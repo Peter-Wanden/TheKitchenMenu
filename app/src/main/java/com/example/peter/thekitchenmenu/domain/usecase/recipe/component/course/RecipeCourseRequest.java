@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course;
 
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainMessageBasePlusModel;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainMessageBaseModel;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainModel;
 
 import java.util.ArrayList;
@@ -13,27 +13,19 @@ import javax.annotation.Nonnull;
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse.*;
 
 public final class RecipeCourseRequest
-        extends UseCaseDomainMessageBasePlusModel<RecipeCourseRequest.Model>
+        extends UseCaseDomainMessageBaseModel<RecipeCourseRequest.Model>
         implements UseCase.Request {
 
-    @Nonnull
-    @Override
-    public String toString() {
-        return "RecipeCourseRequest{" +
-                "dataId='" + dataId + '\'' +
-                "domainId='" + domainId + '\'' +
-                ", model=" + model +
-                '}';
-    }
+    private RecipeCourseRequest() {}
 
     public static class Builder
-            extends UseCaseMessageBuilderWithModel
-            <Builder, RecipeCourseRequest, Model> {
+            extends UseCaseMessageBuilderModel<Builder, RecipeCourseRequest, Model> {
 
         public Builder() {
             message = new RecipeCourseRequest();
         }
 
+        @Override
         public Builder getDefault() {
             message.dataId = "";
             message.domainId = "";
@@ -43,6 +35,7 @@ public final class RecipeCourseRequest
 
         public Builder basedOnResponse(RecipeCourseResponse response) {
             message.dataId = response.getDataId();
+            message.domainId = response.getDomainId();
             message.model.courseList = new ArrayList<>(response.
                     getModel().
                     getCourseList().
@@ -60,6 +53,8 @@ public final class RecipeCourseRequest
     public static final class Model extends UseCaseDomainModel {
 
         private List<Course> courseList;
+
+        private Model(){}
 
         public List<Course> getCourseList() {
             return courseList;

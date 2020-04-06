@@ -68,17 +68,17 @@ public class ConversionFactorStatus extends UseCase
 
     @Override
     protected <Q extends Request> void execute(Q request) {
-        ConversionFactorStatusRequest sr = (ConversionFactorStatusRequest) request;
-        UnitOfMeasure unitOfMeasure = sr.getSubtype().getMeasurementClass();
+        ConversionFactorStatusRequest r = (ConversionFactorStatusRequest) request;
+        UnitOfMeasure unitOfMeasure = r.getSubtype().getMeasurementClass();
 
-        if (isNoIdSupplied(sr)) {
+        if (isNoIdSupplied(r)) {
             returnDataNotAvailable();
         }
         if (!unitOfMeasure.isConversionFactorEnabled()) {
             returnResultDisabled();
             return;
         }
-        loadIngredient(sr.getIngredientId());
+        loadIngredient(r.getIngredientId());
     }
 
     private boolean isNoIdSupplied(ConversionFactorStatusRequest request) {
@@ -145,7 +145,7 @@ public class ConversionFactorStatus extends UseCase
     }
 
     private boolean conversionFactorPreviouslySet() {
-        return ingredientEntity.getConversionFactor() != UnitOfMeasureConstants.NO_CONVERSION_FACTOR;
+        return ingredientEntity.getConversionFactor() != UnitOfMeasureConstants.DEFAULT_CONVERSION_FACTOR;
     }
 
     private void returnResultEnabledEditablePreviouslySet() {

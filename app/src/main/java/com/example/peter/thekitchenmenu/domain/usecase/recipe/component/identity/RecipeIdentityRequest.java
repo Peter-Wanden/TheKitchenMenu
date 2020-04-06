@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity;
 
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainMessageBasePlusModel;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainMessageBaseModel;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainModel;
 
 import java.util.Objects;
@@ -9,21 +9,13 @@ import java.util.Objects;
 import javax.annotation.Nonnull;
 
 public final class RecipeIdentityRequest
-        extends UseCaseDomainMessageBasePlusModel<RecipeIdentityRequest.Model>
+        extends UseCaseDomainMessageBaseModel<RecipeIdentityRequest.Model>
         implements UseCase.Request {
 
-    @Override
-    public String toString() {
-        return "RecipeIdentityRequest{" +
-                "dataId='" + dataId + '\'' +
-                ", domainId='" + domainId + '\'' +
-                ", model=" + model +
-                '}';
-    }
+    private RecipeIdentityRequest() {}
 
     public static class Builder
-            extends UseCaseMessageBuilderWithModel
-            <Builder, RecipeIdentityRequest, Model> {
+            extends UseCaseMessageBuilderModel<Builder, RecipeIdentityRequest, Model> {
 
         public Builder() {
             message = new RecipeIdentityRequest();

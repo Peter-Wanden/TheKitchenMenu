@@ -52,7 +52,7 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
     private double totalUnitOne;
     private int itemUnitTwo;
     private double itemUnitOne;
-    private double conversionFactor = UnitOfMeasureConstants.NO_CONVERSION_FACTOR;
+    private double conversionFactor = UnitOfMeasureConstants.DEFAULT_CONVERSION_FACTOR;
 
     UnitOfMeasureAbstract() {
     }
@@ -101,7 +101,7 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
     }
 
     private boolean isConversionFactorPreviouslyChanged() {
-        return conversionFactor != UnitOfMeasureConstants.NO_CONVERSION_FACTOR;
+        return conversionFactor != UnitOfMeasureConstants.DEFAULT_CONVERSION_FACTOR;
     }
 
     private void resetToOriginalValuesBeforeConversionFactorChanged() {

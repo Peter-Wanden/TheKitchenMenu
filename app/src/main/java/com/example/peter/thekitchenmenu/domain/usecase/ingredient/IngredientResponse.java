@@ -1,51 +1,31 @@
 package com.example.peter.thekitchenmenu.domain.usecase.ingredient;
 
+import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainMessageBaseModelMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainModel;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadata;
 
 import java.util.Objects;
 
-import javax.annotation.Nonnull;
+public final class IngredientResponse
+        extends UseCaseDomainMessageBaseModelMetadata<IngredientResponse.Model>
+        implements UseCase.Response {
 
-public final class IngredientResponse extends UseCaseResponse<IngredientResponse.Model> {
-
-    private String ingredientId;
-
-    public String getIngredientId() {
-        return ingredientId;
-    }
-
-    @Nonnull
-    @Override
-    public String toString() {
-        return "IngredientResponse{" +
-                "id='" + id + '\'' +
-                ", ingredientId='" + ingredientId + '\'' +
-                ", metadata=" + metadata +
-                ", model=" + model +
-                '}';
-    }
+    private IngredientResponse() {}
 
     public static class Builder
-            extends UseCaseResponse.UseCaseResponseBuilder<
-            Builder,
-            IngredientResponse,
-            Model> {
+            extends UseCaseMessageBuilderMetadata<Builder, IngredientResponse, Model> {
 
         public Builder() {
-            response = new IngredientResponse();
+            message = new IngredientResponse();
         }
 
         public Builder getDefault() {
-            return new Builder().
-                    setId("").
-                    setModel(new Model.Builder().
-                            getDefault().
-                            build());
-        }
-
-        public Builder setIngredientId(String ingredientId) {
-            response.ingredientId = ingredientId;
+            message.dataId = "";
+            message.domainId = "";
+            message.metadata = new UseCaseMetadata.Builder().getDefault().build();
+            message.model = new Model.Builder().getDefault().build();
             return self();
         }
 
@@ -59,6 +39,8 @@ public final class IngredientResponse extends UseCaseResponse<IngredientResponse
         private String name;
         private String description;
         private double conversionFactor;
+
+        private Model() {}
 
         @Override
         public boolean equals(Object o) {
@@ -103,6 +85,9 @@ public final class IngredientResponse extends UseCaseResponse<IngredientResponse
             }
 
             public Builder getDefault() {
+                model.name = "";
+                model.description = "";
+                model.conversionFactor = UnitOfMeasureConstants.DEFAULT_CONVERSION_FACTOR;
                 return new Builder().
                         setName("").
                         setDescription("").

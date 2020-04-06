@@ -1,6 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions;
 
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainMessageBaseModelMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainModel;
 
@@ -8,35 +9,25 @@ import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public final class RecipePortionsResponse extends UseCaseResponse<RecipePortionsResponse.Model> {
+public final class RecipePortionsResponse
+        extends UseCaseDomainMessageBaseModelMetadata<RecipePortionsResponse.Model>
+        implements UseCase.Response {
 
-    @Override
-    public String toString() {
-        return "RecipePortionsResponse{" +
-                "id=" + id +
-                ", metadata=" + metadata +
-                ", model=" + model +
-                '}';
-    }
+    private RecipePortionsResponse() {}
 
-    public static class Builder extends UseCaseResponseBuilder<
-                    Builder,
-                    RecipePortionsResponse,
-                    Model> {
+    public static class Builder
+            extends UseCaseMessageBuilderMetadata<Builder, RecipePortionsResponse, Model> {
 
         public Builder() {
-            response = new RecipePortionsResponse();
+            message = new RecipePortionsResponse();
         }
 
         public Builder getDefault() {
-            return new Builder().
-                    setId("").
-                    setMetadata(new UseCaseMetadata.Builder().
-                            getDefault().
-                            build()).
-                    setModel(new Model.Builder().
-                            getDefault().
-                            build());
+            message.dataId = "";
+            message.domainId = "";
+            message.metadata = new UseCaseMetadata.Builder().getDefault().build();
+            message.model = new Model.Builder().getDefault().build();
+            return self();
         }
 
         @Override
@@ -51,7 +42,8 @@ public final class RecipePortionsResponse extends UseCaseResponse<RecipePortions
         private int sittings;
         private int portions;
 
-        private Model() {}
+        private Model() {
+        }
 
         public int getServings() {
             return servings;
@@ -90,19 +82,17 @@ public final class RecipePortionsResponse extends UseCaseResponse<RecipePortions
                     '}';
         }
 
-        public static class Builder extends DomainModelBuilder<
-                                Builder,
-                                Model> {
+        public static class Builder extends DomainModelBuilder<Builder, Model> {
 
             public Builder() {
                 model = new RecipePortionsResponse.Model();
             }
 
             public Builder getDefault() {
-                return new Builder().
-                        setServings(RecipePortions.MIN_SERVINGS).
-                        setSittings(RecipePortions.MIN_SITTINGS).
-                        setPortions(RecipePortions.MIN_SERVINGS * RecipePortions.MIN_SITTINGS);
+                model.servings = RecipePortions.MIN_SERVINGS;
+                model.sittings = RecipePortions.MIN_SITTINGS;
+                model.portions = RecipePortions.MIN_SERVINGS * RecipePortions.MIN_SITTINGS;
+                return self();
             }
 
             public Builder setServings(int servings) {

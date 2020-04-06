@@ -1,45 +1,20 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions;
 
-import com.example.peter.thekitchenmenu.domain.model.DomainPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecase.PersistenceBase;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public final class RecipePortionsPersistenceModel implements DomainPersistenceModel {
-    @Nonnull
-    private final String id;
-    @Nonnull
-    private final String recipeId;
-    private final int servings;
-    private final int sittings;
-    private final long createDate;
-    private final long lastUpdate;
+public final class RecipePortionsPersistenceModel
+        extends PersistenceBase {
 
-    private RecipePortionsPersistenceModel(@Nonnull String id,
-                                           @Nonnull String recipeId,
-                                           int servings,
-                                           int sittings,
-                                           long createDate,
-                                           long lastUpdate) {
-        this.id = id;
-        this.recipeId = recipeId;
-        this.servings = servings;
-        this.sittings = sittings;
-        this.createDate = createDate;
-        this.lastUpdate = lastUpdate;
-    }
+    private int servings;
+    private int sittings;
+    private long createDate;
+    private long lastUpdate;
 
-    @Override
-    @Nonnull
-    public String getDataId() {
-        return id;
-    }
-
-    @Nonnull
-    public String getRecipeId() {
-        return recipeId;
-    }
+    private RecipePortionsPersistenceModel() {}
 
     public int getServings() {
         return servings;
@@ -61,26 +36,25 @@ public final class RecipePortionsPersistenceModel implements DomainPersistenceMo
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        RecipePortionsPersistenceModel model = (RecipePortionsPersistenceModel) o;
-        return servings == model.servings &&
-                sittings == model.sittings &&
-                createDate == model.createDate &&
-                lastUpdate == model.lastUpdate &&
-                id.equals(model.id) &&
-                recipeId.equals(model.recipeId);
+        RecipePortionsPersistenceModel that = (RecipePortionsPersistenceModel) o;
+        return dataId.equals(that.dataId) &&
+                domainId.equals(that.domainId) &&
+                servings == that.servings &&
+                sittings == that.sittings &&
+                createDate == that.createDate &&
+                lastUpdate == that.lastUpdate;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, recipeId, servings, sittings, createDate, lastUpdate);
+        return Objects.hash(dataId, domainId, servings, sittings, createDate, lastUpdate);
     }
 
-    @Nonnull
     @Override
     public String toString() {
         return "RecipePortionsPersistenceModel{" +
-                "id='" + id + '\'' +
-                ", recipeId='" + recipeId + '\'' +
+                "dataId='" + dataId + '\'' +
+                ", domainId='" + domainId + '\'' +
                 ", servings=" + servings +
                 ", sittings=" + sittings +
                 ", createDate=" + createDate +
@@ -88,73 +62,67 @@ public final class RecipePortionsPersistenceModel implements DomainPersistenceMo
                 '}';
     }
 
-    public static class Builder {
-        private String id;
-        private String recipeId;
-        private int servings;
-        private int sittings;
-        private long createDate;
-        private long lastUpdate;
+    public static class Builder
+            extends DomainModelBuilder<Builder, RecipePortionsPersistenceModel> {
 
-        public static Builder basedOnPersistenceModel(@Nonnull RecipePortionsPersistenceModel oldModel) {
-            return new Builder().
-                    setId(oldModel.getDataId()).
-                    setRecipeId(oldModel.getRecipeId()).
-                    setServings(oldModel.getServings()).
-                    setSittings(oldModel.getSittings()).
-                    setCreateDate(oldModel.getCreateDate()).
-                    setLastUpdate(oldModel.getLastUpdate());
+        public Builder() {
+            model = new RecipePortionsPersistenceModel();
         }
 
         public Builder getDefault() {
-            return new Builder().
-                    setId("").
-                    setRecipeId("").
-                    setServings(RecipePortions.MIN_SERVINGS).
-                    setSittings(RecipePortions.MIN_SITTINGS).
-                    setCreateDate(0L).
-                    setLastUpdate(0L);
+            model.dataId = "";
+            model.domainId = "";
+            model.servings = 0;
+            model.sittings = 0;
+            model.createDate = 0L;
+            model.lastUpdate = 0L;
+            return self();
         }
 
-        public Builder setId(@Nonnull String id) {
-            this.id = id;
-            return this;
+        public Builder basedOnPersistenceModel(
+                @Nonnull RecipePortionsPersistenceModel m) {
+            model.dataId = m.getDataId();
+            model.domainId = m.getDomainId();
+            model.servings = m.getServings();
+            model.sittings = m.getSittings();
+            model.createDate = m.getCreateDate();
+            model.lastUpdate = m.getLastUpdate();
+            return self();
+        }
+
+        public Builder setDataId(@Nonnull String dataId) {
+            model.dataId = dataId;
+            return self();
         }
 
         public Builder setRecipeId(@Nonnull String recipeId) {
-            this.recipeId = recipeId;
-            return this;
+            model.domainId = recipeId;
+            return self();
         }
 
         public Builder setServings(int servings) {
-            this.servings = servings;
-            return this;
+            model.servings = servings;
+            return self();
         }
 
         public Builder setSittings(int sittings) {
-            this.sittings = sittings;
-            return this;
+            model.sittings = sittings;
+            return self();
         }
 
         public Builder setCreateDate(long createDate) {
-            this.createDate = createDate;
-            return this;
+            model.createDate = createDate;
+            return self();
         }
 
         public Builder setLastUpdate(long lastUpdate) {
-            this.lastUpdate = lastUpdate;
-            return this;
+            model.lastUpdate = lastUpdate;
+            return self();
         }
 
-        public RecipePortionsPersistenceModel build() {
-            return new RecipePortionsPersistenceModel(
-                    id,
-                    recipeId,
-                    servings,
-                    sittings,
-                    createDate,
-                    lastUpdate
-            );
+        @Override
+        protected Builder self() {
+            return this;
         }
     }
 }

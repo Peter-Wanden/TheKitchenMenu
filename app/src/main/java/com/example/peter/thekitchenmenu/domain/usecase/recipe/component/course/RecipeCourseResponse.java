@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course;
 
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainMessageBasePlusModelMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainMessageBaseModelMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainModel;
 
@@ -11,21 +11,13 @@ import java.util.Objects;
 import javax.annotation.Nonnull;
 
 public final class RecipeCourseResponse
-        extends UseCaseDomainMessageBasePlusModelMetadata<RecipeCourseResponse.Model>
+        extends UseCaseDomainMessageBaseModelMetadata<RecipeCourseResponse.Model>
         implements UseCase.Response {
 
-    @Override
-    public String toString() {
-        return "RecipeCourseResponse{" +
-                "metadata=" + metadata +
-                ", model=" + model +
-                ", dataId='" + dataId + '\'' +
-                ", domainId='" + domainId + '\'' +
-                '}';
-    }
+    private RecipeCourseResponse() {}
 
-    public static class Builder extends UseCaseMessageBuilderWithMetadata
-            <Builder, RecipeCourseResponse, Model> {
+    public static class Builder
+            extends UseCaseMessageBuilderMetadata<Builder, RecipeCourseResponse, Model> {
 
         public Builder() {
             message = new RecipeCourseResponse();
@@ -43,7 +35,6 @@ public final class RecipeCourseResponse
         protected Builder self() {
             return this;
         }
-
     }
 
     public static final class Model extends UseCaseDomainModel {
@@ -70,6 +61,7 @@ public final class RecipeCourseResponse
             return Objects.hash(courseList);
         }
 
+        @Nonnull
         @Override
         public String toString() {
             return "Model{" +

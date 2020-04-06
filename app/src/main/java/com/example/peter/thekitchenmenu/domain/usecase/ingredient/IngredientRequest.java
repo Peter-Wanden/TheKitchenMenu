@@ -1,50 +1,31 @@
 package com.example.peter.thekitchenmenu.domain.usecase.ingredient;
 
+import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainModel;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainMessageBasePlusModel;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainMessageBaseModel;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
 public final class IngredientRequest
-        extends UseCaseDomainMessageBasePlusModel<IngredientRequest.Model> {
+        extends UseCaseDomainMessageBaseModel<IngredientRequest.Model>
+        implements UseCase.Request {
 
-    private String ingredientId;
-
-    public String getIngredientId() {
-        return ingredientId;
-    }
-
-    @Override
-    public String toString() {
-        return "IngredientRequest{" +
-                "id='" + dataId + '\'' +
-                ", ingredientId='" + ingredientId + '\'' +
-                ", model=" + model +
-                '}';
-    }
+    private IngredientRequest() {}
 
     public static class Builder
-            extends UseCaseMessageBuilderWithModel<
-                                                Builder,
-                                                IngredientRequest,
-                                                Model> {
+            extends UseCaseMessageBuilderModel<Builder, IngredientRequest, Model> {
 
         public Builder() {
-            request = new IngredientRequest();
+            message = new IngredientRequest();
         }
 
         public Builder getDefault() {
-            return new Builder().
-                    setDataId("").
-                    setModel(new Model.Builder().
-                            getDefault().
-                            build());
-        }
-
-        public Builder setIngredientId(String ingredientId) {
-            request.ingredientId = ingredientId;
+            message.dataId = "";
+            message.domainId = "";
+            message.model = new Model.Builder().getDefault().build();
             return self();
         }
 
@@ -103,10 +84,10 @@ public final class IngredientRequest
             }
 
             public Builder getDefault() {
-                return new Builder().
-                        setName("").
-                        setDescription("").
-                        setConversionFactor(0.);
+                model.name = "";
+                model.description = "";
+                model.conversionFactor = UnitOfMeasureConstants.DEFAULT_CONVERSION_FACTOR;
+                return self();
             }
 
             public Builder setName(String name) {

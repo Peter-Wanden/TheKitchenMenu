@@ -91,11 +91,12 @@ public class RecipeCourse
         System.out.println(TAG + r);
 
         if (isNewRequest(r)) {
+            dataId = r.getDataId();
             recipeId = r.getDomainId();
             loadData(recipeId);
         } else {
-            setupUseCase(r);
-            updateCurrentCourseList();
+            setupUseCase();
+            processRequest();
         }
     }
 
@@ -103,10 +104,12 @@ public class RecipeCourse
         return !r.getDomainId().equals(recipeId);
     }
 
-    private void setupUseCase(RecipeCourseRequest r) {
+    private void setupUseCase() {
         isChanged = false;
         newCourseList.clear();
-        newCourseList.addAll(r.getModel().getCourseList());
+        newCourseList.addAll(((RecipeCourseRequest)getRequest()).
+                getModel().
+                getCourseList());
     }
 
     private void loadData(String recipeId) {
@@ -139,7 +142,7 @@ public class RecipeCourse
         sendResponse();
     }
 
-    private void updateCurrentCourseList() {
+    private void processRequest() {
         processCourseAdditions();
         processCourseSubtractions();
         sendResponse();
@@ -159,7 +162,7 @@ public class RecipeCourse
 
     private void addCourseToCurrentList(Course course) {
         isChanged = true;
-        RecipeCoursePersistenceModel model = createNewCourseModel(course);
+        RecipeCoursePersistenceModel model = createNewPersistence(course);
         currentCourseList.put(course, model);
         save(model);
     }
@@ -190,7 +193,7 @@ public class RecipeCourse
         i.remove();
     }
 
-    private RecipeCoursePersistenceModel createNewCourseModel(Course course) {
+    private RecipeCoursePersistenceModel createNewPersistence(Course course) {
         lastUpdate = timeProvider.getCurrentTimeInMills();
         return new RecipeCoursePersistenceModel.Builder().
                 setDataId(idProvider.getUId()).

@@ -1,20 +1,30 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe;
 
+import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainMessageBase;
 
-import javax.annotation.Nonnull;
+public final class RecipeRequest
+        extends UseCaseDomainMessageBase
+        implements UseCase.Request {
 
+    private RecipeRequest() {}
 
-public final class RecipeRequest extends UseCaseDomainMessageBase {
+    public static class Builder extends UseCaseMessageBuilder<Builder, RecipeRequest> {
 
-    public RecipeRequest(@Nonnull String id) {
-        this.dataId = id;
-    }
+        public Builder() {
+            message = new RecipeRequest();
+        }
 
-    @Override
-    public String toString() {
-        return "RecipeRequest{" +
-                "id='" + dataId + '\'' +
-                '}';
+        @Override
+        public Builder getDefault() {
+            message.dataId = "";
+            message.domainId = "";
+            return self();
+        }
+
+        @Override
+        protected Builder self() {
+            return this;
+        }
     }
 }

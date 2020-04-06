@@ -16,13 +16,13 @@ import com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.Co
 import com.example.peter.thekitchenmenu.domain.usecase.ingredient.Ingredient;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipecopy.RecipeCopy;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeduration.RecipeDuration;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeidentity.RecipeIdentity;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDuration;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentity;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipelist.RecipeList;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipecourse.RecipeCourse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredientlist.RecipeIngredientList;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeportions.RecipePortions;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
 import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientDuplicateChecker;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
@@ -40,7 +40,6 @@ public class UseCaseFactory {
 
     private final Application application;
     private final RepositoryRecipeMetadata recipeMetadataRepository;
-    private final RepositoryRecipeFailReasons recipeFailReasonsRepository;
     private final RepositoryRecipePortions recipePortionsRepository;
     private final RepositoryRecipeIngredient recipeIngredientRepository;
     private final RepositoryIngredient ingredientRepository;
@@ -49,8 +48,7 @@ public class UseCaseFactory {
     private final RepositoryRecipeCourse recipeCourseRepository;
 
     private UseCaseFactory(Application application,
-                           RepositoryRecipeMetadataModel recipeMetadataRepository,
-                           RepositoryRecipeFailReasons recipeFailReasonsRepository,
+                           RepositoryRecipeMetadata recipeMetadataRepository,
                            RepositoryRecipePortions recipePortionsRepository,
                            RepositoryRecipeIngredient recipeIngredientRepository,
                            RepositoryIngredient ingredientRepository,
@@ -59,7 +57,6 @@ public class UseCaseFactory {
                            RepositoryRecipeCourse recipeCourseRepository) {
         this.application = application;
         this.recipeMetadataRepository = recipeMetadataRepository;
-        this.recipeFailReasonsRepository = recipeFailReasonsRepository;
         this.recipePortionsRepository = recipePortionsRepository;
         this.recipeIngredientRepository = recipeIngredientRepository;
         this.ingredientRepository = ingredientRepository;
@@ -75,9 +72,6 @@ public class UseCaseFactory {
                     INSTANCE = new UseCaseFactory(
                             application,
                             DatabaseInjection.provideRecipeMetadataDataSource(
-                                    application.getApplicationContext()
-                            ),
-                            DatabaseInjection.provideRecipeFailReasonsDataSource(
                                     application.getApplicationContext()
                             ),
                             DatabaseInjection.provideRecipePortionsDataSource(
@@ -178,17 +172,8 @@ public class UseCaseFactory {
 
         return new RecipeMetadata(
                 new TimeProvider(),
-                provideRecipeMetadataDataModelAdapter(),
-                requiredComponents
-        );
-    }
-
-    private RecipeMetadataDataSource provideRecipeMetadataDataModelAdapter() {
-        return new RecipeMetadataDataSource(
                 recipeMetadataRepository,
-                recipeFailReasonsRepository,
-                new TimeProvider(),
-                new UniqueIdProvider()
+                requiredComponents
         );
     }
 
@@ -208,6 +193,7 @@ public class UseCaseFactory {
         return new RecipeDuration(
                 recipeDurationRepository,
                 new TimeProvider(),
+                new UniqueIdProvider(),
                 resources.getInteger(R.integer.recipe_max_prep_time_in_minutes),
                 resources.getInteger(R.integer.recipe_max_cook_time_in_minutes)
         );
@@ -216,6 +202,7 @@ public class UseCaseFactory {
     public RecipeIdentity provideRecipeIdentity() {
         return new RecipeIdentity(
                 recipeIdentityRepository,
+                new UniqueIdProvider(),
                 new TimeProvider(),
                 UseCaseHandler.getInstance(),
                 provideTextValidator());

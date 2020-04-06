@@ -1,112 +1,70 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe;
 
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainMessageBaseModel;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainModel;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.Objects;
 
 
-public final class RecipeResponse implements UseCase.Response {
-    protected String id;
-    protected Model model;
+public final class RecipeResponse
+        extends UseCaseDomainMessageBaseModel<RecipeResponse.Model>
+        implements UseCase.Response {
 
-    private RecipeResponse() {}
-
-    public String getId() {
-        return id;
+    private RecipeResponse() {
     }
 
-    public Model getModel() {
-        return model;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        RecipeResponse that = (RecipeResponse) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(model, that.model);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, model);
-    }
-
-    @Override
-    public String toString() {
-        return "RecipeResponse{" +
-                "id='" + id + '\'' +
-                ", model=" + model +
-                '}';
-    }
-
-    public static class Builder {
-        private RecipeResponse response;
+    public static class Builder
+            extends UseCaseMessageBuilderModel<Builder, RecipeResponse, Model> {
 
         public Builder() {
-            response = new RecipeResponse();
+            message = new RecipeResponse();
         }
 
+        @Override
         public Builder getDefault() {
-            return new Builder().
-                    setId("").
-                    setModel(
-                    new Model.Builder().
-                            getDefault().
-                            build()
-            );
+            message.dataId = "";
+            message.domainId = "";
+            message.model = new Model.Builder().getDefault().build();
+            return self();
         }
 
-        public Builder setId(String id) {
-            response.id = id;
+        @Override
+        protected Builder self() {
             return this;
-        }
-
-        public Builder setModel(Model model) {
-            response.model = model;
-            return this;
-        }
-
-        public RecipeResponse build() {
-            return response;
         }
     }
 
     public static final class Model extends UseCaseDomainModel {
-        private HashMap<RecipeMetadata.ComponentName, UseCaseResponse> componentResponses;
+        private HashMap<RecipeMetadata.ComponentName, UseCase.Response> componentResponses;
 
-        public Model() {}
+        public Model() {
+        }
 
-        public HashMap<RecipeMetadata.ComponentName, UseCaseResponse> getComponentResponses() {
+        public HashMap<RecipeMetadata.ComponentName, UseCase.Response> getComponentResponses() {
             return componentResponses;
         }
 
-        public static class Builder extends DomainModelBuilder<
-                                Builder,
-                                Model> {
+        public static class Builder
+                extends DomainModelBuilder<Builder, Model> {
 
             public Builder() {
                 model = new Model();
             }
 
             public Builder getDefault() {
-                return new Model.Builder().
-                        setComponentResponses(getDefaultComponentResponses());
+                return new Model.Builder().setComponentResponses(getDefaultComponentResponses());
             }
 
             public Builder setComponentResponses(
-                    HashMap<RecipeMetadata.ComponentName, UseCaseResponse> componentResponses) {
+                    HashMap<RecipeMetadata.ComponentName, UseCase.Response> componentResponses) {
                 model.componentResponses = componentResponses;
                 return self();
             }
 
-            private static HashMap<RecipeMetadata.ComponentName, UseCaseResponse>
+            private static HashMap<RecipeMetadata.ComponentName, UseCase.Response>
             getDefaultComponentResponses() {
                 return new LinkedHashMap<>();
             }

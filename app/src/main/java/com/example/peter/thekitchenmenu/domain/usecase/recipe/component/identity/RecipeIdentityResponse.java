@@ -1,8 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity;
 
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainMessageBasePlusModelMetadata;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainMessageBaseModelMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainModel;
 
@@ -11,24 +10,13 @@ import java.util.Objects;
 import javax.annotation.Nonnull;
 
 public final class RecipeIdentityResponse
-        extends UseCaseDomainMessageBasePlusModelMetadata<RecipeIdentityResponse.Model>
+        extends UseCaseDomainMessageBaseModelMetadata<RecipeIdentityResponse.Model>
         implements UseCase.Response {
 
-    @Nonnull
-    @Override
-    public String toString() {
-        return "RecipeIdentityResponse{" +
-                "dataId='" + dataId + '\'' +
-                ", domainId='" + domainId + '\'' +
-                ", metadata=" + metadata +
-                ", model=" + model +
-                '}';
-    }
+    private RecipeIdentityResponse() {}
 
-    public static class Builder extends UseCaseMessageBuilderWithMetadata<
-                    Builder,
-                    RecipeIdentityResponse,
-                    Model> {
+    public static class Builder extends UseCaseMessageBuilderMetadata
+            <Builder, RecipeIdentityResponse, Model> {
 
         public Builder() {
             message = new RecipeIdentityResponse();

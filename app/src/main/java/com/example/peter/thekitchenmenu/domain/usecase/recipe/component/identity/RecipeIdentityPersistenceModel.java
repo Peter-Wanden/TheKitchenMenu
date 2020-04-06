@@ -1,6 +1,6 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity;
 
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipePersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecase.PersistenceBase;
 
 import java.util.Objects;
 
@@ -8,7 +8,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public final class RecipeIdentityPersistenceModel
-        extends RecipePersistenceModel {
+        extends PersistenceBase {
 
     private String title;
     private String description;
@@ -40,17 +40,20 @@ public final class RecipeIdentityPersistenceModel
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RecipeIdentityPersistenceModel that = (RecipeIdentityPersistenceModel) o;
-        return createDate == that.createDate &&
+        return dataId.equals(that.dataId) &&
+                domainId.equals(that.domainId) &&
+                createDate == that.createDate &&
                 lastUpdate == that.lastUpdate &&
-                title.equals(that.title) &&
-                description.equals(that.description);
+                Objects.equals(title, that.title) &&
+                Objects.equals(description, that.description);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(title, description, createDate, lastUpdate);
+        return Objects.hash(dataId, domainId, title, description, createDate, lastUpdate);
     }
 
+    @Nonnull
     @Override
     public String toString() {
         return "RecipeIdentityPersistenceModel{" +

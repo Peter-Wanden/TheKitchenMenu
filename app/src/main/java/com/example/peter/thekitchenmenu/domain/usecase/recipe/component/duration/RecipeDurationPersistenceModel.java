@@ -1,13 +1,13 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration;
 
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipePersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecase.PersistenceBase;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
 public final class RecipeDurationPersistenceModel
-        extends RecipePersistenceModel {
+        extends PersistenceBase {
 
     private int prepTime;
     private int cookTime;
@@ -50,6 +50,7 @@ public final class RecipeDurationPersistenceModel
         return Objects.hash(dataId, domainId, prepTime, cookTime, createDate, lastUpdate);
     }
 
+    @Nonnull
     @Override
     public String toString() {
         return "RecipeDurationPersistenceModel{" +
@@ -118,6 +119,11 @@ public final class RecipeDurationPersistenceModel
         public Builder setLastUpdate(long lastUpdate) {
             model.lastUpdate = lastUpdate;
             return self();
+        }
+
+        @Override
+        protected Builder self() {
+            return this;
         }
     }
 }

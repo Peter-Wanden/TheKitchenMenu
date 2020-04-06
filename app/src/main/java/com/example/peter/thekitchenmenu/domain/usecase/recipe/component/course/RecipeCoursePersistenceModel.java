@@ -1,13 +1,13 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course;
 
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipePersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecase.PersistenceBase;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
 public final class RecipeCoursePersistenceModel
-        extends RecipePersistenceModel {
+        extends PersistenceBase {
 
     private RecipeCourse.Course course;
     private long createDate;
@@ -50,16 +50,15 @@ public final class RecipeCoursePersistenceModel
     public String toString() {
         return "RecipeCourseModel{" +
                 "dataId='" + dataId + '\'' +
-                ", recipeId='" + domainId + '\'' +
+                ", domainId='" + domainId + '\'' +
                 ", course=" + course +
                 ", createDate=" + createDate +
                 ", lasUpdate=" + lasUpdate +
                 '}';
     }
 
-    public static class Builder extends DomainModelBuilder<
-            Builder,
-            RecipeCoursePersistenceModel> {
+    public static class Builder
+            extends DomainModelBuilder<Builder, RecipeCoursePersistenceModel> {
 
         public Builder() {
             model = new RecipeCoursePersistenceModel();
@@ -103,11 +102,6 @@ public final class RecipeCoursePersistenceModel
         @Override
         protected Builder self() {
             return super.self();
-        }
-
-        @Override
-        public RecipeCoursePersistenceModel build() {
-            return super.build();
         }
     }
 }

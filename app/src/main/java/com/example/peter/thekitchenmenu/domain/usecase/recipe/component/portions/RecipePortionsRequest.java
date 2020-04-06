@@ -1,41 +1,39 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions;
 
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainMessageBasePlusModel;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainMessageBaseModel;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainModel;
+import com.google.gson.internal.$Gson$Types;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public final class RecipePortionsRequest extends UseCaseDomainMessageBasePlusModel<RecipePortionsRequest.Model> {
+public final class RecipePortionsRequest
+        extends UseCaseDomainMessageBaseModel<RecipePortionsRequest.Model>
+        implements UseCase.Request {
 
-    @Nonnull
-    @Override
-    public String toString() {
-        return "RecipePortionsRequest{" +
-                "id='" + dataId + '\'' +
-                ", model=" + model +
-                '}';
-    }
+    private RecipePortionsRequest() {}
 
-    public static class Builder extends UseCaseMessageBuilderWithModel<Builder, RecipePortionsRequest, Model> {
+    public static class Builder
+            extends UseCaseMessageBuilderModel<Builder, RecipePortionsRequest, Model> {
 
         public Builder() {
-            request = new RecipePortionsRequest();
+            message = new RecipePortionsRequest();
         }
 
         public Builder getDefault() {
-            return new Builder().
-                    setDataId("").
-                    setModel(Model.Builder.
-                            getDefault().
-                            build());
+            message.dataId = "";
+            message.domainId = "";
+            message.model = new Model.Builder().getDefault().build();
+            return self();
         }
 
-        public Builder basedOnResponse(RecipePortionsResponse response) {
-            request.dataId = response.getId();
-            request.model.servings = response.getModel().getServings();
-            request.model.sittings = response.getModel().getSittings();
+        public Builder basedOnResponse(RecipePortionsResponse r) {
+            message.dataId = r.getDataId();
+            message.domainId = r.getDomainId();
+            message.model.servings = r.getModel().getServings();
+            message.model.sittings = r.getModel().getSittings();
             return self();
         }
 
@@ -85,16 +83,16 @@ public final class RecipePortionsRequest extends UseCaseDomainMessageBasePlusMod
                 model = new Model();
             }
 
-            public static Builder getDefault() {
-                return new Builder().
-                        setServings(RecipePortions.MIN_SERVINGS).
-                        setSittings(RecipePortions.MIN_SITTINGS);
+            public Builder getDefault() {
+                model.servings = RecipePortions.MIN_SERVINGS;
+                model.sittings = RecipePortions.MIN_SITTINGS;
+                return self();
             }
 
-            public static Builder basedOnPortionsResponseModel(RecipePortionsResponse.Model model) {
-                return new Builder().
-                        setServings(model.getServings()).
-                        setSittings(model.getSittings());
+            public Builder basedOnPortionsResponseModel(RecipePortionsResponse.Model m) {
+                model.sittings = m.getSittings();
+                model.servings = m.getServings();
+                return self();
             }
 
             public Builder setServings(int servings) {

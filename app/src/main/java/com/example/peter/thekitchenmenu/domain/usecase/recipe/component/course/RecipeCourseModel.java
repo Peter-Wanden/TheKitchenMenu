@@ -8,21 +8,21 @@ public final class RecipeCourseModel {
     @Nonnull
     private final String dataId;
     @Nonnull
-    private final RecipeCourse.Course course;
-    @Nonnull
     private final String recipeId;
+    @Nonnull
+    private final RecipeCourse.Course course;
 
     private final long createDate;
     private final long lasUpdate;
 
     public RecipeCourseModel(@Nonnull String dataId,
-                 @Nonnull RecipeCourse.Course course,
-                 @Nonnull String recipeId,
-                 long createDate,
-                 long lasUpdate) {
+                             @Nonnull String recipeId,
+                             @Nonnull RecipeCourse.Course course,
+                             long createDate,
+                             long lasUpdate) {
         this.dataId = dataId;
-        this.course = course;
         this.recipeId = recipeId;
+        this.course = course;
         this.createDate = createDate;
         this.lasUpdate = lasUpdate;
     }

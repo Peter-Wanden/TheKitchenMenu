@@ -5,7 +5,7 @@ import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.meta
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.failreason.RecipeFailReasonEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.parent.RecipeMetadataParentEntity;
 import com.example.peter.thekitchenmenu.domain.model.FailReasons;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipePersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecase.PersistenceBase;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,7 +17,7 @@ import static com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.Re
  * Represented in primitive form by {@link RecipeMetadataParentEntity},
  * {@link RecipeComponentStateEntity} & {@link RecipeFailReasonEntity}
  */
-public final class RecipeMetadataPersistenceModel extends RecipePersistenceModel {
+public final class RecipeMetadataPersistenceModel extends PersistenceBase {
 
     private String recipeParentId;
     private RecipeState recipeState;

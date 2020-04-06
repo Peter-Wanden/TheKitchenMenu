@@ -9,6 +9,7 @@ import com.example.peter.thekitchenmenu.domain.model.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadata;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
+import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,7 +20,8 @@ import javax.annotation.Nonnull;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.*;
 
-public class RecipeDuration extends UseCase
+public class RecipeDuration
+        extends UseCase
         implements DataAccess.GetDomainModelCallback<RecipeDurationPersistenceModel> {
 
     private static final String TAG = "tkm-" + RecipeDuration.class.getSimpleName() + ": ";
@@ -56,12 +58,15 @@ public class RecipeDuration extends UseCase
     private final int MAX_COOK_TIME;
 
     @Nonnull
+    private final RepositoryRecipeDuration repository;
+    @Nonnull
     private final TimeProvider timeProvider;
     @Nonnull
-    private final RepositoryRecipeDuration repository;
+    private final UniqueIdProvider idProvider;
     @Nonnull
     private final List<FailReasons> failReasons;
 
+    private String dataId = "";
     private String recipeId = "";
     private boolean isNewRequest;
 
@@ -70,10 +75,12 @@ public class RecipeDuration extends UseCase
 
     public RecipeDuration(@Nonnull RepositoryRecipeDuration repository,
                           @Nonnull TimeProvider timeProvider,
+                          @Nonnull UniqueIdProvider idProvider,
                           int maxPrepTime,
                           int maxCookTime) {
         this.repository = repository;
         this.timeProvider = timeProvider;
+        this.idProvider = idProvider;
 
         MAX_PREP_TIME = maxPrepTime;
         MAX_COOK_TIME = maxCookTime;
@@ -89,15 +96,17 @@ public class RecipeDuration extends UseCase
         System.out.println(TAG + r);
 
         if (isNewRequest(r)) {
+            dataId = r.getDataId();
             recipeId = r.getDomainId();
             loadData(recipeId);
         } else {
-            processChanges();
+            setupUseCase();
+            processRequest();
         }
     }
 
     private boolean isNewRequest(RecipeDurationRequest r) {
-        return isNewRequest = !this.recipeId.equals(r.getDomainId());
+        return isNewRequest = !r.getDomainId().equals(recipeId);
     }
 
     private void loadData(String recipeId) {
@@ -107,6 +116,11 @@ public class RecipeDuration extends UseCase
     @Override
     public void onModelLoaded(RecipeDurationPersistenceModel persistenceModel) {
         this.persistenceModel = persistenceModel;
+
+        if (!dataId.equals(persistenceModel.getDataId())) {
+            dataId = persistenceModel.getDataId();
+        }
+
         validateData();
         buildResponse();
     }
@@ -120,14 +134,22 @@ public class RecipeDuration extends UseCase
 
     private RecipeDurationPersistenceModel createNewPersistenceModel() {
         long currentTime = timeProvider.getCurrentTimeInMills();
-        return RecipeDurationPersistenceModel.Builder.getDefault().
-                setDataId(recipeId).
+        dataId = idProvider.getUId();
+        return new RecipeDurationPersistenceModel.Builder().
+                getDefault().
+                setDataId(dataId).
+                setDomainId(recipeId).
                 setCreateDate(currentTime).
                 setLastUpdate(currentTime).
                 build();
     }
 
-    private void processChanges() {
+    private void setupUseCase() {
+        failReasons.clear();
+        isNewRequest = false;
+    }
+
+    private void processRequest() {
         validateData();
         buildResponse();
     }
@@ -167,7 +189,7 @@ public class RecipeDuration extends UseCase
 
     private void buildResponse() {
         RecipeDurationResponse response = new RecipeDurationResponse.Builder().
-                setDataId("").
+                setDataId(dataId).
                 setDomainId(recipeId).
                 setMetadata(getMetadata()).
                 setModel(getResponseModel()).
@@ -222,8 +244,9 @@ public class RecipeDuration extends UseCase
         return getTotalMinutes(requestModel.getCookHours(), requestModel.getCookMinutes());
     }
 
+    // todo, needs a new dataId
     private RecipeDurationPersistenceModel updatePersistenceFromRequestModel() {
-        return RecipeDurationPersistenceModel.Builder.
+        return new RecipeDurationPersistenceModel.Builder().
                 basedOnPersistenceModel(persistenceModel).
 
                 setPrepTime(getTotalMinutes(
@@ -283,18 +306,12 @@ public class RecipeDuration extends UseCase
 
     private void sendResponse(RecipeDurationResponse response) {
         System.out.println(TAG + response);
-        resetState();
 
         if (response.getMetadata().getFailReasons().contains(CommonFailReason.NONE)) {
             getUseCaseCallback().onSuccess(response);
         } else {
             getUseCaseCallback().onError(response);
         }
-    }
-
-    private void resetState() {
-        failReasons.clear();
-        isNewRequest = false;
     }
 
     private void save() {

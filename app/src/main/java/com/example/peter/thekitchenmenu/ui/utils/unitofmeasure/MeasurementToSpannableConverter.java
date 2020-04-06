@@ -88,7 +88,7 @@ public class MeasurementToSpannableConverter {
 
     private boolean hasConversionFactor() {
         return Double.compare(model.getConversionFactor(),
-                UnitOfMeasureConstants.NO_CONVERSION_FACTOR) != 0;
+                UnitOfMeasureConstants.DEFAULT_CONVERSION_FACTOR) != 0;
     }
 
     private boolean isMetricMeasurement() {

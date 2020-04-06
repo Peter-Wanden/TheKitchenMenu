@@ -1,33 +1,23 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration;
 
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainMessageBasePlusModelMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainMessageBaseModelMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadataResponse;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
 public final class RecipeDurationResponse
-        extends UseCaseDomainMessageBasePlusModelMetadata<RecipeDurationResponse.Model>
+        extends UseCaseDomainMessageBaseModelMetadata<RecipeDurationResponse.Model>
         implements UseCase.Response {
 
-    @Nonnull
-    @Override
-    public String toString() {
-        return "RecipeDurationResponse{" +
-                "dataId='" + dataId + '\'' +
-                ", domainId='" + domainId + '\'' +
-                ", model=" + model +
-                ", metadata=" + metadata +
-                '}';
-    }
+    private RecipeDurationResponse() {}
 
-    public static class Builder extends UseCaseMessageBuilderWithMetadata<
-                        Builder,
-                        RecipeDurationResponse,
-                        Model> {
+    public static class Builder
+            extends UseCaseMessageBuilderMetadata<Builder, RecipeDurationResponse, Model> {
 
         public Builder() {
             message = new RecipeDurationResponse();
@@ -36,8 +26,8 @@ public final class RecipeDurationResponse
         public Builder getDefault() {
             message.dataId = "";
             message.domainId = "";
-            message.model = new Model.Builder().getDefault().build();
             message.metadata = new UseCaseMetadata.Builder().getDefault().build();
+            message.model = new Model.Builder().getDefault().build();
             return self();
         }
 
@@ -48,6 +38,7 @@ public final class RecipeDurationResponse
     }
 
     public static final class Model extends UseCaseDomainModel {
+
         private int prepHours;
         private int prepMinutes;
         private int totalPrepTime;
@@ -118,6 +109,7 @@ public final class RecipeDurationResponse
                     totalCookTime, totalTime, createDate, lastUpdate);
         }
 
+        @Nonnull
         @Override
         public String toString() {
             return "Model{" +

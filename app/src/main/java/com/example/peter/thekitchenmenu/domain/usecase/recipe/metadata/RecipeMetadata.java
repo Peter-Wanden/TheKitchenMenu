@@ -8,7 +8,6 @@ import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.model.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadata;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 
@@ -22,8 +21,8 @@ import java.util.Set;
 import javax.annotation.Nonnull;
 
 /**
- * Calculates and stores {@link Recipe} metadata state information based on recipe
- * {@link UseCaseResponse}'s
+ * Calculates and stores {@link Recipe} metadata state information based on recipe component
+ * responses.
  *
  * Always use as a {@link Recipe} component
  */
@@ -179,7 +178,6 @@ public class RecipeMetadata
 
     //  TODO - last update - should be the time of the last updated component
     // TODO - Data layer:
-    //  have uid as well as recipeId
     //  keep a copy of all metadata as it changes
 
     public RecipeMetadata(@Nonnull TimeProvider timeProvider,
@@ -347,9 +345,9 @@ public class RecipeMetadata
 
     private void buildResponse() {
         addFailReasonNone();
-
         RecipeMetadataResponse response = new RecipeMetadataResponse.Builder().
-                setId(dataId).
+                setDataId(dataId).
+                setDomainId(recipeId).
                 setModel(getModel()).
                 build();
 

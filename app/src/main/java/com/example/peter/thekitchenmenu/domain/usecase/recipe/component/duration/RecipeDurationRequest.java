@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duratio
 
 
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainMessageBasePlusModel;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainMessageBaseModel;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainModel;
 
 import java.util.Objects;
@@ -10,21 +10,13 @@ import java.util.Objects;
 import javax.annotation.Nonnull;
 
 public final class RecipeDurationRequest
-        extends UseCaseDomainMessageBasePlusModel<RecipeDurationRequest.Model>
+        extends UseCaseDomainMessageBaseModel<RecipeDurationRequest.Model>
         implements UseCase.Request {
 
-    @Nonnull
-    @Override
-    public String toString() {
-        return "RecipeDurationRequest{" +
-                "dataId='" + dataId + '\'' +
-                ", domainId='" + domainId + '\'' +
-                ", model=" + model +
-                '}';
-    }
+    private RecipeDurationRequest() {}
 
-    public static class Builder extends UseCaseMessageBuilderWithModel
-            <Builder, RecipeDurationRequest, Model> {
+    public static class Builder
+            extends UseCaseMessageBuilderModel<Builder, RecipeDurationRequest, Model> {
 
         public Builder() {
             message = new RecipeDurationRequest();
@@ -57,6 +49,8 @@ public final class RecipeDurationRequest
         private int prepMinutes;
         private int cookHours;
         private int cookMinutes;
+
+        private Model() {}
 
         public int getPrepHours() {
             return prepHours;

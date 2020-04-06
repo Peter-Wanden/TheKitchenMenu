@@ -68,7 +68,8 @@ public class RecipePortions extends UseCase
     @Nonnull
     private final List<FailReasons> failReasons;
 
-    private String id = "";
+    private String dataId = "";
+    private String recipeId = "";
     private boolean isNewRequest;
 
     private RecipePortionsRequest.Model requestModel;
@@ -86,27 +87,28 @@ public class RecipePortions extends UseCase
         this.maxServings = maxServings;
         this.maxSittings = maxSittings;
 
-        requestModel = RecipePortionsRequest.Model.Builder.getDefault().build();
+        requestModel = new RecipePortionsRequest.Model.Builder().getDefault().build();
         failReasons = new ArrayList<>();
     }
 
     @Override
     protected <Q extends Request> void execute(Q request) {
-        RecipePortionsRequest portionsRequest = (RecipePortionsRequest) request;
-        System.out.println(TAG + portionsRequest);
+        RecipePortionsRequest r = (RecipePortionsRequest) request;
+        requestModel = r.getModel();
+        System.out.println(TAG + r);
 
-        requestModel = portionsRequest.getModel();
-
-        if (isNewRequest(portionsRequest.getDataId())) {
-            id = portionsRequest.getDataId();
-            loadData(id);
+        if (isNewRequest(r)) {
+            dataId = r.getDataId();
+            recipeId = r.getDomainId();
+            loadData(recipeId);
         } else {
+            setupUseCase();
             processChanges();
         }
     }
 
-    private boolean isNewRequest(String recipeId) {
-        return isNewRequest = !this.id.equals(recipeId);
+    private boolean isNewRequest(RecipePortionsRequest r) {
+        return isNewRequest = !r.getDomainId().equals(recipeId);
     }
 
     private void loadData(String recipeId) {
@@ -130,14 +132,20 @@ public class RecipePortions extends UseCase
 
     private RecipePortionsPersistenceModel createNewPersistenceModel() {
         long currentTime = timeProvider.getCurrentTimeInMills();
+        dataId = idProvider.getUId();
         return new RecipePortionsPersistenceModel.Builder().
-                setId(idProvider.getUId()).
-                setRecipeId(id).
+                setDataId(dataId).
+                setRecipeId(recipeId).
                 setServings(MIN_SERVINGS).
                 setSittings(MIN_SITTINGS).
                 setCreateDate(currentTime).
                 setLastUpdate(currentTime).
                 build();
+    }
+
+    private void setupUseCase() {
+        failReasons.clear();
+        isNewRequest = false;
     }
 
     private void processChanges() {
@@ -157,14 +165,12 @@ public class RecipePortions extends UseCase
         }
         if (servings < MIN_SERVINGS) {
             failReasons.add(FailReason.SERVINGS_TOO_LOW);
-        }
-        if (servings > maxServings) {
+        } else if (servings > maxServings) {
             failReasons.add(FailReason.SERVINGS_TOO_HIGH);
         }
         if (sittings < MIN_SITTINGS) {
             failReasons.add(FailReason.SITTINGS_TOO_LOW);
-        }
-        if (sittings > maxSittings) {
+        } else if (sittings > maxSittings) {
             failReasons.add(FailReason.SITTINGS_TOO_HIGH);
         }
         if (failReasons.isEmpty()) {
@@ -174,7 +180,8 @@ public class RecipePortions extends UseCase
 
     private void buildResponse() {
         RecipePortionsResponse response = new RecipePortionsResponse.Builder().
-                setId(id).
+                setDataId(dataId).
+                setDomainId(recipeId).
                 setMetadata(getMetadata()).
                 setModel(getResponseModel()).
                 build();
@@ -202,7 +209,7 @@ public class RecipePortions extends UseCase
             return RecipeMetadata.ComponentState.VALID_UNCHANGED;
         } else if (!isValid && isChanged()) {
             return RecipeMetadata.ComponentState.INVALID_CHANGED;
-        } else  {
+        } else {
             return RecipeMetadata.ComponentState.VALID_CHANGED;
         }
     }
@@ -220,7 +227,7 @@ public class RecipePortions extends UseCase
     }
 
     private RecipePortionsPersistenceModel updatePersistenceFromRequestModel() {
-        return RecipePortionsPersistenceModel.Builder.
+        return new RecipePortionsPersistenceModel.Builder().
                 basedOnPersistenceModel(persistenceModel).
                 setSittings(requestModel.getSittings()).
                 setServings(requestModel.getServings()).
@@ -247,18 +254,11 @@ public class RecipePortions extends UseCase
 
     private void sendResponse(RecipePortionsResponse response) {
         System.out.println(TAG + response);
-        resetState();
-
         if (response.getMetadata().getFailReasons().contains(CommonFailReason.NONE)) {
             getUseCaseCallback().onSuccess(response);
         } else {
             getUseCaseCallback().onError(response);
         }
-    }
-
-    private void resetState() {
-        failReasons.clear();
-        isNewRequest = false;
     }
 
     private void save(RecipePortionsPersistenceModel model) {

@@ -14,6 +14,7 @@ import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValida
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidatorRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidatorResponse;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
+import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,7 +26,8 @@ import javax.annotation.Nonnull;
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.*;
 import static com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator.*;
 
-public class RecipeIdentity extends UseCase
+public class RecipeIdentity
+        extends UseCase
         implements DataAccess.GetDomainModelCallback<RecipeIdentityPersistenceModel> {
 
     private static final String TAG = "tkm-" + RecipeIdentity.class.getSimpleName() + ": ";
@@ -66,6 +68,8 @@ public class RecipeIdentity extends UseCase
     @Nonnull
     private final RepositoryRecipeIdentity repository;
     @Nonnull
+    private final UniqueIdProvider idProvider;
+    @Nonnull
     private final TimeProvider timeProvider;
     @Nonnull
     private final UseCaseHandler handler;
@@ -74,17 +78,20 @@ public class RecipeIdentity extends UseCase
     @Nonnull
     private final List<FailReasons> failReasons;
 
-    private String id = "";
+    private String dataId = "";
+    private String recipeId = "";
     private boolean isNewRequest;
 
     private RecipeIdentityRequest.Model requestModel;
     private RecipeIdentityPersistenceModel persistenceModel;
 
     public RecipeIdentity(@Nonnull RepositoryRecipeIdentity repository,
+                          @Nonnull UniqueIdProvider idProvider,
                           @Nonnull TimeProvider timeProvider,
                           @Nonnull UseCaseHandler handler,
                           @Nonnull TextValidator textValidator) {
         this.repository = repository;
+        this.idProvider = idProvider;
         this.timeProvider = timeProvider;
         this.handler = handler;
         this.textValidator = textValidator;
@@ -95,20 +102,21 @@ public class RecipeIdentity extends UseCase
 
     @Override
     protected <Q extends Request> void execute(Q request) {
-        RecipeIdentityRequest identityRequest = (RecipeIdentityRequest) request;
-        requestModel = identityRequest.getModel();
-        System.out.println(TAG + identityRequest);
+        RecipeIdentityRequest r = (RecipeIdentityRequest) request;
+        requestModel = r.getModel();
+        System.out.println(TAG + r);
 
-        if (isNewRequest(identityRequest.getDataId())) {
-            id = identityRequest.getDataId();
-            loadData(id);
+        if (isNewRequest(r)) {
+            dataId = r.getDataId();
+            recipeId = r.getDomainId();
+            loadData(recipeId);
         } else {
             processChanges();
         }
     }
 
-    private boolean isNewRequest(String recipeId) {
-        return isNewRequest = !id.equals(recipeId);
+    private boolean isNewRequest(RecipeIdentityRequest r) {
+        return isNewRequest = !r.getDomainId().equals(recipeId);
     }
 
     private void loadData(String recipeId) {
@@ -126,14 +134,16 @@ public class RecipeIdentity extends UseCase
     public void onModelUnavailable() {
         persistenceModel = createNewPersistenceModel();
         failReasons.add(CommonFailReason.DATA_UNAVAILABLE);
-
         buildResponse();
     }
 
     private RecipeIdentityPersistenceModel createNewPersistenceModel() {
         long currentTime = timeProvider.getCurrentTimeInMills();
-        return RecipeIdentityPersistenceModel.Builder.getDefault().
-                setId(id).
+        dataId = idProvider.getUId();
+        return new RecipeIdentityPersistenceModel.Builder().
+                getDefault().
+                setDataId(dataId).
+                setDomainId(recipeId).
                 setCreateDate(currentTime).
                 setLastUpdate(currentTime).
                 build();
@@ -213,7 +223,8 @@ public class RecipeIdentity extends UseCase
 
     private void buildResponse() {
         RecipeIdentityResponse response = new RecipeIdentityResponse.Builder().
-                setId(id).
+                setDataId(dataId).
+                setDomainId(recipeId).
                 setMetadata(getMetadata()).
                 setModel(getResponseModel()).
                 build();
@@ -261,7 +272,7 @@ public class RecipeIdentity extends UseCase
     }
 
     private RecipeIdentityPersistenceModel updatePersistenceFromRequestModel() {
-        return RecipeIdentityPersistenceModel.Builder.
+        return new RecipeIdentityPersistenceModel.Builder().
                 basedOnPersistenceModel(persistenceModel).
                 setTitle(requestModel.getTitle()).
                 setDescription(requestModel.getDescription()).
@@ -270,15 +281,15 @@ public class RecipeIdentity extends UseCase
     }
 
     private RecipeIdentityResponse.Model getResponseModel() {
-            return new RecipeIdentityResponse.Model.Builder().
-                    setTitle(isNewRequest ?
-                            persistenceModel.getTitle() :
-                            requestModel.getTitle()).
+        return new RecipeIdentityResponse.Model.Builder().
+                setTitle(isNewRequest ?
+                        persistenceModel.getTitle() :
+                        requestModel.getTitle()).
 
-                    setDescription(isNewRequest ?
-                            persistenceModel.getDescription():
-                            requestModel.getDescription()).
-                    build();
+                setDescription(isNewRequest ?
+                        persistenceModel.getDescription() :
+                        requestModel.getDescription()).
+                build();
     }
 
     private void sendResponse(RecipeIdentityResponse response) {

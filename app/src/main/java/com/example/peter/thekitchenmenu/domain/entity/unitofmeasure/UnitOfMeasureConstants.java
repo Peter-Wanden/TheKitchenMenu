@@ -21,7 +21,7 @@ public class UnitOfMeasureConstants {
 
     // density
     public static final double MIN_CONVERSION_FACTOR = .001;
-    public static final double NO_CONVERSION_FACTOR = 1;
+    public static final double DEFAULT_CONVERSION_FACTOR = 1;
     public static final double MAX_CONVERSION_FACTOR = 1.5;
 
     // region imperial mass constants --------------------------------------------------------------

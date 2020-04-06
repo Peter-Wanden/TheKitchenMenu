@@ -1,50 +1,39 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata;
 
 import com.example.peter.thekitchenmenu.domain.model.FailReasons;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainMessageBaseModelMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainModel;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadata;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseResponse;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.*;
 
-public final class RecipeMetadataResponse extends UseCaseResponse<RecipeMetadataResponse.Model> {
+public final class RecipeMetadataResponse
+        extends UseCaseDomainMessageBaseModelMetadata<RecipeMetadataResponse.Model>
+        implements UseCase.Response {
 
-    @Override
-    public String toString() {
-        return "RecipeMetadataResponse{" +
-                "id='" + id + '\'' +
-                ", metadata=" + metadata +
-                ", model=" + model +
-                '}';
-    }
+    private RecipeMetadataResponse() {}
 
-    private RecipeMetadataResponse() {
-    }
-
-    public static class Builder extends UseCaseResponseBuilder<
-            Builder,
-            RecipeMetadataResponse,
-            Model> {
+    public static class Builder
+            extends UseCaseMessageBuilderMetadata<Builder, RecipeMetadataResponse, Model> {
 
         public Builder() {
-            response = new RecipeMetadataResponse();
+            message = new RecipeMetadataResponse();
         }
 
         public Builder getDefault() {
-            return new Builder().
-                    setId("").
-                    setMetadata(new UseCaseMetadata.Builder().
-                            getDefault().
-                            build()).
-                    setModel(new Model.Builder().
-                            getDefault().
-                            build());
+            message.dataId = "";
+            message.domainId = "";
+            message.metadata = new UseCaseMetadata.Builder().getDefault().build();
+            message.model = new Model.Builder().getDefault().build();
+            return self();
         }
 
         @Override
@@ -61,8 +50,7 @@ public final class RecipeMetadataResponse extends UseCaseResponse<RecipeMetadata
         private long createDate;
         private long lastUpdate;
 
-        private Model() {
-        }
+        private Model() {}
 
         @Nonnull
         public String getParentId() {
@@ -90,6 +78,26 @@ public final class RecipeMetadataResponse extends UseCaseResponse<RecipeMetadata
         }
 
         @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Model model = (Model) o;
+            return createDate == model.createDate &&
+                    lastUpdate == model.lastUpdate &&
+                    Objects.equals(parentId, model.parentId) &&
+                    state == model.state &&
+                    Objects.equals(failReasons, model.failReasons) &&
+                    Objects.equals(componentStates, model.componentStates);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(parentId, state, failReasons, componentStates, createDate,
+                    lastUpdate);
+        }
+
+        @Nonnull
+        @Override
         public String toString() {
             return "Model{" +
                     "parentId='" + parentId + '\'' +
@@ -101,9 +109,7 @@ public final class RecipeMetadataResponse extends UseCaseResponse<RecipeMetadata
                     '}';
         }
 
-        public static class Builder extends DomainModelBuilder<
-                Builder,
-                Model> {
+        public static class Builder extends DomainModelBuilder<Builder, Model> {
 
             public Builder() {
                 model = new Model();
@@ -114,6 +120,8 @@ public final class RecipeMetadataResponse extends UseCaseResponse<RecipeMetadata
                 model.state = RecipeState.INVALID_UNCHANGED;
                 model.failReasons = getDefaultFailReasons();
                 model.componentStates = new HashMap<>();
+                model.createDate = 0L;
+                model.lastUpdate = 0L;
                 return self();
             }
 

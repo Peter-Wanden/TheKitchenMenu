@@ -85,9 +85,10 @@ public class Ingredient
     @Nonnull
     private final List<FailReasons> failReasons;
 
-    private String id = "";
-    private String ingredientId;
+    private String dataId = "";
+    private String ingredientId = "";
     private boolean isNewRequest;
+
     private IngredientRequest request;
     private IngredientRequest.Model requestModel;
     private IngredientPersistenceModel persistenceModel;
@@ -112,20 +113,21 @@ public class Ingredient
 
     @Override
     protected <Q extends Request> void execute(Q request) {
-        IngredientRequest ingredientRequest = (IngredientRequest) request;
-        this.request = ingredientRequest;
-        System.out.println(TAG + "request:" + ingredientRequest);
+        IngredientRequest r = (IngredientRequest) request;
+        this.request = r;
+        System.out.println(TAG + "request:" + r);
 
-        if (isNewRequest(ingredientRequest.getIngredientId())) {
-            ingredientId = ingredientRequest.getIngredientId();
+        if (isNewRequest(r)) {
+            dataId = r.getDataId();
+            ingredientId = r.getDomainId();
             loadData(ingredientId);
         } else {
             processChanges();
         }
     }
 
-    private boolean isNewRequest(String ingredientId) {
-        return isNewRequest = !this.ingredientId.equals(ingredientId);
+    private boolean isNewRequest(IngredientRequest r) {
+        return isNewRequest = !r.getDomainId().equals(ingredientId);
     }
 
     private void loadData(String ingredientId) {
@@ -153,13 +155,13 @@ public class Ingredient
 
     private IngredientPersistenceModel createNewPersistenceModel() {
         long currentTime = timeProvider.getCurrentTimeInMills();
-        id = idProvider.getUId();
+        dataId = idProvider.getUId();
         ingredientId = idProvider.getUId();
 
         return new IngredientPersistenceModel.Builder().
                 getDefault().
-                setId(id).
-                setIngredientId(ingredientId).
+                setDataId(dataId).
+                setDomainId(ingredientId).
                 setCreateDate(currentTime).
                 setLastUpdate(currentTime).
                 build();
@@ -176,7 +178,7 @@ public class Ingredient
     private void checkForDuplicateName() {
         duplicateNameChecker.checkForDuplicateAndNotify(
                 request.getModel().getName(),
-                request.getIngredientId(),
+                request.getDomainId(),
 
                 duplicateId -> {
                     if (!NO_DUPLICATE_FOUND.equals(duplicateId)) {
@@ -252,8 +254,8 @@ public class Ingredient
 
     private void buildResponse() {
         IngredientResponse response = new IngredientResponse.Builder().
-                setId(id).
-                setIngredientId(ingredientId).
+                setDataId(dataId).
+                setDomainId(ingredientId).
                 setMetadata(getMetadata()).
                 setModel(getResponseModel()).
                 build();
@@ -292,7 +294,7 @@ public class Ingredient
     }
 
     private boolean isEditable() {
-        return Constants.getUserId().equals(persistenceModel.getUserId());
+        return Constants.getUserId().equals(persistenceModel.getCreatedBy());
     }
 
     private boolean isNameChanged() {

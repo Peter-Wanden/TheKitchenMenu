@@ -77,7 +77,7 @@ public class IngredientEditorViewModel extends ViewModel {
 
             IngredientPersistenceModel model = new IngredientPersistenceModel.Builder().
                     getDefault().
-                    setIngredientId(ingredientId).
+                    setDomainId(ingredientId).
                     build();
 
             executeUseCaseIngredient(model);

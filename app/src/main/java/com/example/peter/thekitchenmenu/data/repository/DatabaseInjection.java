@@ -12,6 +12,7 @@ import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeF
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeIdentity;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeIngredient;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeComponentState;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeMetadata;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeMetadataModel;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.datasource.IngredientLocalDataSource;
@@ -69,12 +70,12 @@ public class DatabaseInjection {
         );
     }
 
-    public static RepositoryRecipeMetadataModel provideRecipeMetadataDataSource(
+    public static RepositoryRecipeMetadata provideRecipeMetadataDataSource(
             @Nonnull Context context) {
 
         TKMDatabase database = TKMDatabase.getInstance(context, new AppExecutors());
 
-        return RepositoryRecipeMetadataModel.getInstance(
+        return RepositoryRecipeMetadata.getInstance(
                 RecipeMetadataRemoteDataAccess.getInstance(),
                 RecipeMetadataLocalDataAccess.getInstance(
                         new AppExecutors(),

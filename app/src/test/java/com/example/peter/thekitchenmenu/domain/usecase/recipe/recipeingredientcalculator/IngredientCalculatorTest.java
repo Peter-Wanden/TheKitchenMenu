@@ -448,7 +448,7 @@ public class IngredientCalculatorTest {
         // Act
         handler.execute(SUT, requestUnitOfMeasureChange, getResponseCallback());
         // Assert - conversion factor has reset to default
-        assertEquals(UnitOfMeasureConstants.NO_CONVERSION_FACTOR,
+        assertEquals(UnitOfMeasureConstants.DEFAULT_CONVERSION_FACTOR,
                 actualResponse.getModel().getConversionFactor(), DELTA);
     }
 

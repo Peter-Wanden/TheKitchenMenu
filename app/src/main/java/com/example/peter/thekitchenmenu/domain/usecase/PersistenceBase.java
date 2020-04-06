@@ -1,9 +1,9 @@
-package com.example.peter.thekitchenmenu.domain.usecase.recipe;
+package com.example.peter.thekitchenmenu.domain.usecase;
 
 import com.example.peter.thekitchenmenu.domain.model.DomainPersistenceModel;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainModel;
 
-public abstract class RecipePersistenceModel
+public abstract class PersistenceBase
         extends UseCaseDomainModel
         implements DomainPersistenceModel {
 
