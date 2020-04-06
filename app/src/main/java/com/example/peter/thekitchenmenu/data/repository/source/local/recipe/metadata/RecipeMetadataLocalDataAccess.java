@@ -1,13 +1,13 @@
 package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata;
 
 import com.example.peter.thekitchenmenu.data.repository.DataAccess;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.dataadapters.DeleteAllAdapter;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.dataadapters.DeleteByDataIdAdapter;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.dataadapters.DeleteByDomainIdAdapter;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.dataadapters.GetAllLatestAdapter;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.dataadapters.GetByDataIdAdapter;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.dataadapters.GetLatestByDomainIdAdapter;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.dataadapters.SaveAdapter;
+import com.example.peter.thekitchenmenu.data.repository.dataadapter.DeleteAllAdapter;
+import com.example.peter.thekitchenmenu.data.repository.dataadapter.DeleteByDataIdAdapter;
+import com.example.peter.thekitchenmenu.data.repository.dataadapter.DeleteByDomainIdAdapter;
+import com.example.peter.thekitchenmenu.data.repository.dataadapter.GetAllLatestAdapter;
+import com.example.peter.thekitchenmenu.data.repository.dataadapter.GetByDataIdAdapter;
+import com.example.peter.thekitchenmenu.data.repository.dataadapter.GetLatestByDomainIdAdapter;
+import com.example.peter.thekitchenmenu.data.repository.dataadapter.SaveAdapter;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadataPersistenceModel;
 
 import java.util.List;

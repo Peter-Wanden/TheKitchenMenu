@@ -27,7 +27,7 @@ import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValida
 import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientDuplicateChecker;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredientcalculator.IngredientCalculator;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredient.RecipeIngredient;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -98,8 +98,8 @@ public class UseCaseFactory {
         return INSTANCE;
     }
 
-    public IngredientCalculator provideIngredientCalculator() {
-        return new IngredientCalculator(
+    public RecipeIngredient provideIngredientCalculator() {
+        return new RecipeIngredient(
                 recipePortionsRepository,
                 recipeIngredientRepository,
                 ingredientRepository,

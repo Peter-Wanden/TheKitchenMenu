@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredientcalculator;
+package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredient;
 
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModel;
@@ -7,7 +7,7 @@ import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public final class IngredientCalculatorRequest implements UseCase.Request {
+public final class RecipeIngredientRequest implements UseCase.Request {
     @Nonnull
     private final String recipeId;
     @Nonnull
@@ -17,10 +17,10 @@ public final class IngredientCalculatorRequest implements UseCase.Request {
     @Nonnull
     private final MeasurementModel model;
 
-    public IngredientCalculatorRequest(@Nonnull String recipeId,
-                                       @Nonnull String ingredientId,
-                                       @Nonnull String recipeIngredientId,
-                                       @Nonnull MeasurementModel model) {
+    public RecipeIngredientRequest(@Nonnull String recipeId,
+                                   @Nonnull String ingredientId,
+                                   @Nonnull String recipeIngredientId,
+                                   @Nonnull MeasurementModel model) {
         this.recipeId = recipeId;
         this.ingredientId = ingredientId;
         this.recipeIngredientId = recipeIngredientId;
@@ -51,7 +51,7 @@ public final class IngredientCalculatorRequest implements UseCase.Request {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        IngredientCalculatorRequest that = (IngredientCalculatorRequest) o;
+        RecipeIngredientRequest that = (RecipeIngredientRequest) o;
         return recipeId.equals(that.recipeId) &&
                 ingredientId.equals(that.ingredientId) &&
                 recipeIngredientId.equals(that.recipeIngredientId) &&
@@ -100,8 +100,8 @@ public final class IngredientCalculatorRequest implements UseCase.Request {
             return this;
         }
 
-        public IngredientCalculatorRequest build() {
-            return new IngredientCalculatorRequest(
+        public RecipeIngredientRequest build() {
+            return new RecipeIngredientRequest(
                     recipeId,
                     ingredientId,
                     recipeIngredientId,

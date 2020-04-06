@@ -62,7 +62,7 @@ public abstract class TKMDatabase extends RoomDatabase {
 
     public abstract ProductEntityDao productEntityDao();
     public abstract FavoriteProductEntityDao favoriteProductEntityDao();
-    public abstract RecipeMetadataParentEntityDao recipeEntityDao();
+    public abstract RecipeMetadataParentEntityDao recipeMetadataParentEntityDao();
     public abstract RecipeCourseEntityDao recipeCourseEntityDao();
     public abstract RecipeIdentityEntityDao recipeIdentityEntityDao();
     public abstract RecipeDurationEntityDao recipeDurationEntityDao();

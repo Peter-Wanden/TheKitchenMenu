@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredientcalculator;
+package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredient;
 
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModel;
@@ -7,16 +7,16 @@ import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredientcalculator.IngredientCalculator.*;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredient.RecipeIngredient.*;
 
-public final class IngredientCalculatorResponse implements UseCase.Response {
+public final class RecipeIngredientResponse implements UseCase.Response {
     @Nonnull
     private final MeasurementModel model;
     @Nonnull
     private final Result resultStatus;
 
-    public IngredientCalculatorResponse(@Nonnull MeasurementModel model,
-                                        @Nonnull Result resultStatus) {
+    public RecipeIngredientResponse(@Nonnull MeasurementModel model,
+                                    @Nonnull Result resultStatus) {
         this.model = model;
         this.resultStatus = resultStatus;
     }
@@ -35,7 +35,7 @@ public final class IngredientCalculatorResponse implements UseCase.Response {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        IngredientCalculatorResponse that = (IngredientCalculatorResponse) o;
+        RecipeIngredientResponse that = (RecipeIngredientResponse) o;
         return model.equals(that.model) &&
                 resultStatus == that.resultStatus;
     }

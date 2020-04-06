@@ -1,9 +1,8 @@
-package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredienteditor;
+package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeIngredientEditor;
 
 import android.content.res.Resources;
 
 import androidx.databinding.Bindable;
-import androidx.databinding.library.baseAdapters.BR;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.peter.thekitchenmenu.R;
@@ -14,9 +13,9 @@ import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModelBuil
 import com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.ConversionFactorStatusRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.ConversionFactorStatus;
 import com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.ConversionFactorStatusResponse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredientcalculator.IngredientCalculator;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredientcalculator.IngredientCalculatorRequest;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredientcalculator.IngredientCalculatorResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredient.RecipeIngredient;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredient.RecipeIngredientRequest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredient.RecipeIngredientResponse;
 import com.example.peter.thekitchenmenu.ui.ObservableViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.common.MeasurementErrorMessageMaker;
 import com.example.peter.thekitchenmenu.ui.utils.unitofmeasure.CountFraction;
@@ -35,7 +34,7 @@ public class RecipeIngredientCalculatorViewModel extends ObservableViewModel {
 
     private UseCaseHandler useCaseHandler;
     private NumberFormatter numberFormatter;
-    private IngredientCalculator ingredientCalculator;
+    private RecipeIngredient ingredientCalculator;
     private ConversionFactorStatus conversionFactorStatus;
 
     private static final int MEASUREMENT_ERROR = -1;
@@ -60,7 +59,7 @@ public class RecipeIngredientCalculatorViewModel extends ObservableViewModel {
 
     public RecipeIngredientCalculatorViewModel(
             @Nonnull UseCaseHandler useCaseHandler,
-            @Nonnull IngredientCalculator ingredientCalculator,
+            @Nonnull RecipeIngredient ingredientCalculator,
             @Nonnull ConversionFactorStatus useCaseConversionFactor,
             @Nonnull Resources resources,
             @Nonnull NumberFormatter numberFormatter,
@@ -344,7 +343,7 @@ public class RecipeIngredientCalculatorViewModel extends ObservableViewModel {
     }
 
     private void executeIngredientCalculator(MeasurementModel model) {
-        IngredientCalculatorRequest request = new IngredientCalculatorRequest(
+        RecipeIngredientRequest request = new RecipeIngredientRequest(
                 recipeId,
                 ingredientId,
                 recipeIngredientId,
@@ -353,15 +352,15 @@ public class RecipeIngredientCalculatorViewModel extends ObservableViewModel {
         useCaseHandler.execute(
                 ingredientCalculator,
                 request,
-                new UseCase.Callback<IngredientCalculatorResponse>() {
+                new UseCase.Callback<RecipeIngredientResponse>() {
                     @Override
-                    public void onSuccess(IngredientCalculatorResponse response) {
+                    public void onSuccess(RecipeIngredientResponse response) {
                         processModelResult(response.getModel());
                         processResultStatus(response.getResultStatus());
                     }
 
                     @Override
-                    public void onError(IngredientCalculatorResponse response) {
+                    public void onError(RecipeIngredientResponse response) {
                         processModelResult(response.getModel());
                         processResultStatus(response.getResultStatus());
                     }
@@ -397,18 +396,18 @@ public class RecipeIngredientCalculatorViewModel extends ObservableViewModel {
         measurementModel = resultModel;
     }
 
-    private void processResultStatus(IngredientCalculator.Result resultStatus) {
+    private void processResultStatus(RecipeIngredient.Result resultStatus) {
         hideAllInputErrors();
 
-        if (resultStatus == IngredientCalculator.Result.INVALID_CONVERSION_FACTOR) {
+        if (resultStatus == RecipeIngredient.Result.INVALID_CONVERSION_FACTOR) {
             conversionFactorErrorMessage = errorMessageMaker.getConversionFactorErrorMessage();
             notifyPropertyChanged(BR.conversionFactorErrorMessage);
 
-        } else if (resultStatus == IngredientCalculator.Result.INVALID_TOTAL_UNIT_ONE) {
+        } else if (resultStatus == RecipeIngredient.Result.INVALID_TOTAL_UNIT_ONE) {
             unitOneErrorMessage = errorMessageMaker.getMeasurementErrorMessage(measurementModel);
             notifyPropertyChanged(BR.unitOneErrorMessage);
 
-        } else if (resultStatus == IngredientCalculator.Result.INVALID_TOTAL_UNIT_TWO) {
+        } else if (resultStatus == RecipeIngredient.Result.INVALID_TOTAL_UNIT_TWO) {
             unitTwoErrorMessage = errorMessageMaker.getMeasurementErrorMessage(measurementModel);
             notifyPropertyChanged(BR.unitTwoErrorMessage);
         }

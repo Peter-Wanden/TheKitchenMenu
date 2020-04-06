@@ -80,7 +80,7 @@ public class RepositoryRecipePortions
             return null;
         else {
             for (RecipePortionsPersistenceModel model : cache.values()) {
-                if (recipeId.equals(model.getRecipeId())) {
+                if (recipeId.equals(model.getDomainId())) {
                     return model;
                 }
             }

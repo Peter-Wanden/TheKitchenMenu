@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredientcalculator;
+package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredient;
 
 import android.annotation.SuppressLint;
 
@@ -18,6 +18,7 @@ import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasur
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModel;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortionsPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
@@ -29,9 +30,9 @@ import javax.annotation.Nonnull;
 /**
  * Calculates the measurement of an ingredient for a single portion of a recipe.
  */
-public class IngredientCalculator extends UseCase {
+public class RecipeIngredient extends UseCase {
 
-    private static final String TAG = "tkm-" + IngredientCalculator.class.getSimpleName() + ": ";
+    private static final String TAG = "tkm-" + RecipeIngredient.class.getSimpleName() + ": ";
 
     public enum Result {
         QUANTITY_DATA_UNAVAILABLE,
@@ -82,9 +83,9 @@ public class IngredientCalculator extends UseCase {
 
     // TODO -------------------------- USE A RECIPE FOR THE DATA HERE ---------------------- TODO //
     @Nonnull
-    private final RepositoryRecipeIngredient recipeIngredientRepository; // TODO - Use the use cases for this data
-    @Nonnull
-    private final RepositoryRecipePortions portionsRepository; // TODO - Or use a recipe instance
+    private final RepositoryRecipeIngredient recipeIngredientRepository;
+
+    private  RepositoryRecipePortions portionsRepository; // TODO - Or use a recipe instance
     @Nonnull
     private final RepositoryIngredient ingredientRepository; // TODO - for all three??
     @Nonnull
@@ -100,26 +101,27 @@ public class IngredientCalculator extends UseCase {
     private boolean totalUnitTwoChanged;
     private boolean isTotalUnitOneSet;
     private boolean isTotalUnitTwoSet;
+    private int numberOfPortions;
 
     private boolean portionsChanged;
     private boolean isPortionsSet;
 
+    private String dataId = "";
     private String recipeId = "";
     private String ingredientId = "";
     private String recipeIngredientId = "";
-    private int numberOfPortions;
 
     private MeasurementModel modelIn;
     private MeasurementModel existingModel;
-    private RecipeIngredientEntity quantityEntity;
+    private RecipeIngredientPersistenceModel persistenceModel;
     private IngredientEntity ingredientEntity;
 
-    public IngredientCalculator(@Nonnull RepositoryRecipePortions portionsRepository,
-                                @Nonnull RepositoryRecipeIngredient recipeIngredientRepository,
-                                @Nonnull RepositoryIngredient ingredientRepository,
-                                @Nonnull UniqueIdProvider idProvider,
-                                @Nonnull TimeProvider timeProvider) {
-        this.portionsRepository = portionsRepository;
+    public RecipeIngredient(@Nonnull Recipe recipe,
+                            @Nonnull RepositoryRecipeIngredient recipeIngredientRepository,
+                            @Nonnull RepositoryIngredient ingredientRepository,
+                            @Nonnull UniqueIdProvider idProvider,
+                            @Nonnull TimeProvider timeProvider) {
+//        this.portionsRepository = portionsRepository;
         this.recipeIngredientRepository = recipeIngredientRepository;
         this.ingredientRepository = ingredientRepository;
         this.idProvider = idProvider;
@@ -128,13 +130,14 @@ public class IngredientCalculator extends UseCase {
 
     @Override
     protected <Q extends Request> void execute(Q request) {
-        IngredientCalculatorRequest icr = (IngredientCalculatorRequest) request;
+        RecipeIngredientRequest r = (RecipeIngredientRequest) request;
 
-        System.out.println(TAG + icr);
+        System.out.println(TAG + r);
         if (isNewInstantiation()) {
-            extractIdsAndStart(icr);
+            extractIdsAndStart(r);
         } else {
-            processModel(icr.getModel());
+            setupUseCase();
+            processModel(r.getModel());
         }
     }
 
@@ -142,7 +145,7 @@ public class IngredientCalculator extends UseCase {
         return recipeIngredientId.isEmpty();
     }
 
-    private void extractIdsAndStart(IngredientCalculatorRequest request) {
+    private void extractIdsAndStart(RecipeIngredientRequest request) {
         if (isRecipeIngredientIdProvided(request)) {
             start(request.getRecipeIngredientId());
         } else {
@@ -150,31 +153,21 @@ public class IngredientCalculator extends UseCase {
         }
     }
 
-    private boolean isRecipeIngredientIdProvided(IngredientCalculatorRequest request) {
+    private boolean isRecipeIngredientIdProvided(RecipeIngredientRequest request) {
         return !request.getRecipeIngredientId().isEmpty();
     }
 
     private void start(String recipeId, String ingredientId) {
         this.recipeId = recipeId;
         this.ingredientId = ingredientId;
-        quantityEntity = createNewRecipeIngredientQuantityEntity();
-        recipeIngredientId = quantityEntity.getDataId();
+        persistenceModel = createNewPersistenceModel();
+        recipeIngredientId = persistenceModel.getDataId();
         loadIngredient();
     }
 
-    private RecipeIngredientEntity createNewRecipeIngredientQuantityEntity() {
+    private RecipeIngredientPersistenceModel createNewPersistenceModel() {
         long currentTime = timeProvider.getCurrentTimeInMills();
-        return new RecipeIngredientEntity(
-                idProvider.getUId(),
-                recipeId,
-                ingredientId,
-                "",
-                0,
-                0,
-                Constants.getUserId(),
-                currentTime,
-                currentTime
-        );
+        return new RecipeIngredientPersistenceModel();
     }
 
     private void start(String recipeIngredientId) {
@@ -183,40 +176,40 @@ public class IngredientCalculator extends UseCase {
     }
 
     private void loadRecipeIngredient(String recipeIngredientId) {
-        recipeIngredientRepository.getByDataId(
-                recipeIngredientId,
-                new PrimitiveDataSource.GetEntityCallback<RecipeIngredientEntity>() {
-                    @Override
-                    public void onEntityLoaded(RecipeIngredientEntity entity) {
-                        recipeId = entity.getRecipeId();
-                        ingredientId = entity.getIngredientId();
-                        IngredientCalculator.this.quantityEntity = entity;
-                        loadIngredient();
-                    }
-
-                    @Override
-                    public void onDataUnavailable() {
-                        returnDataNotAvailable(Result.QUANTITY_DATA_UNAVAILABLE);
-                    }
-                });
+//        recipeIngredientRepository.getByDataId(
+//                recipeIngredientId,
+//                new PrimitiveDataSource.GetEntityCallback<RecipeIngredientEntity>() {
+//                    @Override
+//                    public void onEntityLoaded(RecipeIngredientEntity entity) {
+//                        recipeId = entity.getRecipeId();
+//                        ingredientId = entity.getIngredientId();
+//                         RecipeIngredient.this.persistenceModel = entity;
+//                        loadIngredient();
+//                    }
+//
+//                    @Override
+//                    public void onDataUnavailable() {
+//                        returnDataUnAvailable(Result.QUANTITY_DATA_UNAVAILABLE);
+//                    }
+//                });
     }
 
     private void loadIngredient() {
-        ingredientRepository.getByDataId(
-                ingredientId,
-                new PrimitiveDataSource.GetEntityCallback<IngredientEntity>() {
-                    @Override
-                    public void onEntityLoaded(IngredientEntity entity) {
-                        ingredientId = entity.getDataId();
-                        IngredientCalculator.this.ingredientEntity = entity;
-                        loadPortions();
-                    }
-
-                    @Override
-                    public void onDataUnavailable() {
-                        returnDataNotAvailable(Result.INGREDIENT_DATA_UNAVAILABLE);
-                    }
-                });
+//        ingredientRepository.getByDataId(
+//                ingredientId,
+//                new PrimitiveDataSource.GetEntityCallback<IngredientEntity>() {
+//                    @Override
+//                    public void onEntityLoaded(IngredientEntity entity) {
+//                        ingredientId = entity.getDataId();
+//                        RecipeIngredient.this.ingredientEntity = entity;
+//                        loadPortions();
+//                    }
+//
+//                    @Override
+//                    public void onDataUnavailable() {
+//                        returnDataUnAvailable(Result.INGREDIENT_DATA_UNAVAILABLE);
+//                    }
+//                });
     }
 
     private void loadPortions() {
@@ -232,13 +225,13 @@ public class IngredientCalculator extends UseCase {
 
                     @Override
                     public void onModelUnavailable() {
-                        returnDataNotAvailable(Result.PORTIONS_DATA_UNAVAILABLE);
+                        returnDataUnAvailable(Result.PORTIONS_DATA_UNAVAILABLE);
                     }
                 });
     }
 
-    private void returnDataNotAvailable(Result status) {
-        IngredientCalculatorResponse response = new IngredientCalculatorResponse(
+    private void returnDataUnAvailable(Result status) {
+        RecipeIngredientResponse response = new RecipeIngredientResponse(
                 UnitOfMeasureConstants.DEFAULT_MEASUREMENT_MODEL,
                 status);
         System.out.println(TAG + response);
@@ -246,19 +239,26 @@ public class IngredientCalculator extends UseCase {
     }
 
     private void setupUnitOfMeasure() {
-        int subtypeAsInt = quantityEntity.getMeasurementSubtype();
-        MeasurementSubtype subType = MeasurementSubtype.fromInt(subtypeAsInt);
+//        int subtypeAsInt = persistenceModel.getMeasurementSubtype();
+//        MeasurementSubtype subType = MeasurementSubtype.fromInt(subtypeAsInt);
+//
+//        unitOfMeasure = subType.getMeasurementClass();
+//        setConversionFactor();
+//        setPortions();
+//
+//        if (unitOfMeasure.isItemBaseUnitsSet(persistenceModel.getItemBaseUnits())) {
+//            isTotalUnitOneSet = true;
+//            isTotalUnitTwoSet = true;
+//        }
+//
+//        updateExistingModel();
+    }
 
-        unitOfMeasure = subType.getMeasurementClass();
-        setConversionFactor();
-        setPortions();
-
-        if (unitOfMeasure.isItemBaseUnitsSet(quantityEntity.getItemBaseUnits())) {
-            isTotalUnitOneSet = true;
-            isTotalUnitTwoSet = true;
-        }
-
-        updateExistingModel();
+    private void setupUseCase() {
+        portionsChanged = false;
+        conversionFactorChanged = false;
+        totalUnitOneChanged = false;
+        totalUnitTwoChanged = false;
     }
 
     private void processModel(MeasurementModel modelIn) {
@@ -318,7 +318,7 @@ public class IngredientCalculator extends UseCase {
     }
 
     private void saveConversionFactorToIngredient() {
-        ingredientRepository.save(getUpdatedIngredientEntity());
+//        ingredientRepository.save(getUpdatedIngredientEntity());
     }
 
     private boolean isTotalUnitOneChanged() {
@@ -364,14 +364,13 @@ public class IngredientCalculator extends UseCase {
 
     private void returnResult() {
         saveIfValid();
-        IngredientCalculatorResponse response = getResponse();
-        resetResults();
+        RecipeIngredientResponse response = getResponse();
         System.out.println(TAG + response);
         getUseCaseCallback().onSuccess(response);
     }
 
-    private IngredientCalculatorResponse getResponse() {
-        return new IngredientCalculatorResponse(
+    private RecipeIngredientResponse getResponse() {
+        return new RecipeIngredientResponse(
                 existingModel,
                 getResultStatus());
     }
@@ -411,12 +410,6 @@ public class IngredientCalculator extends UseCase {
         return Result.RESULT_OK;
     }
 
-    private void resetResults() {
-        portionsChanged = false;
-        conversionFactorChanged = false;
-        totalUnitOneChanged = false;
-        totalUnitTwoChanged = false;
-    }
 
     private void saveIfValid() {
         if (quantityEntityHasChanged() && unitOfMeasure.isValidMeasurement()) {
@@ -425,41 +418,43 @@ public class IngredientCalculator extends UseCase {
     }
 
     private boolean quantityEntityHasChanged() {
-        if (quantityEntity != null) {
-            RecipeIngredientEntity updatedEntity = new RecipeIngredientEntity(
-                    quantityEntity.getDataId(),
-                    quantityEntity.getRecipeId(),
-                    quantityEntity.getIngredientId(),
-                    quantityEntity.getProductId(),
-                    unitOfMeasure.getItemBaseUnits(),
-                    unitOfMeasure.getMeasurementSubtype().asInt(),
-                    Constants.getUserId(),
-                    quantityEntity.getCreateDate(),
-                    quantityEntity.getLastUpdate()
-            );
-            return !quantityEntity.equals(updatedEntity);
-
-        } else
-            return false;
+//        if (persistenceModel != null) {
+//            RecipeIngredientEntity updatedEntity = new RecipeIngredientEntity(
+//                    persistenceModel.getDataId(),
+//                    persistenceModel.getRecipeId(),
+//                    persistenceModel.getIngredientId(),
+//                    persistenceModel.getProductId(),
+//                    unitOfMeasure.getItemBaseUnits(),
+//                    unitOfMeasure.getMeasurementSubtype().asInt(),
+//                    Constants.getUserId(),
+//                    persistenceModel.getCreateDate(),
+//                    persistenceModel.getLastUpdate()
+//            );
+//            return !persistenceModel.equals(updatedEntity);
+//
+//        } else
+//            return false;
+        return false;
     }
 
     private RecipeIngredientEntity updatedRecipeIngredientEntity() {
+
         return new RecipeIngredientEntity(
-                quantityEntity.getDataId(),
-                quantityEntity.getRecipeId(),
-                quantityEntity.getIngredientId(),
-                quantityEntity.getProductId(),
+                persistenceModel.getDataId(),
+                "persistenceModel.getRecipeId()",
+                "persistenceModel.getIngredientId()",
+                "persistenceModel.getProductId()",
                 unitOfMeasure.getItemBaseUnits(),
                 unitOfMeasure.getMeasurementSubtype().asInt(),
-                quantityEntity.getCreatedBy(),
-                quantityEntity.getCreateDate(),
+                "persistenceModel.getCreatedBy()",
+                0L, //persistenceModel.getCreateDate(),
                 timeProvider.getCurrentTimeInMills()
         );
     }
 
     private void save(RecipeIngredientEntity quantityEntity) {
-        this.quantityEntity = quantityEntity;
-        recipeIngredientRepository.save(quantityEntity);
+//        this.persistenceModel = quantityEntity;
+//        recipeIngredientRepository.save(quantityEntity);
     }
 
     // todo - this should only be accessible through interface

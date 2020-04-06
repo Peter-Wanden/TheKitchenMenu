@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredientcalculator;
+package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredient;
 
 import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
 import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.IngredientEntity;
@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants.*;
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredientcalculator.IngredientCalculator.*;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredient.RecipeIngredient.*;
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.assertEquals;
 
@@ -45,7 +45,7 @@ public class IngredientCalculatorTest {
     private final String NO_RECIPE_INGREDIENT_ID = "";
     private final String NO_RECIPE_ID = "";
 
-    private List<IngredientCalculatorResponse> responses = new ArrayList<>();
+    private List<RecipeIngredientResponse> responses = new ArrayList<>();
 
     // region - RECIPE INGREDIENT QUANTITY TEST DATA
     private RecipeIngredientEntity QUANTITY_NEW_INVALID =
@@ -87,115 +87,115 @@ public class IngredientCalculatorTest {
     // endregion - INGREDIENT TEST DATA
 
     // region - REQUEST & RESPONSE PAIRS TEST DATA
-    private IngredientCalculatorRequest REQUEST_NEW_EMPTY_FOUR_PORTIONS =
+    private RecipeIngredientRequest REQUEST_NEW_EMPTY_FOUR_PORTIONS =
             TestDataUseCasePortionCalculatorRequestResponse.
                     getRequestEmptyFourPortions();
-    private IngredientCalculatorResponse RESPONSE_NEW_EMPTY_FOUR_PORTIONS =
+    private RecipeIngredientResponse RESPONSE_NEW_EMPTY_FOUR_PORTIONS =
             TestDataUseCasePortionCalculatorRequestResponse.
                     getResponseEmptyFourPortions();
 
-    private IngredientCalculatorRequest REQUEST_NEW_INVALID_UNIT_ONE =
+    private RecipeIngredientRequest REQUEST_NEW_INVALID_UNIT_ONE =
             TestDataUseCasePortionCalculatorRequestResponse.
                     getRequestInvalidTotalUnitOne();
-    private IngredientCalculatorResponse RESPONSE_NEW_INVALID_UNIT_ONE =
+    private RecipeIngredientResponse RESPONSE_NEW_INVALID_UNIT_ONE =
             TestDataUseCasePortionCalculatorRequestResponse.
                     getResponseInvalidTotalUnitOne();
 
-    private IngredientCalculatorRequest REQUEST_NEW_VALID_UNIT_ONE =
+    private RecipeIngredientRequest REQUEST_NEW_VALID_UNIT_ONE =
             TestDataUseCasePortionCalculatorRequestResponse.
                     getRequestValidTotalUnitOne();
-    private IngredientCalculatorResponse RESPONSE_NEW_VALID_UNIT_ONE =
+    private RecipeIngredientResponse RESPONSE_NEW_VALID_UNIT_ONE =
             TestDataUseCasePortionCalculatorRequestResponse.
                     getResponseValidTotalUnitOne();
 
-    private IngredientCalculatorRequest REQUEST_NEW_INVALID_UNIT_TWO =
+    private RecipeIngredientRequest REQUEST_NEW_INVALID_UNIT_TWO =
             TestDataUseCasePortionCalculatorRequestResponse.
                     getRequestInvalidTotalUnitTwo();
-    private IngredientCalculatorResponse RESPONSE_NEW_INVALID_UNIT_TWO =
+    private RecipeIngredientResponse RESPONSE_NEW_INVALID_UNIT_TWO =
             TestDataUseCasePortionCalculatorRequestResponse.
                     getResponseInvalidTotalUnitTwo();
 
-    private IngredientCalculatorRequest REQUEST_NEW_VALID_UNIT_TWO =
+    private RecipeIngredientRequest REQUEST_NEW_VALID_UNIT_TWO =
             TestDataUseCasePortionCalculatorRequestResponse.
                     getRequestValidTotalUnitTwo();
-    private IngredientCalculatorResponse RESPONSE_NEW_VALID_UNIT_TWO =
+    private RecipeIngredientResponse RESPONSE_NEW_VALID_UNIT_TWO =
             TestDataUseCasePortionCalculatorRequestResponse.
                     getResponseValidTotalUnitTwo();
 
-    private IngredientCalculatorRequest REQUEST_NEW_UNIT_OF_MEASURE_CHANGE_IMPERIAL_SPOON =
+    private RecipeIngredientRequest REQUEST_NEW_UNIT_OF_MEASURE_CHANGE_IMPERIAL_SPOON =
             TestDataUseCasePortionCalculatorRequestResponse.
                     getRequestUnitOfMeasureChangeImperialSpoon();
-    private IngredientCalculatorResponse RESPONSE_NEW_UNIT_OF_MEASURE_CHANGE_IMPERIAL_SPOON =
+    private RecipeIngredientResponse RESPONSE_NEW_UNIT_OF_MEASURE_CHANGE_IMPERIAL_SPOON =
             TestDataUseCasePortionCalculatorRequestResponse.
                     getResponseUnitOfMeasureChangeImperialSpoon();
 
-    private IngredientCalculatorRequest REQUEST_NEW_VALID_IMPERIAL_SPOON_UNIT_ONE_UPDATED_HALF_SPOON =
+    private RecipeIngredientRequest REQUEST_NEW_VALID_IMPERIAL_SPOON_UNIT_ONE_UPDATED_HALF_SPOON =
             TestDataUseCasePortionCalculatorRequestResponse.
                     getRequestNewValidImperialSpoonUnitOneUpdatedHalfSpoon();
-    private IngredientCalculatorResponse RESPONSE_NEW_VALID_IMPERIAL_SPOON_UNIT_ONE_UPDATED_HALF_SPOON =
+    private RecipeIngredientResponse RESPONSE_NEW_VALID_IMPERIAL_SPOON_UNIT_ONE_UPDATED_HALF_SPOON =
             TestDataUseCasePortionCalculatorRequestResponse.
                     getResponseNewValidImperialSpoonUnitOneUpdatedHalfSpoon();
 
-    private IngredientCalculatorRequest REQUEST_NEW_INVALID_IMPERIAL_SPOON_CONVERSION_FACTOR =
+    private RecipeIngredientRequest REQUEST_NEW_INVALID_IMPERIAL_SPOON_CONVERSION_FACTOR =
             TestDataUseCasePortionCalculatorRequestResponse.
                     getRequestNewValidImperialSpoonInvalidConversionFactor();
-    private IngredientCalculatorResponse RESPONSE_NEW_INVALID_IMPERIAL_SPOON_CONVERSION_FACTOR =
+    private RecipeIngredientResponse RESPONSE_NEW_INVALID_IMPERIAL_SPOON_CONVERSION_FACTOR =
             TestDataUseCasePortionCalculatorRequestResponse.
                     getResponseNewValidImperialSpoonInvalidConversionFactor();
 
-    private IngredientCalculatorRequest REQUEST_NEW_VALID_IMPERIAL_SPOON_CONVERSION_FACTOR =
+    private RecipeIngredientRequest REQUEST_NEW_VALID_IMPERIAL_SPOON_CONVERSION_FACTOR =
             TestDataUseCasePortionCalculatorRequestResponse.
                     getRequestNewValidImperialSpoonValidConversionFactor();
-    private IngredientCalculatorResponse RESPONSE_NEW_VALID_IMPERIAL_SPOON_CONVERSION_FACTOR =
+    private RecipeIngredientResponse RESPONSE_NEW_VALID_IMPERIAL_SPOON_CONVERSION_FACTOR =
             TestDataUseCasePortionCalculatorRequestResponse.
                     getResponseNewValidImperialSpoonValidConversionFactor();
 
-    private IngredientCalculatorRequest REQUEST_EXISTING_VALID_METRIC =
+    private RecipeIngredientRequest REQUEST_EXISTING_VALID_METRIC =
             TestDataUseCasePortionCalculatorRequestResponse.
                     getRequestExistingValidMetric();
-    private IngredientCalculatorResponse RESPONSE_EXISTING_VALID_METRIC =
+    private RecipeIngredientResponse RESPONSE_EXISTING_VALID_METRIC =
             TestDataUseCasePortionCalculatorRequestResponse.
                     getResponseExistingValidMetric();
 
-    private IngredientCalculatorRequest REQUEST_EXISTING_INVALID_METRIC_UNIT_ONE =
+    private RecipeIngredientRequest REQUEST_EXISTING_INVALID_METRIC_UNIT_ONE =
             TestDataUseCasePortionCalculatorRequestResponse.
                     getRequestExistingMetricInvalidTotalUnitOne();
-    private IngredientCalculatorResponse RESPONSE_EXISTING_INVALID_METRIC_UNIT_ONE =
+    private RecipeIngredientResponse RESPONSE_EXISTING_INVALID_METRIC_UNIT_ONE =
             TestDataUseCasePortionCalculatorRequestResponse.
                     getResponseExistingMetricInvalidTotalUnitOne();
 
-    private IngredientCalculatorRequest REQUEST_EXISTING_VALID_METRIC_UNIT_ONE =
+    private RecipeIngredientRequest REQUEST_EXISTING_VALID_METRIC_UNIT_ONE =
             TestDataUseCasePortionCalculatorRequestResponse.
                     getRequestExistingMetricValidTotalUnitOne();
-    private IngredientCalculatorResponse RESPONSE_EXISTING_VALID_METRIC_UNIT_ONE =
+    private RecipeIngredientResponse RESPONSE_EXISTING_VALID_METRIC_UNIT_ONE =
             TestDataUseCasePortionCalculatorRequestResponse.
                     getResponseExistingMetricValidTotalUnitOne();
 
-    private IngredientCalculatorRequest REQUEST_EXISTING_VALID_METRIC_UNIT_TWO =
+    private RecipeIngredientRequest REQUEST_EXISTING_VALID_METRIC_UNIT_TWO =
             TestDataUseCasePortionCalculatorRequestResponse.
                     getRequestExistingMetricValidTotalUnitTwo();
-    private IngredientCalculatorResponse RESPONSE_EXISTING_VALID_METRIC_UNIT_TWO =
+    private RecipeIngredientResponse RESPONSE_EXISTING_VALID_METRIC_UNIT_TWO =
             TestDataUseCasePortionCalculatorRequestResponse.
                     getResponseExistingMetricValidTotalUnitTwo();
 
-    private IngredientCalculatorRequest REQUEST_EXISTING_UNIT_OF_MEASURE_CHANGE_IMPERIAL_SPOON =
+    private RecipeIngredientRequest REQUEST_EXISTING_UNIT_OF_MEASURE_CHANGE_IMPERIAL_SPOON =
             TestDataUseCasePortionCalculatorRequestResponse.
                     getRequestExistingMetricUnitOfMeasureChangedToImperialSpoon();
-    private IngredientCalculatorResponse RESPONSE_EXISTING_UNIT_OF_MEASURE_CHANGE_IMPERIAL_SPOON =
+    private RecipeIngredientResponse RESPONSE_EXISTING_UNIT_OF_MEASURE_CHANGE_IMPERIAL_SPOON =
             TestDataUseCasePortionCalculatorRequestResponse.
                     getResponseExistingMetricUnitOfMeasureChangedToImperialSpoon();
 
-    private IngredientCalculatorRequest REQUEST_EXISTING_VALID_IMPERIAL_SPOON =
+    private RecipeIngredientRequest REQUEST_EXISTING_VALID_IMPERIAL_SPOON =
             TestDataUseCasePortionCalculatorRequestResponse.
                     getRequestExistingValidImperialSpoon();
-    private IngredientCalculatorResponse RESPONSE_EXISTING_VALID_IMPERIAL_SPOON =
+    private RecipeIngredientResponse RESPONSE_EXISTING_VALID_IMPERIAL_SPOON =
             TestDataUseCasePortionCalculatorRequestResponse.
                     getResponseExistingImperialSpoon();
 
-    private IngredientCalculatorRequest REQUEST_EXISTING_INVALID_IMPERIAL_SPOON_CONVERSION_FACTOR =
+    private RecipeIngredientRequest REQUEST_EXISTING_INVALID_IMPERIAL_SPOON_CONVERSION_FACTOR =
             TestDataUseCasePortionCalculatorRequestResponse.
                     getRequestExistingImperialSpoonInvalidConversionFactor();
-    private IngredientCalculatorResponse RESPONSE_EXISTING_INVALID_IMPERIAL_SPOON_CONVERSION_FACTOR =
+    private RecipeIngredientResponse RESPONSE_EXISTING_INVALID_IMPERIAL_SPOON_CONVERSION_FACTOR =
             TestDataUseCasePortionCalculatorRequestResponse.
                     getResponseExistingImperialSpoonInvalidConversionFactor();
     // endregion - REQUEST & RESPONSE PAIRS TEST DATA
@@ -203,7 +203,7 @@ public class IngredientCalculatorTest {
     // endregion constants -------------------------------------------------------------------------
     // region helper fields ------------------------------------------------------------------------
     private UseCaseHandler handler;
-    private IngredientCalculatorResponse actualResponse;
+    private RecipeIngredientResponse actualResponse;
     @Mock
     RepositoryRecipePortions repoRecipePortionsMock;
     @Captor
@@ -229,7 +229,7 @@ public class IngredientCalculatorTest {
     ArgumentCaptor<IngredientEntity> ingredientArgumentCaptor;
     // endregion helper fields ---------------------------------------------------------------------
 
-    private IngredientCalculator SUT;
+    private RecipeIngredient SUT;
 
     @Before
     public void setup() {
@@ -237,7 +237,7 @@ public class IngredientCalculatorTest {
 
         handler = new UseCaseHandler(new UseCaseSchedulerMock());
 
-        SUT = new IngredientCalculator(
+        SUT = new RecipeIngredient(
                 repoRecipePortionsMock,
                 repoRecipeIngredientMock,
                 repoIngredientMock,
@@ -426,8 +426,8 @@ public class IngredientCalculatorTest {
                 setConversionFactor(MAX_CONVERSION_FACTOR).
                 build();
 
-        IngredientCalculatorRequest requestValuesWithConversionFactor =
-                new IngredientCalculatorRequest(
+        RecipeIngredientRequest requestValuesWithConversionFactor =
+                new RecipeIngredientRequest(
                         recipeId, ingredientId, NO_RECIPE_INGREDIENT_ID, updatedConversionFactor);
 
         // Act
@@ -442,8 +442,8 @@ public class IngredientCalculatorTest {
                 basedOnModel(modelWithConversionFactor).
                 setSubtype(MeasurementSubtype.METRIC_MASS).
                 build();
-        IngredientCalculatorRequest requestUnitOfMeasureChange =
-                new IngredientCalculatorRequest(
+        RecipeIngredientRequest requestUnitOfMeasureChange =
+                new RecipeIngredientRequest(
                         recipeId, ingredientId, NO_RECIPE_INGREDIENT_ID, modelWithUnitOfMeasureChange);
         // Act
         handler.execute(SUT, requestUnitOfMeasureChange, getResponseCallback());
@@ -544,7 +544,7 @@ public class IngredientCalculatorTest {
         MeasurementModel unitOneUpdated = MeasurementModelBuilder.basedOnModel(
                 REQUEST_NEW_VALID_IMPERIAL_SPOON_CONVERSION_FACTOR.getModel()).
                 setTotalUnitOne(1).build();
-        IngredientCalculatorRequest requestUnitOneUpdated = new IngredientCalculatorRequest(
+        RecipeIngredientRequest requestUnitOneUpdated = new RecipeIngredientRequest(
                 REQUEST_NEW_VALID_IMPERIAL_SPOON_CONVERSION_FACTOR.getRecipeId(),
                 REQUEST_NEW_VALID_IMPERIAL_SPOON_CONVERSION_FACTOR.getIngredientId(),
                 NO_RECIPE_INGREDIENT_ID,
@@ -552,12 +552,12 @@ public class IngredientCalculatorTest {
         // Act - Update unit one
         handler.execute(SUT, requestUnitOneUpdated, getResponseCallback());
         // Get response from unit one updated
-        IngredientCalculatorResponse responseUnitOneUpdated = actualResponse;
+        RecipeIngredientResponse responseUnitOneUpdated = actualResponse;
         // Arrange
         MeasurementModel unitTwoUpdated = MeasurementModelBuilder.basedOnModel(
                 responseUnitOneUpdated.getModel()).
                 setTotalUnitTwo(1).build();
-        IngredientCalculatorRequest requestUnitTwoUpdated = new IngredientCalculatorRequest(
+        RecipeIngredientRequest requestUnitTwoUpdated = new RecipeIngredientRequest(
                 REQUEST_NEW_VALID_IMPERIAL_SPOON_CONVERSION_FACTOR.getRecipeId(),
                 REQUEST_NEW_VALID_IMPERIAL_SPOON_CONVERSION_FACTOR.getIngredientId(),
                 NO_RECIPE_INGREDIENT_ID,
@@ -587,7 +587,7 @@ public class IngredientCalculatorTest {
         MeasurementModel unitOneUpdated = MeasurementModelBuilder.basedOnModel(
                 REQUEST_NEW_VALID_IMPERIAL_SPOON_CONVERSION_FACTOR.getModel()).
                 setTotalUnitOne(1).build();
-        IngredientCalculatorRequest requestUnitOneUpdated = new IngredientCalculatorRequest(
+        RecipeIngredientRequest requestUnitOneUpdated = new RecipeIngredientRequest(
                 REQUEST_NEW_VALID_IMPERIAL_SPOON_CONVERSION_FACTOR.getRecipeId(),
                 REQUEST_NEW_VALID_IMPERIAL_SPOON_CONVERSION_FACTOR.getIngredientId(),
                 NO_RECIPE_INGREDIENT_ID,
@@ -595,12 +595,12 @@ public class IngredientCalculatorTest {
         // Act - Update unit one
         handler.execute(SUT, requestUnitOneUpdated, getResponseCallback());
         // Get response from unit one updated
-        IngredientCalculatorResponse responseUnitOneUpdated = actualResponse;
+        RecipeIngredientResponse responseUnitOneUpdated = actualResponse;
         // Arrange
         MeasurementModel unitTwoUpdated = MeasurementModelBuilder.basedOnModel(
                 responseUnitOneUpdated.getModel()).
                 setTotalUnitTwo(1).build();
-        IngredientCalculatorRequest requestUnitTwoUpdated = new IngredientCalculatorRequest(
+        RecipeIngredientRequest requestUnitTwoUpdated = new RecipeIngredientRequest(
                 REQUEST_NEW_VALID_IMPERIAL_SPOON_CONVERSION_FACTOR.getRecipeId(),
                 REQUEST_NEW_VALID_IMPERIAL_SPOON_CONVERSION_FACTOR.getIngredientId(),
                 NO_RECIPE_INGREDIENT_ID,
@@ -678,7 +678,7 @@ public class IngredientCalculatorTest {
                 setTotalUnitOne(8000).
                 build();
 
-        IngredientCalculatorRequest request = new IngredientCalculatorRequest.Builder().
+        RecipeIngredientRequest request = new RecipeIngredientRequest.Builder().
                 setRecipeId(recipeId).
                 setIngredientId(ingredientId).
                 setRecipeIngredientId(recipeIngredientId).
@@ -708,7 +708,7 @@ public class IngredientCalculatorTest {
                 setTotalUnitOne(8000).
                 build();
 
-        IngredientCalculatorRequest request = new IngredientCalculatorRequest.Builder().
+        RecipeIngredientRequest request = new RecipeIngredientRequest.Builder().
                 setRecipeId(recipeId).
                 setIngredientId(ingredientId).
                 setRecipeIngredientId(recipeIngredientId).
@@ -921,8 +921,8 @@ public class IngredientCalculatorTest {
                 setSubtype(MeasurementSubtype.IMPERIAL_SPOON).
                 build();
 
-        IngredientCalculatorRequest updatedUnitOfMeasureRequest =
-                new IngredientCalculatorRequest(
+        RecipeIngredientRequest updatedUnitOfMeasureRequest =
+                new RecipeIngredientRequest(
                         NO_RECIPE_ID,
                         NO_INGREDIENT_ID,
                         REQUEST_EXISTING_VALID_METRIC.getRecipeIngredientId(),
@@ -939,7 +939,7 @@ public class IngredientCalculatorTest {
                 basedOnModel(actualResponse.getModel()).
                 setTotalUnitOne(numberOfTeaspoons).
                 build();
-        IngredientCalculatorRequest updatedUnitOneRequest = new IngredientCalculatorRequest(
+        RecipeIngredientRequest updatedUnitOneRequest = new RecipeIngredientRequest(
                 NO_RECIPE_ID,
                 NO_INGREDIENT_ID,
                 REQUEST_EXISTING_VALID_METRIC.getRecipeIngredientId(),
@@ -973,8 +973,8 @@ public class IngredientCalculatorTest {
                 basedOnModel(actualResponse.getModel()).
                 setConversionFactor(MAX_CONVERSION_FACTOR).
                 build();
-        IngredientCalculatorRequest updatedConversionFactorRequest =
-                new IngredientCalculatorRequest(
+        RecipeIngredientRequest updatedConversionFactorRequest =
+                new RecipeIngredientRequest(
                         NO_RECIPE_ID,
                         NO_INGREDIENT_ID,
                         REQUEST_EXISTING_VALID_METRIC.getRecipeIngredientId(),
@@ -1021,17 +1021,17 @@ public class IngredientCalculatorTest {
     }
 
     // region helper methods -----------------------------------------------------------------------
-    private Callback<IngredientCalculatorResponse> getResponseCallback() {
-        return new Callback<IngredientCalculatorResponse>() {
+    private Callback<RecipeIngredientResponse> getResponseCallback() {
+        return new Callback<RecipeIngredientResponse>() {
 
             @Override
-            public void onSuccess(IngredientCalculatorResponse response) {
+            public void onSuccess(RecipeIngredientResponse response) {
                 IngredientCalculatorTest.this.responses.add(response);
                 IngredientCalculatorTest.this.actualResponse = response;
             }
 
             @Override
-            public void onError(IngredientCalculatorResponse response) {
+            public void onError(RecipeIngredientResponse response) {
                 IngredientCalculatorTest.this.responses.add(response);
                 IngredientCalculatorTest.this.actualResponse = response;
             }
