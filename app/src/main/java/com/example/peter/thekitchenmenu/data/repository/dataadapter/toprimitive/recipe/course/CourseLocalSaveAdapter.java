@@ -5,17 +5,17 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.R
 
 import javax.annotation.Nonnull;
 
-public class CourseLocalUpdateAdapter {
+public class CourseLocalSaveAdapter {
 
     @Nonnull
     private final RecipeCourseLocalDataAccess courseLocalDataAccess;
 
-    public CourseLocalUpdateAdapter(@Nonnull RecipeCourseLocalDataAccess courseLocalDataAccess) {
+    public CourseLocalSaveAdapter(@Nonnull RecipeCourseLocalDataAccess courseLocalDataAccess) {
         this.courseLocalDataAccess = courseLocalDataAccess;
     }
 
-    public void update(RecipeCourseModelPersistence m) {
+    public void save(RecipeCourseModelPersistence m) {
         CourseConverter c = new CourseConverter();
-        courseLocalDataAccess.update(c.convertToPrimitive(m));
+        courseLocalDataAccess.save(c.convertToPrimitive(m));
     }
 }

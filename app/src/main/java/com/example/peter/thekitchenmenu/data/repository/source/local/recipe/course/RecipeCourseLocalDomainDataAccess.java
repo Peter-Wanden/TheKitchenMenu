@@ -1,10 +1,8 @@
 package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course;
 
-import com.example.peter.thekitchenmenu.data.repository.dataadapter.toprimitive.recipe.course.CourseLocalGetActiveAdapter;
-import com.example.peter.thekitchenmenu.data.repository.dataadapter.toprimitive.recipe.course.CourseLocalGetAllAdapter;
-import com.example.peter.thekitchenmenu.data.repository.dataadapter.toprimitive.recipe.course.CourseLocalGetAllByCourseAdapter;
-import com.example.peter.thekitchenmenu.data.repository.dataadapter.toprimitive.recipe.course.CourseLocalGetAllByDomainIdAdapter;
-import com.example.peter.thekitchenmenu.data.repository.dataadapter.toprimitive.recipe.course.CourseLocalGetByDataIdAdapter;
+import com.example.peter.thekitchenmenu.data.repository.dataadapter.toprimitive.recipe.course.CourseLocalDeleteAdapter;
+import com.example.peter.thekitchenmenu.data.repository.dataadapter.toprimitive.recipe.course.CourseLocalGetAdapter;
+import com.example.peter.thekitchenmenu.data.repository.dataadapter.toprimitive.recipe.course.CourseLocalSaveAdapter;
 import com.example.peter.thekitchenmenu.data.repository.dataadapter.toprimitive.recipe.course.CourseLocalUpdateAdapter;
 import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipeCourse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse;
@@ -19,52 +17,41 @@ public class RecipeCourseLocalDomainDataAccess implements DataAccessRecipeCourse
     private static volatile RecipeCourseLocalDomainDataAccess INSTANCE;
 
     @Nonnull
-    private final CourseLocalGetByDataIdAdapter getByDataIdAdapter;
-    @Nonnull
-    private final CourseLocalGetAllByCourseAdapter getAllByCourseAdapter;
-    @Nonnull
-    private final CourseLocalGetAllByDomainIdAdapter getAllByDomainIdAdapter;
+    private final CourseLocalGetAdapter getAdapter;
     @Nonnull
     private final CourseLocalUpdateAdapter updateAdapter;
     @Nonnull
-    private final CourseLocalGetAllAdapter getAllAdapter;
+    private final CourseLocalSaveAdapter saveAdapter;
     @Nonnull
-    private final CourseLocalGetActiveAdapter getActiveAdapter;
+    private final CourseLocalDeleteAdapter deleteAdapter;
 
     private RecipeCourseLocalDomainDataAccess(
-            @Nonnull CourseLocalGetByDataIdAdapter getByDataIdAdapter,
-            @Nonnull CourseLocalGetAllByCourseAdapter getAllByCourseAdapter,
-            @Nonnull CourseLocalGetAllByDomainIdAdapter getAllByDomainIdAdapter,
+            @Nonnull CourseLocalGetAdapter getAdapter,
             @Nonnull CourseLocalUpdateAdapter updateAdapter,
-            @Nonnull CourseLocalGetAllAdapter getAllAdapter,
-            @Nonnull CourseLocalGetActiveAdapter getActiveAdapter) {
+            @Nonnull CourseLocalSaveAdapter saveAdapter,
+            @Nonnull CourseLocalDeleteAdapter deleteAdapter) {
 
-        this.getByDataIdAdapter = getByDataIdAdapter;
-        this.getAllByCourseAdapter = getAllByCourseAdapter;
-        this.getAllByDomainIdAdapter = getAllByDomainIdAdapter;
+        this.getAdapter = getAdapter;
         this.updateAdapter = updateAdapter;
-        this.getAllAdapter = getAllAdapter;
-        this.getActiveAdapter = getActiveAdapter;
+        this.saveAdapter = saveAdapter;
+        this.deleteAdapter = deleteAdapter;
     }
 
     public static RecipeCourseLocalDomainDataAccess getInstance(
-            @Nonnull CourseLocalGetByDataIdAdapter getByDataIdAdapter,
-            @Nonnull CourseLocalGetAllByCourseAdapter getAllByCourseAdapter,
-            @Nonnull CourseLocalGetAllByDomainIdAdapter getAllByDomainIdAdapter,
+            @Nonnull CourseLocalGetAdapter getAdapter,
             @Nonnull CourseLocalUpdateAdapter updateAdapter,
-            @Nonnull CourseLocalGetAllAdapter getAllAdapter,
-            @Nonnull CourseLocalGetActiveAdapter getActiveAdapter) {
+            @Nonnull CourseLocalSaveAdapter saveAdapter,
+            @Nonnull CourseLocalDeleteAdapter deleteAdapter) {
 
         if (INSTANCE == null) {
             synchronized (RecipeCourseLocalDomainDataAccess.class) {
                 if (INSTANCE == null) {
                     INSTANCE = new RecipeCourseLocalDomainDataAccess(
-                            getByDataIdAdapter,
-                            getAllByCourseAdapter,
-                            getAllByDomainIdAdapter,
+                            getAdapter,
                             updateAdapter,
-                            getAllAdapter,
-                            getActiveAdapter);
+                            saveAdapter,
+                            deleteAdapter
+                    );
                 }
             }
         }
@@ -75,7 +62,7 @@ public class RecipeCourseLocalDomainDataAccess implements DataAccessRecipeCourse
     public void getAllByCourse(
             RecipeCourse.Course c,
             @Nonnull GetAllDomainModelsCallback<RecipeCourseModelPersistence> callback) {
-        getAllByCourseAdapter.getAllByCourse(
+        getAdapter.getAllByCourse(
                 c,
                 new GetAllDomainModelsCallback<RecipeCourseModelPersistence>() {
                     @Override
@@ -95,19 +82,20 @@ public class RecipeCourseLocalDomainDataAccess implements DataAccessRecipeCourse
     public void getAllByDomainId(
             @Nonnull String domainId,
             @Nonnull GetAllDomainModelsCallback<RecipeCourseModelPersistence> callback) {
-        getAllByDomainIdAdapter.getAllByDomainId(
+        getAdapter.getAllByDomainId(
                 domainId,
                 new GetAllDomainModelsCallback<RecipeCourseModelPersistence>() {
-            @Override
-            public void onAllLoaded(List<RecipeCourseModelPersistence> models) {
-                callback.onAllLoaded(models);
-            }
+                    @Override
+                    public void onAllLoaded(List<RecipeCourseModelPersistence> models) {
+                        callback.onAllLoaded(models);
+                    }
 
-            @Override
-            public void onModelsUnavailable() {
-                callback.onModelsUnavailable();
-            }
-        });
+                    @Override
+                    public void onModelsUnavailable() {
+                        callback.onModelsUnavailable();
+                    }
+                }
+        );
     }
 
     @Override
@@ -117,24 +105,26 @@ public class RecipeCourseLocalDomainDataAccess implements DataAccessRecipeCourse
 
     @Override
     public void getAll(@Nonnull GetAllDomainModelsCallback<RecipeCourseModelPersistence> callback) {
-        getAllAdapter.getAll(new GetAllDomainModelsCallback<RecipeCourseModelPersistence>() {
-            @Override
-            public void onAllLoaded(List<RecipeCourseModelPersistence> models) {
-                callback.onAllLoaded(models);
-            }
+        getAdapter.getAll(
+                new GetAllDomainModelsCallback<RecipeCourseModelPersistence>() {
+                    @Override
+                    public void onAllLoaded(List<RecipeCourseModelPersistence> models) {
+                        callback.onAllLoaded(models);
+                    }
 
-            @Override
-            public void onModelsUnavailable() {
-                callback.onModelsUnavailable();
-            }
-        });
+                    @Override
+                    public void onModelsUnavailable() {
+                        callback.onModelsUnavailable();
+                    }
+                }
+        );
     }
 
     @Override
     public void getByDataId(
             @Nonnull String dataId,
             @Nonnull GetDomainModelCallback<RecipeCourseModelPersistence> callback) {
-        getByDataIdAdapter.adaptToDomainModel(
+        getAdapter.getByDataId(
                 dataId,
                 new GetDomainModelCallback<RecipeCourseModelPersistence>() {
                     @Override
@@ -154,13 +144,33 @@ public class RecipeCourseLocalDomainDataAccess implements DataAccessRecipeCourse
     public void getActiveByDomainId(
             @Nonnull String domainId,
             @Nonnull GetDomainModelCallback<RecipeCourseModelPersistence> callback) {
-        getActiveAdapter.getActiveByDomainId(
-                domainId, new GetAllDomainModelsCallback<>()
+        // TODO - implement? or move to?
+        callback.onModelUnavailable();
+    }
+
+    @Override
+    public void getAllActiveByDomainId(
+            @Nonnull String domainId,
+            @Nonnull GetAllDomainModelsCallback<RecipeCourseModelPersistence> callback) {
+        getAdapter.getAllActiveByDomainId(
+                domainId,
+                new GetAllDomainModelsCallback<RecipeCourseModelPersistence>() {
+                    @Override
+                    public void onAllLoaded(List<RecipeCourseModelPersistence> models) {
+                        callback.onAllLoaded(models);
+                    }
+
+                    @Override
+                    public void onModelsUnavailable() {
+                        callback.onModelsUnavailable();
+                    }
+                }
+        );
     }
 
     @Override
     public void save(@Nonnull RecipeCourseModelPersistence model) {
-
+        saveAdapter.save(model);
     }
 
     @Override
@@ -170,16 +180,16 @@ public class RecipeCourseLocalDomainDataAccess implements DataAccessRecipeCourse
 
     @Override
     public void deleteByDataId(String dataId) {
-
+        deleteAdapter.deleteByDataId(dataId);
     }
 
     @Override
     public void deleteAllByDomainId(@Nonnull String domainId) {
-
+        deleteAdapter.deleteAllByDomainId(domainId);
     }
 
     @Override
     public void deleteAll() {
-
+        deleteAdapter.deleteAll();
     }
 }

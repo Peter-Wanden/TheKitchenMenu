@@ -9,7 +9,7 @@ import java.util.List;
 
 class CourseConverter {
 
-    static RecipeCourseModelPersistence convertToModel(RecipeCourseEntity e) {
+    RecipeCourseModelPersistence convertToModel(RecipeCourseEntity e) {
         return new RecipeCourseModelPersistence.Builder().
                 setDataId(e.getId()).
                 setDomainId(e.getRecipeId()).
@@ -20,8 +20,7 @@ class CourseConverter {
                 build();
     }
 
-
-    static RecipeCourseEntity convertToPrimitive(RecipeCourseModelPersistence m) {
+    RecipeCourseEntity convertToPrimitive(RecipeCourseModelPersistence m) {
         return new RecipeCourseEntity(
                 m.getDataId(),
                 m.getDomainId(),
@@ -32,21 +31,21 @@ class CourseConverter {
         );
     }
 
-    static List<RecipeCourseModelPersistence> convertToModels(List<RecipeCourseEntity> entities) {
+    List<RecipeCourseModelPersistence> convertToModels(List<RecipeCourseEntity> entities) {
         List<RecipeCourseModelPersistence> models = new ArrayList<>();
         for (RecipeCourseEntity e : entities) {
-            models.add(CourseConverter.convertToModel(e));
+            models.add(convertToModel(e));
         }
         return models;
     }
 
-    static List<RecipeCourseModelPersistence> convertActiveModels(
+    List<RecipeCourseModelPersistence> convertActiveModels(
             List<RecipeCourseEntity> entities) {
 
         List<RecipeCourseModelPersistence> models = new ArrayList<>();
         for (RecipeCourseEntity e : entities) {
             if (e.isActive()) {
-                models.add(CourseConverter.convertToModel(e));
+                models.add(convertToModel(e));
             }
         }
         return models;
