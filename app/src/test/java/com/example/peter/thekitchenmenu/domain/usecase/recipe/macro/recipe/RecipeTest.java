@@ -8,7 +8,7 @@ import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.dura
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.parent.RecipeMetadataParentEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.RecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.RecipePortionsEntity;
-import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
+import com.example.peter.thekitchenmenu.data.repository.dataadapter.toprimitive.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeComponentState;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeCourse;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeDuration;
@@ -100,23 +100,23 @@ public class RecipeTest {
     @Mock
     RepositoryRecipeComponentState repoRecipeMock;
     @Captor
-    ArgumentCaptor<PrimitiveDataSource.GetEntityCallback<RecipeMetadataParentEntity>> repoRecipeCallback;
+    ArgumentCaptor<PrimitiveDataSource.GetPrimitiveCallback<RecipeMetadataParentEntity>> repoRecipeCallback;
     @Mock
     RepositoryRecipeIdentity repoIdentityMock;
     @Captor
-    ArgumentCaptor<PrimitiveDataSource.GetEntityCallback<RecipeIdentityEntity>> repoIdentityCallback;
+    ArgumentCaptor<PrimitiveDataSource.GetPrimitiveCallback<RecipeIdentityEntity>> repoIdentityCallback;
     @Mock
     RepositoryRecipeCourse repoCourseMock;
     @Captor
-    ArgumentCaptor<PrimitiveDataSource.GetAllCallback<RecipeCourseEntity>> repoCourseCallback;
+    ArgumentCaptor<PrimitiveDataSource.GetAllPrimitiveCallback<RecipeCourseEntity>> repoCourseCallback;
     @Mock
     RepositoryRecipeDuration repoDurationMock;
     @Captor
-    ArgumentCaptor<PrimitiveDataSource.GetEntityCallback<RecipeDurationEntity>> repoDurationCallback;
+    ArgumentCaptor<PrimitiveDataSource.GetPrimitiveCallback<RecipeDurationEntity>> repoDurationCallback;
     @Mock
     RepositoryRecipePortions repoPortionsMock;
     @Captor
-    ArgumentCaptor<PrimitiveDataSource.GetEntityCallback<RecipePortionsEntity>> repoPortionsCallback;
+    ArgumentCaptor<PrimitiveDataSource.GetPrimitiveCallback<RecipePortionsEntity>> repoPortionsCallback;
     @Mock
     TimeProvider timeProviderMock;
     @Mock
@@ -204,7 +204,7 @@ public class RecipeTest {
     @Test
     public void recipeRequestNewId_invokerIssuesCommandToAllReceivers() {
         // Arrange
-        String recipeId = INVALID_NEW_RECIPE.getDataId();
+        String recipeId = INVALID_NEW_RECIPE.getId();
 
         RecipeCallbackClient callback = new RecipeCallbackClient();
         RecipeRequest request = new RecipeRequest(recipeId);
@@ -219,7 +219,7 @@ public class RecipeTest {
     @Test
     public void recipeRequestNewId_invokerIssuesCommand_metadataListenersUpdatedWithCorrectValues() {
         // Arrange
-        String recipeId = INVALID_NEW_RECIPE.getDataId();
+        String recipeId = INVALID_NEW_RECIPE.getId();
 
         RecipeCallbackClient callback = new RecipeCallbackClient();
         RecipeRequest request = new RecipeRequest(recipeId);
@@ -270,7 +270,7 @@ public class RecipeTest {
     @Test
     public void recipeRequestNewId_invokerIssuesCommand_useCaseCallbackINVALID_UNCHANGED_INVALID_COMPONENTS() {
         // Arrange
-        String recipeId = INVALID_NEW_RECIPE.getDataId();
+        String recipeId = INVALID_NEW_RECIPE.getId();
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 getDefault().
                 setDataId(recipeId).
@@ -307,7 +307,7 @@ public class RecipeTest {
     @Test
     public void recipeRequestNewId_invokerIssuesCommand_registeredComponentListenerUpdated() {
         // Arrange
-        String recipeId = INVALID_NEW_RECIPE.getDataId();
+        String recipeId = INVALID_NEW_RECIPE.getId();
         RecipeRequest request = new RecipeRequest(recipeId);
         RecipeCallbackClient callback = new RecipeCallbackClient();
 
@@ -326,7 +326,7 @@ public class RecipeTest {
     @Test
     public void identityRequestNewId_initialRequest_invokerIssuesCommandToAllReceivers() {
         // Arrange
-        String recipeId = INVALID_NEW_RECIPE.getDataId();
+        String recipeId = INVALID_NEW_RECIPE.getId();
         IdentityCallbackClient callback = new IdentityCallbackClient();
 
         RecipeIdentityRequest identityRequest = new RecipeIdentityRequest.Builder().
@@ -347,7 +347,7 @@ public class RecipeTest {
     @Test
     public void identityRequestNewId_invokerIssuesCommand_correctMacroComponentResponses() {
         // Arrange
-        String recipeId = INVALID_NEW_RECIPE.getDataId();
+        String recipeId = INVALID_NEW_RECIPE.getId();
         RecipeIdentityRequest request = new RecipeIdentityRequest.Builder().
                 getDefault().
                 setDataId(recipeId).
@@ -421,7 +421,7 @@ public class RecipeTest {
     @Test
     public void coursesRequestNewId_initialRequest_invokerIssuesCommandToAllReceivers() {
         // Arrange
-        String recipeId = INVALID_NEW_RECIPE.getDataId();
+        String recipeId = INVALID_NEW_RECIPE.getId();
         CourseCallbackClient callback = new CourseCallbackClient();
 
         RecipeCourseRequest courseRequest = new RecipeCourseRequest.Builder().getDefault().
@@ -441,7 +441,7 @@ public class RecipeTest {
     @Test
     public void durationRequestNewId_initialRequest_invokerIssuesCommandToAllReceivers() {
         // Arrange
-        String recipeId = INVALID_NEW_RECIPE.getDataId();
+        String recipeId = INVALID_NEW_RECIPE.getId();
         DurationCallbackClient callback = new DurationCallbackClient();
 
         RecipeDurationRequest durationRequest = new RecipeDurationRequest.Builder().
@@ -465,7 +465,7 @@ public class RecipeTest {
     @Test
     public void portionsRequestNewId_initialRequest_invokerIssuesCommandToAllReceivers() {
         // Arrange
-        String recipeId = INVALID_NEW_RECIPE.getDataId();
+        String recipeId = INVALID_NEW_RECIPE.getId();
         PortionCallbackClient callback = new PortionCallbackClient();
 
         RecipePortionsRequest portionsRequest = new RecipePortionsRequest.Builder().
@@ -488,7 +488,7 @@ public class RecipeTest {
     @Test
     public void identityRequestNewId_titleValidDescriptionValid_identityStateVALID_CHANGED() {
         // Arrange
-        String recipeId = IDENTITY_INVALID_NEW_EMPTY.getDataId();
+        String recipeId = IDENTITY_INVALID_NEW_EMPTY.getId();
         IdentityCallbackClient callback = new IdentityCallbackClient();
 
         ArgumentCaptor<RecipeIdentityEntity> identityEntity = ArgumentCaptor.
@@ -567,7 +567,7 @@ public class RecipeTest {
         String recipeId = expectedCourseEntity.getRecipeId();
 
         whenTimeProviderReturnTime(expectedCourseEntity.getCreateDate());
-        when(idProviderMock.getUId()).thenReturn(expectedCourseEntity.getDataId());
+        when(idProviderMock.getUId()).thenReturn(expectedCourseEntity.getId());
 
         RecipeCourseRequest.Model initialModel = new RecipeCourseRequest.Model.Builder().
                 getDefault().
@@ -620,7 +620,7 @@ public class RecipeTest {
     @Test
     public void recipeRequestExistingId_validData_onlyRegisteredListenersNotified() {
         // Arrange
-        String recipeId = RECIPE_VALID_EXISTING.getDataId();
+        String recipeId = RECIPE_VALID_EXISTING.getId();
         RecipeMetadataCallback callback = new RecipeMetadataCallback();
 
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
@@ -644,7 +644,7 @@ public class RecipeTest {
     @Test
     public void recipeRequestExistingId_validData_componentStateVALID_UNCHANGED() {
         // Arrange
-        String recipeId = RECIPE_VALID_EXISTING.getDataId();
+        String recipeId = RECIPE_VALID_EXISTING.getId();
         RecipeMetadataCallback callback = new RecipeMetadataCallback();
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 getDefault().
@@ -674,7 +674,7 @@ public class RecipeTest {
     @Test
     public void recipeRequestExistingId_validData_recipeStateVALID_UNCHANGED() {
         // Arrange
-        String recipeId = RECIPE_VALID_EXISTING.getDataId();
+        String recipeId = RECIPE_VALID_EXISTING.getId();
         RecipeMetadataCallback callback = new RecipeMetadataCallback();
 
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
@@ -700,7 +700,7 @@ public class RecipeTest {
     @Test
     public void recipeRequest_validId_registeredComponentCallbacksCalled() {
         // Arrange
-        String recipeId = RECIPE_VALID_EXISTING.getDataId();
+        String recipeId = RECIPE_VALID_EXISTING.getId();
 
         RecipeCallbackClient recipeCallbackClient = new RecipeCallbackClient();
         IdentityCallbackClient identityCallbackClient = new IdentityCallbackClient();
@@ -755,7 +755,7 @@ public class RecipeTest {
     }
 
     private void verifyRepoCoursesCalledAndReturnDataUnavailable(String recipeId) {
-        verify(repoCourseMock).getAllByRecipeId(eq(recipeId), repoCourseCallback.capture());
+        verify(repoCourseMock).getAllByDomainId(eq(recipeId), repoCourseCallback.capture());
         repoCourseCallback.getValue().onDataUnavailable();
     }
 
@@ -784,7 +784,7 @@ public class RecipeTest {
         verify(repoIdentityMock).getByDataId(eq(recipeId), repoIdentityCallback.capture());
         repoIdentityCallback.getValue().onEntityLoaded(IDENTITY_VALID_EXISTING_COMPLETE);
 
-        verify(repoCourseMock).getAllByRecipeId(eq(recipeId), repoCourseCallback.capture());
+        verify(repoCourseMock).getAllByDomainId(eq(recipeId), repoCourseCallback.capture());
         repoCourseCallback.getValue().onAllLoaded(TestDataRecipeCourseEntity.getAllByRecipeId(recipeId));
 
         verify(repoDurationMock).getByDataId(eq(recipeId), repoDurationCallback.capture());

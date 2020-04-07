@@ -33,7 +33,7 @@ public interface DataAccess<T extends DomainPersistenceModel> {
 
     void getByDataId(@Nonnull String dataId, @Nonnull GetDomainModelCallback<T> callback);
 
-    void getLatestByDomainId(@Nonnull String domainId, @Nonnull GetDomainModelCallback<T> callback);
+    void getActiveByDomainId(@Nonnull String domainId, @Nonnull GetDomainModelCallback<T> callback);
 
     void save(@Nonnull T model);
 

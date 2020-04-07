@@ -1,21 +1,21 @@
 package com.example.peter.thekitchenmenu.data.repository.recipe;
 
 import com.example.peter.thekitchenmenu.data.repository.DataAccess;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredient.RecipeIngredientPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredient.RecipeIngredientModelPersistence;
 
 import javax.annotation.Nonnull;
 
-public interface DataAccessRecipeIngredient extends DataAccess<RecipeIngredientPersistenceModel> {
+public interface DataAccessRecipeIngredient extends DataAccess<RecipeIngredientModelPersistence> {
 
     void getAllByRecipeId(
             @Nonnull String recipeId,
-            @Nonnull GetAllDomainModelsCallback<RecipeIngredientPersistenceModel> callback);
+            @Nonnull GetAllDomainModelsCallback<RecipeIngredientModelPersistence> callback);
 
     void getAllByProductId(
             @Nonnull String productId,
-            @Nonnull GetAllDomainModelsCallback<RecipeIngredientPersistenceModel> callback);
+            @Nonnull GetAllDomainModelsCallback<RecipeIngredientModelPersistence> callback);
 
     void getAllByIngredientId(
             @Nonnull String ingredientId,
-            @Nonnull GetAllDomainModelsCallback<RecipeIngredientPersistenceModel> callback);
+            @Nonnull GetAllDomainModelsCallback<RecipeIngredientModelPersistence> callback);
 }

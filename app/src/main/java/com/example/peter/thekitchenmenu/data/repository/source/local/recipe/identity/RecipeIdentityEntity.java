@@ -74,6 +74,7 @@ public final class RecipeIdentityEntity implements PrimitiveModel {
                 lastUpdate);
     }
 
+    @Nonnull
     @Override
     public String toString() {
         return "RecipeIdentityEntity{" +
@@ -85,9 +86,9 @@ public final class RecipeIdentityEntity implements PrimitiveModel {
                 '}';
     }
 
-    @Override
     @Nonnull
-    public String getDataId() {
+    @Override
+    public String getId() {
         return id;
     }
 

@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.data.repository.source.local.ingredient
 
 import com.example.peter.thekitchenmenu.app.AppExecutors;
 import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.IngredientEntity;
-import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
+import com.example.peter.thekitchenmenu.data.repository.dataadapter.toprimitive.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.dao.IngredientEntityDao;
 
 import java.util.List;
@@ -37,7 +37,7 @@ public class IngredientLocalDataSource implements PrimitiveDataSource<Ingredient
     }
 
     @Override
-    public void getAll(@Nonnull GetAllCallback<IngredientEntity> callback) {
+    public void getAll(@Nonnull GetAllPrimitiveCallback<IngredientEntity> callback) {
         Runnable runnable = () -> {
             final List<IngredientEntity> entityList = entityDao.getAll();
             appExecutors.mainThread().execute(() -> {
@@ -52,7 +52,7 @@ public class IngredientLocalDataSource implements PrimitiveDataSource<Ingredient
 
     @Override
     public void getByDataId(@Nonnull String dataId,
-                            @Nonnull GetEntityCallback<IngredientEntity> callback) {
+                            @Nonnull GetPrimitiveCallback<IngredientEntity> callback) {
         Runnable runnable = () -> {
             final IngredientEntity entity = entityDao.getById(dataId);
             appExecutors.mainThread().execute(() -> {

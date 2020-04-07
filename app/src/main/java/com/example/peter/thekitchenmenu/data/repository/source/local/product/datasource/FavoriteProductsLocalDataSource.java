@@ -37,7 +37,7 @@ public class FavoriteProductsLocalDataSource implements DataSourceFavoriteProduc
     }
 
     @Override
-    public void getAll(@Nonnull GetAllCallback<FavoriteProductEntity> callback) {
+    public void getAll(@Nonnull GetAllPrimitiveCallback<FavoriteProductEntity> callback) {
         Runnable runnable = () -> {
             final List<FavoriteProductEntity> favoriteProducts = favoriteProductEntityDao.getAll();
             appExecutors.mainThread().execute(() -> {
@@ -52,7 +52,7 @@ public class FavoriteProductsLocalDataSource implements DataSourceFavoriteProduc
 
     @Override
     public void getByDataId(@Nonnull String dataId,
-                            @Nonnull GetEntityCallback<FavoriteProductEntity> callback) {
+                            @Nonnull GetPrimitiveCallback<FavoriteProductEntity> callback) {
         Runnable runnable = () -> {
             final FavoriteProductEntity favoriteProduct =
                     favoriteProductEntityDao.getById(dataId);
@@ -68,7 +68,7 @@ public class FavoriteProductsLocalDataSource implements DataSourceFavoriteProduc
 
     @Override
     public void getByProductId(@Nonnull String productId,
-                               @Nonnull GetEntityCallback<FavoriteProductEntity> callback) {
+                               @Nonnull GetPrimitiveCallback<FavoriteProductEntity> callback) {
         Runnable runnable = () -> {
             final FavoriteProductEntity favoriteProduct =
                     favoriteProductEntityDao.getByProductId(productId);

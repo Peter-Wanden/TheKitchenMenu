@@ -5,7 +5,7 @@ import android.content.res.Resources;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.primitivemodel.product.FavoriteProductEntity;
-import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
+import com.example.peter.thekitchenmenu.data.repository.dataadapter.toprimitive.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.product.DataSourceFavoriteProducts;
 import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
 import com.example.peter.thekitchenmenu.ui.utils.TextValidator;
@@ -23,7 +23,7 @@ import javax.annotation.Nonnull;
 
 public class FavoriteProductEditorViewModel
         extends AndroidViewModel
-        implements PrimitiveDataSource.GetEntityCallback<FavoriteProductEntity> {
+        implements PrimitiveDataSource.GetPrimitiveCallback<FavoriteProductEntity> {
 
     private static final String TAG = "tkm-" + FavoriteProductEditorViewModel.class.getSimpleName()
             + ":";
@@ -291,7 +291,7 @@ public class FavoriteProductEditorViewModel
     private boolean isExistingFavoriteProductThatHasBeenEdited() {
         if (isExistingFavoriteProductEntity) {
             FavoriteProductEntity favoriteProductEntity = new FavoriteProductEntity(
-                    this.favoriteProductEntity.getDataId(),
+                    this.favoriteProductEntity.getId(),
                     this.favoriteProductEntity.getProductId(),
                     retailer.get(),
                     locationRoom.get(),
@@ -311,7 +311,7 @@ public class FavoriteProductEditorViewModel
 
         if (isExistingFavoriteProductEntity) {
             favoriteProduct = FavoriteProductEntity.updateFavoriteProduct(
-                    favoriteProductEntity.getDataId(),
+                    favoriteProductEntity.getId(),
                     productId,
                     retailer.get(),
                     locationRoom.get(),

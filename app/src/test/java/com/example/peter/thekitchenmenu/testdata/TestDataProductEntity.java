@@ -27,7 +27,7 @@ public class TestDataProductEntity {
 
     public static ProductEntity getNewValid() {
         return new ProductEntity(
-                getNewInvalid().getDataId(),
+                getNewInvalid().getId(),
                 "description",
                 "shoppingListItemName",
                 1,

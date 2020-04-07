@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.parent;
 
 import com.example.peter.thekitchenmenu.app.AppExecutors;
-import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSourceParent;
+import com.example.peter.thekitchenmenu.data.repository.dataadapter.toprimitive.PrimitiveDataSourceParent;
 
 import java.util.List;
 
@@ -39,8 +39,7 @@ public class RecipeMetadataParentEntityLocalDataSource
 
     @Override
     public void getAllByDomainId(@Nonnull String domainId,
-                                 @Nonnull GetAllCallback<RecipeMetadataParentEntity> callback) {
-
+                                 @Nonnull GetAllPrimitiveCallback<RecipeMetadataParentEntity> callback) {
         Runnable r = () -> {
             final List<RecipeMetadataParentEntity> entities = dao.getAllByDomainId(domainId);
             executors.mainThread().execute(() -> {
@@ -54,7 +53,7 @@ public class RecipeMetadataParentEntityLocalDataSource
     }
 
     @Override
-    public void getAll(@Nonnull GetAllCallback<RecipeMetadataParentEntity> callback) {
+    public void getAll(@Nonnull GetAllPrimitiveCallback<RecipeMetadataParentEntity> callback) {
         Runnable r = () -> {
             final List<RecipeMetadataParentEntity> entities = dao.getAll();
             executors.mainThread().execute(() -> {
@@ -69,7 +68,7 @@ public class RecipeMetadataParentEntityLocalDataSource
 
     @Override
     public void getByDataId(@Nonnull String dataId,
-                            @Nonnull GetEntityCallback<RecipeMetadataParentEntity> callback) {
+                            @Nonnull GetPrimitiveCallback<RecipeMetadataParentEntity> callback) {
         Runnable r = () -> {
             final RecipeMetadataParentEntity e = dao.getByDataId(dataId);
             executors.mainThread().execute(() -> {

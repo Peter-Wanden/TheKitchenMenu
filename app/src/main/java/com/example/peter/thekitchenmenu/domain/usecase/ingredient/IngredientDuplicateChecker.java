@@ -8,7 +8,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 public class IngredientDuplicateChecker
-        implements DataAccess.GetAllDomainModelsCallback<IngredientPersistenceModel> {
+        implements DataAccess.GetAllDomainModelsCallback<IngredientModelPersistence> {
 
     public interface DuplicateCallback {
         void duplicateCheckResult(String duplicateId);
@@ -37,21 +37,21 @@ public class IngredientDuplicateChecker
     }
 
     @Override
-    public void onAllLoaded(List<IngredientPersistenceModel> ingredients) {
+    public void onAllLoaded(List<IngredientModelPersistence> ingredients) {
         if (!ingredients.isEmpty()) {
             createExistingIngredientList(ingredients);
             checkForDuplicates();
         }
     }
 
-    private void createExistingIngredientList(List<IngredientPersistenceModel> ingredients) {
+    private void createExistingIngredientList(List<IngredientModelPersistence> ingredients) {
         if (existingIngredients == null) {
             existingIngredients = new LinkedHashMap<>();
         }
 
         existingIngredients.clear();
 
-        for (IngredientPersistenceModel ingredient : ingredients) {
+        for (IngredientModelPersistence ingredient : ingredients) {
             String key = makeKey(ingredient.getName());
             existingIngredients.put(key, ingredient.getDataId());
         }

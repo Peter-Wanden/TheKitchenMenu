@@ -8,7 +8,7 @@ import androidx.databinding.ObservableField;
 import androidx.lifecycle.AndroidViewModel;
 
 import com.example.peter.thekitchenmenu.data.primitivemodel.product.FavoriteProductEntity;
-import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
+import com.example.peter.thekitchenmenu.data.repository.dataadapter.toprimitive.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.product.DataSourceFavoriteProducts;
 import com.example.peter.thekitchenmenu.ui.UnsavedChangesDialogFragment;
 import com.example.peter.thekitchenmenu.ui.detail.product.favoriteproducteditor.FavoriteProductEditorActivity;
@@ -18,7 +18,7 @@ import com.google.android.gms.common.util.Strings;
 
 public class FavoriteProductViewerViewModel
         extends AndroidViewModel
-        implements PrimitiveDataSource.GetEntityCallback<FavoriteProductEntity> {
+        implements PrimitiveDataSource.GetPrimitiveCallback<FavoriteProductEntity> {
 
     private static final String TAG = "tkm-" + FavoriteProductViewerViewModel.class.getSimpleName()
             + ":";
@@ -105,7 +105,7 @@ public class FavoriteProductViewerViewModel
 
     void deleteFavoriteProduct() {
         if (favoriteProduct.get() != null) {
-            favoriteProductEntityDataSource.deleteByDataId(favoriteProduct.get().getDataId());
+            favoriteProductEntityDataSource.deleteByDataId(favoriteProduct.get().getId());
             isFavorite.set(false);
             favoriteProduct.set(null);
             hasOptionsMenuEvent.call();

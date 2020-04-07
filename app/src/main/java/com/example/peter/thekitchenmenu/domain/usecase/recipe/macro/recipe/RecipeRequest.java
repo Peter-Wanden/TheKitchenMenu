@@ -1,10 +1,10 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe;
 
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainMessageBase;
+import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainMessage;
 
 public final class RecipeRequest
-        extends UseCaseDomainMessageBase
+        extends BaseDomainMessage
         implements UseCase.Request {
 
     private RecipeRequest() {}

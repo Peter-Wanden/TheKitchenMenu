@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecase.ingredient;
 
 import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.IngredientEntity;
-import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
+import com.example.peter.thekitchenmenu.data.repository.dataadapter.toprimitive.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.ingredient.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.testdata.TestDataIngredientEntity;
 
@@ -24,7 +24,7 @@ public class IngredientDuplicateCheckerTest {
     private String VALID_NAME_DUPLICATE_IS_BEING_EDITED =
             TestDataIngredientEntity.getNewValidName().getName();
     private String INGREDIENT_ID =
-            TestDataIngredientEntity.getNewValidName().getDataId();
+            TestDataIngredientEntity.getNewValidName().getId();
     private String NO_DUPLICATE_FOUND = IngredientDuplicateChecker.NO_DUPLICATE_FOUND;
     // endregion constants -------------------------------------------------------------------------
 
@@ -32,7 +32,7 @@ public class IngredientDuplicateCheckerTest {
     @Mock
     RepositoryIngredient repoMock;
     @Captor
-    ArgumentCaptor<PrimitiveDataSource.GetAllCallback<IngredientEntity>> getRepoCallbackCaptor;
+    ArgumentCaptor<PrimitiveDataSource.GetAllPrimitiveCallback<IngredientEntity>> getRepoCallbackCaptor;
     @Mock
     IngredientDuplicateChecker.DuplicateCallback callbackMock;
     // endregion helper fields ---------------------------------------------------------------------
@@ -93,7 +93,7 @@ public class IngredientDuplicateCheckerTest {
         SUT.checkForDuplicateAndNotify(VALID_DUPLICATE.getName(), INGREDIENT_ID, callbackMock);
         // Assert
         simulateGetAllFromDatabase();
-        verify(callbackMock).duplicateCheckResult(eq(VALID_DUPLICATE.getDataId()));
+        verify(callbackMock).duplicateCheckResult(eq(VALID_DUPLICATE.getId()));
     }
 
     // region helper methods -----------------------------------------------------------------------

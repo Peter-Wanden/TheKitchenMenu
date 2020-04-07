@@ -106,9 +106,9 @@ public final class IngredientEntity implements PrimitiveModel {
                 '}';
     }
 
-    @Nonnull
     @Override
-    public String getDataId() {
+    @Nonnull
+    public String getId() {
         return id;
     }
 

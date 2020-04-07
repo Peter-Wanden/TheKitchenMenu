@@ -67,6 +67,7 @@ public final class RecipeDurationEntity implements PrimitiveModel {
         return Objects.hash(id, prepTime, cookTime, createDate, lastUpdate);
     }
 
+    @Nonnull
     @Override
     public String toString() {
         return "RecipeDurationEntity{" +
@@ -80,7 +81,7 @@ public final class RecipeDurationEntity implements PrimitiveModel {
 
     @Override
     @Nonnull
-    public String getDataId() {
+    public String getId() {
         return id;
     }
 

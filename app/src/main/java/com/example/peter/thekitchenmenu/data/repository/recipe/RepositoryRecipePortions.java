@@ -1,14 +1,14 @@
 package com.example.peter.thekitchenmenu.data.repository.recipe;
 
 import com.example.peter.thekitchenmenu.data.repository.Repository;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortionsPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortionsModelPersistence;
 
 import java.util.LinkedHashMap;
 
 import javax.annotation.Nonnull;
 
 public class RepositoryRecipePortions
-        extends Repository<RecipePortionsPersistenceModel>
+        extends Repository<RecipePortionsModelPersistence>
         implements DataAccessRecipePortions {
 
     public static RepositoryRecipePortions INSTANCE;
@@ -30,9 +30,9 @@ public class RepositoryRecipePortions
 
     @Override
     public void getByRecipeId(@Nonnull String recipeId,
-                              @Nonnull GetDomainModelCallback<RecipePortionsPersistenceModel> callback) {
+                              @Nonnull GetDomainModelCallback<RecipePortionsModelPersistence> callback) {
 
-        RecipePortionsPersistenceModel model = checkCacheForRecipeId(recipeId);
+        RecipePortionsModelPersistence model = checkCacheForRecipeId(recipeId);
 
         if (model != null) {
             callback.onModelLoaded(model);
@@ -40,9 +40,9 @@ public class RepositoryRecipePortions
         }
         ((DataAccessRecipePortions) localDataAccess).getByRecipeId(
                 recipeId,
-                new GetDomainModelCallback<RecipePortionsPersistenceModel>() {
+                new GetDomainModelCallback<RecipePortionsModelPersistence>() {
                     @Override
-                    public void onModelLoaded(RecipePortionsPersistenceModel model) {
+                    public void onModelLoaded(RecipePortionsModelPersistence model) {
                         if (cache == null)
                             cache = new LinkedHashMap<>();
                         cache.put(model.getDataId(), model);
@@ -54,9 +54,9 @@ public class RepositoryRecipePortions
                     public void onModelUnavailable() {
                         ((DataAccessRecipePortions) remoteDataAccess).getByRecipeId(
                                 recipeId,
-                                new GetDomainModelCallback<RecipePortionsPersistenceModel>() {
+                                new GetDomainModelCallback<RecipePortionsModelPersistence>() {
                                     @Override
-                                    public void onModelLoaded(RecipePortionsPersistenceModel model) {
+                                    public void onModelLoaded(RecipePortionsModelPersistence model) {
                                         if (cache == null)
                                             cache = new LinkedHashMap<>();
                                         cache.put(model.getDataId(), model);
@@ -74,12 +74,12 @@ public class RepositoryRecipePortions
                 });
     }
 
-    private RecipePortionsPersistenceModel checkCacheForRecipeId(String recipeId) {
+    private RecipePortionsModelPersistence checkCacheForRecipeId(String recipeId) {
 
         if (cache == null || cache.isEmpty())
             return null;
         else {
-            for (RecipePortionsPersistenceModel model : cache.values()) {
+            for (RecipePortionsModelPersistence model : cache.values()) {
                 if (recipeId.equals(model.getDomainId())) {
                     return model;
                 }

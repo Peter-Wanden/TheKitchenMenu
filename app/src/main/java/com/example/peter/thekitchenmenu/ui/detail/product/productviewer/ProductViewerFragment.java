@@ -140,7 +140,7 @@ public class ProductViewerFragment extends Fragment {
 
             case R.id.menu_item_delete_product:
                 productViewerViewModel.deleteProduct(
-                        productViewerViewModel.productEntityObservable.get().getDataId());
+                        productViewerViewModel.productEntityObservable.get().getId());
                 return true;
 
             case R.id.menu_item_post_product:
@@ -153,7 +153,7 @@ public class ProductViewerFragment extends Fragment {
 
             case R.id.menu_item_done:
                 productViewerViewModel.doneWithProduct(
-                        productViewerViewModel.productEntityObservable.get().getDataId());
+                        productViewerViewModel.productEntityObservable.get().getId());
                 return true;
         }
         return false;

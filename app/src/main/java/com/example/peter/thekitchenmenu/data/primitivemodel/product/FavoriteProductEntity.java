@@ -162,7 +162,7 @@ public final class FavoriteProductEntity implements PrimitiveModel {
 
     @Nonnull
     @Override
-    public String getDataId() {
+    public String getId() {
         return id;
     }
 

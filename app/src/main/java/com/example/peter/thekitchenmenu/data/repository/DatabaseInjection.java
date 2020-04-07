@@ -3,12 +3,12 @@ package com.example.peter.thekitchenmenu.data.repository;
 import android.content.Context;
 
 import com.example.peter.thekitchenmenu.app.AppExecutors;
-import com.example.peter.thekitchenmenu.data.repository.dataadapter.DeleteAllAdapter;
-import com.example.peter.thekitchenmenu.data.repository.dataadapter.DeleteByDataIdAdapter;
-import com.example.peter.thekitchenmenu.data.repository.dataadapter.DeleteByDomainIdAdapter;
-import com.example.peter.thekitchenmenu.data.repository.dataadapter.GetAllLatestAdapter;
-import com.example.peter.thekitchenmenu.data.repository.dataadapter.GetLatestByDomainIdAdapter;
-import com.example.peter.thekitchenmenu.data.repository.dataadapter.SaveAdapter;
+import com.example.peter.thekitchenmenu.data.repository.dataadapter.toprimitive.recipe.metadata.RecipeMetadataLocalDeleteAllAdapter;
+import com.example.peter.thekitchenmenu.data.repository.dataadapter.toprimitive.recipe.metadata.DeleteByDataIdAdapter;
+import com.example.peter.thekitchenmenu.data.repository.dataadapter.toprimitive.recipe.metadata.DeleteByDomainIdAdapter;
+import com.example.peter.thekitchenmenu.data.repository.dataadapter.toprimitive.recipe.metadata.GetAllActiveAdapter;
+import com.example.peter.thekitchenmenu.data.repository.dataadapter.toprimitive.recipe.metadata.GetActiveByDomainIdAdapter;
+import com.example.peter.thekitchenmenu.data.repository.dataadapter.toprimitive.recipe.metadata.SaveAdapter;
 import com.example.peter.thekitchenmenu.data.repository.ingredient.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.data.repository.product.RepositoryFavoriteProduct;
 import com.example.peter.thekitchenmenu.data.repository.product.RepositoryProduct;
@@ -20,7 +20,7 @@ import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeM
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.datasource.IngredientLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.componentstate.RecipeComponentStateLocalDataSource;
-import com.example.peter.thekitchenmenu.data.repository.dataadapter.GetByDataIdAdapter;
+import com.example.peter.thekitchenmenu.data.repository.dataadapter.toprimitive.recipe.metadata.RecipeMetadataLocalGetByDataIdAdapter;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.failreason.RecipeFailReasonsLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.ingredient.RecipeIngredientLocalDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.parent.RecipeMetadataParentEntityLocalDataSource;
@@ -29,24 +29,21 @@ import com.example.peter.thekitchenmenu.data.repository.source.local.product.dat
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.RecipeCourseLocalDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.RecipeDurationLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.RecipeIdentityLocalDataSource;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.RecipeMetadataLocalDataAccess;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.RecipeMetadataLocalDomainDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.source.local.TKMDatabase;
 import com.example.peter.thekitchenmenu.data.repository.source.local.product.datasource.FavoriteProductsLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.remote.IngredientRemoteDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.remote.ProductRemoteDataSource;
-import com.example.peter.thekitchenmenu.data.repository.source.remote.recipe.RecipeComponentStateRemoteDataSource;
-import com.example.peter.thekitchenmenu.data.repository.source.remote.recipe.RecipeDurationRemoteDataSource;
+import com.example.peter.thekitchenmenu.data.repository.source.remote.recipe.RecipeDurationRemoteDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.source.remote.FavoriteProductsRemoteDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.remote.recipe.RecipeCourseRemoteDataAccess;
-import com.example.peter.thekitchenmenu.data.repository.source.remote.recipe.RecipeIdentityRemoteDataSource;
+import com.example.peter.thekitchenmenu.data.repository.source.remote.recipe.RecipeIdentityRemoteDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.source.remote.recipe.RecipeIngredientRemoteDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.source.remote.recipe.RecipeMetadataRemoteDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.source.remote.recipe.RecipePortionsRemoteDataAccess;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
 import javax.annotation.Nonnull;
-
-import static com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeMetadata.getInstance;
 
 public class DatabaseInjection {
 
@@ -77,10 +74,9 @@ public class DatabaseInjection {
 
     public static RepositoryRecipeMetadata provideRecipeMetadataDataSource(
             @Nonnull Context context) {
-
-        return getInstance(
+        return RepositoryRecipeMetadata.getInstance(
                 RecipeMetadataRemoteDataAccess.getInstance(),
-                RecipeMetadataLocalDataAccess.getInstance(
+                RecipeMetadataLocalDomainDataAccess.getInstance(
                         provideRecipeMetadataGetByDataIdAdapter(context),
                         provideGetLatestByDomainIdAdapter(context),
                         provideGetAllLatestAdapter(context),
@@ -92,8 +88,8 @@ public class DatabaseInjection {
         );
     }
 
-    private static DeleteAllAdapter provideDeleteAllAdapter(@Nonnull Context context) {
-        return new DeleteAllAdapter(
+    private static RecipeMetadataLocalDeleteAllAdapter provideDeleteAllAdapter(@Nonnull Context context) {
+        return new RecipeMetadataLocalDeleteAllAdapter(
                 provideRecipeMetaDataParentLocalDataSource(context),
                 provideRecipeComponentStateLocalDataSource(context),
                 provideRecipeFailReasonsLocalDataSource(context)
@@ -126,25 +122,25 @@ public class DatabaseInjection {
         );
     }
 
-    private static GetAllLatestAdapter provideGetAllLatestAdapter(
+    private static GetAllActiveAdapter provideGetAllLatestAdapter(
             @Nonnull Context context) {
-        return new GetAllLatestAdapter(
+        return new GetAllActiveAdapter(
                 provideRecipeMetaDataParentLocalDataSource(context),
                 provideGetLatestByDomainIdAdapter(context)
         );
     }
 
-    private static GetLatestByDomainIdAdapter provideGetLatestByDomainIdAdapter(
+    private static GetActiveByDomainIdAdapter provideGetLatestByDomainIdAdapter(
             @Nonnull Context context) {
-        return new GetLatestByDomainIdAdapter(
+        return new GetActiveByDomainIdAdapter(
                 provideRecipeMetaDataParentLocalDataSource(context),
                 provideRecipeMetadataGetByDataIdAdapter(context)
         );
     }
 
-    private static GetByDataIdAdapter provideRecipeMetadataGetByDataIdAdapter(
+    private static RecipeMetadataLocalGetByDataIdAdapter provideRecipeMetadataGetByDataIdAdapter(
             @Nonnull Context context) {
-        return new GetByDataIdAdapter(
+        return new RecipeMetadataLocalGetByDataIdAdapter(
                 provideRecipeMetaDataParentLocalDataSource(context),
                 provideRecipeComponentStateLocalDataSource(context),
                 provideRecipeFailReasonsLocalDataSource(context)
@@ -184,20 +180,6 @@ public class DatabaseInjection {
         );
     }
 
-    public static RepositoryRecipeComponentState provideRecipeComponentStateDataSource(
-            @Nonnull Context context) {
-
-        TKMDatabase database = TKMDatabase.getInstance(context, new AppExecutors());
-
-        return RepositoryRecipeComponentState.getInstance(
-                RecipeComponentStateRemoteDataSource.getInstance(),
-                RecipeComponentStateLocalDataSource.getInstance(
-                        new AppExecutors(),
-                        database.recipeComponentStateEntityDao()
-                )
-        );
-    }
-
     public static RepositoryRecipeCourse provideRecipeCourseDataSource(
             @Nonnull Context context) {
 
@@ -217,7 +199,7 @@ public class DatabaseInjection {
         TKMDatabase database = TKMDatabase.getInstance(context, new AppExecutors());
 
         return RepositoryRecipeIdentity.getInstance(
-                RecipeIdentityRemoteDataSource.getInstance(),
+                RecipeIdentityRemoteDataAccess.getInstance(),
                 RecipeIdentityLocalDataSource.getInstance(
                         new AppExecutors(),
                         database.recipeIdentityEntityDao())
@@ -230,7 +212,7 @@ public class DatabaseInjection {
         TKMDatabase database = TKMDatabase.getInstance(context, new AppExecutors());
 
         return RepositoryRecipeDuration.getInstance(
-                RecipeDurationRemoteDataSource.getInstance(),
+                RecipeDurationRemoteDataAccess.getInstance(),
                 RecipeDurationLocalDataSource.getInstance(
                         new AppExecutors(),
                         database.recipeDurationEntityDao())

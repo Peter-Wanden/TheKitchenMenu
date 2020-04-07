@@ -1,17 +1,16 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration;
 
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainMessageBaseModelMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainMessageModelMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadata;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainModel;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadataResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainModel;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
 public final class RecipeDurationResponse
-        extends UseCaseDomainMessageBaseModelMetadata<RecipeDurationResponse.Model>
+        extends BaseDomainMessageModelMetadata<RecipeDurationResponse.Model>
         implements UseCase.Response {
 
     private RecipeDurationResponse() {}
@@ -37,7 +36,7 @@ public final class RecipeDurationResponse
         }
     }
 
-    public static final class Model extends UseCaseDomainModel {
+    public static final class Model extends BaseDomainModel {
 
         private int prepHours;
         private int prepMinutes;

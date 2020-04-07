@@ -3,7 +3,7 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredientl
 import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.IngredientEntity;
 import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.RecipeIngredientEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.RecipePortionsEntity;
-import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
+import com.example.peter.thekitchenmenu.data.repository.dataadapter.toprimitive.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.ingredient.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeIngredient;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipePortions;
@@ -56,7 +56,7 @@ public class RecipeIngredientList extends UseCase {
     private void getPortionsForRecipe() {
         repoPortions.getByRecipeId(
                 recipeId,
-                new PrimitiveDataSource.GetEntityCallback<RecipePortionsEntity>() {
+                new PrimitiveDataSource.GetPrimitiveCallback<RecipePortionsEntity>() {
                     @Override
                     public void onEntityLoaded(RecipePortionsEntity entity) {
                         RecipeIngredientList.this.portions =
@@ -76,7 +76,7 @@ public class RecipeIngredientList extends UseCase {
 
         repoRecipeIngredient.getAllByRecipeId(
                 recipeId,
-                new PrimitiveDataSource.GetAllCallback<RecipeIngredientEntity>() {
+                new PrimitiveDataSource.GetAllPrimitiveCallback<RecipeIngredientEntity>() {
                     @Override
                     public void onAllLoaded(List<RecipeIngredientEntity> entities) {
                         for (RecipeIngredientEntity entity : entities) {
@@ -100,10 +100,10 @@ public class RecipeIngredientList extends UseCase {
     }
 
     private void getIngredient(String ingredientId) {
-        repoIngredient.getByDataId(ingredientId, new PrimitiveDataSource.GetEntityCallback<IngredientEntity>() {
+        repoIngredient.getByDataId(ingredientId, new PrimitiveDataSource.GetPrimitiveCallback<IngredientEntity>() {
             @Override
             public void onEntityLoaded(IngredientEntity entity) {
-                ingredients.put(entity.getDataId(), entity);
+                ingredients.put(entity.getId(), entity);
                 createResponseModels();
             }
 
@@ -125,7 +125,7 @@ public class RecipeIngredientList extends UseCase {
                 IngredientEntity ingredient = ingredients.get(ingredientId);
 
                 RecipeIngredientListItemModel listItemModel = new RecipeIngredientListItemModel(
-                        recipeIngredient.getDataId(),
+                        recipeIngredient.getId(),
                         ingredientId,
                         ingredient.getName(),
                         ingredient.getDescription(),

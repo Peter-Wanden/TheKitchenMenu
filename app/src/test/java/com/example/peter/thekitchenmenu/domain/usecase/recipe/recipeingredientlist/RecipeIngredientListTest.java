@@ -5,7 +5,7 @@ import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
 import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.IngredientEntity;
 import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.RecipeIngredientEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.RecipePortionsEntity;
-import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
+import com.example.peter.thekitchenmenu.data.repository.dataadapter.toprimitive.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.ingredient.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeIngredient;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipePortions;
@@ -69,8 +69,8 @@ public class RecipeIngredientListTest {
         };
     }
 
-    private PrimitiveDataSource.GetAllCallback<RecipeIngredientEntity> quantityCallback() {
-        return new PrimitiveDataSource.GetAllCallback<RecipeIngredientEntity>() {
+    private PrimitiveDataSource.GetAllPrimitiveCallback<RecipeIngredientEntity> quantityCallback() {
+        return new PrimitiveDataSource.GetAllPrimitiveCallback<RecipeIngredientEntity>() {
             @Override
             public void onAllLoaded(List<RecipeIngredientEntity> entities) {
 

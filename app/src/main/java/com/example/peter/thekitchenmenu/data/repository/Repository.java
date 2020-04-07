@@ -102,7 +102,7 @@ public abstract class Repository<T extends DomainPersistenceModel> implements Da
     }
 
     @Override
-    public void getLatestByDomainId(@Nonnull String domainId,
+    public void getActiveByDomainId(@Nonnull String domainId,
                                     @Nonnull GetDomainModelCallback<T> callback) {
         T cachedModel = getFromCacheModelWithDomainId(domainId);
 
@@ -110,7 +110,7 @@ public abstract class Repository<T extends DomainPersistenceModel> implements Da
             callback.onModelLoaded(cachedModel);
             return;
         }
-        localDataAccess.getLatestByDomainId(domainId, new GetDomainModelCallback<T>() {
+        localDataAccess.getActiveByDomainId(domainId, new GetDomainModelCallback<T>() {
             @Override
             public void onModelLoaded(T model) {
                 if (cache == null) {
@@ -122,7 +122,7 @@ public abstract class Repository<T extends DomainPersistenceModel> implements Da
 
             @Override
             public void onModelUnavailable() {
-                remoteDataAccess.getLatestByDomainId(domainId, new GetDomainModelCallback<T>() {
+                remoteDataAccess.getActiveByDomainId(domainId, new GetDomainModelCallback<T>() {
                     @Override
                     public void onModelLoaded(T model) {
                         if (model == null) {

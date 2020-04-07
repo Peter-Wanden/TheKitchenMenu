@@ -10,14 +10,14 @@ import androidx.lifecycle.AndroidViewModel;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.primitivemodel.product.ProductEntity;
-import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
+import com.example.peter.thekitchenmenu.data.repository.dataadapter.toprimitive.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.ui.detail.product.producteditor.ProductEditorActivity;
 import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
 import com.google.android.gms.common.util.Strings;
 
 public class ProductViewerViewModel
         extends AndroidViewModel
-        implements PrimitiveDataSource.GetEntityCallback<ProductEntity>, ProductViewerNavigator{
+        implements PrimitiveDataSource.GetPrimitiveCallback<ProductEntity>, ProductViewerNavigator{
 
     private static final String TAG = "tkm-" + ProductViewerViewModel.class.getSimpleName() + ":";
 
@@ -143,18 +143,18 @@ public class ProductViewerViewModel
         if (showPostMessageEvent.get()) {
             // Product add/edit has not been saved so exit as is.
             productEntityObservable.set(null);
-            doneWithProduct(productEntityObservable.get().getDataId());
+            doneWithProduct(productEntityObservable.get().getId());
         }
         else {
-            productEntityDataSource.deleteByDataId(productEntityObservable.get().getDataId());
-            navigator.deleteProduct(productEntityObservable.get().getDataId());
+            productEntityDataSource.deleteByDataId(productEntityObservable.get().getId());
+            navigator.deleteProduct(productEntityObservable.get().getId());
         }
     }
 
     @Override
     public void discardProductEdits() {
         // Reloads the product to reset it to its last saved state
-        start(productEntityObservable.get().getDataId());
+        start(productEntityObservable.get().getId());
     }
 
     @Override
@@ -178,7 +178,7 @@ public class ProductViewerViewModel
             showUnsavedChangesDialog();
 
         } else if (dataHasChanged) {
-            navigator.doneWithProduct(productEntityObservable.get().getDataId());
+            navigator.doneWithProduct(productEntityObservable.get().getId());
 
         } else {
             navigator.discardProductEdits();

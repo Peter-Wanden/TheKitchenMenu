@@ -3,7 +3,7 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course;
 import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.RecipeCourseEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.parent.RecipeMetadataParentEntity;
-import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
+import com.example.peter.thekitchenmenu.data.repository.dataadapter.toprimitive.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeCourse;
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
@@ -33,14 +33,14 @@ public class RecipeCourseTest {
 
     // region constants ----------------------------------------------------------------------------
     private RecipeMetadataParentEntity VALID_EXISTING_RECIPE_ENTITY = getValidExisting();
-    private String EXISTING_RECIPE_ID = VALID_EXISTING_RECIPE_ENTITY.getDataId();
+    private String EXISTING_RECIPE_ID = VALID_EXISTING_RECIPE_ENTITY.getId();
     // endregion constants -------------------------------------------------------------------------
 
     // region helper fields ------------------------------------------------------------------------
     @Mock
     RepositoryRecipeCourse repoCourseMock;
     @Captor
-    ArgumentCaptor<PrimitiveDataSource.GetAllCallback<RecipeCourseEntity>> repoCourseCallback;
+    ArgumentCaptor<PrimitiveDataSource.GetAllPrimitiveCallback<RecipeCourseEntity>> repoCourseCallback;
     @Mock
     UniqueIdProvider idProviderMock;
     @Mock
@@ -126,7 +126,7 @@ public class RecipeCourseTest {
         verify(repoCourseMock).save(entityCaptor.capture());
         assertEquals(Course.COURSE_ONE.getCourseNo(), entityCaptor.getValue().getCourseNo());
         assertEquals(time, entityCaptor.getValue().getCreateDate());
-        assertEquals(id, entityCaptor.getValue().getDataId());
+        assertEquals(id, entityCaptor.getValue().getId());
         assertEquals(com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentState.VALID_CHANGED, onSuccessResponse.getMetadata().getState());
     }
 
@@ -143,7 +143,7 @@ public class RecipeCourseTest {
         // Act
         handler.execute(SUT, initialiseComponentRequest, getCallback());
         // Assert
-        verify(repoCourseMock).getAllByRecipeId(eq(EXISTING_RECIPE_ID), repoCourseCallback.capture());
+        verify(repoCourseMock).getAllByDomainId(eq(EXISTING_RECIPE_ID), repoCourseCallback.capture());
     }
 
     @Test
@@ -225,7 +225,7 @@ public class RecipeCourseTest {
 
     private void verifyRepoCalledAndReturnMatchingCourses(String recipeId) {
         // Confirm repo called and capture the callback
-        verify(repoCourseMock).getAllByRecipeId(eq(recipeId), repoCourseCallback.capture());
+        verify(repoCourseMock).getAllByDomainId(eq(recipeId), repoCourseCallback.capture());
         // Find the matching values in the test data and return the callback with results
         List<RecipeCourseEntity> courseEntityList = getAllByRecipeId(recipeId);
         if (courseEntityList.size() > 0) {

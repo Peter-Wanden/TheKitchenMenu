@@ -330,7 +330,7 @@ public final class ProductEntity implements Parcelable, PrimitiveModel {
 
     @Nonnull
     @Override
-    public String getDataId() {
+    public String getId() {
         return id;
     }
 

@@ -4,7 +4,7 @@ import android.database.Cursor;
 
 import com.example.peter.thekitchenmenu.app.AppExecutors;
 import com.example.peter.thekitchenmenu.data.primitivemodel.product.ProductEntity;
-import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
+import com.example.peter.thekitchenmenu.data.repository.dataadapter.toprimitive.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.product.dao.ProductEntityDao;
 
 import java.util.List;
@@ -37,11 +37,11 @@ public class ProductLocalDataSource implements PrimitiveDataSource<ProductEntity
     }
 
     /**
-     * Note: {@link GetAllCallback#onDataUnavailable()} is fired if the
+     * Note: {@link GetAllPrimitiveCallback#onDataUnavailable()} is fired if the
      * database doesn't exist or the table is empty
      */
     @Override
-    public void getAll(@Nonnull GetAllCallback<ProductEntity> callback) {
+    public void getAll(@Nonnull GetAllPrimitiveCallback<ProductEntity> callback) {
         Runnable runnable = () -> {
             final List<ProductEntity> entityList = entityDao.getAll();
             appExecutors.mainThread().execute(() -> {
@@ -56,7 +56,7 @@ public class ProductLocalDataSource implements PrimitiveDataSource<ProductEntity
 
     @Override
     public void getByDataId(@Nonnull String dataId,
-                            @Nonnull GetEntityCallback<ProductEntity> callback) {
+                            @Nonnull GetPrimitiveCallback<ProductEntity> callback) {
 
         Runnable runnable = () -> {
             final ProductEntity entity = entityDao.getById(dataId);

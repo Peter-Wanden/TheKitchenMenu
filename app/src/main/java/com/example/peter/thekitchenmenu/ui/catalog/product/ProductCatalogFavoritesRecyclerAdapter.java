@@ -115,7 +115,7 @@ public class ProductCatalogFavoritesRecyclerAdapter
 
             @Override
             public void onRemoveFromFavoritesClicked(ProductModel productModel) {
-                viewModel.removeFromFavorites(productModel.getFavoriteProductEntity().getDataId());
+                viewModel.removeFromFavorites(productModel.getFavoriteProductEntity().getId());
             }
         };
 

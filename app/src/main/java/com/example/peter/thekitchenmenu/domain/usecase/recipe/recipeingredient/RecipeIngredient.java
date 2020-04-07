@@ -2,22 +2,19 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredient;
 
 import android.annotation.SuppressLint;
 
-import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.IngredientEntity;
 import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.RecipeIngredientEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataAccess;
-import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.ingredient.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeIngredient;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.domain.model.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModelBuilder;
-import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasure;
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModel;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortionsPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortionsModelPersistence;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
@@ -113,7 +110,7 @@ public class RecipeIngredient extends UseCase {
 
     private MeasurementModel modelIn;
     private MeasurementModel existingModel;
-    private RecipeIngredientPersistenceModel persistenceModel;
+    private RecipeIngredientModelPersistence persistenceModel;
     private IngredientEntity ingredientEntity;
 
     public RecipeIngredient(@Nonnull Recipe recipe,
@@ -165,9 +162,9 @@ public class RecipeIngredient extends UseCase {
         loadIngredient();
     }
 
-    private RecipeIngredientPersistenceModel createNewPersistenceModel() {
+    private RecipeIngredientModelPersistence createNewPersistenceModel() {
         long currentTime = timeProvider.getCurrentTimeInMills();
-        return new RecipeIngredientPersistenceModel();
+        return new RecipeIngredientModelPersistence();
     }
 
     private void start(String recipeIngredientId) {
@@ -215,9 +212,9 @@ public class RecipeIngredient extends UseCase {
     private void loadPortions() {
         portionsRepository.getByRecipeId(
                 recipeId,
-                new DataAccess.GetDomainModelCallback<RecipePortionsPersistenceModel>() {
+                new DataAccess.GetDomainModelCallback<RecipePortionsModelPersistence>() {
                     @Override
-                    public void onModelLoaded(RecipePortionsPersistenceModel model) {
+                    public void onModelLoaded(RecipePortionsModelPersistence model) {
                         numberOfPortions = model.getServings() *
                                 model.getSittings();
                         setupUnitOfMeasure();
@@ -342,7 +339,7 @@ public class RecipeIngredient extends UseCase {
 
     private IngredientEntity getUpdatedIngredientEntity() {
         return new IngredientEntity(
-                ingredientEntity.getDataId(),
+                ingredientEntity.getId(),
                 ingredientEntity.getName(),
                 ingredientEntity.getDescription(),
                 unitOfMeasure.getConversionFactor(),

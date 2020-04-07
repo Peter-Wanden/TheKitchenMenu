@@ -28,7 +28,7 @@ import javax.annotation.Nonnull;
  */
 public class RecipeMetadata
         extends UseCase
-        implements DataAccess.GetDomainModelCallback<RecipeMetadataPersistenceModel> {
+        implements DataAccess.GetDomainModelCallback<RecipeMetadataModelPersistence> {
 
     private static final String TAG = "tkm-" + RecipeMetadata.class.getSimpleName() + ": ";
 
@@ -164,7 +164,7 @@ public class RecipeMetadata
     @Nonnull
     private final List<FailReasons> failReasons;
 
-    private RecipeMetadataPersistenceModel persistenceModel;
+    private RecipeMetadataModelPersistence persistenceModel;
     private RecipeState recipeState;
     private String dataId = "";
     private String recipeId = "";
@@ -212,11 +212,11 @@ public class RecipeMetadata
     }
 
     private void loadData(String recipeId) {
-        repository.getLatestByDomainId(recipeId, this);
+        repository.getActiveByDomainId(recipeId, this);
     }
 
     @Override
-    public void onModelLoaded(RecipeMetadataPersistenceModel model) {
+    public void onModelLoaded(RecipeMetadataModelPersistence model) {
         persistenceModel = model;
         buildResponse();
     }
@@ -228,10 +228,10 @@ public class RecipeMetadata
         calculateState();
     }
 
-    private RecipeMetadataPersistenceModel createNewPersistenceModel() {
+    private RecipeMetadataModelPersistence createNewPersistenceModel() {
         long currentTime = timeProvider.getCurrentTimeInMills();
 
-        return new RecipeMetadataPersistenceModel.Builder().
+        return new RecipeMetadataModelPersistence.Builder().
                 getDefault().
                 setDataId(dataId).
                 setRecipeId(recipeId).
@@ -365,8 +365,8 @@ public class RecipeMetadata
                 build();
     }
 
-    private RecipeMetadataPersistenceModel getUpdatedPersistenceModel() {
-        return new RecipeMetadataPersistenceModel.Builder().build();
+    private RecipeMetadataModelPersistence getUpdatedPersistenceModel() {
+        return new RecipeMetadataModelPersistence.Builder().build();
     }
 
     private boolean isChanged() {
@@ -388,7 +388,7 @@ public class RecipeMetadata
         }
     }
 
-    private void save(RecipeMetadataPersistenceModel model) {
+    private void save(RecipeMetadataModelPersistence model) {
         repository.save(model);
     }
 }

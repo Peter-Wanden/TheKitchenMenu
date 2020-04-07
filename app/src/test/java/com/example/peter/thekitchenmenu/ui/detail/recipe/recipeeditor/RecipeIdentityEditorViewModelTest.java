@@ -11,7 +11,7 @@ import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.dura
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.parent.RecipeMetadataParentEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.RecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.RecipePortionsEntity;
-import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
+import com.example.peter.thekitchenmenu.data.repository.dataadapter.toprimitive.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeComponentState;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeCourse;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeDuration;
@@ -85,23 +85,23 @@ public class RecipeIdentityEditorViewModelTest {
     @Mock
     RepositoryRecipeComponentState repoRecipeMock;
     @Captor
-    ArgumentCaptor<PrimitiveDataSource.GetEntityCallback<RecipeMetadataParentEntity>> repoRecipeCallback;
+    ArgumentCaptor<PrimitiveDataSource.GetPrimitiveCallback<RecipeMetadataParentEntity>> repoRecipeCallback;
     @Mock
     RepositoryRecipeIdentity repoIdentityMock;
     @Captor
-    ArgumentCaptor<PrimitiveDataSource.GetEntityCallback<RecipeIdentityEntity>> repoIdentityCallback;
+    ArgumentCaptor<PrimitiveDataSource.GetPrimitiveCallback<RecipeIdentityEntity>> repoIdentityCallback;
     @Mock
     RepositoryRecipeCourse repoCourseMock;
     @Captor
-    ArgumentCaptor<PrimitiveDataSource.GetAllCallback<RecipeCourseEntity>> repoCourseCallback;
+    ArgumentCaptor<PrimitiveDataSource.GetAllPrimitiveCallback<RecipeCourseEntity>> repoCourseCallback;
     @Mock
     RepositoryRecipeDuration repoDurationMock;
     @Captor
-    ArgumentCaptor<PrimitiveDataSource.GetEntityCallback<RecipeDurationEntity>> repoDurationCallback;
+    ArgumentCaptor<PrimitiveDataSource.GetPrimitiveCallback<RecipeDurationEntity>> repoDurationCallback;
     @Mock
     RepositoryRecipePortions repoPortionsMock;
     @Captor
-    ArgumentCaptor<PrimitiveDataSource.GetEntityCallback<RecipePortionsEntity>> repoPortionsCallback;
+    ArgumentCaptor<PrimitiveDataSource.GetPrimitiveCallback<RecipePortionsEntity>> repoPortionsCallback;
     @Mock
     TimeProvider timeProviderMock;
     @Mock
@@ -194,7 +194,7 @@ public class RecipeIdentityEditorViewModelTest {
     @Test
     public void startNewRecipeId_requestFromAnotherRecipeMacroClient_identityResponsePushedRegisteredCallback() {
         // Arrange
-        String recipeId = INVALID_NEW_EMPTY.getDataId();
+        String recipeId = INVALID_NEW_EMPTY.getId();
         String expectedTitle = INVALID_NEW_EMPTY.getTitle();
         String expectedDescription = INVALID_NEW_EMPTY.getDescription();
 
@@ -222,7 +222,7 @@ public class RecipeIdentityEditorViewModelTest {
     @Test
     public void startNewId_dataLoadingError_true() {
         // Arrange
-        String recipeId = INVALID_NEW_EMPTY.getDataId();
+        String recipeId = INVALID_NEW_EMPTY.getId();
 
         // An external request that starts/loads the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
@@ -239,7 +239,7 @@ public class RecipeIdentityEditorViewModelTest {
     @Test
     public void startNewId_invalidTitleTooShort_tooShortErrorMessageSetToObservable() {
         // Arrange
-        String recipeId = INVALID_NEW_EMPTY.getDataId();
+        String recipeId = INVALID_NEW_EMPTY.getId();
         String invalidTitle = INVALID_NEW_TITLE_TOO_SHORT.getTitle();
 
         // An external request that starts/loads the recipe
@@ -259,7 +259,7 @@ public class RecipeIdentityEditorViewModelTest {
     @Test
     public void startNewId_invalidTitleTooLong_tooLongErrorMessageSetToObservable() {
         // Arrange
-        String recipeId = INVALID_NEW_EMPTY.getDataId();
+        String recipeId = INVALID_NEW_EMPTY.getId();
         String invalidTitle = INVALID_NEW_TITLE_TOO_LONG.getTitle();
 
         // An external request that starts/loads the recipe
@@ -280,7 +280,7 @@ public class RecipeIdentityEditorViewModelTest {
     public void startNewId_invalidTitle_stateINVALID_CHANGED() {
         // Arrange
         String invalidTitle = INVALID_NEW_TITLE_TOO_SHORT.getTitle();
-        String recipeId = INVALID_NEW_EMPTY.getDataId();
+        String recipeId = INVALID_NEW_EMPTY.getId();
 
         // An external request that starts/loads the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
@@ -304,7 +304,7 @@ public class RecipeIdentityEditorViewModelTest {
 
     @Test
     public void startNewRecipeId_invalidTitleValidDescription_nothingSaved() {
-        String recipeId = INVALID_NEW_EMPTY.getDataId();
+        String recipeId = INVALID_NEW_EMPTY.getId();
         String invalidTitle = INVALID_NEW_TITLE_INVALID_DESCRIPTION_VALID.getTitle();
         String validDescription = INVALID_NEW_TITLE_INVALID_DESCRIPTION_VALID.getDescription();
 
@@ -326,7 +326,7 @@ public class RecipeIdentityEditorViewModelTest {
     @Test
     public void startNewRecipeId_validTitle_errorMessageObservableNull() {
         // Arrange
-        String recipeId = INVALID_NEW_EMPTY.getDataId();
+        String recipeId = INVALID_NEW_EMPTY.getId();
         String validTitle = VALID_NEW_TITLE_VALID.getTitle();
 
         // An external request that starts/loads the recipe
@@ -346,7 +346,7 @@ public class RecipeIdentityEditorViewModelTest {
     @Test
     public void startNewRecipeId_validTitle_titleSaved() {
         // Arrange
-        String recipeId = INVALID_NEW_EMPTY.getDataId();
+        String recipeId = INVALID_NEW_EMPTY.getId();
         String title = VALID_NEW_TITLE_VALID.getTitle();
         long time = VALID_NEW_TITLE_VALID.getCreateDate();
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(time);
@@ -368,7 +368,7 @@ public class RecipeIdentityEditorViewModelTest {
     @Test
     public void startNewRecipeId_validTitle_stateVALID_CHANGED() {
         // Arrange
-        String recipeId = INVALID_NEW_EMPTY.getDataId();
+        String recipeId = INVALID_NEW_EMPTY.getId();
         String title = VALID_NEW_TITLE_VALID.getTitle();
 
         // An external request that starts/loads the recipe
@@ -394,7 +394,7 @@ public class RecipeIdentityEditorViewModelTest {
     @Test
     public void startNewRecipeId_validTitleInvalidDescription_errorMessageSetToObservable() {
         // Arrange
-        String recipeId = INVALID_NEW_EMPTY.getDataId();
+        String recipeId = INVALID_NEW_EMPTY.getId();
 
         String validTitle = new StringMaker().
                 makeStringOfExactLength(shortTextMaxLength).
@@ -423,7 +423,7 @@ public class RecipeIdentityEditorViewModelTest {
     @Test
     public void startNewRecipeId_validTitleInvalidDescription_descriptionNotSaved() {
         // Arrange
-        String recipeId = INVALID_NEW_EMPTY.getDataId();
+        String recipeId = INVALID_NEW_EMPTY.getId();
 
         String validTitle = new StringMaker().
                 makeStringOfExactLength(shortTextMaxLength).
@@ -451,7 +451,7 @@ public class RecipeIdentityEditorViewModelTest {
     @Test
     public void startNewRecipeId_validTitleInvalidDescription_stateINVALID_CHANGED() {
         // Arrange
-        String recipeId = INVALID_NEW_EMPTY.getDataId();
+        String recipeId = INVALID_NEW_EMPTY.getId();
 
         String validTitle = new StringMaker().
                 makeStringOfExactLength(shortTextMaxLength).
@@ -486,7 +486,7 @@ public class RecipeIdentityEditorViewModelTest {
     @Test
     public void startNewRecipeId_validTitleValidDescription_errorMessageObservableNull() {
         // Arrange
-        String recipeId = INVALID_NEW_EMPTY.getDataId();
+        String recipeId = INVALID_NEW_EMPTY.getId();
         String title = VALID_NEW_COMPLETE.getTitle();
         String description = VALID_NEW_COMPLETE.getDescription();
 
@@ -509,7 +509,7 @@ public class RecipeIdentityEditorViewModelTest {
     @Test
     public void startNewRecipeId_validTitleValidDescription_saved() {
         // Arrange
-        String recipeId = INVALID_NEW_EMPTY.getDataId();
+        String recipeId = INVALID_NEW_EMPTY.getId();
 
         String validTitle = VALID_NEW_COMPLETE.getTitle();
         String validDescription = VALID_NEW_COMPLETE.getDescription();
@@ -534,7 +534,7 @@ public class RecipeIdentityEditorViewModelTest {
     @Test
     public void startNewRecipeId_validTitleValidDescription_stateVALID_CHANGED() {
         // Arrange
-        String recipeId = INVALID_NEW_EMPTY.getDataId();
+        String recipeId = INVALID_NEW_EMPTY.getId();
         String validTitle = VALID_NEW_COMPLETE.getTitle();
         String validDescription = VALID_NEW_COMPLETE.getDescription();
         whenTimeProviderReturnTime(VALID_NEW_COMPLETE.getCreateDate());
@@ -563,7 +563,7 @@ public class RecipeIdentityEditorViewModelTest {
     @Test
     public void startValidExistingRecipeId_textValuesSetToObservables() {
         // Arrange
-        String recipeId = VALID_EXISTING_COMPLETE.getDataId();
+        String recipeId = VALID_EXISTING_COMPLETE.getId();
         String title = VALID_EXISTING_COMPLETE.getTitle();
         String description = VALID_EXISTING_COMPLETE.getDescription();
 
@@ -590,7 +590,7 @@ public class RecipeIdentityEditorViewModelTest {
     @Test
     public void startValidExistingRecipeId_stateVALID_UNCHANGED() {
         // Arrange
-        String recipeId = VALID_EXISTING_COMPLETE.getDataId();
+        String recipeId = VALID_EXISTING_COMPLETE.getId();
 
         // An external request that starts/loads the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
@@ -619,7 +619,7 @@ public class RecipeIdentityEditorViewModelTest {
     @Test
     public void startValidExistingRecipeId_invalidTitle_errorMessageSetToObservable() {
         // Arrange
-        String recipeId = INVALID_EXISTING_INCOMPLETE_INVALID_TITLE.getDataId();
+        String recipeId = INVALID_EXISTING_INCOMPLETE_INVALID_TITLE.getId();
 
         // An external request that starts/loads the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
@@ -685,7 +685,7 @@ public class RecipeIdentityEditorViewModelTest {
     }
 
     private void verifyRepoCoursesCalledAndReturnDataUnavailable(String recipeId) {
-        verify(repoCourseMock).getAllByRecipeId(eq(recipeId), repoCourseCallback.capture());
+        verify(repoCourseMock).getAllByDomainId(eq(recipeId), repoCourseCallback.capture());
         repoCourseCallback.getValue().onDataUnavailable();
     }
 

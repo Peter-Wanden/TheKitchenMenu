@@ -1,15 +1,13 @@
 package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course;
 
 import com.example.peter.thekitchenmenu.app.AppExecutors;
-import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipeCourse;
+import com.example.peter.thekitchenmenu.data.repository.dataadapter.toprimitive.recipe.course.RecipeCoursePrimitiveDataSource;
 
 import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import static androidx.core.util.Preconditions.checkNotNull;
-
-public class RecipeCourseLocalDataAccess implements DataAccessRecipeCourse {
+public class RecipeCourseLocalDataAccess implements RecipeCoursePrimitiveDataSource {
 
     private static volatile RecipeCourseLocalDataAccess INSTANCE;
 
@@ -37,42 +35,46 @@ public class RecipeCourseLocalDataAccess implements DataAccessRecipeCourse {
     }
 
     @Override
-    public void getAllByCourseNo(int courseNo,
-                                 @Nonnull GetAllDomainModelsCallback<RecipeCourseEntity> c) {
+    public void getAllByCourseNo(
+            int courseNo,
+            @Nonnull GetAllPrimitiveCallback<RecipeCourseEntity> c) {
         Runnable r = () -> {
             final List<RecipeCourseEntity> e = dao.getAllByCourseNo(courseNo);
             executors.mainThread().execute(() -> {
-                if (e.isEmpty())
-                    c.onModelsUnavailable();
-                else
+                if (e.isEmpty()) {
+                    c.onDataUnavailable();
+                } else {
                     c.onAllLoaded(e);
+                }
             });
         };
         executors.diskIO().execute(r);
     }
 
     @Override
-    public void getAllByRecipeId(@Nonnull String recipeId,
-                                 @Nonnull GetAllDomainModelsCallback<RecipeCourseEntity> c) {
+    public void getAllByDomainId(
+            String domainId,
+            @Nonnull GetAllPrimitiveCallback<RecipeCourseEntity> c) {
         Runnable r = () -> {
-            final List<RecipeCourseEntity> e = dao.getAllByRecipeId(recipeId);
+            final List<RecipeCourseEntity> e = dao.getAllByRecipeId(domainId);
             executors.mainThread().execute(() -> {
-                if (e.isEmpty())
-                    c.onModelsUnavailable();
-                else
+                if (e.isEmpty()) {
+                    c.onDataUnavailable();
+                } else {
                     c.onAllLoaded(e);
+                }
             });
         };
         executors.diskIO().execute(r);
     }
 
     @Override
-    public void getAll(@Nonnull GetAllDomainModelsCallback<RecipeCourseEntity> c) {
+    public void getAll(@Nonnull GetAllPrimitiveCallback<RecipeCourseEntity> c) {
         Runnable r = () -> {
             final List<RecipeCourseEntity> e = dao.getAll();
             executors.mainThread().execute(() -> {
                 if (e.isEmpty())
-                    c.onModelsUnavailable();
+                    c.onDataUnavailable();
                 else
                     c.onAllLoaded(e);
             });
@@ -81,15 +83,16 @@ public class RecipeCourseLocalDataAccess implements DataAccessRecipeCourse {
     }
 
     @Override
-    public void getById(@Nonnull String id,
-                        @Nonnull GetEntityCallback<RecipeCourseEntity> callback) {
+    public void getByDataId(
+            @Nonnull String dataId,
+            @Nonnull GetPrimitiveCallback<RecipeCourseEntity> c) {
         Runnable r = () -> {
-            final RecipeCourseEntity e = dao.getById(id);
+            final RecipeCourseEntity e = dao.getById(dataId);
             executors.mainThread().execute(() -> {
                 if (e != null)
-                    callback.onEntityLoaded(e);
+                    c.onEntityLoaded(e);
                 else
-                    callback.onDataUnavailable();
+                    c.onDataUnavailable();
             });
         };
         executors.diskIO().execute(r);
@@ -98,6 +101,12 @@ public class RecipeCourseLocalDataAccess implements DataAccessRecipeCourse {
     @Override
     public void save(@Nonnull RecipeCourseEntity entity) {
         Runnable r = () -> dao.insert(entity);
+        executors.diskIO().execute(r);
+    }
+
+    @Override
+    public void update(@Nonnull RecipeCourseEntity e) {
+        Runnable r = () -> dao.update(e);
         executors.diskIO().execute(r);
     }
 
@@ -117,5 +126,10 @@ public class RecipeCourseLocalDataAccess implements DataAccessRecipeCourse {
     public void deleteAllByDomainId(@Nonnull String domainId) {
         Runnable r = () -> dao.deleteByCourseId(domainId);
         executors.diskIO().execute(r);
+    }
+
+    @Override
+    public void deleteByDataId(@Nonnull String dataId) {
+
     }
 }

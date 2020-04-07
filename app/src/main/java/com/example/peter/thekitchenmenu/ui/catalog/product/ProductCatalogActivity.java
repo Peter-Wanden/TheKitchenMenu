@@ -117,7 +117,7 @@ public class ProductCatalogActivity
     public void viewProduct(ProductModel productModel) {
         Intent intent = new Intent(this, ProductViewerActivity.class);
         intent.putExtra(ProductEditorActivity.EXTRA_PRODUCT_ID,
-                productModel.getProductEntity().getDataId());
+                productModel.getProductEntity().getId());
         startActivityForResult(intent, ProductViewerActivity.REQUEST_VIEW_PRODUCT);
     }
 

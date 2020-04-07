@@ -1,8 +1,8 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course;
 
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainMessageBaseModel;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainMessageModel;
+import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +13,7 @@ import javax.annotation.Nonnull;
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse.*;
 
 public final class RecipeCourseRequest
-        extends UseCaseDomainMessageBaseModel<RecipeCourseRequest.Model>
+        extends BaseDomainMessageModel<RecipeCourseRequest.Model>
         implements UseCase.Request {
 
     private RecipeCourseRequest() {}
@@ -50,7 +50,7 @@ public final class RecipeCourseRequest
         }
     }
 
-    public static final class Model extends UseCaseDomainModel {
+    public static final class Model extends BaseDomainModel {
 
         private List<Course> courseList;
 

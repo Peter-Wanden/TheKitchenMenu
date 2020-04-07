@@ -30,7 +30,7 @@ import static com.example.peter.thekitchenmenu.domain.usecase.textvalidation.Tex
 
 public class Ingredient
         extends UseCase
-        implements DataAccess.GetDomainModelCallback<IngredientPersistenceModel> {
+        implements DataAccess.GetDomainModelCallback<IngredientModelPersistence> {
 
     private static final String TAG = "tkm-" + Ingredient.class.getSimpleName() + ": ";
 
@@ -91,7 +91,7 @@ public class Ingredient
 
     private IngredientRequest request;
     private IngredientRequest.Model requestModel;
-    private IngredientPersistenceModel persistenceModel;
+    private IngredientModelPersistence persistenceModel;
 
     public Ingredient(@Nonnull RepositoryIngredient repository,
                       @Nonnull UniqueIdProvider idProvider,
@@ -135,7 +135,7 @@ public class Ingredient
     }
 
     @Override
-    public void onModelLoaded(IngredientPersistenceModel model) {
+    public void onModelLoaded(IngredientModelPersistence model) {
         persistenceModel = model;
         if (isEditable()) {
             validateData();
@@ -153,12 +153,12 @@ public class Ingredient
         buildResponse();
     }
 
-    private IngredientPersistenceModel createNewPersistenceModel() {
+    private IngredientModelPersistence createNewPersistenceModel() {
         long currentTime = timeProvider.getCurrentTimeInMills();
         dataId = idProvider.getUId();
         ingredientId = idProvider.getUId();
 
-        return new IngredientPersistenceModel.Builder().
+        return new IngredientModelPersistence.Builder().
                 getDefault().
                 setDataId(dataId).
                 setDomainId(ingredientId).
@@ -321,8 +321,8 @@ public class Ingredient
                 build();
     }
 
-    private IngredientPersistenceModel updatePersistenceFromRequestModel() {
-        return IngredientPersistenceModel.Builder.
+    private IngredientModelPersistence updatePersistenceFromRequestModel() {
+        return IngredientModelPersistence.Builder.
                 basedOnPersistenceModel(persistenceModel).
                 setConversionFactor(persistenceModel.getConversionFactor()).
                 setName(persistenceModel.getName()).
@@ -330,7 +330,7 @@ public class Ingredient
                 build();
     }
 
-    private void save(IngredientPersistenceModel model) {
+    private void save(IngredientModelPersistence model) {
         repository.save(model);
     }
 

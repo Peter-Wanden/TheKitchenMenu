@@ -3,7 +3,7 @@ package com.example.peter.thekitchenmenu.data.repository.source.remote;
 import android.database.Cursor;
 
 import com.example.peter.thekitchenmenu.data.primitivemodel.product.ProductEntity;
-import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
+import com.example.peter.thekitchenmenu.data.repository.dataadapter.toprimitive.PrimitiveDataSource;
 
 import javax.annotation.Nonnull;
 
@@ -18,14 +18,14 @@ public class ProductRemoteDataSource implements PrimitiveDataSource<ProductEntit
     }
 
     @Override
-    public void getAll(@Nonnull GetAllCallback<ProductEntity> callback) {
+    public void getAll(@Nonnull GetAllPrimitiveCallback<ProductEntity> callback) {
         callback.onDataUnavailable();
     }
 
     @Override
     public void getByDataId(
             @Nonnull String dataId,
-            @Nonnull GetEntityCallback<ProductEntity> callback) {
+            @Nonnull GetPrimitiveCallback<ProductEntity> callback) {
         callback.onDataUnavailable();
     }
 

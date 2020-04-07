@@ -16,7 +16,7 @@ public class ShoppingListItemEntity implements PrimitiveModel {
 
     @Nonnull
     @Override
-    public String getDataId() {
+    public String getId() {
         return id;
     }
 }

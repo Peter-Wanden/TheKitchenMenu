@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.componentstate;
 
 import com.example.peter.thekitchenmenu.app.AppExecutors;
-import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSourceChild;
+import com.example.peter.thekitchenmenu.data.repository.dataadapter.toprimitive.PrimitiveDataSourceChild;
 
 import java.util.List;
 
@@ -37,7 +37,7 @@ public class RecipeComponentStateLocalDataSource
     }
 
     @Override
-    public void getAll(@Nonnull GetAllCallback<RecipeComponentStateEntity> c) {
+    public void getAll(@Nonnull GetAllPrimitiveCallback<RecipeComponentStateEntity> c) {
         Runnable r = () -> {
             final List<RecipeComponentStateEntity> entities = dao.getAll();
             executors.diskIO().execute(() -> {
@@ -52,7 +52,7 @@ public class RecipeComponentStateLocalDataSource
 
     @Override
     public void getAllByParentDataId(@Nonnull String parentDataId,
-                                     @Nonnull GetAllCallback<RecipeComponentStateEntity> c) {
+                                     @Nonnull GetAllPrimitiveCallback<RecipeComponentStateEntity> c) {
         Runnable r = () -> {
             final List<RecipeComponentStateEntity> e = dao.getAllByParentDataId(parentDataId);
             executors.mainThread().execute(() -> {
@@ -67,7 +67,7 @@ public class RecipeComponentStateLocalDataSource
 
     @Override
     public void getByDataId(@Nonnull String dataId,
-                            @Nonnull GetEntityCallback<RecipeComponentStateEntity> c) {
+                            @Nonnull GetPrimitiveCallback<RecipeComponentStateEntity> c) {
         Runnable r = () -> {
             final RecipeComponentStateEntity e = dao.getByDataId(dataId);
             executors.mainThread().execute(() -> {

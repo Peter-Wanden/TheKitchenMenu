@@ -16,7 +16,7 @@ public interface RecipeComponentStateEntityDao {
     @Query("SELECT * FROM " + TABLE_RECIPE_COMPONENT_STATE)
     List<RecipeComponentStateEntity> getAll();
 
-    @Query("SELECT * FROM " + TABLE_RECIPE_COMPONENT_STATE + " WHERE " + DATA_ID + " = :dataId")
+    @Query("SELECT * FROM " + TABLE_RECIPE_COMPONENT_STATE + " WHERE " + DATA_ID + "id = :dataId")
     RecipeComponentStateEntity getByDataId(String dataId);
 
     @Query("SELECT * FROM " + TABLE_RECIPE_COMPONENT_STATE + " WHERE " + PARENT_DATA_ID + " = :parentDataId")
@@ -31,7 +31,7 @@ public interface RecipeComponentStateEntityDao {
     @Update
     void update(RecipeComponentStateEntity e);
 
-    @Query("DELETE FROM " + TABLE_RECIPE_COMPONENT_STATE + " WHERE " + DATA_ID + " = :dataId")
+    @Query("DELETE FROM " + TABLE_RECIPE_COMPONENT_STATE + " WHERE " + DATA_ID + "id = :dataId")
     void deleteByDataId(String dataId);
 
     @Query("DELETE FROM " + TABLE_RECIPE_COMPONENT_STATE + " WHERE " + PARENT_DATA_ID + " = :parentDataId")

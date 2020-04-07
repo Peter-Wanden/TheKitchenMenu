@@ -4,12 +4,12 @@ import androidx.databinding.ObservableField;
 import androidx.lifecycle.ViewModel;
 
 import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.IngredientEntity;
-import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
+import com.example.peter.thekitchenmenu.data.repository.dataadapter.toprimitive.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.ingredient.RepositoryIngredient;
 
 public class IngredientViewerViewModel
         extends ViewModel
-        implements PrimitiveDataSource.GetEntityCallback<IngredientEntity> {
+        implements PrimitiveDataSource.GetPrimitiveCallback<IngredientEntity> {
 
     private RepositoryIngredient repositoryIngredient;
 

@@ -10,7 +10,7 @@ import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.dura
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.parent.RecipeMetadataParentEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.RecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.RecipePortionsEntity;
-import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
+import com.example.peter.thekitchenmenu.data.repository.dataadapter.toprimitive.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeComponentState;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeCourse;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeDuration;
@@ -89,23 +89,23 @@ public class RecipePortionsEditorViewModelTest {
     @Mock
     RepositoryRecipeComponentState repoRecipeMock;
     @Captor
-    ArgumentCaptor<PrimitiveDataSource.GetEntityCallback<RecipeMetadataParentEntity>> repoRecipeCallback;
+    ArgumentCaptor<PrimitiveDataSource.GetPrimitiveCallback<RecipeMetadataParentEntity>> repoRecipeCallback;
     @Mock
     RepositoryRecipeIdentity repoIdentityMock;
     @Captor
-    ArgumentCaptor<PrimitiveDataSource.GetEntityCallback<RecipeIdentityEntity>> repoIdentityCallback;
+    ArgumentCaptor<PrimitiveDataSource.GetPrimitiveCallback<RecipeIdentityEntity>> repoIdentityCallback;
     @Mock
     RepositoryRecipeCourse repoCourseMock;
     @Captor
-    ArgumentCaptor<PrimitiveDataSource.GetAllCallback<RecipeCourseEntity>> repoCourseCallback;
+    ArgumentCaptor<PrimitiveDataSource.GetAllPrimitiveCallback<RecipeCourseEntity>> repoCourseCallback;
     @Mock
     RepositoryRecipeDuration repoDurationMock;
     @Captor
-    ArgumentCaptor<PrimitiveDataSource.GetEntityCallback<RecipeDurationEntity>> repoDurationCallback;
+    ArgumentCaptor<PrimitiveDataSource.GetPrimitiveCallback<RecipeDurationEntity>> repoDurationCallback;
     @Mock
     RepositoryRecipePortions repoPortionsMock;
     @Captor
-    ArgumentCaptor<PrimitiveDataSource.GetEntityCallback<RecipePortionsEntity>> repoPortionsCallback;
+    ArgumentCaptor<PrimitiveDataSource.GetPrimitiveCallback<RecipePortionsEntity>> repoPortionsCallback;
     @Mock
     private Resources resourcesMock;
     @Mock
@@ -447,7 +447,7 @@ public class RecipePortionsEditorViewModelTest {
     public void startNewRecipeId_validSittingsValidServings_saved() {
         // Arrange
         String recipeId = NEW_EMPTY.getRecipeId();
-        whenIdProviderReturn(NEW_EMPTY.getDataId());
+        whenIdProviderReturn(NEW_EMPTY.getId());
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(NEW_EMPTY.getCreateDate());
         // An external request that starts/loads the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
@@ -648,7 +648,7 @@ public class RecipePortionsEditorViewModelTest {
     }
 
     private void verifyRepoCoursesCalledAndReturnDataUnavailable(String recipeId) {
-        verify(repoCourseMock).getAllByRecipeId(eq(recipeId), repoCourseCallback.capture());
+        verify(repoCourseMock).getAllByDomainId(eq(recipeId), repoCourseCallback.capture());
         repoCourseCallback.getValue().onDataUnavailable();
     }
 
@@ -670,7 +670,7 @@ public class RecipePortionsEditorViewModelTest {
         repoIdentityCallback.getValue().onEntityLoaded(TestDataRecipeIdentityEntity.
                 getValidExistingTitleValidDescriptionValid());
 
-        verify(repoCourseMock).getAllByRecipeId(eq(recipeId), repoCourseCallback.capture());
+        verify(repoCourseMock).getAllByDomainId(eq(recipeId), repoCourseCallback.capture());
         repoCourseCallback.getValue().onAllLoaded(TestDataRecipeCourseEntity.
                 getAllByRecipeId(recipeId));
 

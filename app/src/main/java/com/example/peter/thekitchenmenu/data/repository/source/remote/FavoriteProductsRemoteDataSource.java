@@ -16,19 +16,19 @@ public class FavoriteProductsRemoteDataSource implements DataSourceFavoriteProdu
     }
 
     @Override
-    public void getAll(@Nonnull GetAllCallback callback) {
+    public void getAll(@Nonnull GetAllPrimitiveCallback callback) {
         callback.onDataUnavailable();
     }
 
     @Override
     public void getByDataId(@Nonnull String dataId,
-                            @Nonnull GetEntityCallback<FavoriteProductEntity> callback) {
+                            @Nonnull GetPrimitiveCallback<FavoriteProductEntity> callback) {
         callback.onDataUnavailable();
     }
 
     @Override
     public void getByProductId(@Nonnull String productId,
-                               @Nonnull GetEntityCallback<FavoriteProductEntity> callback) {
+                               @Nonnull GetPrimitiveCallback<FavoriteProductEntity> callback) {
         callback.onDataUnavailable();
     }
 

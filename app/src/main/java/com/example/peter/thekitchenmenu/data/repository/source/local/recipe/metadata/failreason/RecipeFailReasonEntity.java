@@ -64,7 +64,7 @@ public final class RecipeFailReasonEntity implements PrimitiveModel {
     }
 
     @NonNull
-    public String getDataId() {
+    public String getId() {
         return id;
     }
 

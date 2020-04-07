@@ -27,7 +27,7 @@ public final class RecipeMetadataParentEntity implements PrimitiveModel {
     @PrimaryKey
     @NonNull
     @ColumnInfo(name = DATA_ID)
-    private final String dataId;
+    private final String id;
 
     @Nonnull
     @ColumnInfo(name = DOMAIN_ID)
@@ -50,14 +50,14 @@ public final class RecipeMetadataParentEntity implements PrimitiveModel {
     @ColumnInfo(name = LAST_UPDATE)
     private final long lastUpdate;
 
-    private RecipeMetadataParentEntity(@Nonnull String dataId,
+    public RecipeMetadataParentEntity(@Nonnull String id,
                                       @Nonnull String domainId,
                                       @Nonnull String recipeParentId,
                                       int recipeStateId,
                                       @Nonnull String createdBy,
                                       long createDate,
                                       long lastUpdate) {
-        this.dataId = dataId;
+        this.id = id;
         this.domainId = domainId;
         this.recipeParentId = recipeParentId;
         this.recipeStateId = recipeStateId;
@@ -74,7 +74,7 @@ public final class RecipeMetadataParentEntity implements PrimitiveModel {
         return recipeStateId == that.recipeStateId &&
                 createDate == that.createDate &&
                 lastUpdate == that.lastUpdate &&
-                dataId.equals(that.dataId) &&
+                id.equals(that.id) &&
                 domainId.equals(that.domainId) &&
                 recipeParentId.equals(that.recipeParentId) &&
                 createdBy.equals(that.createdBy);
@@ -83,14 +83,15 @@ public final class RecipeMetadataParentEntity implements PrimitiveModel {
     @Override
     public int hashCode() {
         return Objects.hash(
-                dataId, domainId, recipeParentId, recipeStateId,
+                id, domainId, recipeParentId, recipeStateId,
                 createdBy, createDate, lastUpdate);
     }
 
+    @Nonnull
     @Override
     public String toString() {
         return "RecipeMetadataEntity{" +
-                "dataId='" + dataId + '\'' +
+                "dataId='" + id + '\'' +
                 ", domainId='" + domainId + '\'' +
                 ", recipeParentId='" + recipeParentId + '\'' +
                 ", recipeStateId=" + recipeStateId +
@@ -102,8 +103,8 @@ public final class RecipeMetadataParentEntity implements PrimitiveModel {
 
     @Nonnull
     @Override
-    public String getDataId() {
-        return dataId;
+    public String getId() {
+        return id;
     }
 
     @Nonnull

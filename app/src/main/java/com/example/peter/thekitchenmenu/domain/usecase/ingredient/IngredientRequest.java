@@ -2,15 +2,15 @@ package com.example.peter.thekitchenmenu.domain.usecase.ingredient;
 
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainModel;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainMessageBaseModel;
+import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainMessageModel;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
 public final class IngredientRequest
-        extends UseCaseDomainMessageBaseModel<IngredientRequest.Model>
+        extends BaseDomainMessageModel<IngredientRequest.Model>
         implements UseCase.Request {
 
     private IngredientRequest() {}
@@ -35,7 +35,7 @@ public final class IngredientRequest
         }
     }
 
-    public static final class Model extends UseCaseDomainModel {
+    public static final class Model extends BaseDomainModel {
         private String name;
         private String description;
         private double conversionFactor;

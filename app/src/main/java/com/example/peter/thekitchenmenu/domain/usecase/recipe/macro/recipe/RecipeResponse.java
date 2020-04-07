@@ -1,8 +1,8 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe;
 
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainMessageBaseModel;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainMessageModel;
+import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata;
 
 import java.util.HashMap;
@@ -10,7 +10,7 @@ import java.util.LinkedHashMap;
 
 
 public final class RecipeResponse
-        extends UseCaseDomainMessageBaseModel<RecipeResponse.Model>
+        extends BaseDomainMessageModel<RecipeResponse.Model>
         implements UseCase.Response {
 
     private RecipeResponse() {
@@ -37,7 +37,7 @@ public final class RecipeResponse
         }
     }
 
-    public static final class Model extends UseCaseDomainModel {
+    public static final class Model extends BaseDomainModel {
         private HashMap<RecipeMetadata.ComponentName, UseCase.Response> componentResponses;
 
         public Model() {

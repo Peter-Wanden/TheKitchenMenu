@@ -8,10 +8,10 @@ import java.util.List;
 public class TestDataRecipeCourseEntity {
 
     public static final String EXISTING_RECIPE_ID =
-            TestDataRecipeMetadataEntity.getValidExisting().getDataId();
+            TestDataRecipeMetadataEntity.getValidExisting().getId();
 
     private static final String NEW_RECIPE_ID =
-            TestDataRecipeMetadataEntity.getNewInvalid().getDataId();
+            TestDataRecipeMetadataEntity.getNewInvalid().getId();
 
     public static RecipeCourseEntity getRecipeCourseZero() {
         return new RecipeCourseEntity(

@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.failreason;
 
 import com.example.peter.thekitchenmenu.app.AppExecutors;
-import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSourceChild;
+import com.example.peter.thekitchenmenu.data.repository.dataadapter.toprimitive.PrimitiveDataSourceChild;
 
 import java.util.List;
 
@@ -37,7 +37,7 @@ public class RecipeFailReasonsLocalDataSource
     }
 
     @Override
-    public void getAll(@Nonnull GetAllCallback<RecipeFailReasonEntity> c) {
+    public void getAll(@Nonnull GetAllPrimitiveCallback<RecipeFailReasonEntity> c) {
         Runnable r = () -> {
             final List<RecipeFailReasonEntity> e = dao.getAll();
             executors.mainThread().execute(() -> {
@@ -52,7 +52,7 @@ public class RecipeFailReasonsLocalDataSource
 
     @Override
     public void getAllByParentDataId(@Nonnull String parentDataId,
-                                     @Nonnull GetAllCallback<RecipeFailReasonEntity> c) {
+                                     @Nonnull GetAllPrimitiveCallback<RecipeFailReasonEntity> c) {
         Runnable r = () -> {
             final List<RecipeFailReasonEntity> e = dao.getAllByParentDataId(parentDataId);
             executors.mainThread().execute(() -> {
@@ -67,7 +67,7 @@ public class RecipeFailReasonsLocalDataSource
 
     @Override
     public void getByDataId(@Nonnull String dataId,
-                            @Nonnull GetEntityCallback<RecipeFailReasonEntity> c) {
+                            @Nonnull GetPrimitiveCallback<RecipeFailReasonEntity> c) {
         Runnable r = () -> {
             final RecipeFailReasonEntity e = dao.getByDataId(dataId);
             executors.mainThread().execute(() -> {

@@ -2,8 +2,8 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata;
 
 import com.example.peter.thekitchenmenu.domain.model.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainMessageBaseModelMetadata;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainMessageModelMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainModel;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadata;
 
 import java.util.ArrayList;
@@ -16,7 +16,7 @@ import javax.annotation.Nonnull;
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.*;
 
 public final class RecipeMetadataResponse
-        extends UseCaseDomainMessageBaseModelMetadata<RecipeMetadataResponse.Model>
+        extends BaseDomainMessageModelMetadata<RecipeMetadataResponse.Model>
         implements UseCase.Response {
 
     private RecipeMetadataResponse() {}
@@ -42,7 +42,7 @@ public final class RecipeMetadataResponse
         }
     }
 
-    public static final class Model extends UseCaseDomainModel {
+    public static final class Model extends BaseDomainModel {
         private String parentId;
         private RecipeState state;
         private List<FailReasons> failReasons;

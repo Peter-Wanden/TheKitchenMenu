@@ -1,16 +1,13 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions;
 
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainMessageBaseModel;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainModel;
-import com.google.gson.internal.$Gson$Types;
+import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainMessageModel;
+import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainModel;
 
 import java.util.Objects;
 
-import javax.annotation.Nonnull;
-
 public final class RecipePortionsRequest
-        extends UseCaseDomainMessageBaseModel<RecipePortionsRequest.Model>
+        extends BaseDomainMessageModel<RecipePortionsRequest.Model>
         implements UseCase.Request {
 
     private RecipePortionsRequest() {}
@@ -43,7 +40,7 @@ public final class RecipePortionsRequest
         }
     }
 
-    public static final class Model extends UseCaseDomainModel {
+    public static final class Model extends BaseDomainModel {
         private int servings;
         private int sittings;
 

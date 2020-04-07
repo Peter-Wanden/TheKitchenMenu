@@ -22,7 +22,7 @@ import static com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.Re
 
 public class RecipeDuration
         extends UseCase
-        implements DataAccess.GetDomainModelCallback<RecipeDurationPersistenceModel> {
+        implements DataAccess.GetDomainModelCallback<RecipeDurationModelPersistence> {
 
     private static final String TAG = "tkm-" + RecipeDuration.class.getSimpleName() + ": ";
 
@@ -71,7 +71,7 @@ public class RecipeDuration
     private boolean isNewRequest;
 
     private RecipeDurationRequest.Model requestModel;
-    private RecipeDurationPersistenceModel persistenceModel;
+    private RecipeDurationModelPersistence persistenceModel;
 
     public RecipeDuration(@Nonnull RepositoryRecipeDuration repository,
                           @Nonnull TimeProvider timeProvider,
@@ -114,7 +114,7 @@ public class RecipeDuration
     }
 
     @Override
-    public void onModelLoaded(RecipeDurationPersistenceModel persistenceModel) {
+    public void onModelLoaded(RecipeDurationModelPersistence persistenceModel) {
         this.persistenceModel = persistenceModel;
 
         if (!dataId.equals(persistenceModel.getDataId())) {
@@ -132,10 +132,10 @@ public class RecipeDuration
         buildResponse();
     }
 
-    private RecipeDurationPersistenceModel createNewPersistenceModel() {
+    private RecipeDurationModelPersistence createNewPersistenceModel() {
         long currentTime = timeProvider.getCurrentTimeInMills();
         dataId = idProvider.getUId();
-        return new RecipeDurationPersistenceModel.Builder().
+        return new RecipeDurationModelPersistence.Builder().
                 getDefault().
                 setDataId(dataId).
                 setDomainId(recipeId).
@@ -245,8 +245,8 @@ public class RecipeDuration
     }
 
     // todo, needs a new dataId
-    private RecipeDurationPersistenceModel updatePersistenceFromRequestModel() {
-        return new RecipeDurationPersistenceModel.Builder().
+    private RecipeDurationModelPersistence updatePersistenceFromRequestModel() {
+        return new RecipeDurationModelPersistence.Builder().
                 basedOnPersistenceModel(persistenceModel).
 
                 setPrepTime(getTotalMinutes(

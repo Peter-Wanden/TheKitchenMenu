@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.data.repository.source.remote;
 
 import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.IngredientEntity;
-import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
+import com.example.peter.thekitchenmenu.data.repository.dataadapter.toprimitive.PrimitiveDataSource;
 
 import javax.annotation.Nonnull;
 
@@ -16,13 +16,13 @@ public class IngredientRemoteDataSource implements PrimitiveDataSource<Ingredien
     }
 
     @Override
-    public void getAll(@Nonnull GetAllCallback<IngredientEntity> callback) {
+    public void getAll(@Nonnull GetAllPrimitiveCallback<IngredientEntity> callback) {
         callback.onDataUnavailable();
     }
 
     @Override
     public void getByDataId(@Nonnull String dataId,
-                            @Nonnull GetEntityCallback<IngredientEntity> callback) {
+                            @Nonnull GetPrimitiveCallback<IngredientEntity> callback) {
         callback.onDataUnavailable();
     }
 

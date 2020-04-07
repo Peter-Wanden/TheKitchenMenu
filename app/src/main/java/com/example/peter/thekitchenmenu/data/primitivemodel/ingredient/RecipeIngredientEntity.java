@@ -109,6 +109,7 @@ public final class RecipeIngredientEntity implements PrimitiveModel {
                 lastUpdate);
     }
 
+    @Nonnull
     @Override
     public String toString() {
         return "RecipeIngredientEntity{" +
@@ -126,7 +127,7 @@ public final class RecipeIngredientEntity implements PrimitiveModel {
 
     @Override
     @Nonnull
-    public String getDataId() {
+    public String getId() {
         return id;
     }
 

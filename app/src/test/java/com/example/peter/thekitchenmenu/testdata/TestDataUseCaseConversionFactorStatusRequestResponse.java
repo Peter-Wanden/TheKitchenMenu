@@ -12,7 +12,7 @@ public class TestDataUseCaseConversionFactorStatusRequestResponse {
         return new ConversionFactorStatusRequest(
                 MeasurementSubtype.fromInt(TestDataRecipeIngredientQuantityEntity.
                         getNewValidMetric().getMeasurementSubtype()),
-                TestDataIngredientEntity.getNewValidNameValidDescription().getDataId());
+                TestDataIngredientEntity.getNewValidNameValidDescription().getId());
     }
 
     public static ConversionFactorStatusResponse
@@ -26,7 +26,7 @@ public class TestDataUseCaseConversionFactorStatusRequestResponse {
         return new ConversionFactorStatusRequest(
                 MeasurementSubtype.IMPERIAL_SPOON,
                 TestDataIngredientEntity.getExistingValidNameValidDescriptionFromAnotherUser().
-                        getDataId());
+                        getId());
     }
     public static ConversionFactorStatusResponse
     getResponseConversionFactorUneditable() {
@@ -38,7 +38,7 @@ public class TestDataUseCaseConversionFactorStatusRequestResponse {
     getRequestWithConversionFactorEnabledUnset() {
         return new ConversionFactorStatusRequest(
                 MeasurementSubtype.IMPERIAL_SPOON,
-                TestDataIngredientEntity.getNewInvalidNameValidDescription().getDataId());
+                TestDataIngredientEntity.getNewInvalidNameValidDescription().getId());
     }
     public static ConversionFactorStatusResponse
     getResponseConversionFactorEnabledUnset() {
@@ -50,7 +50,7 @@ public class TestDataUseCaseConversionFactorStatusRequestResponse {
     getRequestWithConversionFactorEnabledSet() {
         return new ConversionFactorStatusRequest(
                 MeasurementSubtype.IMPERIAL_SPOON,
-                TestDataIngredientEntity.getExistingValidWithConversionFactor().getDataId());
+                TestDataIngredientEntity.getExistingValidWithConversionFactor().getId());
     }
     public static ConversionFactorStatusResponse
     getResponseConversionFactorEnabledSet() {

@@ -2,12 +2,12 @@ package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor;
 
 import com.example.peter.thekitchenmenu.commonmocks.RecipeComponents;
 import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
+import com.example.peter.thekitchenmenu.data.repository.dataadapter.toprimitive.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.RecipeCourseEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.RecipeDurationEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.RecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.parent.RecipeMetadataParentEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.RecipePortionsEntity;
-import com.example.peter.thekitchenmenu.data.repository.*;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeCourse;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeDuration;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeIdentity;
@@ -57,8 +57,8 @@ public class RecipeCourseEditorViewModelTest {
 
     // region constants ----------------------------------------------------------------------------
     private RecipeMetadataParentEntity VALID_EXISTING_RECIPE_ENTITY = getValidExisting();
-    private String EXISTING_RECIPE_ID = VALID_EXISTING_RECIPE_ENTITY.getDataId();
-    private String NEW_RECIPE_ID = TestDataRecipeMetadataEntity.getNewInvalid().getDataId();
+    private String EXISTING_RECIPE_ID = VALID_EXISTING_RECIPE_ENTITY.getId();
+    private String NEW_RECIPE_ID = TestDataRecipeMetadataEntity.getNewInvalid().getId();
 
     private static final RecipeMetadataParentEntity RECIPE_INVALID_NEW =
             TestDataRecipeMetadataEntity.getNewInvalid();
@@ -79,23 +79,23 @@ public class RecipeCourseEditorViewModelTest {
     @Mock
     RepositoryRecipeComponentState repoRecipeMock;
     @Captor
-    ArgumentCaptor<PrimitiveDataSource.GetEntityCallback<RecipeMetadataParentEntity>> repoRecipeCallback;
+    ArgumentCaptor<PrimitiveDataSource.GetPrimitiveCallback<RecipeMetadataParentEntity>> repoRecipeCallback;
     @Mock
     RepositoryRecipeIdentity repoIdentityMock;
     @Captor
-    ArgumentCaptor<PrimitiveDataSource.GetEntityCallback<RecipeIdentityEntity>> repoIdentityCallback;
+    ArgumentCaptor<PrimitiveDataSource.GetPrimitiveCallback<RecipeIdentityEntity>> repoIdentityCallback;
     @Mock
     RepositoryRecipeCourse repoCourseMock;
     @Captor
-    ArgumentCaptor<PrimitiveDataSource.GetAllCallback<RecipeCourseEntity>> repoCourseCallback;
+    ArgumentCaptor<PrimitiveDataSource.GetAllPrimitiveCallback<RecipeCourseEntity>> repoCourseCallback;
     @Mock
     RepositoryRecipeDuration repoDurationMock;
     @Captor
-    ArgumentCaptor<PrimitiveDataSource.GetEntityCallback<RecipeDurationEntity>> repoDurationCallback;
+    ArgumentCaptor<PrimitiveDataSource.GetPrimitiveCallback<RecipeDurationEntity>> repoDurationCallback;
     @Mock
     RepositoryRecipePortions repoPortionsMock;
     @Captor
-    ArgumentCaptor<PrimitiveDataSource.GetEntityCallback<RecipePortionsEntity>> repoPortionsCallback;
+    ArgumentCaptor<PrimitiveDataSource.GetPrimitiveCallback<RecipePortionsEntity>> repoPortionsCallback;
     @Mock
     UniqueIdProvider idProviderMock;
     @Mock
@@ -175,7 +175,7 @@ public class RecipeCourseEditorViewModelTest {
     @Test
     public void start_recipeIdSupplied_databaseCalledForListOfCourses() {
         // Arrange
-        String recipeId = RECIPE_VALID_EXISTING.getDataId();
+        String recipeId = RECIPE_VALID_EXISTING.getId();
 
         // An external request that starts loads the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
@@ -188,13 +188,13 @@ public class RecipeCourseEditorViewModelTest {
         // Assert
         verifyAllOtherComponentReposCalledAndReturnValidExisting(recipeId);
         verifyRepoCourseCalledAndReturnCoursesMatchingId(recipeId);
-        verify(repoCourseMock).getAllByRecipeId(eq(recipeId), repoCourseCallback.capture());
+        verify(repoCourseMock).getAllByDomainId(eq(recipeId), repoCourseCallback.capture());
     }
 
     @Test
     public void start_recipeIdSupplied_observersCalled() {
         // Arrange
-        String recipeId = RECIPE_VALID_EXISTING.getDataId();
+        String recipeId = RECIPE_VALID_EXISTING.getId();
 
         // An external request that starts/loads the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
@@ -220,7 +220,7 @@ public class RecipeCourseEditorViewModelTest {
     @Test
     public void start_recipeIdSupplied_evenObserversCalledOnly() {
         // Arrange
-        String recipeId = RECIPE_VALID_EXISTING.getDataId();
+        String recipeId = RECIPE_VALID_EXISTING.getId();
 
         // An external request that starts/loads the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
@@ -293,7 +293,7 @@ public class RecipeCourseEditorViewModelTest {
     @Test
     public void courseZeroSelected_true_courseZeroAndRecipeIdSavedToDatabase() {
         // Arrange
-        when(idProviderMock.getUId()).thenReturn(getRecipeCourseZero().getDataId());
+        when(idProviderMock.getUId()).thenReturn(getRecipeCourseZero().getId());
         whenTimeProviderCalledReturnTime(getRecipeCourseZero().getCreateDate());
 
         // An external request that starts/loads the recipe
@@ -333,13 +333,13 @@ public class RecipeCourseEditorViewModelTest {
         verifyRepoCourseCalledAndReturnCoursesMatchingId(EXISTING_RECIPE_ID);
 
         SUT.setCourseZero(false);
-        verify(repoCourseMock).deleteByDataId(eq(TestDataRecipeCourseEntity.getRecipeCourseZero().getDataId()));
+        verify(repoCourseMock).deleteByDataId(eq(TestDataRecipeCourseEntity.getRecipeCourseZero().getId()));
     }
 
     @Test
     public void courseOneSelected_true_courseOneAndRecipeIdSavedToDatabase() {
         // Arrange
-        when(idProviderMock.getUId()).thenReturn(getRecipeCourseOne().getDataId());
+        when(idProviderMock.getUId()).thenReturn(getRecipeCourseOne().getId());
         whenTimeProviderCalledReturnTime(getRecipeCourseFour().getCreateDate());
         // Act
         // An external request that starts/loads the recipe
@@ -379,13 +379,13 @@ public class RecipeCourseEditorViewModelTest {
         SUT.setCourseOne(false);
 
         // Assert
-        verify(repoCourseMock).deleteByDataId(eq(getRecipeCourseOne().getDataId()));
+        verify(repoCourseMock).deleteByDataId(eq(getRecipeCourseOne().getId()));
     }
 
     @Test
     public void courseTwoSelected_true_courseId2AndRecipeIdSavedToDatabase() {
         // Arrange
-        when(idProviderMock.getUId()).thenReturn(getRecipeCourseTwo().getDataId());
+        when(idProviderMock.getUId()).thenReturn(getRecipeCourseTwo().getId());
         whenTimeProviderCalledReturnTime(getRecipeCourseTwo().getCreateDate());
 
         // An external request that starts/loads the recipe
@@ -424,13 +424,13 @@ public class RecipeCourseEditorViewModelTest {
 
         // Act
         SUT.setCourseTwo(false);
-        verify(repoCourseMock).deleteByDataId(eq(getRecipeCourseTwo().getDataId()));
+        verify(repoCourseMock).deleteByDataId(eq(getRecipeCourseTwo().getId()));
     }
 
     @Test
     public void courseThreeSelected_true_courseId3AndRecipeIdSavedToDatabase() {
         // Arrange
-        when(idProviderMock.getUId()).thenReturn(getRecipeCourseThree().getDataId());
+        when(idProviderMock.getUId()).thenReturn(getRecipeCourseThree().getId());
         whenTimeProviderCalledReturnTime(getRecipeCourseThree().getCreateDate());
 
         // An external request that starts/loads the recipe
@@ -471,13 +471,13 @@ public class RecipeCourseEditorViewModelTest {
         SUT.setCourseThree(false);
 
         // Assert
-        verify(repoCourseMock).deleteByDataId(eq(getRecipeCourseThree().getDataId()));
+        verify(repoCourseMock).deleteByDataId(eq(getRecipeCourseThree().getId()));
     }
 
     @Test
     public void courseFourSelected_true_courseId4AndRecipeIdSavedToDatabase() {
         // Arrange
-        when(idProviderMock.getUId()).thenReturn(getRecipeCourseFour().getDataId());
+        when(idProviderMock.getUId()).thenReturn(getRecipeCourseFour().getId());
         whenTimeProviderCalledReturnTime(getRecipeCourseFour().getCreateDate());
 
         // An external request that starts/loads the recipe
@@ -520,13 +520,13 @@ public class RecipeCourseEditorViewModelTest {
         SUT.setCourseFour(false);
 
         // Assert
-        verify(repoCourseMock).deleteByDataId(eq(getRecipeCourseFour().getDataId()));
+        verify(repoCourseMock).deleteByDataId(eq(getRecipeCourseFour().getId()));
     }
 
     @Test
     public void courseFiveSelected_true_courseId5AndRecipeIdSavedToDatabase() {
         // Arrange
-        when(idProviderMock.getUId()).thenReturn(getRecipeCourseFive().getDataId());
+        when(idProviderMock.getUId()).thenReturn(getRecipeCourseFive().getId());
         whenTimeProviderCalledReturnTime(getRecipeCourseFive().getCreateDate());
 
         // An external request that starts/loads the recipe
@@ -565,13 +565,13 @@ public class RecipeCourseEditorViewModelTest {
         SUT.setCourseFive(false);
 
         // Assert
-        verify(repoCourseMock).deleteByDataId(eq(getRecipeCourseFive().getDataId()));
+        verify(repoCourseMock).deleteByDataId(eq(getRecipeCourseFive().getId()));
     }
 
     @Test
     public void courseSixSelected_true_courseId6AndRecipeIdSavedToDatabase() {
         // Arrange
-        when(idProviderMock.getUId()).thenReturn(getRecipeCourseSix().getDataId());
+        when(idProviderMock.getUId()).thenReturn(getRecipeCourseSix().getId());
         whenTimeProviderCalledReturnTime(getRecipeCourseSix().getCreateDate());
         // An external request that starts/loads the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
@@ -611,13 +611,13 @@ public class RecipeCourseEditorViewModelTest {
         SUT.setCourseSix(false);
 
         // Assert
-        verify(repoCourseMock).deleteByDataId(eq(getRecipeCourseSix().getDataId()));
+        verify(repoCourseMock).deleteByDataId(eq(getRecipeCourseSix().getId()));
     }
 
     @Test
     public void courseSevenSelected_true_courseId7AndRecipeIdSavedToDatabase() {
         // Arrange
-        when(idProviderMock.getUId()).thenReturn(getRecipeCourseSeven().getDataId());
+        when(idProviderMock.getUId()).thenReturn(getRecipeCourseSeven().getId());
         whenTimeProviderCalledReturnTime(getRecipeCourseSeven().getCreateDate());
 
         // An external request that starts/loads the recipe
@@ -659,7 +659,7 @@ public class RecipeCourseEditorViewModelTest {
         SUT.setCourseSeven(false);
 
         // Assert
-        verify(repoCourseMock).deleteByDataId(getRecipeCourseSeven().getDataId());
+        verify(repoCourseMock).deleteByDataId(getRecipeCourseSeven().getId());
     }
 
     @Test
@@ -813,17 +813,17 @@ public class RecipeCourseEditorViewModelTest {
     }
 
     private void verifyRepoCourseCalledAndReturnCoursesMatchingId(String recipeId) {
-        verify(repoCourseMock).getAllByRecipeId(eq(recipeId), repoCourseCallback.capture());
+        verify(repoCourseMock).getAllByDomainId(eq(recipeId), repoCourseCallback.capture());
         repoCourseCallback.getValue().onAllLoaded(getAllByRecipeId(recipeId));
     }
 
     private void verifyRepoCourseCalledAndReturnEvenCoursesForId(String recipeId) {
-        verify(repoCourseMock).getAllByRecipeId(eq(recipeId), repoCourseCallback.capture());
+        verify(repoCourseMock).getAllByDomainId(eq(recipeId), repoCourseCallback.capture());
         repoCourseCallback.getValue().onAllLoaded(getEvenRecipeCoursesDatabaseResponse());
     }
 
     private void verifyRepoCourseCalledAndReturnDataUnavailableForId(String recipeId) {
-        verify(repoCourseMock).getAllByRecipeId(eq(recipeId), repoCourseCallback.capture());
+        verify(repoCourseMock).getAllByDomainId(eq(recipeId), repoCourseCallback.capture());
         repoCourseCallback.getValue().onDataUnavailable();
     }
 
@@ -843,11 +843,11 @@ public class RecipeCourseEditorViewModelTest {
 
     private void whenIdProviderReturnClonedEvenIds() {
         when(idProviderMock.getUId()).thenReturn(
-                getClonedRecipeCourseZero().getDataId(),
-                getClonedRecipeCourseZero().getDataId(),
-                getClonedRecipeCourseTwo().getDataId(),
-                getClonedRecipeCourseFour().getDataId(),
-                getClonedRecipeCourseSix().getDataId());
+                getClonedRecipeCourseZero().getId(),
+                getClonedRecipeCourseZero().getId(),
+                getClonedRecipeCourseTwo().getId(),
+                getClonedRecipeCourseFour().getId(),
+                getClonedRecipeCourseSix().getId());
     }
 
     private void whenTimeProviderCalledReturnTime(long time) {

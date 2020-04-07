@@ -2,14 +2,14 @@ package com.example.peter.thekitchenmenu.domain.usecase.ingredient;
 
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainMessageBaseModelMetadata;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainMessageModelMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainModel;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadata;
 
 import java.util.Objects;
 
 public final class IngredientResponse
-        extends UseCaseDomainMessageBaseModelMetadata<IngredientResponse.Model>
+        extends BaseDomainMessageModelMetadata<IngredientResponse.Model>
         implements UseCase.Response {
 
     private IngredientResponse() {}
@@ -35,7 +35,7 @@ public final class IngredientResponse
         }
     }
 
-    public static final class Model extends UseCaseDomainModel {
+    public static final class Model extends BaseDomainModel {
         private String name;
         private String description;
         private double conversionFactor;

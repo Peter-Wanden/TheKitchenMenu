@@ -34,7 +34,7 @@ public class RepositoryFavoriteProduct
 
     @Override
     public void getByProductId(@Nonnull String productId,
-                               @Nonnull GetEntityCallback<FavoriteProductEntity> callback) {
+                               @Nonnull GetPrimitiveCallback<FavoriteProductEntity> callback) {
 
         FavoriteProductEntity cachedEntity = checkCacheForProductId(productId);
 
@@ -44,13 +44,13 @@ public class RepositoryFavoriteProduct
         }
         ((DataSourceFavoriteProducts) localDataAccess).getByProductId(
                 productId,
-                new GetEntityCallback<FavoriteProductEntity>() {
+                new GetPrimitiveCallback<FavoriteProductEntity>() {
             @Override
             public void onEntityLoaded(FavoriteProductEntity entity) {
                 if (cache == null)
                     cache = new LinkedHashMap<>();
 
-                cache.put(entity.getDataId(), entity);
+                cache.put(entity.getId(), entity);
                 callback.onEntityLoaded(entity);
             }
 
@@ -58,13 +58,13 @@ public class RepositoryFavoriteProduct
             public void onDataUnavailable() {
                 ((DataSourceFavoriteProducts) remoteDataAccess).getByProductId(
                         productId,
-                        new GetEntityCallback<FavoriteProductEntity>() {
+                        new GetPrimitiveCallback<FavoriteProductEntity>() {
                     @Override
                     public void onEntityLoaded(FavoriteProductEntity entity) {
                         if (cache == null)
                             cache = new LinkedHashMap<>();
 
-                        cache.put(entity.getDataId(), entity);
+                        cache.put(entity.getId(), entity);
                         callback.onEntityLoaded(entity);
                     }
 

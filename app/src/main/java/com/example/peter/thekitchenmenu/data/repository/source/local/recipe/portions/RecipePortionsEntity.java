@@ -94,9 +94,9 @@ public final class RecipePortionsEntity implements PrimitiveModel {
                 lastUpdate);
     }
 
-    @Nonnull
     @Override
-    public String getDataId() {
+    @Nonnull
+    public String getId() {
         return id;
     }
 

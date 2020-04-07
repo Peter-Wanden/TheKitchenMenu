@@ -112,7 +112,7 @@ public class ProductEditorViewModel extends ObservableAndroidViewModel {
     private boolean isExistingProductEntityThatHasBeenEdited() {
         if (isExistingProductEntity) {
             ProductEntity productEntity = new ProductEntity(
-                    uneditedProductEntity.getValue().getDataId(),
+                    uneditedProductEntity.getValue().getId(),
                     updatedIdentityModel.getDescription(),
                     updatedIdentityModel.getShoppingListItemName(),
                     updatedIdentityModel.getCategory(),
@@ -157,7 +157,7 @@ public class ProductEditorViewModel extends ObservableAndroidViewModel {
 
         if (isExistingProductEntity) {
             productEntity = ProductEntity.updateProduct(
-                    uneditedProductEntity.getValue().getDataId(),
+                    uneditedProductEntity.getValue().getId(),
                     updatedIdentityModel.getDescription(),
                     updatedIdentityModel.getShoppingListItemName(),
                     updatedIdentityModel.getCategory(),

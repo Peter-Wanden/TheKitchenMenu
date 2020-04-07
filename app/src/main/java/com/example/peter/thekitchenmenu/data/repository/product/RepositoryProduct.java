@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.data.repository.product;
 
 import com.example.peter.thekitchenmenu.data.primitivemodel.product.ProductEntity;
-import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
+import com.example.peter.thekitchenmenu.data.repository.dataadapter.toprimitive.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.Repository;
 
 import javax.annotation.Nonnull;

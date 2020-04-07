@@ -1,15 +1,15 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity;
 
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainMessageBaseModel;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainMessageModel;
+import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainModel;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
 public final class RecipeIdentityRequest
-        extends UseCaseDomainMessageBaseModel<RecipeIdentityRequest.Model>
+        extends BaseDomainMessageModel<RecipeIdentityRequest.Model>
         implements UseCase.Request {
 
     private RecipeIdentityRequest() {}
@@ -43,7 +43,7 @@ public final class RecipeIdentityRequest
         }
     }
 
-    public static final class Model extends UseCaseDomainModel {
+    public static final class Model extends BaseDomainModel {
         private String title;
         private String description;
 

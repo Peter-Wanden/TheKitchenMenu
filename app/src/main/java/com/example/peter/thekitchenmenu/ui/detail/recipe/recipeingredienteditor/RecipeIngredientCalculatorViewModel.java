@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeIngredientEditor;
+package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredienteditor;
 
 import android.content.res.Resources;
 
@@ -73,7 +73,7 @@ public class RecipeIngredientCalculatorViewModel extends ObservableViewModel {
         this.errorMessageMaker = errorMessageMaker;
     }
 
-    void setNavigator(RecipeIngredientEditorNavigator navigator) {
+    public void setNavigator(RecipeIngredientEditorNavigator navigator) {
         this.navigator = navigator;
     }
 

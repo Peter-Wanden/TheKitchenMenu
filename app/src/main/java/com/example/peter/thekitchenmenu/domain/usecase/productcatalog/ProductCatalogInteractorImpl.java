@@ -5,7 +5,7 @@ import android.app.Application;
 import com.example.peter.thekitchenmenu.data.primitivemodel.product.FavoriteProductEntity;
 import com.example.peter.thekitchenmenu.data.primitivemodel.product.ProductEntity;
 import com.example.peter.thekitchenmenu.data.model.ProductModel;
-import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
+import com.example.peter.thekitchenmenu.data.repository.dataadapter.toprimitive.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.DatabaseInjection;
 import com.example.peter.thekitchenmenu.data.repository.product.RepositoryFavoriteProduct;
 import com.example.peter.thekitchenmenu.data.repository.product.RepositoryProduct;
@@ -64,12 +64,12 @@ public class ProductCatalogInteractorImpl implements ProductCatalogInteractor {
         productsMap.clear();
         productEntitiesLoading = true;
         productEntityDataSource.getAll(
-                new PrimitiveDataSource.GetAllCallback<ProductEntity>() {
+                new PrimitiveDataSource.GetAllPrimitiveCallback<ProductEntity>() {
                     @Override
                     public void onAllLoaded(List<ProductEntity> productEntityList) {
 
                         for (ProductEntity productEntity : productEntityList) {
-                            productsMap.put(productEntity.getDataId(), productEntity);
+                            productsMap.put(productEntity.getId(), productEntity);
                         }
 
                         productEntitiesLoading = false;
@@ -91,7 +91,7 @@ public class ProductCatalogInteractorImpl implements ProductCatalogInteractor {
         favoriteProductsMap.clear();
         favoriteProductEntitiesLoading = true;
         favoriteProductEntityDataSource.getAll(
-                new PrimitiveDataSource.GetAllCallback<FavoriteProductEntity>() {
+                new PrimitiveDataSource.GetAllPrimitiveCallback<FavoriteProductEntity>() {
                     @Override
                     public void onAllLoaded(List<FavoriteProductEntity> favoriteProductEntityList) {
 
@@ -127,10 +127,10 @@ public class ProductCatalogInteractorImpl implements ProductCatalogInteractor {
             ProductModel productModel = new ProductModel();
             productModel.setProductEntity(productEntity.getValue());
 
-            if (favoriteProductsMap.containsKey(productEntity.getValue().getDataId())) {
+            if (favoriteProductsMap.containsKey(productEntity.getValue().getId())) {
                 productModel.setFavorite(true);
                 productModel.setFavoriteProductEntity(
-                        favoriteProductsMap.get(productEntity.getValue().getDataId()));
+                        favoriteProductsMap.get(productEntity.getValue().getId()));
                 favoriteProductModels.add(productModel);
             } else
                 productModel.setFavorite(false);

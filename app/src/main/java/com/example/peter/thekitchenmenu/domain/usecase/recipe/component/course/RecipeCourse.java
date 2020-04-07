@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
 
 public class RecipeCourse
         extends UseCase
-        implements DataAccess.GetAllDomainModelsCallback<RecipeCoursePersistenceModel> {
+        implements DataAccess.GetAllDomainModelsCallback<RecipeCourseModelPersistence> {
 
     private static final String TAG = "tkm-" + RecipeCourse.class.getSimpleName() + ": ";
 
@@ -73,9 +73,9 @@ public class RecipeCourse
 
     private String dataId = "";
     private String recipeId = "";
-    private final HashMap<Course, RecipeCoursePersistenceModel> currentCourseList =
+    private final HashMap<Course, RecipeCourseModelPersistence> activeCourseList =
             new LinkedHashMap<>();
-    private final List<Course> newCourseList = new ArrayList<>();
+    private final List<Course> updatedCourseList = new ArrayList<>();
 
     public RecipeCourse(@Nonnull RepositoryRecipeCourse repository,
                         @Nonnull UniqueIdProvider idProvider,
@@ -106,33 +106,33 @@ public class RecipeCourse
 
     private void setupUseCase() {
         isChanged = false;
-        newCourseList.clear();
-        newCourseList.addAll(((RecipeCourseRequest)getRequest()).
+        updatedCourseList.clear();
+        updatedCourseList.addAll(((RecipeCourseRequest) getRequest()).
                 getModel().
                 getCourseList());
     }
 
     private void loadData(String recipeId) {
-        repository.getAllByRecipeId(recipeId, this);
+        repository.getAllByDomainId(recipeId, this);
     }
 
     @Override
-    public void onAllLoaded(List<RecipeCoursePersistenceModel> courseModels) {
+    public void onAllLoaded(List<RecipeCourseModelPersistence> courseModels) {
         addCoursesToLists(courseModels);
     }
 
-    private void addCoursesToLists(List<RecipeCoursePersistenceModel> courseModels) {
+    private void addCoursesToLists(List<RecipeCourseModelPersistence> courseModels) {
         createDate = courseModels.isEmpty() ? 0L : Long.MAX_VALUE;
         lastUpdate = 0L;
 
-        for (RecipeCoursePersistenceModel courseModel : courseModels) {
+        for (RecipeCourseModelPersistence m : courseModels) {
 
-            Course course = courseModel.getCourse();
-            currentCourseList.put(course, courseModel);
-            newCourseList.add(course);
+            Course course = m.getCourse();
+            activeCourseList.put(course, m);
+            updatedCourseList.add(course);
 
-            createDate = Math.min(createDate, courseModel.getCreateDate());
-            lastUpdate = Math.max(lastUpdate, courseModel.getLasUpdate());
+            createDate = Math.min(createDate, m.getCreateDate());
+            lastUpdate = Math.max(lastUpdate, m.getLasUpdate());
         }
         sendResponse();
     }
@@ -149,63 +149,75 @@ public class RecipeCourse
     }
 
     private void processCourseAdditions() {
-        for (Course c : newCourseList) {
-            if (isCourseAddedToNewList(c)) {
+        for (Course c : updatedCourseList) {
+            if (isCourseAdded(c)) {
                 addCourseToCurrentList(c);
             }
         }
     }
 
-    private boolean isCourseAddedToNewList(Course c) {
-        return !currentCourseList.containsKey(c);
+    private boolean isCourseAdded(Course c) {
+        return !activeCourseList.containsKey(c);
     }
 
     private void addCourseToCurrentList(Course course) {
         isChanged = true;
-        RecipeCoursePersistenceModel model = createNewPersistence(course);
-        currentCourseList.put(course, model);
+        RecipeCourseModelPersistence model = createNewPersistenceModel(course);
+        activeCourseList.put(course, model);
         save(model);
     }
 
-    private void save(RecipeCoursePersistenceModel model) {
+    private void save(RecipeCourseModelPersistence model) {
         repository.save(model);
     }
 
-    private void processCourseSubtractions() {
-        Iterator<Course> iterator = currentCourseList.keySet().iterator();
-        while (iterator.hasNext()) {
-            Course c = iterator.next();
-
-            if (isCourseRemovedFromNewList(c)) {
-                removeCourseFromCurrentList(iterator, c);
-            }
-        }
-    }
-
-    private boolean isCourseRemovedFromNewList(Course c) {
-        return !newCourseList.contains(c);
-    }
-
-    private void removeCourseFromCurrentList(Iterator i, Course course) {
-        isChanged = true;
+    private RecipeCourseModelPersistence createNewPersistenceModel(Course course) {
         lastUpdate = timeProvider.getCurrentTimeInMills();
-        repository.deleteByDataId(currentCourseList.get(course).getDataId());
-        i.remove();
-    }
-
-    private RecipeCoursePersistenceModel createNewPersistence(Course course) {
-        lastUpdate = timeProvider.getCurrentTimeInMills();
-        return new RecipeCoursePersistenceModel.Builder().
+        return new RecipeCourseModelPersistence.Builder().
                 setDataId(idProvider.getUId()).
-                setRecipeId(recipeId).
+                setDomainId(recipeId).
                 setCourse(course).
+                setIsActive(true).
                 setCreateDate(lastUpdate).
                 setLastUpdate(lastUpdate).
                 build();
     }
 
+    private void processCourseSubtractions() {
+        Iterator<RecipeCourseModelPersistence> i = activeCourseList.values().iterator();
+        while (i.hasNext()) {
+            RecipeCourseModelPersistence m = i.next();
+
+            if (isCourseRemoved(m.getCourse())) {
+                isChanged = true;
+                updateRepository(m);
+                i.remove();
+            }
+        }
+    }
+
+    private boolean isCourseRemoved(Course c) {
+        return !updatedCourseList.contains(c);
+    }
+
+    private void updateRepository(RecipeCourseModelPersistence m) {
+        repository.update(getDeactivatedPersistenceModel(m));
+    }
+
+    private RecipeCourseModelPersistence getDeactivatedPersistenceModel(
+            RecipeCourseModelPersistence m) {
+        lastUpdate = timeProvider.getCurrentTimeInMills();
+        return new RecipeCourseModelPersistence.Builder().
+                setDataId(m.getDataId()).
+                setDomainId(m.getDomainId()).
+                setCourse(m.getCourse()).setIsActive(false).
+                setCreateDate(m.getCreateDate()).
+                setLastUpdate(lastUpdate).
+                build();
+    }
+
     private void sendResponse() {
-        System.out.println(TAG + "oldCourseMap" + currentCourseList);
+        System.out.println(TAG + "activeCourseList" + activeCourseList);
         RecipeCourseResponse response = new RecipeCourseResponse.Builder().
                 setDataId(dataId).
                 setDomainId(recipeId).
@@ -233,7 +245,7 @@ public class RecipeCourse
 
     private RecipeCourseResponse.Model getResponseModel() {
         return new RecipeCourseResponse.Model.Builder().
-                setCourseList(new HashMap<>(currentCourseList)).
+                setCourseList(new HashMap<>(activeCourseList)).
                 build();
     }
 
@@ -252,7 +264,7 @@ public class RecipeCourse
     }
 
     private boolean isValid() {
-        return !currentCourseList.isEmpty();
+        return !activeCourseList.isEmpty();
     }
 
     private List<FailReasons> getFailReasons() {

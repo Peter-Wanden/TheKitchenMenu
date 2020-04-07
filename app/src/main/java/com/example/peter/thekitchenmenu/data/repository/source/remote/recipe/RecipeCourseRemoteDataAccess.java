@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.data.repository.source.remote.recipe;
 
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.RecipeCourseEntity;
 import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipeCourse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourseModelPersistence;
 
 import javax.annotation.Nonnull;
 
@@ -15,32 +15,46 @@ public class RecipeCourseRemoteDataAccess implements DataAccessRecipeCourse {
         return INSTANCE;
     }
 
-
     @Override
-    public void getAllByCourseNo(int courseNo,
-                                 @Nonnull GetAllDomainModelsCallback<RecipeCourseEntity> callback) {
+    public void getAll(@Nonnull GetAllDomainModelsCallback<RecipeCourseModelPersistence> callback) {
         callback.onModelsUnavailable();
     }
 
     @Override
-    public void getAllByRecipeId(@Nonnull String recipeId,
-                                 @Nonnull GetAllDomainModelsCallback<RecipeCourseEntity> callback) {
+    public void getAllByCourseNo(
+            int courseNo,
+            @Nonnull GetAllDomainModelsCallback<RecipeCourseModelPersistence> callback) {
         callback.onModelsUnavailable();
     }
 
     @Override
-    public void getAll(@Nonnull GetAllDomainModelsCallback<RecipeCourseEntity> callback) {
+    public void getAllByDomainId(
+            @Nonnull String recipeId,
+            @Nonnull GetAllDomainModelsCallback<RecipeCourseModelPersistence> callback) {
         callback.onModelsUnavailable();
     }
 
     @Override
-    public void getById(@Nonnull String id,
-                        @Nonnull GetEntityCallback<RecipeCourseEntity> callback) {
-        callback.onDataUnavailable();
+    public void getActiveByDomainId(
+            @Nonnull String domainId,
+            @Nonnull GetDomainModelCallback<RecipeCourseModelPersistence> callback) {
+        callback.onModelUnavailable();
     }
 
     @Override
-    public void save(@Nonnull RecipeCourseEntity entity) {
+    public void getByDataId(
+            @Nonnull String dataId,
+            @Nonnull GetDomainModelCallback<RecipeCourseModelPersistence> callback) {
+        callback.onModelUnavailable();
+    }
+
+    @Override
+    public void save(@Nonnull RecipeCourseModelPersistence model) {
+
+    }
+
+    @Override
+    public void update(@Nonnull RecipeCourseModelPersistence model) {
 
     }
 
@@ -50,12 +64,17 @@ public class RecipeCourseRemoteDataAccess implements DataAccessRecipeCourse {
     }
 
     @Override
-    public void deleteAll() {
+    public void deleteByDataId(String dataId) {
 
     }
 
     @Override
     public void deleteAllByDomainId(@Nonnull String domainId) {
+
+    }
+
+    @Override
+    public void deleteAll() {
 
     }
 }

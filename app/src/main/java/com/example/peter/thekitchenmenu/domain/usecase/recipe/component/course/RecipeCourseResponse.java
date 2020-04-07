@@ -1,9 +1,9 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course;
 
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainMessageBaseModelMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainMessageModelMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadata;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainModel;
 
 import java.util.HashMap;
 import java.util.Objects;
@@ -11,7 +11,7 @@ import java.util.Objects;
 import javax.annotation.Nonnull;
 
 public final class RecipeCourseResponse
-        extends UseCaseDomainMessageBaseModelMetadata<RecipeCourseResponse.Model>
+        extends BaseDomainMessageModelMetadata<RecipeCourseResponse.Model>
         implements UseCase.Response {
 
     private RecipeCourseResponse() {}
@@ -37,14 +37,14 @@ public final class RecipeCourseResponse
         }
     }
 
-    public static final class Model extends UseCaseDomainModel {
+    public static final class Model extends BaseDomainModel {
 
-        private HashMap<RecipeCourse.Course, RecipeCoursePersistenceModel> courseList;
+        private HashMap<RecipeCourse.Course, RecipeCourseModelPersistence> courseList;
 
         private Model() {}
 
         @Nonnull
-        public HashMap<RecipeCourse.Course, RecipeCoursePersistenceModel> getCourseList() {
+        public HashMap<RecipeCourse.Course, RecipeCourseModelPersistence> getCourseList() {
             return courseList;
         }
 
@@ -81,7 +81,7 @@ public final class RecipeCourseResponse
             }
 
             public Builder setCourseList(
-                    HashMap<RecipeCourse.Course, RecipeCoursePersistenceModel> courseList) {
+                    HashMap<RecipeCourse.Course, RecipeCourseModelPersistence> courseList) {
                 model.courseList = courseList;
                 return self();
             }

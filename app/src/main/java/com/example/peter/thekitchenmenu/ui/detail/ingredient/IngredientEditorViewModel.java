@@ -10,7 +10,7 @@ import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.ingredient.Ingredient;
-import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientModelPersistence;
 import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
@@ -63,7 +63,7 @@ public class IngredientEditorViewModel extends ViewModel {
         if (isNewInstantiation()) {
             navigator.setActivityTitle(R.string.activity_title_add_new_ingredient);
 
-            IngredientPersistenceModel model = new IngredientPersistenceModel.Builder().
+            IngredientModelPersistence model = new IngredientModelPersistence.Builder().
                     getDefault().
                     build();
 
@@ -75,7 +75,7 @@ public class IngredientEditorViewModel extends ViewModel {
         if (isNewInstantiation() || isIngredientIdChanged(ingredientId)) {
             navigator.setActivityTitle(R.string.activity_title_edit_ingredient);
 
-            IngredientPersistenceModel model = new IngredientPersistenceModel.Builder().
+            IngredientModelPersistence model = new IngredientModelPersistence.Builder().
                     getDefault().
                     setDomainId(ingredientId).
                     build();
@@ -128,7 +128,7 @@ public class IngredientEditorViewModel extends ViewModel {
     private void processNameTextValidationResponse(TextValidatorResponse response) {
         if (response.getFailReason() == TextValidator.FailReason.NONE) {
 
-            IngredientPersistenceModel model = IngredientPersistenceModel.Builder.
+            IngredientModelPersistence model = IngredientModelPersistence.Builder.
                     basedOnPersistenceModel(ingredientResponse.getModel()).
                     setName(response.getModel().getText()).
                     build();
@@ -178,7 +178,7 @@ public class IngredientEditorViewModel extends ViewModel {
                                                                   longTextResponse) {
         if (longTextResponse.getFailReason() == TextValidator.FailReason.NONE) {
 
-            IngredientPersistenceModel model = IngredientPersistenceModel.Builder.
+            IngredientModelPersistence model = IngredientModelPersistence.Builder.
                     basedOnPersistenceModel(ingredientResponse.getModel()).
                     setDescription(longTextResponse.getModel().getText()).
                     build();
@@ -190,7 +190,7 @@ public class IngredientEditorViewModel extends ViewModel {
         }
     }
 
-    private void executeUseCaseIngredient(IngredientPersistenceModel model) {
+    private void executeUseCaseIngredient(IngredientModelPersistence model) {
         dataLoading.setValue(true);
         IngredientRequest request = new IngredientRequest(model);
 

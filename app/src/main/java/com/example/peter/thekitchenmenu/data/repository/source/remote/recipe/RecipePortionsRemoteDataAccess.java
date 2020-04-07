@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.data.repository.source.remote.recipe;
 
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipePortions;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortionsModelPersistence;
 
 import javax.annotation.Nonnull;
 
@@ -16,29 +16,44 @@ public class RecipePortionsRemoteDataAccess implements DataAccessRecipePortions 
     }
 
     @Override
-    public void getByRecipeId(@Nonnull String recipeId,
-                              @Nonnull GetEntityCallback<RecipePortionsEntity> callback) {
-        callback.onDataUnavailable();
+    public void getByRecipeId(
+            @Nonnull String recipeId,
+            @Nonnull GetDomainModelCallback<RecipePortionsModelPersistence> callback) {
+        callback.onModelUnavailable();
     }
 
     @Override
-    public void getAll(@Nonnull GetAllDomainModelsCallback<RecipePortionsEntity> callback) {
+    public void getActiveByDomainId(
+            @Nonnull String domainId,
+            @Nonnull GetDomainModelCallback<RecipePortionsModelPersistence> callback) {
+        callback.onModelUnavailable();
+    }
+
+    @Override
+    public void getAll(
+            @Nonnull GetAllDomainModelsCallback<RecipePortionsModelPersistence> callback) {
         callback.onModelsUnavailable();
     }
 
     @Override
-    public void getById(@Nonnull String id,
-                        @Nonnull GetEntityCallback<RecipePortionsEntity> callback) {
-        callback.onDataUnavailable();
+    public void getByDataId(
+            @Nonnull String dataId,
+            @Nonnull GetDomainModelCallback<RecipePortionsModelPersistence> callback) {
+        callback.onModelUnavailable();
     }
 
     @Override
-    public void save(@Nonnull RecipePortionsEntity entity) {
+    public void save(@Nonnull RecipePortionsModelPersistence model) {
 
     }
 
     @Override
     public void refreshData() {
+
+    }
+
+    @Override
+    public void deleteByDataId(String dataId) {
 
     }
 
