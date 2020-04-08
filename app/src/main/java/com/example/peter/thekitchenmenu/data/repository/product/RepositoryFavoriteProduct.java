@@ -19,8 +19,8 @@ public class RepositoryFavoriteProduct
             @Nonnull DataSourceFavoriteProducts remoteDataSource,
             @Nonnull DataSourceFavoriteProducts localDataSource) {
 
-        this.remoteDataAccess = remoteDataSource;
-        this.localDataAccess = localDataSource;
+        this.remoteDomainDataAccess = remoteDataSource;
+        this.localDomainDataAccess = localDataSource;
     }
 
     public static RepositoryFavoriteProduct getInstance(
@@ -42,7 +42,7 @@ public class RepositoryFavoriteProduct
             callback.onEntityLoaded(cachedEntity);
             return;
         }
-        ((DataSourceFavoriteProducts) localDataAccess).getByProductId(
+        ((DataSourceFavoriteProducts) localDomainDataAccess).getByProductId(
                 productId,
                 new GetPrimitiveCallback<FavoriteProductEntity>() {
             @Override
@@ -56,7 +56,7 @@ public class RepositoryFavoriteProduct
 
             @Override
             public void onDataUnavailable() {
-                ((DataSourceFavoriteProducts) remoteDataAccess).getByProductId(
+                ((DataSourceFavoriteProducts) remoteDomainDataAccess).getByProductId(
                         productId,
                         new GetPrimitiveCallback<FavoriteProductEntity>() {
                     @Override

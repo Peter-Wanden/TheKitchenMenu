@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.data.repository.source.local.ingredient
 
 import com.example.peter.thekitchenmenu.app.AppExecutors;
 import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.IngredientEntity;
-import com.example.peter.thekitchenmenu.data.repository.dataadapter.toprimitive.PrimitiveDataSource;
+import com.example.peter.thekitchenmenu.data.repository.dataadapter.primitive.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.dao.IngredientEntityDao;
 
 import java.util.List;

@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata;
 
 import android.annotation.SuppressLint;
 
-import com.example.peter.thekitchenmenu.data.repository.DataAccess;
+import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.model.FailReasons;
@@ -28,7 +28,7 @@ import javax.annotation.Nonnull;
  */
 public class RecipeMetadata
         extends UseCase
-        implements DataAccess.GetDomainModelCallback<RecipeMetadataModelPersistence> {
+        implements DomainDataAccess.GetDomainModelCallback<RecipeMetadataPersistenceModel> {
 
     private static final String TAG = "tkm-" + RecipeMetadata.class.getSimpleName() + ": ";
 
@@ -164,7 +164,7 @@ public class RecipeMetadata
     @Nonnull
     private final List<FailReasons> failReasons;
 
-    private RecipeMetadataModelPersistence persistenceModel;
+    private RecipeMetadataPersistenceModel persistenceModel;
     private RecipeState recipeState;
     private String dataId = "";
     private String recipeId = "";
@@ -216,7 +216,7 @@ public class RecipeMetadata
     }
 
     @Override
-    public void onModelLoaded(RecipeMetadataModelPersistence model) {
+    public void onModelLoaded(RecipeMetadataPersistenceModel model) {
         persistenceModel = model;
         buildResponse();
     }
@@ -228,10 +228,10 @@ public class RecipeMetadata
         calculateState();
     }
 
-    private RecipeMetadataModelPersistence createNewPersistenceModel() {
+    private RecipeMetadataPersistenceModel createNewPersistenceModel() {
         long currentTime = timeProvider.getCurrentTimeInMills();
 
-        return new RecipeMetadataModelPersistence.Builder().
+        return new RecipeMetadataPersistenceModel.Builder().
                 getDefault().
                 setDataId(dataId).
                 setRecipeId(recipeId).
@@ -365,8 +365,8 @@ public class RecipeMetadata
                 build();
     }
 
-    private RecipeMetadataModelPersistence getUpdatedPersistenceModel() {
-        return new RecipeMetadataModelPersistence.Builder().build();
+    private RecipeMetadataPersistenceModel getUpdatedPersistenceModel() {
+        return new RecipeMetadataPersistenceModel.Builder().build();
     }
 
     private boolean isChanged() {
@@ -388,7 +388,7 @@ public class RecipeMetadata
         }
     }
 
-    private void save(RecipeMetadataModelPersistence model) {
+    private void save(RecipeMetadataPersistenceModel model) {
         repository.save(model);
     }
 }

@@ -8,7 +8,7 @@ import androidx.databinding.ObservableField;
 import androidx.lifecycle.AndroidViewModel;
 
 import com.example.peter.thekitchenmenu.data.primitivemodel.product.FavoriteProductEntity;
-import com.example.peter.thekitchenmenu.data.repository.dataadapter.toprimitive.PrimitiveDataSource;
+import com.example.peter.thekitchenmenu.data.repository.dataadapter.primitive.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.product.DataSourceFavoriteProducts;
 import com.example.peter.thekitchenmenu.ui.UnsavedChangesDialogFragment;
 import com.example.peter.thekitchenmenu.ui.detail.product.favoriteproducteditor.FavoriteProductEditorActivity;

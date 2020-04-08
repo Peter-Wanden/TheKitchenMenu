@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity;
 
 import com.example.peter.thekitchenmenu.app.AppExecutors;
-import com.example.peter.thekitchenmenu.data.repository.dataadapter.toprimitive.PrimitiveDataSource;
+import com.example.peter.thekitchenmenu.data.repository.dataadapter.primitive.PrimitiveDataSource;
 
 import java.util.List;
 

@@ -4,7 +4,7 @@ import android.annotation.SuppressLint;
 
 import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.IngredientEntity;
 import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.RecipeIngredientEntity;
-import com.example.peter.thekitchenmenu.data.repository.DataAccess;
+import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.ingredient.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeIngredient;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipePortions;
@@ -212,7 +212,7 @@ public class RecipeIngredient extends UseCase {
     private void loadPortions() {
         portionsRepository.getByRecipeId(
                 recipeId,
-                new DataAccess.GetDomainModelCallback<RecipePortionsModelPersistence>() {
+                new DomainDataAccess.GetDomainModelCallback<RecipePortionsModelPersistence>() {
                     @Override
                     public void onModelLoaded(RecipePortionsModelPersistence model) {
                         numberOfPortions = model.getServings() *

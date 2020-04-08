@@ -9,19 +9,19 @@ import javax.annotation.Nonnull;
 
 public class RepositoryRecipePortions
         extends Repository<RecipePortionsModelPersistence>
-        implements DataAccessRecipePortions {
+        implements DomainDataAccessRecipePortions {
 
     public static RepositoryRecipePortions INSTANCE;
 
-    private RepositoryRecipePortions(@Nonnull DataAccessRecipePortions remoteDataSource,
-                                     @Nonnull DataAccessRecipePortions localDataSource) {
-        this.remoteDataAccess = remoteDataSource;
-        this.localDataAccess = localDataSource;
+    private RepositoryRecipePortions(@Nonnull DomainDataAccessRecipePortions remoteDataSource,
+                                     @Nonnull DomainDataAccessRecipePortions localDataSource) {
+        this.remoteDomainDataAccess = remoteDataSource;
+        this.localDomainDataAccess = localDataSource;
     }
 
     public static RepositoryRecipePortions getInstance(
-            @Nonnull DataAccessRecipePortions remoteDataSource,
-            @Nonnull DataAccessRecipePortions localDataSource) {
+            @Nonnull DomainDataAccessRecipePortions remoteDataSource,
+            @Nonnull DomainDataAccessRecipePortions localDataSource) {
         if (INSTANCE == null) {
             INSTANCE = new RepositoryRecipePortions(remoteDataSource, localDataSource);
         }
@@ -38,7 +38,7 @@ public class RepositoryRecipePortions
             callback.onModelLoaded(model);
             return;
         }
-        ((DataAccessRecipePortions) localDataAccess).getByRecipeId(
+        ((DomainDataAccessRecipePortions) localDomainDataAccess).getByRecipeId(
                 recipeId,
                 new GetDomainModelCallback<RecipePortionsModelPersistence>() {
                     @Override
@@ -52,7 +52,7 @@ public class RepositoryRecipePortions
 
                     @Override
                     public void onModelUnavailable() {
-                        ((DataAccessRecipePortions) remoteDataAccess).getByRecipeId(
+                        ((DomainDataAccessRecipePortions) remoteDomainDataAccess).getByRecipeId(
                                 recipeId,
                                 new GetDomainModelCallback<RecipePortionsModelPersistence>() {
                                     @Override

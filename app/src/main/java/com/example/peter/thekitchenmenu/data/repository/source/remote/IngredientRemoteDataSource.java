@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.data.repository.source.remote;
 
 import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.IngredientEntity;
-import com.example.peter.thekitchenmenu.data.repository.dataadapter.toprimitive.PrimitiveDataSource;
+import com.example.peter.thekitchenmenu.data.repository.dataadapter.primitive.PrimitiveDataSource;
 
 import javax.annotation.Nonnull;
 

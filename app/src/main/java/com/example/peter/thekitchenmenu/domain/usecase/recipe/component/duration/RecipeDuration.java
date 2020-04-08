@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duratio
 
 import android.annotation.SuppressLint;
 
-import com.example.peter.thekitchenmenu.data.repository.DataAccess;
+import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeDuration;
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.model.FailReasons;
@@ -22,7 +22,7 @@ import static com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.Re
 
 public class RecipeDuration
         extends UseCase
-        implements DataAccess.GetDomainModelCallback<RecipeDurationModelPersistence> {
+        implements DomainDataAccess.GetDomainModelCallback<RecipeDurationPersistenceModel> {
 
     private static final String TAG = "tkm-" + RecipeDuration.class.getSimpleName() + ": ";
 
@@ -71,7 +71,7 @@ public class RecipeDuration
     private boolean isNewRequest;
 
     private RecipeDurationRequest.Model requestModel;
-    private RecipeDurationModelPersistence persistenceModel;
+    private RecipeDurationPersistenceModel persistenceModel;
 
     public RecipeDuration(@Nonnull RepositoryRecipeDuration repository,
                           @Nonnull TimeProvider timeProvider,
@@ -114,7 +114,7 @@ public class RecipeDuration
     }
 
     @Override
-    public void onModelLoaded(RecipeDurationModelPersistence persistenceModel) {
+    public void onModelLoaded(RecipeDurationPersistenceModel persistenceModel) {
         this.persistenceModel = persistenceModel;
 
         if (!dataId.equals(persistenceModel.getDataId())) {
@@ -132,10 +132,10 @@ public class RecipeDuration
         buildResponse();
     }
 
-    private RecipeDurationModelPersistence createNewPersistenceModel() {
+    private RecipeDurationPersistenceModel createNewPersistenceModel() {
         long currentTime = timeProvider.getCurrentTimeInMills();
         dataId = idProvider.getUId();
-        return new RecipeDurationModelPersistence.Builder().
+        return new RecipeDurationPersistenceModel.Builder().
                 getDefault().
                 setDataId(dataId).
                 setDomainId(recipeId).
@@ -245,8 +245,8 @@ public class RecipeDuration
     }
 
     // todo, needs a new dataId
-    private RecipeDurationModelPersistence updatePersistenceFromRequestModel() {
-        return new RecipeDurationModelPersistence.Builder().
+    private RecipeDurationPersistenceModel updatePersistenceFromRequestModel() {
+        return new RecipeDurationPersistenceModel.Builder().
                 basedOnPersistenceModel(persistenceModel).
 
                 setPrepTime(getTotalMinutes(

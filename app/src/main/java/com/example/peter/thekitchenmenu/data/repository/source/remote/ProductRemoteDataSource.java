@@ -3,7 +3,7 @@ package com.example.peter.thekitchenmenu.data.repository.source.remote;
 import android.database.Cursor;
 
 import com.example.peter.thekitchenmenu.data.primitivemodel.product.ProductEntity;
-import com.example.peter.thekitchenmenu.data.repository.dataadapter.toprimitive.PrimitiveDataSource;
+import com.example.peter.thekitchenmenu.data.repository.dataadapter.primitive.PrimitiveDataSource;
 
 import javax.annotation.Nonnull;
 

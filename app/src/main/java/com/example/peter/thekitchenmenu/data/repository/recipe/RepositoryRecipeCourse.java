@@ -13,16 +13,16 @@ import javax.annotation.Nonnull;
 
 public class RepositoryRecipeCourse
         extends Repository<RecipeCourseModelPersistence>
-        implements DataAccessRecipeCourse {
+        implements DomainDataAccessRecipeCourse {
 
-    private RepositoryRecipeCourse(@Nonnull DataAccessRecipeCourse remoteDataSource,
-                                   @Nonnull DataAccessRecipeCourse localDataSource) {
-        this.remoteDataAccess = remoteDataSource;
-        this.localDataAccess = localDataSource;
+    private RepositoryRecipeCourse(@Nonnull DomainDataAccessRecipeCourse remoteDataSource,
+                                   @Nonnull DomainDataAccessRecipeCourse localDataSource) {
+        this.remoteDomainDataAccess = remoteDataSource;
+        this.localDomainDataAccess = localDataSource;
     }
 
-    public static RepositoryRecipeCourse getInstance(DataAccessRecipeCourse remoteDataSource,
-                                                     DataAccessRecipeCourse localDataSource) {
+    public static RepositoryRecipeCourse getInstance(DomainDataAccessRecipeCourse remoteDataSource,
+                                                     DomainDataAccessRecipeCourse localDataSource) {
         if (INSTANCE == null) {
             INSTANCE = new RepositoryRecipeCourse(remoteDataSource, localDataSource);
         }
@@ -40,7 +40,7 @@ public class RepositoryRecipeCourse
             callback.onAllLoaded(models);
             return;
         }
-        ((DataAccessRecipeCourse) localDataAccess).getAllByCourse(
+        ((DomainDataAccessRecipeCourse) localDomainDataAccess).getAllByCourse(
                 c,
                 new GetAllDomainModelsCallback<RecipeCourseModelPersistence>() {
                     @Override
@@ -56,7 +56,7 @@ public class RepositoryRecipeCourse
 
                     @Override
                     public void onModelsUnavailable() {
-                        ((DataAccessRecipeCourse) remoteDataAccess).getAllByCourse(
+                        ((DomainDataAccessRecipeCourse) remoteDomainDataAccess).getAllByCourse(
                                 c,
                                 new GetAllDomainModelsCallback<RecipeCourseModelPersistence>() {
                                     @Override
@@ -110,7 +110,7 @@ public class RepositoryRecipeCourse
             callback.onAllLoaded(models);
             return;
         }
-        ((DataAccessRecipeCourse) localDataAccess).getAllByDomainId(
+        ((DomainDataAccessRecipeCourse) localDomainDataAccess).getAllByDomainId(
                 domainId,
                 new GetAllDomainModelsCallback<RecipeCourseModelPersistence>() {
                     @Override
@@ -126,7 +126,7 @@ public class RepositoryRecipeCourse
 
                     @Override
                     public void onModelsUnavailable() {
-                        ((DataAccessRecipeCourse) remoteDataAccess).getAllByDomainId(
+                        ((DomainDataAccessRecipeCourse) remoteDomainDataAccess).getAllByDomainId(
                                 domainId,
                                 new GetAllDomainModelsCallback<RecipeCourseModelPersistence>() {
                                     @Override
@@ -168,9 +168,36 @@ public class RepositoryRecipeCourse
     }
 
     @Override
+    public void getAllActiveByDomainId(
+            @Nonnull String domainId,
+            @Nonnull GetAllDomainModelsCallback<RecipeCourseModelPersistence> callback) {
+        List<RecipeCourseModelPersistence> activeModels = new ArrayList<>();
+        getAllByDomainId(domainId, new GetAllDomainModelsCallback<RecipeCourseModelPersistence>() {
+            @Override
+            public void onAllLoaded(List<RecipeCourseModelPersistence> models) {
+                for (RecipeCourseModelPersistence m : models) {
+                    if (m.isActive()) {
+                        activeModels.add(m);
+                    }
+                }
+                if (activeModels.isEmpty()) {
+                    callback.onModelsUnavailable();
+                } else {
+                    callback.onAllLoaded(activeModels);
+                }
+            }
+
+            @Override
+            public void onModelsUnavailable() {
+                callback.onModelsUnavailable();
+            }
+        });
+    }
+
+    @Override
     public void update(@Nonnull RecipeCourseModelPersistence model) {
-        remoteDataAccess.update(model);
-        localDataAccess.update(model);
+        ((DomainDataAccessRecipeCourse) remoteDomainDataAccess).update(model);
+        ((DomainDataAccessRecipeCourse) localDomainDataAccess).update(model);
         cache.put(model.getDataId(), model);
     }
 }

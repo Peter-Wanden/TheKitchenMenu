@@ -7,25 +7,25 @@ import com.example.peter.thekitchenmenu.data.primitivemodel.product.FavoriteProd
 import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.IngredientEntity;
 import com.example.peter.thekitchenmenu.data.primitivemodel.product.ProductEntity;
 import com.example.peter.thekitchenmenu.data.primitivemodel.product.ProductFastTextSearch;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.componentstate.RecipeComponentStateEntity;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.RecipeCourseEntity;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.RecipeDurationEntity;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.parent.RecipeMetadataParentEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.datasource.RecipeDurationDao;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.componentstate.RecipeComponentStateEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.RecipeCourseEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.datasource.RecipeDurationEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.failreason.RecipeFailReasonDao;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.parent.RecipeMetadataParentDao;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.parent.RecipeMetadataParentEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.RecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.RecipeIngredientEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.product.dao.FavoriteProductEntityDao;
 import com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.dao.IngredientEntityDao;
 import com.example.peter.thekitchenmenu.data.repository.source.local.product.dao.ProductEntityDao;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.componentstate.RecipeComponentStateEntityDao;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.RecipeCourseEntityDao;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.RecipeDurationEntityDao;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.failreason.RecipeFailReasonEntityDao;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.parent.RecipeMetadataParentEntityDao;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.componentstate.RecipeComponentStateDao;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.RecipeCourseDao;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.RecipeIdentityEntityDao;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.ingredient.RecipeIngredientEntityDao;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.RecipePortionsEntityDao;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.failreason.RecipeFailReasonEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.failreason.RecipeFailReasonEntity;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -62,15 +62,15 @@ public abstract class TKMDatabase extends RoomDatabase {
 
     public abstract ProductEntityDao productEntityDao();
     public abstract FavoriteProductEntityDao favoriteProductEntityDao();
-    public abstract RecipeMetadataParentEntityDao recipeMetadataParentEntityDao();
-    public abstract RecipeCourseEntityDao recipeCourseEntityDao();
+    public abstract RecipeMetadataParentDao recipeMetadataParentEntityDao();
+    public abstract RecipeCourseDao recipeCourseEntityDao();
     public abstract RecipeIdentityEntityDao recipeIdentityEntityDao();
-    public abstract RecipeDurationEntityDao recipeDurationEntityDao();
+    public abstract RecipeDurationDao recipeDurationEntityDao();
     public abstract IngredientEntityDao ingredientEntityDao();
     public abstract RecipePortionsEntityDao recipePortionsEntityDao();
     public abstract RecipeIngredientEntityDao recipeIngredientEntityDao();
-    public abstract RecipeComponentStateEntityDao recipeComponentStateEntityDao();
-    public abstract RecipeFailReasonEntityDao recipeFailReasonDao();
+    public abstract RecipeComponentStateDao recipeComponentStateEntityDao();
+    public abstract RecipeFailReasonDao recipeFailReasonDao();
 
     private final MutableLiveData<Boolean> isDatabaseCreated = new MutableLiveData<>();
 

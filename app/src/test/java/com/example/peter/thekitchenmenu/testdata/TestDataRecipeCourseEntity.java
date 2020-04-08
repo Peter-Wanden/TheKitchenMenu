@@ -1,6 +1,6 @@
 package com.example.peter.thekitchenmenu.testdata;
 
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.RecipeCourseEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.RecipeCourseEntity;
 
 import java.util.ArrayList;
 import java.util.List;

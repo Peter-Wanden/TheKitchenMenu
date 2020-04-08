@@ -13,11 +13,12 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 
 
-public abstract class Repository<T extends DomainPersistenceModel> implements DataAccess<T> {
+public abstract class Repository<T extends DomainPersistenceModel>
+        implements DomainDataAccess<T> {
 
     protected static Repository INSTANCE = null;
-    protected DataAccess<T> remoteDataAccess;
-    protected DataAccess<T> localDataAccess;
+    protected DomainDataAccess<T> remoteDomainDataAccess;
+    protected DomainDataAccess<T> localDomainDataAccess;
     protected Map<String, T> cache;
 
     private boolean cacheIsDirty;
@@ -32,7 +33,7 @@ public abstract class Repository<T extends DomainPersistenceModel> implements Da
         if (cacheIsDirty) {
             getItemsFromRemoteDataSource(callback);
         } else {
-            localDataAccess.getAll(new GetAllDomainModelsCallback<T>() {
+            localDomainDataAccess.getAll(new GetAllDomainModelsCallback<T>() {
                 @Override
                 public void onAllLoaded(List<T> models) {
                     refreshCache(models);
@@ -57,7 +58,7 @@ public abstract class Repository<T extends DomainPersistenceModel> implements Da
             callback.onModelLoaded(cachedModel);
             return;
         }
-        localDataAccess.getByDataId(dataId, new GetDomainModelCallback<T>() {
+        localDomainDataAccess.getByDataId(dataId, new GetDomainModelCallback<T>() {
             @Override
             public void onModelLoaded(T model) {
                 if (cache == null) {
@@ -69,7 +70,7 @@ public abstract class Repository<T extends DomainPersistenceModel> implements Da
 
             @Override
             public void onModelUnavailable() {
-                remoteDataAccess.getByDataId(dataId, new GetDomainModelCallback<T>() {
+                remoteDomainDataAccess.getByDataId(dataId, new GetDomainModelCallback<T>() {
                     @Override
                     public void onModelLoaded(T model) {
                         if (model == null) {
@@ -110,7 +111,7 @@ public abstract class Repository<T extends DomainPersistenceModel> implements Da
             callback.onModelLoaded(cachedModel);
             return;
         }
-        localDataAccess.getActiveByDomainId(domainId, new GetDomainModelCallback<T>() {
+        localDomainDataAccess.getActiveByDomainId(domainId, new GetDomainModelCallback<T>() {
             @Override
             public void onModelLoaded(T model) {
                 if (cache == null) {
@@ -122,7 +123,7 @@ public abstract class Repository<T extends DomainPersistenceModel> implements Da
 
             @Override
             public void onModelUnavailable() {
-                remoteDataAccess.getActiveByDomainId(domainId, new GetDomainModelCallback<T>() {
+                remoteDomainDataAccess.getActiveByDomainId(domainId, new GetDomainModelCallback<T>() {
                     @Override
                     public void onModelLoaded(T model) {
                         if (model == null) {
@@ -161,8 +162,8 @@ public abstract class Repository<T extends DomainPersistenceModel> implements Da
 
     @Override
     public void save(@Nonnull T model) {
-        remoteDataAccess.save(model);
-        localDataAccess.save(model);
+        remoteDomainDataAccess.save(model);
+        localDomainDataAccess.save(model);
 
         if (cache == null)
             cache = new LinkedHashMap<>();
@@ -177,15 +178,15 @@ public abstract class Repository<T extends DomainPersistenceModel> implements Da
 
     @Override
     public void deleteByDataId(@Nonnull String dataId) {
-        remoteDataAccess.deleteByDataId(dataId);
-        localDataAccess.deleteByDataId(dataId);
+        remoteDomainDataAccess.deleteByDataId(dataId);
+        localDomainDataAccess.deleteByDataId(dataId);
         cache.remove(dataId);
     }
 
     @Override
     public void deleteAllByDomainId(@Nonnull String domainId) {
-        remoteDataAccess.deleteAllByDomainId(domainId);
-        localDataAccess.deleteAllByDomainId(domainId);
+        remoteDomainDataAccess.deleteAllByDomainId(domainId);
+        localDomainDataAccess.deleteAllByDomainId(domainId);
 
         Iterator<Map.Entry<String, T>> cacheIterator = cache.entrySet().iterator();
 
@@ -199,8 +200,8 @@ public abstract class Repository<T extends DomainPersistenceModel> implements Da
 
     @Override
     public void deleteAll() {
-        remoteDataAccess.deleteAll();
-        localDataAccess.deleteAll();
+        remoteDomainDataAccess.deleteAll();
+        localDomainDataAccess.deleteAll();
 
         if (cache == null)
             cache = new LinkedHashMap<>();
@@ -208,7 +209,7 @@ public abstract class Repository<T extends DomainPersistenceModel> implements Da
     }
 
     private void getItemsFromRemoteDataSource(@Nonnull final GetAllDomainModelsCallback<T> callback) {
-        remoteDataAccess.getAll(new GetAllDomainModelsCallback<T>() {
+        remoteDomainDataAccess.getAll(new GetAllDomainModelsCallback<T>() {
             @Override
             public void onAllLoaded(List<T> models) {
                 refreshCache(models);
@@ -236,9 +237,9 @@ public abstract class Repository<T extends DomainPersistenceModel> implements Da
     }
 
     private void refreshLocalDataSource(List<T> models) {
-        localDataAccess.deleteAll();
+        localDomainDataAccess.deleteAll();
 
         for (T model : models)
-            localDataAccess.save(model);
+            localDomainDataAccess.save(model);
     }
 }

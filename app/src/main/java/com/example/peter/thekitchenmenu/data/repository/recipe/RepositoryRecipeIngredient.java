@@ -11,19 +11,19 @@ import javax.annotation.Nonnull;
 
 public class RepositoryRecipeIngredient
         extends Repository<RecipeIngredientModelPersistence>
-        implements DataAccessRecipeIngredient {
+        implements DomainDataAccessRecipeIngredient {
 
     public static RepositoryRecipeIngredient INSTANCE = null;
 
-    private RepositoryRecipeIngredient(@Nonnull DataAccessRecipeIngredient remoteDataSource,
-                                       @Nonnull DataAccessRecipeIngredient localDataSource) {
-        this.remoteDataAccess = remoteDataSource;
-        this.localDataAccess = localDataSource;
+    private RepositoryRecipeIngredient(@Nonnull DomainDataAccessRecipeIngredient remoteDataSource,
+                                       @Nonnull DomainDataAccessRecipeIngredient localDataSource) {
+        this.remoteDomainDataAccess = remoteDataSource;
+        this.localDomainDataAccess = localDataSource;
     }
 
     public static RepositoryRecipeIngredient getInstance(
-            DataAccessRecipeIngredient remoteDataSource,
-            DataAccessRecipeIngredient localDataSource) {
+            DomainDataAccessRecipeIngredient remoteDataSource,
+            DomainDataAccessRecipeIngredient localDataSource) {
         if (INSTANCE == null)
             INSTANCE = new RepositoryRecipeIngredient(remoteDataSource, localDataSource);
         return INSTANCE;
@@ -40,7 +40,7 @@ public class RepositoryRecipeIngredient
             callback.onAllLoaded(cachedEntities);
             return;
         }
-        ((DataAccessRecipeIngredient) localDataAccess).getAllByRecipeId(
+        ((DomainDataAccessRecipeIngredient) localDomainDataAccess).getAllByRecipeId(
                 recipeId,
                 new GetAllDomainModelsCallback<RecipeIngredientModelPersistence>() {
                     @Override
@@ -56,7 +56,7 @@ public class RepositoryRecipeIngredient
 
                     @Override
                     public void onModelsUnavailable() {
-                        ((DataAccessRecipeIngredient) remoteDataAccess).getAllByRecipeId(
+                        ((DomainDataAccessRecipeIngredient) remoteDomainDataAccess).getAllByRecipeId(
                                 recipeId,
                                 new GetAllDomainModelsCallback<RecipeIngredientModelPersistence>() {
                                     @Override
@@ -90,7 +90,7 @@ public class RepositoryRecipeIngredient
             callback.onAllLoaded(cache);
             return;
         }
-        ((DataAccessRecipeIngredient) localDataAccess).getAllByProductId(
+        ((DomainDataAccessRecipeIngredient) localDomainDataAccess).getAllByProductId(
                 productId,
                 new GetAllDomainModelsCallback<RecipeIngredientModelPersistence>() {
                     @Override
@@ -106,7 +106,7 @@ public class RepositoryRecipeIngredient
 
                     @Override
                     public void onModelsUnavailable() {
-                        ((DataAccessRecipeIngredient) remoteDataAccess).getAllByProductId(
+                        ((DomainDataAccessRecipeIngredient) remoteDomainDataAccess).getAllByProductId(
                                 productId,
                                 new GetAllDomainModelsCallback<RecipeIngredientModelPersistence>() {
                                     @Override
@@ -139,7 +139,7 @@ public class RepositoryRecipeIngredient
             callback.onAllLoaded(cache);
             return;
         }
-        ((DataAccessRecipeIngredient) localDataAccess).getAllByIngredientId(
+        ((DomainDataAccessRecipeIngredient) localDomainDataAccess).getAllByIngredientId(
                 ingredientId,
                 new GetAllDomainModelsCallback<RecipeIngredientModelPersistence>() {
                     @Override
@@ -154,7 +154,7 @@ public class RepositoryRecipeIngredient
 
                     @Override
                     public void onModelsUnavailable() {
-                        ((DataAccessRecipeIngredient) remoteDataAccess).getAllByIngredientId(
+                        ((DomainDataAccessRecipeIngredient) remoteDomainDataAccess).getAllByIngredientId(
                                 ingredientId,
                                 new GetAllDomainModelsCallback<RecipeIngredientModelPersistence>() {
                                     @Override
