@@ -12,7 +12,8 @@ import javax.annotation.Nonnull;
 
 public class CourseConverter
         implements
-        DomainModelConverter<RecipeCoursePersistenceModel, RecipeCourseEntity> {
+        DomainModelConverter<RecipeCoursePersistenceModel, RecipeCourseEntity>,
+        DomainModelConverter.ActiveList<RecipeCoursePersistenceModel, RecipeCourseEntity> {
 
     @Override
     public RecipeCoursePersistenceModel convertToModel(@Nonnull RecipeCourseEntity e) {
@@ -25,7 +26,6 @@ public class CourseConverter
                 setLastUpdate(e.getLasUpdate()).
                 build();
     }
-
 
     @Override
     public RecipeCourseEntity convertToPrimitive(@Nonnull RecipeCoursePersistenceModel m) {

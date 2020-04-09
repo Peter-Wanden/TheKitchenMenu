@@ -92,7 +92,19 @@ public class RepositoryRecipeDurationLocal
     public void getActiveByDomainId(
             @Nonnull String domainId,
             @Nonnull GetDomainModelCallback<RecipeDurationPersistenceModel> c) {
-        c.onModelUnavailable();
+        getAdapter.getActiveByDomainId(
+                domainId, new GetDomainModelCallback<RecipeDurationPersistenceModel>() {
+                    @Override
+                    public void onModelLoaded(RecipeDurationPersistenceModel m) {
+                        c.onModelLoaded(m);
+                    }
+
+                    @Override
+                    public void onModelUnavailable() {
+                        c.onModelUnavailable();
+                    }
+                }
+        );
     }
 
     @Override
