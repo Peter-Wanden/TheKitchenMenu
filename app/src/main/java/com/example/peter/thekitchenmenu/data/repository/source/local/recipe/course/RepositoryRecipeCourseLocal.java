@@ -6,13 +6,14 @@ import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.cour
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.dataadapter.CourseLocalUpdateAdapter;
 import com.example.peter.thekitchenmenu.data.repository.recipe.DomainDataAccessRecipeCourse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourseModelPersistence;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCoursePersistenceModel;
 
 import java.util.List;
 
 import javax.annotation.Nonnull;
 
-public class RepositoryRecipeCourseLocal implements DomainDataAccessRecipeCourse {
+public class RepositoryRecipeCourseLocal
+        implements DomainDataAccessRecipeCourse {
 
     private static volatile RepositoryRecipeCourseLocal INSTANCE;
 
@@ -59,76 +60,14 @@ public class RepositoryRecipeCourseLocal implements DomainDataAccessRecipeCourse
     }
 
     @Override
-    public void getAllByCourse(
-            RecipeCourse.Course c,
-            @Nonnull GetAllDomainModelsCallback<RecipeCourseModelPersistence> callback) {
-        getAdapter.getAllByCourse(
-                c,
-                new GetAllDomainModelsCallback<RecipeCourseModelPersistence>() {
-                    @Override
-                    public void onAllLoaded(List<RecipeCourseModelPersistence> models) {
-                        callback.onAllLoaded(models);
-                    }
-
-                    @Override
-                    public void onModelsUnavailable() {
-                        callback.onModelsUnavailable();
-                    }
-                }
-        );
-    }
-
-    @Override
-    public void getAllByDomainId(
-            @Nonnull String domainId,
-            @Nonnull GetAllDomainModelsCallback<RecipeCourseModelPersistence> callback) {
-        getAdapter.getAllByDomainId(
-                domainId,
-                new GetAllDomainModelsCallback<RecipeCourseModelPersistence>() {
-                    @Override
-                    public void onAllLoaded(List<RecipeCourseModelPersistence> models) {
-                        callback.onAllLoaded(models);
-                    }
-
-                    @Override
-                    public void onModelsUnavailable() {
-                        callback.onModelsUnavailable();
-                    }
-                }
-        );
-    }
-
-    @Override
-    public void update(@Nonnull RecipeCourseModelPersistence model) {
-        updateAdapter.update(model);
-    }
-
-    @Override
-    public void getAll(@Nonnull GetAllDomainModelsCallback<RecipeCourseModelPersistence> callback) {
-        getAdapter.getAll(
-                new GetAllDomainModelsCallback<RecipeCourseModelPersistence>() {
-                    @Override
-                    public void onAllLoaded(List<RecipeCourseModelPersistence> models) {
-                        callback.onAllLoaded(models);
-                    }
-
-                    @Override
-                    public void onModelsUnavailable() {
-                        callback.onModelsUnavailable();
-                    }
-                }
-        );
-    }
-
-    @Override
     public void getByDataId(
             @Nonnull String dataId,
-            @Nonnull GetDomainModelCallback<RecipeCourseModelPersistence> callback) {
+            @Nonnull GetDomainModelCallback<RecipeCoursePersistenceModel> callback) {
         getAdapter.getByDataId(
                 dataId,
-                new GetDomainModelCallback<RecipeCourseModelPersistence>() {
+                new GetDomainModelCallback<RecipeCoursePersistenceModel>() {
                     @Override
-                    public void onModelLoaded(RecipeCourseModelPersistence model) {
+                    public void onModelLoaded(RecipeCoursePersistenceModel model) {
                         callback.onModelLoaded(model);
                     }
 
@@ -141,22 +80,14 @@ public class RepositoryRecipeCourseLocal implements DomainDataAccessRecipeCourse
     }
 
     @Override
-    public void getActiveByDomainId(
+    public void getAllByDomainId(
             @Nonnull String domainId,
-            @Nonnull GetDomainModelCallback<RecipeCourseModelPersistence> callback) {
-        // TODO - implement? or move to?
-        callback.onModelUnavailable();
-    }
-
-    @Override
-    public void getAllActiveByDomainId(
-            @Nonnull String domainId,
-            @Nonnull GetAllDomainModelsCallback<RecipeCourseModelPersistence> callback) {
-        getAdapter.getAllActiveByDomainId(
+            @Nonnull GetAllDomainModelsCallback<RecipeCoursePersistenceModel> callback) {
+        getAdapter.getAllByDomainId(
                 domainId,
-                new GetAllDomainModelsCallback<RecipeCourseModelPersistence>() {
+                new GetAllDomainModelsCallback<RecipeCoursePersistenceModel>() {
                     @Override
-                    public void onAllLoaded(List<RecipeCourseModelPersistence> models) {
+                    public void onAllLoaded(List<RecipeCoursePersistenceModel> models) {
                         callback.onAllLoaded(models);
                     }
 
@@ -169,7 +100,77 @@ public class RepositoryRecipeCourseLocal implements DomainDataAccessRecipeCourse
     }
 
     @Override
-    public void save(@Nonnull RecipeCourseModelPersistence model) {
+    public void getAllByCourse(
+            RecipeCourse.Course c,
+            @Nonnull GetAllDomainModelsCallback<RecipeCoursePersistenceModel> callback) {
+        getAdapter.getAllByCourse(
+                c,
+                new GetAllDomainModelsCallback<RecipeCoursePersistenceModel>() {
+                    @Override
+                    public void onAllLoaded(List<RecipeCoursePersistenceModel> models) {
+                        callback.onAllLoaded(models);
+                    }
+
+                    @Override
+                    public void onModelsUnavailable() {
+                        callback.onModelsUnavailable();
+                    }
+                }
+        );
+    }
+
+    @Override
+    public void getAll(@Nonnull GetAllDomainModelsCallback<RecipeCoursePersistenceModel> callback) {
+        getAdapter.getAll(
+                new GetAllDomainModelsCallback<RecipeCoursePersistenceModel>() {
+                    @Override
+                    public void onAllLoaded(List<RecipeCoursePersistenceModel> models) {
+                        callback.onAllLoaded(models);
+                    }
+
+                    @Override
+                    public void onModelsUnavailable() {
+                        callback.onModelsUnavailable();
+                    }
+                }
+        );
+    }
+
+    @Override
+    public void update(@Nonnull RecipeCoursePersistenceModel model) {
+        updateAdapter.update(model);
+    }
+
+    @Override
+    public void getActiveByDomainId(
+            @Nonnull String domainId,
+            @Nonnull GetDomainModelCallback<RecipeCoursePersistenceModel> callback) {
+        // TODO - implement? or move to?
+        callback.onModelUnavailable();
+    }
+
+    @Override
+    public void getAllActiveByDomainId(
+            @Nonnull String domainId,
+            @Nonnull GetAllDomainModelsCallback<RecipeCoursePersistenceModel> callback) {
+        getAdapter.getAllActiveByDomainId(
+                domainId,
+                new GetAllDomainModelsCallback<RecipeCoursePersistenceModel>() {
+                    @Override
+                    public void onAllLoaded(List<RecipeCoursePersistenceModel> models) {
+                        callback.onAllLoaded(models);
+                    }
+
+                    @Override
+                    public void onModelsUnavailable() {
+                        callback.onModelsUnavailable();
+                    }
+                }
+        );
+    }
+
+    @Override
+    public void save(@Nonnull RecipeCoursePersistenceModel model) {
         saveAdapter.save(model);
     }
 

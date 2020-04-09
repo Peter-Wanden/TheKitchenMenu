@@ -54,7 +54,7 @@ public class RecipeCourseLocalDataSource
 
     @Override
     public void getAllByDomainId(
-            String domainId,
+            @Nonnull String domainId,
             @Nonnull GetAllPrimitiveCallback<RecipeCourseEntity> c) {
         Runnable r = () -> {
             final List<RecipeCourseEntity> e = dao.getAllByRecipeId(domainId);

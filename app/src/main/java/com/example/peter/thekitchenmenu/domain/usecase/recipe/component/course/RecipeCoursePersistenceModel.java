@@ -6,7 +6,7 @@ import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public final class RecipeCourseModelPersistence
+public final class RecipeCoursePersistenceModel
         extends BasePersistence {
 
     private RecipeCourse.Course course;
@@ -14,7 +14,7 @@ public final class RecipeCourseModelPersistence
     private long createDate;
     private long lasUpdate;
 
-    private RecipeCourseModelPersistence(){}
+    private RecipeCoursePersistenceModel(){}
 
     @Nonnull
     public RecipeCourse.Course getCourse() {
@@ -37,7 +37,7 @@ public final class RecipeCourseModelPersistence
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        RecipeCourseModelPersistence that = (RecipeCourseModelPersistence) o;
+        RecipeCoursePersistenceModel that = (RecipeCoursePersistenceModel) o;
         return dataId.equals(that.dataId) &&
                 domainId.equals(that.domainId) &&
                 course == that.course &&
@@ -65,10 +65,10 @@ public final class RecipeCourseModelPersistence
     }
 
     public static class Builder
-            extends DomainModelBuilder<Builder, RecipeCourseModelPersistence> {
+            extends DomainModelBuilder<Builder, RecipeCoursePersistenceModel> {
 
         public Builder() {
-            model = new RecipeCourseModelPersistence();
+            model = new RecipeCoursePersistenceModel();
         }
 
         @Override

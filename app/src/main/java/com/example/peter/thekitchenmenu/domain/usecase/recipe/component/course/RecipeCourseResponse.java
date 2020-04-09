@@ -39,12 +39,12 @@ public final class RecipeCourseResponse
 
     public static final class Model extends BaseDomainModel {
 
-        private HashMap<RecipeCourse.Course, RecipeCourseModelPersistence> courseList;
+        private HashMap<RecipeCourse.Course, RecipeCoursePersistenceModel> courseList;
 
         private Model() {}
 
         @Nonnull
-        public HashMap<RecipeCourse.Course, RecipeCourseModelPersistence> getCourseList() {
+        public HashMap<RecipeCourse.Course, RecipeCoursePersistenceModel> getCourseList() {
             return courseList;
         }
 
@@ -81,7 +81,7 @@ public final class RecipeCourseResponse
             }
 
             public Builder setCourseList(
-                    HashMap<RecipeCourse.Course, RecipeCourseModelPersistence> courseList) {
+                    HashMap<RecipeCourse.Course, RecipeCoursePersistenceModel> courseList) {
                 model.courseList = courseList;
                 return self();
             }

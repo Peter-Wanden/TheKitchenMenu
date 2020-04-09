@@ -1,16 +1,22 @@
 package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.dataadapter;
 
+import com.example.peter.thekitchenmenu.data.repository.source.local.DomainModelConverter;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.RecipeCourseEntity;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourseModelPersistence;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCoursePersistenceModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
-class CourseConverter {
+import javax.annotation.Nonnull;
 
-    RecipeCourseModelPersistence convertToModel(RecipeCourseEntity e) {
-        return new RecipeCourseModelPersistence.Builder().
+public class CourseConverter
+        implements
+        DomainModelConverter<RecipeCoursePersistenceModel, RecipeCourseEntity> {
+
+    @Override
+    public RecipeCoursePersistenceModel convertToModel(@Nonnull RecipeCourseEntity e) {
+        return new RecipeCoursePersistenceModel.Builder().
                 setDataId(e.getId()).
                 setDomainId(e.getRecipeId()).
                 setCourse(RecipeCourse.Course.fromInt(e.getCourseNo())).
@@ -20,7 +26,9 @@ class CourseConverter {
                 build();
     }
 
-    RecipeCourseEntity convertToPrimitive(RecipeCourseModelPersistence m) {
+
+    @Override
+    public RecipeCourseEntity convertToPrimitive(@Nonnull RecipeCoursePersistenceModel m) {
         return new RecipeCourseEntity(
                 m.getDataId(),
                 m.getDomainId(),
@@ -31,18 +39,20 @@ class CourseConverter {
         );
     }
 
-    List<RecipeCourseModelPersistence> convertToModels(List<RecipeCourseEntity> entities) {
-        List<RecipeCourseModelPersistence> models = new ArrayList<>();
+    @Override
+    public List<RecipeCoursePersistenceModel> convertToModels(
+            @Nonnull List<RecipeCourseEntity> entities) {
+        List<RecipeCoursePersistenceModel> models = new ArrayList<>();
         for (RecipeCourseEntity e : entities) {
             models.add(convertToModel(e));
         }
         return models;
     }
 
-    List<RecipeCourseModelPersistence> convertActiveModels(
-            List<RecipeCourseEntity> entities) {
-
-        List<RecipeCourseModelPersistence> models = new ArrayList<>();
+    @Override
+    public List<RecipeCoursePersistenceModel> convertToActiveModels(
+            @Nonnull List<RecipeCourseEntity> entities) {
+        List<RecipeCoursePersistenceModel> models = new ArrayList<>();
         for (RecipeCourseEntity e : entities) {
             if (e.isActive()) {
                 models.add(convertToModel(e));

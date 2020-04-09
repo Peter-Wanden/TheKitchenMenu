@@ -16,10 +16,10 @@ import javax.annotation.Nonnull;
  * Responsible for the flow of domain models objects to primitive data structures to and from the
  * local persistence framework.
  */
-public class LocalRepositoryRecipeMetadataAdapter
+public class RepositoryRecipeMetadataLocal
         implements DomainDataAccess<RecipeMetadataPersistenceModel> {
 
-    private static volatile LocalRepositoryRecipeMetadataAdapter INSTANCE;
+    private static volatile RepositoryRecipeMetadataLocal INSTANCE;
 
     @Nonnull
     private final RecipeMetadataLocalGetByDataIdAdapter localGetByDataIdAdapter;
@@ -32,7 +32,7 @@ public class LocalRepositoryRecipeMetadataAdapter
     @Nonnull
     private final RecipeMetadataLocalDeleteAdapter deleteAdapter;
 
-    private LocalRepositoryRecipeMetadataAdapter(
+    private RepositoryRecipeMetadataLocal(
             @Nonnull RecipeMetadataLocalGetByDataIdAdapter localGetByDataIdAdapter,
             @Nonnull RecipeMetadataLocalGetActiveByDomainIdAdapter getActiveByDomainIdAdapter,
             @Nonnull RecipeMetadataLocalGetAllActiveAdapter getAllActiveAdapter,
@@ -46,7 +46,7 @@ public class LocalRepositoryRecipeMetadataAdapter
         this.deleteAdapter = deleteAdapter;
     }
 
-    public static LocalRepositoryRecipeMetadataAdapter getInstance(
+    public static RepositoryRecipeMetadataLocal getInstance(
             @Nonnull RecipeMetadataLocalGetByDataIdAdapter localGetByDataIdAdapter,
             @Nonnull RecipeMetadataLocalGetActiveByDomainIdAdapter getActiveByDomainIdAdapter,
             @Nonnull RecipeMetadataLocalGetAllActiveAdapter getAllActiveAdapter,
@@ -54,9 +54,9 @@ public class LocalRepositoryRecipeMetadataAdapter
             @Nonnull RecipeMetadataLocalDeleteAdapter deleteAdapter) {
 
         if (INSTANCE == null) {
-            synchronized (LocalRepositoryRecipeMetadataAdapter.class) {
+            synchronized (RepositoryRecipeMetadataLocal.class) {
                 if (INSTANCE == null)
-                    INSTANCE = new LocalRepositoryRecipeMetadataAdapter(
+                    INSTANCE = new RepositoryRecipeMetadataLocal(
                             localGetByDataIdAdapter,
                             getActiveByDomainIdAdapter,
                             getAllActiveAdapter,

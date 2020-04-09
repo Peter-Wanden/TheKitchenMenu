@@ -16,6 +16,7 @@ public final class RecipeDurationEntity implements PrimitiveModel {
 
     public static final String TABLE_RECIPE_DURATION = "recipeDuration";
     public static final String ID = "id";
+    public static final String DOMAIN_ID = "domainId";
     public static final String PREP_TIME = "prepTime";
     public static final String COOK_TIME = "cookTime";
     public static final String CREATE_DATE = "createDate";
@@ -25,6 +26,10 @@ public final class RecipeDurationEntity implements PrimitiveModel {
     @NonNull
     @ColumnInfo(name = ID)
     private final String id;
+
+    @Nonnull
+    @ColumnInfo(name = DOMAIN_ID)
+    private final String domainId;
 
     @ColumnInfo(name = PREP_TIME)
     private final int prepTime;
@@ -39,11 +44,13 @@ public final class RecipeDurationEntity implements PrimitiveModel {
     private final long lastUpdate;
 
     public RecipeDurationEntity(@Nonnull String id,
+                                @Nonnull String domainId,
                                 int prepTime,
                                 int cookTime,
                                 long createDate,
                                 long lastUpdate) {
         this.id = id;
+        this.domainId = domainId;
         this.prepTime = prepTime;
         this.cookTime = cookTime;
         this.createDate = createDate;
@@ -59,12 +66,13 @@ public final class RecipeDurationEntity implements PrimitiveModel {
                 cookTime == that.cookTime &&
                 createDate == that.createDate &&
                 lastUpdate == that.lastUpdate &&
-                id.equals(that.id);
+                id.equals(that.id) &&
+                domainId.equals(that.domainId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, prepTime, cookTime, createDate, lastUpdate);
+        return Objects.hash(id, domainId, prepTime, cookTime, createDate, lastUpdate);
     }
 
     @Nonnull
@@ -72,6 +80,7 @@ public final class RecipeDurationEntity implements PrimitiveModel {
     public String toString() {
         return "RecipeDurationEntity{" +
                 "id='" + id + '\'' +
+                ", domainId='" + domainId + '\'' +
                 ", prepTime=" + prepTime +
                 ", cookTime=" + cookTime +
                 ", createDate=" + createDate +
@@ -83,6 +92,11 @@ public final class RecipeDurationEntity implements PrimitiveModel {
     @Nonnull
     public String getId() {
         return id;
+    }
+
+    @Nonnull
+    public String getDomainId() {
+        return domainId;
     }
 
     public int getPrepTime() {

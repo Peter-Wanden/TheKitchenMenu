@@ -32,7 +32,7 @@ import com.example.peter.thekitchenmenu.data.repository.source.local.product.dat
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.RecipeCourseLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.datasource.RecipeDurationLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.RecipeIdentityLocalDataSource;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.LocalRepositoryRecipeMetadataAdapter;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.RepositoryRecipeMetadataLocal;
 import com.example.peter.thekitchenmenu.data.repository.source.local.TKMDatabase;
 import com.example.peter.thekitchenmenu.data.repository.source.local.product.datasource.FavoriteProductsLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.remote.IngredientRemoteDataSource;
@@ -79,7 +79,7 @@ public class DatabaseInjection {
             @Nonnull Context c) {
         return RepositoryRecipeMetadata.getInstance(
                 RecipeMetadataRemoteDomainDataAccess.getInstance(),
-                LocalRepositoryRecipeMetadataAdapter.getInstance(
+                RepositoryRecipeMetadataLocal.getInstance(
                         provideRecipeMetadataGetByDataIdAdapter(c),
                         provideGetLatestByDomainIdAdapter(c),
                         provideGetAllLatestAdapter(c),

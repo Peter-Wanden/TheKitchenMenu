@@ -29,11 +29,11 @@ public interface DomainDataAccess<T extends DomainPersistenceModel> {
         void onModelUnavailable();
     }
 
-    void getAll(@Nonnull GetAllDomainModelsCallback<T> callback);
-
     void getByDataId(@Nonnull String dataId, @Nonnull GetDomainModelCallback<T> callback);
 
     void getActiveByDomainId(@Nonnull String domainId, @Nonnull GetDomainModelCallback<T> callback);
+
+    void getAll(@Nonnull GetAllDomainModelsCallback<T> callback);
 
     void save(@Nonnull T model);
 

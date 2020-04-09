@@ -13,11 +13,14 @@ import static com.example.peter.thekitchenmenu.data.repository.source.local.reci
 @Dao
 public interface RecipeDurationDao {
 
+    @Query("SELECT * FROM " + TABLE_RECIPE_DURATION + " WHERE " + ID + " = :id")
+    RecipeDurationEntity getById(String id);
+
+    @Query("SELECT * FROM " + TABLE_RECIPE_DURATION + " WHERE " + DOMAIN_ID + " = :domainId")
+    List<RecipeDurationEntity> getAllByDomainId(String domainId);
+
     @Query("SELECT * FROM " + TABLE_RECIPE_DURATION)
     List<RecipeDurationEntity> getAll();
-
-    @Query("SELECT * FROM " + TABLE_RECIPE_DURATION + " WHERE id = :id")
-    RecipeDurationEntity getById(String id);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(RecipeDurationEntity recipeDurationEntity);
@@ -28,7 +31,9 @@ public interface RecipeDurationDao {
     @Query("DELETE FROM " + TABLE_RECIPE_DURATION + " WHERE " + ID + " = :id")
     void deleteById(String id);
 
+    @Query("DELETE FROM " + TABLE_RECIPE_DURATION + " WHERE " + DOMAIN_ID + " = :domainId")
+    void deleteAllByDomainId(String domainId);
+
     @Query("DELETE FROM " + TABLE_RECIPE_DURATION)
     void deleteAll();
-
 }
