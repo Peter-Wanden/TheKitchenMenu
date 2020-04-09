@@ -17,9 +17,12 @@ public class CourseLocalGetAdapter {
 
     @Nonnull
     private final RecipeCourseLocalDataSource courseLocalDataSource;
+    @Nonnull
+    private final CourseModelConverter converter;
 
     public CourseLocalGetAdapter(@Nonnull RecipeCourseLocalDataSource courseLocalDataSource) {
         this.courseLocalDataSource = courseLocalDataSource;
+        converter = new CourseModelConverter();
     }
 
     public void getByDataId(
@@ -29,9 +32,8 @@ public class CourseLocalGetAdapter {
                 dataId,
                 new GetPrimitiveCallback<RecipeCourseEntity>() {
                     @Override
-                    public void onEntityLoaded(RecipeCourseEntity e) {
-                        CourseConverter c = new CourseConverter();
-                        callback.onModelLoaded(c.convertToModel(e));
+                    public void onEntityLoaded(RecipeCourseEntity entity) {
+                        callback.onModelLoaded(converter.convertToModel(entity));
                     }
 
                     @Override
@@ -50,8 +52,7 @@ public class CourseLocalGetAdapter {
                 new GetAllPrimitiveCallback<RecipeCourseEntity>() {
                     @Override
                     public void onAllLoaded(List<RecipeCourseEntity> entities) {
-                        CourseConverter c = new CourseConverter();
-                        callback.onAllLoaded(c.convertToModels(entities));
+                        callback.onAllLoaded(converter.convertToModels(entities));
                     }
 
                     @Override
@@ -70,8 +71,7 @@ public class CourseLocalGetAdapter {
                 new GetAllPrimitiveCallback<RecipeCourseEntity>() {
                     @Override
                     public void onAllLoaded(List<RecipeCourseEntity> entities) {
-                        CourseConverter c = new CourseConverter();
-                        callback.onAllLoaded(c.convertToModels(entities));
+                        callback.onAllLoaded(converter.convertToModels(entities));
                     }
 
                     @Override
@@ -88,8 +88,7 @@ public class CourseLocalGetAdapter {
                 new GetAllPrimitiveCallback<RecipeCourseEntity>() {
                     @Override
                     public void onAllLoaded(List<RecipeCourseEntity> entities) {
-                        CourseConverter c = new CourseConverter();
-                        callback.onAllLoaded(c.convertToModels(entities));
+                        callback.onAllLoaded(converter.convertToModels(entities));
                     }
 
                     @Override
@@ -108,8 +107,7 @@ public class CourseLocalGetAdapter {
                 new GetAllPrimitiveCallback<RecipeCourseEntity>() {
                     @Override
                     public void onAllLoaded(List<RecipeCourseEntity> entities) {
-                        CourseConverter c = new CourseConverter();
-                        callback.onAllLoaded(c.convertActiveModels(entities));
+                        callback.onAllLoaded(converter.convertToActiveModels(entities));
                     }
 
                     @Override

@@ -84,7 +84,7 @@ public class RecipeMetadataTest {
     @Test
     public void newId_databaseCalled_responseDATA_UNAVAILABLE() {
         // Arrange
-        String recipeId = TestDataRecipeMetadataEntity.getNewInvalid().getId();
+        String recipeId = TestDataRecipeMetadataEntity.getNewInvalid().getDataId();
         // Act
         givenNewIdAsInitialRequest(recipeId);
         // Assert response
@@ -94,7 +94,7 @@ public class RecipeMetadataTest {
     @Test
     public void missingComponent_stateDATA_UNAVAILABLE_failReasonMISSING_COMPONENTS() {
         // Arrange/execute initial request
-        String recipeId = TestDataRecipeMetadataEntity.getNewInvalid().getId();
+        String recipeId = TestDataRecipeMetadataEntity.getNewInvalid().getDataId();
         givenNewIdAsInitialRequest(recipeId);
 
         // Arrange MISSING_COMPONENT state (portions component missing)
@@ -124,7 +124,7 @@ public class RecipeMetadataTest {
     @Test
     public void invalidUnchanged_stateINVALID_UNCHANGED_failReasonINVALID_COMPONENTS() {
         // Arrange
-        String recipeId = TestDataRecipeMetadataEntity.getNewInvalid().getId();
+        String recipeId = TestDataRecipeMetadataEntity.getNewInvalid().getDataId();
         givenNewIdAsInitialRequest(recipeId);
 
         // Arrange INVALID_UNCHANGED / INVALID_COMPONENTS state
@@ -154,7 +154,7 @@ public class RecipeMetadataTest {
     @Test
     public void invalidChanged_stateINVALID_CHANGED_failReasonINVALID_COMPONENTS() {
         // Arrange
-        String recipeId = TestDataRecipeMetadataEntity.getNewInvalid().getId();
+        String recipeId = TestDataRecipeMetadataEntity.getNewInvalid().getDataId();
         givenNewIdAsInitialRequest(recipeId);
 
         // Arrange INVALID_CHANGED / INVALID_COMPONENTS state
@@ -184,7 +184,7 @@ public class RecipeMetadataTest {
     @Test
     public void validUnchanged_stateVALID_UNCHANGED_failReasonNONE() {
         // Arrange
-        String recipeId = TestDataRecipeMetadataEntity.getNewInvalid().getId();
+        String recipeId = TestDataRecipeMetadataEntity.getNewInvalid().getDataId();
         givenNewIdAsInitialRequest(recipeId);
 
         // Arrange VALID_UNCHANGED / CommonFailReason.NONE state
@@ -214,7 +214,7 @@ public class RecipeMetadataTest {
     @Test
     public void validChanged_stateVALID_CHANGED_failReasonNONE() {
         // Arrange
-        String recipeId = TestDataRecipeMetadataEntity.getNewInvalid().getId();
+        String recipeId = TestDataRecipeMetadataEntity.getNewInvalid().getDataId();
         givenNewIdAsInitialRequest(recipeId);
 
         // Arrange VALID_CHANGED / CommonFailReason.NONE state

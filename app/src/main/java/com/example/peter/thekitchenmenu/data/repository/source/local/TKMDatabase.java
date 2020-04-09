@@ -16,7 +16,7 @@ import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.meta
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.parent.RecipeMetadataParentEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.datasource.RecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.RecipeIngredientEntity;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.RecipePortionsEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.datasource.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.product.dao.FavoriteProductEntityDao;
 import com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.datasource.IngredientEntityDao;
 import com.example.peter.thekitchenmenu.data.repository.source.local.product.dao.ProductEntityDao;
@@ -24,7 +24,7 @@ import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.meta
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.RecipeCourseDao;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.datasource.RecipeIdentityEntityDao;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.recipeingredient.RecipeIngredientEntityDao;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.RecipePortionsEntityDao;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.datasource.RecipePortionsEntityDao;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.failreason.RecipeFailReasonEntity;
 
 import androidx.lifecycle.LiveData;

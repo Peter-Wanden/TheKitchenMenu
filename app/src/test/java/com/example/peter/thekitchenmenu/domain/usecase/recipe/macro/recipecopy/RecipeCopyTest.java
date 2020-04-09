@@ -5,7 +5,7 @@ import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.cour
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.datasource.RecipeDurationEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.parent.RecipeMetadataParentEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.datasource.RecipeIdentityEntity;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.RecipePortionsEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.datasource.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.data.repository.dataadapter.primitive.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeComponentState;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeCourse;
@@ -241,7 +241,7 @@ public class RecipeCopyTest {
     @Test
     public void cloneFromAnotherUser_validRecipe_objectsRequestedFromDataLayer() {
         // Arrange
-        String cloneFromId = TestDataRecipeMetadataEntity.getValidFromAnotherUser().getId();
+        String cloneFromId = TestDataRecipeMetadataEntity.getValidFromAnotherUser().getDataId();
 
         RecipeCopyRequest request = new RecipeCopyRequest(cloneFromId);
         // Act
@@ -254,8 +254,8 @@ public class RecipeCopyTest {
     @Test
     public void cloneFromAnotherUser_validRecipe_objectsClonedAndSavedToDataLayer() {
         // Arrange
-        String cloneFromId = TestDataRecipeMetadataEntity.getValidFromAnotherUser().getId();
-        String copyToId = TestDataRecipeMetadataEntity.getValidNewCloned().getId();
+        String cloneFromId = TestDataRecipeMetadataEntity.getValidFromAnotherUser().getDataId();
+        String copyToId = TestDataRecipeMetadataEntity.getValidNewCloned().getDataId();
         when(idProviderMock.getUId()).thenReturn(copyToId);
 
         ArgumentCaptor<RecipeCourseEntity> courseEntity = ArgumentCaptor.
@@ -882,7 +882,7 @@ public class RecipeCopyTest {
 
     private void verifyRepoDurationCalledAndReturnValidFromAnotherUser() {
         verify(repoDurationMock).getByDataId(
-                eq(DURATION_VALID_COMPLETE_FROM_ANOTHER_USER.getId()),
+                eq(DURATION_VALID_COMPLETE_FROM_ANOTHER_USER.getDataId()),
                 repoDurationCallback.capture());
 
         repoDurationCallback.getValue().onEntityLoaded(

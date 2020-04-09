@@ -10,15 +10,14 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-public class CourseConverter
+public class CourseModelConverter
         implements
-        DomainModelConverter<RecipeCoursePersistenceModel, RecipeCourseEntity>,
-        DomainModelConverter.ActiveList<RecipeCoursePersistenceModel, RecipeCourseEntity> {
+        DomainModelConverter<RecipeCoursePersistenceModel, RecipeCourseEntity> {
 
     @Override
     public RecipeCoursePersistenceModel convertToModel(@Nonnull RecipeCourseEntity e) {
         return new RecipeCoursePersistenceModel.Builder().
-                setDataId(e.getId()).
+                setDataId(e.getDataId()).
                 setDomainId(e.getRecipeId()).
                 setCourse(RecipeCourse.Course.fromInt(e.getCourseNo())).
                 setIsActive(e.isActive()).
@@ -35,28 +34,16 @@ public class CourseConverter
                 m.getCourse().getCourseNo(),
                 m.isActive(),
                 m.getCreateDate(),
-                m.getLasUpdate()
+                m.getLastUpdate()
         );
     }
 
     @Override
     public List<RecipeCoursePersistenceModel> convertToModels(
-            @Nonnull List<RecipeCourseEntity> entities) {
+            @Nonnull List<RecipeCourseEntity> es) {
         List<RecipeCoursePersistenceModel> models = new ArrayList<>();
-        for (RecipeCourseEntity e : entities) {
+        for (RecipeCourseEntity e : es) {
             models.add(convertToModel(e));
-        }
-        return models;
-    }
-
-    @Override
-    public List<RecipeCoursePersistenceModel> convertToActiveModels(
-            @Nonnull List<RecipeCourseEntity> entities) {
-        List<RecipeCoursePersistenceModel> models = new ArrayList<>();
-        for (RecipeCourseEntity e : entities) {
-            if (e.isActive()) {
-                models.add(convertToModel(e));
-            }
         }
         return models;
     }

@@ -291,7 +291,7 @@ public class FavoriteProductEditorViewModel
     private boolean isExistingFavoriteProductThatHasBeenEdited() {
         if (isExistingFavoriteProductEntity) {
             FavoriteProductEntity favoriteProductEntity = new FavoriteProductEntity(
-                    this.favoriteProductEntity.getId(),
+                    this.favoriteProductEntity.getDataId(),
                     this.favoriteProductEntity.getProductId(),
                     retailer.get(),
                     locationRoom.get(),
@@ -311,7 +311,7 @@ public class FavoriteProductEditorViewModel
 
         if (isExistingFavoriteProductEntity) {
             favoriteProduct = FavoriteProductEntity.updateFavoriteProduct(
-                    favoriteProductEntity.getId(),
+                    favoriteProductEntity.getDataId(),
                     productId,
                     retailer.get(),
                     locationRoom.get(),

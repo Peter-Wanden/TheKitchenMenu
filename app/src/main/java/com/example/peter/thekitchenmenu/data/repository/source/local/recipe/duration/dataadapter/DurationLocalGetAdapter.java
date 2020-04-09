@@ -15,27 +15,29 @@ import javax.annotation.Nonnull;
 public class DurationLocalGetAdapter {
 
     @Nonnull
-    private final RecipeDurationLocalDataSource localDataSource;
+    private final RecipeDurationLocalDataSource dataSource;
+    @Nonnull
+    private final DurationModelConverter converter;
 
-    public DurationLocalGetAdapter(@Nonnull RecipeDurationLocalDataSource localDataSource) {
-        this.localDataSource = localDataSource;
+    public DurationLocalGetAdapter(@Nonnull RecipeDurationLocalDataSource dataSource) {
+        this.dataSource = dataSource;
+        converter = new DurationModelConverter();
     }
 
     public void getByDataId(
             @Nonnull String dataId,
-            @Nonnull GetDomainModelCallback<RecipeDurationPersistenceModel> c) {
-        localDataSource.getByDataId(
+            @Nonnull GetDomainModelCallback<RecipeDurationPersistenceModel> callback) {
+        dataSource.getByDataId(
                 dataId,
                 new GetPrimitiveCallback<RecipeDurationEntity>() {
                     @Override
-                    public void onEntityLoaded(RecipeDurationEntity e) {
-                        DurationConverter d = new DurationConverter();
-                        c.onModelLoaded(d.convertToModel(e));
+                    public void onEntityLoaded(RecipeDurationEntity entity) {
+                        callback.onModelLoaded(converter.convertToModel(entity));
                     }
 
                     @Override
                     public void onDataUnavailable() {
-                        c.onModelUnavailable();
+                        callback.onModelUnavailable();
                     }
                 }
         );
@@ -43,37 +45,18 @@ public class DurationLocalGetAdapter {
 
     public void getAllByDomainId(
             @Nonnull String domainId,
-            @Nonnull GetAllDomainModelsCallback<RecipeDurationPersistenceModel> c) {
-        localDataSource.getAllByDomainId(
+            @Nonnull GetAllDomainModelsCallback<RecipeDurationPersistenceModel> callback) {
+        dataSource.getAllByDomainId(
                 domainId,
                 new GetAllPrimitiveCallback<RecipeDurationEntity>() {
                     @Override
-                    public void onAllLoaded(List<RecipeDurationEntity> e) {
-                        DurationConverter d = new DurationConverter();
-                        c.onAllLoaded(d.convertToModels(e));
+                    public void onAllLoaded(List<RecipeDurationEntity> entities) {
+                        callback.onAllLoaded(converter.convertToModels(entities));
                     }
 
                     @Override
                     public void onDataUnavailable() {
-                        c.onModelsUnavailable();
-                    }
-                }
-        );
-    }
-
-    public void getAll(
-            @Nonnull GetAllDomainModelsCallback<RecipeDurationPersistenceModel> c) {
-        localDataSource.getAll(
-                new GetAllPrimitiveCallback<RecipeDurationEntity>() {
-                    @Override
-                    public void onAllLoaded(List<RecipeDurationEntity> e) {
-                        DurationConverter d = new DurationConverter();
-                        c.onAllLoaded(d.convertToModels(e));
-                    }
-
-                    @Override
-                    public void onDataUnavailable() {
-                        c.onModelsUnavailable();
+                        callback.onModelsUnavailable();
                     }
                 }
         );
@@ -81,29 +64,51 @@ public class DurationLocalGetAdapter {
 
     public void getActiveByDomainId(
             @Nonnull String domainId,
-            @Nonnull GetDomainModelCallback<RecipeDurationPersistenceModel> c) {
+            @Nonnull GetDomainModelCallback<RecipeDurationPersistenceModel> callback) {
         getAllByDomainId(
                 domainId,
                 new GetAllDomainModelsCallback<RecipeDurationPersistenceModel>() {
                     @Override
                     public void onAllLoaded(List<RecipeDurationPersistenceModel> models) {
-                        int lastUpdated = 0;
-                        RecipeDurationPersistenceModel activeModel =
-                                new RecipeDurationPersistenceModel.Builder().
-                                        getDefault().
-                                        build();
-
-                        for (RecipeDurationPersistenceModel m : models) {
-                            if (m.getLastUpdate() > lastUpdated) {
-                                activeModel = m;
-                            }
-                        }
-                        c.onModelLoaded(activeModel);
+                        callback.onModelLoaded(filterForActiveModel(models));
                     }
 
                     @Override
                     public void onModelsUnavailable() {
-                        c.onModelUnavailable();
+                        callback.onModelUnavailable();
+                    }
+                }
+        );
+    }
+
+    private RecipeDurationPersistenceModel filterForActiveModel(
+            List<RecipeDurationPersistenceModel> models) {
+        long lastUpdated = 0;
+        RecipeDurationPersistenceModel activeModel =
+                new RecipeDurationPersistenceModel.Builder().
+                        getDefault().
+                        build();
+
+        for (RecipeDurationPersistenceModel m : models) {
+            if (m.getLastUpdate() > lastUpdated) {
+                activeModel = m;
+            }
+        }
+        return activeModel;
+    }
+
+    public void getAll(
+            @Nonnull GetAllDomainModelsCallback<RecipeDurationPersistenceModel> callback) {
+        dataSource.getAll(
+                new GetAllPrimitiveCallback<RecipeDurationEntity>() {
+                    @Override
+                    public void onAllLoaded(List<RecipeDurationEntity> entities) {
+                        callback.onAllLoaded(converter.convertToModels(entities));
+                    }
+
+                    @Override
+                    public void onDataUnavailable() {
+                        callback.onModelsUnavailable();
                     }
                 }
         );

@@ -50,7 +50,7 @@ public class RecipeMetadataLocalDeleteAdapter {
                     public void onAllLoaded(List<RecipeMetadataParentEntity> entities) {
                         if (!entities.isEmpty()) {
                             for (RecipeMetadataParentEntity e : entities) {
-                                deleteDataId(e.getId());
+                                deleteDataId(e.getDataId());
                             }
                         }
                     }

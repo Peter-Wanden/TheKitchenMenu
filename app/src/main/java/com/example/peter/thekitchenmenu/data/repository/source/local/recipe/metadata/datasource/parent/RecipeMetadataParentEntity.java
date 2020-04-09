@@ -103,7 +103,7 @@ public final class RecipeMetadataParentEntity implements PrimitiveModel {
 
     @Nonnull
     @Override
-    public String getId() {
+    public String getDataId() {
         return id;
     }
 

@@ -9,7 +9,7 @@ import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.cour
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.datasource.RecipeDurationEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.parent.RecipeMetadataParentEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.datasource.RecipeIdentityEntity;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.RecipePortionsEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.datasource.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.data.repository.dataadapter.primitive.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeComponentState;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeCourse;
@@ -194,7 +194,7 @@ public class RecipePortionsEditorViewModelTest {
     @Test
     public void startNewRecipeId_requestFromAnotherMacroClient_responsePushedToRegisteredCallbackOnce() {
         // Arrange
-        String recipeId = NEW_EMPTY.getRecipeId();
+        String recipeId = NEW_EMPTY.getDomainId();
         whenIdProviderReturn(recipeId);
 
         // An external request that starts/loads the recipe
@@ -216,7 +216,7 @@ public class RecipePortionsEditorViewModelTest {
     @Test
     public void startNewRecipeId_recipeModelStatusVALID_UNCHANGED() {
         // Arrange
-        String recipeId = NEW_EMPTY.getRecipeId();
+        String recipeId = NEW_EMPTY.getDomainId();
         whenIdProviderReturn(recipeId);
 
         // An external request that starts/loads the recipe
@@ -243,7 +243,7 @@ public class RecipePortionsEditorViewModelTest {
     @Test
     public void startNewRecipeId_invalidServingsInvalidSittings_errorMessageSet() {
         // Arrange
-        String recipeId = NEW_EMPTY.getRecipeId();
+        String recipeId = NEW_EMPTY.getDomainId();
         whenIdProviderReturn(recipeId);
         // An external request that starts/loads the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
@@ -272,7 +272,7 @@ public class RecipePortionsEditorViewModelTest {
     @Test
     public void startNewRecipeId_invalidServingsInvalidSittings_recipeModelStatusINVALID_CHANGED() {
         // Arrange
-        String recipeId = NEW_EMPTY.getRecipeId();
+        String recipeId = NEW_EMPTY.getDomainId();
         whenIdProviderReturn(recipeId);
         // An external request that starts/loads the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
@@ -303,7 +303,7 @@ public class RecipePortionsEditorViewModelTest {
     @Test
     public void startNewRecipeId_invalidServingsValidSittings_recipeModelStatusINVALID_CHANGED() {
         // Arrange
-        String recipeId = NEW_EMPTY.getRecipeId();
+        String recipeId = NEW_EMPTY.getDomainId();
         whenIdProviderReturn(recipeId);
         // An external request that starts/loads the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
@@ -334,7 +334,7 @@ public class RecipePortionsEditorViewModelTest {
     @Test
     public void startNewRecipeId_validServingsInvalidSittings_recipeModelStatusINVALID_CHANGED() {
         // Arrange
-        String recipeId = NEW_EMPTY.getRecipeId();
+        String recipeId = NEW_EMPTY.getDomainId();
         whenIdProviderReturn(recipeId);
         // An external request that starts/loads the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
@@ -365,7 +365,7 @@ public class RecipePortionsEditorViewModelTest {
     @Test
     public void startNewRecipeId_validServingsValidSittings_errorMessageNull() {
         // Arrange
-        String recipeId = NEW_EMPTY.getRecipeId();
+        String recipeId = NEW_EMPTY.getDomainId();
         whenIdProviderReturn(recipeId);
         // An external request that starts/loads the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
@@ -390,7 +390,7 @@ public class RecipePortionsEditorViewModelTest {
     @Test
     public void startNewRecipeId_validServingsValidSittings_recipeModelStatusVALID_CHANGED() {
         // Arrange
-        String recipeId = NEW_EMPTY.getRecipeId();
+        String recipeId = NEW_EMPTY.getDomainId();
         whenIdProviderReturn(recipeId);
         // An external request that starts/loads the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
@@ -421,7 +421,7 @@ public class RecipePortionsEditorViewModelTest {
     @Test
     public void startNewRecipeId_validSittingsValidServings_portionsUpdated() {
         // Arrange
-        String recipeId = NEW_EMPTY.getRecipeId();
+        String recipeId = NEW_EMPTY.getDomainId();
         whenIdProviderReturn(recipeId);
         // An external request that starts/loads the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
@@ -446,8 +446,8 @@ public class RecipePortionsEditorViewModelTest {
     @Test
     public void startNewRecipeId_validSittingsValidServings_saved() {
         // Arrange
-        String recipeId = NEW_EMPTY.getRecipeId();
-        whenIdProviderReturn(NEW_EMPTY.getId());
+        String recipeId = NEW_EMPTY.getDomainId();
+        whenIdProviderReturn(NEW_EMPTY.getDataId());
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(NEW_EMPTY.getCreateDate());
         // An external request that starts/loads the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
@@ -471,7 +471,7 @@ public class RecipePortionsEditorViewModelTest {
     @Test
     public void startExistingRecipeId_validRecipeId_valuesSetToObservables() {
         // Arrange
-        String recipeId = EXISTING_VALID.getRecipeId();
+        String recipeId = EXISTING_VALID.getDomainId();
         // Act
         // An external request that starts/loads the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
@@ -490,7 +490,7 @@ public class RecipePortionsEditorViewModelTest {
     @Test
     public void startExistingRecipeId_validRecipeId_resultVALID_UNCHANGED() {
         // Arrange
-        String recipeId = EXISTING_VALID.getRecipeId();
+        String recipeId = EXISTING_VALID.getDomainId();
         // Act
         // An external request that starts/loads the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
@@ -516,7 +516,7 @@ public class RecipePortionsEditorViewModelTest {
     @Test
     public void startExistingRecipeId_invalidUpdatedServings_invalidValueNotSaved() {
         // Arrange
-        String recipeId = EXISTING_VALID.getRecipeId();
+        String recipeId = EXISTING_VALID.getDomainId();
 
         // An external request that starts/loads the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
@@ -539,7 +539,7 @@ public class RecipePortionsEditorViewModelTest {
     @Test
     public void startExistingRecipeId_validUpdatedServings_saved() {
         // Arrange
-        String recipeId = EXISTING_VALID.getRecipeId();
+        String recipeId = EXISTING_VALID.getDomainId();
 
         when(timeProviderMock.getCurrentTimeInMills()).
                 thenReturn(EXISTING_VALID_UPDATED_SERVINGS.getLastUpdate());
@@ -565,7 +565,7 @@ public class RecipePortionsEditorViewModelTest {
     @Test
     public void startExistingRecipeId_invalidUpdatedSittings_invalidValueNotSaved() {
         // Arrange
-        String recipeId = EXISTING_VALID.getRecipeId();
+        String recipeId = EXISTING_VALID.getDomainId();
 
         when(timeProviderMock.getCurrentTimeInMills()).
                 thenReturn(EXISTING_VALID_UPDATED_SERVINGS.getLastUpdate());
@@ -591,7 +591,7 @@ public class RecipePortionsEditorViewModelTest {
     @Test
     public void startExistingRecipeId_validUpdatedSittings_saved() {
         // Arrange
-        String recipeId = EXISTING_VALID.getRecipeId();
+        String recipeId = EXISTING_VALID.getDomainId();
 
         when(timeProviderMock.getCurrentTimeInMills()).
                 thenReturn(EXISTING_VALID_UPDATED_SITTINGS.getLastUpdate());

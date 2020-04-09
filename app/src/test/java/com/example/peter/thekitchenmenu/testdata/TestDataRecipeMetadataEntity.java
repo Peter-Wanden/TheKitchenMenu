@@ -22,8 +22,8 @@ public class TestDataRecipeMetadataEntity {
     // Built from new, or cloned / copied to current user
     public static RecipeMetadataParentEntity getNewValid() {
         return new RecipeMetadataParentEntity(
-                getNewInvalid().getId(),
-                getNewInvalid().getId(),
+                getNewInvalid().getDataId(),
+                getNewInvalid().getDataId(),
                 getNewInvalid().getCreatedBy(),
                 getNewInvalid().getCreateDate(),
                 getNewInvalid().getLastUpdate()
@@ -65,8 +65,8 @@ public class TestDataRecipeMetadataEntity {
 
     public static RecipeMetadataParentEntity getInvalidFromAnotherUser() {
         return new RecipeMetadataParentEntity(
-                getValidFromAnotherUser().getId(),
-                getValidFromAnotherUser().getId(),
+                getValidFromAnotherUser().getDataId(),
+                getValidFromAnotherUser().getDataId(),
                 getValidFromAnotherUser().getCreatedBy(),
                 50L,
                 60L
@@ -76,8 +76,8 @@ public class TestDataRecipeMetadataEntity {
     // Existing valid recipe, expected output when cloned from another user
     public static RecipeMetadataParentEntity getValidNewCloned() {
         return new RecipeMetadataParentEntity(
-                getNewInvalid().getId(),
-                getValidFromAnotherUser().getId(),
+                getNewInvalid().getDataId(),
+                getValidFromAnotherUser().getDataId(),
                 Constants.getUserId(),
                 getNewInvalid().getCreateDate(),
                 getNewInvalid().getLastUpdate()
@@ -88,8 +88,8 @@ public class TestDataRecipeMetadataEntity {
     // editing copy
     public static RecipeMetadataParentEntity getInvalidNewCloned() {
         return new RecipeMetadataParentEntity(
-                getNewInvalid().getId(),
-                getInvalidFromAnotherUser().getId(),
+                getNewInvalid().getDataId(),
+                getInvalidFromAnotherUser().getDataId(),
                 Constants.getUserId(),
                 getNewInvalid().getCreateDate(),
                 getNewInvalid().getLastUpdate()

@@ -61,7 +61,7 @@ public class RecipeMetadataLocalGetActiveByDomainIdAdapter {
         for (RecipeMetadataParentEntity e : entities) {
             if (e.getLastUpdate() > lastUpdated) {
                 lastUpdated = e.getLastUpdate();
-                activeDataId = e.getId();
+                activeDataId = e.getDataId();
             }
         }
         if (activeDataId.isEmpty()) {

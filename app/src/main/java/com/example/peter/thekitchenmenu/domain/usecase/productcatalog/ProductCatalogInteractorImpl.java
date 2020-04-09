@@ -69,7 +69,7 @@ public class ProductCatalogInteractorImpl implements ProductCatalogInteractor {
                     public void onAllLoaded(List<ProductEntity> productEntityList) {
 
                         for (ProductEntity productEntity : productEntityList) {
-                            productsMap.put(productEntity.getId(), productEntity);
+                            productsMap.put(productEntity.getDataId(), productEntity);
                         }
 
                         productEntitiesLoading = false;
@@ -127,10 +127,10 @@ public class ProductCatalogInteractorImpl implements ProductCatalogInteractor {
             ProductModel productModel = new ProductModel();
             productModel.setProductEntity(productEntity.getValue());
 
-            if (favoriteProductsMap.containsKey(productEntity.getValue().getId())) {
+            if (favoriteProductsMap.containsKey(productEntity.getValue().getDataId())) {
                 productModel.setFavorite(true);
                 productModel.setFavoriteProductEntity(
-                        favoriteProductsMap.get(productEntity.getValue().getId()));
+                        favoriteProductsMap.get(productEntity.getValue().getDataId()));
                 favoriteProductModels.add(productModel);
             } else
                 productModel.setFavorite(false);

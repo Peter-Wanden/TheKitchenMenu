@@ -8,14 +8,15 @@ import javax.annotation.Nonnull;
 public class DurationLocalSaveAdapter {
     @Nonnull
     private final RecipeDurationLocalDataSource dataSource;
+    @Nonnull
+    private final DurationModelConverter converter;
 
-    public DurationLocalSaveAdapter(
-            @Nonnull RecipeDurationLocalDataSource dataSource) {
+    public DurationLocalSaveAdapter(@Nonnull RecipeDurationLocalDataSource dataSource) {
         this.dataSource = dataSource;
+        converter = new DurationModelConverter();
     }
 
-    public void save(RecipeDurationPersistenceModel m) {
-        DurationConverter c = new DurationConverter();
-        dataSource.save(c.convertToPrimitive(m));
+    public void save(RecipeDurationPersistenceModel model) {
+        dataSource.save(converter.convertToPrimitive(model));
     }
 }

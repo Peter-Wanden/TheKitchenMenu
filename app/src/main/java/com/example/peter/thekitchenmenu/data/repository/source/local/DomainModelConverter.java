@@ -14,20 +14,18 @@ public interface DomainModelConverter<
     interface ActiveList<
             P extends BasePersistence,
             E extends PrimitiveModel> {
-        List<P> convertToActiveModels(@Nonnull List<E> entities);
+        List<P> convertToActiveModels(@Nonnull List<E> es);
     }
 
     interface ActiveModel<
             P extends BasePersistence,
             E extends PrimitiveModel> {
-        P convertToActiveModel(@Nonnull List<E> entities);
+        P convertToActiveModel(@Nonnull List<E> es);
     }
 
-    P convertToModel(@Nonnull E entity);
+    P convertToModel(@Nonnull E e);
 
-    E convertToPrimitive(@Nonnull P model);
+    E convertToPrimitive(@Nonnull P m);
 
-    List<P> convertToModels(@Nonnull List<E> entities);
-
-
+    List<P> convertToModels(@Nonnull List<E> es);
 }

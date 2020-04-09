@@ -98,7 +98,7 @@ public class ProductViewerActivity
         if (intent.hasExtra(ProductEditorActivity.EXTRA_PRODUCT_ENTITY)) {
             ProductEntity productEntity = getIntent().getParcelableExtra(
                     ProductEditorActivity.EXTRA_PRODUCT_ENTITY);
-            productId = productEntity.getId();
+            productId = productEntity.getDataId();
             findOrReplaceProductViewerFragment(productEntity);
 
         } else if (intent.hasExtra(ProductEditorActivity.EXTRA_PRODUCT_ID)) {

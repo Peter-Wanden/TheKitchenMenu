@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions;
+package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.datasource;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
@@ -15,8 +15,8 @@ import javax.annotation.Nonnull;
 public final class RecipePortionsEntity implements PrimitiveModel {
 
     public static final String TABLE_RECIPE_PORTIONS = "recipePortions";
-    public static final String ID = "id";
-    public static final String RECIPE_ID = "recipeId";
+    public static final String DATA_ID = "dataId";
+    public static final String DOMAIN_ID = "domainId";
     public static final String SERVINGS = "servings";
     public static final String SITTINGS = "sittings";
     public static final String CREATE_DATE = "createDate";
@@ -24,12 +24,12 @@ public final class RecipePortionsEntity implements PrimitiveModel {
 
     @PrimaryKey
     @NonNull
-    @ColumnInfo(name = ID)
-    private final String id;
+    @ColumnInfo(name = DATA_ID)
+    private final String dataId;
 
     @Nonnull
-    @ColumnInfo(name = RECIPE_ID)
-    private final String recipeId;
+    @ColumnInfo(name = DOMAIN_ID)
+    private final String domainId;
 
     @ColumnInfo(name = SERVINGS)
     private final int servings;
@@ -43,14 +43,14 @@ public final class RecipePortionsEntity implements PrimitiveModel {
     @ColumnInfo(name = LAST_UPDATE)
     private final long lastUpdate;
 
-    public RecipePortionsEntity(@Nonnull String id,
-                                @Nonnull String recipeId,
+    public RecipePortionsEntity(@Nonnull String dataId,
+                                @Nonnull String domainId,
                                 int servings,
                                 int sittings,
                                 long createDate,
                                 long lastUpdate) {
-        this.id = id;
-        this.recipeId = recipeId;
+        this.dataId = dataId;
+        this.domainId = domainId;
         this.servings = servings;
         this.sittings = sittings;
         this.createDate = createDate;
@@ -66,16 +66,21 @@ public final class RecipePortionsEntity implements PrimitiveModel {
                 sittings == that.sittings &&
                 createDate == that.createDate &&
                 lastUpdate == that.lastUpdate &&
-                id.equals(that.id) &&
-                recipeId.equals(that.recipeId);
+                dataId.equals(that.dataId) &&
+                domainId.equals(that.domainId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(dataId, domainId, servings, sittings, createDate, lastUpdate);
     }
 
     @Nonnull
     @Override
     public String toString() {
         return "RecipePortionsEntity{" +
-                "id='" + id + '\'' +
-                ", recipeId='" + recipeId + '\'' +
+                "dataId='" + dataId + '\'' +
+                ", domainId='" + domainId + '\'' +
                 ", servings=" + servings +
                 ", sittings=" + sittings +
                 ", createDate=" + createDate +
@@ -84,25 +89,14 @@ public final class RecipePortionsEntity implements PrimitiveModel {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(
-                id,
-                recipeId,
-                servings,
-                sittings,
-                createDate,
-                lastUpdate);
-    }
-
-    @Override
     @Nonnull
-    public String getId() {
-        return id;
+    public String getDataId() {
+        return dataId;
     }
 
     @Nonnull
-    public String getRecipeId() {
-        return recipeId;
+    public String getDomainId() {
+        return domainId;
     }
 
     public int getServings() {

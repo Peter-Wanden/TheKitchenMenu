@@ -12,9 +12,9 @@ public class TestDataRecipeIngredientQuantityEntity {
     public static RecipeIngredientEntity getNewInvalid() {
         return new RecipeIngredientEntity(
                 "newId",
-                TestDataRecipeMetadataEntity.getNewInvalid().getId(),
-                TestDataIngredientEntity.getNew().getId(),
-                TestDataProductEntity.getNewInvalid().getId(),
+                TestDataRecipeMetadataEntity.getNewInvalid().getDataId(),
+                TestDataIngredientEntity.getNew().getDataId(),
+                TestDataProductEntity.getNewInvalid().getDataId(),
                 0,
                 MeasurementSubtype.METRIC_MASS.asInt(),
                 Constants.getUserId(),
@@ -26,8 +26,8 @@ public class TestDataRecipeIngredientQuantityEntity {
     public static RecipeIngredientEntity getNewValidMetric() {
         return new RecipeIngredientEntity(
                 "new_valid_measurement_one_id",
-                TestDataRecipeMetadataEntity.getNewValid().getId(),
-                TestDataIngredientEntity.getNewValidName().getId(),
+                TestDataRecipeMetadataEntity.getNewValid().getDataId(),
+                TestDataIngredientEntity.getNewValidName().getDataId(),
                 "",
                 150, // per portion value
                 MeasurementSubtype.METRIC_MASS.asInt(),
@@ -39,9 +39,9 @@ public class TestDataRecipeIngredientQuantityEntity {
 
     public static RecipeIngredientEntity getNewValidImperial() {
         return new RecipeIngredientEntity(
-                getNewValidMetric().getId(),
-                TestDataRecipeMetadataEntity.getNewValid().getId(),
-                TestDataIngredientEntity.getNewValidName().getId(),
+                getNewValidMetric().getDataId(),
+                TestDataRecipeMetadataEntity.getNewValid().getDataId(),
+                TestDataIngredientEntity.getNewValidName().getDataId(),
                 "",
                 36.145641984375, // 5.1lbs / 4 portions
                 MeasurementSubtype.IMPERIAL_MASS.asInt(),
@@ -62,7 +62,7 @@ public class TestDataRecipeIngredientQuantityEntity {
         unitOfMeasure.isNumberOfItemsSet(portions);
 
         return new RecipeIngredientEntity(
-                getNewValidMetric().getId(),
+                getNewValidMetric().getDataId(),
                 getNewValidMetric().getRecipeId(),
                 getNewValidMetric().getIngredientId(),
                 getNewValidMetric().getProductId(),
@@ -76,7 +76,7 @@ public class TestDataRecipeIngredientQuantityEntity {
 
     public static RecipeIngredientEntity getNewValidImperialOneTeaspoonFourPortionsNoConversionFactor() {
         return new RecipeIngredientEntity(
-                getNewInvalid().getId(),
+                getNewInvalid().getDataId(),
                 getNewInvalid().getRecipeId(),
                 getNewInvalid().getIngredientId(),
                 "",
@@ -90,7 +90,7 @@ public class TestDataRecipeIngredientQuantityEntity {
 
     public static RecipeIngredientEntity getNewValidImperialOneTeaspoonConversionFactorApplied() {
         return new RecipeIngredientEntity(
-                getNewInvalid().getId(),
+                getNewInvalid().getDataId(),
                 getNewInvalid().getRecipeId(),
                 getNewInvalid().getIngredientId(),
                 "",
@@ -104,7 +104,7 @@ public class TestDataRecipeIngredientQuantityEntity {
 
     public static RecipeIngredientEntity getNewValidImperialSpoonMaxConversionFactor() {
         return new RecipeIngredientEntity(
-                getNewValidMetric().getId(),
+                getNewValidMetric().getDataId(),
                 getNewInvalid().getRecipeId(),
                 getNewInvalid().getIngredientId(),
                 "",
@@ -133,9 +133,9 @@ public class TestDataRecipeIngredientQuantityEntity {
     public static RecipeIngredientEntity getExistingValidMetric() {
         return new RecipeIngredientEntity(
                 "existing_valid_id",
-                TestDataRecipeMetadataEntity.getValidExisting().getId(),
-                TestDataIngredientEntity.getExistingValidNameValidDescriptionNoConversionFactor().getId(),
-                TestDataProductEntity.getExistingValid().getId(),
+                TestDataRecipeMetadataEntity.getValidExisting().getDataId(),
+                TestDataIngredientEntity.getExistingValidNameValidDescriptionNoConversionFactor().getDataId(),
+                TestDataProductEntity.getExistingValid().getDataId(),
                 250,
                 MeasurementSubtype.METRIC_VOLUME.asInt(),
                 Constants.getUserId(),
@@ -146,7 +146,7 @@ public class TestDataRecipeIngredientQuantityEntity {
 
     public static RecipeIngredientEntity getExistingValidMetricMeasurementUpdated() {
         return new RecipeIngredientEntity(
-                getExistingValidMetric().getId(),
+                getExistingValidMetric().getDataId(),
                 getExistingValidMetric().getRecipeId(),
                 getExistingValidMetric().getIngredientId(),
                 getExistingValidMetric().getProductId(),
@@ -168,9 +168,9 @@ public class TestDataRecipeIngredientQuantityEntity {
 
         return new RecipeIngredientEntity(
                 "existing_valid_imperialSpoon_id",
-                TestDataRecipeMetadataEntity.getValidExisting().getId(),
-                TestDataIngredientEntity.getExistingValidNameValidDescriptionNoConversionFactor().getId(),
-                TestDataProductEntity.getExistingValid().getId(),
+                TestDataRecipeMetadataEntity.getValidExisting().getDataId(),
+                TestDataIngredientEntity.getExistingValidNameValidDescriptionNoConversionFactor().getDataId(),
+                TestDataProductEntity.getExistingValid().getDataId(),
                 5,
                 MeasurementSubtype.IMPERIAL_SPOON.asInt(),
                 Constants.getUserId(),

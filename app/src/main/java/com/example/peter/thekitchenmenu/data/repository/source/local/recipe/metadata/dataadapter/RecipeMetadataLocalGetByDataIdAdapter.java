@@ -75,7 +75,7 @@ public class RecipeMetadataLocalGetByDataIdAdapter {
 
     private void addParentEntityToModelBuilder(RecipeMetadataParentEntity e) {
         modelBuilder.
-                setDataId(e.getId()).
+                setDataId(e.getDataId()).
                 setRecipeId(e.getDomainId()).
                 setRecipeParentId(e.getRecipeParentId()).
                 setRecipeState(RecipeState.getById(e.getRecipeStateId())).

@@ -33,7 +33,7 @@ public class RecipeCourseTest {
 
     // region constants ----------------------------------------------------------------------------
     private RecipeMetadataParentEntity VALID_EXISTING_RECIPE_ENTITY = getValidExisting();
-    private String EXISTING_RECIPE_ID = VALID_EXISTING_RECIPE_ENTITY.getId();
+    private String EXISTING_RECIPE_ID = VALID_EXISTING_RECIPE_ENTITY.getDataId();
     // endregion constants -------------------------------------------------------------------------
 
     // region helper fields ------------------------------------------------------------------------
@@ -126,7 +126,7 @@ public class RecipeCourseTest {
         verify(repoCourseMock).save(entityCaptor.capture());
         assertEquals(Course.COURSE_ONE.getCourseNo(), entityCaptor.getValue().getCourseNo());
         assertEquals(time, entityCaptor.getValue().getCreateDate());
-        assertEquals(id, entityCaptor.getValue().getId());
+        assertEquals(id, entityCaptor.getValue().getDataId());
         assertEquals(com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentState.VALID_CHANGED, onSuccessResponse.getMetadata().getState());
     }
 

@@ -8,6 +8,7 @@ import com.example.peter.thekitchenmenu.data.repository.recipe.DomainDataAccessR
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCoursePersistenceModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -158,7 +159,7 @@ public class RepositoryRecipeCourseLocal
                 new GetAllDomainModelsCallback<RecipeCoursePersistenceModel>() {
                     @Override
                     public void onAllLoaded(List<RecipeCoursePersistenceModel> models) {
-                        callback.onAllLoaded(models);
+                        callback.onAllLoaded(filterForActive(models));
                     }
 
                     @Override
@@ -167,6 +168,20 @@ public class RepositoryRecipeCourseLocal
                     }
                 }
         );
+    }
+
+    private List<RecipeCoursePersistenceModel> filterForActive(
+            List<RecipeCoursePersistenceModel> models) {
+            long lastUpdated = 0;
+
+            List<RecipeCoursePersistenceModel> activeModels = new ArrayList<>();
+
+            for (RecipeCoursePersistenceModel m : models) {
+                if (m.getLastUpdate() > lastUpdated) {
+                    activeModels.add(m);
+                }
+            }
+            return activeModels;
     }
 
     @Override

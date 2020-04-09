@@ -2,14 +2,16 @@ package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.dur
 
 import com.example.peter.thekitchenmenu.data.repository.source.local.DomainModelConverter;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.datasource.RecipeDurationEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.datasource.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDurationPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortionsPersistenceModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nonnull;
 
-public class DurationConverter
+public class DurationModelConverter
         implements
         DomainModelConverter<RecipeDurationPersistenceModel, RecipeDurationEntity> {
 
@@ -17,7 +19,7 @@ public class DurationConverter
     public RecipeDurationPersistenceModel convertToModel(
             @Nonnull RecipeDurationEntity e) {
         return new RecipeDurationPersistenceModel.Builder().
-                setDataId(e.getId()).
+                setDataId(e.getDataId()).
                 setDomainId(e.getDomainId()).
                 setPrepTime(e.getPrepTime()).
                 setCookTime(e.getCookTime()).
@@ -41,9 +43,9 @@ public class DurationConverter
 
     @Override
     public List<RecipeDurationPersistenceModel> convertToModels(
-            @Nonnull List<RecipeDurationEntity> entities) {
+            @Nonnull List<RecipeDurationEntity> es) {
         List<RecipeDurationPersistenceModel> models = new ArrayList<>();
-        for (RecipeDurationEntity e : entities) {
+        for (RecipeDurationEntity e : es) {
             models.add(convertToModel(e));
         }
         return models;

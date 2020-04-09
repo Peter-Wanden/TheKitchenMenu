@@ -6,7 +6,7 @@ import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public final class RecipePortionsModelPersistence
+public final class RecipePortionsPersistenceModel
         extends BasePersistence {
 
     private int servings;
@@ -14,7 +14,7 @@ public final class RecipePortionsModelPersistence
     private long createDate;
     private long lastUpdate;
 
-    private RecipePortionsModelPersistence() {}
+    private RecipePortionsPersistenceModel() {}
 
     public int getServings() {
         return servings;
@@ -36,7 +36,7 @@ public final class RecipePortionsModelPersistence
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        RecipePortionsModelPersistence that = (RecipePortionsModelPersistence) o;
+        RecipePortionsPersistenceModel that = (RecipePortionsPersistenceModel) o;
         return dataId.equals(that.dataId) &&
                 domainId.equals(that.domainId) &&
                 servings == that.servings &&
@@ -63,10 +63,10 @@ public final class RecipePortionsModelPersistence
     }
 
     public static class Builder
-            extends DomainModelBuilder<Builder, RecipePortionsModelPersistence> {
+            extends DomainModelBuilder<Builder, RecipePortionsPersistenceModel> {
 
         public Builder() {
-            model = new RecipePortionsModelPersistence();
+            model = new RecipePortionsPersistenceModel();
         }
 
         public Builder getDefault() {
@@ -80,7 +80,7 @@ public final class RecipePortionsModelPersistence
         }
 
         public Builder basedOnPersistenceModel(
-                @Nonnull RecipePortionsModelPersistence m) {
+                @Nonnull RecipePortionsPersistenceModel m) {
             model.dataId = m.getDataId();
             model.domainId = m.getDomainId();
             model.servings = m.getServings();
@@ -95,8 +95,8 @@ public final class RecipePortionsModelPersistence
             return self();
         }
 
-        public Builder setRecipeId(@Nonnull String recipeId) {
-            model.domainId = recipeId;
+        public Builder setDomainId(@Nonnull String domainId) {
+            model.domainId = domainId;
             return self();
         }
 

@@ -99,7 +99,7 @@ public class ConversionFactorStatusTest {
     @Test
     public void getConversionFactorStatus_disabledForUnitOfMeasure_DISABLED() {
         // Arrange
-        String ingredientId = INGREDIENT_NEW_VALID_NAME_DESCRIPTION.getId();
+        String ingredientId = INGREDIENT_NEW_VALID_NAME_DESCRIPTION.getDataId();
         MeasurementSubtype subtype = REQUEST_DISABLED.getSubtype();
         // Act
         handler.execute(SUT, getRequestValues(subtype, ingredientId), getResponseCallback());
@@ -111,7 +111,7 @@ public class ConversionFactorStatusTest {
     @Test
     public void getConversionFactorStatus_userIsNotCreator_ENABLED_UNEDITABLE() {
         // Arrange
-        String ingredientId = INGREDIENT_VALID_FROM_ANOTHER_USER.getId();
+        String ingredientId = INGREDIENT_VALID_FROM_ANOTHER_USER.getDataId();
         MeasurementSubtype subtype = REQUEST_ENABLED_UNEDITABLE.getSubtype();
         // Act
         handler.execute(SUT, getRequestValues(subtype, ingredientId), getResponseCallback());
@@ -123,7 +123,7 @@ public class ConversionFactorStatusTest {
     @Test
     public void getConversionFactorStatus_noConversionFactorSet_ENABLED_EDITABLE_UNSET() {
         // Arrange
-        String ingredientId = INGREDIENT_NEW_VALID_WITH_CONVERSION_FACTOR_UNSET.getId();
+        String ingredientId = INGREDIENT_NEW_VALID_WITH_CONVERSION_FACTOR_UNSET.getDataId();
         MeasurementSubtype subtype = REQUEST_ENABLED_EDITABLE_UNSET.getSubtype();
         // Act
         handler.execute(SUT, getRequestValues(subtype, ingredientId), getResponseCallback());
@@ -135,7 +135,7 @@ public class ConversionFactorStatusTest {
     @Test
     public void getConversionFactorStatus_conversionFactorSet_ENABLED_EDITABLE_SET() {
         // Arrange
-        String ingredientId = INGREDIENT_VALID_WITH_CONVERSION_FACTOR.getId();
+        String ingredientId = INGREDIENT_VALID_WITH_CONVERSION_FACTOR.getDataId();
         MeasurementSubtype subtype = REQUEST_ENABLED_EDITABLE_SET.getSubtype();
         // Act
         handler.execute(SUT, getRequestValues(subtype, ingredientId), getResponseCallback());
@@ -165,19 +165,19 @@ public class ConversionFactorStatusTest {
     }
 
     private void verifyRepoCalledWithIngredientValidFromAnotherUser() {
-        verify(repoMock).getByDataId(eq(INGREDIENT_VALID_FROM_ANOTHER_USER.getId()),
+        verify(repoMock).getByDataId(eq(INGREDIENT_VALID_FROM_ANOTHER_USER.getDataId()),
                 getEntityCallbackCaptor.capture());
         getEntityCallbackCaptor.getValue().onEntityLoaded(INGREDIENT_VALID_FROM_ANOTHER_USER);
     }
 
     private void verifyRepoCalledWithIngredientNewValidNameDescription() {
-        verify(repoMock).getByDataId(eq(INGREDIENT_NEW_VALID_NAME_DESCRIPTION.getId()),
+        verify(repoMock).getByDataId(eq(INGREDIENT_NEW_VALID_NAME_DESCRIPTION.getDataId()),
                 getEntityCallbackCaptor.capture());
         getEntityCallbackCaptor.getValue().onEntityLoaded(INGREDIENT_NEW_VALID_NAME_DESCRIPTION);
     }
 
     private void verifyRepoCalledWithIngredientValidWithConversionFactor() {
-        verify(repoMock).getByDataId(eq(INGREDIENT_VALID_WITH_CONVERSION_FACTOR.getId()),
+        verify(repoMock).getByDataId(eq(INGREDIENT_VALID_WITH_CONVERSION_FACTOR.getDataId()),
                 getEntityCallbackCaptor.capture());
         getEntityCallbackCaptor.getValue().onEntityLoaded(INGREDIENT_VALID_WITH_CONVERSION_FACTOR);
     }

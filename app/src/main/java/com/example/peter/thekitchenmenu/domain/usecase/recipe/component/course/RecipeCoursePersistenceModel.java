@@ -29,7 +29,7 @@ public final class RecipeCoursePersistenceModel
         return createDate;
     }
 
-    public long getLasUpdate() {
+    public long getLastUpdate() {
         return lasUpdate;
     }
 

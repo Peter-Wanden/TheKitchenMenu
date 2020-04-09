@@ -14,7 +14,7 @@ import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModelBuil
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasure;
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModel;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortionsModelPersistence;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortionsPersistenceModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
@@ -212,9 +212,9 @@ public class RecipeIngredient extends UseCase {
     private void loadPortions() {
         portionsRepository.getByRecipeId(
                 recipeId,
-                new DomainDataAccess.GetDomainModelCallback<RecipePortionsModelPersistence>() {
+                new DomainDataAccess.GetDomainModelCallback<RecipePortionsPersistenceModel>() {
                     @Override
-                    public void onModelLoaded(RecipePortionsModelPersistence model) {
+                    public void onModelLoaded(RecipePortionsPersistenceModel model) {
                         numberOfPortions = model.getServings() *
                                 model.getSittings();
                         setupUnitOfMeasure();
@@ -339,7 +339,7 @@ public class RecipeIngredient extends UseCase {
 
     private IngredientEntity getUpdatedIngredientEntity() {
         return new IngredientEntity(
-                ingredientEntity.getId(),
+                ingredientEntity.getDataId(),
                 ingredientEntity.getName(),
                 ingredientEntity.getDescription(),
                 unitOfMeasure.getConversionFactor(),

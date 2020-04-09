@@ -15,7 +15,7 @@ public class CourseLocalSaveAdapter {
     }
 
     public void save(RecipeCoursePersistenceModel m) {
-        CourseConverter c = new CourseConverter();
+        CourseModelConverter c = new CourseModelConverter();
         dataSource.save(c.convertToPrimitive(m));
     }
 }

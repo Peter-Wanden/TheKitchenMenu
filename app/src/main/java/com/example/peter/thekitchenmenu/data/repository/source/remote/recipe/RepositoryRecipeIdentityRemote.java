@@ -5,13 +5,13 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity
 
 import javax.annotation.Nonnull;
 
-public class RecipeIdentityRemoteDomainDataAccess implements DomainDataAccess<RecipeIdentityPersistenceModel> {
+public class RepositoryRecipeIdentityRemote implements DomainDataAccess<RecipeIdentityPersistenceModel> {
 
-    private static RecipeIdentityRemoteDomainDataAccess INSTANCE;
+    private static RepositoryRecipeIdentityRemote INSTANCE;
 
-    public static RecipeIdentityRemoteDomainDataAccess getInstance() {
+    public static RepositoryRecipeIdentityRemote getInstance() {
         if (INSTANCE == null) {
-            INSTANCE = new RecipeIdentityRemoteDomainDataAccess();
+            INSTANCE = new RepositoryRecipeIdentityRemote();
         }
         return INSTANCE;
     }

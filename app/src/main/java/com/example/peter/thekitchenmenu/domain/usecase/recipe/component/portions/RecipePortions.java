@@ -20,7 +20,7 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 
 public class RecipePortions extends UseCase
-        implements DomainDataAccess.GetDomainModelCallback<RecipePortionsModelPersistence> {
+        implements DomainDataAccess.GetDomainModelCallback<RecipePortionsPersistenceModel> {
 
     private static final String TAG = "tkm-" + RecipePortions.class.getSimpleName() + ": ";
 
@@ -73,7 +73,7 @@ public class RecipePortions extends UseCase
     private boolean isNewRequest;
 
     private RecipePortionsRequest.Model requestModel;
-    private RecipePortionsModelPersistence persistenceModel;
+    private RecipePortionsPersistenceModel persistenceModel;
 
     public RecipePortions(@Nonnull RepositoryRecipePortions repository,
                           @Nonnull UniqueIdProvider idProvider,
@@ -116,7 +116,7 @@ public class RecipePortions extends UseCase
     }
 
     @Override
-    public void onModelLoaded(RecipePortionsModelPersistence model) {
+    public void onModelLoaded(RecipePortionsPersistenceModel model) {
         persistenceModel = model;
         validateData();
         buildResponse();
@@ -130,12 +130,12 @@ public class RecipePortions extends UseCase
         buildResponse();
     }
 
-    private RecipePortionsModelPersistence createNewPersistenceModel() {
+    private RecipePortionsPersistenceModel createNewPersistenceModel() {
         long currentTime = timeProvider.getCurrentTimeInMills();
         dataId = idProvider.getUId();
-        return new RecipePortionsModelPersistence.Builder().
+        return new RecipePortionsPersistenceModel.Builder().
                 setDataId(dataId).
-                setRecipeId(recipeId).
+                setDomainId(recipeId).
                 setServings(MIN_SERVINGS).
                 setSittings(MIN_SITTINGS).
                 setCreateDate(currentTime).
@@ -226,8 +226,8 @@ public class RecipePortions extends UseCase
         return persistenceModel.getSittings() != requestModel.getSittings();
     }
 
-    private RecipePortionsModelPersistence updatePersistenceFromRequestModel() {
-        return new RecipePortionsModelPersistence.Builder().
+    private RecipePortionsPersistenceModel updatePersistenceFromRequestModel() {
+        return new RecipePortionsPersistenceModel.Builder().
                 basedOnPersistenceModel(persistenceModel).
                 setSittings(requestModel.getSittings()).
                 setServings(requestModel.getServings()).
@@ -261,7 +261,7 @@ public class RecipePortions extends UseCase
         }
     }
 
-    private void save(RecipePortionsModelPersistence model) {
+    private void save(RecipePortionsPersistenceModel model) {
         repository.save(model);
     }
 }

@@ -9,7 +9,7 @@ import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.cour
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.datasource.RecipeDurationEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.parent.RecipeMetadataParentEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.datasource.RecipeIdentityEntity;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.RecipePortionsEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.datasource.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.data.repository.dataadapter.primitive.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeComponentState;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeCourse;
@@ -200,7 +200,7 @@ public class RecipeDurationEditorViewModelTest {
     @Test
     public void newId_newEmptyValuesSetToObservers() {
         // Arrange
-        String recipeId = VALID_NEW_EMPTY.getId();
+        String recipeId = VALID_NEW_EMPTY.getDataId();
 
         // Act
         givenNewEmptyRecipe(recipeId);
@@ -219,7 +219,7 @@ public class RecipeDurationEditorViewModelTest {
     @Test
     public void newId_recipeStatusINVALID_UNCHANGED() {
         // Arrange
-        String recipeId = VALID_NEW_EMPTY.getId();
+        String recipeId = VALID_NEW_EMPTY.getDataId();
         long dateReturnedIfNoData = 0L;
         int timeReturnedForEmptyModel = 0;
 
@@ -255,7 +255,7 @@ public class RecipeDurationEditorViewModelTest {
     @Test
     public void newId_invalidPrepHours_errorMessageSetToObservable() {
         // Arrange
-        String recipeId = VALID_NEW_EMPTY.getId();
+        String recipeId = VALID_NEW_EMPTY.getDataId();
 
         // Act
         givenNewEmptyRecipe(recipeId);
@@ -269,7 +269,7 @@ public class RecipeDurationEditorViewModelTest {
     @Test
     public void newId_invalidPrepHours_invalidValueNotSaved() {
         // Arrange
-        String recipeId = VALID_NEW_EMPTY.getId();
+        String recipeId = VALID_NEW_EMPTY.getDataId();
 
         // Act
         givenNewEmptyRecipe(recipeId);
@@ -283,7 +283,7 @@ public class RecipeDurationEditorViewModelTest {
     @Test
     public void newId_invalidPrepHours_resultINVALID_CHANGED() {
         // Arrange
-        String recipeId = VALID_NEW_EMPTY.getId();
+        String recipeId = VALID_NEW_EMPTY.getDataId();
         givenNewEmptyRecipe(recipeId);
 
         // Act
@@ -306,7 +306,7 @@ public class RecipeDurationEditorViewModelTest {
     @Test
     public void newId_validPrepHours_errorMessageObservableNull() {
         // Arrange
-        String recipeId = VALID_NEW_EMPTY.getId();
+        String recipeId = VALID_NEW_EMPTY.getDataId();
         givenNewEmptyRecipe(recipeId);
 
         // Act
@@ -319,7 +319,7 @@ public class RecipeDurationEditorViewModelTest {
     @Test
     public void newId_validPrepHours_recipeModelStatusVALID_CHANGED() {
         // Arrange
-        String recipeId = VALID_NEW_EMPTY.getId();
+        String recipeId = VALID_NEW_EMPTY.getDataId();
         givenNewEmptyRecipe(recipeId);
 
         // Act
@@ -338,7 +338,7 @@ public class RecipeDurationEditorViewModelTest {
     @Test
     public void newId_validPrepHours_prepHoursSaved() {
         // Arrange
-        String recipeId = VALID_NEW_EMPTY.getId();
+        String recipeId = VALID_NEW_EMPTY.getDataId();
         when(timeProviderMock.getCurrentTimeInMills()).
                 thenReturn(VALID_NEW_PREP_TIME_VALID.getCreateDate());
         givenNewEmptyRecipe(recipeId);
@@ -354,7 +354,7 @@ public class RecipeDurationEditorViewModelTest {
     @Test
     public void newId_invalidPrepMinutes_errorMessageSetToObservable() {
         // Arrange
-        String recipeId = VALID_NEW_EMPTY.getId();
+        String recipeId = VALID_NEW_EMPTY.getDataId();
         givenNewEmptyRecipe(recipeId);
 
         // Act
@@ -367,7 +367,7 @@ public class RecipeDurationEditorViewModelTest {
     @Test
     public void newId_invalidPrepMinutes_recipeModelStatusINVALID_CHANGED() {
         // Arrange
-        String recipeId = VALID_NEW_EMPTY.getId();
+        String recipeId = VALID_NEW_EMPTY.getDataId();
         givenNewEmptyRecipe(recipeId);
 
         // Act
@@ -386,7 +386,7 @@ public class RecipeDurationEditorViewModelTest {
     @Test
     public void newId_invalidPrepMinutes_invalidValueNotSaved() {
         // Arrange
-        String recipeId = VALID_NEW_EMPTY.getId();
+        String recipeId = VALID_NEW_EMPTY.getDataId();
         givenNewEmptyRecipe(recipeId);
 
         // Act
@@ -399,7 +399,7 @@ public class RecipeDurationEditorViewModelTest {
     @Test
     public void newId_validPrepMinutes_errorMessageObservableNull() {
         // Arrange
-        String recipeId = VALID_NEW_EMPTY.getId();
+        String recipeId = VALID_NEW_EMPTY.getDataId();
         givenNewEmptyRecipe(recipeId);
 
         // Act
@@ -412,7 +412,7 @@ public class RecipeDurationEditorViewModelTest {
     @Test
     public void newId_validPrepMinutes_recipeModelStatusVALID_CHANGED() {
         // Arrange
-        String recipeId = VALID_NEW_EMPTY.getId();
+        String recipeId = VALID_NEW_EMPTY.getDataId();
         givenNewEmptyRecipe(recipeId);
 
         // Act
@@ -431,7 +431,7 @@ public class RecipeDurationEditorViewModelTest {
     @Test
     public void newId_validPrepMinutes_prepMinutesSaved() {
         // Arrange
-        String recipeId = VALID_NEW_EMPTY.getId();
+        String recipeId = VALID_NEW_EMPTY.getDataId();
         when(timeProviderMock.getCurrentTimeInMills()).
                 thenReturn(VALID_NEW_PREP_TIME_VALID.getCreateDate());
         givenNewEmptyRecipe(recipeId);
@@ -447,7 +447,7 @@ public class RecipeDurationEditorViewModelTest {
     @Test
     public void newId_validPrepHoursAndMinutes_prepTimeSaved() {
         // Arrange
-        String recipeId = VALID_NEW_EMPTY.getId();
+        String recipeId = VALID_NEW_EMPTY.getDataId();
         when(timeProviderMock.getCurrentTimeInMills()).
                 thenReturn(VALID_NEW_PREP_TIME_VALID.getCreateDate());
         givenNewEmptyRecipe(recipeId);
@@ -464,7 +464,7 @@ public class RecipeDurationEditorViewModelTest {
     @Test
     public void newId_validPrepHoursAndMinutes_recipeModelStatusVALID_CHANGED() {
         // Arrange
-        String recipeId = VALID_NEW_EMPTY.getId();
+        String recipeId = VALID_NEW_EMPTY.getDataId();
         givenNewEmptyRecipe(recipeId);
 
         // Act
@@ -484,7 +484,7 @@ public class RecipeDurationEditorViewModelTest {
     @Test
     public void newId_invalidPrepHoursAndMinutes_onlyValidPartOfPrepTimeSaved() {
         // Arrange
-        String recipeId = VALID_NEW_EMPTY.getId();
+        String recipeId = VALID_NEW_EMPTY.getDataId();
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
                 INVALID_NEW_PREP_TIME_INVALID.getCreateDate());
         givenNewEmptyRecipe(recipeId);
@@ -501,7 +501,7 @@ public class RecipeDurationEditorViewModelTest {
     @Test
     public void newId_invalidPrepHoursAndMinutes_recipeModelStatusINVALID_CHANGED() {
         // Arrange
-        String recipeId = VALID_NEW_EMPTY.getId();
+        String recipeId = VALID_NEW_EMPTY.getDataId();
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
                 INVALID_NEW_PREP_TIME_INVALID.getCreateDate());
         givenNewEmptyRecipe(recipeId);
@@ -523,7 +523,7 @@ public class RecipeDurationEditorViewModelTest {
     @Test
     public void newId_validCookHours_errorMessageObservableNull() {
         // Arrange
-        String recipeId = VALID_NEW_EMPTY.getId();
+        String recipeId = VALID_NEW_EMPTY.getDataId();
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
                 INVALID_NEW_PREP_TIME_INVALID.getCreateDate());
         givenNewEmptyRecipe(recipeId);
@@ -538,7 +538,7 @@ public class RecipeDurationEditorViewModelTest {
     @Test
     public void newId_validCookHours_RecipeModelStatusVALID_CHANGED() {
         // Arrange
-        String recipeId = VALID_NEW_EMPTY.getId();
+        String recipeId = VALID_NEW_EMPTY.getDataId();
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
                 VALID_NEW_COOK_TIME_VALID.getCreateDate());
         givenNewEmptyRecipe(recipeId);
@@ -559,7 +559,7 @@ public class RecipeDurationEditorViewModelTest {
     @Test
     public void newId_validCookHours_cookHoursSaved() {
         // Arrange
-        String recipeId = VALID_NEW_EMPTY.getId();
+        String recipeId = VALID_NEW_EMPTY.getDataId();
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
                 VALID_NEW_COOK_TIME_VALID.getCreateDate());
         givenNewEmptyRecipe(recipeId);
@@ -575,7 +575,7 @@ public class RecipeDurationEditorViewModelTest {
     @Test
     public void newId_invalidCookHours_errorMessageSetToObservable() {
         // Arrange
-        String recipeId = VALID_NEW_EMPTY.getId();
+        String recipeId = VALID_NEW_EMPTY.getDataId();
         givenNewEmptyRecipe(recipeId);
 
         // Act
@@ -588,7 +588,7 @@ public class RecipeDurationEditorViewModelTest {
     @Test
     public void newId_invalidCookHours_RecipeModelStatusINVALID_CHANGED() {
         // Arrange
-        String recipeId = VALID_NEW_EMPTY.getId();
+        String recipeId = VALID_NEW_EMPTY.getDataId();
         givenNewEmptyRecipe(recipeId);
 
         // Act
@@ -607,7 +607,7 @@ public class RecipeDurationEditorViewModelTest {
     @Test
     public void newId_invalidCookHours_invalidValueNotSaved() {
         // Arrange
-        String recipeId = VALID_NEW_EMPTY.getId();
+        String recipeId = VALID_NEW_EMPTY.getDataId();
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(VALID_NEW_EMPTY.getCreateDate());
         givenNewEmptyRecipe(recipeId);
 
@@ -621,7 +621,7 @@ public class RecipeDurationEditorViewModelTest {
     @Test
     public void newId_validCookMinutes_errorMessageObservableNull() {
         // Arrange
-        String recipeId = VALID_NEW_EMPTY.getId();
+        String recipeId = VALID_NEW_EMPTY.getDataId();
         givenNewEmptyRecipe(recipeId);
 
         // Act
@@ -634,7 +634,7 @@ public class RecipeDurationEditorViewModelTest {
     @Test
     public void newId_validCookMinutes_RecipeModelStatusVALID_CHANGED() {
         // Arrange
-        String recipeId = VALID_NEW_EMPTY.getId();
+        String recipeId = VALID_NEW_EMPTY.getDataId();
         givenNewEmptyRecipe(recipeId);
 
         // Act
@@ -653,7 +653,7 @@ public class RecipeDurationEditorViewModelTest {
     @Test
     public void newId_validCookMinutes_cookTimeSaved() {
         // Arrange
-        String recipeId = VALID_NEW_EMPTY.getId();
+        String recipeId = VALID_NEW_EMPTY.getDataId();
         when(timeProviderMock.getCurrentTimeInMills()).
                 thenReturn(VALID_NEW_COOK_TIME_VALID.getCreateDate());
         givenNewEmptyRecipe(recipeId);
@@ -669,7 +669,7 @@ public class RecipeDurationEditorViewModelTest {
     @Test
     public void newId_invalidCookMinutes_errorMessageSetToObservable() {
         // Arrange
-        String recipeId = VALID_NEW_EMPTY.getId();
+        String recipeId = VALID_NEW_EMPTY.getDataId();
         givenNewEmptyRecipe(recipeId);
 
         // Act
@@ -681,7 +681,7 @@ public class RecipeDurationEditorViewModelTest {
     @Test
     public void newId_invalidCookMinutes_RecipeModelStatusINVALID_CHANGED() {
         // Arrange
-        String recipeId = VALID_NEW_EMPTY.getId();
+        String recipeId = VALID_NEW_EMPTY.getDataId();
         givenNewEmptyRecipe(recipeId);
 
         // Act
@@ -701,7 +701,7 @@ public class RecipeDurationEditorViewModelTest {
     @Test
     public void newId_invalidCookMinutes_invalidValueNotSaved() {
         // Arrange
-        String recipeId = VALID_NEW_EMPTY.getId();
+        String recipeId = VALID_NEW_EMPTY.getDataId();
         when(timeProviderMock.getCurrentTimeInMills()).
                 thenReturn(INVALID_NEW_COOK_TIME_INVALID.getCreateDate());
         givenNewEmptyRecipe(recipeId);
@@ -716,7 +716,7 @@ public class RecipeDurationEditorViewModelTest {
     @Test
     public void newId_validCookHoursAndMinutes_errorMessageObservableNull() {
         // Arrange
-        String recipeId = VALID_NEW_EMPTY.getId();
+        String recipeId = VALID_NEW_EMPTY.getDataId();
         givenNewEmptyRecipe(recipeId);
 
         // Act
@@ -730,7 +730,7 @@ public class RecipeDurationEditorViewModelTest {
     @Test
     public void newId_validCookHoursAndMinutes_recipeModelStatusVALID_CHANGED() {
         // Arrange
-        String recipeId = VALID_NEW_EMPTY.getId();
+        String recipeId = VALID_NEW_EMPTY.getDataId();
         when(timeProviderMock.getCurrentTimeInMills()).
                 thenReturn(VALID_NEW_COOK_TIME_VALID.getCreateDate());
         givenNewEmptyRecipe(recipeId);
@@ -752,7 +752,7 @@ public class RecipeDurationEditorViewModelTest {
     @Test
     public void newId_validCookHoursAndMinutes_cookTimeSaved() {
         // Arrange
-        String recipeId = VALID_NEW_EMPTY.getId();
+        String recipeId = VALID_NEW_EMPTY.getDataId();
         when(timeProviderMock.getCurrentTimeInMills()).
                 thenReturn(VALID_NEW_COOK_TIME_VALID.getCreateDate());
         givenNewEmptyRecipe(recipeId);
@@ -769,7 +769,7 @@ public class RecipeDurationEditorViewModelTest {
     @Test
     public void newId_invalidCookHoursAndMinutes_errorMessageSetToObservable() {
         // Arrange
-        String recipeId = VALID_NEW_EMPTY.getId();
+        String recipeId = VALID_NEW_EMPTY.getDataId();
         givenNewEmptyRecipe(recipeId);
 
         // Act
@@ -782,7 +782,7 @@ public class RecipeDurationEditorViewModelTest {
     @Test
     public void newId_invalidCookHoursAndMinutes_RecipeModelStatusINVALID_CHANGED() {
         // Arrange
-        String recipeId = VALID_NEW_EMPTY.getId();
+        String recipeId = VALID_NEW_EMPTY.getDataId();
         givenNewEmptyRecipe(recipeId);
 
         // Act
@@ -802,7 +802,7 @@ public class RecipeDurationEditorViewModelTest {
     @Test
     public void newId_invalidCookHoursAndMinutes_onlyValidPartOfPrepTimeSaved() {
         // Arrange
-        String recipeId = VALID_NEW_EMPTY.getId();
+        String recipeId = VALID_NEW_EMPTY.getDataId();
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
                 INVALID_NEW_COOK_TIME_INVALID.getCreateDate());
         givenNewEmptyRecipe(recipeId);
@@ -818,7 +818,7 @@ public class RecipeDurationEditorViewModelTest {
     @Test
     public void validExistingId_prepHoursSetToObservable() {
         // Arrange
-        String recipeId = VALID_EXISTING_COMPLETE.getId();
+        String recipeId = VALID_EXISTING_COMPLETE.getDataId();
         String prepHours = String.valueOf(VALID_EXISTING_COMPLETE.getPrepTime() / 60);
 
         // An external request that loads the recipe
@@ -837,7 +837,7 @@ public class RecipeDurationEditorViewModelTest {
     @Test
     public void validExistingId_prepMinutesSetToObservable() {
         // Arrange
-        String recipeId = VALID_EXISTING_COMPLETE.getId();
+        String recipeId = VALID_EXISTING_COMPLETE.getDataId();
         String prepMinutes = String.valueOf(VALID_EXISTING_COMPLETE.getPrepTime() % 60);
 
         // An external request that loads the recipe
@@ -856,7 +856,7 @@ public class RecipeDurationEditorViewModelTest {
     @Test
     public void validExistingId_cookHoursSetToObservable() {
         // Arrange
-        String recipeId = VALID_EXISTING_COMPLETE.getId();
+        String recipeId = VALID_EXISTING_COMPLETE.getDataId();
         String cookHours = String.valueOf(VALID_EXISTING_COMPLETE.getCookTime() / 60);
 
         // An external request that starts/loads the recipe
@@ -875,7 +875,7 @@ public class RecipeDurationEditorViewModelTest {
     @Test
     public void validExistingId_cookMinutesSetToObservable() {
         // Arrange
-        String recipeId = VALID_EXISTING_COMPLETE.getId();
+        String recipeId = VALID_EXISTING_COMPLETE.getDataId();
         String cookMinutes = String.valueOf(VALID_EXISTING_COMPLETE.getCookTime() % 60);
 
         // An external request that starts/loads the recipe
@@ -894,7 +894,7 @@ public class RecipeDurationEditorViewModelTest {
     @Test
     public void validExistingId_RecipeModelStatusVALID_UNCHANGED() {
         // Arrange
-        String recipeId = VALID_EXISTING_COMPLETE.getId();
+        String recipeId = VALID_EXISTING_COMPLETE.getDataId();
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
                 VALID_EXISTING_COMPLETE.getCreateDate());
 

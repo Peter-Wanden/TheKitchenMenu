@@ -132,7 +132,7 @@ public class RecipeCourse
             updatedCourseList.add(course);
 
             createDate = Math.min(createDate, m.getCreateDate());
-            lastUpdate = Math.max(lastUpdate, m.getLasUpdate());
+            lastUpdate = Math.max(lastUpdate, m.getLastUpdate());
         }
         sendResponse();
     }

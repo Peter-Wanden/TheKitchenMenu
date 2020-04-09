@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions;
 
 import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.RecipePortionsEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.datasource.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.data.repository.dataadapter.primitive.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
@@ -87,12 +87,12 @@ public class RecipePortionsTest {
     @Test
     public void newId_defaultModel_newDefaultModelReturned() {
         // Arrange
-        whenIdProviderReturn(NEW_EMPTY.getId());
+        whenIdProviderReturn(NEW_EMPTY.getDataId());
         whenTimeProviderReturn(NEW_EMPTY.getCreateDate());
 
         RecipePortionsRequest request = new RecipePortionsRequest.Builder().
                 getDefault().
-                setDataId(NEW_EMPTY.getRecipeId()).
+                setDataId(NEW_EMPTY.getDomainId()).
                 build();
         RecipePortionsResponse.Model expectedResponseModel = getResponseModelFromEntity(NEW_EMPTY);
         // Act
@@ -105,12 +105,12 @@ public class RecipePortionsTest {
     @Test
     public void newId_defaultModel_resultDATA_UNAVAILABLE() {
         // Arrange
-        whenIdProviderReturn(NEW_EMPTY.getId());
+        whenIdProviderReturn(NEW_EMPTY.getDataId());
         whenTimeProviderReturn(NEW_EMPTY.getCreateDate());
 
         RecipePortionsRequest request = new RecipePortionsRequest.Builder().
                 getDefault().
-                setDataId(NEW_EMPTY.getRecipeId()).
+                setDataId(NEW_EMPTY.getDomainId()).
                 build();
         // Act
         handler.execute(SUT, request, getCallback());
@@ -126,12 +126,12 @@ public class RecipePortionsTest {
     @Test
     public void newId_invalidServingsInvalidSittings_resultINVALID_CHANGED() {
         // Arrange
-        whenIdProviderReturn(NEW_EMPTY.getId());
+        whenIdProviderReturn(NEW_EMPTY.getDataId());
         whenTimeProviderReturn(NEW_EMPTY.getCreateDate());
 
         RecipePortionsRequest request = new RecipePortionsRequest.Builder().
                 getDefault().
-                setDataId(NEW_EMPTY.getRecipeId()).
+                setDataId(NEW_EMPTY.getDomainId()).
                 build();
 
         handler.execute(SUT, request, getCallback());
@@ -141,7 +141,7 @@ public class RecipePortionsTest {
                 INVALID_NEW_TOO_HIGH_SITTINGS_TOO_HIGH_SERVINGS);
 
         RecipePortionsRequest invalidRequest = new RecipePortionsRequest.Builder().
-                setDataId(NEW_EMPTY.getRecipeId()).
+                setDataId(NEW_EMPTY.getDomainId()).
                 setModel(invalidModel).
                 build();
 
@@ -161,12 +161,12 @@ public class RecipePortionsTest {
     @Test
     public void newId_invalidServingsValidSittings_resultINVALID_CHANGED() {
         // Arrange
-        whenIdProviderReturn(NEW_EMPTY.getId());
+        whenIdProviderReturn(NEW_EMPTY.getDataId());
         whenTimeProviderReturn(NEW_EMPTY.getCreateDate());
 
         RecipePortionsRequest request = new RecipePortionsRequest.Builder().
                 getDefault().
-                setDataId(NEW_EMPTY.getRecipeId()).
+                setDataId(NEW_EMPTY.getDomainId()).
                 build();
 
         handler.execute(SUT, request, getCallback());
@@ -175,7 +175,7 @@ public class RecipePortionsTest {
         RecipePortionsRequest.Model invalidModel = getRequestModelFromEntity(
                 INVALID_NEW_TOO_HIGH_SERVINGS_VALID_SITTINGS);
         RecipePortionsRequest invalidRequest = new RecipePortionsRequest.Builder().
-                setDataId(NEW_EMPTY.getRecipeId()).
+                setDataId(NEW_EMPTY.getDomainId()).
                 setModel(invalidModel).
                 build();
         handler.execute(SUT, invalidRequest, getCallback());
@@ -193,12 +193,12 @@ public class RecipePortionsTest {
     @Test
     public void newId_validServingsInvalidSittings_resultINVALID_CHANGED() {
         // Arrange
-        whenIdProviderReturn(NEW_EMPTY.getId());
+        whenIdProviderReturn(NEW_EMPTY.getDataId());
         whenTimeProviderReturn(NEW_EMPTY.getCreateDate());
 
         RecipePortionsRequest request = new RecipePortionsRequest.Builder().
                 getDefault().
-                setDataId(NEW_EMPTY.getRecipeId()).
+                setDataId(NEW_EMPTY.getDomainId()).
                 build();
 
         handler.execute(SUT, request, getCallback());
@@ -207,7 +207,7 @@ public class RecipePortionsTest {
         RecipePortionsRequest.Model invalidModel = getRequestModelFromEntity(
                 INVALID_NEW_VALID_SERVINGS_TOO_HIGH_SITTINGS);
         RecipePortionsRequest invalidRequest = new RecipePortionsRequest.Builder().
-                setDataId(NEW_EMPTY.getRecipeId()).
+                setDataId(NEW_EMPTY.getDomainId()).
                 setModel(invalidModel).
                 build();
         handler.execute(SUT, invalidRequest, getCallback());
@@ -225,19 +225,19 @@ public class RecipePortionsTest {
     @Test
     public void newId_validServingsValidSittings_resultVALID_CHANGED() {
         // Arrange
-        whenIdProviderReturn(NEW_EMPTY.getId());
+        whenIdProviderReturn(NEW_EMPTY.getDataId());
         whenTimeProviderReturn(NEW_EMPTY.getCreateDate());
 
         RecipePortionsRequest request = new RecipePortionsRequest.Builder().
                 getDefault().
-                setDataId(NEW_EMPTY.getRecipeId()).build();
+                setDataId(NEW_EMPTY.getDomainId()).build();
 
         handler.execute(SUT, request, getCallback());
         simulateNothingReturnedFromDatabase();
         // Act
         RecipePortionsRequest.Model validModel = getRequestModelFromEntity(VALID_NEW);
         RecipePortionsRequest validRequest = new RecipePortionsRequest.Builder().
-                setDataId(NEW_EMPTY.getRecipeId()).
+                setDataId(NEW_EMPTY.getDomainId()).
                 setModel(validModel).
                 build();
         handler.execute(SUT, validRequest, getCallback());
@@ -255,12 +255,12 @@ public class RecipePortionsTest {
     @Test
     public void newId_validSittingsValidServings_saved() {
         // Arrange
-        whenIdProviderReturn(NEW_EMPTY.getId());
+        whenIdProviderReturn(NEW_EMPTY.getDataId());
         whenTimeProviderReturn(NEW_EMPTY.getCreateDate());
 
         RecipePortionsRequest request = new RecipePortionsRequest.Builder().
                 getDefault().
-                setDataId(NEW_EMPTY.getRecipeId()).
+                setDataId(NEW_EMPTY.getDomainId()).
                 build();
 
         handler.execute(SUT, request, getCallback());
@@ -270,7 +270,7 @@ public class RecipePortionsTest {
         System.out.println(TAG + validModel);
 
         RecipePortionsRequest validRequest = new RecipePortionsRequest.Builder().
-                setDataId(NEW_EMPTY.getRecipeId()).
+                setDataId(NEW_EMPTY.getDomainId()).
                 setModel(validModel).
                 build();
         handler.execute(SUT, validRequest, getCallback());
@@ -287,7 +287,7 @@ public class RecipePortionsTest {
     @Test
     public void existingId_validRecipeId_resultVALID_UNCHANGED() {
         // Arrange
-        String recipeId = VALID_EXISTING.getRecipeId();
+        String recipeId = VALID_EXISTING.getDomainId();
         RecipePortionsRequest request = new RecipePortionsRequest.Builder().
                 getDefault().
                 setDataId(recipeId).
@@ -314,7 +314,7 @@ public class RecipePortionsTest {
     @Test
     public void existingId_invalidUpdatedServings_invalidValueNotSaved() {
         // Arrange
-        String recipeId = VALID_EXISTING.getRecipeId();
+        String recipeId = VALID_EXISTING.getDomainId();
         RecipePortionsRequest request = new RecipePortionsRequest.Builder().
                 getDefault().
                 setDataId(recipeId).
@@ -337,7 +337,7 @@ public class RecipePortionsTest {
     @Test
     public void existingId_validUpdatedServings_saved() {
         // Arrange
-        String recipeId = VALID_EXISTING_UPDATED_SERVINGS.getRecipeId();
+        String recipeId = VALID_EXISTING_UPDATED_SERVINGS.getDomainId();
         whenTimeProviderReturn(VALID_EXISTING_UPDATED_SERVINGS.getLastUpdate());
         RecipePortionsRequest request = new RecipePortionsRequest.Builder().
                 getDefault().
@@ -361,7 +361,7 @@ public class RecipePortionsTest {
 
     @Test
     public void existingId_invalidUpdatedSittings_invalidValueNotSaved() {
-        String recipeId = VALID_EXISTING.getRecipeId();
+        String recipeId = VALID_EXISTING.getDomainId();
         RecipePortionsRequest request = new RecipePortionsRequest.Builder().
                 getDefault().
                 setDataId(recipeId).
@@ -388,7 +388,7 @@ public class RecipePortionsTest {
     @Test
     public void existingId_validUpdatedSittings_saved() {
         // Arrange
-        String recipeId = VALID_EXISTING_UPDATED_SITTINGS.getRecipeId();
+        String recipeId = VALID_EXISTING_UPDATED_SITTINGS.getDomainId();
         whenTimeProviderReturn(VALID_EXISTING_UPDATED_SITTINGS.getLastUpdate());
         RecipePortionsRequest request = new RecipePortionsRequest.Builder().
                 getDefault().
@@ -426,13 +426,13 @@ public class RecipePortionsTest {
     }
 
     private void simulateNothingReturnedFromDatabase() {
-        verify(repoPortionsMock).getByRecipeId(eq(NEW_EMPTY.getRecipeId()),
+        verify(repoPortionsMock).getByRecipeId(eq(NEW_EMPTY.getDomainId()),
                 repoPortionsCallback.capture());
         repoPortionsCallback.getValue().onDataUnavailable();
     }
 
     private void simulateValidExistingReturnedFromDatabase(String recipeId) {
-        assertEquals(VALID_EXISTING.getRecipeId(), recipeId);
+        assertEquals(VALID_EXISTING.getDomainId(), recipeId);
         verify(repoPortionsMock).getByRecipeId(eq(recipeId), repoPortionsCallback.capture());
         repoPortionsCallback.getValue().onEntityLoaded(VALID_EXISTING);
     }
