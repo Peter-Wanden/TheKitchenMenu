@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity;
+package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.datasource;
 
 import androidx.room.Dao;
 import androidx.room.Insert;
@@ -8,7 +8,7 @@ import androidx.room.Update;
 
 import java.util.List;
 
-import static com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.RecipeIdentityEntity.*;
+import static com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.datasource.RecipeIdentityEntity.*;
 
 @Dao
 public interface RecipeIdentityEntityDao {

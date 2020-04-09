@@ -31,7 +31,7 @@ public class RepositoryRecipeCourse
 
     @Override
     public void getAllByCourse(
-            RecipeCourse.Course c,
+            @Nonnull RecipeCourse.Course c,
             @Nonnull GetAllDomainModelsCallback<RecipeCoursePersistenceModel> callback) {
 
         List<RecipeCoursePersistenceModel> models = checkCacheForCourse(c);

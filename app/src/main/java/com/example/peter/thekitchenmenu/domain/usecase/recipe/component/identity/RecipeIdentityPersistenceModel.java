@@ -7,7 +7,7 @@ import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public final class RecipeIdentityModelPersistence
+public final class RecipeIdentityPersistenceModel
         extends BasePersistence {
 
     private String title;
@@ -15,7 +15,7 @@ public final class RecipeIdentityModelPersistence
     private long createDate;
     private long lastUpdate;
 
-    private RecipeIdentityModelPersistence(){}
+    private RecipeIdentityPersistenceModel(){}
 
     @Nonnull
     public String getTitle() {
@@ -39,7 +39,7 @@ public final class RecipeIdentityModelPersistence
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        RecipeIdentityModelPersistence that = (RecipeIdentityModelPersistence) o;
+        RecipeIdentityPersistenceModel that = (RecipeIdentityPersistenceModel) o;
         return dataId.equals(that.dataId) &&
                 domainId.equals(that.domainId) &&
                 createDate == that.createDate &&
@@ -67,10 +67,10 @@ public final class RecipeIdentityModelPersistence
     }
 
     public static class Builder
-            extends DomainModelBuilder<Builder, RecipeIdentityModelPersistence> {
+            extends DomainModelBuilder<Builder, RecipeIdentityPersistenceModel> {
 
         public Builder() {
-            model = new RecipeIdentityModelPersistence();
+            model = new RecipeIdentityPersistenceModel();
         }
 
         public Builder getDefault() {
@@ -84,7 +84,7 @@ public final class RecipeIdentityModelPersistence
         }
 
         public Builder basedOnPersistenceModel(
-                @Nonnull RecipeIdentityModelPersistence m) {
+                @Nonnull RecipeIdentityPersistenceModel m) {
             model.dataId = m.getDataId();
             model.domainId = m.getDomainId();
             model.title = m.getTitle();

@@ -101,7 +101,7 @@ public class RepositoryRecipeCourseLocal
 
     @Override
     public void getAllByCourse(
-            RecipeCourse.Course c,
+            @Nonnull RecipeCourse.Course c,
             @Nonnull GetAllDomainModelsCallback<RecipeCoursePersistenceModel> callback) {
         getAdapter.getAllByCourse(
                 c,

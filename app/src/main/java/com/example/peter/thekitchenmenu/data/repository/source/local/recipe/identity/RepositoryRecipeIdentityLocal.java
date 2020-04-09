@@ -1,39 +1,32 @@
-package com.example.peter.thekitchenmenu.data.repository.source.remote.recipe;
+package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity;
 
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityPersistenceModel;
 
 import javax.annotation.Nonnull;
 
-public class RecipeIdentityRemoteDomainDataAccess implements DomainDataAccess<RecipeIdentityPersistenceModel> {
+public class RepositoryRecipeIdentityLocal
+        implements DomainDataAccess<RecipeIdentityPersistenceModel> {
 
-    private static RecipeIdentityRemoteDomainDataAccess INSTANCE;
-
-    public static RecipeIdentityRemoteDomainDataAccess getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new RecipeIdentityRemoteDomainDataAccess();
-        }
-        return INSTANCE;
-    }
-
-    @Override
-    public void getAll(
-            @Nonnull GetAllDomainModelsCallback<RecipeIdentityPersistenceModel> callback) {
-        callback.onModelsUnavailable();
-    }
+    private static volatile RepositoryRecipeIdentityLocal INSTANCE;
 
     @Override
     public void getByDataId(
             @Nonnull String dataId,
             @Nonnull GetDomainModelCallback<RecipeIdentityPersistenceModel> callback) {
-        callback.onModelUnavailable();
+
     }
 
     @Override
     public void getActiveByDomainId(
             @Nonnull String domainId,
             @Nonnull GetDomainModelCallback<RecipeIdentityPersistenceModel> callback) {
-        callback.onModelUnavailable();
+
+    }
+
+    @Override
+    public void getAll(@Nonnull GetAllDomainModelsCallback<RecipeIdentityPersistenceModel> callback) {
+
     }
 
     @Override

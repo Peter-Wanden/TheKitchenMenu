@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity;
+package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.datasource;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;

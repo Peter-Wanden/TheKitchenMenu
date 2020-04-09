@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.ingredient;
+package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.recipeingredient;
 
 import com.example.peter.thekitchenmenu.app.AppExecutors;
 import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.RecipeIngredientEntity;

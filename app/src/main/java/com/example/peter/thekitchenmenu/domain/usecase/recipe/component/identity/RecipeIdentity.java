@@ -28,7 +28,7 @@ import static com.example.peter.thekitchenmenu.domain.usecase.textvalidation.Tex
 
 public class RecipeIdentity
         extends UseCase
-        implements DomainDataAccess.GetDomainModelCallback<RecipeIdentityModelPersistence> {
+        implements DomainDataAccess.GetDomainModelCallback<RecipeIdentityPersistenceModel> {
 
     private static final String TAG = "tkm-" + RecipeIdentity.class.getSimpleName() + ": ";
 
@@ -83,7 +83,7 @@ public class RecipeIdentity
     private boolean isNewRequest;
 
     private RecipeIdentityRequest.Model requestModel;
-    private RecipeIdentityModelPersistence persistenceModel;
+    private RecipeIdentityPersistenceModel persistenceModel;
 
     public RecipeIdentity(@Nonnull RepositoryRecipeIdentity repository,
                           @Nonnull UniqueIdProvider idProvider,
@@ -124,7 +124,7 @@ public class RecipeIdentity
     }
 
     @Override
-    public void onModelLoaded(RecipeIdentityModelPersistence model) {
+    public void onModelLoaded(RecipeIdentityPersistenceModel model) {
         persistenceModel = model;
         validateData();
         buildResponse();
@@ -137,10 +137,10 @@ public class RecipeIdentity
         buildResponse();
     }
 
-    private RecipeIdentityModelPersistence createNewPersistenceModel() {
+    private RecipeIdentityPersistenceModel createNewPersistenceModel() {
         long currentTime = timeProvider.getCurrentTimeInMills();
         dataId = idProvider.getUId();
-        return new RecipeIdentityModelPersistence.Builder().
+        return new RecipeIdentityPersistenceModel.Builder().
                 getDefault().
                 setDataId(dataId).
                 setDomainId(recipeId).
@@ -271,8 +271,8 @@ public class RecipeIdentity
                 equals(requestModel.getDescription().toLowerCase().trim());
     }
 
-    private RecipeIdentityModelPersistence updatePersistenceFromRequestModel() {
-        return new RecipeIdentityModelPersistence.Builder().
+    private RecipeIdentityPersistenceModel updatePersistenceFromRequestModel() {
+        return new RecipeIdentityPersistenceModel.Builder().
                 basedOnPersistenceModel(persistenceModel).
                 setTitle(requestModel.getTitle()).
                 setDescription(requestModel.getDescription()).
@@ -308,7 +308,7 @@ public class RecipeIdentity
         isNewRequest = false;
     }
 
-    private void save(RecipeIdentityModelPersistence model) {
+    private void save(RecipeIdentityPersistenceModel model) {
         repository.save(model);
     }
 }

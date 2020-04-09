@@ -9,7 +9,7 @@ import javax.annotation.Nonnull;
 public interface DomainDataAccessRecipeCourse extends DomainDataAccess<RecipeCoursePersistenceModel> {
 
     void getAllByCourse(
-            RecipeCourse.Course c,
+            @Nonnull RecipeCourse.Course c,
             @Nonnull GetAllDomainModelsCallback<RecipeCoursePersistenceModel> callback);
 
     void getAllByDomainId(

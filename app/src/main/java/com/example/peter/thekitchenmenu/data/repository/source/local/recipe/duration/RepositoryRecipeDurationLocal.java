@@ -1,6 +1,7 @@
 package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration;
 
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.dataadapter.DurationLocalDeleteAdapter;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.dataadapter.DurationLocalGetAdapter;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.dataadapter.DurationLocalSaveAdapter;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDurationPersistenceModel;
@@ -18,12 +19,35 @@ public class RepositoryRecipeDurationLocal
     private final DurationLocalGetAdapter getAdapter;
     @Nonnull
     private final DurationLocalSaveAdapter saveAdapter;
+    @Nonnull
+    private final DurationLocalDeleteAdapter deleteAdapter;
 
-    public RepositoryRecipeDurationLocal(
+    private RepositoryRecipeDurationLocal(
             @Nonnull DurationLocalGetAdapter getAdapter,
-            @Nonnull DurationLocalSaveAdapter saveAdapter) {
+            @Nonnull DurationLocalSaveAdapter saveAdapter,
+            @Nonnull DurationLocalDeleteAdapter deleteAdapter) {
         this.getAdapter = getAdapter;
         this.saveAdapter = saveAdapter;
+        this.deleteAdapter = deleteAdapter;
+    }
+
+    public static RepositoryRecipeDurationLocal getInstance(
+            @Nonnull DurationLocalGetAdapter getAdapter,
+            @Nonnull DurationLocalSaveAdapter saveAdapter,
+            @Nonnull DurationLocalDeleteAdapter deleteAdapter) {
+
+        if (INSTANCE == null) {
+            synchronized (RepositoryRecipeDurationLocal.class) {
+                if (INSTANCE == null) {
+                    INSTANCE = new RepositoryRecipeDurationLocal(
+                            getAdapter,
+                            saveAdapter,
+                            deleteAdapter
+                    );
+                }
+            }
+        }
+        return INSTANCE;
     }
 
     @Override
@@ -83,16 +107,16 @@ public class RepositoryRecipeDurationLocal
 
     @Override
     public void deleteByDataId(String dataId) {
-
+        deleteAdapter.deleteByDataId(dataId);
     }
 
     @Override
     public void deleteAllByDomainId(@Nonnull String domainId) {
-
+        deleteAdapter.deleteAllByDomainId(domainId);
     }
 
     @Override
     public void deleteAll() {
-
+        deleteAdapter.deleteAll();
     }
 }

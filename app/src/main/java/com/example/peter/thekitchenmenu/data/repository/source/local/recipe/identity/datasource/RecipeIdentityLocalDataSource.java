@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity;
+package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.datasource;
 
 import com.example.peter.thekitchenmenu.app.AppExecutors;
 import com.example.peter.thekitchenmenu.data.repository.dataadapter.primitive.PrimitiveDataSource;

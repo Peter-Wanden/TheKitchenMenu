@@ -5,13 +5,13 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration
 
 import javax.annotation.Nonnull;
 
-public class RecipeDurationRemoteDomainDataAccess implements DomainDataAccess<RecipeDurationPersistenceModel> {
+public class RepositoryRecipeDurationRemote implements DomainDataAccess<RecipeDurationPersistenceModel> {
 
-    private static RecipeDurationRemoteDomainDataAccess INSTANCE;
+    private static RepositoryRecipeDurationRemote INSTANCE;
 
-    public static RecipeDurationRemoteDomainDataAccess getInstance() {
+    public static RepositoryRecipeDurationRemote getInstance() {
         if (INSTANCE == null) {
-            INSTANCE = new RecipeDurationRemoteDomainDataAccess();
+            INSTANCE = new RepositoryRecipeDurationRemote();
         }
         return INSTANCE;
     }

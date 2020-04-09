@@ -1,6 +1,7 @@
 package com.example.peter.thekitchenmenu.data.repository.source.remote.recipe;
 
 import com.example.peter.thekitchenmenu.data.repository.recipe.DomainDataAccessRecipeCourse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCoursePersistenceModel;
 
 import javax.annotation.Nonnull;
@@ -16,20 +17,22 @@ public class RepositoryRecipeCourseRemote implements DomainDataAccessRecipeCours
     }
 
     @Override
-    public void getAll(@Nonnull GetAllDomainModelsCallback<RecipeCoursePersistenceModel> callback) {
-        callback.onModelsUnavailable();
-    }
-
-    @Override
-    public void getAllByCourseNo(
-            int courseNo,
-            @Nonnull GetAllDomainModelsCallback<RecipeCoursePersistenceModel> callback) {
-        callback.onModelsUnavailable();
+    public void getByDataId(
+            @Nonnull String dataId,
+            @Nonnull GetDomainModelCallback<RecipeCoursePersistenceModel> callback) {
+        callback.onModelUnavailable();
     }
 
     @Override
     public void getAllByDomainId(
             @Nonnull String recipeId,
+            @Nonnull GetAllDomainModelsCallback<RecipeCoursePersistenceModel> callback) {
+        callback.onModelsUnavailable();
+    }
+
+    @Override
+    public void getAllByCourse(
+            @Nonnull RecipeCourse.Course c,
             @Nonnull GetAllDomainModelsCallback<RecipeCoursePersistenceModel> callback) {
         callback.onModelsUnavailable();
     }
@@ -42,10 +45,17 @@ public class RepositoryRecipeCourseRemote implements DomainDataAccessRecipeCours
     }
 
     @Override
-    public void getByDataId(
-            @Nonnull String dataId,
-            @Nonnull GetDomainModelCallback<RecipeCoursePersistenceModel> callback) {
-        callback.onModelUnavailable();
+    public void getAllActiveByDomainId(
+            @Nonnull String domainId,
+            @Nonnull GetAllDomainModelsCallback<RecipeCoursePersistenceModel> callback) {
+        callback.onModelsUnavailable();
+
+    }
+
+    @Override
+    public void getAll(
+            @Nonnull GetAllDomainModelsCallback<RecipeCoursePersistenceModel> callback) {
+        callback.onModelsUnavailable();
     }
 
     @Override

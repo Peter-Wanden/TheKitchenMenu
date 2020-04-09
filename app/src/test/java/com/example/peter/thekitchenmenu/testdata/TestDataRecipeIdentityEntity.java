@@ -1,8 +1,8 @@
 package com.example.peter.thekitchenmenu.testdata;
 
 import com.example.peter.thekitchenmenu.commonmocks.StringMaker;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.RecipeIdentityEntity;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityModelPersistence;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.datasource.RecipeIdentityEntity;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityPersistenceModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityTest;
 
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ import java.util.List;
 
 public class TestDataRecipeIdentityEntity {
 
-    private static final RecipeIdentityModelPersistence defaultModel = RecipeIdentityModelPersistence.Builder.
+    private static final RecipeIdentityPersistenceModel defaultModel = RecipeIdentityPersistenceModel.Builder.
             getDefault().
             build();
 
