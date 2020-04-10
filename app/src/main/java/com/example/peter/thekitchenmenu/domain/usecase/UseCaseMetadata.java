@@ -1,6 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecase;
 
 
+import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.model.FailReasons;
 
@@ -23,15 +24,19 @@ public class UseCaseMetadata {
     private final ComponentState state;
     @Nonnull
     private final List<FailReasons> failReasons;
+    @Nonnull
+    private final String createdBy;
     private final long createDate;
     private final long lasUpdate;
 
     private UseCaseMetadata(@Nonnull ComponentState state,
                             @Nonnull List<FailReasons> failReasons,
+                            @Nonnull String createdBy,
                             long createDate,
                             long lasUpdate) {
         this.state = state;
         this.failReasons = failReasons;
+        this.createdBy = createdBy;
         this.createDate = createDate;
         this.lasUpdate = lasUpdate;
     }
@@ -44,6 +49,11 @@ public class UseCaseMetadata {
     @Nonnull
     public List<FailReasons> getFailReasons() {
         return failReasons;
+    }
+
+    @Nonnull
+    public String getCreatedBy() {
+        return createdBy;
     }
 
     public long getCreateDate() {
@@ -59,23 +69,24 @@ public class UseCaseMetadata {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UseCaseMetadata that = (UseCaseMetadata) o;
-        return state == that.state &&
+        return createDate == that.createDate &&
+                lasUpdate == that.lasUpdate &&
+                state == that.state &&
                 failReasons.equals(that.failReasons) &&
-                createDate == that.createDate &&
-                lasUpdate == that.lasUpdate;
+                createdBy.equals(that.createdBy);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(state, failReasons, createDate, lasUpdate);
+        return Objects.hash(state, failReasons, createdBy, createDate, lasUpdate);
     }
 
-    @Nonnull
     @Override
     public String toString() {
-        return "MetadataModel{" +
+        return "UseCaseMetadata{" +
                 "state=" + state +
                 ", failReasons=" + failReasons +
+                ", createdBy='" + createdBy + '\'' +
                 ", createDate=" + createDate +
                 ", lasUpdate=" + lasUpdate +
                 '}';
@@ -84,6 +95,7 @@ public class UseCaseMetadata {
     public static class Builder {
         private ComponentState state;
         private List<FailReasons> failReasons;
+        private String createdBy;
         private long createDate;
         private long lasUpdate;
 
@@ -91,6 +103,7 @@ public class UseCaseMetadata {
             return new Builder().
                     setState(ComponentState.INVALID_UNCHANGED).
                     setFailReasons(getDefaultFailReasons()).
+                    setCreatedBy(Constants.getUserId()).
                     setCreateDate(0L).
                     setLasUpdate(0L);
         }
@@ -102,6 +115,11 @@ public class UseCaseMetadata {
 
         public Builder setFailReasons(List<FailReasons> failReasons) {
             this.failReasons = failReasons;
+            return this;
+        }
+
+        public Builder setCreatedBy(String createdBy) {
+            this.createdBy = createdBy;
             return this;
         }
 
@@ -125,6 +143,7 @@ public class UseCaseMetadata {
             return new UseCaseMetadata(
                     state,
                     failReasons,
+                    createdBy,
                     createDate,
                     lasUpdate
             );

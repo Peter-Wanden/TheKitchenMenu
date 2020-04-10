@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.testdata;
 
 import com.example.peter.thekitchenmenu.app.Constants;
-import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.RecipeIngredientEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.recipeingredient.datasource.RecipeIngredientEntity;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasure;
 
@@ -63,9 +63,9 @@ public class TestDataRecipeIngredientQuantityEntity {
 
         return new RecipeIngredientEntity(
                 getNewValidMetric().getDataId(),
-                getNewValidMetric().getRecipeId(),
-                getNewValidMetric().getIngredientId(),
-                getNewValidMetric().getProductId(),
+                getNewValidMetric().getRecipeDomainId(),
+                getNewValidMetric().getIngredientDomainId(),
+                getNewValidMetric().getProductDataId(),
                 unitOfMeasure.getItemBaseUnits(),
                 unitOfMeasure.getMeasurementSubtype().asInt(),
                 getNewValidMetric().getCreatedBy(),
@@ -77,8 +77,8 @@ public class TestDataRecipeIngredientQuantityEntity {
     public static RecipeIngredientEntity getNewValidImperialOneTeaspoonFourPortionsNoConversionFactor() {
         return new RecipeIngredientEntity(
                 getNewInvalid().getDataId(),
-                getNewInvalid().getRecipeId(),
-                getNewInvalid().getIngredientId(),
+                getNewInvalid().getRecipeDomainId(),
+                getNewInvalid().getIngredientDomainId(),
                 "",
                 1.25,
                 MeasurementSubtype.IMPERIAL_SPOON.asInt(),
@@ -91,8 +91,8 @@ public class TestDataRecipeIngredientQuantityEntity {
     public static RecipeIngredientEntity getNewValidImperialOneTeaspoonConversionFactorApplied() {
         return new RecipeIngredientEntity(
                 getNewInvalid().getDataId(),
-                getNewInvalid().getRecipeId(),
-                getNewInvalid().getIngredientId(),
+                getNewInvalid().getRecipeDomainId(),
+                getNewInvalid().getIngredientDomainId(),
                 "",
                 getItemBaseUnitsWithConversionFactorApplied(),
                 MeasurementSubtype.IMPERIAL_SPOON.asInt(),
@@ -105,8 +105,8 @@ public class TestDataRecipeIngredientQuantityEntity {
     public static RecipeIngredientEntity getNewValidImperialSpoonMaxConversionFactor() {
         return new RecipeIngredientEntity(
                 getNewValidMetric().getDataId(),
-                getNewInvalid().getRecipeId(),
-                getNewInvalid().getIngredientId(),
+                getNewInvalid().getRecipeDomainId(),
+                getNewInvalid().getIngredientDomainId(),
                 "",
                  7.5,
                 getNewValidImperialOneTeaspoonConversionFactorApplied().getMeasurementSubtype(),
@@ -147,9 +147,9 @@ public class TestDataRecipeIngredientQuantityEntity {
     public static RecipeIngredientEntity getExistingValidMetricMeasurementUpdated() {
         return new RecipeIngredientEntity(
                 getExistingValidMetric().getDataId(),
-                getExistingValidMetric().getRecipeId(),
-                getExistingValidMetric().getIngredientId(),
-                getExistingValidMetric().getProductId(),
+                getExistingValidMetric().getRecipeDomainId(),
+                getExistingValidMetric().getIngredientDomainId(),
+                getExistingValidMetric().getProductDataId(),
                 getExistingValidMetric().getItemBaseUnits() + 250,
                 getExistingValidMetric().getMeasurementSubtype(),
                 getExistingValidMetric().getCreatedBy(),

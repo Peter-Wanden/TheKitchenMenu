@@ -6,8 +6,8 @@ import androidx.core.util.Pair;
 import androidx.databinding.Bindable;
 import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableField;
-import androidx.databinding.library.baseAdapters.BR;
 
+import com.example.peter.thekitchenmenu.BR;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
@@ -131,12 +131,14 @@ public class RecipeDurationEditorViewModel extends ObservableViewModel {
                     if (prepHoursParsed == MEASUREMENT_ERROR)
                         prepTimeErrorMessage.set(numberFormatExceptionErrorMessage());
                     else {
-                        RecipeDurationRequest.Model model = RecipeDurationRequest.Model.Builder.
+                        RecipeDurationRequest.Model model = new RecipeDurationRequest.Model.
+                                Builder().
                                 basedOnResponseModel(response.getModel()).
                                 setPrepHours(prepHoursParsed).
                                 build();
                         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
-                                setDataId(response.getId()).
+                                setDataId(response.getDataId()).
+                                setDomainId(response.getDomainId()).
                                 setModel(model).
                                 build();
                         handler.execute(recipeMacro, request, new DurationCallbackListener());
@@ -164,12 +166,14 @@ public class RecipeDurationEditorViewModel extends ObservableViewModel {
                     if (prepMinutesParsed == MEASUREMENT_ERROR)
                         prepTimeErrorMessage.set(numberFormatExceptionErrorMessage());
                     else {
-                        RecipeDurationRequest.Model model = RecipeDurationRequest.Model.Builder.
+                        RecipeDurationRequest.Model model = new RecipeDurationRequest.Model.
+                                Builder().
                                 basedOnResponseModel(response.getModel()).
                                 setPrepMinutes(prepMinutesParsed).
                                 build();
                         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
-                                setDataId(response.getId()).
+                                setDataId(response.getDataId()).
+                                setDomainId(response.getDomainId()).
                                 setModel(model).
                                 build();
                         handler.execute(recipeMacro, request, new DurationCallbackListener());
@@ -197,12 +201,14 @@ public class RecipeDurationEditorViewModel extends ObservableViewModel {
                     if (cookHoursParsed == MEASUREMENT_ERROR)
                         cookTimeErrorMessage.set(numberFormatExceptionErrorMessage());
                     else {
-                        RecipeDurationRequest.Model model = RecipeDurationRequest.Model.Builder.
+                        RecipeDurationRequest.Model model = new RecipeDurationRequest.Model.
+                                Builder().
                                 basedOnResponseModel(response.getModel()).
                                 setCookHours(cookHoursParsed).
                                 build();
                         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
-                                setDataId(response.getId()).
+                                setDataId(response.getDataId()).
+                                setDomainId(response.getDomainId()).
                                 setModel(model).
                                 build();
                         handler.execute(recipeMacro, request, new DurationCallbackListener());
@@ -230,12 +236,14 @@ public class RecipeDurationEditorViewModel extends ObservableViewModel {
                     if (cookMinutesParsed == MEASUREMENT_ERROR)
                         cookTimeErrorMessage.set(numberFormatExceptionErrorMessage());
                     else {
-                        RecipeDurationRequest.Model model = RecipeDurationRequest.Model.Builder.
+                        RecipeDurationRequest.Model model = new RecipeDurationRequest.Model.
+                                Builder().
                                 basedOnResponseModel(response.getModel()).
                                 setCookMinutes(cookMinutesParsed).
                                 build();
                         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
-                                setDataId(response.getId()).
+                                setDataId(response.getDataId()).
+                                setDomainId(response.getDomainId()).
                                 setModel(model).
                                 build();
                         handler.execute(recipeMacro, request, new DurationCallbackListener());

@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.data.repository.recipe;
 
 import com.example.peter.thekitchenmenu.data.repository.Repository;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredient.RecipeIngredientModelPersistence;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredient.RecipeIngredientPersistenceModel;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -10,7 +10,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 public class RepositoryRecipeIngredient
-        extends Repository<RecipeIngredientModelPersistence>
+        extends Repository<RecipeIngredientPersistenceModel>
         implements DomainDataAccessRecipeIngredient {
 
     public static RepositoryRecipeIngredient INSTANCE = null;
@@ -22,8 +22,8 @@ public class RepositoryRecipeIngredient
     }
 
     public static RepositoryRecipeIngredient getInstance(
-            DomainDataAccessRecipeIngredient remoteDataSource,
-            DomainDataAccessRecipeIngredient localDataSource) {
+            @Nonnull DomainDataAccessRecipeIngredient remoteDataSource,
+            @Nonnull DomainDataAccessRecipeIngredient localDataSource) {
         if (INSTANCE == null)
             INSTANCE = new RepositoryRecipeIngredient(remoteDataSource, localDataSource);
         return INSTANCE;
@@ -32,9 +32,9 @@ public class RepositoryRecipeIngredient
     @Override
     public void getAllByRecipeId(
             @Nonnull String recipeId,
-            @Nonnull GetAllDomainModelsCallback<RecipeIngredientModelPersistence> callback) {
+            @Nonnull GetAllDomainModelsCallback<RecipeIngredientPersistenceModel> callback) {
 
-        List<RecipeIngredientModelPersistence> cachedEntities = getFromCachedByRecipeId(recipeId);
+        List<RecipeIngredientPersistenceModel> cachedEntities = getFromCachedByRecipeId(recipeId);
 
         if (cachedEntities != null && !cachedEntities.isEmpty()) {
             callback.onAllLoaded(cachedEntities);
@@ -42,13 +42,13 @@ public class RepositoryRecipeIngredient
         }
         ((DomainDataAccessRecipeIngredient) localDomainDataAccess).getAllByRecipeId(
                 recipeId,
-                new GetAllDomainModelsCallback<RecipeIngredientModelPersistence>() {
+                new GetAllDomainModelsCallback<RecipeIngredientPersistenceModel>() {
                     @Override
-                    public void onAllLoaded(List<RecipeIngredientModelPersistence> models) {
+                    public void onAllLoaded(List<RecipeIngredientPersistenceModel> models) {
                         if (cache == null)
                             cache = new LinkedHashMap<>();
 
-                        for (RecipeIngredientModelPersistence m : models)
+                        for (RecipeIngredientPersistenceModel m : models)
                             cache.put(m.getDataId(), m);
 
                         callback.onAllLoaded(models);
@@ -58,13 +58,13 @@ public class RepositoryRecipeIngredient
                     public void onModelsUnavailable() {
                         ((DomainDataAccessRecipeIngredient) remoteDomainDataAccess).getAllByRecipeId(
                                 recipeId,
-                                new GetAllDomainModelsCallback<RecipeIngredientModelPersistence>() {
+                                new GetAllDomainModelsCallback<RecipeIngredientPersistenceModel>() {
                                     @Override
-                                    public void onAllLoaded(List<RecipeIngredientModelPersistence> models) {
+                                    public void onAllLoaded(List<RecipeIngredientPersistenceModel> models) {
                                         if (cache == null)
                                             cache = new LinkedHashMap<>();
 
-                                        for (RecipeIngredientModelPersistence m : models)
+                                        for (RecipeIngredientPersistenceModel m : models)
                                             cache.put(m.getDataId(), m);
 
                                         callback.onAllLoaded(models);
@@ -82,9 +82,9 @@ public class RepositoryRecipeIngredient
     @Override
     public void getAllByProductId(
             @Nonnull String productId,
-            @Nonnull GetAllDomainModelsCallback<RecipeIngredientModelPersistence> callback) {
+            @Nonnull GetAllDomainModelsCallback<RecipeIngredientPersistenceModel> callback) {
 
-        List<RecipeIngredientModelPersistence> cache = getFromCacheByProductId(productId);
+        List<RecipeIngredientPersistenceModel> cache = getFromCacheByProductId(productId);
 
         if (cache == null || !cache.isEmpty()) {
             callback.onAllLoaded(cache);
@@ -92,13 +92,13 @@ public class RepositoryRecipeIngredient
         }
         ((DomainDataAccessRecipeIngredient) localDomainDataAccess).getAllByProductId(
                 productId,
-                new GetAllDomainModelsCallback<RecipeIngredientModelPersistence>() {
+                new GetAllDomainModelsCallback<RecipeIngredientPersistenceModel>() {
                     @Override
-                    public void onAllLoaded(List<RecipeIngredientModelPersistence> models) {
+                    public void onAllLoaded(List<RecipeIngredientPersistenceModel> models) {
                         if (RepositoryRecipeIngredient.this.cache == null)
                             RepositoryRecipeIngredient.this.cache = new LinkedHashMap<>();
 
-                        for (RecipeIngredientModelPersistence m : models)
+                        for (RecipeIngredientPersistenceModel m : models)
                             RepositoryRecipeIngredient.this.cache.put(m.getDataId(), m);
 
                         callback.onAllLoaded(models);
@@ -108,13 +108,13 @@ public class RepositoryRecipeIngredient
                     public void onModelsUnavailable() {
                         ((DomainDataAccessRecipeIngredient) remoteDomainDataAccess).getAllByProductId(
                                 productId,
-                                new GetAllDomainModelsCallback<RecipeIngredientModelPersistence>() {
+                                new GetAllDomainModelsCallback<RecipeIngredientPersistenceModel>() {
                                     @Override
-                                    public void onAllLoaded(List<RecipeIngredientModelPersistence> models) {
+                                    public void onAllLoaded(List<RecipeIngredientPersistenceModel> models) {
                                         if (RepositoryRecipeIngredient.this.cache == null)
                                             RepositoryRecipeIngredient.this.cache = new LinkedHashMap<>();
 
-                                        for (RecipeIngredientModelPersistence m : models)
+                                        for (RecipeIngredientPersistenceModel m : models)
                                             RepositoryRecipeIngredient.this.cache.put(m.getDataId(), m);
 
                                         callback.onAllLoaded(models);
@@ -132,22 +132,22 @@ public class RepositoryRecipeIngredient
     @Override
     public void getAllByIngredientId(
             @Nonnull String ingredientId,
-            @Nonnull GetAllDomainModelsCallback<RecipeIngredientModelPersistence> callback) {
+            @Nonnull GetAllDomainModelsCallback<RecipeIngredientPersistenceModel> callback) {
 
-        List<RecipeIngredientModelPersistence> cache = getFromCacheByIngredientId(ingredientId);
+        List<RecipeIngredientPersistenceModel> cache = getFromCacheByIngredientId(ingredientId);
         if (cache != null || !cache.isEmpty()) {
             callback.onAllLoaded(cache);
             return;
         }
         ((DomainDataAccessRecipeIngredient) localDomainDataAccess).getAllByIngredientId(
                 ingredientId,
-                new GetAllDomainModelsCallback<RecipeIngredientModelPersistence>() {
+                new GetAllDomainModelsCallback<RecipeIngredientPersistenceModel>() {
                     @Override
-                    public void onAllLoaded(List<RecipeIngredientModelPersistence> models) {
+                    public void onAllLoaded(List<RecipeIngredientPersistenceModel> models) {
                         if (RepositoryRecipeIngredient.this.cache == null)
                             RepositoryRecipeIngredient.this.cache = new LinkedHashMap<>();
 
-                        for (RecipeIngredientModelPersistence m : models)
+                        for (RecipeIngredientPersistenceModel m : models)
                             RepositoryRecipeIngredient.this.cache.put(m.getDataId(), m);
                         callback.onAllLoaded(models);
                     }
@@ -156,13 +156,13 @@ public class RepositoryRecipeIngredient
                     public void onModelsUnavailable() {
                         ((DomainDataAccessRecipeIngredient) remoteDomainDataAccess).getAllByIngredientId(
                                 ingredientId,
-                                new GetAllDomainModelsCallback<RecipeIngredientModelPersistence>() {
+                                new GetAllDomainModelsCallback<RecipeIngredientPersistenceModel>() {
                                     @Override
-                                    public void onAllLoaded(List<RecipeIngredientModelPersistence> models) {
+                                    public void onAllLoaded(List<RecipeIngredientPersistenceModel> models) {
                                         if (RepositoryRecipeIngredient.this.cache == null)
                                             RepositoryRecipeIngredient.this.cache = new LinkedHashMap<>();
 
-                                        for (RecipeIngredientModelPersistence m : models)
+                                        for (RecipeIngredientPersistenceModel m : models)
                                             RepositoryRecipeIngredient.this.cache.put(m.getDataId(), m);
 
                                         callback.onAllLoaded(models);
@@ -178,14 +178,14 @@ public class RepositoryRecipeIngredient
         );
     }
 
-    private List<RecipeIngredientModelPersistence> getFromCachedByRecipeId(@Nonnull String recipeId) {
+    private List<RecipeIngredientPersistenceModel> getFromCachedByRecipeId(String recipeId) {
 
         if (cache == null)
             return null;
         else {
-            List<RecipeIngredientModelPersistence> models = new ArrayList<>();
+            List<RecipeIngredientPersistenceModel> models = new ArrayList<>();
 
-            for (RecipeIngredientModelPersistence m : cache.values())
+            for (RecipeIngredientPersistenceModel m : cache.values())
                 if (recipeId.equals(m.getDomainId()))
                     models.add(m);
 
@@ -193,28 +193,28 @@ public class RepositoryRecipeIngredient
         }
     }
 
-    private List<RecipeIngredientModelPersistence> getFromCacheByProductId(@Nonnull String productId) {
+    private List<RecipeIngredientPersistenceModel> getFromCacheByProductId(String productId) {
 
         if (cache == null)
             return null;
         else {
-            List<RecipeIngredientModelPersistence> models = new ArrayList<>();
+            List<RecipeIngredientPersistenceModel> models = new ArrayList<>();
 
-            for (RecipeIngredientModelPersistence m : models)
-                if (productId.equals(m.getProductId()))
+            for (RecipeIngredientPersistenceModel m : models)
+                if (productId.equals(m.getProductDataId()))
                     models.add(m);
 
             return models;
         }
     }
 
-    private List<RecipeIngredientModelPersistence> getFromCacheByIngredientId(@Nonnull String ingredientId) {
+    private List<RecipeIngredientPersistenceModel> getFromCacheByIngredientId(String ingredientId) {
 
         if (cache == null)
             return null;
         else {
-            List<RecipeIngredientModelPersistence> models = new ArrayList<>();
-            for (RecipeIngredientModelPersistence m : models)
+            List<RecipeIngredientPersistenceModel> models = new ArrayList<>();
+            for (RecipeIngredientPersistenceModel m : models)
                 if (ingredientId.equals(m.getIngredientDomainId()))
                     models.add(m);
             return models;

@@ -2,8 +2,8 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredient;
 
 import android.annotation.SuppressLint;
 
-import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.IngredientEntity;
-import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.RecipeIngredientEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.datasource.IngredientEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.recipeingredient.datasource.RecipeIngredientEntity;
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.ingredient.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeIngredient;
@@ -110,7 +110,7 @@ public class RecipeIngredient extends UseCase {
 
     private MeasurementModel modelIn;
     private MeasurementModel existingModel;
-    private RecipeIngredientModelPersistence persistenceModel;
+    private RecipeIngredientPersistenceModel persistenceModel;
     private IngredientEntity ingredientEntity;
 
     public RecipeIngredient(@Nonnull Recipe recipe,
@@ -162,9 +162,9 @@ public class RecipeIngredient extends UseCase {
         loadIngredient();
     }
 
-    private RecipeIngredientModelPersistence createNewPersistenceModel() {
+    private RecipeIngredientPersistenceModel createNewPersistenceModel() {
         long currentTime = timeProvider.getCurrentTimeInMills();
-        return new RecipeIngredientModelPersistence();
+        return new RecipeIngredientPersistenceModel();
     }
 
     private void start(String recipeIngredientId) {
@@ -210,7 +210,7 @@ public class RecipeIngredient extends UseCase {
     }
 
     private void loadPortions() {
-        portionsRepository.getByRecipeId(
+        portionsRepository.getAllByDomainId(
                 recipeId,
                 new DomainDataAccess.GetDomainModelCallback<RecipePortionsPersistenceModel>() {
                     @Override

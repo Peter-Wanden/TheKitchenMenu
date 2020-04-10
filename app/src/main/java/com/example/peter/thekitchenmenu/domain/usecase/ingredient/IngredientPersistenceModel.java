@@ -10,7 +10,7 @@ import javax.annotation.Nonnull;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.ingredient.Ingredient.CREATE_NEW_INGREDIENT;
 
-public final class IngredientModelPersistence extends BasePersistence {
+public final class IngredientPersistenceModel extends BasePersistence {
 
     private String name;
     private String description;
@@ -19,7 +19,7 @@ public final class IngredientModelPersistence extends BasePersistence {
     private long createDate;
     private long lastUpdate;
 
-    private IngredientModelPersistence() {}
+    private IngredientPersistenceModel() {}
 
     public String getName() {
         return name;
@@ -49,7 +49,7 @@ public final class IngredientModelPersistence extends BasePersistence {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        IngredientModelPersistence that = (IngredientModelPersistence) o;
+        IngredientPersistenceModel that = (IngredientPersistenceModel) o;
         return dataId.equals(that.dataId) &&
                 domainId.equals(that.domainId) &&
                 Double.compare(that.conversionFactor, conversionFactor) == 0 &&
@@ -66,7 +66,7 @@ public final class IngredientModelPersistence extends BasePersistence {
                 createDate, lastUpdate);
     }
 
-    public static class Builder extends DomainModelBuilder<Builder, IngredientModelPersistence> {
+    public static class Builder extends DomainModelBuilder<Builder, IngredientPersistenceModel> {
 
         @Override
         public Builder getDefault() {
@@ -81,7 +81,7 @@ public final class IngredientModelPersistence extends BasePersistence {
             return self();
         }
 
-        public static Builder basedOnPersistenceModel(@Nonnull IngredientModelPersistence m) {
+        public Builder basedOnPersistenceModel(@Nonnull IngredientPersistenceModel m) {
             return new Builder().
                     setDataId(m.getDataId()).
                     setDomainId(m.getDomainId()).

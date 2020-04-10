@@ -1,9 +1,9 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredientlist;
 
-import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.IngredientEntity;
-import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.RecipeIngredientEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.datasource.IngredientEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.recipeingredient.datasource.RecipeIngredientEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.datasource.RecipePortionsEntity;
-import com.example.peter.thekitchenmenu.data.repository.dataadapter.primitive.PrimitiveDataSource;
+import com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.ingredient.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeIngredient;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipePortions;
@@ -54,7 +54,7 @@ public class RecipeIngredientList extends UseCase {
     }
 
     private void getPortionsForRecipe() {
-        repoPortions.getByRecipeId(
+        repoPortions.getAllByDomainId(
                 recipeId,
                 new PrimitiveDataSource.GetPrimitiveCallback<RecipePortionsEntity>() {
                     @Override
@@ -80,7 +80,7 @@ public class RecipeIngredientList extends UseCase {
                     @Override
                     public void onAllLoaded(List<RecipeIngredientEntity> entities) {
                         for (RecipeIngredientEntity entity : entities) {
-                            recipeIngredientQuantities.put(entity.getIngredientId(), entity);
+                            recipeIngredientQuantities.put(entity.getIngredientDomainId(), entity);
                         }
                         getRecipeIngredients();
                     }

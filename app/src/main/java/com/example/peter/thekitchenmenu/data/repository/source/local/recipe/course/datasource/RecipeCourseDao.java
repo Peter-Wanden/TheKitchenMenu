@@ -16,7 +16,7 @@ public interface RecipeCourseDao {
     @Query("SELECT * FROM " + TABLE_RECIPE_COURSE)
     List<RecipeCourseEntity> getAll();
 
-    @Query("SELECT * FROM " + TABLE_RECIPE_COURSE + " WHERE " + ID + " = :dataId")
+    @Query("SELECT * FROM " + TABLE_RECIPE_COURSE + " WHERE " + DATA_ID + " = :dataId")
     RecipeCourseEntity getByDataId(String dataId);
 
     @Query("SELECT * FROM " + TABLE_RECIPE_COURSE + " WHERE " + RECIPE_COURSE_NO + " = :courseNo")
@@ -31,7 +31,7 @@ public interface RecipeCourseDao {
     @Update
     void update(RecipeCourseEntity recipeCourseEntity);
 
-    @Query("DELETE FROM " + TABLE_RECIPE_COURSE + " WHERE " + ID + " = :dataId")
+    @Query("DELETE FROM " + TABLE_RECIPE_COURSE + " WHERE " + DATA_ID + " = :dataId")
     void deleteByDataId(String dataId);
 
     @Query("DELETE FROM " + TABLE_RECIPE_COURSE + " WHERE " + RECIPE_ID + " = :domainId")

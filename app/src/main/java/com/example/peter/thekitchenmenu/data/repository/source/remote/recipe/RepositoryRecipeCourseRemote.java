@@ -6,7 +6,8 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.R
 
 import javax.annotation.Nonnull;
 
-public class RepositoryRecipeCourseRemote implements DomainDataAccessRecipeCourse {
+public class RepositoryRecipeCourseRemote
+        implements DomainDataAccessRecipeCourse {
 
     private static RepositoryRecipeCourseRemote INSTANCE;
 

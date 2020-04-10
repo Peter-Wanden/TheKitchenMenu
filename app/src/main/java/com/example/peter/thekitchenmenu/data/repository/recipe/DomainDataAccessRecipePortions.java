@@ -8,6 +8,8 @@ import javax.annotation.Nonnull;
 public interface DomainDataAccessRecipePortions
         extends DomainDataAccess<RecipePortionsPersistenceModel> {
 
-    void getByRecipeId(@Nonnull String recipeId,
-                       @Nonnull GetDomainModelCallback<RecipePortionsPersistenceModel> callback);
+    void getAllByDomainId(
+            @Nonnull String domainId,
+            @Nonnull GetAllDomainModelsCallback<RecipePortionsPersistenceModel> callback);
+
 }

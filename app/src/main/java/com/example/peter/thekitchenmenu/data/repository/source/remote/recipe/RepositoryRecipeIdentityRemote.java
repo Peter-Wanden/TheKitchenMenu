@@ -5,7 +5,8 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity
 
 import javax.annotation.Nonnull;
 
-public class RepositoryRecipeIdentityRemote implements DomainDataAccess<RecipeIdentityPersistenceModel> {
+public class RepositoryRecipeIdentityRemote
+        implements DomainDataAccess<RecipeIdentityPersistenceModel> {
 
     private static RepositoryRecipeIdentityRemote INSTANCE;
 

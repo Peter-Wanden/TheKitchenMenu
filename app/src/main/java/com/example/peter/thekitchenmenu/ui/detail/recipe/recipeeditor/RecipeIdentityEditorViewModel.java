@@ -6,8 +6,8 @@ import androidx.core.util.Pair;
 import androidx.databinding.Bindable;
 import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableField;
-import androidx.databinding.library.baseAdapters.BR;
 
+import com.example.peter.thekitchenmenu.BR;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.model.FailReasons;
@@ -93,12 +93,13 @@ public class RecipeIdentityEditorViewModel extends ObservableViewModel {
 
     public void setTitle(String title) {
         if (isTitleChanged(title)) {
-            RecipeIdentityRequest.Model model = RecipeIdentityRequest.Model.Builder.
+            RecipeIdentityRequest.Model model = new RecipeIdentityRequest.Model.Builder().
                     basedOnResponseModel(response.getModel()).
                     setTitle(title).
                     build();
             RecipeIdentityRequest request = new RecipeIdentityRequest.Builder().
-                    setDataId(response.getId()).
+                    setDataId(response.getDataId()).
+                    setDomainId(response.getDomainId()).
                     setModel(model).
                     build();
             handler.execute(recipeMacro, request, new IdentityCallbackListener());
@@ -116,12 +117,13 @@ public class RecipeIdentityEditorViewModel extends ObservableViewModel {
 
     public void setDescription(String description) {
         if (isDescriptionChanged(description)) {
-            RecipeIdentityRequest.Model model = RecipeIdentityRequest.Model.Builder.
+            RecipeIdentityRequest.Model model = new RecipeIdentityRequest.Model.Builder().
                     basedOnResponseModel(response.getModel()).
                     setDescription(description).
                     build();
             RecipeIdentityRequest request = new RecipeIdentityRequest.Builder().
-                    setDataId(response.getId()).
+                    setDataId(response.getDataId()).
+                    setDomainId(response.getDomainId()).
                     setModel(model).
                     build();
 

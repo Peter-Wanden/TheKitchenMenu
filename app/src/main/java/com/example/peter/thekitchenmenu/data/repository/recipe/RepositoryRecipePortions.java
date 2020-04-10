@@ -3,7 +3,9 @@ package com.example.peter.thekitchenmenu.data.repository.recipe;
 import com.example.peter.thekitchenmenu.data.repository.Repository;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortionsPersistenceModel;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 
@@ -29,62 +31,70 @@ public class RepositoryRecipePortions
     }
 
     @Override
-    public void getByRecipeId(@Nonnull String recipeId,
-                              @Nonnull GetDomainModelCallback<RecipePortionsPersistenceModel> callback) {
+    public void getAllByDomainId(
+            @Nonnull String domainId,
+            @Nonnull GetAllDomainModelsCallback<RecipePortionsPersistenceModel> callback) {
 
-        RecipePortionsPersistenceModel model = checkCacheForRecipeId(recipeId);
+        List<RecipePortionsPersistenceModel> models = getModelsFromCache(domainId);
 
-        if (model != null) {
-            callback.onModelLoaded(model);
+        if (!models.isEmpty()) {
+            callback.onAllLoaded(models);
             return;
         }
-        ((DomainDataAccessRecipePortions) localDomainDataAccess).getByRecipeId(
-                recipeId,
-                new GetDomainModelCallback<RecipePortionsPersistenceModel>() {
+        ((DomainDataAccessRecipePortions) localDomainDataAccess).getAllByDomainId(
+                domainId,
+                new GetAllDomainModelsCallback<RecipePortionsPersistenceModel>() {
                     @Override
-                    public void onModelLoaded(RecipePortionsPersistenceModel model) {
-                        if (cache == null)
+                    public void onAllLoaded(List<RecipePortionsPersistenceModel> models) {
+                        if (cache == null) {
                             cache = new LinkedHashMap<>();
-                        cache.put(model.getDataId(), model);
-
-                        callback.onModelLoaded(model);
+                        }
+                        for (RecipePortionsPersistenceModel m : models) {
+                            cache.put(m.getDataId(), m);
+                        }
+                        callback.onAllLoaded(models);
                     }
 
                     @Override
-                    public void onModelUnavailable() {
-                        ((DomainDataAccessRecipePortions) remoteDomainDataAccess).getByRecipeId(
-                                recipeId,
-                                new GetDomainModelCallback<RecipePortionsPersistenceModel>() {
+                    public void onModelsUnavailable() {
+                        ((DomainDataAccessRecipePortions)remoteDomainDataAccess).getAllByDomainId(
+                                domainId,
+                                new GetAllDomainModelsCallback<RecipePortionsPersistenceModel>() {
                                     @Override
-                                    public void onModelLoaded(RecipePortionsPersistenceModel model) {
-                                        if (cache == null)
+                                    public void onAllLoaded(
+                                            List<RecipePortionsPersistenceModel> models) {
+                                        if (cache == null) {
                                             cache = new LinkedHashMap<>();
-                                        cache.put(model.getDataId(), model);
-
-                                        callback.onModelLoaded(model);
+                                        }
+                                        for (RecipePortionsPersistenceModel m : models) {
+                                            cache.put(m.getDataId(), m);
+                                        }
+                                        callback.onAllLoaded(models);
                                     }
 
                                     @Override
-                                    public void onModelUnavailable() {
-                                        callback.onModelUnavailable();
+                                    public void onModelsUnavailable() {
+                                        callback.onModelsUnavailable();
                                     }
                                 }
                         );
                     }
-                });
+                }
+        );
     }
 
-    private RecipePortionsPersistenceModel checkCacheForRecipeId(String recipeId) {
+    private List<RecipePortionsPersistenceModel> getModelsFromCache(String domainId) {
+        List<RecipePortionsPersistenceModel> models = new ArrayList<>();
 
         if (cache == null || cache.isEmpty())
             return null;
         else {
             for (RecipePortionsPersistenceModel model : cache.values()) {
-                if (recipeId.equals(model.getDomainId())) {
-                    return model;
+                if (domainId.equals(model.getDomainId())) {
+                    models.add(model);
                 }
             }
-            return null;
+            return models;
         }
     }
 }

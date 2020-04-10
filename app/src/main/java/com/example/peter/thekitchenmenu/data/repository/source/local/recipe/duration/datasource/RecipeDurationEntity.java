@@ -15,7 +15,7 @@ import javax.annotation.Nonnull;
 public final class RecipeDurationEntity implements PrimitiveModel {
 
     public static final String TABLE_RECIPE_DURATION = "recipeDuration";
-    public static final String ID = "id";
+    public static final String DATA_ID = "dataId";
     public static final String DOMAIN_ID = "domainId";
     public static final String PREP_TIME = "prepTime";
     public static final String COOK_TIME = "cookTime";
@@ -24,8 +24,8 @@ public final class RecipeDurationEntity implements PrimitiveModel {
 
     @PrimaryKey
     @NonNull
-    @ColumnInfo(name = ID)
-    private final String id;
+    @ColumnInfo(name = DATA_ID)
+    private final String dataId;
 
     @Nonnull
     @ColumnInfo(name = DOMAIN_ID)
@@ -43,13 +43,13 @@ public final class RecipeDurationEntity implements PrimitiveModel {
     @ColumnInfo(name = LAST_UPDATE)
     private final long lastUpdate;
 
-    public RecipeDurationEntity(@Nonnull String id,
+    public RecipeDurationEntity(@Nonnull String dataId,
                                 @Nonnull String domainId,
                                 int prepTime,
                                 int cookTime,
                                 long createDate,
                                 long lastUpdate) {
-        this.id = id;
+        this.dataId = dataId;
         this.domainId = domainId;
         this.prepTime = prepTime;
         this.cookTime = cookTime;
@@ -66,20 +66,20 @@ public final class RecipeDurationEntity implements PrimitiveModel {
                 cookTime == that.cookTime &&
                 createDate == that.createDate &&
                 lastUpdate == that.lastUpdate &&
-                id.equals(that.id) &&
+                dataId.equals(that.dataId) &&
                 domainId.equals(that.domainId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, domainId, prepTime, cookTime, createDate, lastUpdate);
+        return Objects.hash(dataId, domainId, prepTime, cookTime, createDate, lastUpdate);
     }
 
     @Nonnull
     @Override
     public String toString() {
         return "RecipeDurationEntity{" +
-                "id='" + id + '\'' +
+                "id='" + dataId + '\'' +
                 ", domainId='" + domainId + '\'' +
                 ", prepTime=" + prepTime +
                 ", cookTime=" + cookTime +
@@ -91,7 +91,7 @@ public final class RecipeDurationEntity implements PrimitiveModel {
     @Override
     @Nonnull
     public String getDataId() {
-        return id;
+        return dataId;
     }
 
     @Nonnull

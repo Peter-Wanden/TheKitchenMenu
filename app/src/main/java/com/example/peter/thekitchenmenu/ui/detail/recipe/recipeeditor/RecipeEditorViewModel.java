@@ -227,9 +227,9 @@ public class RecipeEditorViewModel extends ViewModel {
     }
 
     void reviewButtonPressed() {
-        String recipeId = metadataResponse.getId();
+        String recipeId = metadataResponse.getDomainId();
         if (isNewRecipe) {
-            navigator.reviewNewRecipe(metadataResponse.getId());
+            navigator.reviewNewRecipe(metadataResponse.getDomainId());
 
         } else if (isEditorCreator()) {
             navigator.reviewEditedRecipe(recipeId);
@@ -241,7 +241,7 @@ public class RecipeEditorViewModel extends ViewModel {
     }
 
     public void ingredientsButtonPressed() {
-        String recipeId = metadataResponse.getId();
+        String recipeId = metadataResponse.getDomainId();
 
         if (isNewRecipe) {
             navigator.addIngredients(recipeId);

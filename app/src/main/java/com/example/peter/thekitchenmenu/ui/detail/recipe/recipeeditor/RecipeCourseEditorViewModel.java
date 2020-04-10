@@ -187,8 +187,10 @@ public class RecipeCourseEditorViewModel extends ObservableViewModel {
             courseList.remove(course);
         }
 
-        RecipeCourseRequest request = new RecipeCourseRequest.Builder().getDefault().
-                setDataId(response.getId()).
+        RecipeCourseRequest request = new RecipeCourseRequest.Builder().
+                getDefault().
+                setDataId(response.getDataId()).
+                setDomainId(response.getDomainId()).
                 setModel(new RecipeCourseRequest.Model.Builder().
                         setCourseList(courseList).
                         build()).

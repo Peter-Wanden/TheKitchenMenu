@@ -23,7 +23,7 @@ public final class RecipeComponentStateEntity implements PrimitiveModel {
     @PrimaryKey
     @NonNull
     @ColumnInfo(name = DATA_ID)
-    private final String id;
+    private final String dataId;
 
     @Nonnull
     @ColumnInfo(name = PARENT_DATA_ID)
@@ -35,11 +35,11 @@ public final class RecipeComponentStateEntity implements PrimitiveModel {
     @ColumnInfo(name = COMPONENT_STATE_ID)
     private final int componentStateId;
 
-    public RecipeComponentStateEntity(@Nonnull String id,
+    public RecipeComponentStateEntity(@Nonnull String dataId,
                                       @Nonnull String parentDataId,
                                       int componentNameId,
                                       int componentStateId) {
-        this.id = id;
+        this.dataId = dataId;
         this.parentDataId = parentDataId;
         this.componentNameId = componentNameId;
         this.componentStateId = componentStateId;
@@ -50,7 +50,7 @@ public final class RecipeComponentStateEntity implements PrimitiveModel {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RecipeComponentStateEntity that = (RecipeComponentStateEntity) o;
-        return id.equals(that.id) &&
+        return dataId.equals(that.dataId) &&
                 parentDataId.equals(that.parentDataId) &&
                 componentNameId == that.componentNameId &&
                 componentStateId == that.componentStateId;
@@ -58,14 +58,14 @@ public final class RecipeComponentStateEntity implements PrimitiveModel {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, parentDataId, componentNameId, componentStateId);
+        return Objects.hash(dataId, parentDataId, componentNameId, componentStateId);
     }
 
     @Nonnull
     @Override
     public String toString() {
         return "RecipeComponentStateEntity{" +
-                "id='" + id + '\'' +
+                "id='" + dataId + '\'' +
                 ", parentDataId='" + parentDataId + '\'' +
                 ", componentNameId=" + componentNameId +
                 ", componentStateLevel=" + componentStateId +
@@ -75,7 +75,7 @@ public final class RecipeComponentStateEntity implements PrimitiveModel {
     @Override
     @Nonnull
     public String getDataId() {
-        return id;
+        return dataId;
     }
 
     @Nonnull

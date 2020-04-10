@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.data.repository.source.local.product.da
 
 import static com.example.peter.thekitchenmenu.data.primitivemodel.product.FavoriteProductEntity.TABLE_FAVORITE_PRODUCTS;
 import static com.example.peter.thekitchenmenu.data.primitivemodel.product.FavoriteProductEntity.PRODUCT_ID;
-import static com.example.peter.thekitchenmenu.data.primitivemodel.product.FavoriteProductEntity.ID;
+import static com.example.peter.thekitchenmenu.data.primitivemodel.product.FavoriteProductEntity.DATA_ID;
 
 import com.example.peter.thekitchenmenu.data.primitivemodel.product.FavoriteProductEntity;
 
@@ -21,8 +21,8 @@ public interface FavoriteProductEntityDao {
     List<FavoriteProductEntity> getAll();
 
     @Query("SELECT * FROM " + TABLE_FAVORITE_PRODUCTS +
-            " WHERE " + ID + " = :id")
-    FavoriteProductEntity getById(String id);
+            " WHERE " + DATA_ID + " = :dataId")
+    FavoriteProductEntity getByDataId(String dataId);
 
     @Query("SELECT * FROM " + TABLE_FAVORITE_PRODUCTS +
             " WHERE " + PRODUCT_ID + " = :productId")
@@ -34,7 +34,7 @@ public interface FavoriteProductEntityDao {
     @Update
     void update(FavoriteProductEntity favoriteProduct);
 
-    @Query("DELETE FROM " + TABLE_FAVORITE_PRODUCTS + " WHERE " + ID + " = :favoriteProductId")
+    @Query("DELETE FROM " + TABLE_FAVORITE_PRODUCTS + " WHERE " + DATA_ID + " = :favoriteProductId")
     void deleteByFavoriteProductId(String favoriteProductId);
 
     @Query("DELETE FROM " + TABLE_FAVORITE_PRODUCTS + " WHERE " + PRODUCT_ID + " = :productId")

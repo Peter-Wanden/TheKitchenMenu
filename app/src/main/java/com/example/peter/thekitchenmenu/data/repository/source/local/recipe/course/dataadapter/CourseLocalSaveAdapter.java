@@ -9,13 +9,15 @@ public class CourseLocalSaveAdapter {
 
     @Nonnull
     private final RecipeCourseLocalDataSource dataSource;
+    @Nonnull
+    private final CourseModelConverter converter;
 
     public CourseLocalSaveAdapter(@Nonnull RecipeCourseLocalDataSource dataSource) {
         this.dataSource = dataSource;
+        converter = new CourseModelConverter();
     }
 
-    public void save(RecipeCoursePersistenceModel m) {
-        CourseModelConverter c = new CourseModelConverter();
-        dataSource.save(c.convertToPrimitive(m));
+    public void save(RecipeCoursePersistenceModel model) {
+        dataSource.save(converter.convertToPrimitive(model));
     }
 }

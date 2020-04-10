@@ -5,13 +5,14 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMet
 
 import javax.annotation.Nonnull;
 
-public class RecipeMetadataRemoteDomainDataAccess implements DomainDataAccess<RecipeMetadataPersistenceModel> {
+public class RepositoryRecipeMetadataRemote
+        implements DomainDataAccess<RecipeMetadataPersistenceModel> {
 
-    private static RecipeMetadataRemoteDomainDataAccess INSTANCE;
+    private static RepositoryRecipeMetadataRemote INSTANCE;
 
-    public static RecipeMetadataRemoteDomainDataAccess getInstance() {
+    public static RepositoryRecipeMetadataRemote getInstance() {
         if (INSTANCE == null)
-            INSTANCE = new RecipeMetadataRemoteDomainDataAccess();
+            INSTANCE = new RepositoryRecipeMetadataRemote();
         return INSTANCE;
     }
 

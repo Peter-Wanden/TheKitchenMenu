@@ -1,6 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecase.textvalidation;
 
 
+import com.example.peter.thekitchenmenu.domain.model.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 
 import java.util.Objects;
@@ -9,7 +10,7 @@ import javax.annotation.Nonnull;
 
 public final class TextValidatorResponse implements UseCase.Response {
     @Nonnull
-    private final TextValidator.FailReason failReason;
+    private final FailReasons failReason;
     @Nonnull
     private final TextValidatorModel model;
     @Nonnull
@@ -28,7 +29,7 @@ public final class TextValidatorResponse implements UseCase.Response {
     }
 
     @Nonnull
-    public TextValidator.FailReason getFailReason() {
+    public FailReasons getFailReason() {
         return failReason;
     }
 

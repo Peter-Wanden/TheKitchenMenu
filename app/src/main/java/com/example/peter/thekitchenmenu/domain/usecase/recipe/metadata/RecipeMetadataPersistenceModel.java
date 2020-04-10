@@ -59,7 +59,7 @@ public final class RecipeMetadataPersistenceModel extends BasePersistence {
 
 
     public static class Builder extends DomainModelBuilder<
-                    Builder,
+            Builder,
             RecipeMetadataPersistenceModel> {
 
         public Builder() {

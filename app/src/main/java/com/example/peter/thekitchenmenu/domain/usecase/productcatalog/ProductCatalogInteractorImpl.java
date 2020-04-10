@@ -5,7 +5,7 @@ import android.app.Application;
 import com.example.peter.thekitchenmenu.data.primitivemodel.product.FavoriteProductEntity;
 import com.example.peter.thekitchenmenu.data.primitivemodel.product.ProductEntity;
 import com.example.peter.thekitchenmenu.data.model.ProductModel;
-import com.example.peter.thekitchenmenu.data.repository.dataadapter.primitive.PrimitiveDataSource;
+import com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.DatabaseInjection;
 import com.example.peter.thekitchenmenu.data.repository.product.RepositoryFavoriteProduct;
 import com.example.peter.thekitchenmenu.data.repository.product.RepositoryProduct;

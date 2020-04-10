@@ -5,21 +5,29 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions
 
 import javax.annotation.Nonnull;
 
-public class RecipePortionsRemoteDomainDataAccess implements DomainDataAccessRecipePortions {
+public class RepositoryRecipePortionsRemote
+        implements DomainDataAccessRecipePortions {
 
-    private static RecipePortionsRemoteDomainDataAccess INSTANCE;
+    private static RepositoryRecipePortionsRemote INSTANCE;
 
-    public static RecipePortionsRemoteDomainDataAccess getInstance() {
+    public static RepositoryRecipePortionsRemote getInstance() {
         if (INSTANCE == null)
-            INSTANCE = new RecipePortionsRemoteDomainDataAccess();
+            INSTANCE = new RepositoryRecipePortionsRemote();
         return INSTANCE;
     }
 
     @Override
-    public void getByRecipeId(
-            @Nonnull String recipeId,
+    public void getByDataId(
+            @Nonnull String dataId,
             @Nonnull GetDomainModelCallback<RecipePortionsPersistenceModel> callback) {
         callback.onModelUnavailable();
+    }
+
+    @Override
+    public void getAllByDomainId(
+            @Nonnull String domainId,
+            @Nonnull GetAllDomainModelsCallback<RecipePortionsPersistenceModel> callback) {
+        callback.onModelsUnavailable();
     }
 
     @Override
@@ -33,13 +41,6 @@ public class RecipePortionsRemoteDomainDataAccess implements DomainDataAccessRec
     public void getAll(
             @Nonnull GetAllDomainModelsCallback<RecipePortionsPersistenceModel> callback) {
         callback.onModelsUnavailable();
-    }
-
-    @Override
-    public void getByDataId(
-            @Nonnull String dataId,
-            @Nonnull GetDomainModelCallback<RecipePortionsPersistenceModel> callback) {
-        callback.onModelUnavailable();
     }
 
     @Override

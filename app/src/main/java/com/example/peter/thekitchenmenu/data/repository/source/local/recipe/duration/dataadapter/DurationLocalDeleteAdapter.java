@@ -7,7 +7,7 @@ import javax.annotation.Nonnull;
 public class DurationLocalDeleteAdapter {
 
     @Nonnull
-    private RecipeDurationLocalDataSource dataSource;
+    private final RecipeDurationLocalDataSource dataSource;
 
     public DurationLocalDeleteAdapter(@Nonnull RecipeDurationLocalDataSource dataSource) {
         this.dataSource = dataSource;

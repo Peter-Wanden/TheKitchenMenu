@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.data.repository.dataadapter.primitive;
+package com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter;
 
 import com.example.peter.thekitchenmenu.data.primitivemodel.PrimitiveModel;
 

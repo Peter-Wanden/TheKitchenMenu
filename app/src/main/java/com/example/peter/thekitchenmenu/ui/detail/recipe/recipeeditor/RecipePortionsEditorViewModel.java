@@ -6,8 +6,8 @@ import androidx.core.util.Pair;
 import androidx.databinding.Bindable;
 import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableField;
-import androidx.databinding.library.baseAdapters.BR;
 
+import com.example.peter.thekitchenmenu.BR;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.model.FailReasons;
@@ -143,12 +143,13 @@ public class RecipePortionsEditorViewModel extends ObservableViewModel {
                 if (servingsParsed == MEASUREMENT_ERROR)
                     servingsErrorMessage.set(numberFormatExceptionErrorMessage());
                 else {
-                    RecipePortionsRequest.Model model = RecipePortionsRequest.Model.Builder.
+                    RecipePortionsRequest.Model model = new RecipePortionsRequest.Model.Builder().
                             basedOnPortionsResponseModel(response.getModel()).
                             setServings(servingsParsed).
                             build();
                     RecipePortionsRequest request = new RecipePortionsRequest.Builder().
-                            setDataId(response.getId()).
+                            setDataId(response.getDataId()).
+                            setDomainId(response.getDomainId()).
                             setModel(model).
                             build();
                     handler.execute(recipeMacro, request, callback);
@@ -191,12 +192,13 @@ public class RecipePortionsEditorViewModel extends ObservableViewModel {
                 if (sittingsParsed == MEASUREMENT_ERROR)
                     sittingsErrorMessage.set(numberFormatExceptionErrorMessage());
                 else {
-                    RecipePortionsRequest.Model model = RecipePortionsRequest.Model.Builder.
+                    RecipePortionsRequest.Model model = new RecipePortionsRequest.Model.Builder().
                             basedOnPortionsResponseModel(response.getModel()).
                             setSittings(sittingsParsed).
                             build();
                     RecipePortionsRequest request = new RecipePortionsRequest.Builder().
-                            setDataId(response.getId()).
+                            setDataId(response.getDataId()).
+                            setDomainId(response.getDomainId()).
                             setModel(model).
                             build();
                     handler.execute(recipeMacro, request, callback);

@@ -27,7 +27,7 @@ public final class FavoriteProductEntity implements PrimitiveModel {
     public static final String TAG = "FavoriteProductEntity";
 
     public static final String TABLE_FAVORITE_PRODUCTS = "favoriteProducts";
-    public static final String ID = "id";
+    public static final String DATA_ID = "id";
     public static final String PRODUCT_ID = "productId";
     private static final String RETAILER = "retailer";
     private static final String LOCATION_ROOM = "locationRoom";
@@ -38,8 +38,8 @@ public final class FavoriteProductEntity implements PrimitiveModel {
 
     @PrimaryKey
     @NonNull
-    @ColumnInfo(name = ID)
-    private final String id;
+    @ColumnInfo(name = DATA_ID)
+    private final String dataId;
 
     @Nonnull
     @ColumnInfo(name = PRODUCT_ID)
@@ -63,7 +63,7 @@ public final class FavoriteProductEntity implements PrimitiveModel {
     @ColumnInfo(name = LAST_UPDATE)
     private final long lastUpdate;
 
-    public FavoriteProductEntity(@Nonnull String id,
+    public FavoriteProductEntity(@Nonnull String dataId,
                                  @Nonnull String productId,
                                  @Nullable String retailer,
                                  @Nullable String locationRoom,
@@ -72,7 +72,7 @@ public final class FavoriteProductEntity implements PrimitiveModel {
                                  long createDate,
                                  long lastUpdate) {
 
-        this.id = id;
+        this.dataId = dataId;
         this.productId = productId;
         this.retailer = retailer;
         this.locationRoom = locationRoom;
@@ -129,7 +129,7 @@ public final class FavoriteProductEntity implements PrimitiveModel {
         if (o == null || getClass() != o.getClass()) return false;
         FavoriteProductEntity entity = (FavoriteProductEntity) o;
 
-        return Objects.equal(id, entity.id) &&
+        return Objects.equal(dataId, entity.dataId) &&
                 Objects.equal(productId, entity.productId) &&
                 Objects.equal(retailer, entity.retailer) &&
                 Objects.equal(locationRoom, entity.locationRoom) &&
@@ -149,7 +149,7 @@ public final class FavoriteProductEntity implements PrimitiveModel {
     @Override
     public String toString() {
         return "FavoriteProductEntity{" +
-                "id='" + id + '\'' +
+                "id='" + dataId + '\'' +
                 ", productId='" + productId + '\'' +
                 ", retailer='" + retailer + '\'' +
                 ", locationRoom='" + locationRoom + '\'' +
@@ -163,7 +163,7 @@ public final class FavoriteProductEntity implements PrimitiveModel {
     @Nonnull
     @Override
     public String getDataId() {
-        return id;
+        return dataId;
     }
 
     @Nonnull

@@ -55,7 +55,7 @@ public class FavoriteProductsLocalDataSource implements DataSourceFavoriteProduc
                             @Nonnull GetPrimitiveCallback<FavoriteProductEntity> callback) {
         Runnable runnable = () -> {
             final FavoriteProductEntity favoriteProduct =
-                    favoriteProductEntityDao.getById(dataId);
+                    favoriteProductEntityDao.getByDataId(dataId);
             appExecutors.mainThread().execute(() -> {
                 if (favoriteProduct != null) {
                     callback.onEntityLoaded(favoriteProduct);

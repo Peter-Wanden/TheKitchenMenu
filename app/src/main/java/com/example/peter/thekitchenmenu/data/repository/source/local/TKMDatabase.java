@@ -4,9 +4,10 @@ import android.content.Context;
 
 import com.example.peter.thekitchenmenu.app.AppExecutors;
 import com.example.peter.thekitchenmenu.data.primitivemodel.product.FavoriteProductEntity;
-import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.IngredientEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.datasource.IngredientEntity;
 import com.example.peter.thekitchenmenu.data.primitivemodel.product.ProductEntity;
 import com.example.peter.thekitchenmenu.data.primitivemodel.product.ProductFastTextSearch;
+import com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.datasource.IngredientDao;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.datasource.RecipeDurationDao;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.componentstate.RecipeComponentStateEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.RecipeCourseEntity;
@@ -15,15 +16,14 @@ import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.meta
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.parent.RecipeMetadataParentDao;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.parent.RecipeMetadataParentEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.datasource.RecipeIdentityEntity;
-import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.RecipeIngredientEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.recipeingredient.datasource.RecipeIngredientEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.datasource.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.product.dao.FavoriteProductEntityDao;
-import com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.datasource.IngredientEntityDao;
 import com.example.peter.thekitchenmenu.data.repository.source.local.product.dao.ProductEntityDao;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.componentstate.RecipeComponentStateDao;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.RecipeCourseDao;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.datasource.RecipeIdentityEntityDao;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.recipeingredient.RecipeIngredientEntityDao;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.recipeingredient.datasource.RecipeIngredientEntityDao;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.datasource.RecipePortionsEntityDao;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.failreason.RecipeFailReasonEntity;
 
@@ -66,7 +66,7 @@ public abstract class TKMDatabase extends RoomDatabase {
     public abstract RecipeCourseDao recipeCourseEntityDao();
     public abstract RecipeIdentityEntityDao recipeIdentityEntityDao();
     public abstract RecipeDurationDao recipeDurationEntityDao();
-    public abstract IngredientEntityDao ingredientEntityDao();
+    public abstract IngredientDao ingredientEntityDao();
     public abstract RecipePortionsEntityDao recipePortionsEntityDao();
     public abstract RecipeIngredientEntityDao recipeIngredientEntityDao();
     public abstract RecipeComponentStateDao recipeComponentStateEntityDao();
@@ -139,7 +139,7 @@ public abstract class TKMDatabase extends RoomDatabase {
 
             database.execSQL("INSERT INTO " + TABLE_FTS_PRODUCT +
                     " (`rowid`, " + DESCRIPTION + ", " + SHOPPING_LIST_ITEM_NAME + ") "
-                    + "SELECT " + ID + ", " + DESCRIPTION + ", " +
+                    + "SELECT " + DATA_ID + ", " + DESCRIPTION + ", " +
                     SHOPPING_LIST_ITEM_NAME + " FROM " + TABLE_PRODUCT);
         }
     };

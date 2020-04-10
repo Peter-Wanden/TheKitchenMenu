@@ -22,7 +22,7 @@ public final class RecipeFailReasonEntity implements PrimitiveModel {
     @PrimaryKey
     @NonNull
     @ColumnInfo(name = DATA_ID)
-    private final String id;
+    private final String dataId;
 
     @Nonnull
     @ColumnInfo(name = PARENT_DATA_ID)
@@ -31,10 +31,10 @@ public final class RecipeFailReasonEntity implements PrimitiveModel {
     @ColumnInfo(name = FAIL_REASON_ID)
     private final int failReasonId;
 
-    public RecipeFailReasonEntity(@NonNull String id,
+    public RecipeFailReasonEntity(@NonNull String dataId,
                                   @Nonnull String parentDataId,
                                   int failReasonId) {
-        this.id = id;
+        this.dataId = dataId;
         this.parentDataId = parentDataId;
         this.failReasonId = failReasonId;
     }
@@ -45,19 +45,19 @@ public final class RecipeFailReasonEntity implements PrimitiveModel {
         if (o == null || getClass() != o.getClass()) return false;
         RecipeFailReasonEntity that = (RecipeFailReasonEntity) o;
         return failReasonId == that.failReasonId &&
-                id.equals(that.id) &&
+                dataId.equals(that.dataId) &&
                 parentDataId.equals(that.parentDataId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, parentDataId, failReasonId);
+        return Objects.hash(dataId, parentDataId, failReasonId);
     }
 
     @Override
     public String toString() {
         return "RecipeFailReasonEntity{" +
-                "id='" + id + '\'' +
+                "id='" + dataId + '\'' +
                 ", parentDataId='" + parentDataId + '\'' +
                 ", failReason=" + failReasonId +
                 '}';
@@ -65,7 +65,7 @@ public final class RecipeFailReasonEntity implements PrimitiveModel {
 
     @NonNull
     public String getDataId() {
-        return id;
+        return dataId;
     }
 
     @Nonnull

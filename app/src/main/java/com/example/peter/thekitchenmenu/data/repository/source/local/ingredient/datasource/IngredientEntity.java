@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.data.primitivemodel.ingredient;
+package com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.datasource;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,7 +16,8 @@ import javax.annotation.Nonnull;
 public final class IngredientEntity implements PrimitiveModel {
 
     public static final String TABLE_INGREDIENTS = "ingredients";
-    public static final String ID = "id";
+    public static final String DATA_ID = "dataId";
+    public static final String DOMAIN_ID = "domainId";
     public static final String NAME = "name";
     private static final String DESCRIPTION = "description";
     private static final String CONVERSION_FACTOR = "conversionFactor";
@@ -26,8 +27,12 @@ public final class IngredientEntity implements PrimitiveModel {
 
     @PrimaryKey
     @NonNull
-    @ColumnInfo(name = ID)
-    private final String id;
+    @ColumnInfo(name = DATA_ID)
+    private final String dataId;
+
+    @Nonnull
+    @ColumnInfo(name = DOMAIN_ID)
+    private final String domainId;
 
     @Nonnull
     @ColumnInfo(name = NAME)
@@ -50,14 +55,16 @@ public final class IngredientEntity implements PrimitiveModel {
     @ColumnInfo(name = LAST_UPDATE)
     private final long lastUpdate;
 
-    public IngredientEntity(@Nonnull String id,
+    public IngredientEntity(@Nonnull String dataId,
+                            @Nonnull String domainId,
                             @Nonnull String name,
                             @Nullable String description,
                             double conversionFactor,
                             @Nonnull String createdBy,
                             long createDate,
                             long lastUpdate) {
-        this.id = id;
+        this.dataId = dataId;
+        this.domainId = domainId;
         this.name = name;
         this.description = description;
         this.conversionFactor = conversionFactor;
@@ -70,46 +77,32 @@ public final class IngredientEntity implements PrimitiveModel {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        IngredientEntity entity = (IngredientEntity) o;
-        return Double.compare(entity.conversionFactor, conversionFactor) == 0 &&
-                createDate == entity.createDate &&
-                lastUpdate == entity.lastUpdate &&
-                id.equals(entity.id) &&
-                name.equals(entity.name) &&
-                description.equals(entity.description) &&
-                createdBy.equals(entity.createdBy);
+        IngredientEntity that = (IngredientEntity) o;
+        return Double.compare(that.conversionFactor, conversionFactor) == 0 &&
+                createDate == that.createDate &&
+                lastUpdate == that.lastUpdate &&
+                dataId.equals(that.dataId) &&
+                domainId.equals(that.domainId) &&
+                name.equals(that.name) &&
+                Objects.equals(description, that.description) &&
+                createdBy.equals(that.createdBy);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(
-                id,
-                name,
-                description,
-                conversionFactor,
-                createdBy,
-                createDate,
-                lastUpdate);
-    }
-
-    @Nonnull
-    @Override
-    public String toString() {
-        return "IngredientEntity{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", conversionFactor=" + conversionFactor +
-                ", createdBy='" + createdBy + '\'' +
-                ", createDate=" + createDate +
-                ", lastUpdate=" + lastUpdate +
-                '}';
+        return Objects.hash(dataId, domainId, name, description, conversionFactor, createdBy,
+                createDate, lastUpdate);
     }
 
     @Override
     @Nonnull
     public String getDataId() {
-        return id;
+        return dataId;
+    }
+
+    @Nonnull
+    public String getDomainId() {
+        return domainId;
     }
 
     @Nonnull

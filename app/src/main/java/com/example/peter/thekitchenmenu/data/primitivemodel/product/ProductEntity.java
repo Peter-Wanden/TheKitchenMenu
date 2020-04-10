@@ -23,7 +23,7 @@ import javax.annotation.Nonnull;
 public final class ProductEntity implements Parcelable, PrimitiveModel {
 
     public static final String TABLE_PRODUCT = "product";
-    public static final String ID = "id";
+    public static final String DATA_ID = "dataId";
     public static final String DESCRIPTION = "description";
     public static final String SHOPPING_LIST_ITEM_NAME = "shoppingListItemName";
     private static final String CATEGORY = "category";
@@ -41,8 +41,8 @@ public final class ProductEntity implements Parcelable, PrimitiveModel {
 
     @PrimaryKey
     @NonNull
-    @ColumnInfo(name = ID)
-    private final String id;
+    @ColumnInfo(name = DATA_ID)
+    private final String dataId;
 
     @Nonnull
     @ColumnInfo(name = DESCRIPTION)
@@ -92,7 +92,7 @@ public final class ProductEntity implements Parcelable, PrimitiveModel {
     @ColumnInfo(name = LAST_UPDATE)
     private final long lastUpdate;
 
-    public ProductEntity(@Nonnull String id,
+    public ProductEntity(@Nonnull String dataId,
                          @Nonnull String description,
                          @Nonnull String shoppingListItemName,
                          int category,
@@ -108,7 +108,7 @@ public final class ProductEntity implements Parcelable, PrimitiveModel {
                          long createDate,
                          long lastUpdate) {
 
-        this.id = id;
+        this.dataId = dataId;
         this.description = description;
         this.shoppingListItemName = shoppingListItemName;
         this.category = category;
@@ -233,7 +233,7 @@ public final class ProductEntity implements Parcelable, PrimitiveModel {
         if (o == null || getClass() != o.getClass()) return false;
         ProductEntity entity = (ProductEntity) o;
 
-        return Objects.equal(id, entity.id) &&
+        return Objects.equal(dataId, entity.dataId) &&
                 Objects.equal(description, entity.description) &&
                 Objects.equal(shoppingListItemName, entity.shoppingListItemName) &&
                 Objects.equal(category, entity.category) &&
@@ -253,7 +253,7 @@ public final class ProductEntity implements Parcelable, PrimitiveModel {
     @Override
     public String toString() {
         return "ProductEntity{" +
-                "\nid=" + id +
+                "\nid=" + dataId +
                 "\ndescription='" + description + '\'' +
                 "\nshoppingListItemName='" + shoppingListItemName + '\'' +
                 "\ncategory=" + category +
@@ -272,7 +272,7 @@ public final class ProductEntity implements Parcelable, PrimitiveModel {
     }
 
     protected ProductEntity(Parcel in) {
-        id = java.util.Objects.requireNonNull(in.readString(),
+        dataId = java.util.Objects.requireNonNull(in.readString(),
                 "id cannot be null");
         description = java.util.Objects.requireNonNull(in.readString(),
                 "description cannot be null");
@@ -311,7 +311,7 @@ public final class ProductEntity implements Parcelable, PrimitiveModel {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(id);
+        parcel.writeString(dataId);
         parcel.writeString(description);
         parcel.writeString(shoppingListItemName);
         parcel.writeInt(category);
@@ -331,7 +331,7 @@ public final class ProductEntity implements Parcelable, PrimitiveModel {
     @Nonnull
     @Override
     public String getDataId() {
-        return id;
+        return dataId;
     }
 
     @Nonnull

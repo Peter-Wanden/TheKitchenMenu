@@ -228,7 +228,7 @@ public class RecipeEditorActivity
                 getIntent().getStringExtra(EXTRA_RECIPE_ID) :
                 CREATE_NEW_RECIPE;
 
-        RecipeRequest request = new RecipeRequest(recipeId);
+        RecipeRequest request = new RecipeRequest.Builder().setDomainId(recipeId).build();
         // TODO -
         //  if there is no recipe id create a new recipe
         //  if there is a recipe id, load the recipe:

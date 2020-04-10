@@ -112,7 +112,7 @@ public class RecipePortions extends UseCase
     }
 
     private void loadData(String recipeId) {
-        repository.getByRecipeId(recipeId, this);
+        repository.getAllByDomainId(recipeId, this);
     }
 
     @Override

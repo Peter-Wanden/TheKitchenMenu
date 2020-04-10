@@ -1,8 +1,7 @@
 package com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.datasource;
 
 import com.example.peter.thekitchenmenu.app.AppExecutors;
-import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.IngredientEntity;
-import com.example.peter.thekitchenmenu.data.repository.dataadapter.primitive.PrimitiveDataSource;
+import com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter.PrimitiveDataSourceParent;
 
 import java.util.List;
 
@@ -10,21 +9,22 @@ import javax.annotation.Nonnull;
 
 import static androidx.core.util.Preconditions.checkNotNull;
 
-public class IngredientLocalDataSource implements PrimitiveDataSource<IngredientEntity> {
+public class IngredientLocalDataSource
+        implements PrimitiveDataSourceParent<IngredientEntity> {
 
     private static volatile IngredientLocalDataSource INSTANCE;
-    private IngredientEntityDao entityDao;
-    private AppExecutors appExecutors;
+    private IngredientDao dao;
+    private AppExecutors executors;
 
-    private IngredientLocalDataSource(@Nonnull AppExecutors appExecutors,
-                                      @Nonnull IngredientEntityDao entityDao) {
-        this.appExecutors = appExecutors;
-        this.entityDao = entityDao;
+    private IngredientLocalDataSource(@Nonnull AppExecutors executors,
+                                      @Nonnull IngredientDao dao) {
+        this.executors = executors;
+        this.dao = dao;
     }
 
     public static IngredientLocalDataSource getInstance(
             @Nonnull AppExecutors appExecutors,
-            @Nonnull IngredientEntityDao entityDao) {
+            @Nonnull IngredientDao entityDao) {
 
         if (INSTANCE == null) {
             synchronized (IngredientLocalDataSource.class) {
@@ -36,38 +36,54 @@ public class IngredientLocalDataSource implements PrimitiveDataSource<Ingredient
     }
 
     @Override
-    public void getAll(@Nonnull GetAllPrimitiveCallback<IngredientEntity> callback) {
-        Runnable runnable = () -> {
-            final List<IngredientEntity> entityList = entityDao.getAll();
-            appExecutors.mainThread().execute(() -> {
-                if (entityList.isEmpty())
-                    callback.onDataUnavailable();
-                else
-                    callback.onAllLoaded(entityList);
-            });
-        };
-        appExecutors.diskIO().execute(runnable);
-    }
-
-    @Override
     public void getByDataId(@Nonnull String dataId,
                             @Nonnull GetPrimitiveCallback<IngredientEntity> callback) {
         Runnable runnable = () -> {
-            final IngredientEntity entity = entityDao.getById(dataId);
-            appExecutors.mainThread().execute(() -> {
+            final IngredientEntity entity = dao.getById(dataId);
+            executors.mainThread().execute(() -> {
                 if (entity != null)
                     callback.onEntityLoaded(entity);
                 else
                     callback.onDataUnavailable();
             });
         };
-        appExecutors.diskIO().execute(runnable);
+        executors.diskIO().execute(runnable);
+    }
+
+    @Override
+    public void getAllByDomainId(@Nonnull String domainId,
+                                 @Nonnull GetAllPrimitiveCallback<IngredientEntity> callback) {
+        Runnable runnable = () -> {
+            final List<IngredientEntity> entities = dao.getAllByDomainId(domainId);
+            executors.mainThread().execute(() -> {
+                if (entities.isEmpty()) {
+                    callback.onDataUnavailable();
+                } else {
+                    callback.onAllLoaded(entities);
+                }
+            });
+        };
+        executors.diskIO().execute(runnable);
+    }
+
+    @Override
+    public void getAll(@Nonnull GetAllPrimitiveCallback<IngredientEntity> callback) {
+        Runnable runnable = () -> {
+            final List<IngredientEntity> entityList = dao.getAll();
+            executors.mainThread().execute(() -> {
+                if (entityList.isEmpty())
+                    callback.onDataUnavailable();
+                else
+                    callback.onAllLoaded(entityList);
+            });
+        };
+        executors.diskIO().execute(runnable);
     }
 
     @Override
     public void save(@Nonnull IngredientEntity entity) {
-        Runnable runnable = () -> entityDao.insert(entity);
-        appExecutors.diskIO().execute(runnable);
+        Runnable runnable = () -> dao.insert(entity);
+        executors.diskIO().execute(runnable);
     }
 
     @Override
@@ -77,14 +93,20 @@ public class IngredientLocalDataSource implements PrimitiveDataSource<Ingredient
     }
 
     @Override
-    public void deleteAll() {
-        Runnable runnable = () -> entityDao.deleteAll();
-        appExecutors.diskIO().execute(runnable);
+    public void deleteByDataId(@Nonnull String dataId) {
+        Runnable runnable = () -> dao.deleteByDataId(dataId);
+        executors.diskIO().execute(runnable);
     }
 
     @Override
-    public void deleteByDataId(@Nonnull String dataId) {
-        Runnable runnable = () -> entityDao.deleteById(dataId);
-        appExecutors.diskIO().execute(runnable);
+    public void deleteAllByDomainId(@Nonnull String domainId) {
+        Runnable runnable = () -> dao.deleteAllByDomainId(domainId);
+        executors.diskIO().execute(runnable);
+    }
+
+    @Override
+    public void deleteAll() {
+        Runnable runnable = () -> dao.deleteAll();
+        executors.diskIO().execute(runnable);
     }
 }

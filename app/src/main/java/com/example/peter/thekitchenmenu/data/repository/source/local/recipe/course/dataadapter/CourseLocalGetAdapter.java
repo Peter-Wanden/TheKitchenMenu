@@ -2,13 +2,14 @@ package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.cou
 
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess.GetAllDomainModelsCallback;
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess.GetDomainModelCallback;
-import com.example.peter.thekitchenmenu.data.repository.dataadapter.primitive.PrimitiveDataSource.GetAllPrimitiveCallback;
-import com.example.peter.thekitchenmenu.data.repository.dataadapter.primitive.PrimitiveDataSource.GetPrimitiveCallback;
+import com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter.PrimitiveDataSource.GetAllPrimitiveCallback;
+import com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter.PrimitiveDataSource.GetPrimitiveCallback;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.RecipeCourseEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.RecipeCourseLocalDataSource;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse.Course;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCoursePersistenceModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -82,13 +83,15 @@ public class CourseLocalGetAdapter {
         );
     }
 
-    public void getAll(
-            @Nonnull GetAllDomainModelsCallback<RecipeCoursePersistenceModel> callback) {
-        courseLocalDataSource.getAll(
+    public void getAllActiveByDomainId(
+            String domainId,
+            GetAllDomainModelsCallback<RecipeCoursePersistenceModel> callback) {
+        courseLocalDataSource.getAllByDomainId(
+                domainId,
                 new GetAllPrimitiveCallback<RecipeCourseEntity>() {
                     @Override
                     public void onAllLoaded(List<RecipeCourseEntity> entities) {
-                        callback.onAllLoaded(converter.convertToModels(entities));
+                        callback.onAllLoaded(filterForActive(entities));
                     }
 
                     @Override
@@ -99,15 +102,23 @@ public class CourseLocalGetAdapter {
         );
     }
 
-    public void getAllActiveByDomainId(
-            String domainId,
-            GetAllDomainModelsCallback<RecipeCoursePersistenceModel> callback) {
-        courseLocalDataSource.getAllByDomainId(
-                domainId,
+    private List<RecipeCoursePersistenceModel> filterForActive(List<RecipeCourseEntity> entities) {
+        List<RecipeCoursePersistenceModel> models = new ArrayList<>();
+        for (RecipeCourseEntity e : entities) {
+            if (e.isActive()) {
+                models.add(converter.convertToModel(e));
+            }
+        }
+        return models;
+    }
+
+    public void getAll(
+            @Nonnull GetAllDomainModelsCallback<RecipeCoursePersistenceModel> callback) {
+        courseLocalDataSource.getAll(
                 new GetAllPrimitiveCallback<RecipeCourseEntity>() {
                     @Override
                     public void onAllLoaded(List<RecipeCourseEntity> entities) {
-                        callback.onAllLoaded(converter.convertToActiveModels(entities));
+                        callback.onAllLoaded(converter.convertToModels(entities));
                     }
 
                     @Override

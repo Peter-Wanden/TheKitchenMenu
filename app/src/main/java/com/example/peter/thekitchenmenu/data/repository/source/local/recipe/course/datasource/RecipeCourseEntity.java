@@ -17,7 +17,7 @@ import static com.example.peter.thekitchenmenu.data.repository.source.local.reci
 public final class RecipeCourseEntity implements PrimitiveModel {
 
     public static final String TABLE_RECIPE_COURSE = "recipeCourse";
-    public static final String ID = "id";
+    public static final String DATA_ID = "dataId";
     public static final String RECIPE_ID = "recipeId";
     public static final String RECIPE_COURSE_NO = "recipeCourseNo";
     public static final String IS_ACTIVE = "isActive";
@@ -26,8 +26,8 @@ public final class RecipeCourseEntity implements PrimitiveModel {
 
     @PrimaryKey
     @NonNull
-    @ColumnInfo(name = ID)
-    private final String id;
+    @ColumnInfo(name = DATA_ID)
+    private final String dataId;
 
     @Nonnull
     @ColumnInfo(name = RECIPE_ID)
@@ -45,13 +45,13 @@ public final class RecipeCourseEntity implements PrimitiveModel {
     @ColumnInfo(name = LAST_UPDATE)
     private final long lasUpdate;
 
-    public RecipeCourseEntity(@Nonnull String id,
+    public RecipeCourseEntity(@Nonnull String dataId,
                               @Nonnull String recipeId,
                               int courseNo,
                               boolean isActive,
                               long createDate,
                               long lasUpdate) {
-        this.id = id;
+        this.dataId = dataId;
         this.recipeId = recipeId;
         this.courseNo = courseNo;
         this.isActive = isActive;
@@ -62,7 +62,7 @@ public final class RecipeCourseEntity implements PrimitiveModel {
     @Override
     @Nonnull
     public String getDataId() {
-        return id;
+        return dataId;
     }
 
     @Nonnull
@@ -95,20 +95,20 @@ public final class RecipeCourseEntity implements PrimitiveModel {
                 isActive == that.isActive &&
                 createDate == that.createDate &&
                 lasUpdate == that.lasUpdate &&
-                id.equals(that.id) &&
+                dataId.equals(that.dataId) &&
                 recipeId.equals(that.recipeId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, recipeId, courseNo, isActive, createDate, lasUpdate);
+        return Objects.hash(dataId, recipeId, courseNo, isActive, createDate, lasUpdate);
     }
 
     @Nonnull
     @Override
     public String toString() {
         return "RecipeCourseEntity{" +
-                "id='" + id + '\'' +
+                "id='" + dataId + '\'' +
                 ", recipeId='" + recipeId + '\'' +
                 ", courseNo=" + courseNo +
                 ", isActive=" + isActive +

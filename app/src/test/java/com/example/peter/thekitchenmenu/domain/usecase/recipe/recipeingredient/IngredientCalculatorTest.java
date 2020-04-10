@@ -1,10 +1,10 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredient;
 
 import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
-import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.IngredientEntity;
-import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.RecipeIngredientEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.datasource.IngredientEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.recipeingredient.datasource.RecipeIngredientEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.datasource.RecipePortionsEntity;
-import com.example.peter.thekitchenmenu.data.repository.dataadapter.primitive.PrimitiveDataSource;
+import com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.ingredient.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeIngredient;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipePortions;
@@ -956,9 +956,9 @@ public class IngredientCalculatorTest {
         RecipeIngredientEntity expectedQuantityEntityUnitOneChange =
                 new RecipeIngredientEntity(
                         QUANTITY_EXISTING_VALID_METRIC.getDataId(),
-                        QUANTITY_EXISTING_VALID_METRIC.getRecipeId(),
-                        QUANTITY_EXISTING_VALID_METRIC.getIngredientId(),
-                        QUANTITY_EXISTING_VALID_METRIC.getProductId(),
+                        QUANTITY_EXISTING_VALID_METRIC.getRecipeDomainId(),
+                        QUANTITY_EXISTING_VALID_METRIC.getIngredientDomainId(),
+                        QUANTITY_EXISTING_VALID_METRIC.getProductDataId(),
                         expectedResultFromMeasurementOneChange.getItemBaseUnits(),
                         expectedResultFromMeasurementOneChange.getSubtype().asInt(),
                         QUANTITY_EXISTING_VALID_METRIC.getCreatedBy(),
@@ -1008,9 +1008,9 @@ public class IngredientCalculatorTest {
         RecipeIngredientEntity expectedQuantityEntityAfterConversionFactorApplied =
                 new RecipeIngredientEntity(
                         QUANTITY_EXISTING_VALID_METRIC.getDataId(),
-                        QUANTITY_EXISTING_VALID_METRIC.getRecipeId(),
-                        QUANTITY_EXISTING_VALID_METRIC.getIngredientId(),
-                        QUANTITY_EXISTING_VALID_METRIC.getProductId(),
+                        QUANTITY_EXISTING_VALID_METRIC.getRecipeDomainId(),
+                        QUANTITY_EXISTING_VALID_METRIC.getIngredientDomainId(),
+                        QUANTITY_EXISTING_VALID_METRIC.getProductDataId(),
                         itemBaseUnits,
                         updatedUnitOfMeasureModel.getSubtype().asInt(),
                         QUANTITY_EXISTING_VALID_METRIC.getCreatedBy(),
@@ -1062,22 +1062,22 @@ public class IngredientCalculatorTest {
     }
 
     private void verifyRepoPortionsCalledReturnNewValidFourPortions() {
-        verify(repoRecipePortionsMock).getByRecipeId(
-                eq(QUANTITY_NEW_INVALID.getRecipeId()),
+        verify(repoRecipePortionsMock).getAllByDomainId(
+                eq(QUANTITY_NEW_INVALID.getRecipeDomainId()),
                 getRecipePortionsCallbackCaptor.capture());
         getRecipePortionsCallbackCaptor.getValue().onEntityLoaded(PORTIONS_NEW_VALID_FOUR);
     }
 
     private void verifyRepoPortionsCalledAndReturnNewValidFourPortions() {
-        verify(repoRecipePortionsMock).getByRecipeId(
-                eq(QUANTITY_NEW_VALID_METRIC.getRecipeId()),
+        verify(repoRecipePortionsMock).getAllByDomainId(
+                eq(QUANTITY_NEW_VALID_METRIC.getRecipeDomainId()),
                 getRecipePortionsCallbackCaptor.capture());
         getRecipePortionsCallbackCaptor.getValue().onEntityLoaded(PORTIONS_NEW_VALID_FOUR);
     }
 
     private void verifyRepoPortionsCalledAndReturnExistingValidNinePortions() {
-        verify(repoRecipePortionsMock).getByRecipeId(
-                eq(QUANTITY_EXISTING_VALID_METRIC.getRecipeId()),
+        verify(repoRecipePortionsMock).getAllByDomainId(
+                eq(QUANTITY_EXISTING_VALID_METRIC.getRecipeDomainId()),
                 getRecipePortionsCallbackCaptor.capture());
         getRecipePortionsCallbackCaptor.getValue().onEntityLoaded(PORTIONS_EXISTING_VALID_NINE);
     }
