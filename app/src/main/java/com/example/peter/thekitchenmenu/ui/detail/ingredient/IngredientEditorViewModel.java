@@ -8,16 +8,23 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
+import com.example.peter.thekitchenmenu.domain.model.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.ingredient.Ingredient;
 import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientPersistenceModel;
 import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidatorModel;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidatorRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidatorResponse;
+import com.google.firebase.remoteconfig.proto.ConfigPersistence;
+
+import java.util.List;
 
 public class IngredientEditorViewModel extends ViewModel {
 
@@ -64,11 +71,9 @@ public class IngredientEditorViewModel extends ViewModel {
         if (isNewInstantiation()) {
             navigator.setActivityTitle(R.string.activity_title_add_new_ingredient);
 
-            IngredientPersistenceModel model = new IngredientPersistenceModel.Builder().
-                    getDefault().
-                    build();
+            IngredientRequest request = new IngredientRequest.Builder().getDefault().build();
 
-            executeUseCaseIngredient(model);
+            executeUseCaseIngredient(request);
         }
     }
 
@@ -76,12 +81,10 @@ public class IngredientEditorViewModel extends ViewModel {
         if (isNewInstantiation() || isIngredientIdChanged(ingredientId)) {
             navigator.setActivityTitle(R.string.activity_title_edit_ingredient);
 
-            IngredientPersistenceModel model = new IngredientPersistenceModel.Builder().
-                    getDefault().
+            IngredientRequest request = new IngredientRequest.Builder().
                     setDomainId(ingredientId).
                     build();
-
-            executeUseCaseIngredient(model);
+            executeUseCaseIngredient(request);
         }
     }
 
@@ -129,17 +132,17 @@ public class IngredientEditorViewModel extends ViewModel {
     private void processNameTextValidationResponse(TextValidatorResponse response) {
         if (response.getFailReason() == CommonFailReason.NONE) {
 
-            IngredientPersistenceModel model = new IngredientPersistenceModel.Builder().
+            IngredientRequest request = new IngredientRequest.Builder().
                     setDataId(ingredientResponse.getDataId()).
                     setDomainId(ingredientResponse.getDomainId()).
-                    setName(response.getModel().getText()).
-                    setDescription(ingredientResponse.getModel().getDescription()).
-                    setConversionFactor(ingredientResponse.getModel().getConversionFactor()).
-                    setCreatedBy(ingredientResponse.getMetadata().getCreatedBy()).
-                    setCreateDate(ingredientResponse.getMetadata().getCreateDate()).
-                    setLastUpdate(ingredientResponse.getMetadata().getLasUpdate()).
+                    setModel(new IngredientRequest.Model.Builder().
+                            setName(response.getModel().getText()).
+                            setDescription(ingredientResponse.getModel().getDescription()).
+                            setConversionFactor(ingredientResponse.getModel().getConversionFactor()).
+                            build()).
                     build();
-            executeUseCaseIngredient(model);
+
+            executeUseCaseIngredient(request);
 
         } else {
             setError(showNameError, response);
@@ -182,26 +185,29 @@ public class IngredientEditorViewModel extends ViewModel {
     }
 
     private void processDescriptionTextValidationResponse(TextValidatorResponse
-                                                                  longTextResponse) {
-        if (longTextResponse.getFailReason() == CommonFailReason.NONE) {
+                                                                  response) {
+        if (response.getFailReason() == CommonFailReason.NONE) {
 
-            IngredientPersistenceModel model = new IngredientPersistenceModel.Builder().
-                    basedOnPersistenceModel(ingredientResponse.getModel()).
-                    setDescription(longTextResponse.getModel().getText()).
+            IngredientRequest request = new IngredientRequest.Builder().
+                    setDataId(ingredientResponse.getDataId()).
+                    setDomainId(ingredientResponse.getDomainId()).
+                    setModel(new IngredientRequest.Model.Builder().
+                            setName(ingredientResponse.getModel().getName()).
+                            setDescription(response.getModel().getText()).
+                            setConversionFactor(ingredientResponse.getModel().getConversionFactor()).
+                            build()).
                     build();
 
 
-
-            executeUseCaseIngredient(model);
+            executeUseCaseIngredient(request);
         } else {
-            setError(showDescriptionError, longTextResponse);
+            setError(showDescriptionError, response);
             updateUseButtonVisibility();
         }
     }
 
-    private void executeUseCaseIngredient(IngredientPersistenceModel model) {
+    private void executeUseCaseIngredient(IngredientRequest request) {
         dataLoading.setValue(true);
-        IngredientRequest request = new IngredientRequest(model);
 
         handler.execute(ingredient, request, new UseCase.Callback<IngredientResponse>() {
             @Override
@@ -220,9 +226,10 @@ public class IngredientEditorViewModel extends ViewModel {
         dataLoading.setValue(false);
         ingredientResponse = response;
 
-        Ingredient.Result result = response.getResult();
+        List<FailReasons> failReasons = response.getMetadata().getFailReasons();
+        RecipeMetadata.ComponentState state = response.getMetadata().getState();
 
-        if (result == Ingredient.Result.DATA_UNAVAILABLE) {
+        if (failReasons.contains(CommonFailReason.DATA_UNAVAILABLE)) {
             dataLoadingError.setValue(true);
             isValid = false;
             isChanged = false;
@@ -231,27 +238,27 @@ public class IngredientEditorViewModel extends ViewModel {
             dataLoadingError.setValue(false);
         }
 
-        if (result == Ingredient.Result.UNEDITABLE) {
+        if (failReasons.contains(Ingredient.FailReason.UNEDITABLE)) {
             navigator.finishActivity("");
 
-        } else if (result == Ingredient.Result.IS_DUPLICATE) {
+        } else if (failReasons.contains(Ingredient.FailReason.DUPLICATE)) {
             isValid = false;
             isChanged = false;
             showNameError.set(resources.getString(R.string.ingredient_name_duplicate_error_message));
 
-        } else if (result == Ingredient.Result.INVALID_UNCHANGED) {
+        } else if (state == RecipeMetadata.ComponentState.INVALID_UNCHANGED) {
             isChanged = false;
             isValid = false;
 
-        } else if (result == Ingredient.Result.VALID_UNCHANGED) {
+        } else if (state == RecipeMetadata.ComponentState.VALID_UNCHANGED) {
             isChanged = false;
             isValid = true;
 
-        } else if (result == Ingredient.Result.INVALID_CHANGED) {
+        } else if (state == RecipeMetadata.ComponentState.INVALID_CHANGED) {
             isChanged = true;
             isValid = false;
 
-        } else if (result == Ingredient.Result.VALID_CHANGED) {
+        } else if (state == RecipeMetadata.ComponentState.VALID_CHANGED) {
             isChanged = true;
             isValid = true;
         }
@@ -296,6 +303,6 @@ public class IngredientEditorViewModel extends ViewModel {
     }
 
     void useButtonPressed() {
-        navigator.finishActivity(ingredientResponse.getModel().getIngredientId());
+        navigator.finishActivity(ingredientResponse.getDomainId());
     }
 }
