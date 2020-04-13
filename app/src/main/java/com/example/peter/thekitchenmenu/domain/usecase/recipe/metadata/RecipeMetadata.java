@@ -234,7 +234,7 @@ public class RecipeMetadata
         return new RecipeMetadataPersistenceModel.Builder().
                 getDefault().
                 setDataId(dataId).
-                setRecipeId(recipeId).
+                setDomainId(recipeId).
                 setCreateDate(currentTime).
                 setLastUpdate(currentTime).
                 build();

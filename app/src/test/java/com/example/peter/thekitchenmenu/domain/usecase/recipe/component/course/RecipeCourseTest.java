@@ -1,14 +1,14 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course;
 
 import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
+import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess.GetAllDomainModelsCallback;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.RecipeCourseEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.parent.RecipeMetadataParentEntity;
-import com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeCourse;
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
-import com.example.peter.thekitchenmenu.testdata.TestDataRecipeCourseEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.TestDataRecipeCourseEntity;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
@@ -19,8 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse.*;
-import static com.example.peter.thekitchenmenu.testdata.TestDataRecipeCourseEntity.getAllByRecipeId;
-import static com.example.peter.thekitchenmenu.testdata.TestDataRecipeMetadataEntity.getValidExisting;
+import static com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.TestDataRecipeCourseEntity.getAllByRecipeId;
+import static com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.TestDataRecipeMetadataEntity.getValidExisting;
 
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.*;
@@ -29,7 +29,7 @@ import static org.junit.Assert.assertEquals;
 
 public class RecipeCourseTest {
 
-//    private static final String TAG = "tkm-" + RecipeCourseTest.class.getSimpleName() + ": ";
+    private static final String TAG = "tkm-" + RecipeCourseTest.class.getSimpleName() + ": ";
 
     // region constants ----------------------------------------------------------------------------
     private RecipeMetadataParentEntity VALID_EXISTING_RECIPE_ENTITY = getValidExisting();
@@ -40,13 +40,13 @@ public class RecipeCourseTest {
     @Mock
     RepositoryRecipeCourse repoCourseMock;
     @Captor
-    ArgumentCaptor<PrimitiveDataSource.GetAllPrimitiveCallback<RecipeCourseEntity>> repoCourseCallback;
+    ArgumentCaptor<GetAllDomainModelsCallback<RecipeCoursePersistenceModel>> repoCourseCallback;
     @Mock
     UniqueIdProvider idProviderMock;
     @Mock
     TimeProvider timeProviderMock;
     @Captor
-    ArgumentCaptor<RecipeCourseEntity> entityCaptor;
+    ArgumentCaptor<RecipeCoursePersistenceModel> persistentModelCapture;
 
     private UseCaseHandler handler;
 
@@ -123,10 +123,10 @@ public class RecipeCourseTest {
         // Act
         handler.execute(SUT, request, getCallback());
         // Assert
-        verify(repoCourseMock).save(entityCaptor.capture());
-        assertEquals(Course.COURSE_ONE.getCourseNo(), entityCaptor.getValue().getCourseNo());
-        assertEquals(time, entityCaptor.getValue().getCreateDate());
-        assertEquals(id, entityCaptor.getValue().getDataId());
+        verify(repoCourseMock).save(persistentModelCapture.capture());
+        assertEquals(Course.COURSE_ONE.getCourseNo(), persistentModelCapture.getValue().getCourseNo());
+        assertEquals(time, persistentModelCapture.getValue().getCreateDate());
+        assertEquals(id, persistentModelCapture.getValue().getDataId());
         assertEquals(com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentState.VALID_CHANGED, onSuccessResponse.getMetadata().getState());
     }
 

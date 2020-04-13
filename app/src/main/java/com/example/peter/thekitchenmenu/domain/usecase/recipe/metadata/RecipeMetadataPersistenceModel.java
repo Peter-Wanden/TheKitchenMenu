@@ -85,8 +85,8 @@ public final class RecipeMetadataPersistenceModel extends BasePersistence {
             return self();
         }
 
-        public Builder setRecipeId(String recipeId) {
-            model.domainId = recipeId;
+        public Builder setDomainId(String domainId) {
+            model.domainId = domainId;
             return self();
         }
 

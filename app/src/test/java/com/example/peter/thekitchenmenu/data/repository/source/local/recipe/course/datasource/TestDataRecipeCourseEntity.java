@@ -1,6 +1,6 @@
-package com.example.peter.thekitchenmenu.testdata;
+package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource;
 
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.RecipeCourseEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.TestDataRecipeMetadataEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,81 +15,89 @@ public class TestDataRecipeCourseEntity {
 
     public static RecipeCourseEntity getRecipeCourseZero() {
         return new RecipeCourseEntity(
-                "id0",
-                0,
+                "dataId0",
                 EXISTING_RECIPE_ID,
-                10,
-                10
+                0,
+                true,
+                10L,
+                10L
         );
     }
 
     public static RecipeCourseEntity getRecipeCourseOne() {
         return new RecipeCourseEntity(
-                "id1",
-                1,
+                "dataId1",
                 EXISTING_RECIPE_ID,
-                10,
-                10
+                1,
+                true,
+                10L,
+                10L
         );
     }
 
     public static RecipeCourseEntity getRecipeCourseTwo() {
         return new RecipeCourseEntity(
-                "id2",
-                2,
+                "dataId2",
                 EXISTING_RECIPE_ID,
-                10,
-                10
+                2,
+                true,
+                10L,
+                10L
         );
     }
 
     public static RecipeCourseEntity getRecipeCourseThree() {
         return new RecipeCourseEntity(
-                "id3",
-                3,
+                "dataId3",
                 EXISTING_RECIPE_ID,
-                10,
-                10
+                3,
+                true,
+                10L,
+                10L
         );
     }
 
     public static RecipeCourseEntity getRecipeCourseFour() {
         return new RecipeCourseEntity(
-                "id4",
-                4,
+                "dataId4",
                 EXISTING_RECIPE_ID,
-                10,
-                10
+                4,
+                true,
+                10L,
+                10L
         );
     }
 
     public static RecipeCourseEntity getRecipeCourseFive() {
         return new RecipeCourseEntity(
-                "id5",
-                5,
+                "dataId5",
                 EXISTING_RECIPE_ID,
-                10,
-                10
+                5,
+                true,
+                10L,
+                10L
         );
     }
 
     public static RecipeCourseEntity getRecipeCourseSix() {
         return new RecipeCourseEntity(
-                "id6",
-                6,
+                "dataId6",
                 EXISTING_RECIPE_ID,
-                10,
-                10
+                6,
+                true,
+                10L,
+                10L
         );
     }
 
     public static RecipeCourseEntity getRecipeCourseSeven() {
         return new RecipeCourseEntity(
-                "id7",
-                7,
+                "dataId7",
                 EXISTING_RECIPE_ID,
-                10,
-                10
+                7,
+                true,
+                10L,
+                10L
         );
     }
 
@@ -131,51 +139,56 @@ public class TestDataRecipeCourseEntity {
 
     public static RecipeCourseEntity getClonedRecipeCourseZero() {
         return new RecipeCourseEntity(
-                "id0",
-                getRecipeCourseZero().getCourseNo(),
+                "dataId0Clone",
                 NEW_RECIPE_ID,
-                20,
-                20
+                getRecipeCourseZero().getCourseNo(),
+                true,
+                20L,
+                20L
         );
     }
 
     public static RecipeCourseEntity getClonedRecipeCourseOne() {
         return new RecipeCourseEntity(
-                "id1",
-                getRecipeCourseOne().getCourseNo(),
+                "dataId1Clone",
                 NEW_RECIPE_ID,
-                20,
-                20
+                getRecipeCourseOne().getCourseNo(),
+                true,
+                20L,
+                20L
         );
     }
 
     public static RecipeCourseEntity getClonedRecipeCourseTwo() {
         return new RecipeCourseEntity(
-                "id2",
-                getRecipeCourseTwo().getCourseNo(),
+                "dataId2Clone",
                 NEW_RECIPE_ID,
-                20,
-                20
+                getRecipeCourseTwo().getCourseNo(),
+                true,
+                20L,
+                20L
         );
     }
 
     public static RecipeCourseEntity getClonedRecipeCourseFour() {
         return new RecipeCourseEntity(
-                "id4",
-                getRecipeCourseFour().getCourseNo(),
+                "dataId4Clone",
                 NEW_RECIPE_ID,
-                20,
-                20
+                getRecipeCourseFour().getCourseNo(),
+                true,
+                20L,
+                20L
         );
     }
 
     public static RecipeCourseEntity getClonedRecipeCourseSix() {
         return new RecipeCourseEntity(
-                "id6",
-                getRecipeCourseSix().getCourseNo(),
+                "dataId6Clone",
                 NEW_RECIPE_ID,
-                20,
-                20
+                getRecipeCourseSix().getCourseNo(),
+                true,
+                20L,
+                20L
         );
     }
 

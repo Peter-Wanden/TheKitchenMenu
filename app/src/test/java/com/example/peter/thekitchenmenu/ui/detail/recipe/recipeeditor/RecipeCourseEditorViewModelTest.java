@@ -30,9 +30,9 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityTest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortionsTest;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
-import com.example.peter.thekitchenmenu.testdata.TestDataRecipeCourseEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.TestDataRecipeCourseEntity;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeDurationEntity;
-import com.example.peter.thekitchenmenu.testdata.TestDataRecipeMetadataEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.TestDataRecipeMetadataEntity;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeIdentityEntity;
@@ -45,8 +45,8 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.testdata.TestDataRecipeCourseEntity.*;
-import static com.example.peter.thekitchenmenu.testdata.TestDataRecipeMetadataEntity.*;
+import static com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.TestDataRecipeCourseEntity.*;
+import static com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.TestDataRecipeMetadataEntity.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 

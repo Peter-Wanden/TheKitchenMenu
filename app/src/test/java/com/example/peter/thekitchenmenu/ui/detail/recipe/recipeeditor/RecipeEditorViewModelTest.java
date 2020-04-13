@@ -44,7 +44,7 @@ import org.mockito.MockitoAnnotations;
 import javax.annotation.Nonnull;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe.CREATE_NEW_RECIPE;
-import static com.example.peter.thekitchenmenu.testdata.TestDataRecipeMetadataEntity.*;
+import static com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.TestDataRecipeMetadataEntity.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;

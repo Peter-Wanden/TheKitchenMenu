@@ -1,6 +1,7 @@
-package com.example.peter.thekitchenmenu.testdata;
+package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata;
 
 import com.example.peter.thekitchenmenu.app.Constants;
+import com.example.peter.thekitchenmenu.data.repository.recipe.metadata.TestDataRecipeMetadataPersistenceModel;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.parent.RecipeMetadataParentEntity;
 
 import java.util.ArrayList;
@@ -11,13 +12,16 @@ public class TestDataRecipeMetadataEntity {
     // Create new recipe, or used when cloning
     public static RecipeMetadataParentEntity getNewInvalid() {
         return new RecipeMetadataParentEntity(
-                "newId",
-                "newId",
+                TestDataRecipeMetadataPersistenceModel.getNewInvalid().getDataId(),
+                TestDataRecipeMetadataPersistenceModel.getNewInvalid().getDomainId(),
+                TestDataRecipeMetadataPersistenceModel.getNewInvalid().getRecipeParentId(),
+                TestDataRecipeMetadataPersistenceModel.getNewInvalid().getRecipeState().getId(),
                 Constants.getUserId(),
                 10L,
                 10L
         );
     }
+
 
     // Built from new, or cloned / copied to current user
     public static RecipeMetadataParentEntity getNewValid() {
