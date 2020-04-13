@@ -18,7 +18,7 @@ public final class TextValidatorResponse implements UseCase.Response {
     @Nonnull
     private String maxLength;
 
-    public TextValidatorResponse(@Nonnull TextValidator.FailReason failReason,
+    public TextValidatorResponse(@Nonnull FailReasons failReason,
                                  @Nonnull TextValidatorModel model,
                                  @Nonnull String minLength,
                                  @Nonnull String maxLength) {
@@ -76,12 +76,12 @@ public final class TextValidatorResponse implements UseCase.Response {
     }
 
     public static class Builder {
-        private TextValidator.FailReason failReason;
+        private FailReasons failReason;
         private TextValidatorModel model;
         String minLength;
         String maxLength;
 
-        public Builder setFailReason(TextValidator.FailReason failReason) {
+        public Builder setFailReason(FailReasons failReason) {
             this.failReason = failReason;
             return this;
         }

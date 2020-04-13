@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.domain.usecase.productcatalog;
+package com.example.peter.thekitchenmenu.domain.usecase.product.productcatalog;
 
 import android.app.Application;
 
@@ -63,26 +63,26 @@ public class ProductCatalogInteractorImpl implements ProductCatalogInteractor {
         this.productListCallback = productListCallback;
         productsMap.clear();
         productEntitiesLoading = true;
-        productEntityDataSource.getAll(
-                new PrimitiveDataSource.GetAllPrimitiveCallback<ProductEntity>() {
-                    @Override
-                    public void onAllLoaded(List<ProductEntity> productEntityList) {
-
-                        for (ProductEntity productEntity : productEntityList) {
-                            productsMap.put(productEntity.getDataId(), productEntity);
-                        }
-
-                        productEntitiesLoading = false;
-                        sortDataWhenLoaded();
-                    }
-
-                    @Override
-                    public void onDataUnavailable() {
-                        productEntitiesLoading = false;
-                        productListCallback.onDataNotAvailable();
-                        sortDataWhenLoaded();
-                    }
-                });
+//        productEntityDataSource.getAll(
+//                new PrimitiveDataSource.GetAllPrimitiveCallback<ProductEntity>() {
+//                    @Override
+//                    public void onAllLoaded(List<ProductEntity> productEntityList) {
+//
+//                        for (ProductEntity productEntity : productEntityList) {
+//                            productsMap.put(productEntity.getDataId(), productEntity);
+//                        }
+//
+//                        productEntitiesLoading = false;
+//                        sortDataWhenLoaded();
+//                    }
+//
+//                    @Override
+//                    public void onDataUnavailable() {
+//                        productEntitiesLoading = false;
+//                        productListCallback.onDataNotAvailable();
+//                        sortDataWhenLoaded();
+//                    }
+//                });
     }
 
     @Override

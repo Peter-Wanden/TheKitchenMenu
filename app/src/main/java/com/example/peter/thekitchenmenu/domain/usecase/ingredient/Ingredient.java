@@ -207,7 +207,7 @@ public class Ingredient
 
             @Override
             public void onError(TextValidatorResponse response) {
-                TextValidator.FailReason failReason = response.getFailReason();
+                FailReasons failReason = response.getFailReason();
                 if (TextValidator.FailReason.TOO_SHORT.equals(failReason)) {
                     failReasons.add(FailReason.NAME_TOO_SHORT);
 
@@ -241,7 +241,7 @@ public class Ingredient
 
             @Override
             public void onError(TextValidatorResponse response) {
-                TextValidator.FailReason failReason = response.getFailReason();
+                FailReasons failReason = response.getFailReason();
                 if (TextValidator.FailReason.TOO_SHORT == failReason) {
                     failReasons.add(FailReason.DESCRIPTION_TOO_SHORT);
                 } else {
@@ -322,7 +322,7 @@ public class Ingredient
     }
 
     private IngredientPersistenceModel updatePersistenceFromRequestModel() {
-        return IngredientPersistenceModel.Builder.
+        return new IngredientPersistenceModel.Builder().
                 basedOnPersistenceModel(persistenceModel).
                 setConversionFactor(persistenceModel.getConversionFactor()).
                 setName(persistenceModel.getName()).

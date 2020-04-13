@@ -177,7 +177,7 @@ public class RecipeIdentity
 
             @Override
             public void onError(TextValidatorResponse response) {
-                TextValidator.FailReason failReason = response.getFailReason();
+                FailReasons failReason = response.getFailReason();
                 if (failReason == TextValidator.FailReason.TOO_SHORT) {
                     failReasons.add(FailReason.TITLE_TOO_SHORT);
 
@@ -210,7 +210,7 @@ public class RecipeIdentity
 
             @Override
             public void onError(TextValidatorResponse response) {
-                TextValidator.FailReason failReason = response.getFailReason();
+                FailReasons failReason = response.getFailReason();
                 if (failReason == TextValidator.FailReason.TOO_SHORT) {
                     failReasons.add(FailReason.DESCRIPTION_TOO_SHORT);
 
@@ -273,7 +273,7 @@ public class RecipeIdentity
 
     private RecipeIdentityPersistenceModel updatePersistenceFromRequestModel() {
         return new RecipeIdentityPersistenceModel.Builder().
-                basedOnPersistenceModel(persistenceModel).
+                basedOnModel(persistenceModel).
                 setTitle(requestModel.getTitle()).
                 setDescription(requestModel.getDescription()).
                 setLastUpdate(timeProvider.getCurrentTimeInMills()).

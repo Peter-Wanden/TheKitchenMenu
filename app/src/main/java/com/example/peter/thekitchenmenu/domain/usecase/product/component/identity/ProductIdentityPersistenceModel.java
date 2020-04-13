@@ -1,30 +1,32 @@
-package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity;
+package com.example.peter.thekitchenmenu.domain.usecase.product.component.identity;
 
 import com.example.peter.thekitchenmenu.domain.usecase.BasePersistence;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
-public final class RecipeIdentityPersistenceModel
+public class ProductIdentityPersistenceModel
         extends BasePersistence {
 
-    private String title;
+    private String name;
     private String description;
+    private ProductIdentity.Category category;
     private long createDate;
     private long lastUpdate;
 
-    private RecipeIdentityPersistenceModel(){}
+    private ProductIdentityPersistenceModel(){}
 
-    @Nonnull
-    public String getTitle() {
-        return title;
+    public String getName() {
+        return name;
     }
 
-    @Nonnull
     public String getDescription() {
         return description;
+    }
+
+    public ProductIdentity.Category getCategory() {
+        return category;
     }
 
     public long getCreateDate() {
@@ -39,58 +41,53 @@ public final class RecipeIdentityPersistenceModel
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        RecipeIdentityPersistenceModel that = (RecipeIdentityPersistenceModel) o;
+        ProductIdentityPersistenceModel that = (ProductIdentityPersistenceModel) o;
         return dataId.equals(that.dataId) &&
                 domainId.equals(that.domainId) &&
+                name.equals(that.name) &&
+                description.equals(that.description) &&
+                category == that.category &&
                 createDate == that.createDate &&
-                lastUpdate == that.lastUpdate &&
-                Objects.equals(title, that.title) &&
-                Objects.equals(description, that.description);
+                lastUpdate == that.lastUpdate;
+
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(dataId, domainId, title, description, createDate, lastUpdate);
+        return Objects.hash(dataId, domainId, name, description, category, createDate, lastUpdate);
     }
 
     @Nonnull
     @Override
     public String toString() {
-        return "RecipeIdentityPersistenceModel{" +
+        return "ProductIdentityPersistenceModel{" +
                 "dataId='" + dataId + '\'' +
                 ", domainId='" + domainId + '\'' +
-                ", title='" + title + '\'' +
+                ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
+                ", category=" + category +
                 ", createDate=" + createDate +
                 ", lastUpdate=" + lastUpdate +
                 '}';
     }
 
     public static class Builder
-            extends DomainModelBuilder<Builder, RecipeIdentityPersistenceModel> {
+            extends DomainModelBuilder<Builder, ProductIdentityPersistenceModel>  {
 
         public Builder() {
-            model = new RecipeIdentityPersistenceModel();
+            model = new ProductIdentityPersistenceModel();
         }
 
+        @Override
         public Builder getDefault() {
             model.dataId = "";
             model.domainId = "";
-            model.title = "";
+            model.name = "";
             model.description = "";
+            model.category = ProductIdentity.Category.NON_FOOD;
             model.createDate = 0L;
             model.lastUpdate = 0L;
-            return self();
-        }
-
-        public Builder basedOnModel(@Nonnull RecipeIdentityPersistenceModel m) {
-            model.dataId = m.getDataId();
-            model.domainId = m.getDomainId();
-            model.title = m.getTitle();
-            model.description = m.getDescription();
-            model.createDate = m.getCreateDate();
-            model.lastUpdate = m.getLastUpdate();
-            return self();
+            return this;
         }
 
         public Builder setDataId(String dataId) {
@@ -103,13 +100,18 @@ public final class RecipeIdentityPersistenceModel
             return self();
         }
 
-        public Builder setTitle(String title) {
-            model.title = title;
+        public Builder setName(String name) {
+            model.name = name;
             return self();
         }
 
         public Builder setDescription(String description) {
             model.description = description;
+            return self();
+        }
+
+        public Builder setCategory(ProductIdentity.Category category) {
+            model.category = category;
             return self();
         }
 

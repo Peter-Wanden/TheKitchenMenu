@@ -34,11 +34,11 @@ public class ViewModelFactoryProduct extends ViewModelProvider.NewInstanceFactor
     public static ViewModelFactoryProduct getInstance(Application application) {
         if (INSTANCE == null) {
             synchronized (ViewModelFactoryProduct.class) {
-                if (INSTANCE == null)
-                    INSTANCE = new ViewModelFactoryProduct(
-                        application,
-                        DatabaseInjection.provideProductDataSource(
-                                application.getApplicationContext()));
+//                if (INSTANCE == null)
+//                    INSTANCE = new ViewModelFactoryProduct(
+//                        application,
+//                        DatabaseInjection.provideProductDataSource(
+//                                application.getApplicationContext()));
             }
         }
         return INSTANCE;

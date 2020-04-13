@@ -1,5 +1,6 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredientlist;
 
+import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.datasource.IngredientEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.recipeingredient.datasource.RecipeIngredientEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.datasource.RecipePortionsEntity;
@@ -12,6 +13,9 @@ import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModel;
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModelBuilder;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasure;
+import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortionsPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredient.RecipeIngredientPersistenceModel;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -30,9 +34,9 @@ public class RecipeIngredientList extends UseCase {
     private RepositoryRecipePortions repoPortions;
 
     private String recipeId;
-    private Map<String, RecipeIngredientEntity> recipeIngredientQuantities =
+    private Map<String, RecipeIngredientPersistenceModel> recipeIngredientQuantities =
             new LinkedHashMap<>();
-    private Map<String, IngredientEntity> ingredients = new LinkedHashMap<>();
+    private Map<String, IngredientPersistenceModel> ingredients = new LinkedHashMap<>();
     private List<RecipeIngredientListItemModel> listItemModels = new ArrayList<>();
     private int portions;
 
@@ -54,21 +58,22 @@ public class RecipeIngredientList extends UseCase {
     }
 
     private void getPortionsForRecipe() {
-        repoPortions.getAllByDomainId(
+        repoPortions.getActiveByDomainId(
                 recipeId,
-                new PrimitiveDataSource.GetPrimitiveCallback<RecipePortionsEntity>() {
+                new DomainDataAccess.GetDomainModelCallback<RecipePortionsPersistenceModel>() {
                     @Override
-                    public void onEntityLoaded(RecipePortionsEntity entity) {
+                    public void onModelLoaded(RecipePortionsPersistenceModel model) {
                         RecipeIngredientList.this.portions =
-                                entity.getServings() * entity.getSittings();
+                                model.getServings() * model.getSittings();
                         getRecipeIngredientQuantities();
                     }
 
                     @Override
-                    public void onDataUnavailable() {
+                    public void onModelUnavailable() {
 
                     }
-                });
+                }
+        );
     }
 
     private void getRecipeIngredientQuantities() {
@@ -76,20 +81,21 @@ public class RecipeIngredientList extends UseCase {
 
         repoRecipeIngredient.getAllByRecipeId(
                 recipeId,
-                new PrimitiveDataSource.GetAllPrimitiveCallback<RecipeIngredientEntity>() {
+                new DomainDataAccess.GetAllDomainModelsCallback<RecipeIngredientPersistenceModel>() {
                     @Override
-                    public void onAllLoaded(List<RecipeIngredientEntity> entities) {
-                        for (RecipeIngredientEntity entity : entities) {
-                            recipeIngredientQuantities.put(entity.getIngredientDomainId(), entity);
+                    public void onAllLoaded(List<RecipeIngredientPersistenceModel> models) {
+                        for (RecipeIngredientPersistenceModel m : models) {
+                            recipeIngredientQuantities.put(m.getIngredientDomainId(), m);
                         }
                         getRecipeIngredients();
                     }
 
                     @Override
-                    public void onDataUnavailable() {
+                    public void onModelsUnavailable() {
 
                     }
-                });
+                }
+        );
     }
 
     private void getRecipeIngredients() {
@@ -100,18 +106,21 @@ public class RecipeIngredientList extends UseCase {
     }
 
     private void getIngredient(String ingredientId) {
-        repoIngredient.getByDataId(ingredientId, new PrimitiveDataSource.GetPrimitiveCallback<IngredientEntity>() {
-            @Override
-            public void onEntityLoaded(IngredientEntity entity) {
-                ingredients.put(entity.getDataId(), entity);
-                createResponseModels();
-            }
+        repoIngredient.getByDataId(
+                ingredientId,
+                new DomainDataAccess.GetDomainModelCallback<IngredientPersistenceModel>() {
+                    @Override
+                    public void onModelLoaded(IngredientPersistenceModel model) {
+                        ingredients.put(model.getDataId(), model);
+                        createResponseModels();
+                    }
 
-            @Override
-            public void onDataUnavailable() {
+                    @Override
+                    public void onModelUnavailable() {
 
-            }
-        });
+                    }
+                }
+        );
     }
 
     private void createResponseModels() {
@@ -119,10 +128,10 @@ public class RecipeIngredientList extends UseCase {
             listItemModels.clear();
             for (String ingredientId : recipeIngredientQuantities.keySet()) {
 
-                RecipeIngredientEntity recipeIngredient = recipeIngredientQuantities.
+                RecipeIngredientPersistenceModel recipeIngredient = recipeIngredientQuantities.
                         get(ingredientId);
 
-                IngredientEntity ingredient = ingredients.get(ingredientId);
+                IngredientPersistenceModel ingredient = ingredients.get(ingredientId);
 
                 RecipeIngredientListItemModel listItemModel = new RecipeIngredientListItemModel(
                         recipeIngredient.getDataId(),
@@ -143,17 +152,19 @@ public class RecipeIngredientList extends UseCase {
         return recipeIngredientQuantities.keySet().equals(ingredients.keySet());
     }
 
-    private MeasurementModel getMeasurementModel(RecipeIngredientEntity quantityEntity,
-                                                 IngredientEntity ingredient) {
+    private MeasurementModel getMeasurementModel(RecipeIngredientPersistenceModel recipeIngredient,
+                                                 IngredientPersistenceModel ingredient) {
 
-        UnitOfMeasure unitOfMeasure = MeasurementSubtype.fromInt(quantityEntity.
-                getMeasurementSubtype()).getMeasurementClass();
+        UnitOfMeasure unitOfMeasure = recipeIngredient.
+                getMeasurementModel().
+                getSubtype().
+                getMeasurementClass();
         unitOfMeasure.isNumberOfItemsSet(portions);
 
         if (unitOfMeasure.isConversionFactorEnabled()) {
             unitOfMeasure.isConversionFactorSet(ingredient.getConversionFactor());
         }
-        unitOfMeasure.isItemBaseUnitsSet(quantityEntity.getItemBaseUnits());
+        unitOfMeasure.isItemBaseUnitsSet(recipeIngredient.getMeasurementModel().getItemBaseUnits());
 
         return MeasurementModelBuilder.basedOnUnitOfMeasure(unitOfMeasure).build();
     }

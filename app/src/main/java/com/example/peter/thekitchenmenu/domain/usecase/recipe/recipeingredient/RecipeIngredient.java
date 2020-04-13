@@ -2,12 +2,14 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredient;
 
 import android.annotation.SuppressLint;
 
+import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess.GetDomainModelCallback;
 import com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.datasource.IngredientEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.recipeingredient.datasource.RecipeIngredientEntity;
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.ingredient.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeIngredient;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipePortions;
+import com.example.peter.thekitchenmenu.data.repository.source.remote.recipe.RepositoryRecipePortionsRemote;
 import com.example.peter.thekitchenmenu.domain.model.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModelBuilder;
@@ -63,8 +65,8 @@ public class RecipeIngredient extends UseCase {
         }
 
         static {
-            for (FailReason s : FailReason.values())
-                options.put(s.id, s);
+            for (FailReason failReason : FailReason.values())
+                options.put(failReason.id, failReason);
         }
 
         public static FailReason getById(int id) {
@@ -82,7 +84,7 @@ public class RecipeIngredient extends UseCase {
     @Nonnull
     private final RepositoryRecipeIngredient recipeIngredientRepository;
 
-    private  RepositoryRecipePortions portionsRepository; // TODO - Or use a recipe instance
+    private RepositoryRecipePortions portionsRepository; // TODO - Or use a recipe instance
     @Nonnull
     private final RepositoryIngredient ingredientRepository; // TODO - for all three??
     @Nonnull
@@ -113,12 +115,12 @@ public class RecipeIngredient extends UseCase {
     private RecipeIngredientPersistenceModel persistenceModel;
     private IngredientEntity ingredientEntity;
 
-    public RecipeIngredient(@Nonnull Recipe recipe,
+    public RecipeIngredient(@Nonnull RepositoryRecipePortions portionsRepository,
                             @Nonnull RepositoryRecipeIngredient recipeIngredientRepository,
                             @Nonnull RepositoryIngredient ingredientRepository,
                             @Nonnull UniqueIdProvider idProvider,
                             @Nonnull TimeProvider timeProvider) {
-//        this.portionsRepository = portionsRepository;
+        this.portionsRepository = portionsRepository;
         this.recipeIngredientRepository = recipeIngredientRepository;
         this.ingredientRepository = ingredientRepository;
         this.idProvider = idProvider;
@@ -164,7 +166,7 @@ public class RecipeIngredient extends UseCase {
 
     private RecipeIngredientPersistenceModel createNewPersistenceModel() {
         long currentTime = timeProvider.getCurrentTimeInMills();
-        return new RecipeIngredientPersistenceModel();
+        return new RecipeIngredientPersistenceModel.Builder().getDefault().build();
     }
 
     private void start(String recipeIngredientId) {
@@ -210,9 +212,9 @@ public class RecipeIngredient extends UseCase {
     }
 
     private void loadPortions() {
-        portionsRepository.getAllByDomainId(
+        portionsRepository.getActiveByDomainId(
                 recipeId,
-                new DomainDataAccess.GetDomainModelCallback<RecipePortionsPersistenceModel>() {
+                new GetDomainModelCallback<RecipePortionsPersistenceModel>() {
                     @Override
                     public void onModelLoaded(RecipePortionsPersistenceModel model) {
                         numberOfPortions = model.getServings() *
@@ -224,7 +226,8 @@ public class RecipeIngredient extends UseCase {
                     public void onModelUnavailable() {
                         returnDataUnAvailable(Result.PORTIONS_DATA_UNAVAILABLE);
                     }
-                });
+                }
+        );
     }
 
     private void returnDataUnAvailable(Result status) {
@@ -337,18 +340,6 @@ public class RecipeIngredient extends UseCase {
         isTotalUnitTwoSet = unitOfMeasure.isTotalUnitTwoSet(modelIn.getTotalUnitTwo());
     }
 
-    private IngredientEntity getUpdatedIngredientEntity() {
-        return new IngredientEntity(
-                ingredientEntity.getDataId(),
-                ingredientEntity.getName(),
-                ingredientEntity.getDescription(),
-                unitOfMeasure.getConversionFactor(),
-                ingredientEntity.getCreatedBy(),
-                ingredientEntity.getCreateDate(),
-                timeProvider.getCurrentTimeInMills()
-        );
-    }
-
     private void updateExistingModel() {
         existingModel = MeasurementModelBuilder.basedOnUnitOfMeasure(unitOfMeasure).
                 setConversionFactor(getConversionFactorResult()).
@@ -410,7 +401,7 @@ public class RecipeIngredient extends UseCase {
 
     private void saveIfValid() {
         if (quantityEntityHasChanged() && unitOfMeasure.isValidMeasurement()) {
-            save(updatedRecipeIngredientEntity());
+//            save(updatedRecipeIngredientEntity());
         }
     }
 
@@ -432,26 +423,6 @@ public class RecipeIngredient extends UseCase {
 //        } else
 //            return false;
         return false;
-    }
-
-    private RecipeIngredientEntity updatedRecipeIngredientEntity() {
-
-        return new RecipeIngredientEntity(
-                persistenceModel.getDataId(),
-                "persistenceModel.getRecipeId()",
-                "persistenceModel.getIngredientId()",
-                "persistenceModel.getProductId()",
-                unitOfMeasure.getItemBaseUnits(),
-                unitOfMeasure.getMeasurementSubtype().asInt(),
-                "persistenceModel.getCreatedBy()",
-                0L, //persistenceModel.getCreateDate(),
-                timeProvider.getCurrentTimeInMills()
-        );
-    }
-
-    private void save(RecipeIngredientEntity quantityEntity) {
-//        this.persistenceModel = quantityEntity;
-//        recipeIngredientRepository.save(quantityEntity);
     }
 
     // todo - this should only be accessible through interface

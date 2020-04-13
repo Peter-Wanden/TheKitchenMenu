@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.domain.usecase.productcatalog;
+package com.example.peter.thekitchenmenu.domain.usecase.product.productcatalog;
 
 import com.example.peter.thekitchenmenu.data.model.ProductModel;
 

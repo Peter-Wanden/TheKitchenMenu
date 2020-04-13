@@ -31,7 +31,7 @@ import javax.annotation.Nonnull;
 public class RecipeCopy extends UseCase {
 
     public enum FailReason implements FailReasons {
-        SOURCE_DATA_ERROR();
+        SOURCE_DATA_ERROR(999);
 
         private final int id;
 
@@ -93,7 +93,9 @@ public class RecipeCopy extends UseCase {
 
     private void initialiseDestinationRecipe() {
         destinationId = idProvider.getUId();
-        RecipeRequest request = new RecipeRequest(destinationId);
+        RecipeRequest request = new RecipeRequest.Builder().
+                setDataId(destinationId).
+                build();
 
         handler.execute(destinationRecipe, request, new RecipeListener());
     }
@@ -107,7 +109,7 @@ public class RecipeCopy extends UseCase {
     }
 
     private void loadSourceRecipe(String sourceId) {
-        RecipeRequest request = new RecipeRequest(sourceId);
+        RecipeRequest request = new RecipeRequest.Builder().setDomainId(sourceId).build();
         handler.execute(sourceRecipe, request, new SourceCallback());
     }
 
@@ -233,16 +235,16 @@ public class RecipeCopy extends UseCase {
     }
 
     private void buildResponse() {
-        RecipeCopyResponse response = new RecipeCopyResponse(destinationRecipe);
-
-        if (destinationData.
-                getModel().
-                getRecipeStateResponse().
-                getFailReasons().
-                contains(CommonFailReason.NONE)) {
-            getUseCaseCallback().onSuccess(response);
-        } else {
-            getUseCaseCallback().onError(response);
-        }
+//        RecipeCopyResponse response = new RecipeCopyResponse(destinationRecipe);
+//
+//        if (destinationData.
+//                getModel().
+//                getRecipeStateResponse().
+//                getFailReasons().
+//                contains(CommonFailReason.NONE)) {
+//            getUseCaseCallback().onSuccess(response);
+//        } else {
+//            getUseCaseCallback().onError(response);
+//        }
     }
 }
