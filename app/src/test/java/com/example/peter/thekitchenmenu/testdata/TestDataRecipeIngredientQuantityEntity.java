@@ -13,7 +13,7 @@ public class TestDataRecipeIngredientQuantityEntity {
     public static RecipeIngredientEntity getNewInvalid() {
         return new RecipeIngredientEntity(
                 "newId",
-                TestDataRecipeMetadataEntity.getNewInvalid().getDataId(),
+                TestDataRecipeMetadataEntity.getNewInvalidParent().getDataId(),
                 TestDataIngredientEntity.getNew().getDataId(),
                 TestDataProductEntity.getNewInvalid().getDataId(),
                 0,

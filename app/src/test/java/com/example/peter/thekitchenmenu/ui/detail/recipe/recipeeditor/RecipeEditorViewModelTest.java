@@ -61,7 +61,7 @@ public class RecipeEditorViewModelTest {
             getSimpleName() + ": ";
 
     // region constants ----------------------------------------------------------------------------
-    private static final RecipeMetadataParentEntity NEW_EMPTY_RECIPE_ENTITY = getNewInvalid();
+    private static final RecipeMetadataParentEntity NEW_EMPTY_RECIPE_ENTITY = getNewInvalidParent();
     private static final RecipeMetadataParentEntity INVALID_DRAFT_RECIPE_ENTITY = getInvalidExisting();
     private static final String INVALID_DRAFT_RECIPE_ID = INVALID_DRAFT_RECIPE_ENTITY.getDataId();
 
@@ -483,7 +483,7 @@ public class RecipeEditorViewModelTest {
 //        SUT.start();
         // Assert
         verify(repoRecipeMock).save(ac.capture());
-        assertEquals(ac.getValue().getDataId(), ac.getValue().getRecipeParentId());
+        assertEquals(ac.getValue().getDataId(), ac.getValue().getRecipeParentDomainId());
     }
 
     @Test
@@ -510,7 +510,7 @@ public class RecipeEditorViewModelTest {
         verify(repoRecipeMock).save(ac.capture());
         RecipeMetadataParentEntity recipeMetadataEntity = ac.getValue();
         assertEquals(recipeId, recipeMetadataEntity.getDataId());
-        assertEquals(VALID_RECIPE_ID_FROM_ANOTHER_USER, recipeMetadataEntity.getRecipeParentId());
+        assertEquals(VALID_RECIPE_ID_FROM_ANOTHER_USER, recipeMetadataEntity.getRecipeParentDomainId());
     }
 
     @Test

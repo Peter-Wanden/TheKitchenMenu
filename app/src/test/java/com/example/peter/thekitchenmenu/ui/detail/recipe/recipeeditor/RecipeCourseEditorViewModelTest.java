@@ -58,10 +58,10 @@ public class RecipeCourseEditorViewModelTest {
     // region constants ----------------------------------------------------------------------------
     private RecipeMetadataParentEntity VALID_EXISTING_RECIPE_ENTITY = getValidExisting();
     private String EXISTING_RECIPE_ID = VALID_EXISTING_RECIPE_ENTITY.getDataId();
-    private String NEW_RECIPE_ID = TestDataRecipeMetadataEntity.getNewInvalid().getDataId();
+    private String NEW_RECIPE_ID = TestDataRecipeMetadataEntity.getNewInvalidParent().getDataId();
 
     private static final RecipeMetadataParentEntity RECIPE_INVALID_NEW =
-            TestDataRecipeMetadataEntity.getNewInvalid();
+            TestDataRecipeMetadataEntity.getNewInvalidParent();
     private static final RecipeMetadataParentEntity RECIPE_VALID_EXISTING =
             TestDataRecipeMetadataEntity.getValidExisting();
     private static final RecipeIdentityEntity IDENTITY_VALID_EXISTING_COMPLETE =

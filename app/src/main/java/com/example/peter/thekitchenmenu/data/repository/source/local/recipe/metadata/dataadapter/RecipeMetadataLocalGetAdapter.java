@@ -1,12 +1,16 @@
 package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.dataadapter;
 
+import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
+import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess.GetDomainModelCallback;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.componentstate.RecipeComponentStateLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.failreason.RecipeFailReasonsLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.parent.RecipeMetadataParentLocalDataSource;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadataPersistenceModel;
 
 import javax.annotation.Nonnull;
 
 public class RecipeMetadataLocalGetAdapter {
+
 
     @Nonnull
     private final RecipeMetadataParentLocalDataSource parentDataSource;
@@ -24,5 +28,9 @@ public class RecipeMetadataLocalGetAdapter {
         this.recipeFailReasonsDataSource = recipeFailReasonsDataSource;
     }
 
+    public void getByDataId(
+            @Nonnull String dataId,
+            @Nonnull GetDomainModelCallback<RecipeMetadataPersistenceModel> callback) {
 
+    }
 }

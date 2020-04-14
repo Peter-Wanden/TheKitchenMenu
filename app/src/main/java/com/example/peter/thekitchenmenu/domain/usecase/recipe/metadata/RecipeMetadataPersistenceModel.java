@@ -10,6 +10,7 @@ import com.example.peter.thekitchenmenu.domain.usecase.BasePersistence;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.*;
 
@@ -19,7 +20,7 @@ import static com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.Re
  */
 public final class RecipeMetadataPersistenceModel extends BasePersistence {
 
-    private String recipeParentId;
+    private String parentDomainId;
     private RecipeState recipeState;
     private HashMap<ComponentName, ComponentState> componentStates;
     private List<FailReasons> failReasons;
@@ -29,8 +30,30 @@ public final class RecipeMetadataPersistenceModel extends BasePersistence {
 
     private RecipeMetadataPersistenceModel(){}
 
-    public String getRecipeParentId() {
-        return recipeParentId;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RecipeMetadataPersistenceModel that = (RecipeMetadataPersistenceModel) o;
+        return dataId.equals(that.dataId) &&
+                domainId.equals(that.domainId) &&
+                createDate == that.createDate &&
+                lastUpdate == that.lastUpdate &&
+                Objects.equals(parentDomainId, that.parentDomainId) &&
+                recipeState == that.recipeState &&
+                Objects.equals(componentStates, that.componentStates) &&
+                Objects.equals(failReasons, that.failReasons) &&
+                Objects.equals(createdBy, that.createdBy);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(dataId, domainId, parentDomainId, recipeState, componentStates,
+                failReasons, createdBy, createDate, lastUpdate);
+    }
+
+    public String getParentDomainId() {
+        return parentDomainId;
     }
 
     public RecipeState getRecipeState() {
@@ -70,7 +93,7 @@ public final class RecipeMetadataPersistenceModel extends BasePersistence {
         public Builder getDefault() {
             model.dataId = "";
             model.domainId = "";
-            model.recipeParentId = "";
+            model.parentDomainId = "";
             model.recipeState = RecipeState.DATA_UNAVAILABLE;
             model.componentStates = new HashMap<>();
             model.failReasons = new ArrayList<>();
@@ -90,8 +113,8 @@ public final class RecipeMetadataPersistenceModel extends BasePersistence {
             return self();
         }
 
-        public Builder setRecipeParentId(String recipeParentId) {
-            model.recipeParentId = recipeParentId;
+        public Builder setParentDomainId(String parentDomainId) {
+            model.parentDomainId = parentDomainId;
             return self();
         }
 

@@ -47,9 +47,7 @@ public class RecipeCourse
         }
 
         static {
-            for (Course course : Course.values()) {
-                courseMap.put(course.courseNo, course);
-            }
+            for (Course course : Course.values()) courseMap.put(course.courseNo, course);
         }
 
         public static Course fromInt(int courseNo) {

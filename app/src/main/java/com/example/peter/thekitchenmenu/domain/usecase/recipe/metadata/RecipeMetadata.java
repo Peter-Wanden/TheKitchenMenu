@@ -278,13 +278,13 @@ public class RecipeMetadata
                 ComponentState componentState = componentStates.get(componentName);
 
                 if (ComponentState.INVALID_UNCHANGED == componentState &&
-                        recipeState.getId() > RecipeState.INVALID_UNCHANGED.id) {
+                        recipeState.getId() > RecipeState.INVALID_UNCHANGED.getId()) {
 
                     recipeState = RecipeState.INVALID_UNCHANGED;
                     addFailReasonInvalidComponents();
 
                 } else if (componentState == ComponentState.INVALID_CHANGED &&
-                        recipeState.getId() > RecipeState.INVALID_CHANGED.id) {
+                        recipeState.getId() > RecipeState.INVALID_CHANGED.getId()) {
 
                     recipeState = RecipeState.INVALID_CHANGED;
                     addFailReasonInvalidComponents();
@@ -358,7 +358,7 @@ public class RecipeMetadata
 
     private RecipeMetadataResponse.Model getModel() {
         return new RecipeMetadataResponse.Model.Builder().
-                setParentId(persistenceModel.getRecipeParentId()).
+                setParentId(persistenceModel.getParentDomainId()).
                 setRecipeState(RecipeState.getById(recipeState.getId())).
                 setFailReasons(new ArrayList<>(failReasons)).
                 setComponentStates(new LinkedHashMap<>(componentStates)).

@@ -77,7 +77,7 @@ public class RecipeMetadataLocalGetByDataIdAdapter {
         modelBuilder.
                 setDataId(e.getDataId()).
                 setDomainId(e.getDomainId()).
-                setRecipeParentId(e.getRecipeParentId()).
+                setParentDomainId(e.getRecipeParentDomainId()).
                 setRecipeState(RecipeState.getById(e.getRecipeStateId())).
                 setCreatedBy(e.getCreatedBy()).
                 setCreateDate(e.getCreateDate()).

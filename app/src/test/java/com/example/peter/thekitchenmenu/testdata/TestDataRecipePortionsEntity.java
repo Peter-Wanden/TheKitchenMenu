@@ -21,77 +21,77 @@ public class TestDataRecipePortionsEntity {
     public static RecipePortionsEntity getNewValidEmpty() {
         return new RecipePortionsEntity(
                 "portionId",
-                TestDataRecipeMetadataEntity.getNewInvalid().getDataId(),
+                TestDataRecipeMetadataEntity.getNewInvalidParent().getDataId(),
                 getMinServings(),
                 getMinSittings(),
-                TestDataRecipeMetadataEntity.getNewInvalid().getCreateDate(),
-                TestDataRecipeMetadataEntity.getNewInvalid().getLastUpdate()
+                TestDataRecipeMetadataEntity.getNewInvalidParent().getCreateDate(),
+                TestDataRecipeMetadataEntity.getNewInvalidParent().getLastUpdate()
         );
     }
 
     public static RecipePortionsEntity getNewValidFourPortions() {
         return new RecipePortionsEntity(
                 getNewValidEmpty().getDataId(),
-                TestDataRecipeMetadataEntity.getNewInvalid().getDataId(),
+                TestDataRecipeMetadataEntity.getNewInvalidParent().getDataId(),
                 2,
                 2,
-                TestDataRecipeMetadataEntity.getNewInvalid().getCreateDate(),
-                TestDataRecipeMetadataEntity.getNewInvalid().getLastUpdate()
+                TestDataRecipeMetadataEntity.getNewInvalidParent().getCreateDate(),
+                TestDataRecipeMetadataEntity.getNewInvalidParent().getLastUpdate()
         );
     }
 
     public static RecipePortionsEntity getNewValidSixteenPortions() {
         return new RecipePortionsEntity(
                 getNewValidEmpty().getDataId(),
-                TestDataRecipeMetadataEntity.getNewInvalid().getDataId(),
+                TestDataRecipeMetadataEntity.getNewInvalidParent().getDataId(),
                 4,
                 4,
-                TestDataRecipeMetadataEntity.getNewInvalid().getCreateDate(),
-                TestDataRecipeMetadataEntity.getNewInvalid().getLastUpdate()
+                TestDataRecipeMetadataEntity.getNewInvalidParent().getCreateDate(),
+                TestDataRecipeMetadataEntity.getNewInvalidParent().getLastUpdate()
         );
     }
 
     public static RecipePortionsEntity getNewInvalidTooHighServingsInvalidTooHighSittings() {
         return new RecipePortionsEntity(
                 getNewValidEmpty().getDataId(),
-                TestDataRecipeMetadataEntity.getNewInvalid().getDataId(),
+                TestDataRecipeMetadataEntity.getNewInvalidParent().getDataId(),
                 getMaxServings() + 1,
                 getMaxSittings() + 1,
-                TestDataRecipeMetadataEntity.getNewInvalid().getCreateDate(),
-                TestDataRecipeMetadataEntity.getNewInvalid().getLastUpdate()
+                TestDataRecipeMetadataEntity.getNewInvalidParent().getCreateDate(),
+                TestDataRecipeMetadataEntity.getNewInvalidParent().getLastUpdate()
         );
     }
 
     public static RecipePortionsEntity getNewInvalidTooHighServingsValidSittings() {
         return new RecipePortionsEntity(
                 getNewValidEmpty().getDataId(),
-                TestDataRecipeMetadataEntity.getNewInvalid().getDataId(),
+                TestDataRecipeMetadataEntity.getNewInvalidParent().getDataId(),
                 getMaxServings() + 1,
                 getMinSittings(),
-                TestDataRecipeMetadataEntity.getNewInvalid().getCreateDate(),
-                TestDataRecipeMetadataEntity.getNewInvalid().getLastUpdate()
+                TestDataRecipeMetadataEntity.getNewInvalidParent().getCreateDate(),
+                TestDataRecipeMetadataEntity.getNewInvalidParent().getLastUpdate()
         );
     }
 
     public static RecipePortionsEntity getNewValidServingsInvalidTooHighSittings() {
         return new RecipePortionsEntity(
                 getNewValidEmpty().getDataId(),
-                TestDataRecipeMetadataEntity.getNewInvalid().getDataId(),
+                TestDataRecipeMetadataEntity.getNewInvalidParent().getDataId(),
                 getMinServings(),
                 getMaxSittings() + 1,
-                TestDataRecipeMetadataEntity.getNewInvalid().getCreateDate(),
-                TestDataRecipeMetadataEntity.getNewInvalid().getLastUpdate()
+                TestDataRecipeMetadataEntity.getNewInvalidParent().getCreateDate(),
+                TestDataRecipeMetadataEntity.getNewInvalidParent().getLastUpdate()
         );
     }
 
     public static RecipePortionsEntity getNewValidServingsValidSittings() {
         return new RecipePortionsEntity(
                 getNewValidEmpty().getDataId(),
-                TestDataRecipeMetadataEntity.getNewInvalid().getDataId(),
+                TestDataRecipeMetadataEntity.getNewInvalidParent().getDataId(),
                 getMaxServings(),
                 getMaxSittings(),
-                TestDataRecipeMetadataEntity.getNewInvalid().getCreateDate(),
-                TestDataRecipeMetadataEntity.getNewInvalid().getLastUpdate()
+                TestDataRecipeMetadataEntity.getNewInvalidParent().getCreateDate(),
+                TestDataRecipeMetadataEntity.getNewInvalidParent().getLastUpdate()
         );
     }
 

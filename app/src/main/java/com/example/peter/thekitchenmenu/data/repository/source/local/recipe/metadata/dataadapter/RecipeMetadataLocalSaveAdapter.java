@@ -48,7 +48,7 @@ public class RecipeMetadataLocalSaveAdapter {
         RecipeMetadataParentEntity e = new RecipeMetadataParentEntity.Builder().
                 setDataId(model.getDataId()).
                 setDomainId(model.getDomainId()).
-                setRecipeParentId(model.getRecipeParentId()).
+                setRecipeParentDomainId(model.getParentDomainId()).
                 setRecipeStateId(model.getRecipeState().getId()).
                 setCreatedBy(model.getCreatedBy()).
                 setCreateDate(model.getCreateDate()).

@@ -22,6 +22,7 @@ import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.c
 import static com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.TestDataRecipeCourseEntity.getAllByRecipeId;
 import static com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.TestDataRecipeMetadataEntity.getValidExisting;
 
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.*;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
@@ -82,7 +83,7 @@ public class RecipeCourseTest {
         handler.execute(SUT, request, getCallback());
         // Assert
         verifyRepoCalledAndReturnMatchingCourses(request.getDataId());
-        assertEquals(com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentState.INVALID_UNCHANGED, onErrorResponse.getMetadata().getState());
+        assertEquals(ComponentState.INVALID_UNCHANGED, onErrorResponse.getMetadata().getState());
         assertTrue(onErrorResponse.getMetadata().getFailReasons().
                 contains(CommonFailReason.DATA_UNAVAILABLE));
         assertEquals(0, onErrorResponse.getModel().getCourseList().size());
@@ -108,7 +109,7 @@ public class RecipeCourseTest {
         handler.execute(SUT, initialiseComponentRequest, getCallback());
         // Assert
         verifyRepoCalledAndReturnMatchingCourses(initialiseComponentRequest.getDataId());
-        assertEquals(com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentState.INVALID_UNCHANGED, onErrorResponse.getMetadata().getState());
+        assertEquals(ComponentState.INVALID_UNCHANGED, onErrorResponse.getMetadata().getState());
         assertEquals(0, onErrorResponse.getModel().getCourseList().size());
         // Arrange
         List<Course> addCourseOne = new ArrayList<>();
@@ -124,10 +125,10 @@ public class RecipeCourseTest {
         handler.execute(SUT, request, getCallback());
         // Assert
         verify(repoCourseMock).save(persistentModelCapture.capture());
-        assertEquals(Course.COURSE_ONE.getCourseNo(), persistentModelCapture.getValue().getCourseNo());
+        assertEquals(Course.COURSE_ONE, persistentModelCapture.getValue().getCourse());
         assertEquals(time, persistentModelCapture.getValue().getCreateDate());
         assertEquals(id, persistentModelCapture.getValue().getDataId());
-        assertEquals(com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentState.VALID_CHANGED, onSuccessResponse.getMetadata().getState());
+        assertEquals(ComponentState.VALID_CHANGED, onSuccessResponse.getMetadata().getState());
     }
 
     @Test
@@ -170,7 +171,7 @@ public class RecipeCourseTest {
 
         assertEquals(expectedNumberOfModels, actualNumberOfModels);
         // No data has been modified, just data returned
-        assertEquals(com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentState.VALID_UNCHANGED, onSuccessResponse.getMetadata().getState());
+        assertEquals(ComponentState.VALID_UNCHANGED, onSuccessResponse.getMetadata().getState());
     }
 
     // TODO - text for create date and last update in metadata
@@ -194,7 +195,7 @@ public class RecipeCourseTest {
         // Act
         handler.execute(SUT, removeAllCoursesRequest, getCallback());
         // Assert
-        assertEquals(com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentState.INVALID_CHANGED, onErrorResponse.
+        assertEquals(ComponentState.INVALID_CHANGED, onErrorResponse.
                 getMetadata().
                 getState());
         assertTrue(onErrorResponse.

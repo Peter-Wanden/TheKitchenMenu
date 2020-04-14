@@ -79,7 +79,7 @@ public class RecipeTest {
 
     // region constants ----------------------------------------------------------------------------
     private static final RecipeMetadataParentEntity INVALID_NEW_RECIPE =
-            TestDataRecipeMetadataEntity.getNewInvalid();
+            TestDataRecipeMetadataEntity.getNewInvalidParent();
 
     private static final RecipeIdentityEntity IDENTITY_INVALID_NEW_EMPTY =
             TestDataRecipeIdentityEntity.getInvalidNewEmpty();

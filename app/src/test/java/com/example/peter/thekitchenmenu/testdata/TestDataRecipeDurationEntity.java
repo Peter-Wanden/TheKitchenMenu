@@ -15,61 +15,61 @@ public class TestDataRecipeDurationEntity {
 
     public static RecipeDurationEntity getValidNewEmpty() {
         return new RecipeDurationEntity(
-                TestDataRecipeMetadataEntity.getNewInvalid().getDataId(),
+                TestDataRecipeMetadataEntity.getNewInvalidParent().getDataId(),
                 0,
                 0,
-                TestDataRecipeMetadataEntity.getNewInvalid().getCreateDate(),
-                TestDataRecipeMetadataEntity.getNewInvalid().getLastUpdate()
+                TestDataRecipeMetadataEntity.getNewInvalidParent().getCreateDate(),
+                TestDataRecipeMetadataEntity.getNewInvalidParent().getLastUpdate()
         );
     }
 
     public static RecipeDurationEntity getInvalidNewPrepTimeInvalid() {
         return new RecipeDurationEntity(
-                TestDataRecipeMetadataEntity.getNewInvalid().getDataId(),
+                TestDataRecipeMetadataEntity.getNewInvalidParent().getDataId(),
                 getMaxPrepTime() + 1,
                 getValidNewEmpty().getCookTime(),
-                TestDataRecipeMetadataEntity.getNewInvalid().getCreateDate(),
-                TestDataRecipeMetadataEntity.getNewInvalid().getLastUpdate()
+                TestDataRecipeMetadataEntity.getNewInvalidParent().getCreateDate(),
+                TestDataRecipeMetadataEntity.getNewInvalidParent().getLastUpdate()
         );
     }
 
     public static RecipeDurationEntity getInvalidNewCookTimeInvalid() {
         return new RecipeDurationEntity(
-                TestDataRecipeMetadataEntity.getNewInvalid().getDataId(),
+                TestDataRecipeMetadataEntity.getNewInvalidParent().getDataId(),
                 getValidNewEmpty().getPrepTime(),
                 getMaxCookTime() + 1,
-                TestDataRecipeMetadataEntity.getNewInvalid().getCreateDate(),
-                TestDataRecipeMetadataEntity.getNewInvalid().getLastUpdate()
+                TestDataRecipeMetadataEntity.getNewInvalidParent().getCreateDate(),
+                TestDataRecipeMetadataEntity.getNewInvalidParent().getLastUpdate()
         );
     }
 
     public static RecipeDurationEntity getValidNewPrepTimeValid() {
         return new RecipeDurationEntity(
-                TestDataRecipeMetadataEntity.getNewInvalid().getDataId(),
+                TestDataRecipeMetadataEntity.getNewInvalidParent().getDataId(),
                 getMaxPrepTime(),
                 getValidNewEmpty().getCookTime(),
-                TestDataRecipeMetadataEntity.getNewInvalid().getCreateDate(),
-                TestDataRecipeMetadataEntity.getNewInvalid().getLastUpdate()
+                TestDataRecipeMetadataEntity.getNewInvalidParent().getCreateDate(),
+                TestDataRecipeMetadataEntity.getNewInvalidParent().getLastUpdate()
         );
     }
 
     public static RecipeDurationEntity getValidNewCookTimeValid() {
         return new RecipeDurationEntity(
-                TestDataRecipeMetadataEntity.getNewInvalid().getDataId(),
+                TestDataRecipeMetadataEntity.getNewInvalidParent().getDataId(),
                 getValidNewEmpty().getPrepTime(),
                 getMaxCookTime(),
-                TestDataRecipeMetadataEntity.getNewInvalid().getCreateDate(),
-                TestDataRecipeMetadataEntity.getNewInvalid().getLastUpdate()
+                TestDataRecipeMetadataEntity.getNewInvalidParent().getCreateDate(),
+                TestDataRecipeMetadataEntity.getNewInvalidParent().getLastUpdate()
         );
     }
 
     public static RecipeDurationEntity getValidNewComplete() {
         return new RecipeDurationEntity(
-                TestDataRecipeMetadataEntity.getNewInvalid().getDataId(),
+                TestDataRecipeMetadataEntity.getNewInvalidParent().getDataId(),
                 getValidNewPrepTimeValid().getPrepTime(),
                 getValidNewPrepTimeValid().getCookTime(),
-                TestDataRecipeMetadataEntity.getNewInvalid().getCreateDate(),
-                TestDataRecipeMetadataEntity.getNewInvalid().getLastUpdate()
+                TestDataRecipeMetadataEntity.getNewInvalidParent().getCreateDate(),
+                TestDataRecipeMetadataEntity.getNewInvalidParent().getLastUpdate()
         );
     }
 
