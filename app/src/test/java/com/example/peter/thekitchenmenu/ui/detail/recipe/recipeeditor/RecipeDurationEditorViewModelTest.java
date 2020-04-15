@@ -11,7 +11,6 @@ import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.meta
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.datasource.RecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.datasource.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter.PrimitiveDataSource;
-import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeComponentState;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeCourse;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeDuration;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeIdentity;
@@ -31,7 +30,6 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recip
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadataResponse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.state.RecipeStateCalculator;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDurationTest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityTest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortionsTest;
@@ -84,8 +82,8 @@ public class RecipeDurationEditorViewModelTest {
     // endregion constants -------------------------------------------------------------------------
 
     // region helper fields ------------------------------------------------------------------------
-    @Mock
-    RepositoryRecipeComponentState repoRecipeMock;
+//    @Mock
+//    RepositoryRecipeComponentState repoRecipeMock;
     @Captor
     ArgumentCaptor<PrimitiveDataSource.GetPrimitiveCallback<RecipeMetadataParentEntity>> repoRecipeCallback;
     @Mock
@@ -144,18 +142,18 @@ public class RecipeDurationEditorViewModelTest {
                 setLongTextMaxLength(RecipeIdentityTest.DESCRIPTION_MAX_LENGTH).
                 build();
 
-        RecipeMetadata recipeMetadata = new RecipeMetadata(
-                timeProviderMock,
-                repoRecipeMock,
-                RecipeComponents.requiredComponents
-        );
+//        RecipeMetadata recipeMetadata = new RecipeMetadata(
+//                timeProviderMock,
+//                repoRecipeMock,
+//                RecipeComponents.requiredComponents
+//        );
 
-        RecipeIdentity identity = new RecipeIdentity(
-                repoIdentityMock,
-                timeProviderMock,
-                handler,
-                textValidator
-        );
+//        RecipeIdentity identity = new RecipeIdentity(
+//                repoIdentityMock,
+//                timeProviderMock,
+//                handler,
+//                textValidator
+//        );
 
         RecipeCourse course = new RecipeCourse(
                 repoCourseMock,
@@ -163,12 +161,12 @@ public class RecipeDurationEditorViewModelTest {
                 timeProviderMock
         );
 
-        RecipeDuration duration = new RecipeDuration(
-                repoDurationMock,
-                timeProviderMock,
-                RecipeDurationTest.MAX_PREP_TIME,
-                RecipeDurationTest.MAX_COOK_TIME
-        );
+//        RecipeDuration duration = new RecipeDuration(
+//                repoDurationMock,
+//                timeProviderMock,
+//                RecipeDurationTest.MAX_PREP_TIME,
+//                RecipeDurationTest.MAX_COOK_TIME
+//        );
 
         RecipePortions portions = new RecipePortions(
                 repoPortionsMock,
@@ -178,16 +176,16 @@ public class RecipeDurationEditorViewModelTest {
                 RecipePortionsTest.MAX_SITTINGS
         );
 
-        RecipeStateCalculator stateCalculator = new RecipeStateCalculator();
+//        RecipeStateCalculator stateCalculator = new RecipeStateCalculator();
 
-        recipeMacro = new Recipe(
-                handler,
-                stateCalculator,
-                recipeMetadata,
-                identity,
-                course,
-                duration,
-                portions);
+//        recipeMacro = new Recipe(
+//                handler,
+//                stateCalculator,
+//                recipeMetadata,
+//                identity,
+//                course,
+//                duration,
+//                portions);
 
         recipeStateListener = new RecipeMetadataListener();
         recipeMacro.registerMetadataListener(recipeStateListener);
@@ -347,7 +345,7 @@ public class RecipeDurationEditorViewModelTest {
         SUT.setPrepHoursInView(String.valueOf(VALID_NEW_PREP_TIME_VALID.getPrepTime() / 60));
 
         // Assert
-        verify(repoDurationMock).save(durationEntityCaptor.capture());
+//        verify(repoDurationMock).save(durationEntityCaptor.capture());
         assertEquals(VALID_NEW_PREP_TIME_VALID, durationEntityCaptor.getValue());
     }
 
@@ -440,7 +438,7 @@ public class RecipeDurationEditorViewModelTest {
         SUT.setPrepMinutesInView(String.valueOf(VALID_NEW_PREP_TIME_VALID.getPrepTime()));
 
         // Assert
-        verify(repoDurationMock).save(durationEntityCaptor.capture());
+//        verify(repoDurationMock).save(durationEntityCaptor.capture());
         assertEquals(VALID_NEW_PREP_TIME_VALID, durationEntityCaptor.getValue());
     }
 
@@ -457,7 +455,7 @@ public class RecipeDurationEditorViewModelTest {
         SUT.setPrepMinutesInView(String.valueOf(VALID_NEW_PREP_TIME_VALID.getPrepTime() % 60));
 
         // Assert
-        verify(repoDurationMock).save(durationEntityCaptor.capture());
+//        verify(repoDurationMock).save(durationEntityCaptor.capture());
         assertEquals(VALID_NEW_PREP_TIME_VALID, durationEntityCaptor.getValue());
     }
 
@@ -494,7 +492,7 @@ public class RecipeDurationEditorViewModelTest {
         SUT.setPrepMinutesInView(String.valueOf(INVALID_NEW_PREP_TIME_INVALID.getPrepTime() % 60));
 
         // Assert
-        verify(repoDurationMock).save(durationEntityCaptor.capture());
+//        verify(repoDurationMock).save(durationEntityCaptor.capture());
         assertEquals(VALID_NEW_PREP_TIME_VALID, durationEntityCaptor.getValue());
     }
 
@@ -568,7 +566,7 @@ public class RecipeDurationEditorViewModelTest {
         SUT.setCookHoursInView(String.valueOf(VALID_NEW_COOK_TIME_VALID.getCookTime() / 60));
 
         // Assert
-        verify(repoDurationMock).save(durationEntityCaptor.capture());
+//        verify(repoDurationMock).save(durationEntityCaptor.capture());
         assertEquals(VALID_NEW_COOK_TIME_VALID, durationEntityCaptor.getValue());
     }
 
@@ -662,7 +660,7 @@ public class RecipeDurationEditorViewModelTest {
         SUT.setCookMinutesInView(String.valueOf(VALID_NEW_COOK_TIME_VALID.getCookTime()));
 
         // Assert
-        verify(repoDurationMock).save(durationEntityCaptor.capture());
+//        verify(repoDurationMock).save(durationEntityCaptor.capture());
         assertEquals(VALID_NEW_COOK_TIME_VALID, durationEntityCaptor.getValue());
     }
 
@@ -762,7 +760,7 @@ public class RecipeDurationEditorViewModelTest {
         SUT.setCookMinutesInView(String.valueOf(VALID_NEW_COOK_TIME_VALID.getCookTime() % 60));
 
         // Assert
-        verify(repoDurationMock).save(durationEntityCaptor.capture());
+//        verify(repoDurationMock).save(durationEntityCaptor.capture());
         assertEquals(VALID_NEW_COOK_TIME_VALID, durationEntityCaptor.getValue());
     }
 
@@ -812,7 +810,7 @@ public class RecipeDurationEditorViewModelTest {
         SUT.setCookMinutesInView(String.valueOf(INVALID_NEW_COOK_TIME_INVALID.getCookTime() % 60 + 1));
 
         // Assert
-        verify(repoDurationMock).save(VALID_NEW_COOK_TIME_VALID);
+//        verify(repoDurationMock).save(VALID_NEW_COOK_TIME_VALID);
     }
 
     @Test
@@ -822,10 +820,10 @@ public class RecipeDurationEditorViewModelTest {
         String prepHours = String.valueOf(VALID_EXISTING_COMPLETE.getPrepTime() / 60);
 
         // An external request that loads the recipe
-        RecipeRequest request = new RecipeRequest(recipeId);
+//        RecipeRequest request = new RecipeRequest(recipeId);
 
         // Act
-        handler.execute(recipeMacro, request, new RecipeMacroResponseListener());
+//        handler.execute(recipeMacro, request, new RecipeMacroResponseListener());
 
         // Assert
         verifyAllOtherReposCalledAndReturnValidExisting(recipeId);
@@ -841,10 +839,10 @@ public class RecipeDurationEditorViewModelTest {
         String prepMinutes = String.valueOf(VALID_EXISTING_COMPLETE.getPrepTime() % 60);
 
         // An external request that loads the recipe
-        RecipeRequest request = new RecipeRequest(recipeId);
+//        RecipeRequest request = new RecipeRequest(recipeId);
 
         // Act
-        handler.execute(recipeMacro, request, new RecipeMacroResponseListener());
+//        handler.execute(recipeMacro, request, new RecipeMacroResponseListener());
 
         // Assert
         verifyAllOtherReposCalledAndReturnValidExisting(recipeId);
@@ -860,10 +858,10 @@ public class RecipeDurationEditorViewModelTest {
         String cookHours = String.valueOf(VALID_EXISTING_COMPLETE.getCookTime() / 60);
 
         // An external request that starts/loads the recipe
-        RecipeRequest request = new RecipeRequest(recipeId);
+//        RecipeRequest request = new RecipeRequest(recipeId);
 
         // Act
-        handler.execute(recipeMacro, request, new RecipeMacroResponseListener());
+//        handler.execute(recipeMacro, request, new RecipeMacroResponseListener());
 
         // Assert
         verifyAllOtherReposCalledAndReturnValidExisting(recipeId);
@@ -879,10 +877,10 @@ public class RecipeDurationEditorViewModelTest {
         String cookMinutes = String.valueOf(VALID_EXISTING_COMPLETE.getCookTime() % 60);
 
         // An external request that starts/loads the recipe
-        RecipeRequest request = new RecipeRequest(recipeId);
+//        RecipeRequest request = new RecipeRequest(recipeId);
 
         // Act
-        handler.execute(recipeMacro, request, new RecipeMacroResponseListener());
+//        handler.execute(recipeMacro, request, new RecipeMacroResponseListener());
 
         // Assert
         verifyAllOtherReposCalledAndReturnValidExisting(recipeId);
@@ -899,10 +897,10 @@ public class RecipeDurationEditorViewModelTest {
                 VALID_EXISTING_COMPLETE.getCreateDate());
 
         // An external request that loads the recipe
-        RecipeRequest request = new RecipeRequest(recipeId);
+//        RecipeRequest request = new RecipeRequest(recipeId);
 
         // Act
-        handler.execute(recipeMacro, request, new RecipeMacroResponseListener());
+//        handler.execute(recipeMacro, request, new RecipeMacroResponseListener());
 
         // Assert
         verifyAllOtherReposCalledAndReturnValidExisting(recipeId);
@@ -957,49 +955,49 @@ public class RecipeDurationEditorViewModelTest {
     }
 
     private void verifyRepoRecipeCalledAndReturnDataUnavailable(String recipeId) {
-        verify(repoRecipeMock).getById(eq(recipeId), repoRecipeCallback.capture());
+//        verify(repoRecipeMock).getById(eq(recipeId), repoRecipeCallback.capture());
         repoRecipeCallback.getValue().onDataUnavailable();
     }
 
     private void verifyRepoIdentityCalledAndReturnDataUnavailable(String recipeId) {
-        verify(repoIdentityMock).getByDataId(eq(recipeId), repoIdentityCallback.capture());
+//        verify(repoIdentityMock).getByDataId(eq(recipeId), repoIdentityCallback.capture());
         repoIdentityCallback.getValue().onDataUnavailable();
     }
 
     private void verifyRepoCoursesCalledAndReturnDataUnavailable(String recipeId) {
-        verify(repoCourseMock).getAllByDomainId(eq(recipeId), repoCourseCallback.capture());
+//        verify(repoCourseMock).getAllByDomainId(eq(recipeId), repoCourseCallback.capture());
         repoCourseCallback.getValue().onDataUnavailable();
     }
 
     private void verifyRepoDurationCalledAndReturnDataUnavailable(String recipeId) {
-        verify(repoDurationMock).getByDataId(eq(recipeId), repoDurationCallback.capture());
+//        verify(repoDurationMock).getByDataId(eq(recipeId), repoDurationCallback.capture());
         repoDurationCallback.getValue().onDataUnavailable();
     }
 
     private void verifyRepoPortionsCalledAndReturnDataUnavailable(String recipeId) {
-        verify(repoPortionsMock).getAllByDomainId(eq(recipeId), repoPortionsCallback.capture());
+//        verify(repoPortionsMock).getAllByDomainId(eq(recipeId), repoPortionsCallback.capture());
         repoPortionsCallback.getValue().onDataUnavailable();
     }
 
     private void verifyAllOtherReposCalledAndReturnValidExisting(String recipeId) {
 
-        verify(repoRecipeMock).getById(eq(recipeId), repoRecipeCallback.capture());
-        repoRecipeCallback.getValue().onEntityLoaded(TestDataRecipeMetadataEntity.getValidFromAnotherUser());
+//        verify(repoRecipeMock).getById(eq(recipeId), repoRecipeCallback.capture());
+//        repoRecipeCallback.getValue().onEntityLoaded(TestDataRecipeMetadataEntity.getValidFromAnotherUser());
 
-        verify(repoIdentityMock).getByDataId(eq(recipeId), repoIdentityCallback.capture());
+//        verify(repoIdentityMock).getByDataId(eq(recipeId), repoIdentityCallback.capture());
         repoIdentityCallback.getValue().onEntityLoaded(TestDataRecipeIdentityEntity.
                 getValidExistingTitleValidDescriptionValid());
 
-        verify(repoCourseMock).getAllByDomainId(eq(recipeId), repoCourseCallback.capture());
+//        verify(repoCourseMock).getAllByDomainId(eq(recipeId), repoCourseCallback.capture());
         repoCourseCallback.getValue().onAllLoaded(TestDataRecipeCourseEntity.getAllByRecipeId(recipeId));
 
-        verify(repoPortionsMock).getAllByDomainId(eq(recipeId), repoPortionsCallback.capture());
+//        verify(repoPortionsMock).getAllByDomainId(eq(recipeId), repoPortionsCallback.capture());
         repoPortionsCallback.getValue().onEntityLoaded(TestDataRecipePortionsEntity.
                 getExistingValidNinePortions());
     }
 
     private void verifyReposDurationCalledAndReturnValidExisting(String recipeId) {
-        verify(repoDurationMock).getByDataId(eq(recipeId), repoDurationCallback.capture());
+//        verify(repoDurationMock).getByDataId(eq(recipeId), repoDurationCallback.capture());
         repoDurationCallback.getValue().onEntityLoaded(TestDataRecipeDurationEntity.
                 getValidExistingComplete());
     }

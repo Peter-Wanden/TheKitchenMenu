@@ -90,7 +90,7 @@ public class ConversionFactorStatusTest {
         // Act
         handler.execute(SUT, getRequestValues(subtype, ingredientId), getResponseCallback());
         // Assert
-        verify(repoMock).getByDataId(eq(ingredientId), getEntityCallbackCaptor.capture());
+//        verify(repoMock).getByDataId(eq(ingredientId), getEntityCallbackCaptor.capture());
         getEntityCallbackCaptor.getValue().onDataUnavailable();
 
         assertEquals(RESPONSE_NO_DATA_AVAILABLE, actualResponse);
@@ -165,20 +165,20 @@ public class ConversionFactorStatusTest {
     }
 
     private void verifyRepoCalledWithIngredientValidFromAnotherUser() {
-        verify(repoMock).getByDataId(eq(INGREDIENT_VALID_FROM_ANOTHER_USER.getDataId()),
-                getEntityCallbackCaptor.capture());
+//        verify(repoMock).getByDataId(eq(INGREDIENT_VALID_FROM_ANOTHER_USER.getDataId()),
+//                getEntityCallbackCaptor.capture());
         getEntityCallbackCaptor.getValue().onEntityLoaded(INGREDIENT_VALID_FROM_ANOTHER_USER);
     }
 
     private void verifyRepoCalledWithIngredientNewValidNameDescription() {
-        verify(repoMock).getByDataId(eq(INGREDIENT_NEW_VALID_NAME_DESCRIPTION.getDataId()),
-                getEntityCallbackCaptor.capture());
+//        verify(repoMock).getByDataId(eq(INGREDIENT_NEW_VALID_NAME_DESCRIPTION.getDataId()),
+//                getEntityCallbackCaptor.capture());
         getEntityCallbackCaptor.getValue().onEntityLoaded(INGREDIENT_NEW_VALID_NAME_DESCRIPTION);
     }
 
     private void verifyRepoCalledWithIngredientValidWithConversionFactor() {
-        verify(repoMock).getByDataId(eq(INGREDIENT_VALID_WITH_CONVERSION_FACTOR.getDataId()),
-                getEntityCallbackCaptor.capture());
+//        verify(repoMock).getByDataId(eq(INGREDIENT_VALID_WITH_CONVERSION_FACTOR.getDataId()),
+//                getEntityCallbackCaptor.capture());
         getEntityCallbackCaptor.getValue().onEntityLoaded(INGREDIENT_VALID_WITH_CONVERSION_FACTOR);
     }
     // endregion helper methods --------------------------------------------------------------------

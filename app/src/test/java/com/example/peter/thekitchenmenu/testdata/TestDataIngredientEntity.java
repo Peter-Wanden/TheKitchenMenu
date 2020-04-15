@@ -10,184 +10,199 @@ import java.util.List;
 public class TestDataIngredientEntity {
 
     public static IngredientEntity getNew() {
-        return new IngredientEntity(
-                "1",
-                "",
-                "",
-                1,
-                Constants.getUserId(),
-                10L,
-                10L);
+        return null;
+//        new IngredientEntity(
+//                "1",
+//                "",
+//                "",
+//                1,
+//                Constants.getUserId(),
+//                10L,
+//                10L);
     }
 
     public static IngredientEntity getNewInvalidName() {
-        return new IngredientEntity(
-                "2",
-                "na",
-                getNew().getDescription(),
-                1,
-                getNew().getCreatedBy(),
-                getNew().getCreateDate(),
-                20L
-        );
+        return null;
+//        new IngredientEntity(
+//                "2",
+//                "na",
+//                getNew().getDescription(),
+//                1,
+//                getNew().getCreatedBy(),
+//                getNew().getCreateDate(),
+//                20L
+//        );
     }
 
     public static IngredientEntity getNewValidName() {
-        return new IngredientEntity(
-                getNew().getDataId(),
-                "name",
-                getNew().getDescription(),
-                1,
-                getNew().getCreatedBy(),
-                getNew().getCreateDate(),
-                30L
-        );
+        return null;
+//        new IngredientEntity(
+//                getNew().getDataId(),
+//                "name",
+//                getNew().getDescription(),
+//                1,
+//                getNew().getCreatedBy(),
+//                getNew().getCreateDate(),
+//                30L
+//        );
     }
 
     public static IngredientEntity getNewValidNameMaxConversionFactor() {
-        return new IngredientEntity(
-                getNew().getDataId(),
-                getNewValidName().getName(),
-                getNew().getDescription(),
-                UnitOfMeasureConstants.MAX_CONVERSION_FACTOR,
-                getNew().getCreatedBy(),
-                getNew().getCreateDate(),
-                getNew().getLastUpdate()
-        );
+        return null;
+//        new IngredientEntity(
+//                getNew().getDataId(),
+//                getNewValidName().getName(),
+//                getNew().getDescription(),
+//                UnitOfMeasureConstants.MAX_CONVERSION_FACTOR,
+//                getNew().getCreatedBy(),
+//                getNew().getCreateDate(),
+//                getNew().getLastUpdate()
+//        );
     }
 
     public static IngredientEntity getNewValidNameInvalidDescription() {
-        return new IngredientEntity(
-                "5",
-                getNewValidName().getName(),
-                "de",
-                1,
-                getNew().getCreatedBy(),
-                getNew().getCreateDate(),
-                40L
-        );
+        return null;
+//        new IngredientEntity(
+//                "5",
+//                getNewValidName().getName(),
+//                "de",
+//                1,
+//                getNew().getCreatedBy(),
+//                getNew().getCreateDate(),
+//                40L
+//        );
     }
 
     public static IngredientEntity getNewInvalidNameValidDescription() {
-        return new IngredientEntity(
-                getNew().getDataId(),
-                getNewInvalidName().getName(),
-                "description",
-                1,
-                getNew().getCreatedBy(),
-                getNew().getCreateDate(),
-                50L
-        );
+        return null;
+//        new IngredientEntity(
+//                getNew().getDataId(),
+//                getNewInvalidName().getName(),
+//                "description",
+//                1,
+//                getNew().getCreatedBy(),
+//                getNew().getCreateDate(),
+//                50L
+//        );
     }
 
     public static IngredientEntity getNewValidNameValidDescription() {
-        return new IngredientEntity(
-                getNew().getDataId(),
-                getNewValidName().getName(),
-                getNewInvalidNameValidDescription().getDescription(),
-                1,
-                getNew().getCreatedBy(),
-                getNew().getCreateDate(),
-                60L
-        );
+        return null;
+//        new IngredientEntity(
+//                getNew().getDataId(),
+//                getNewValidName().getName(),
+//                getNewInvalidNameValidDescription().getDescription(),
+//                1,
+//                getNew().getCreatedBy(),
+//                getNew().getCreateDate(),
+//                60L
+//        );
     }
 
     public static IngredientEntity getNewValidNameValidDescriptionConversionFactorUpdated() {
-        return new IngredientEntity(
-                getNewValidName().getDataId(),
-                getNewValidName().getName(),
-                getNewInvalidNameValidDescription().getDescription(),
-                0.5,
-                getNew().getCreatedBy(),
-                getNew().getCreateDate(),
-                70L
-        );
+        return null;
+//        new IngredientEntity(
+//                getNewValidName().getDataId(),
+//                getNewValidName().getName(),
+//                getNewInvalidNameValidDescription().getDescription(),
+//                0.5,
+//                getNew().getCreatedBy(),
+//                getNew().getCreateDate(),
+//                70L
+//        );
     }
 
     public static IngredientEntity getExistingValidNameValidDescriptionNoConversionFactor() {
-        return new IngredientEntity(
-                "9",
-                "existingName",
-                "existingDescription",
-                1,
-                Constants.getUserId(),
-                70L,
-                80L
-
-        );
+        return null;
+//        new IngredientEntity(
+//                "9",
+//                "existingName",
+//                "existingDescription",
+//                1,
+//                Constants.getUserId(),
+//                70L,
+//                80L
+//
+//        );
     }
 
     public static IngredientEntity getExistingUpdatedWithInvalidName() {
-        return new IngredientEntity(
-                "10",
-                "na",
-                getExistingValidNameValidDescriptionNoConversionFactor().getDescription(),
-                1,
-                getExistingValidNameValidDescriptionNoConversionFactor().getCreatedBy(),
-                getExistingValidNameValidDescriptionNoConversionFactor().getCreateDate(),
-                getExistingValidNameValidDescriptionNoConversionFactor().getLastUpdate()
-        );
+        return null;
+//        new IngredientEntity(
+//                "10",
+//                "na",
+//                getExistingValidNameValidDescriptionNoConversionFactor().getDescription(),
+//                1,
+//                getExistingValidNameValidDescriptionNoConversionFactor().getCreatedBy(),
+//                getExistingValidNameValidDescriptionNoConversionFactor().getCreateDate(),
+//                getExistingValidNameValidDescriptionNoConversionFactor().getLastUpdate()
+//        );
     }
 
     public static IngredientEntity getExistingUpdatedWithValidName() {
-        return new IngredientEntity(
-                getExistingValidNameValidDescriptionNoConversionFactor().getDataId(),
-                "existingNameUpdated",
-                getExistingValidNameValidDescriptionNoConversionFactor().getDescription(),
-                1,
-                getExistingValidNameValidDescriptionNoConversionFactor().getCreatedBy(),
-                getExistingValidNameValidDescriptionNoConversionFactor().getCreateDate(),
-                90L
-        );
+        return null;
+//        new IngredientEntity(
+//                getExistingValidNameValidDescriptionNoConversionFactor().getDataId(),
+//                "existingNameUpdated",
+//                getExistingValidNameValidDescriptionNoConversionFactor().getDescription(),
+//                1,
+//                getExistingValidNameValidDescriptionNoConversionFactor().getCreatedBy(),
+//                getExistingValidNameValidDescriptionNoConversionFactor().getCreateDate(),
+//                90L
+//        );
     }
 
     public static IngredientEntity getExistingUpdatedWithInvalidDescription() {
-        return new IngredientEntity(
-                "12",
-                getExistingValidNameValidDescriptionNoConversionFactor().getName(),
-                "de",
-                1,
-                getExistingValidNameValidDescriptionNoConversionFactor().getCreatedBy(),
-                getExistingValidNameValidDescriptionNoConversionFactor().getCreateDate(),
-                90L
-        );
+        return null;
+//        new IngredientEntity(
+//                "12",
+//                getExistingValidNameValidDescriptionNoConversionFactor().getName(),
+//                "de",
+//                1,
+//                getExistingValidNameValidDescriptionNoConversionFactor().getCreatedBy(),
+//                getExistingValidNameValidDescriptionNoConversionFactor().getCreateDate(),
+//                90L
+//        );
     }
 
     public static IngredientEntity getExistingUpdatedWithValidDescription() {
-        return new IngredientEntity(
-                getExistingValidNameValidDescriptionNoConversionFactor().getDataId(),
-                getExistingValidNameValidDescriptionNoConversionFactor().getName(),
-                "existingDescriptionUpdated",
-                1,
-                getExistingValidNameValidDescriptionNoConversionFactor().getCreatedBy(),
-                getExistingValidNameValidDescriptionNoConversionFactor().getCreateDate(),
-                100L
-        );
+        return null;
+//        new IngredientEntity(
+//                getExistingValidNameValidDescriptionNoConversionFactor().getDataId(),
+//                getExistingValidNameValidDescriptionNoConversionFactor().getName(),
+//                "existingDescriptionUpdated",
+//                1,
+//                getExistingValidNameValidDescriptionNoConversionFactor().getCreatedBy(),
+//                getExistingValidNameValidDescriptionNoConversionFactor().getCreateDate(),
+//                100L
+//        );
     }
 
     public static IngredientEntity getExistingValidNameValidDescriptionFromAnotherUser() {
-        return new IngredientEntity(
-                "14",
-                "existingNameFromAnotherUser",
-                "existingDescriptionFromAnotherUser",
-                1,
-                "anotherUsersId",
-                1000L,
-                2000L
-
-        );
+        return null;
+//        new IngredientEntity(
+//                "14",
+//                "existingNameFromAnotherUser",
+//                "existingDescriptionFromAnotherUser",
+//                1,
+//                "anotherUsersId",
+//                1000L,
+//                2000L
+//
+//        );
     }
 
     public static IngredientEntity getExistingValidWithConversionFactor() {
-        return new IngredientEntity(
-                "15",
-                getExistingValidNameValidDescriptionNoConversionFactor().getName(),
-                getExistingValidNameValidDescriptionNoConversionFactor().getDescription(),
-                0.5,
-                getExistingValidNameValidDescriptionNoConversionFactor().getCreatedBy(),
-                getExistingValidNameValidDescriptionNoConversionFactor().getCreateDate(),
-                110L
-        );
+        return null;
+//        new IngredientEntity(
+//                "15",
+//                getExistingValidNameValidDescriptionNoConversionFactor().getName(),
+//                getExistingValidNameValidDescriptionNoConversionFactor().getDescription(),
+//                0.5,
+//                getExistingValidNameValidDescriptionNoConversionFactor().getCreatedBy(),
+//                getExistingValidNameValidDescriptionNoConversionFactor().getCreateDate(),
+//                110L
+//        );
     }
 
     public static List<IngredientEntity> getAllIngredients() {

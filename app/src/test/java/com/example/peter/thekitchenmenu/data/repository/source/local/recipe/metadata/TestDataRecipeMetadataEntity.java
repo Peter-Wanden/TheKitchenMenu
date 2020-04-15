@@ -26,24 +26,6 @@ public class TestDataRecipeMetadataEntity {
                 build();
     }
 
-    public static List<RecipeFailReasonEntity> getRecipeFailReasonEntitiesFromDomainModel(
-            RecipeMetadataPersistenceModel model) {
-
-        List<RecipeFailReasonEntity> failReasonEntities = new ArrayList<>();
-        int dataId = 0;
-        for (FailReasons failReason : model.getFailReasons()) {
-            failReasonEntities.add(
-                    new RecipeFailReasonEntity(
-                            String.valueOf(dataId),
-                            model.getDataId(),
-                            failReason.getId()
-                    )
-            );
-            dataId ++;
-        }
-        return failReasonEntities;
-    }
-
     public static List<RecipeComponentStateEntity> getComponentStateEntitiesFromDomainModel(
             RecipeMetadataPersistenceModel model) {
         List<RecipeComponentStateEntity> componentStateEntities = new ArrayList<>();
@@ -61,6 +43,24 @@ public class TestDataRecipeMetadataEntity {
             dataId ++;
         }
         return componentStateEntities;
+    }
+
+    public static List<RecipeFailReasonEntity> getRecipeFailReasonEntitiesFromDomainModel(
+            RecipeMetadataPersistenceModel model) {
+
+        List<RecipeFailReasonEntity> failReasonEntities = new ArrayList<>();
+        int dataId = 0;
+        for (FailReasons failReason : model.getFailReasons()) {
+            failReasonEntities.add(
+                    new RecipeFailReasonEntity(
+                            String.valueOf(dataId),
+                            model.getDataId(),
+                            failReason.getId()
+                    )
+            );
+            dataId ++;
+        }
+        return failReasonEntities;
     }
 }
 

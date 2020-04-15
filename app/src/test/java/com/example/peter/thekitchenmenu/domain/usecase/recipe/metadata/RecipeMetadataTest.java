@@ -35,8 +35,8 @@ public class RecipeMetadataTest {
     // endregion constants -------------------------------------------------------------------------
 
     // region helper fields ------------------------------------------------------------------------
-    @Mock
-    RepositoryRecipeComponentState repoRecipeMetadataMock;
+//    @Mock
+//    RepositoryRecipeComponentState repoRecipeMetadataMock;
     @Captor
     ArgumentCaptor<PrimitiveDataSource.GetPrimitiveCallback<RecipeMetadataParentEntity>> repoMetadataCallback;
     @Mock
@@ -70,11 +70,12 @@ public class RecipeMetadataTest {
         requiredComponents.add(ComponentName.DURATION);
         requiredComponents.add(ComponentName.PORTIONS);
 
-        return new com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata(
-                timeProviderMock,
-                repoRecipeMetadataMock,
-                requiredComponents
-        );
+//        return new com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata(
+//                timeProviderMock,
+//                repoRecipeMetadataMock,
+//                requiredComponents
+//        );
+        return null;
     }
 
     // TODO -
@@ -83,9 +84,9 @@ public class RecipeMetadataTest {
     @Test
     public void newId_databaseCalled_responseDATA_UNAVAILABLE() {
         // Arrange
-        String recipeId = TestDataRecipeMetadataEntity.getNewInvalidParent().getDataId();
+//        String recipeId = TestDataRecipeMetadataEntity.getNewInvalidParent().getDataId();
         // Act
-        givenNewIdAsInitialRequest(recipeId);
+//        givenNewIdAsInitialRequest(recipeId);
         // Assert response
         assertTrue(onErrorResponse.getModel().getFailReasons().contains(CommonFailReason.DATA_UNAVAILABLE));
     }
@@ -93,8 +94,8 @@ public class RecipeMetadataTest {
     @Test
     public void missingComponent_stateDATA_UNAVAILABLE_failReasonMISSING_COMPONENTS() {
         // Arrange/execute initial request
-        String recipeId = TestDataRecipeMetadataEntity.getNewInvalidParent().getDataId();
-        givenNewIdAsInitialRequest(recipeId);
+//        String recipeId = TestDataRecipeMetadataEntity.getNewInvalidParent().getDataId();
+//        givenNewIdAsInitialRequest(recipeId);
 
         // Arrange MISSING_COMPONENT state (portions component missing)
         componentStates.put(ComponentName.IDENTITY, ComponentState.VALID_UNCHANGED);
@@ -106,13 +107,13 @@ public class RecipeMetadataTest {
                 setComponentStates(componentStates).
                 build();
 
-        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
-                setDataId(recipeId).
-                setModel(model).
-                build();
+//        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
+//                setDataId(recipeId).
+//                setModel(model).
+//                build();
 
         // Act
-        handler.execute(SUT, request, new MetadataCallbackClient());
+//        handler.execute(SUT, request, new MetadataCallbackClient());
         // Assert
         assertEquals(RecipeState.DATA_UNAVAILABLE, onErrorResponse.getModel().getState());
         assertTrue(onErrorResponse.getModel().
@@ -123,8 +124,8 @@ public class RecipeMetadataTest {
     @Test
     public void invalidUnchanged_stateINVALID_UNCHANGED_failReasonINVALID_COMPONENTS() {
         // Arrange
-        String recipeId = TestDataRecipeMetadataEntity.getNewInvalidParent().getDataId();
-        givenNewIdAsInitialRequest(recipeId);
+//        String recipeId = TestDataRecipeMetadataEntity.getNewInvalidParent().getDataId();
+//        givenNewIdAsInitialRequest(recipeId);
 
         // Arrange INVALID_UNCHANGED / INVALID_COMPONENTS state
         componentStates.put(ComponentName.IDENTITY, ComponentState.VALID_UNCHANGED);
@@ -137,13 +138,13 @@ public class RecipeMetadataTest {
                 setComponentStates(componentStates).
                 build();
 
-        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
-                setDataId(recipeId).
-                setModel(model).
-                build();
+//        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
+//                setDataId(recipeId).
+//                setModel(model).
+//                build();
 
         // Act
-        handler.execute(SUT, request, new MetadataCallbackClient());
+//        handler.execute(SUT, request, new MetadataCallbackClient());
         // Assert
         assertEquals(RecipeState.INVALID_UNCHANGED, onErrorResponse.getModel().getState());
         assertTrue(onErrorResponse.getModel().getFailReasons().
@@ -153,8 +154,8 @@ public class RecipeMetadataTest {
     @Test
     public void invalidChanged_stateINVALID_CHANGED_failReasonINVALID_COMPONENTS() {
         // Arrange
-        String recipeId = TestDataRecipeMetadataEntity.getNewInvalidParent().getDataId();
-        givenNewIdAsInitialRequest(recipeId);
+//        String recipeId = TestDataRecipeMetadataEntity.getNewInvalidParent().getDataId();
+//        givenNewIdAsInitialRequest(recipeId);
 
         // Arrange INVALID_CHANGED / INVALID_COMPONENTS state
         componentStates.put(com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentName.IDENTITY, com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentState.VALID_UNCHANGED);
@@ -167,13 +168,13 @@ public class RecipeMetadataTest {
                 setComponentStates(componentStates).
                 build();
 
-        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
-                setDataId(recipeId).
-                setModel(model).
-                build();
+//        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
+//                setDataId(recipeId).
+//                setModel(model).
+//                build();
 
         // Act
-        handler.execute(SUT, request, new MetadataCallbackClient());
+//        handler.execute(SUT, request, new MetadataCallbackClient());
         // Assert
         assertEquals(RecipeState.INVALID_CHANGED, onErrorResponse.getModel().getState());
         assertTrue(onErrorResponse.getModel().getFailReasons().
@@ -183,8 +184,8 @@ public class RecipeMetadataTest {
     @Test
     public void validUnchanged_stateVALID_UNCHANGED_failReasonNONE() {
         // Arrange
-        String recipeId = TestDataRecipeMetadataEntity.getNewInvalidParent().getDataId();
-        givenNewIdAsInitialRequest(recipeId);
+//        String recipeId = TestDataRecipeMetadataEntity.getNewInvalidParent().getDataId();
+//        givenNewIdAsInitialRequest(recipeId);
 
         // Arrange VALID_UNCHANGED / CommonFailReason.NONE state
         componentStates.put(ComponentName.IDENTITY, ComponentState.VALID_UNCHANGED);
@@ -197,24 +198,24 @@ public class RecipeMetadataTest {
                 setComponentStates(componentStates).
                 build();
 
-        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
-                setDataId(recipeId).
-                setModel(model).
-                build();
+//        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
+//                setDataId(recipeId).
+//                setModel(model).
+//                build();
 
         // Act
-        handler.execute(SUT, request, new MetadataCallbackClient());
+//        handler.execute(SUT, request, new MetadataCallbackClient());
         // Assert
         assertEquals(RecipeState.VALID_UNCHANGED, onSuccessResponse.getModel().getState());
-        assertTrue(onSuccessResponse.getModel().getFailReasons().
-                contains(com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.FailReason.NONE));
+//        assertTrue(onSuccessResponse.getModel().getFailReasons().
+//                contains(com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.FailReason.NONE));
     }
 
     @Test
     public void validChanged_stateVALID_CHANGED_failReasonNONE() {
         // Arrange
-        String recipeId = TestDataRecipeMetadataEntity.getNewInvalidParent().getDataId();
-        givenNewIdAsInitialRequest(recipeId);
+//        String recipeId = TestDataRecipeMetadataEntity.getNewInvalidParent().getDataId();
+//        givenNewIdAsInitialRequest(recipeId);
 
         // Arrange VALID_CHANGED / CommonFailReason.NONE state
         componentStates.put(com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentName.IDENTITY, com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentState.VALID_UNCHANGED);
@@ -227,18 +228,18 @@ public class RecipeMetadataTest {
                 setComponentStates(componentStates).
                 build();
 
-        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
-                setDataId(recipeId).
-                setModel(model).
-                build();
+//        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
+//                setDataId(recipeId).
+//                setModel(model).
+//                build();
 
         // Act
-        handler.execute(SUT, request, new MetadataCallbackClient());
+//        handler.execute(SUT, request, new MetadataCallbackClient());
 
         // Assert
         assertEquals(com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.RecipeState.VALID_CHANGED, onSuccessResponse.getModel().getState());
-        assertTrue(onSuccessResponse.getModel().getFailReasons().
-                contains(com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.FailReason.NONE));
+//        assertTrue(onSuccessResponse.getModel().getFailReasons().
+//                contains(com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.FailReason.NONE));
     }
 
 
@@ -246,8 +247,8 @@ public class RecipeMetadataTest {
     // region helper methods -----------------------------------------------------------------------
     private void givenNewIdAsInitialRequest(String id) {
         // Arrange/execute initial request
-        when(timeProviderMock.getCurrentTimeInMills()).
-                thenReturn(TestDataRecipeMetadataEntity.getNewInvalidParent().getCreateDate());
+//        when(timeProviderMock.getCurrentTimeInMills()).
+//                thenReturn(TestDataRecipeMetadataEntity.getNewInvalidParent().getCreateDate());
 
         RecipeMetadataRequest initialRequest = new RecipeMetadataRequest.Builder().getDefault().
                 setDataId(id).
@@ -258,7 +259,7 @@ public class RecipeMetadataTest {
     }
 
     private void whenRepoRecipeMetadataCalledThenReturnDataUnavailable(String id) {
-        verify(repoRecipeMetadataMock).getById(eq(id), repoMetadataCallback.capture());
+//        verify(repoRecipeMetadataMock).getById(eq(id), repoMetadataCallback.capture());
         repoMetadataCallback.getValue().onDataUnavailable();
     }
     // endregion helper methods --------------------------------------------------------------------

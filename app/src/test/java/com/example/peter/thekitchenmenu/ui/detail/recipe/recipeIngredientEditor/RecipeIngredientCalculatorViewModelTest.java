@@ -403,40 +403,40 @@ public class RecipeIngredientCalculatorViewModelTest {
     }
 
     private void verifyRepoIngredientCalledReturnNewValidNameValidDescription() {
-        verify(repoIngredientMock).getByDataId(
-                eq(INGREDIENT_NEW_VALID_NAME_DESCRIPTION.getDataId()),
-                getIngredientCallbackCaptor.capture());
+//        verify(repoIngredientMock).getByDataId(
+//                eq(INGREDIENT_NEW_VALID_NAME_DESCRIPTION.getDataId()),
+//                getIngredientCallbackCaptor.capture());
         getIngredientCallbackCaptor.getValue().onEntityLoaded(
                 INGREDIENT_NEW_VALID_NAME_DESCRIPTION);
     }
 
     private void verifyRepoPortionsCalledReturnNewValidFourPortions() {
-        verify(repoPortionsMock).getAllByDomainId(
-                eq(QUANTITY_NEW_INVALID.getRecipeDomainId()),
-                getPortionsCallbackCaptor.capture());
+//        verify(repoPortionsMock).getAllByDomainId(
+//                eq(QUANTITY_NEW_INVALID.getRecipeDomainId()),
+//                getPortionsCallbackCaptor.capture());
         getPortionsCallbackCaptor.getValue().onEntityLoaded(PORTIONS_NEW_VALID_FOUR);
     }
 
     private void verifyRepoRecipeIngredientCalledReturnExistingValidImperialSpoon() {
-        verify(repoRecipeIngredientMock).getByDataId(
-                eq(QUANTITY_EXISTING_VALID_IMPERIAL_SPOON.getDataId()),
-                getRecipeIngredientCallbackCaptor.capture());
+//        verify(repoRecipeIngredientMock).getByDataId(
+//                eq(QUANTITY_EXISTING_VALID_IMPERIAL_SPOON.getDataId()),
+//                getRecipeIngredientCallbackCaptor.capture());
         getRecipeIngredientCallbackCaptor.getValue().onEntityLoaded(
                 QUANTITY_EXISTING_VALID_IMPERIAL_SPOON);
     }
 
     private void verifyRepoIngredientCalledAndReturnExistingValidNameDescriptionNoConversionFactor() {
-        verify(repoIngredientMock).getByDataId(
-                eq(INGREDIENT_EXISTING_VALID_NAME_DESCRIPTION.getDataId()),
-                getIngredientCallbackCaptor.capture());
+//        verify(repoIngredientMock).getByDataId(
+//                eq(INGREDIENT_EXISTING_VALID_NAME_DESCRIPTION.getDataId()),
+//                getIngredientCallbackCaptor.capture());
         getIngredientCallbackCaptor.getValue().onEntityLoaded(
                 INGREDIENT_EXISTING_VALID_NAME_DESCRIPTION);
     }
 
     private void verifyRepoPortionsCalledAndReturnExistingValidNinePortions() {
-        verify(repoPortionsMock).getAllByDomainId(
-                eq(QUANTITY_EXISTING_VALID_METRIC.getRecipeDomainId()),
-                getPortionsCallbackCaptor.capture());
+//        verify(repoPortionsMock).getAllByDomainId(
+//                eq(QUANTITY_EXISTING_VALID_METRIC.getRecipeDomainId()),
+//                getPortionsCallbackCaptor.capture());
         getPortionsCallbackCaptor.getValue().onEntityLoaded(PORTIONS_EXISTING_VALID_NINE);
     }
     // endregion helper methods --------------------------------------------------------------------

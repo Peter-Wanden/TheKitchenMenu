@@ -35,21 +35,36 @@ public final class RecipeMetadataPersistenceModel extends BasePersistence {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RecipeMetadataPersistenceModel that = (RecipeMetadataPersistenceModel) o;
-        return dataId.equals(that.dataId) &&
-                domainId.equals(that.domainId) &&
-                createDate == that.createDate &&
-                lastUpdate == that.lastUpdate &&
+        return Objects.equals(dataId, that.dataId) &&
+                Objects.equals(domainId, that.domainId) &&
                 Objects.equals(parentDomainId, that.parentDomainId) &&
                 recipeState == that.recipeState &&
                 Objects.equals(componentStates, that.componentStates) &&
                 Objects.equals(failReasons, that.failReasons) &&
-                Objects.equals(createdBy, that.createdBy);
+                Objects.equals(createdBy, that.createdBy) &&
+                createDate == that.createDate &&
+                lastUpdate == that.lastUpdate;
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(dataId, domainId, parentDomainId, recipeState, componentStates,
                 failReasons, createdBy, createDate, lastUpdate);
+    }
+
+    @Override
+    public String toString() {
+        return "RecipeMetadataPersistenceModel{" +
+                "dataId='" + dataId + '\'' +
+                ", domainId='" + domainId + '\'' +
+                ", parentDomainId='" + parentDomainId + '\'' +
+                ", recipeState=" + recipeState +
+                ", componentStates=" + componentStates +
+                ", failReasons=" + failReasons +
+                ", createdBy='" + createdBy + '\'' +
+                ", createDate=" + createDate +
+                ", lastUpdate=" + lastUpdate +
+                '}';
     }
 
     public String getParentDomainId() {

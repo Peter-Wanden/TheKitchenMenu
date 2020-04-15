@@ -2,6 +2,7 @@ package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.met
 
 import com.example.peter.thekitchenmenu.data.repository.recipe.metadata.TestDataRecipeMetadata;
 import com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter.PrimitiveDataSource.GetPrimitiveCallback;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.TestDataRecipeMetadataEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.componentstate.RecipeComponentStateEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.componentstate.RecipeComponentStateLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.failreason.RecipeFailReasonEntity;
@@ -36,15 +37,19 @@ public class RecipeMetadataLocalGetAdapterTest {
             getSimpleName() + ": ";
 
     // region constants ----------------------------------------------------------------------------
-    private static RecipeMetadataPersistenceModel dataUnavailableModel =
+    private static RecipeMetadataPersistenceModel DATA_UNAVAILABLE_MODEL =
             TestDataRecipeMetadata.getDataUnavailable();
+    private static List<RecipeMetadataPersistenceModel> VALID_CHANGED_MODELS =
+            TestDataRecipeMetadata.getValidChangedList();
     // endregion constants -------------------------------------------------------------------------
 
     // region helper fields ------------------------------------------------------------------------
     @Mock
     RecipeMetadataParentLocalDataSource parentDataSourceMock;
     @Captor
-    ArgumentCaptor<GetPrimitiveCallback<RecipeMetadataParentEntity>> parentDataSourceCallback;
+    ArgumentCaptor<GetPrimitiveCallback<RecipeMetadataParentEntity>> parentCallback;
+    @Captor
+    ArgumentCaptor<GetAllPrimitiveCallback<RecipeMetadataParentEntity>> parentListCallback;
     @Mock
     RecipeComponentStateLocalDataSource componentStateDataSourceMock;
     @Captor
@@ -72,13 +77,61 @@ public class RecipeMetadataLocalGetAdapterTest {
     }
 
     @Test
-    public void validDataId_domainModelReturned() {
+    public void getByDataId_validDataId_domainModelReturned() {
         // Arrange
-        SUT.getByDataId(dataUnavailableModel.getDataId(), );
+        String dataId = DATA_UNAVAILABLE_MODEL.getDataId();
+        GetDomainModelCallbackClient callbackClient = new GetDomainModelCallbackClient();
+
         // Act
+        SUT.getByDataId(DATA_UNAVAILABLE_MODEL.getDataId(), callbackClient);
 
         // Assert
+        verify(parentDataSourceMock).getByDataId(
+                eq(dataId),
+                parentCallback.capture()
+        );
+        parentCallback.getValue().onEntityLoaded(
+                getRecipeMetadataParentEntityFromDomainModel(DATA_UNAVAILABLE_MODEL)
+        );
+
+        verify(componentStateDataSourceMock).getAllByParentDataId(
+                eq(dataId),
+                componentStateDataSourceCallback.capture()
+        );
+        componentStateDataSourceCallback.getValue().onAllLoaded(
+                getComponentStateEntitiesFromDomainModel(DATA_UNAVAILABLE_MODEL)
+        );
+
+        verify(failReasonsDataSourceMock).getAllByParentDataId(
+                eq(dataId),
+                failReasonDataSourceCallback.capture()
+        );
+        failReasonDataSourceCallback.getValue().onAllLoaded(
+                getRecipeFailReasonEntitiesFromDomainModel(DATA_UNAVAILABLE_MODEL)
+        );
+
+        assertEquals(DATA_UNAVAILABLE_MODEL, callbackClient.domainModel);
+
     }
+
+    @Test
+    public void getActiveModelFromDomainId_returnMostRecentDomainModel() {
+        // Arrange
+        String domainId = VALID_CHANGED_MODELS.get(0).getDomainId();
+        GetDomainModelCallbackClient callbackClient = new GetDomainModelCallbackClient();
+        List<RecipeMetadataParentEntity> parentEntities = new ArrayList<>();
+        for (RecipeMetadataPersistenceModel m : TestDataRecipeMetadata.getValidChangedList()) {
+            parentEntities.add(getRecipeMetadataParentEntityFromDomainModel(m));
+        }
+        // Act
+        SUT.getActiveModelFromDomainId(domainId, callbackClient);
+        // Assert
+        verify(parentDataSourceMock).getAllByDomainId(eq(domainId), parentListCallback.capture());
+        parentListCallback.getValue().onAllLoaded(parentEntities);
+
+
+    }
+
 
     // region helper methods -----------------------------------------------------------------------
     public static RecipeMetadataParentEntity getRecipeMetadataParentEntityFromDomainModel(
@@ -107,7 +160,7 @@ public class RecipeMetadataLocalGetAdapterTest {
                             failReason.getId()
                     )
             );
-            dataId ++;
+            dataId++;
         }
         return failReasonEntities;
     }
@@ -126,7 +179,7 @@ public class RecipeMetadataLocalGetAdapterTest {
                             model.getComponentStates().get(componentName).getId()
                     )
             );
-            dataId ++;
+            dataId++;
         }
         return componentStateEntities;
     }
@@ -137,17 +190,19 @@ public class RecipeMetadataLocalGetAdapterTest {
             implements GetDomainModelCallback<RecipeMetadataPersistenceModel> {
         private static final String TAG = RecipeMetadataLocalGetAdapterTest.TAG +
                 "DomainModelCallbackClient: ";
+
+        private RecipeMetadataPersistenceModel domainModel;
+
         @Override
         public void onModelLoaded(RecipeMetadataPersistenceModel model) {
             System.out.println(TAG + model);
+            this.domainModel = model;
         }
 
         @Override
         public void onModelUnavailable() {
-
+            System.out.println("onDataUnavailable");
         }
     }
     // endregion helper classes --------------------------------------------------------------------
-
-
 }

@@ -7,11 +7,11 @@ import java.util.List;
 
 public class TestDataRecipeCourseEntity {
 
-    private static final String NEW_RECIPE_ID =
-            TestDataRecipeMetadataEntity.getNewInvalidParent().getDataId();
+    private static final String NEW_RECIPE_ID = null;
+//            TestDataRecipeMetadataEntity.getNewInvalidParent().getDataId();
 
-    public static final String EXISTING_RECIPE_ID =
-            TestDataRecipeMetadataEntity.getValidExisting().getDataId();
+    public static final String EXISTING_RECIPE_ID = null;
+//            TestDataRecipeMetadataEntity.getValidExisting().getDataId();
 
     public static RecipeCourseEntity getRecipeCourseZero() {
         return new RecipeCourseEntity(

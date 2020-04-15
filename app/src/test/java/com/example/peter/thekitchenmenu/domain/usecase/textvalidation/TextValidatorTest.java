@@ -2,6 +2,7 @@ package com.example.peter.thekitchenmenu.domain.usecase.textvalidation;
 
 import com.example.peter.thekitchenmenu.commonmocks.StringMaker;
 import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
+import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 
@@ -94,7 +95,7 @@ public class TextValidatorTest {
         // Act
         handler.execute(SUT, request, getCallback());
         // Assert
-        assertEquals(TextValidator.FailReason.NONE, actualResponse.getFailReason());
+        assertEquals(CommonFailReason.NONE, actualResponse.getFailReason());
     }
 
     @Test
@@ -111,7 +112,7 @@ public class TextValidatorTest {
         // Act
         handler.execute(SUT, request, getCallback());
         // Assert
-        assertEquals(TextValidator.FailReason.NONE, actualResponse.getFailReason());
+        assertEquals(CommonFailReason.NONE, actualResponse.getFailReason());
     }
 
     @Test

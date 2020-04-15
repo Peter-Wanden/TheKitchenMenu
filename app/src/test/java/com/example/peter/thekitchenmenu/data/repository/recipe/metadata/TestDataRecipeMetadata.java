@@ -11,6 +11,12 @@ import java.util.List;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.*;
 
+/**
+ * Persistence works by storing the state of an object each time it changes. Therefore there can be
+ * many copies of an object with the same domain id, each separated by a unique data id.
+ * In the case of recipe metadata, the most recent according to the lastUpdate() is considered the
+ * ACTIVE model.
+ */
 public class TestDataRecipeMetadata {
 
     /*
@@ -24,8 +30,8 @@ public class TestDataRecipeMetadata {
                 setDomainId("domainId-recipe-Id0").
                 setParentDomainId("").
                 setRecipeState(RecipeState.DATA_UNAVAILABLE).
-                setFailReasons(getDataUnavailableFailReasons()).
                 setComponentStates(getDataUnavailableComponentStates()).
+                setFailReasons(getDataUnavailableFailReasons()).
                 setCreatedBy(Constants.getUserId()).
                 setCreateDate(10L).
                 setLastUpdate(10L).
@@ -91,8 +97,47 @@ public class TestDataRecipeMetadata {
                 setComponentStates(getValidChangedComponentStates()).
                 setCreatedBy(Constants.getUserId()).
                 setCreateDate(40L).
+                setLastUpdate(60L).
+                build();
+    }
+
+    // getValidChanged() previous state
+    public static RecipeMetadataPersistenceModel getValidChanged1() {
+        return new RecipeMetadataPersistenceModel.Builder().
+                setDataId(getDataUnavailable().getDataId()).
+                setDomainId(getDataUnavailable().getDomainId()).
+                setParentDomainId(getDataUnavailable().getParentDomainId()).
+                setRecipeState(RecipeState.VALID_CHANGED).
+                setFailReasons(getFailReasonsNone()).
+                setComponentStates(getValidChangedComponentStates()).
+                setCreatedBy(Constants.getUserId()).
+                setCreateDate(40L).
+                setLastUpdate(50L).
+                build();
+    }
+
+    // getValidChanged() previous state
+    public static RecipeMetadataPersistenceModel getValidChanged2() {
+        return new RecipeMetadataPersistenceModel.Builder().
+                setDataId(getDataUnavailable().getDataId()).
+                setDomainId(getDataUnavailable().getDomainId()).
+                setParentDomainId(getDataUnavailable().getParentDomainId()).
+                setRecipeState(RecipeState.VALID_CHANGED).
+                setFailReasons(getFailReasonsNone()).
+                setComponentStates(getValidChangedComponentStates()).
+                setCreatedBy(Constants.getUserId()).
+                setCreateDate(40L).
                 setLastUpdate(40L).
                 build();
+    }
+
+    // getValidChanged() previous states
+    public static List<RecipeMetadataPersistenceModel> getValidChangedList() {
+        List<RecipeMetadataPersistenceModel> models = new ArrayList<>();
+        models.add(getValidChanged());
+        models.add(getValidChanged1());
+        models.add(getValidChanged2());
+        return models;
     }
 
     /*
@@ -114,6 +159,8 @@ public class TestDataRecipeMetadata {
                 setLastUpdate(50L).
                 build();
     }
+
+
     
     /*
     Represents a valid recipe created using an user Id that is different from the one in the 
