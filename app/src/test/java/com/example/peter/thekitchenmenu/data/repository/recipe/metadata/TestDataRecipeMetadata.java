@@ -134,9 +134,9 @@ public class TestDataRecipeMetadata {
     // getValidChanged() previous states
     public static List<RecipeMetadataPersistenceModel> getValidChangedList() {
         List<RecipeMetadataPersistenceModel> models = new ArrayList<>();
-        models.add(getValidChanged());
-        models.add(getValidChanged1());
-        models.add(getValidChanged2());
+        models.add(0, getValidChanged());
+        models.add(1, getValidChanged1());
+        models.add(2, getValidChanged2());
         return models;
     }
 

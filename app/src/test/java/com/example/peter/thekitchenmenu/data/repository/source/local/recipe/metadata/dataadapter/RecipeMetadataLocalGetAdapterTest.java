@@ -86,24 +86,21 @@ public class RecipeMetadataLocalGetAdapterTest {
         SUT.getByDataId(DATA_UNAVAILABLE_MODEL.getDataId(), callbackClient);
 
         // Assert
-        verify(parentDataSourceMock).getByDataId(
-                eq(dataId),
+        verify(parentDataSourceMock).getByDataId(eq(dataId),
                 parentCallback.capture()
         );
         parentCallback.getValue().onEntityLoaded(
                 getRecipeMetadataParentEntityFromDomainModel(DATA_UNAVAILABLE_MODEL)
         );
 
-        verify(componentStateDataSourceMock).getAllByParentDataId(
-                eq(dataId),
+        verify(componentStateDataSourceMock).getAllByParentDataId(eq(dataId),
                 componentStateDataSourceCallback.capture()
         );
         componentStateDataSourceCallback.getValue().onAllLoaded(
                 getComponentStateEntitiesFromDomainModel(DATA_UNAVAILABLE_MODEL)
         );
 
-        verify(failReasonsDataSourceMock).getAllByParentDataId(
-                eq(dataId),
+        verify(failReasonsDataSourceMock).getAllByParentDataId(eq(dataId),
                 failReasonDataSourceCallback.capture()
         );
         failReasonDataSourceCallback.getValue().onAllLoaded(
@@ -117,19 +114,40 @@ public class RecipeMetadataLocalGetAdapterTest {
     @Test
     public void getActiveModelFromDomainId_returnMostRecentDomainModel() {
         // Arrange
-        String domainId = VALID_CHANGED_MODELS.get(0).getDomainId();
+        RecipeMetadataPersistenceModel expectedModel = VALID_CHANGED_MODELS.get(0);
+        String domainId = expectedModel.getDomainId();
+        String parentDataId = expectedModel.getDataId();
+
         GetDomainModelCallbackClient callbackClient = new GetDomainModelCallbackClient();
+
         List<RecipeMetadataParentEntity> parentEntities = new ArrayList<>();
         for (RecipeMetadataPersistenceModel m : TestDataRecipeMetadata.getValidChangedList()) {
-            parentEntities.add(getRecipeMetadataParentEntityFromDomainModel(m));
+            parentEntities.add(getRecipeMetadataParentEntityFromDomainModel(m)
+            );
         }
+
         // Act
         SUT.getActiveModelFromDomainId(domainId, callbackClient);
-        // Assert
-        verify(parentDataSourceMock).getAllByDomainId(eq(domainId), parentListCallback.capture());
+
+        // Assert parent data source called to find latest data Id
+        verify(parentDataSourceMock).getAllByDomainId(eq(domainId),
+                parentListCallback.capture()
+        );
         parentListCallback.getValue().onAllLoaded(parentEntities);
+        // Assert child called with correct parent data Id
+        verify(failReasonsDataSourceMock).getAllByParentDataId(eq(parentDataId),
+                failReasonDataSourceCallback.capture());
+        failReasonDataSourceCallback.getValue().onAllLoaded(
+                getRecipeFailReasonEntitiesFromDomainModel(expectedModel)
+        );
+        // Assert child called with correct data Id
+        verify(componentStateDataSourceMock).getAllByParentDataId(eq(parentDataId),
+                componentStateDataSourceCallback.capture());
+        componentStateDataSourceCallback.getValue().onAllLoaded(
+                getComponentStateEntitiesFromDomainModel(expectedModel)
+        );
 
-
+        assertEquals(expectedModel, callbackClient.domainModel);
     }
 
 
