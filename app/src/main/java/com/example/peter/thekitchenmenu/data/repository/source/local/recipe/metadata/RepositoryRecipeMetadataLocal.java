@@ -13,8 +13,8 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 /**
- * Responsible for the flow of domain models objects to primitive data structures to and from the
- * local persistence framework.
+ * Uses data adapters and filters to enable the flow of domain models objects to and from the
+ * persistence local persistence framework.
  */
 public class RepositoryRecipeMetadataLocal
         implements DomainDataAccess<RecipeMetadataPersistenceModel> {
@@ -108,10 +108,11 @@ public class RepositoryRecipeMetadataLocal
 
     @Override
     public void getActiveByDomainId(
-            @Nonnull String recipeId,
+            @Nonnull String domainId,
             @Nonnull GetDomainModelCallback<RecipeMetadataPersistenceModel> callback) {
         getActiveByDomainIdAdapter.getActiveModelForDomainId(
-                recipeId, new RecipeMetadataLocalGetActiveByDomainIdAdapter.Callback() {
+                domainId,
+                new RecipeMetadataLocalGetActiveByDomainIdAdapter.Callback() {
                     @Override
                     public void onModelCreated(@Nonnull RecipeMetadataPersistenceModel model) {
                         callback.onModelLoaded(model);

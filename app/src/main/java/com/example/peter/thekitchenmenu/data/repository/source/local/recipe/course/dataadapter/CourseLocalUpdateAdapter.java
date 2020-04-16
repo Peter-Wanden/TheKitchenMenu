@@ -15,7 +15,7 @@ public class CourseLocalUpdateAdapter {
     }
 
     public void update(RecipeCoursePersistenceModel m) {
-        CourseModelConverter c = new CourseModelConverter();
+        CourseModelConverterParent c = new CourseModelConverterParent();
         courseLocalDataAccess.update(c.convertToPrimitive(m));
     }
 }

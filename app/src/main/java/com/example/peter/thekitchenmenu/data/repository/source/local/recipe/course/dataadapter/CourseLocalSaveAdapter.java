@@ -10,11 +10,11 @@ public class CourseLocalSaveAdapter {
     @Nonnull
     private final RecipeCourseLocalDataSource dataSource;
     @Nonnull
-    private final CourseModelConverter converter;
+    private final CourseModelConverterParent converter;
 
     public CourseLocalSaveAdapter(@Nonnull RecipeCourseLocalDataSource dataSource) {
         this.dataSource = dataSource;
-        converter = new CourseModelConverter();
+        converter = new CourseModelConverterParent();
     }
 
     public void save(RecipeCoursePersistenceModel model) {

@@ -66,7 +66,7 @@ public class TestDataRecipeMetadata {
     3. one or more components data has been changed in the current session
      */
     public static RecipeMetadataPersistenceModel getInvalidChanged() {
-        RecipeMetadataPersistenceModel validModel = getValidChanged();
+        RecipeMetadataPersistenceModel validModel = getValidChanged0();
 
         return new RecipeMetadataPersistenceModel.Builder().
                 setDataId("dataId-recipeMetadata-Id2").
@@ -87,7 +87,7 @@ public class TestDataRecipeMetadata {
     2. has all required components
     3. all completed components are reporting valid data.
      */
-    public static RecipeMetadataPersistenceModel getValidChanged() {
+    public static RecipeMetadataPersistenceModel getValidChanged0() {
         return new RecipeMetadataPersistenceModel.Builder().
                 setDataId(getDataUnavailable().getDataId()).
                 setDomainId(getDataUnavailable().getDomainId()).
@@ -134,7 +134,7 @@ public class TestDataRecipeMetadata {
     // getValidChanged() previous states
     public static List<RecipeMetadataPersistenceModel> getValidChangedList() {
         List<RecipeMetadataPersistenceModel> models = new ArrayList<>();
-        models.add(0, getValidChanged());
+        models.add(0, getValidChanged0());
         models.add(1, getValidChanged1());
         models.add(2, getValidChanged2());
         return models;

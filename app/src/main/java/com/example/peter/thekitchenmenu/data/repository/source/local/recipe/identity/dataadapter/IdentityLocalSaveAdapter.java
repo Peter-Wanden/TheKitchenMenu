@@ -9,11 +9,11 @@ public class IdentityLocalSaveAdapter {
     @Nonnull
     private final RecipeIdentityLocalDataSource dataSource;
     @Nonnull
-    private final IdentityModelConverter converter;
+    private final IdentityModelConverterParent converter;
 
     public IdentityLocalSaveAdapter(@Nonnull RecipeIdentityLocalDataSource dataSource) {
         this.dataSource = dataSource;
-        converter = new IdentityModelConverter();
+        converter = new IdentityModelConverterParent();
     }
 
     public void save(RecipeIdentityPersistenceModel model) {

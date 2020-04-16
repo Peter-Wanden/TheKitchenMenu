@@ -1,19 +1,17 @@
 package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.dataadapter;
 
-import com.example.peter.thekitchenmenu.data.repository.source.local.DomainModelConverter;
+import com.example.peter.thekitchenmenu.data.repository.source.local.DomainModelConverterParent;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.datasource.RecipeDurationEntity;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.datasource.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDurationPersistenceModel;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortionsPersistenceModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nonnull;
 
-public class DurationModelConverter
+public class DurationModelConverterParent
         implements
-        DomainModelConverter<RecipeDurationPersistenceModel, RecipeDurationEntity> {
+        DomainModelConverterParent<RecipeDurationPersistenceModel, RecipeDurationEntity> {
 
     @Override
     public RecipeDurationPersistenceModel convertToModel(

@@ -123,7 +123,9 @@ public abstract class Repository<T extends DomainPersistenceModel>
 
             @Override
             public void onModelUnavailable() {
-                remoteDomainDataAccess.getActiveByDomainId(domainId, new GetDomainModelCallback<T>() {
+                remoteDomainDataAccess.getActiveByDomainId(
+                        domainId,
+                        new GetDomainModelCallback<T>() {
                     @Override
                     public void onModelLoaded(T model) {
                         if (model == null) {

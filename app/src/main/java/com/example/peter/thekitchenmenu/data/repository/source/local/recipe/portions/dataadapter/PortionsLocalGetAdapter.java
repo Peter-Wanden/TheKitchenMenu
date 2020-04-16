@@ -17,11 +17,11 @@ public class PortionsLocalGetAdapter {
     @Nonnull
     private final RecipePortionsLocalDataSource dataSource;
     @Nonnull
-    private final PortionsModelConverter converter;
+    private final PortionsModelConverterParent converter;
 
     public PortionsLocalGetAdapter(@Nonnull RecipePortionsLocalDataSource dataSource) {
         this.dataSource = dataSource;
-        converter = new PortionsModelConverter();
+        converter = new PortionsModelConverterParent();
     }
 
     public void getByDataId(

@@ -17,11 +17,11 @@ public class IngredientLocalGetAdapter {
     @Nonnull
     private final IngredientLocalDataSource dataSource;
     @Nonnull
-    private final IngredientLocalModelConverter converter;
+    private final IngredientLocalModelConverterParent converter;
 
     public IngredientLocalGetAdapter(@Nonnull IngredientLocalDataSource dataSource) {
         this.dataSource = dataSource;
-        converter = new IngredientLocalModelConverter();
+        converter = new IngredientLocalModelConverterParent();
     }
 
     public void getByDataId(

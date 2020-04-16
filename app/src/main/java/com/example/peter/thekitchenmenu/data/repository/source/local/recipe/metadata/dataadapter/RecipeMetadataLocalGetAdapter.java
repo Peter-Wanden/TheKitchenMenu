@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.dataadapter;
 
+import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess.GetAllDomainModelsCallback;
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess.GetDomainModelCallback;
-import com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter.PrimitiveDataSource.GetAllPrimitiveCallback;
 import com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter.PrimitiveDataSource.GetPrimitiveCallback;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.componentstate.RecipeComponentStateEntity;
@@ -17,7 +17,10 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMet
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Nonnull;
 
@@ -34,10 +37,19 @@ public class RecipeMetadataLocalGetAdapter {
     private final RecipeComponentStateLocalDataSource componentStateDataSource;
     @Nonnull
     private final RecipeFailReasonsLocalDataSource recipeFailReasonsDataSource;
+    @Nonnull
+    private final Set<String> uniqueDomainIdList;
+    @Nonnull
+    private List<RecipeMetadataPersistenceModel> domainModels;
 
-    private RecipeMetadataPersistenceModel.Builder modelBuilder;
-    private GetDomainModelCallback<RecipeMetadataPersistenceModel> callback;
+    private GetDomainModelCallback<RecipeMetadataPersistenceModel> getModelCallback;
+    private GetAllDomainModelsCallback<RecipeMetadataPersistenceModel> getAllCallback;
+
     private String activeDataId = "";
+    private RecipeMetadataPersistenceModel.Builder modelBuilder;
+    private int uniqueDomainIdListSize;
+    private int domainModelsProcessed;
+
     private boolean isParentAdded;
     private boolean isComponentStatesAdded;
     private boolean isFailReasonsAdded;
@@ -49,13 +61,15 @@ public class RecipeMetadataLocalGetAdapter {
         this.parentDataSource = parentDataSource;
         this.componentStateDataSource = componentStateDataSource;
         this.recipeFailReasonsDataSource = recipeFailReasonsDataSource;
+
+        uniqueDomainIdList = new HashSet<>();
+        domainModels = new ArrayList<>();
     }
 
-    public void getByDataId(
+    public void getModelByDataId(
             @Nonnull String dataId,
             @Nonnull GetDomainModelCallback<RecipeMetadataPersistenceModel> callback) {
-        setupAdapter();
-        this.callback = callback;
+        this.getModelCallback = callback;
 
         getParentEntityFromDataId(dataId);
         getFailReasonsFromParentDataId(dataId);
@@ -73,13 +87,63 @@ public class RecipeMetadataLocalGetAdapter {
 
                     @Override
                     public void onDataUnavailable() {
-                        callback.onModelUnavailable();
+                        getModelCallback.onModelUnavailable();
                     }
                 }
         );
     }
 
+    public void getActiveModelFromDomainId(
+            @Nonnull String domainId,
+            @Nonnull GetDomainModelCallback<RecipeMetadataPersistenceModel> callback) {
+
+        this.getModelCallback = callback;
+        getParentEntitiesFromDomainId(domainId);
+    }
+
+    private void getParentEntitiesFromDomainId(String domainId) {
+        parentDataSource.getAllByDomainId(
+                domainId,
+                new GetAllPrimitiveCallback<RecipeMetadataParentEntity>() {
+                    @Override
+                    public void onAllLoaded(List<RecipeMetadataParentEntity> entities) {
+                        filterForActiveParent(entities);
+                    }
+
+                    @Override
+                    public void onDataUnavailable() {
+                        getModelCallback.onModelUnavailable();
+                    }
+                }
+        );
+    }
+
+    private void filterForActiveParent(List<RecipeMetadataParentEntity> entities) {
+        long lastUpdated = 0;
+        activeDataId = "";
+
+        RecipeMetadataParentEntity parentEntity = null;
+
+        for (RecipeMetadataParentEntity e : entities) {
+            if (e.getLastUpdate() > lastUpdated) {
+                lastUpdated = e.getLastUpdate();
+                activeDataId = e.getDataId();
+                parentEntity = e;
+            }
+        }
+
+        if (activeDataId.isEmpty()) {
+            getModelCallback.onModelUnavailable();
+        } else {
+            addParentEntityToModelBuilder(parentEntity);
+            getFailReasonsFromParentDataId(activeDataId);
+            getComponentStatesFromParentDataId(activeDataId);
+        }
+    }
+
     private void addParentEntityToModelBuilder(RecipeMetadataParentEntity e) {
+        modelBuilder = new RecipeMetadataPersistenceModel.Builder();
+
         modelBuilder.
                 setDataId(e.getDataId()).
                 setDomainId(e.getDomainId()).
@@ -116,6 +180,7 @@ public class RecipeMetadataLocalGetAdapter {
 
     private void addFailReasonsToModelBuilder(List<RecipeFailReasonEntity> entities) {
         List<FailReasons> failReasons = new ArrayList<>();
+
         for (RecipeFailReasonEntity e : entities) {
             CommonFailReason commonFailReason = CommonFailReason.getFromId(e.getFailReasonId());
             RecipeMetadata.FailReason metadataFailReason = FailReason.getById(e.getFailReasonId());
@@ -129,7 +194,8 @@ public class RecipeMetadataLocalGetAdapter {
 
     private void getComponentStatesFromParentDataId(String parentDataId) {
         componentStateDataSource.getAllByParentDataId(
-                parentDataId, new GetAllPrimitiveCallback<RecipeComponentStateEntity>() {
+                parentDataId,
+                new GetAllPrimitiveCallback<RecipeComponentStateEntity>() {
                     @Override
                     public void onAllLoaded(List<RecipeComponentStateEntity> entities) {
                         if (entities.isEmpty()) {
@@ -161,58 +227,77 @@ public class RecipeMetadataLocalGetAdapter {
     }
 
     private void createModel() {
-        if (isParentAdded && isFailReasonsAdded && isComponentStatesAdded)
-            callback.onModelLoaded(modelBuilder.build());
+        if (isModelComplete())
+            getModelCallback.onModelLoaded(modelBuilder.build());
     }
 
-    public void getActiveModelFromDomainId(
-            @Nonnull String domainId,
-            @Nonnull GetDomainModelCallback<RecipeMetadataPersistenceModel> callback) {
-        setupAdapter();
-        this.callback = callback;
-        getLatestParentEntityIdFromDomainId(domainId);
+    private boolean isModelComplete() {
+        return isParentAdded && isFailReasonsAdded && isComponentStatesAdded;
     }
 
-    private void getLatestParentEntityIdFromDomainId(String domainId) {
-        parentDataSource.getAllByDomainId(
-                domainId,
+    public void getAllActive(
+            @Nonnull GetAllDomainModelsCallback<RecipeMetadataPersistenceModel> callback) {
+        getAllCallback = callback;
+        getAllParents();
+    }
+
+    private void getAllParents() {
+        parentDataSource.getAll(
                 new GetAllPrimitiveCallback<RecipeMetadataParentEntity>() {
                     @Override
                     public void onAllLoaded(List<RecipeMetadataParentEntity> entities) {
-                        filterForActive(entities);
+                        if (entities == null || entities.isEmpty()) {
+                            getAllCallback.onModelsUnavailable();
+                        } else {
+                            createUniqueDomainIdList(entities);
+                        }
                     }
 
                     @Override
                     public void onDataUnavailable() {
-                        callback.onModelUnavailable();
+                        getAllCallback.onModelsUnavailable();
                     }
                 }
         );
     }
 
-    private void filterForActive(List<RecipeMetadataParentEntity> entities) {
-        long lastUpdated = 0;
-        activeDataId = "";
+    private void createUniqueDomainIdList(List<RecipeMetadataParentEntity> es) {
+        uniqueDomainIdList.clear();
+        uniqueDomainIdListSize = 0;
+        domainModelsProcessed = 0;
+        domainModels.clear();
 
-        for (RecipeMetadataParentEntity e : entities) {
-            if (e.getLastUpdate() > lastUpdated) {
-                lastUpdated = e.getLastUpdate();
-                activeDataId = e.getDataId();
-            }
+        for (RecipeMetadataParentEntity e : es) {
+            uniqueDomainIdList.add(e.getDomainId());
         }
-        if (activeDataId.isEmpty()) {
-            callback.onModelUnavailable();
-        } else {
-            getByDataId(activeDataId, callback);
-        }
+        uniqueDomainIdListSize = uniqueDomainIdList.size();
+        getActiveModels();
     }
 
-    private void setupAdapter() {
-        callback = null;
-        activeDataId = "";
-        isParentAdded = false;
-        isComponentStatesAdded = false;
-        isFailReasonsAdded = false;
-        modelBuilder = new RecipeMetadataPersistenceModel.Builder().getDefault();
+    private void getActiveModels() {
+        for (String domainId : uniqueDomainIdList) {
+            getActiveModelFromDomainId(
+                    domainId,
+                    new GetDomainModelCallback<RecipeMetadataPersistenceModel>() {
+                        @Override
+                        public void onModelLoaded(RecipeMetadataPersistenceModel model) {
+                            domainModels.add(model);
+                            domainModelsProcessed++;
+                            returnAllDomainModels();
+                        }
+
+                        @Override
+                        public void onModelUnavailable() {
+                            returnAllDomainModels();
+                        }
+                    }
+            );
+        }
+    }
+    
+    private void returnAllDomainModels() {
+        if (domainModelsProcessed == uniqueDomainIdListSize) {
+            getAllCallback.onAllLoaded(domainModels);
+        }
     }
 }

@@ -2,7 +2,6 @@ package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.met
 
 import com.example.peter.thekitchenmenu.data.repository.recipe.metadata.TestDataRecipeMetadata;
 import com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter.PrimitiveDataSource.GetPrimitiveCallback;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.TestDataRecipeMetadataEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.componentstate.RecipeComponentStateEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.componentstate.RecipeComponentStateLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.failreason.RecipeFailReasonEntity;
@@ -64,7 +63,7 @@ public class RecipeMetadataLocalGetAdapterTest {
     private RecipeMetadataLocalGetAdapter SUT;
 
     @Before
-    public void setup() throws Exception {
+    public void setup() {
         MockitoAnnotations.initMocks(this);
         SUT = givenUseCase();
     }
@@ -83,7 +82,7 @@ public class RecipeMetadataLocalGetAdapterTest {
         GetDomainModelCallbackClient callbackClient = new GetDomainModelCallbackClient();
 
         // Act
-        SUT.getByDataId(DATA_UNAVAILABLE_MODEL.getDataId(), callbackClient);
+        SUT.getModelByDataId(DATA_UNAVAILABLE_MODEL.getDataId(), callbackClient);
 
         // Assert
         verify(parentDataSourceMock).getByDataId(eq(dataId),
@@ -149,6 +148,8 @@ public class RecipeMetadataLocalGetAdapterTest {
 
         assertEquals(expectedModel, callbackClient.domainModel);
     }
+
+
 
 
     // region helper methods -----------------------------------------------------------------------

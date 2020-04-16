@@ -19,11 +19,11 @@ public class CourseLocalGetAdapter {
     @Nonnull
     private final RecipeCourseLocalDataSource courseLocalDataSource;
     @Nonnull
-    private final CourseModelConverter converter;
+    private final CourseModelConverterParent converter;
 
     public CourseLocalGetAdapter(@Nonnull RecipeCourseLocalDataSource courseLocalDataSource) {
         this.courseLocalDataSource = courseLocalDataSource;
-        converter = new CourseModelConverter();
+        converter = new CourseModelConverterParent();
     }
 
     public void getByDataId(

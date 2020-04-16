@@ -7,21 +7,9 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-public interface DomainModelConverter<
+public interface DomainModelConverterParent<
         P extends BasePersistence,
         E extends PrimitiveModel> {
-
-    interface ActiveList<
-            P extends BasePersistence,
-            E extends PrimitiveModel> {
-        List<P> convertToActiveModels(@Nonnull List<E> es);
-    }
-
-    interface ActiveModel<
-            P extends BasePersistence,
-            E extends PrimitiveModel> {
-        P convertToActiveModel(@Nonnull List<E> es);
-    }
 
     P convertToModel(@Nonnull E e);
 

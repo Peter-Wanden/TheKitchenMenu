@@ -9,11 +9,11 @@ public class RecipeIngredientLocalSaveAdapter {
     @Nonnull
     private final RecipeIngredientLocalDataSource dataSource;
     @Nonnull
-    private final RecipeIngredientModelConverter converter;
+    private final RecipeIngredientModelConverterParent converter;
 
     public RecipeIngredientLocalSaveAdapter(@Nonnull RecipeIngredientLocalDataSource dataSource) {
         this.dataSource = dataSource;
-        converter = new RecipeIngredientModelConverter();
+        converter = new RecipeIngredientModelConverterParent();
     }
 
     public void save(RecipeIngredientPersistenceModel model) {

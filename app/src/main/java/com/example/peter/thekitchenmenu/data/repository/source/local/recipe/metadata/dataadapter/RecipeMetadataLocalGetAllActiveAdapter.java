@@ -1,6 +1,6 @@
 package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.dataadapter;
 
-import com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter.PrimitiveDataSource;
+import com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter.PrimitiveDataSource.GetAllPrimitiveCallback;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.parent.RecipeMetadataParentEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.parent.RecipeMetadataParentLocalDataSource;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadataPersistenceModel;
@@ -25,7 +25,7 @@ public class RecipeMetadataLocalGetAllActiveAdapter {
     @Nonnull
     private final RecipeMetadataLocalGetActiveByDomainIdAdapter domainIdAdapter;
     @Nonnull
-    private final Set<String> parentDataIdList;
+    private final Set<String> parentDomainIdList;
     @Nonnull
     private final List<RecipeMetadataPersistenceModel> domainModels;
 
@@ -33,12 +33,13 @@ public class RecipeMetadataLocalGetAllActiveAdapter {
     private int listSize;
     private int totalProcessed;
 
-    public RecipeMetadataLocalGetAllActiveAdapter(@Nonnull RecipeMetadataParentLocalDataSource parentDataSource,
-                                                  @Nonnull RecipeMetadataLocalGetActiveByDomainIdAdapter domainIdAdapter) {
+    public RecipeMetadataLocalGetAllActiveAdapter(
+            @Nonnull RecipeMetadataParentLocalDataSource parentDataSource,
+            @Nonnull RecipeMetadataLocalGetActiveByDomainIdAdapter domainIdAdapter) {
         this.parentDataSource = parentDataSource;
         this.domainIdAdapter = domainIdAdapter;
 
-        parentDataIdList = new HashSet<>();
+        parentDomainIdList = new HashSet<>();
         domainModels = new ArrayList<>();
     }
 
@@ -49,7 +50,7 @@ public class RecipeMetadataLocalGetAllActiveAdapter {
 
     private void getAllDomainIds() {
         parentDataSource.getAll(
-                new PrimitiveDataSource.GetAllPrimitiveCallback<RecipeMetadataParentEntity>() {
+                new GetAllPrimitiveCallback<RecipeMetadataParentEntity>() {
                     @Override
                     public void onAllLoaded(List<RecipeMetadataParentEntity> entities) {
                         createUniqueDomainIdList(entities);
@@ -67,31 +68,34 @@ public class RecipeMetadataLocalGetAllActiveAdapter {
         if (entities.isEmpty()) {
             callback.onDataUnavailable();
         } else {
-            parentDataIdList.clear();
+            parentDomainIdList.clear();
             for (RecipeMetadataParentEntity e : entities) {
-                parentDataIdList.add(e.getDomainId());
+                parentDomainIdList.add(e.getDomainId());
             }
-            listSize = parentDataIdList.size();
+            listSize = parentDomainIdList.size();
             getLatestModels();
         }
     }
 
     private void getLatestModels() {
-        for (String domainId : parentDataIdList) {
-            domainIdAdapter.getActiveModelForDomainId(domainId, new RecipeMetadataLocalGetActiveByDomainIdAdapter.Callback() {
-                @Override
-                public void onModelCreated(@Nonnull RecipeMetadataPersistenceModel model) {
-                    totalProcessed ++;
-                    domainModels.add(model);
-                    returnAll();
-                }
+        for (String domainId : parentDomainIdList) {
+            domainIdAdapter.getActiveModelForDomainId(
+                    domainId,
+                    new RecipeMetadataLocalGetActiveByDomainIdAdapter.Callback() {
+                        @Override
+                        public void onModelCreated(@Nonnull RecipeMetadataPersistenceModel model) {
+                            totalProcessed++;
+                            domainModels.add(model);
+                            returnAll();
+                        }
 
-                @Override
-                public void onDataUnavailable() {
-                    totalProcessed ++;
-                    returnAll();
-                }
-            });
+                        @Override
+                        public void onDataUnavailable() {
+                            totalProcessed++;
+                            returnAll();
+                        }
+                    }
+            );
         }
     }
 

@@ -1,6 +1,6 @@
 package com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.dataadapter;
 
-import com.example.peter.thekitchenmenu.data.repository.source.local.DomainModelConverter;
+import com.example.peter.thekitchenmenu.data.repository.source.local.DomainModelConverterParent;
 import com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.datasource.IngredientEntity;
 import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientPersistenceModel;
 
@@ -9,8 +9,8 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-public class IngredientLocalModelConverter
-        implements DomainModelConverter<IngredientPersistenceModel, IngredientEntity> {
+public class IngredientLocalModelConverterParent
+        implements DomainModelConverterParent<IngredientPersistenceModel, IngredientEntity> {
 
     @Override
     public IngredientPersistenceModel convertToModel(

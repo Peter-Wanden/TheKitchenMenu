@@ -1,6 +1,6 @@
 package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.dataadapter;
 
-import com.example.peter.thekitchenmenu.data.repository.source.local.DomainModelConverter;
+import com.example.peter.thekitchenmenu.data.repository.source.local.DomainModelConverterParent;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.RecipeCourseEntity;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCoursePersistenceModel;
@@ -10,9 +10,9 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-public class CourseModelConverter
+public class CourseModelConverterParent
         implements
-        DomainModelConverter<RecipeCoursePersistenceModel, RecipeCourseEntity> {
+        DomainModelConverterParent<RecipeCoursePersistenceModel, RecipeCourseEntity> {
 
     @Override
     public RecipeCoursePersistenceModel convertToModel(@Nonnull RecipeCourseEntity e) {

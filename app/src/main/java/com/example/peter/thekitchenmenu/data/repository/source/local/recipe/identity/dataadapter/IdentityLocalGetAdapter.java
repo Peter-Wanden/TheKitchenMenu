@@ -18,11 +18,11 @@ public class IdentityLocalGetAdapter {
     @Nonnull
     private final RecipeIdentityLocalDataSource dataSource;
     @Nonnull
-    private final IdentityModelConverter converter;
+    private final IdentityModelConverterParent converter;
 
     public IdentityLocalGetAdapter(@Nonnull RecipeIdentityLocalDataSource dataSource) {
         this.dataSource = dataSource;
-        converter = new IdentityModelConverter();
+        converter = new IdentityModelConverterParent();
     }
 
     public void getByDataId(

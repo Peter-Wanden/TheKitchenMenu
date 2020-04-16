@@ -10,11 +10,11 @@ public class PortionsLocalSaveAdapter {
     @Nonnull
     private final RecipePortionsLocalDataSource dataSource;
     @Nonnull
-    private final PortionsModelConverter converter;
+    private final PortionsModelConverterParent converter;
 
     public PortionsLocalSaveAdapter(@Nonnull RecipePortionsLocalDataSource dataSource) {
         this.dataSource = dataSource;
-        converter = new PortionsModelConverter();
+        converter = new PortionsModelConverterParent();
     }
 
     public void save(RecipePortionsPersistenceModel model) {

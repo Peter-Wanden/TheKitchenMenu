@@ -9,11 +9,11 @@ public class DurationLocalSaveAdapter {
     @Nonnull
     private final RecipeDurationLocalDataSource dataSource;
     @Nonnull
-    private final DurationModelConverter converter;
+    private final DurationModelConverterParent converter;
 
     public DurationLocalSaveAdapter(@Nonnull RecipeDurationLocalDataSource dataSource) {
         this.dataSource = dataSource;
-        converter = new DurationModelConverter();
+        converter = new DurationModelConverterParent();
     }
 
     public void save(RecipeDurationPersistenceModel model) {
