@@ -37,7 +37,7 @@ public class RecipeMetadataLocalGetAdapterTest {
 
     // region constants ----------------------------------------------------------------------------
     private static RecipeMetadataPersistenceModel DATA_UNAVAILABLE_MODEL =
-            TestDataRecipeMetadata.getDataUnavailable();
+            TestDataRecipeMetadata.getDataUnavailablePersistentModel();
     private static List<RecipeMetadataPersistenceModel> VALID_CHANGED_MODELS =
             TestDataRecipeMetadata.getValidChangedList();
     // endregion constants -------------------------------------------------------------------------
@@ -149,8 +149,10 @@ public class RecipeMetadataLocalGetAdapterTest {
         assertEquals(expectedModel, callbackClient.domainModel);
     }
 
+    @Test
+    public void getAllActiveModels_returnOnlyMostRecentModels() {
 
-
+    }
 
     // region helper methods -----------------------------------------------------------------------
     public static RecipeMetadataParentEntity getRecipeMetadataParentEntityFromDomainModel(
