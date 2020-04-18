@@ -160,7 +160,6 @@ public class RecipeMetadata
     private final RepositoryRecipeMetadata repository;
     @Nonnull
     private final Set<ComponentName> requiredComponents;
-
     @Nonnull
     private final List<FailReasons> failReasons;
 

@@ -1,6 +1,5 @@
 package com.example.peter.thekitchenmenu.testdata;
 
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.TestDataRecipeMetadataEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.datasource.RecipePortionsEntity;
 
 public class TestDataRecipePortionsEntity {

@@ -1,6 +1,5 @@
 package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor;
 
-import com.example.peter.thekitchenmenu.commonmocks.RecipeComponents;
 import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
 import com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.RecipeCourseEntity;
@@ -21,16 +20,12 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.R
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.RecipeResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDuration;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentity;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortions;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDurationTest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityTest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortionsTest;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.TestDataRecipeCourseEntity;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeDurationEntity;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.TestDataRecipeMetadataEntity;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeIdentityEntity;
@@ -44,7 +39,6 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 import static com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.TestDataRecipeCourseEntity.*;
-import static com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.TestDataRecipeMetadataEntity.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -815,12 +809,12 @@ public class RecipeCourseEditorViewModelTest {
 
     private void verifyRepoCourseCalledAndReturnCoursesMatchingId(String recipeId) {
 //        verify(repoCourseMock).getAllByDomainId(eq(recipeId), repoCourseCallback.capture());
-        repoCourseCallback.getValue().onAllLoaded(getAllByRecipeId(recipeId));
+        repoCourseCallback.getValue().onAllLoaded(getAllByDomainId(recipeId));
     }
 
     private void verifyRepoCourseCalledAndReturnEvenCoursesForId(String recipeId) {
 //        verify(repoCourseMock).getAllByDomainId(eq(recipeId), repoCourseCallback.capture());
-        repoCourseCallback.getValue().onAllLoaded(getEvenRecipeCoursesDatabaseResponse());
+        repoCourseCallback.getValue().onAllLoaded(getAllEvenRecipeCourses());
     }
 
     private void verifyRepoCourseCalledAndReturnDataUnavailableForId(String recipeId) {
@@ -844,11 +838,11 @@ public class RecipeCourseEditorViewModelTest {
 
     private void whenIdProviderReturnClonedEvenIds() {
         when(idProviderMock.getUId()).thenReturn(
-                getClonedRecipeCourseZero().getDataId(),
-                getClonedRecipeCourseZero().getDataId(),
-                getClonedRecipeCourseTwo().getDataId(),
-                getClonedRecipeCourseFour().getDataId(),
-                getClonedRecipeCourseSix().getDataId());
+                getCopiedRecipeCourseZero().getDataId(),
+                getCopiedRecipeCourseZero().getDataId(),
+                getCopiedRecipeCourseTwo().getDataId(),
+                getCopiedRecipeCourseFour().getDataId(),
+                getCopiedRecipeCourseSix().getDataId());
     }
 
     private void whenTimeProviderCalledReturnTime(long time) {

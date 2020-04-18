@@ -82,7 +82,7 @@ public class RecipeMetadataLocalGetAdapterTest {
     @Test
     public void getByDataId_domainModelReturned() {
         // Arrange
-        String dataId = TestDataRecipeMetadata.getDataUnavailablePersistentModel().getDataId();
+        String dataId = TestDataRecipeMetadata.getDataUnavailable().getDataId();
         GetDomainModelCallbackClient callbackClient = new GetDomainModelCallbackClient();
         // Act
         SUT.getModelByDataId(dataId, callbackClient);
@@ -111,7 +111,7 @@ public class RecipeMetadataLocalGetAdapterTest {
                 TestDataRecipeMetadata.getDataUnavailableFailReasonEntities()
         );
         // Assert result
-        assertEquals(TestDataRecipeMetadata.getDataUnavailablePersistentModel(),
+        assertEquals(TestDataRecipeMetadata.getDataUnavailable(),
                 callbackClient.domainModel
         );
     }

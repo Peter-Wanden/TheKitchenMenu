@@ -26,10 +26,10 @@ public class TestDataRecipeMetadata {
     1. is newly created
     2. has one or more components reporting data unavailable (as it has not been entered yet).
      */
-    public static RecipeMetadataPersistenceModel getDataUnavailablePersistentModel() {
+    public static RecipeMetadataPersistenceModel getDataUnavailable() {
         return new RecipeMetadataPersistenceModel.Builder().
-                setDataId("dataId-recipeMetadata-Id0").
-                setDomainId("domainId-recipe-Id0").
+                setDataId("dataId-recipeMetadata-id0").
+                setDomainId("domainId-recipe-id0").
                 setParentDomainId("").
                 setRecipeState(RecipeState.DATA_UNAVAILABLE).
                 setComponentStates(getDataUnavailableComponentStates()).
@@ -41,15 +41,15 @@ public class TestDataRecipeMetadata {
     }
 
     public static RecipeMetadataParentEntity getDataUnavailableParentEntity() {
-        return getParentEntityFromPersistenceModel(getDataUnavailablePersistentModel());
+        return getParentEntityFromPersistenceModel(getDataUnavailable());
     }
 
     public static List<RecipeFailReasonEntity> getDataUnavailableFailReasonEntities() {
-        return getFailReasonEntitiesFromPersistentModel(getDataUnavailablePersistentModel());
+        return getFailReasonEntitiesFromPersistentModel(getDataUnavailable());
     }
 
     public static List<RecipeComponentStateEntity> getDataUnavailableComponentStateEntities() {
-        return getComponentStateEntitiesFromPersistentModel(getDataUnavailablePersistentModel());
+        return getComponentStateEntitiesFromPersistentModel(getDataUnavailable());
     }
 
     /*
@@ -128,9 +128,9 @@ public class TestDataRecipeMetadata {
      */
     public static RecipeMetadataPersistenceModel getValidChanged0() {
         return new RecipeMetadataPersistenceModel.Builder().
-                setDataId(getDataUnavailablePersistentModel().getDataId()).
-                setDomainId(getDataUnavailablePersistentModel().getDomainId()).
-                setParentDomainId(getDataUnavailablePersistentModel().getParentDomainId()).
+                setDataId(getDataUnavailable().getDataId()).
+                setDomainId(getDataUnavailable().getDomainId()).
+                setParentDomainId(getDataUnavailable().getParentDomainId()).
                 setRecipeState(RecipeState.VALID_CHANGED).
                 setFailReasons(getFailReasonsNone()).
                 setComponentStates(getValidChangedComponentStates()).
@@ -155,9 +155,9 @@ public class TestDataRecipeMetadata {
     // getValidChanged() previous state
     public static RecipeMetadataPersistenceModel getValidChanged1() {
         return new RecipeMetadataPersistenceModel.Builder().
-                setDataId(getDataUnavailablePersistentModel().getDataId()).
-                setDomainId(getDataUnavailablePersistentModel().getDomainId()).
-                setParentDomainId(getDataUnavailablePersistentModel().getParentDomainId()).
+                setDataId(getDataUnavailable().getDataId()).
+                setDomainId(getDataUnavailable().getDomainId()).
+                setParentDomainId(getDataUnavailable().getParentDomainId()).
                 setRecipeState(RecipeState.VALID_CHANGED).
                 setFailReasons(getFailReasonsNone()).
                 setComponentStates(getValidChangedComponentStates()).
@@ -182,9 +182,9 @@ public class TestDataRecipeMetadata {
     // getValidChanged() previous state
     public static RecipeMetadataPersistenceModel getValidChanged2() {
         return new RecipeMetadataPersistenceModel.Builder().
-                setDataId(getDataUnavailablePersistentModel().getDataId()).
-                setDomainId(getDataUnavailablePersistentModel().getDomainId()).
-                setParentDomainId(getDataUnavailablePersistentModel().getParentDomainId()).
+                setDataId(getDataUnavailable().getDataId()).
+                setDomainId(getDataUnavailable().getDomainId()).
+                setParentDomainId(getDataUnavailable().getParentDomainId()).
                 setRecipeState(RecipeState.VALID_CHANGED).
                 setFailReasons(getFailReasonsNone()).
                 setComponentStates(getValidChangedComponentStates()).

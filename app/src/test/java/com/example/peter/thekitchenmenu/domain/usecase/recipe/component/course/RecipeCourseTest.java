@@ -3,7 +3,6 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course;
 import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess.GetAllDomainModelsCallback;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.RecipeCourseEntity;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.parent.RecipeMetadataParentEntity;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeCourse;
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
@@ -19,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse.*;
-import static com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.TestDataRecipeCourseEntity.getAllByRecipeId;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.*;
 import static org.junit.Assert.assertTrue;
@@ -227,7 +225,7 @@ public class RecipeCourseTest {
         // Confirm repo called and capture the callback
         verify(repoCourseMock).getAllByDomainId(eq(recipeId), repoCourseCallback.capture());
         // Find the matching values in the test data and return the callback with results
-        List<RecipeCourseEntity> courseEntityList = getAllByRecipeId(recipeId);
+        List<RecipeCourseEntity> courseEntityList = TestDataRecipeCourseEntity.getAllByDomainId(recipeId);
 //        if (courseEntityList.size() > 0) {
 //            repoCourseCallback.getValue().onAllLoaded(getAllByRecipeId(recipeId));
 //        } else {

@@ -14,11 +14,7 @@ import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeP
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDuration;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentity;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortions;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDurationTest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityTest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortionsTest;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
@@ -26,7 +22,6 @@ import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.TestDataRecipeCourseEntity;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeDurationEntity;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.TestDataRecipeMetadataEntity;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipePortionsEntity;
 
@@ -44,12 +39,6 @@ import static com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.Re
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentName.DURATION;
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentName.IDENTITY;
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentName.PORTIONS;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 public class RecipeCopyTest {
 
@@ -854,7 +843,7 @@ public class RecipeCopyTest {
 
 //        verify(repoCourseMock).getAllByDomainId(eq(recipeId), repoCourseCallback.capture());
         repoCourseCallback.getValue().onAllLoaded(TestDataRecipeCourseEntity.
-                getAllByRecipeId(recipeId));
+                getAllByDomainId(recipeId));
 
 //        verify(repoPortionsMock).getAllByDomainId(eq(recipeId), repoPortionsCallback.capture());
         repoPortionsCallback.getValue().onEntityLoaded(TestDataRecipePortionsEntity.

@@ -3,7 +3,6 @@ package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor;
 import android.content.res.Resources;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.commonmocks.RecipeComponents;
 import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.RecipeCourseEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.datasource.RecipeDurationEntity;
@@ -24,13 +23,9 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDuration;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentity;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.RecipeRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.RecipeResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortions;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadataResponse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDurationTest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityTest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortionsTest;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
@@ -38,7 +33,6 @@ import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.TestDataRecipeCourseEntity;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeDurationEntity;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.TestDataRecipeMetadataEntity;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipePortionsEntity;
 
@@ -989,7 +983,7 @@ public class RecipeDurationEditorViewModelTest {
                 getValidExistingTitleValidDescriptionValid());
 
 //        verify(repoCourseMock).getAllByDomainId(eq(recipeId), repoCourseCallback.capture());
-        repoCourseCallback.getValue().onAllLoaded(TestDataRecipeCourseEntity.getAllByRecipeId(recipeId));
+        repoCourseCallback.getValue().onAllLoaded(TestDataRecipeCourseEntity.getAllByDomainId(recipeId));
 
 //        verify(repoPortionsMock).getAllByDomainId(eq(recipeId), repoPortionsCallback.capture());
         repoPortionsCallback.getValue().onEntityLoaded(TestDataRecipePortionsEntity.

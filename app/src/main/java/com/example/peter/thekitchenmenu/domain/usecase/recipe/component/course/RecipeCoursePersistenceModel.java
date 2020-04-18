@@ -82,6 +82,16 @@ public final class RecipeCoursePersistenceModel
             return self();
         }
 
+        public Builder basedOnModel (RecipeCoursePersistenceModel m) {
+            model.dataId = m.getDataId();
+            model.domainId = m.getDomainId();
+            model.course = m.getCourse();
+            model.isActive = m.isActive();
+            model.createDate = m.getCreateDate();
+            model.lasUpdate = m.getLastUpdate();
+            return self();
+        }
+
         public Builder setDataId(String dataId) {
             model.dataId = dataId;
             return self();
