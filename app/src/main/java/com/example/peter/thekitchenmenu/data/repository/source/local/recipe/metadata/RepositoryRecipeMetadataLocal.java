@@ -2,9 +2,7 @@ package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.met
 
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.dataadapter.RecipeMetadataLocalDeleteAdapter;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.dataadapter.RecipeMetadataLocalGetActiveByDomainIdAdapter;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.dataadapter.RecipeMetadataLocalGetAllActiveAdapter;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.dataadapter.RecipeMetadataLocalGetByDataIdAdapter;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.dataadapter.RecipeMetadataLocalGetAdapter;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.dataadapter.RecipeMetadataLocalSaveAdapter;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadataPersistenceModel;
 
@@ -22,34 +20,24 @@ public class RepositoryRecipeMetadataLocal
     private static volatile RepositoryRecipeMetadataLocal INSTANCE;
 
     @Nonnull
-    private final RecipeMetadataLocalGetByDataIdAdapter localGetByDataIdAdapter;
-    @Nonnull
-    private final RecipeMetadataLocalGetActiveByDomainIdAdapter getActiveByDomainIdAdapter;
-    @Nonnull
-    private final RecipeMetadataLocalGetAllActiveAdapter getAllActiveAdapter;
+    private final RecipeMetadataLocalGetAdapter getAdapter;
     @Nonnull
     private final RecipeMetadataLocalSaveAdapter saveAdapter;
     @Nonnull
     private final RecipeMetadataLocalDeleteAdapter deleteAdapter;
 
     private RepositoryRecipeMetadataLocal(
-            @Nonnull RecipeMetadataLocalGetByDataIdAdapter localGetByDataIdAdapter,
-            @Nonnull RecipeMetadataLocalGetActiveByDomainIdAdapter getActiveByDomainIdAdapter,
-            @Nonnull RecipeMetadataLocalGetAllActiveAdapter getAllActiveAdapter,
+            @Nonnull RecipeMetadataLocalGetAdapter getAdapter,
             @Nonnull RecipeMetadataLocalSaveAdapter saveAdapter,
             @Nonnull RecipeMetadataLocalDeleteAdapter deleteAdapter) {
 
-        this.localGetByDataIdAdapter = localGetByDataIdAdapter;
-        this.getActiveByDomainIdAdapter = getActiveByDomainIdAdapter;
-        this.getAllActiveAdapter = getAllActiveAdapter;
+        this.getAdapter = getAdapter;
         this.saveAdapter = saveAdapter;
         this.deleteAdapter = deleteAdapter;
     }
 
     public static RepositoryRecipeMetadataLocal getInstance(
-            @Nonnull RecipeMetadataLocalGetByDataIdAdapter localGetByDataIdAdapter,
-            @Nonnull RecipeMetadataLocalGetActiveByDomainIdAdapter getActiveByDomainIdAdapter,
-            @Nonnull RecipeMetadataLocalGetAllActiveAdapter getAllActiveAdapter,
+            @Nonnull RecipeMetadataLocalGetAdapter getAdapter,
             @Nonnull RecipeMetadataLocalSaveAdapter saveAdapter,
             @Nonnull RecipeMetadataLocalDeleteAdapter deleteAdapter) {
 
@@ -57,9 +45,7 @@ public class RepositoryRecipeMetadataLocal
             synchronized (RepositoryRecipeMetadataLocal.class) {
                 if (INSTANCE == null)
                     INSTANCE = new RepositoryRecipeMetadataLocal(
-                            localGetByDataIdAdapter,
-                            getActiveByDomainIdAdapter,
-                            getAllActiveAdapter,
+                            getAdapter,
                             saveAdapter,
                             deleteAdapter
                     );
@@ -71,15 +57,15 @@ public class RepositoryRecipeMetadataLocal
     @Override
     public void getAll(
             @Nonnull GetAllDomainModelsCallback<RecipeMetadataPersistenceModel> callback) {
-        getAllActiveAdapter.adaptLatestToDomainObjects(
-                new RecipeMetadataLocalGetAllActiveAdapter.Callback() {
+        getAdapter.getAllActive(
+                new GetAllDomainModelsCallback<RecipeMetadataPersistenceModel>() {
                     @Override
-                    public void onAllLoaded(@Nonnull List<RecipeMetadataPersistenceModel> models) {
+                    public void onAllLoaded(List<RecipeMetadataPersistenceModel> models) {
                         callback.onAllLoaded(models);
                     }
 
                     @Override
-                    public void onDataUnavailable() {
+                    public void onModelsUnavailable() {
                         callback.onModelsUnavailable();
                     }
                 }
@@ -90,16 +76,16 @@ public class RepositoryRecipeMetadataLocal
     public void getByDataId(
             @Nonnull String dataId,
             @Nonnull GetDomainModelCallback<RecipeMetadataPersistenceModel> callback) {
-        localGetByDataIdAdapter.adaptToDomainModel(
+        getAdapter.getModelByDataId(
                 dataId,
-                new RecipeMetadataLocalGetByDataIdAdapter.Callback() {
+                new GetDomainModelCallback<RecipeMetadataPersistenceModel>() {
                     @Override
-                    public void onModelCreated(@Nonnull RecipeMetadataPersistenceModel model) {
+                    public void onModelLoaded(@Nonnull RecipeMetadataPersistenceModel model) {
                         callback.onModelLoaded(model);
                     }
 
                     @Override
-                    public void onDataUnavailable() {
+                    public void onModelUnavailable() {
                         callback.onModelUnavailable();
                     }
                 }
@@ -110,16 +96,16 @@ public class RepositoryRecipeMetadataLocal
     public void getActiveByDomainId(
             @Nonnull String domainId,
             @Nonnull GetDomainModelCallback<RecipeMetadataPersistenceModel> callback) {
-        getActiveByDomainIdAdapter.getActiveModelForDomainId(
+        getAdapter.getActiveModelByDomainId(
                 domainId,
-                new RecipeMetadataLocalGetActiveByDomainIdAdapter.Callback() {
+                new GetDomainModelCallback<RecipeMetadataPersistenceModel>() {
                     @Override
-                    public void onModelCreated(@Nonnull RecipeMetadataPersistenceModel model) {
+                    public void onModelLoaded(RecipeMetadataPersistenceModel model) {
                         callback.onModelLoaded(model);
                     }
 
                     @Override
-                    public void onDataUnavailable() {
+                    public void onModelUnavailable() {
                         callback.onModelUnavailable();
                     }
                 }

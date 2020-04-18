@@ -22,8 +22,7 @@ import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.iden
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.dataadapter.IdentityLocalSaveAdapter;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.datasource.RecipeIdentityLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.dataadapter.RecipeMetadataLocalDeleteAdapter;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.dataadapter.RecipeMetadataLocalGetAllActiveAdapter;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.dataadapter.RecipeMetadataLocalGetActiveByDomainIdAdapter;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.dataadapter.RecipeMetadataLocalGetAdapter;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.dataadapter.RecipeMetadataLocalSaveAdapter;
 import com.example.peter.thekitchenmenu.data.repository.ingredient.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.data.repository.product.RepositoryFavoriteProduct;
@@ -37,7 +36,6 @@ import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeP
 import com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.datasource.IngredientLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.RepositoryRecipeCourseLocal;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.componentstate.RecipeComponentStateLocalDataSource;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.dataadapter.RecipeMetadataLocalGetByDataIdAdapter;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.failreason.RecipeFailReasonsLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.RepositoryRecipePortionsLocal;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.dataadapter.PortionsLocalDeleteAdapter;
@@ -98,9 +96,7 @@ public class DatabaseInjection {
         return RepositoryRecipeMetadata.getInstance(
                 RepositoryRecipeMetadataRemote.getInstance(),
                 RepositoryRecipeMetadataLocal.getInstance(
-                        provideRecipeMetadataGetByDataIdAdapter(c),
-                        provideGetLatestByDomainIdAdapter(c),
-                        provideGetAllLatestAdapter(c),
+                        provideRecipeMetadataLocalGetAdapter(c),
                         provideSaveAdapter(c),
                         provideRecipeMetadataLocalDeleteAdapter(c)
                 )
@@ -116,7 +112,8 @@ public class DatabaseInjection {
         );
     }
 
-    private static RecipeMetadataLocalSaveAdapter provideSaveAdapter(Context c) {
+    private static RecipeMetadataLocalSaveAdapter provideSaveAdapter(
+            @Nonnull Context c) {
         return new RecipeMetadataLocalSaveAdapter(
                 provideRecipeMetaDataParentLocalDataSource(c),
                 provideRecipeComponentStateLocalDataSource(c),
@@ -125,25 +122,9 @@ public class DatabaseInjection {
         );
     }
 
-    private static RecipeMetadataLocalGetAllActiveAdapter provideGetAllLatestAdapter(
+    private static RecipeMetadataLocalGetAdapter provideRecipeMetadataLocalGetAdapter(
             @Nonnull Context c) {
-        return new RecipeMetadataLocalGetAllActiveAdapter(
-                provideRecipeMetaDataParentLocalDataSource(c),
-                provideGetLatestByDomainIdAdapter(c)
-        );
-    }
-
-    private static RecipeMetadataLocalGetActiveByDomainIdAdapter provideGetLatestByDomainIdAdapter(
-            @Nonnull Context c) {
-        return new RecipeMetadataLocalGetActiveByDomainIdAdapter(
-                provideRecipeMetaDataParentLocalDataSource(c),
-                provideRecipeMetadataGetByDataIdAdapter(c)
-        );
-    }
-
-    private static RecipeMetadataLocalGetByDataIdAdapter provideRecipeMetadataGetByDataIdAdapter(
-            @Nonnull Context c) {
-        return new RecipeMetadataLocalGetByDataIdAdapter(
+        return new RecipeMetadataLocalGetAdapter(
                 provideRecipeMetaDataParentLocalDataSource(c),
                 provideRecipeComponentStateLocalDataSource(c),
                 provideRecipeFailReasonsLocalDataSource(c)

@@ -18,7 +18,6 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMet
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -93,7 +92,7 @@ public class RecipeMetadataLocalGetAdapter {
         );
     }
 
-    public void getActiveModelFromDomainId(
+    public void getActiveModelByDomainId(
             @Nonnull String domainId,
             @Nonnull GetDomainModelCallback<RecipeMetadataPersistenceModel> callback) {
 
@@ -227,8 +226,9 @@ public class RecipeMetadataLocalGetAdapter {
     }
 
     private void createModel() {
-        if (isModelComplete())
+        if (isModelComplete()) {
             getModelCallback.onModelLoaded(modelBuilder.build());
+        }
     }
 
     private boolean isModelComplete() {
@@ -276,7 +276,7 @@ public class RecipeMetadataLocalGetAdapter {
 
     private void getActiveModels() {
         for (String domainId : uniqueDomainIdList) {
-            getActiveModelFromDomainId(
+            getActiveModelByDomainId(
                     domainId,
                     new GetDomainModelCallback<RecipeMetadataPersistenceModel>() {
                         @Override

@@ -198,7 +198,7 @@ public class TestDataRecipeMetadata {
         return getParentEntityFromPersistenceModel(getValidChanged2());
     }
 
-    public static List<RecipeFailReasonEntity> getValidChanged2ParentEntities() {
+    public static List<RecipeFailReasonEntity> getValidChanged2FailReasonEntities() {
         return getFailReasonEntitiesFromPersistentModel(getValidChanged2());
     }
 
