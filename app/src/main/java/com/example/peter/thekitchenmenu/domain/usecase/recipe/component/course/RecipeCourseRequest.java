@@ -16,7 +16,8 @@ public final class RecipeCourseRequest
         extends BaseDomainMessageModel<RecipeCourseRequest.Model>
         implements UseCase.Request {
 
-    private RecipeCourseRequest() {}
+    private RecipeCourseRequest() {
+    }
 
     public static class Builder
             extends UseCaseMessageBuilderModel<Builder, RecipeCourseRequest, Model> {
@@ -36,11 +37,9 @@ public final class RecipeCourseRequest
         public Builder basedOnResponse(RecipeCourseResponse response) {
             message.dataId = response.getDataId();
             message.domainId = response.getDomainId();
-            message.model.courseList = new ArrayList<>(response.
-                    getModel().
-                    getCourseList().
-                    keySet()
-            );
+            message.model = new Model.Builder().
+                    basedOnResponseModel(response.getModel()).
+                    build();
             return self();
         }
 
@@ -54,7 +53,8 @@ public final class RecipeCourseRequest
 
         private List<Course> courseList;
 
-        private Model(){}
+        private Model() {
+        }
 
         public List<Course> getCourseList() {
             return courseList;
@@ -89,6 +89,11 @@ public final class RecipeCourseRequest
 
             public Builder getDefault() {
                 model.courseList = new ArrayList<>();
+                return self();
+            }
+
+            public Builder basedOnResponseModel(RecipeCourseResponse.Model m) {
+                model.courseList = new ArrayList<>(m.getCourseList().keySet());
                 return self();
             }
 

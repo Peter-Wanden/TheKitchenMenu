@@ -1,6 +1,7 @@
 package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor;
 
 import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
+import com.example.peter.thekitchenmenu.data.repository.recipe.metadata.TestDataRecipeMetadata;
 import com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.RecipeCourseEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.datasource.RecipeDurationEntity;
@@ -14,6 +15,7 @@ import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeP
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadataPersistenceModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadataRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadataResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourseResponse;
@@ -48,16 +50,15 @@ public class RecipeCourseEditorViewModelTest {
             getSimpleName() + ": ";
 
     // region constants ----------------------------------------------------------------------------
-    private RecipeMetadataParentEntity VALID_EXISTING_RECIPE_ENTITY = null;
-//    getValidExisting();
-    private String EXISTING_RECIPE_ID = VALID_EXISTING_RECIPE_ENTITY.getDataId();
-    private String NEW_RECIPE_ID = null;
-//    TestDataRecipeMetadataEntity.getNewInvalidParent().getDataId();
+    private static final RecipeMetadataPersistenceModel RECIPE_METADATA_VALID_UNCHANGED =
+            TestDataRecipeMetadata.getValidUnchanged();
+    private String EXISTING_RECIPE_ID = RECIPE_METADATA_VALID_UNCHANGED.getDomainId();
+    private String NEW_RECIPE_ID = TestDataRecipeMetadata.getDataUnavailable().getDomainId();
 
     private static final RecipeMetadataParentEntity RECIPE_INVALID_NEW = null;
-//            TestDataRecipeMetadataEntity.getNewInvalidParent();
+    //            TestDataRecipeMetadataEntity.getNewInvalidParent();
     private static final RecipeMetadataParentEntity RECIPE_VALID_EXISTING = null;
-//            TestDataRecipeMetadataEntity.getValidExisting();
+    //            TestDataRecipeMetadataEntity.getValidExisting();
     private static final RecipeIdentityEntity IDENTITY_VALID_EXISTING_COMPLETE =
             TestDataRecipeIdentityEntity.getValidExistingTitleValidDescriptionValid();
     private static final RecipeDurationEntity DURATION_VALID_EXISTING_COMPLETE =
@@ -118,7 +119,7 @@ public class RecipeCourseEditorViewModelTest {
                 setLongTextMaxLength(RecipeIdentityTest.DESCRIPTION_MAX_LENGTH).
                 build();
 
-//        com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata recipeMetadata = new com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata(
+//        RecipeMetadata recipeMetadata = RecipeMetadata(
 //                timeProviderMock,
 //                repoRecipeMock,
 //                RecipeComponents.requiredComponents
@@ -237,53 +238,6 @@ public class RecipeCourseEditorViewModelTest {
         assertTrue(SUT.isCourseSix());
         assertFalse(SUT.isCourseSeven());
     }
-
-//    @Test
-//    public void startWithClone_cloneFromAndToIds_persistenceCalledWithCloneFromId() {
-//        // Arrange
-//        String cloneFromRecipeId = RECIPE_VALID_EXISTING.getId();
-//        String cloneToRecipeId = RECIPE_INVALID_NEW.getId();
-//        // An external request that starts/loads the recipe
-//        RecipeRequest request = new RecipeRequest.Builder().
-//                setId(cloneFromRecipeId).
-//                setCloneToId(cloneToRecipeId).
-//                build();
-//
-//        // Act
-//        handler.execute(recipeMacro, request, new RecipeResponseCallback());
-//
-//        // Assert
-//        verifyAllOtherComponentReposCalledAndReturnValidExisting(cloneFromRecipeId);
-//        verifyRepoCourseCalledAndReturnCoursesMatchingId(cloneFromRecipeId);
-//    }
-
-//    @Test
-//    public void startWithClonedModel_cloneFromAndToIds_whenDeleteCourse_courseDeletedFromCloneToId() {
-//        // Arrange
-//        String cloneFromRecipeId = RECIPE_VALID_EXISTING.getId();
-//        String cloneToRecipeId = RECIPE_INVALID_NEW.getId();
-//        whenIdProviderReturnClonedEvenIds();
-//
-//        // An external request that starts/loads the recipe
-//        RecipeRequest request = new RecipeRequest.Builder().
-//                setId(cloneFromRecipeId).
-//                setCloneToId(cloneToRecipeId).
-//                build();
-//
-//        // Act
-//        handler.execute(recipeMacro, request, new RecipeResponseCallback());
-//
-//        // Assert
-//        verifyAllOtherComponentReposCalledAndReturnValidExisting(cloneFromRecipeId);
-//        verifyRepoCourseCalledAndReturnEvenCoursesForId(cloneFromRecipeId);
-//
-//        assertTrue(SUT.isCourseZero());
-//        SUT.setCourseZero(false);
-//        verify(repoCourseMock).deleteById(eq(getClonedRecipeCourseZero().getId()));
-//        assertFalse(SUT.isCourseZero());
-//        SUT.setCourseFour(false);
-//        verify(repoCourseMock).deleteById(eq(getClonedRecipeCourseFour().getId()));
-//    }
 
     @Test
     public void courseZeroSelected_true_courseZeroAndRecipeIdSavedToDatabase() {

@@ -41,7 +41,7 @@ public abstract class UseCase {
     }
 
     /**
-     * Data received from a request.
+     * Data received after a request has been processed.
      */
     public interface Response extends Message {
     }

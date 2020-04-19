@@ -2,6 +2,7 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course;
 
 import android.annotation.SuppressLint;
 
+import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeCourse;
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
@@ -16,7 +17,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -132,18 +132,18 @@ public class RecipeCourse
             createDate = Math.min(createDate, m.getCreateDate());
             lastUpdate = Math.max(lastUpdate, m.getLastUpdate());
         }
-        sendResponse();
+        buildResponse();
     }
 
     @Override
     public void onModelsUnavailable() {
-        sendResponse();
+        buildResponse();
     }
 
     private void processRequest() {
         processCourseAdditions();
         processCourseSubtractions();
-        sendResponse();
+        buildResponse();
     }
 
     private void processCourseAdditions() {
@@ -214,8 +214,7 @@ public class RecipeCourse
                 build();
     }
 
-    private void sendResponse() {
-        System.out.println(TAG + "activeCourseList" + activeCourseList);
+    private void buildResponse() {
         RecipeCourseResponse response = new RecipeCourseResponse.Builder().
                 setDataId(dataId).
                 setDomainId(recipeId).
@@ -223,8 +222,12 @@ public class RecipeCourse
                 setModel(getResponseModel()).
                 build();
 
-        System.out.println(TAG + response);
+        System.out.println(TAG + "sendResponse() " + response);
 
+        sendResponse(response);
+    }
+
+    private void sendResponse(RecipeCourseResponse response) {
         if (isValid()) {
             getUseCaseCallback().onSuccess(response);
         } else {
@@ -236,6 +239,7 @@ public class RecipeCourse
         return new UseCaseMetadata.Builder().
                 setState(getComponentState()).
                 setFailReasons(getFailReasons()).
+                setCreatedBy(Constants.getUserId()).
                 setCreateDate(createDate).
                 setLasUpdate(lastUpdate).
                 build();
@@ -266,11 +270,12 @@ public class RecipeCourse
     }
 
     private List<FailReasons> getFailReasons() {
-        List<FailReasons> failReasons = new LinkedList<>();
+        List<FailReasons> failReasons = new ArrayList<>();
         if (isValid()) {
-            failReasons.add(CommonFailReason.DATA_UNAVAILABLE);
-        } else {
             failReasons.add(CommonFailReason.NONE);
+        } else {
+            failReasons.add(CommonFailReason.DATA_UNAVAILABLE);
+
         }
         return failReasons;
     }

@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecase;
 
 /**
- * Base class for all requests and responses messages which operate on domain data.
+ * Base class for all request and response messages which operate on domain data.
  * The data id represents an instance of state encapsulated in a domain data model.
  * Domain models are final, so each time a domain models state changes, a new model
  * with data id is created and sent to the persistence framework. This provides a

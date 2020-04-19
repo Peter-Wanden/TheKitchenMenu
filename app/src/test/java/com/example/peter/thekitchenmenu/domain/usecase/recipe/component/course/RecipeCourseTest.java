@@ -2,19 +2,20 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course;
 
 import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess.GetAllDomainModelsCallback;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.RecipeCourseEntity;
+import com.example.peter.thekitchenmenu.data.repository.recipe.course.TestDataRecipeCoursePersistenceModel;
+import com.example.peter.thekitchenmenu.data.repository.recipe.metadata.TestDataRecipeMetadata;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeCourse;
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.TestDataRecipeCourseEntity;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadataPersistenceModel;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
 import org.junit.*;
 import org.mockito.*;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse.*;
@@ -30,8 +31,8 @@ public class RecipeCourseTest {
     private static final String TAG = "tkm-" + RecipeCourseTest.class.getSimpleName() + ": ";
 
     // region constants ----------------------------------------------------------------------------
-//    private RecipeMetadataParentEntity VALID_EXISTING_RECIPE_ENTITY = getValidExisting();
-//    private String EXISTING_RECIPE_ID = VALID_EXISTING_RECIPE_ENTITY.getDataId();
+    private static final RecipeMetadataPersistenceModel RECIPE_METADATA_VALID_UNCHANGED =
+            TestDataRecipeMetadata.getValidUnchanged();
     // endregion constants -------------------------------------------------------------------------
 
     // region helper fields ------------------------------------------------------------------------
@@ -44,7 +45,7 @@ public class RecipeCourseTest {
     @Mock
     TimeProvider timeProviderMock;
     @Captor
-    ArgumentCaptor<RecipeCoursePersistenceModel> persistentModelCapture;
+    ArgumentCaptor<RecipeCoursePersistenceModel> capturedPersistentModel;
 
     private UseCaseHandler handler;
 
@@ -70,16 +71,17 @@ public class RecipeCourseTest {
     }
 
     @Test
-    public void newRequest_idWithNoCourses_emptyListReturned_INVALID_UNCHANGED() {
+    public void newRequest_domainIdWithNoCourses_emptyListReturned_INVALID_UNCHANGED() {
         // Arrange
         RecipeCourseRequest request = new RecipeCourseRequest.Builder().
                 getDefault().
-                setDataId("idNotInTestData").
+                setDomainId("idNotInTestData").
                 build();
+
         // Act
         handler.execute(SUT, request, getCallback());
         // Assert
-        verifyRepoCalledAndReturnMatchingCourses(request.getDataId());
+        verifyRepoCalledAndReturnMatchingCourses(request.getDomainId());
         assertEquals(ComponentState.INVALID_UNCHANGED, onErrorResponse.getMetadata().getState());
         assertTrue(onErrorResponse.getMetadata().getFailReasons().
                 contains(CommonFailReason.DATA_UNAVAILABLE));
@@ -89,109 +91,124 @@ public class RecipeCourseTest {
     @Test
     public void newRequest_idWithNoCourses_thenAddCourse_VALID_CHANGED() {
         // Arrange
-        long time = 10L;
-        whenTimeProviderReturnTime(time);
-        String id = "testId";
-        when(idProviderMock.getUId()).thenReturn(id);
+        String dataId = "testId";
+        long expectedDateTime = 10L;
+        int expectedCourseListSize = 0;
+        whenTimeProviderReturnTime(expectedDateTime);
+        when(idProviderMock.getUId()).thenReturn(dataId);
 
-        RecipeCourseRequest initialiseComponentRequest = new RecipeCourseRequest.Builder().
-                setDataId("IdNotInTestData").
-                setModel(new RecipeCourseRequest.Model.Builder().
-                        getDefault().
-                        build()
-                ).
+        RecipeCourseRequest initialRequest = new RecipeCourseRequest.Builder().getDefault().
+                setDomainId("idNotInTestData").
                 build();
 
         // Act
-        handler.execute(SUT, initialiseComponentRequest, getCallback());
+        handler.execute(SUT, initialRequest, getCallback());
         // Assert
-        verifyRepoCalledAndReturnMatchingCourses(initialiseComponentRequest.getDataId());
+        verifyRepoCalledAndReturnMatchingCourses(initialRequest.getDomainId());
+        // Assert component state
         assertEquals(ComponentState.INVALID_UNCHANGED, onErrorResponse.getMetadata().getState());
-        assertEquals(0, onErrorResponse.getModel().getCourseList().size());
-        // Arrange
-        List<Course> addCourseOne = new ArrayList<>();
-        addCourseOne.add(Course.COURSE_ONE);
-        RecipeCourseRequest request = new RecipeCourseRequest.Builder().
-                setDataId("IdNotInTestData").
+        // Assert course list
+        assertEquals(expectedCourseListSize, onErrorResponse.getModel().getCourseList().size());
+
+        // Arrange - add new course
+        RecipeCourse.Course addedCourse = Course.COURSE_ONE;
+        List<Course> list = Collections.singletonList(addedCourse);
+
+        RecipeCourseRequest r = new RecipeCourseRequest.Builder().
+                basedOnResponse(onErrorResponse).
                 setModel(new RecipeCourseRequest.Model.Builder().
-                        setCourseList(addCourseOne).
+                        setCourseList(list).
                         build()
                 ).
                 build();
+
+        System.out.println(TAG + r);
+
         // Act
-        handler.execute(SUT, request, getCallback());
+        handler.execute(SUT, r, getCallback());
         // Assert
-        verify(repoCourseMock).save(persistentModelCapture.capture());
-        assertEquals(Course.COURSE_ONE, persistentModelCapture.getValue().getCourse());
-        assertEquals(time, persistentModelCapture.getValue().getCreateDate());
-        assertEquals(id, persistentModelCapture.getValue().getDataId());
+        verify(repoCourseMock).save(capturedPersistentModel.capture());
+        RecipeCoursePersistenceModel savedModel = capturedPersistentModel.getValue();
+
+        assertEquals(addedCourse, savedModel.getCourse());
+        assertEquals(expectedDateTime, savedModel.getCreateDate());
+        assertEquals(dataId, savedModel.getDataId());
         assertEquals(ComponentState.VALID_CHANGED, onSuccessResponse.getMetadata().getState());
     }
 
     @Test
     public void existingRequest_persistenceCalledWithCorrectId() {
         // Arrange
-//        RecipeCourseRequest initialiseComponentRequest = new RecipeCourseRequest.Builder().
-//                setDataId(EXISTING_RECIPE_ID).
-//                setModel(new RecipeCourseRequest.Model.Builder().
-//                        getDefault().
-//                        build()
-//                ).
-//                build();
+        String domainId = RECIPE_METADATA_VALID_UNCHANGED.getDomainId();
+
+        RecipeCourseRequest initialisationRequest = new RecipeCourseRequest.Builder().
+                getDefault().
+                setDomainId(domainId).
+                build();
         // Act
-//        handler.execute(SUT, initialiseComponentRequest, getCallback());
+        handler.execute(SUT, initialisationRequest, getCallback());
         // Assert
-//        verify(repoCourseMock).getAllByDomainId(eq(EXISTING_RECIPE_ID), repoCourseCallback.capture());
+        verify(repoCourseMock).getAllByDomainId(eq(domainId), repoCourseCallback.capture());
     }
 
     @Test
     public void existingRequest_completeListOfModelsReturned_VALID_UNCHANGED() {
         // Arrange
-//        RecipeCourseRequest initialiseComponentRequest = new RecipeCourseRequest.Builder().
-//                setDataId(EXISTING_RECIPE_ID).
-//                setModel(new RecipeCourseRequest.Model.Builder().
-//                        getDefault().
-//                        build()).
-//                build();
-        // Act
-//        handler.execute(SUT, initialiseComponentRequest, getCallback());
-        // Assert
-//        verifyRepoCalledAndReturnMatchingCourses(initialiseComponentRequest.getDataId());
+        String domainId = RECIPE_METADATA_VALID_UNCHANGED.getDomainId();
 
-//        int expectedNumberOfModels = TestDataRecipeCourseEntity.
-//                getAllByRecipeId(EXISTING_RECIPE_ID).
-//                size();
+        RecipeCourseRequest initialisationRequest = new RecipeCourseRequest.Builder().
+                getDefault().
+                setDomainId(domainId).
+                build();
+        // Act
+        handler.execute(SUT, initialisationRequest, getCallback());
+        // Assert
+        verifyRepoCalledAndReturnMatchingCourses(domainId);
+
+        int expectedNumberOfModels = TestDataRecipeCoursePersistenceModel.
+                getAllByDomainId(domainId).size();
         int actualNumberOfModels = onSuccessResponse.
                 getModel().
                 getCourseList().
                 size();
 
-//        assertEquals(expectedNumberOfModels, actualNumberOfModels);
-        // No data has been modified, just data returned
+        assertEquals(expectedNumberOfModels, actualNumberOfModels);
+        // No data has been modified, just returned
         assertEquals(ComponentState.VALID_UNCHANGED, onSuccessResponse.getMetadata().getState());
+        assertTrue(onSuccessResponse.getMetadata().getFailReasons().
+                contains(CommonFailReason.NONE));
     }
-
-    // TODO - text for create date and last update in metadata
 
     @Test
     public void existingRequest_allModelsDeleted_INVALID_CHANGED() {
-        // Arrange first transaction
-//        RecipeCourseRequest initialiseComponentRequest = new RecipeCourseRequest.Builder().
-//                setDataId(EXISTING_RECIPE_ID).
-//                setModel(new RecipeCourseRequest.Model.Builder().getDefault().build()).
-//                build();
+        // Arrange - initialisation request load and return data
+        String domainId = RECIPE_METADATA_VALID_UNCHANGED.getDomainId();
+
+        RecipeCourseRequest initialisationRequest = new RecipeCourseRequest.Builder().
+                getDefault().
+                setDomainId(domainId).
+                build();
         // Act
-//        handler.execute(SUT, initialiseComponentRequest, getCallback());
+        handler.execute(SUT, initialisationRequest, getCallback());
         // Assert
-//        verifyRepoCalledAndReturnMatchingCourses(initialiseComponentRequest.getDataId());
-        // Arrange
-//        RecipeCourseRequest removeAllCoursesRequest = new RecipeCourseRequest.Builder().
-//                setDataId(EXISTING_RECIPE_ID).
-//                setModel(new RecipeCourseRequest.Model.Builder().getDefault().build()).
-//                build();
+        verifyRepoCalledAndReturnMatchingCourses(domainId);
+        // Assert - verify all courses returned
+        int expectedNoOfCourses = TestDataRecipeCoursePersistenceModel.
+                getAllByDomainId(domainId).size();
+        int actualNoOfCourses = onSuccessResponse.
+                getModel().
+                getCourseList().
+                size();
+        assertEquals(expectedNoOfCourses, actualNoOfCourses);
+
+        // Arrange - second request, with no courses:
+        RecipeCourseRequest requestWitNoCourses = new RecipeCourseRequest.Builder().
+                getDefault().
+                setDomainId(domainId).
+                build();
         // Act
-//        handler.execute(SUT, removeAllCoursesRequest, getCallback());
-        // Assert
+        handler.execute(SUT, requestWitNoCourses, getCallback());
+        // Assert expected sate after courses removed
         assertEquals(ComponentState.INVALID_CHANGED, onErrorResponse.
                 getMetadata().
                 getState());
@@ -199,7 +216,6 @@ public class RecipeCourseTest {
                 getMetadata().
                 getFailReasons().
                 contains(CommonFailReason.DATA_UNAVAILABLE));
-
         assertTrue(onErrorResponse.
                 getModel().
                 getCourseList().
@@ -209,13 +225,19 @@ public class RecipeCourseTest {
     // region helper methods -----------------------------------------------------------------------
     private UseCase.Callback<RecipeCourseResponse> getCallback() {
         return new UseCase.Callback<RecipeCourseResponse>() {
+
+            private final String TAG = RecipeCourseTest.TAG + this.getClass().getSimpleName()
+                    + ": ";
+
             @Override
             public void onSuccess(RecipeCourseResponse response) {
+                System.out.println(TAG + "onSuccess: " + response);
                 onSuccessResponse = response;
             }
 
             @Override
             public void onError(RecipeCourseResponse response) {
+                System.out.println(TAG + "onError: " + response);
                 onErrorResponse = response;
             }
         };
@@ -225,12 +247,15 @@ public class RecipeCourseTest {
         // Confirm repo called and capture the callback
         verify(repoCourseMock).getAllByDomainId(eq(recipeId), repoCourseCallback.capture());
         // Find the matching values in the test data and return the callback with results
-        List<RecipeCourseEntity> courseEntityList = TestDataRecipeCourseEntity.getAllByDomainId(recipeId);
-//        if (courseEntityList.size() > 0) {
-//            repoCourseCallback.getValue().onAllLoaded(getAllByRecipeId(recipeId));
-//        } else {
-//            repoCourseCallback.getValue().onDataUnavailable();
-//        }
+        List<RecipeCoursePersistenceModel> courses = TestDataRecipeCoursePersistenceModel.
+                getAllByDomainId(recipeId);
+        if (courses.size() > 0) {
+            System.out.println(TAG + "there are " + courses.size() + "courses returned from test data.");
+            repoCourseCallback.getValue().onAllLoaded(courses);
+        } else {
+            System.out.println(TAG + "no courses were returned from test data.");
+            repoCourseCallback.getValue().onModelsUnavailable();
+        }
     }
 
     private void whenTimeProviderReturnTime(long time) {

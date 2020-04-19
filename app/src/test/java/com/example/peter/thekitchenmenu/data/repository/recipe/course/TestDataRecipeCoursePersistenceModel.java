@@ -5,6 +5,7 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.R
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCoursePersistenceModel;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class TestDataRecipeCoursePersistenceModel {
@@ -104,16 +105,16 @@ public class TestDataRecipeCoursePersistenceModel {
     }
 
     public static List<RecipeCoursePersistenceModel> getAllRecipeCourses() {
-        List<RecipeCoursePersistenceModel> m = new ArrayList<>();
-        m.add(getRecipeCourseZero());
-        m.add(getRecipeCourseOne());
-        m.add(getRecipeCourseTwo());
-        m.add(getRecipeCourseThree());
-        m.add(getRecipeCourseFour());
-        m.add(getRecipeCourseFive());
-        m.add(getRecipeCourseSix());
-        m.add(getRecipeCourseSeven());
-        return m;
+        return Arrays.asList(
+                getRecipeCourseZero(),
+                getRecipeCourseOne(),
+                getRecipeCourseTwo(),
+                getRecipeCourseThree(),
+                getRecipeCourseFour(),
+                getRecipeCourseFive(),
+                getRecipeCourseSix(),
+                getRecipeCourseSeven()
+        );
     }
 
     public static List<RecipeCoursePersistenceModel> getAllEvenRecipeCourses() {
@@ -126,10 +127,20 @@ public class TestDataRecipeCoursePersistenceModel {
         return evenModels;
     }
 
-    // TODO
-//    public static List<RecipeCoursePersistenceModel> getAllByDomainId(String domainId) {
-//        if (domainId.equals())
-//    }
+    //TODO - "idFromAnotherUser" ??
+    public static List<RecipeCoursePersistenceModel> getAllByDomainId(String domainId) {
+        if (domainId.equals("idFromAnotherUser")) {
+            return getAllRecipeCourseCopies();
+        } else {
+            List<RecipeCoursePersistenceModel> models = new ArrayList<>();
+            for (RecipeCoursePersistenceModel m : getAllRecipeCourses()) {
+                if (domainId.equals(m.getDomainId())) {
+                    models.add(m);
+                }
+            }
+            return models;
+        }
+    }
 
     public static RecipeCoursePersistenceModel getCopiedRecipeCourseZero() {
         return new RecipeCoursePersistenceModel.Builder().
@@ -187,12 +198,12 @@ public class TestDataRecipeCoursePersistenceModel {
     }
 
     public static List<RecipeCoursePersistenceModel> getAllRecipeCourseCopies() {
-        List<RecipeCoursePersistenceModel> copies = new ArrayList<>();
-        copies.add(getCopiedRecipeCourseZero());
-        copies.add(getCopiedRecipeCourseOne());
-        copies.add(getCopiedRecipeCourseTwo());
-        copies.add(getCopiedRecipeCourseFour());
-        copies.add(getCopiedRecipeCourseSix());
-        return copies;
+        return Arrays.asList(
+                getCopiedRecipeCourseZero(),
+                getCopiedRecipeCourseOne(),
+                getCopiedRecipeCourseTwo(),
+                getCopiedRecipeCourseFour(),
+                getCopiedRecipeCourseSix()
+        );
     }
 }
