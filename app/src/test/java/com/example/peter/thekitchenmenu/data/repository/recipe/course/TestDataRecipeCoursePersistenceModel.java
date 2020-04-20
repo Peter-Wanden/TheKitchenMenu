@@ -16,10 +16,11 @@ public class TestDataRecipeCoursePersistenceModel {
     public static final String EXISTING_RECIPE_ID =
             TestDataRecipeMetadata.getValidUnchanged().getDomainId();
 
-    public static RecipeCoursePersistenceModel getRecipeCourseZero() {
+    // first course added
+    public static RecipeCoursePersistenceModel getNewActiveRecipeCourseZero() {
         return new RecipeCoursePersistenceModel.Builder().
-                setDataId("dataId-recipeCourse-id0").
-                setDomainId(EXISTING_RECIPE_ID).
+                setDataId("dataId-recipeCourseNew-id0").
+                setDomainId(NEW_RECIPE_ID).
                 setCourse(RecipeCourse.Course.COURSE_ZERO).
                 setIsActive(true).
                 setCreateDate(10L).
@@ -27,10 +28,11 @@ public class TestDataRecipeCoursePersistenceModel {
                 build();
     }
 
-    public static RecipeCoursePersistenceModel getRecipeCourseOne() {
+    // Second course added
+    public static RecipeCoursePersistenceModel getNewActiveRecipeCourseOne() {
         return new RecipeCoursePersistenceModel.Builder().
-                setDataId("dataId-recipeCourse-id1").
-                setDomainId(EXISTING_RECIPE_ID).
+                setDataId("dataId-recipeCourseNew-id1").
+                setDomainId(NEW_RECIPE_ID).
                 setCourse(RecipeCourse.Course.COURSE_ONE).
                 setIsActive(true).
                 setCreateDate(10L).
@@ -38,86 +40,145 @@ public class TestDataRecipeCoursePersistenceModel {
                 build();
     }
 
-    public static RecipeCoursePersistenceModel getRecipeCourseTwo() {
+    // State of recipe course data after new courses added
+    public static List<RecipeCoursePersistenceModel> getNewActiveCourses() {
+        return Arrays.asList(getNewActiveRecipeCourseZero(), getNewActiveRecipeCourseOne());
+    }
+
+    // First course updated to deactivated
+    public static RecipeCoursePersistenceModel getNewDeactivatedRecipeCourseZero() {
+        return new RecipeCoursePersistenceModel.Builder().
+                setDataId("dataId-recipeCourseNew-id0").
+                setDomainId(NEW_RECIPE_ID).
+                setCourse(RecipeCourse.Course.COURSE_ZERO).
+                setIsActive(false).
+                setCreateDate(10L).
+                setLastUpdate(100L).
+                build();
+    }
+
+    // Second course updated to deactivated
+    public static RecipeCoursePersistenceModel getNewDeactivatedRecipeCourseOne() {
+        return new RecipeCoursePersistenceModel.Builder().
+                setDataId("dataId-recipeCourseNew-id1").
+                setDomainId(NEW_RECIPE_ID).
+                setCourse(RecipeCourse.Course.COURSE_ONE).
+                setIsActive(false).
+                setCreateDate(10L).
+                setLastUpdate(100L).
+                build();
+    }
+
+    // State of data after courses removed
+    public static List<RecipeCoursePersistenceModel> getNewDeactivatedRecipeCourses() {
+        return new ArrayList<>(Arrays.asList(
+                getNewDeactivatedRecipeCourseZero(),
+                getNewDeactivatedRecipeCourseOne())
+        );
+    }
+
+    public static RecipeCoursePersistenceModel getExistingActiveRecipeCourseZero() {
+        return new RecipeCoursePersistenceModel.Builder().
+                setDataId("dataId-recipeCourse-id0").
+                setDomainId(EXISTING_RECIPE_ID).
+                setCourse(RecipeCourse.Course.COURSE_ZERO).
+                setIsActive(true).
+                setCreateDate(20L).
+                setLastUpdate(20L).
+                build();
+    }
+
+    public static RecipeCoursePersistenceModel getExistingActiveRecipeCourseOne() {
+        return new RecipeCoursePersistenceModel.Builder().
+                setDataId("dataId-recipeCourse-id1").
+                setDomainId(EXISTING_RECIPE_ID).
+                setCourse(RecipeCourse.Course.COURSE_ONE).
+                setIsActive(true).
+                setCreateDate(20L).
+                setLastUpdate(20L).
+                build();
+    }
+
+    public static RecipeCoursePersistenceModel getExistingActiveRecipeCourseTwo() {
         return new RecipeCoursePersistenceModel.Builder().
                 setDataId("dataId-recipeCourse-id2").
                 setDomainId(EXISTING_RECIPE_ID).
                 setCourse(RecipeCourse.Course.COURSE_TWO).
                 setIsActive(true).
-                setCreateDate(10L).
-                setLastUpdate(10L).
+                setCreateDate(20L).
+                setLastUpdate(20L).
                 build();
     }
 
-    public static RecipeCoursePersistenceModel getRecipeCourseThree() {
+    public static RecipeCoursePersistenceModel getExistingActiveRecipeCourseThree() {
         return new RecipeCoursePersistenceModel.Builder().
                 setDataId("dataId-recipeCourse-id3").
                 setDomainId(EXISTING_RECIPE_ID).
                 setCourse(RecipeCourse.Course.COURSE_THREE).
                 setIsActive(true).
-                setCreateDate(10L).
-                setLastUpdate(10L).
+                setCreateDate(20L).
+                setLastUpdate(20L).
                 build();
     }
 
-    public static RecipeCoursePersistenceModel getRecipeCourseFour() {
+    public static RecipeCoursePersistenceModel getExistingActiveRecipeCourseFour() {
         return new RecipeCoursePersistenceModel.Builder().
                 setDataId("dataId-recipeCourse-id4").
                 setDomainId(EXISTING_RECIPE_ID).
                 setCourse(RecipeCourse.Course.COURSE_FOUR).
                 setIsActive(true).
-                setCreateDate(10L).
-                setLastUpdate(10L).
+                setCreateDate(20L).
+                setLastUpdate(20L).
                 build();
     }
 
-    public static RecipeCoursePersistenceModel getRecipeCourseFive() {
+    public static RecipeCoursePersistenceModel getExistingActiveRecipeCourseFive() {
         return new RecipeCoursePersistenceModel.Builder().
                 setDataId("dataId-recipeCourse-id5").
                 setDomainId(EXISTING_RECIPE_ID).
                 setCourse(RecipeCourse.Course.COURSE_FIVE).
                 setIsActive(true).
-                setCreateDate(10L).
-                setLastUpdate(10L).
+                setCreateDate(20L).
+                setLastUpdate(20L).
                 build();
     }
 
-    public static RecipeCoursePersistenceModel getRecipeCourseSix() {
+    public static RecipeCoursePersistenceModel getExistingActiveRecipeCourseSix() {
         return new RecipeCoursePersistenceModel.Builder().
                 setDataId("dataId-recipeCourse-id6").
                 setDomainId(EXISTING_RECIPE_ID).
                 setCourse(RecipeCourse.Course.COURSE_SIX).
                 setIsActive(true).
-                setCreateDate(10L).
-                setLastUpdate(10L).
+                setCreateDate(20L).
+                setLastUpdate(20L).
                 build();
     }
 
-    public static RecipeCoursePersistenceModel getRecipeCourseSeven() {
+    public static RecipeCoursePersistenceModel getExistingActiveRecipeCourseSeven() {
         return new RecipeCoursePersistenceModel.Builder().
                 setDataId("dataId-recipeCourse-id7").
                 setDomainId(EXISTING_RECIPE_ID).
                 setCourse(RecipeCourse.Course.COURSE_SEVEN).
                 setIsActive(true).
-                setCreateDate(10L).
-                setLastUpdate(10L).
+                setCreateDate(20L).
+                setLastUpdate(20L).
                 build();
     }
 
-    public static List<RecipeCoursePersistenceModel> getAllRecipeCourses() {
+    public static List<RecipeCoursePersistenceModel> getAllExistingActiveRecipeCourses() {
         return Arrays.asList(
-                getRecipeCourseZero(),
-                getRecipeCourseOne(),
-                getRecipeCourseTwo(),
-                getRecipeCourseThree(),
-                getRecipeCourseFour(),
-                getRecipeCourseFive(),
-                getRecipeCourseSix(),
-                getRecipeCourseSeven()
+                getExistingActiveRecipeCourseZero(),
+                getExistingActiveRecipeCourseOne(),
+                getExistingActiveRecipeCourseTwo(),
+                getExistingActiveRecipeCourseThree(),
+                getExistingActiveRecipeCourseFour(),
+                getExistingActiveRecipeCourseFive(),
+                getExistingActiveRecipeCourseSix(),
+                getExistingActiveRecipeCourseSeven()
         );
     }
 
-    public static List<RecipeCoursePersistenceModel> getAllEvenRecipeCourses() {
+    public static List<RecipeCoursePersistenceModel> getAllExistingActiveEvenRecipeCourses() {
         List<RecipeCoursePersistenceModel> evenModels = new ArrayList<>();
         for (RecipeCoursePersistenceModel model : evenModels) {
             if (model.getCourse().getCourseNo() % 2 == 0) {
@@ -128,12 +189,12 @@ public class TestDataRecipeCoursePersistenceModel {
     }
 
     //TODO - "idFromAnotherUser" ??
-    public static List<RecipeCoursePersistenceModel> getAllByDomainId(String domainId) {
+    public static List<RecipeCoursePersistenceModel> getAllExistingActiveByDomainId(String domainId) {
         if (domainId.equals("idFromAnotherUser")) {
             return getAllRecipeCourseCopies();
         } else {
             List<RecipeCoursePersistenceModel> models = new ArrayList<>();
-            for (RecipeCoursePersistenceModel m : getAllRecipeCourses()) {
+            for (RecipeCoursePersistenceModel m : getAllExistingActiveRecipeCourses()) {
                 if (domainId.equals(m.getDomainId())) {
                     models.add(m);
                 }
@@ -146,10 +207,10 @@ public class TestDataRecipeCoursePersistenceModel {
         return new RecipeCoursePersistenceModel.Builder().
                 setDataId("dataId-recipeCourseCopy-id0").
                 setDomainId(NEW_RECIPE_ID).
-                setCourse(getRecipeCourseZero().getCourse()).
+                setCourse(getExistingActiveRecipeCourseZero().getCourse()).
                 setIsActive(true).
-                setCreateDate(20L).
-                setLastUpdate(20L).
+                setCreateDate(30L).
+                setLastUpdate(30L).
                 build();
     }
 
@@ -157,10 +218,10 @@ public class TestDataRecipeCoursePersistenceModel {
         return new RecipeCoursePersistenceModel.Builder().
                 setDataId("dataId-recipeCourseCopy-id1").
                 setDomainId(NEW_RECIPE_ID).
-                setCourse(getRecipeCourseOne().getCourse()).
+                setCourse(getExistingActiveRecipeCourseOne().getCourse()).
                 setIsActive(true).
-                setCreateDate(20L).
-                setLastUpdate(20L).
+                setCreateDate(30L).
+                setLastUpdate(30L).
                 build();
     }
 
@@ -168,10 +229,10 @@ public class TestDataRecipeCoursePersistenceModel {
         return new RecipeCoursePersistenceModel.Builder().
                 setDataId("dataId-recipeCourseCopy-id2").
                 setDomainId(NEW_RECIPE_ID).
-                setCourse(getRecipeCourseOne().getCourse()).
+                setCourse(getExistingActiveRecipeCourseOne().getCourse()).
                 setIsActive(true).
-                setCreateDate(20L).
-                setLastUpdate(20L).
+                setCreateDate(30L).
+                setLastUpdate(30L).
                 build();
     }
 
@@ -179,10 +240,10 @@ public class TestDataRecipeCoursePersistenceModel {
         return new RecipeCoursePersistenceModel.Builder().
                 setDataId("dataId-recipeCourseCopy-id4").
                 setDomainId(NEW_RECIPE_ID).
-                setCourse(getRecipeCourseFour().getCourse()).
+                setCourse(getExistingActiveRecipeCourseFour().getCourse()).
                 setIsActive(true).
-                setCreateDate(20L).
-                setLastUpdate(20L).
+                setCreateDate(30L).
+                setLastUpdate(30L).
                 build();
     }
 
@@ -192,8 +253,8 @@ public class TestDataRecipeCoursePersistenceModel {
                 setDomainId(NEW_RECIPE_ID).
                 setCourse(RecipeCourse.Course.COURSE_SIX).
                 setIsActive(true).
-                setCreateDate(20L).
-                setLastUpdate(20L).
+                setCreateDate(30L).
+                setLastUpdate(30L).
                 build();
     }
 

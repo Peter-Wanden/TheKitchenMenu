@@ -28,6 +28,8 @@ public class RecipeCourse
 
     private static final String TAG = "tkm-" + RecipeCourse.class.getSimpleName() + ": ";
 
+    static final int MINIMUM_COURSE_LIST_SIZE = 1;
+
     public enum Course {
         COURSE_ZERO(0),
         COURSE_ONE(1),
@@ -111,7 +113,7 @@ public class RecipeCourse
     }
 
     private void loadData(String recipeId) {
-        repository.getAllByDomainId(recipeId, this);
+        repository.getAllActiveByDomainId(recipeId, this);
     }
 
     @Override
@@ -266,7 +268,7 @@ public class RecipeCourse
     }
 
     private boolean isValid() {
-        return !activeCourseList.isEmpty();
+        return activeCourseList.size() >= MINIMUM_COURSE_LIST_SIZE;
     }
 
     private List<FailReasons> getFailReasons() {

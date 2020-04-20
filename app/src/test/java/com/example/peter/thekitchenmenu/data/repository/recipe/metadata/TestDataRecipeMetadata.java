@@ -15,8 +15,8 @@ import java.util.List;
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.*;
 
 /**
- * Persistence works by storing the state of an object each time it changes. Therefore there can be
- * many copies of an object with the same domain id, each distinguished by a unique data id.
+ * Persistence stores the state of an object (data model) each time it changes. Therefore there can
+ * be many copies of an object with the same domain id, each distinguished by a unique data id.
  * In the case of recipe metadata, the ACTIVE model is the most recent according to lastUpdate()
  */
 public class TestDataRecipeMetadata {
