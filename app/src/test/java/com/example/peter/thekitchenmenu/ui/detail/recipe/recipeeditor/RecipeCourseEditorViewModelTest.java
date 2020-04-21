@@ -4,7 +4,7 @@ import com.example.peter.thekitchenmenu.commonmocks.RecipeComponents;
 import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess.GetDomainModelCallback;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeMetadata;
-import com.example.peter.thekitchenmenu.data.repository.recipe.course.TestDataRecipeCoursePersistenceModel;
+import com.example.peter.thekitchenmenu.data.repository.recipe.course.TestDataRecipeCourse;
 import com.example.peter.thekitchenmenu.data.repository.recipe.metadata.TestDataRecipeMetadata;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.RecipeCourseEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.datasource.RecipeDurationEntity;
@@ -38,7 +38,7 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortionsTest;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.TestDataRecipeCourseEntity;
-import com.example.peter.thekitchenmenu.testdata.TestDataRecipeDurationEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.datasource.TestDataRecipeDurationEntity;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeIdentityEntity;
@@ -272,7 +272,7 @@ public class RecipeCourseEditorViewModelTest {
         SUT.setCourseZero(true);
 
         // Assert
-        verify(repoCourseMock).save(TestDataRecipeCoursePersistenceModel.getExistingActiveRecipeCourseZero());
+        verify(repoCourseMock).save(TestDataRecipeCourse.getExistingActiveRecipeCourseZero());
     }
 
     @Test
@@ -291,7 +291,7 @@ public class RecipeCourseEditorViewModelTest {
         verifyRepoCourseCalledAndReturnCoursesMatchingId(EXISTING_RECIPE_ID);
 
         SUT.setCourseZero(false);
-        verify(repoCourseMock).deleteByDataId(eq(TestDataRecipeCoursePersistenceModel.
+        verify(repoCourseMock).deleteByDataId(eq(TestDataRecipeCourse.
                 getExistingActiveRecipeCourseZero().
                 getDataId()));
     }
@@ -316,7 +316,7 @@ public class RecipeCourseEditorViewModelTest {
 
         SUT.setCourseOne(true);
         // Assert
-        verify(repoCourseMock).save(TestDataRecipeCoursePersistenceModel.getExistingActiveRecipeCourseOne());
+        verify(repoCourseMock).save(TestDataRecipeCourse.getExistingActiveRecipeCourseOne());
     }
 
     @Test
@@ -339,7 +339,7 @@ public class RecipeCourseEditorViewModelTest {
         SUT.setCourseOne(false);
 
         // Assert
-        verify(repoCourseMock).deleteByDataId(eq(TestDataRecipeCoursePersistenceModel.
+        verify(repoCourseMock).deleteByDataId(eq(TestDataRecipeCourse.
                 getExistingActiveRecipeCourseOne().
                 getDataId()));
     }
@@ -365,7 +365,7 @@ public class RecipeCourseEditorViewModelTest {
         // Act
         SUT.setCourseTwo(true);
         // Assert
-        verify(repoCourseMock).save(TestDataRecipeCoursePersistenceModel.getExistingActiveRecipeCourseTwo());
+        verify(repoCourseMock).save(TestDataRecipeCourse.getExistingActiveRecipeCourseTwo());
     }
 
     @Test
@@ -386,7 +386,7 @@ public class RecipeCourseEditorViewModelTest {
 
         // Act
         SUT.setCourseTwo(false);
-        verify(repoCourseMock).deleteByDataId(eq(TestDataRecipeCoursePersistenceModel.
+        verify(repoCourseMock).deleteByDataId(eq(TestDataRecipeCourse.
                 getExistingActiveRecipeCourseTwo().
                 getDataId()));
     }
@@ -413,7 +413,7 @@ public class RecipeCourseEditorViewModelTest {
         SUT.setCourseThree(true);
 
         // Assert
-        verify(repoCourseMock).save(TestDataRecipeCoursePersistenceModel.getExistingActiveRecipeCourseThree());
+        verify(repoCourseMock).save(TestDataRecipeCourse.getExistingActiveRecipeCourseThree());
     }
 
     @Test
@@ -435,7 +435,7 @@ public class RecipeCourseEditorViewModelTest {
         SUT.setCourseThree(false);
 
         // Assert
-        verify(repoCourseMock).deleteByDataId(eq(TestDataRecipeCoursePersistenceModel.
+        verify(repoCourseMock).deleteByDataId(eq(TestDataRecipeCourse.
                 getExistingActiveRecipeCourseThree().
                 getDataId()));
     }
@@ -462,7 +462,7 @@ public class RecipeCourseEditorViewModelTest {
         SUT.setCourseFour(true);
 
         // Assert
-        verify(repoCourseMock).save(TestDataRecipeCoursePersistenceModel.getExistingActiveRecipeCourseFour());
+        verify(repoCourseMock).save(TestDataRecipeCourse.getExistingActiveRecipeCourseFour());
     }
 
     @Test
@@ -484,7 +484,7 @@ public class RecipeCourseEditorViewModelTest {
         SUT.setCourseFour(false);
 
         // Assert
-        verify(repoCourseMock).deleteByDataId(eq(TestDataRecipeCoursePersistenceModel.
+        verify(repoCourseMock).deleteByDataId(eq(TestDataRecipeCourse.
                 getExistingActiveRecipeCourseFour().
                 getDataId()));
     }
@@ -509,7 +509,7 @@ public class RecipeCourseEditorViewModelTest {
         SUT.setCourseFive(true);
 
         // Assert
-        verify(repoCourseMock).save(TestDataRecipeCoursePersistenceModel.getExistingActiveRecipeCourseFive());
+        verify(repoCourseMock).save(TestDataRecipeCourse.getExistingActiveRecipeCourseFive());
     }
 
     @Test
@@ -531,7 +531,7 @@ public class RecipeCourseEditorViewModelTest {
         SUT.setCourseFive(false);
 
         // Assert
-        verify(repoCourseMock).deleteByDataId(eq(TestDataRecipeCoursePersistenceModel.
+        verify(repoCourseMock).deleteByDataId(eq(TestDataRecipeCourse.
                 getExistingActiveRecipeCourseFive().
                 getDataId()));
     }
@@ -556,7 +556,7 @@ public class RecipeCourseEditorViewModelTest {
         // Act
         SUT.setCourseSix(true);
         // Assert
-        verify(repoCourseMock).save(TestDataRecipeCoursePersistenceModel.getExistingActiveRecipeCourseSix());
+        verify(repoCourseMock).save(TestDataRecipeCourse.getExistingActiveRecipeCourseSix());
     }
 
     @Test
@@ -579,7 +579,7 @@ public class RecipeCourseEditorViewModelTest {
         SUT.setCourseSix(false);
 
         // Assert
-        verify(repoCourseMock).deleteByDataId(eq(TestDataRecipeCoursePersistenceModel.
+        verify(repoCourseMock).deleteByDataId(eq(TestDataRecipeCourse.
                 getExistingActiveRecipeCourseSix().
                 getDataId()));
     }
@@ -606,7 +606,7 @@ public class RecipeCourseEditorViewModelTest {
         SUT.setCourseSeven(true);
 
         // Assert
-        verify(repoCourseMock).save(TestDataRecipeCoursePersistenceModel.getExistingActiveRecipeCourseSeven());
+        verify(repoCourseMock).save(TestDataRecipeCourse.getExistingActiveRecipeCourseSeven());
     }
 
     @Test
@@ -629,7 +629,7 @@ public class RecipeCourseEditorViewModelTest {
         SUT.setCourseSeven(false);
 
         // Assert
-        verify(repoCourseMock).deleteByDataId(TestDataRecipeCoursePersistenceModel.
+        verify(repoCourseMock).deleteByDataId(TestDataRecipeCourse.
                 getExistingActiveRecipeCourseSeven().
                 getDataId());
     }
@@ -786,13 +786,13 @@ public class RecipeCourseEditorViewModelTest {
 
     private void verifyRepoCourseCalledAndReturnCoursesMatchingId(String recipeId) {
         verify(repoCourseMock).getAllByDomainId(eq(recipeId), repoCourseCallback.capture());
-        repoCourseCallback.getValue().onAllLoaded(TestDataRecipeCoursePersistenceModel.
+        repoCourseCallback.getValue().onAllLoaded(TestDataRecipeCourse.
                 getAllExistingActiveByDomainId(recipeId));
     }
 
     private void verifyRepoCourseCalledAndReturnEvenCoursesForId(String recipeId) {
         verify(repoCourseMock).getAllByDomainId(eq(recipeId), repoCourseCallback.capture());
-        repoCourseCallback.getValue().onAllLoaded(TestDataRecipeCoursePersistenceModel.
+        repoCourseCallback.getValue().onAllLoaded(TestDataRecipeCourse.
                 getAllExistingActiveEvenRecipeCourses());
     }
 

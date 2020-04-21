@@ -60,7 +60,7 @@ public class TestDataRecipeMetadata {
      */
     public static RecipeMetadataPersistenceModel getInvalidUnchangedPersistentModel() {
         return new RecipeMetadataPersistenceModel.Builder().
-                setDataId("dataId-recipeMetadata-Id1").
+                setDataId("dataId-recipeMetadata-id1").
                 setDomainId("domainId-recipe-Id1").
                 setParentDomainId("").
                 setRecipeState(RecipeState.INVALID_UNCHANGED).
@@ -259,7 +259,7 @@ public class TestDataRecipeMetadata {
     Represents a valid recipe created using an user Id that is different from the one in the 
     current session.
      */
-    private static RecipeMetadataPersistenceModel getValidFromAnotherUser() {
+    public static RecipeMetadataPersistenceModel getValidFromAnotherUser() {
         return new RecipeMetadataPersistenceModel.Builder().
                 setDataId("dataId-recipeMetadata-Id4").
                 setDomainId("domainId-recipe-Id20").
@@ -290,7 +290,7 @@ public class TestDataRecipeMetadata {
     Represents an invalid recipe created using an user Id that is different from the one in the 
     current session.  
      */
-    private static RecipeMetadataPersistenceModel getInvalidFromAnotherUser() {
+    public static RecipeMetadataPersistenceModel getInvalidFromAnotherUser() {
         return new RecipeMetadataPersistenceModel.Builder().
                 setDataId(getValidFromAnotherUser().getDataId()).
                 setDomainId("domainId-recipe-Id21").
@@ -321,7 +321,7 @@ public class TestDataRecipeMetadata {
     Represents a valid recipe that has been copied from another user to the user in the 
     current session.  
      */
-    private static RecipeMetadataPersistenceModel getValidCopied() {
+    public static RecipeMetadataPersistenceModel getValidCopied() {
         RecipeMetadataPersistenceModel validParentFromAnotherUser = getValidFromAnotherUser();
         return new RecipeMetadataPersistenceModel.Builder().
                 setDataId("dataId-recipeMetadata-Id5").
@@ -352,7 +352,7 @@ public class TestDataRecipeMetadata {
     Represents an invalid recipe that has been copied from another user to the user in the 
     current session.
      */
-    private static RecipeMetadataPersistenceModel getInvalidCopied() {
+    public static RecipeMetadataPersistenceModel getInvalidCopied() {
         RecipeMetadataPersistenceModel invalidParentFromAnotherUser = getInvalidFromAnotherUser();
         return new RecipeMetadataPersistenceModel.Builder().
                 setDataId("dataId-recipeMetadata-Idd6").

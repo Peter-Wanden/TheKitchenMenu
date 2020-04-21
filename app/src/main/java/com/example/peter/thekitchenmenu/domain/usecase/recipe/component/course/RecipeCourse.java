@@ -88,6 +88,11 @@ public class RecipeCourse
     @Override
     protected <Q extends Request> void execute(Q request) {
         RecipeCourseRequest r = (RecipeCourseRequest) request;
+
+        if (r.getDomainId() == null) {
+            throw new IllegalArgumentException("domain id cannot be null!");
+        }
+
         System.out.println(TAG + r);
 
         if (isNewRequest(r)) {

@@ -2,15 +2,12 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course;
 
 import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess.GetAllDomainModelsCallback;
-import com.example.peter.thekitchenmenu.data.repository.recipe.course.TestDataRecipeCoursePersistenceModel;
+import com.example.peter.thekitchenmenu.data.repository.recipe.course.TestDataRecipeCourse;
 import com.example.peter.thekitchenmenu.data.repository.recipe.metadata.TestDataRecipeMetadata;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeCourse;
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
-import com.example.peter.thekitchenmenu.domain.model.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.RecipeRequest;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadataPersistenceModel;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
@@ -20,7 +17,6 @@ import org.mockito.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse.*;
@@ -109,16 +105,16 @@ public class RecipeCourseTest {
     @Test
     public void newRequest_coursesDeactivated_lastUpdateAndActiveFlagUpdatedInRepo_INVALID_CHANGED() {
         // Arrange
-        String domainId = TestDataRecipeCoursePersistenceModel.NEW_RECIPE_ID;
+        String domainId = TestDataRecipeCourse.NEW_RECIPE_ID;
 
         int noOfCoursesToDeactivate = 2;
 
         List<RecipeCoursePersistenceModel> newActiveModels =
-                TestDataRecipeCoursePersistenceModel.
+                TestDataRecipeCourse.
                         getNewActiveCourses();
 
         List<RecipeCoursePersistenceModel> expectedDeactivatedModels =
-                TestDataRecipeCoursePersistenceModel.
+                TestDataRecipeCourse.
                         getNewDeactivatedRecipeCourses();
         // Completes the updated timestamp
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
@@ -180,7 +176,7 @@ public class RecipeCourseTest {
     @Test
     public void newRequest_idWithNoCourses_thenAddCourses_VALID_CHANGED() {
         // Arrange
-        List<RecipeCoursePersistenceModel> expectedModels = TestDataRecipeCoursePersistenceModel.
+        List<RecipeCoursePersistenceModel> expectedModels = TestDataRecipeCourse.
                 getNewActiveCourses();
 
         String domainId = expectedModels.get(0).getDomainId();
@@ -226,7 +222,7 @@ public class RecipeCourseTest {
 
         // Assert models saved are equal in content to expected models
         List<RecipeCoursePersistenceModel> expectedCoursePersistentModels =
-                TestDataRecipeCoursePersistenceModel.getNewActiveCourses();
+                TestDataRecipeCourse.getNewActiveCourses();
         List<RecipeCoursePersistenceModel> actualCoursePersistentModels =
                 capturedPersistentModel.getAllValues();
 
@@ -271,7 +267,7 @@ public class RecipeCourseTest {
         // Assert
         verifyRepoCalledAndReturnMatchingCourses(domainId);
 
-        int expectedNumberOfModels = TestDataRecipeCoursePersistenceModel.
+        int expectedNumberOfModels = TestDataRecipeCourse.
                 getAllExistingActiveByDomainId(domainId).size();
         int actualNumberOfModels = onSuccessResponse.
                 getModel().
@@ -299,7 +295,7 @@ public class RecipeCourseTest {
         // Assert
         verifyRepoCalledAndReturnMatchingCourses(domainId);
         // Assert - verify all courses returned
-        int expectedNoOfCourses = TestDataRecipeCoursePersistenceModel.
+        int expectedNoOfCourses = TestDataRecipeCourse.
                 getAllExistingActiveByDomainId(domainId).size();
         int actualNoOfCourses = onSuccessResponse.
                 getModel().
@@ -353,7 +349,7 @@ public class RecipeCourseTest {
         // Confirm repo called and capture the callback
         verify(repoCourseMock).getAllActiveByDomainId(eq(recipeId), repoCourseCallback.capture());
         // Find the matching values in the test data and return the callback with results
-        List<RecipeCoursePersistenceModel> courses = TestDataRecipeCoursePersistenceModel.
+        List<RecipeCoursePersistenceModel> courses = TestDataRecipeCourse.
                 getAllExistingActiveByDomainId(recipeId);
         if (courses.size() > 0) {
             System.out.println(TAG + courses.size() + " courses returned from test data.");

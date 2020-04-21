@@ -21,7 +21,7 @@ import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValida
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.TestDataRecipeCourseEntity;
-import com.example.peter.thekitchenmenu.testdata.TestDataRecipeDurationEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.datasource.TestDataRecipeDurationEntity;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipePortionsEntity;
 
@@ -58,19 +58,19 @@ public class RecipeCopyTest {
     private static final RecipeDurationEntity IDENTITY_DURATION_VALID_COMPLETE_FROM_ANOTHER_USER =
             TestDataRecipeDurationEntity.getValidCompleteFromAnotherUser();
     private static final RecipeDurationEntity IDENTITY_DURATION_VALID_NEW_CLONED =
-            TestDataRecipeDurationEntity.getValidNewCloned();
+            TestDataRecipeDurationEntity.getValidNewCopied();
     private static final RecipeDurationEntity IDENTITY_DURATION_VALID_NEW_CLONED_PREP_TIME_UPDATED =
-            TestDataRecipeDurationEntity.getValidNewClonedPrepTimeUpdated();
+            TestDataRecipeDurationEntity.getValidNewCopiedPrepTimeUpdated();
     private static final RecipeDurationEntity DURATION_VALID_COMPLETE_FROM_ANOTHER_USER =
             TestDataRecipeDurationEntity.getValidCompleteFromAnotherUser();
     private static final RecipeDurationEntity DURATION_INVALID_COMPLETE_FROM_ANOTHER_USER =
             TestDataRecipeDurationEntity.getInvalidCompleteFromAnotherUser();
     private static final RecipeDurationEntity DURATION_VALID_NEW_CLONED =
-            TestDataRecipeDurationEntity.getValidNewCloned();
+            TestDataRecipeDurationEntity.getValidNewCopied();
     private static final RecipeDurationEntity DURATION_INVALID_NEW_CLONED =
-            TestDataRecipeDurationEntity.getInvalidNewCloned();
+            TestDataRecipeDurationEntity.getInvalidNewCopied();
     private static final RecipeDurationEntity DURATION_VALID_NEW_CLONED_PREP_TIME_UPDATED =
-            TestDataRecipeDurationEntity.getValidNewClonedPrepTimeUpdated();
+            TestDataRecipeDurationEntity.getValidNewCopiedPrepTimeUpdated();
     private static final RecipePortionsEntity PORTION_VALID_EXISTING_CLONE =
             TestDataRecipePortionsEntity.getExistingValidClone();
     private static final RecipePortionsEntity PORTION_VALID_EXISTING_CLONE_UPDATED_SITTINGS_SERVINGS =

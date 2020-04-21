@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class TestDataRecipeCoursePersistenceModel {
+public class TestDataRecipeCourse {
 
     public static final String NEW_RECIPE_ID =
             TestDataRecipeMetadata.getDataUnavailable().getDomainId();
@@ -19,7 +19,7 @@ public class TestDataRecipeCoursePersistenceModel {
     // first course added
     public static RecipeCoursePersistenceModel getNewActiveRecipeCourseZero() {
         return new RecipeCoursePersistenceModel.Builder().
-                setDataId("dataId-recipeCourseNew-id0").
+                setDataId("dataId-recipeCourse-new-id0").
                 setDomainId(NEW_RECIPE_ID).
                 setCourse(RecipeCourse.Course.COURSE_ZERO).
                 setIsActive(true).
@@ -31,7 +31,7 @@ public class TestDataRecipeCoursePersistenceModel {
     // Second course added
     public static RecipeCoursePersistenceModel getNewActiveRecipeCourseOne() {
         return new RecipeCoursePersistenceModel.Builder().
-                setDataId("dataId-recipeCourseNew-id1").
+                setDataId("dataId-recipeCourse-new-id1").
                 setDomainId(NEW_RECIPE_ID).
                 setCourse(RecipeCourse.Course.COURSE_ONE).
                 setIsActive(true).
@@ -48,7 +48,7 @@ public class TestDataRecipeCoursePersistenceModel {
     // First course updated to deactivated
     public static RecipeCoursePersistenceModel getNewDeactivatedRecipeCourseZero() {
         return new RecipeCoursePersistenceModel.Builder().
-                setDataId("dataId-recipeCourseNew-id0").
+                setDataId("dataId-recipeCourse-new-id0").
                 setDomainId(NEW_RECIPE_ID).
                 setCourse(RecipeCourse.Course.COURSE_ZERO).
                 setIsActive(false).
@@ -60,7 +60,7 @@ public class TestDataRecipeCoursePersistenceModel {
     // Second course updated to deactivated
     public static RecipeCoursePersistenceModel getNewDeactivatedRecipeCourseOne() {
         return new RecipeCoursePersistenceModel.Builder().
-                setDataId("dataId-recipeCourseNew-id1").
+                setDataId("dataId-recipeCourse-new-id1").
                 setDomainId(NEW_RECIPE_ID).
                 setCourse(RecipeCourse.Course.COURSE_ONE).
                 setIsActive(false).
@@ -79,7 +79,7 @@ public class TestDataRecipeCoursePersistenceModel {
 
     public static RecipeCoursePersistenceModel getExistingActiveRecipeCourseZero() {
         return new RecipeCoursePersistenceModel.Builder().
-                setDataId("dataId-recipeCourse-id0").
+                setDataId("dataId-recipeCourse-existing-id0").
                 setDomainId(EXISTING_RECIPE_ID).
                 setCourse(RecipeCourse.Course.COURSE_ZERO).
                 setIsActive(true).
@@ -90,7 +90,7 @@ public class TestDataRecipeCoursePersistenceModel {
 
     public static RecipeCoursePersistenceModel getExistingActiveRecipeCourseOne() {
         return new RecipeCoursePersistenceModel.Builder().
-                setDataId("dataId-recipeCourse-id1").
+                setDataId("dataId-recipeCourse-existing-id1").
                 setDomainId(EXISTING_RECIPE_ID).
                 setCourse(RecipeCourse.Course.COURSE_ONE).
                 setIsActive(true).
@@ -101,7 +101,7 @@ public class TestDataRecipeCoursePersistenceModel {
 
     public static RecipeCoursePersistenceModel getExistingActiveRecipeCourseTwo() {
         return new RecipeCoursePersistenceModel.Builder().
-                setDataId("dataId-recipeCourse-id2").
+                setDataId("dataId-recipeCourse-existing-id2").
                 setDomainId(EXISTING_RECIPE_ID).
                 setCourse(RecipeCourse.Course.COURSE_TWO).
                 setIsActive(true).
@@ -112,7 +112,7 @@ public class TestDataRecipeCoursePersistenceModel {
 
     public static RecipeCoursePersistenceModel getExistingActiveRecipeCourseThree() {
         return new RecipeCoursePersistenceModel.Builder().
-                setDataId("dataId-recipeCourse-id3").
+                setDataId("dataId-recipeCourse-existing-id3").
                 setDomainId(EXISTING_RECIPE_ID).
                 setCourse(RecipeCourse.Course.COURSE_THREE).
                 setIsActive(true).
@@ -123,7 +123,7 @@ public class TestDataRecipeCoursePersistenceModel {
 
     public static RecipeCoursePersistenceModel getExistingActiveRecipeCourseFour() {
         return new RecipeCoursePersistenceModel.Builder().
-                setDataId("dataId-recipeCourse-id4").
+                setDataId("dataId-recipeCourse-existing-id4").
                 setDomainId(EXISTING_RECIPE_ID).
                 setCourse(RecipeCourse.Course.COURSE_FOUR).
                 setIsActive(true).
@@ -134,7 +134,7 @@ public class TestDataRecipeCoursePersistenceModel {
 
     public static RecipeCoursePersistenceModel getExistingActiveRecipeCourseFive() {
         return new RecipeCoursePersistenceModel.Builder().
-                setDataId("dataId-recipeCourse-id5").
+                setDataId("dataId-recipeCourse-existing-id5").
                 setDomainId(EXISTING_RECIPE_ID).
                 setCourse(RecipeCourse.Course.COURSE_FIVE).
                 setIsActive(true).
@@ -145,7 +145,7 @@ public class TestDataRecipeCoursePersistenceModel {
 
     public static RecipeCoursePersistenceModel getExistingActiveRecipeCourseSix() {
         return new RecipeCoursePersistenceModel.Builder().
-                setDataId("dataId-recipeCourse-id6").
+                setDataId("dataId-recipeCourse-existing-id6").
                 setDomainId(EXISTING_RECIPE_ID).
                 setCourse(RecipeCourse.Course.COURSE_SIX).
                 setIsActive(true).
@@ -156,7 +156,7 @@ public class TestDataRecipeCoursePersistenceModel {
 
     public static RecipeCoursePersistenceModel getExistingActiveRecipeCourseSeven() {
         return new RecipeCoursePersistenceModel.Builder().
-                setDataId("dataId-recipeCourse-id7").
+                setDataId("dataId-recipeCourse-existing-id7").
                 setDomainId(EXISTING_RECIPE_ID).
                 setCourse(RecipeCourse.Course.COURSE_SEVEN).
                 setIsActive(true).
@@ -205,7 +205,7 @@ public class TestDataRecipeCoursePersistenceModel {
 
     public static RecipeCoursePersistenceModel getCopiedRecipeCourseZero() {
         return new RecipeCoursePersistenceModel.Builder().
-                setDataId("dataId-recipeCourseCopy-id0").
+                setDataId("dataId-recipeCourse-copy-id0").
                 setDomainId(NEW_RECIPE_ID).
                 setCourse(getExistingActiveRecipeCourseZero().getCourse()).
                 setIsActive(true).
@@ -216,7 +216,7 @@ public class TestDataRecipeCoursePersistenceModel {
 
     public static RecipeCoursePersistenceModel getCopiedRecipeCourseOne() {
         return new RecipeCoursePersistenceModel.Builder().
-                setDataId("dataId-recipeCourseCopy-id1").
+                setDataId("dataId-recipeCourse-copy-id1").
                 setDomainId(NEW_RECIPE_ID).
                 setCourse(getExistingActiveRecipeCourseOne().getCourse()).
                 setIsActive(true).
@@ -227,7 +227,7 @@ public class TestDataRecipeCoursePersistenceModel {
 
     public static RecipeCoursePersistenceModel getCopiedRecipeCourseTwo() {
         return new RecipeCoursePersistenceModel.Builder().
-                setDataId("dataId-recipeCourseCopy-id2").
+                setDataId("dataId-recipeCourse-copy-id2").
                 setDomainId(NEW_RECIPE_ID).
                 setCourse(getExistingActiveRecipeCourseOne().getCourse()).
                 setIsActive(true).
@@ -238,7 +238,7 @@ public class TestDataRecipeCoursePersistenceModel {
 
     public static RecipeCoursePersistenceModel getCopiedRecipeCourseFour() {
         return new RecipeCoursePersistenceModel.Builder().
-                setDataId("dataId-recipeCourseCopy-id4").
+                setDataId("dataId-recipeCourse-copy-id4").
                 setDomainId(NEW_RECIPE_ID).
                 setCourse(getExistingActiveRecipeCourseFour().getCourse()).
                 setIsActive(true).
@@ -249,7 +249,7 @@ public class TestDataRecipeCoursePersistenceModel {
 
     public static RecipeCoursePersistenceModel getCopiedRecipeCourseSix() {
         return new RecipeCoursePersistenceModel.Builder().
-                setDataId("dataId-recipeCourseCopy-id6").
+                setDataId("dataId-recipeCourse-copy-id6").
                 setDomainId(NEW_RECIPE_ID).
                 setCourse(RecipeCourse.Course.COURSE_SIX).
                 setIsActive(true).
