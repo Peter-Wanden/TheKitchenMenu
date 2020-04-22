@@ -23,6 +23,7 @@ import java.util.List;
 import static com.example.peter.thekitchenmenu.data.repository.DomainDataAccess.*;
 import static com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter.PrimitiveDataSource.*;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 
@@ -77,6 +78,7 @@ public class RecipeMetadataLocalGetAdapterTest {
         // Assert
         verify(parentDataSourceMock).getByDataId(eq(dataId), parentCallback.capture());
         parentCallback.getValue().onDataUnavailable();
+        assertTrue(callbackClient.onModelUnavailable);
     }
 
     @Test
@@ -202,6 +204,7 @@ public class RecipeMetadataLocalGetAdapterTest {
                 "GetModelCallbackClient: ";
 
         private RecipeMetadataPersistenceModel domainModel;
+        private boolean onModelUnavailable;
 
         @Override
         public void onModelLoaded(RecipeMetadataPersistenceModel model) {
@@ -212,6 +215,7 @@ public class RecipeMetadataLocalGetAdapterTest {
         @Override
         public void onModelUnavailable() {
             System.out.println(TAG + "onModelUnavailable");
+            onModelUnavailable = true;
         }
     }
 

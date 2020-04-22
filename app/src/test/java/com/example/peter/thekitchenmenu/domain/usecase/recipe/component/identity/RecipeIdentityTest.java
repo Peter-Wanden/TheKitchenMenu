@@ -16,7 +16,6 @@ import org.junit.*;
 import org.mockito.*;
 
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.assertEquals;
 
@@ -30,12 +29,12 @@ public class RecipeIdentityTest {
     private static final RecipeIdentityEntity INVALID_NEW_TITLE_TOO_LONG_DESCRIPTION_TOO_LONG =
             TestDataRecipeIdentityEntity.getInvalidNewTitleTooLongDescriptionTooLong();
     private static final RecipeIdentityEntity INVALID_NEW_TITLE_TOO_SHORT_DEFAULT_DESCRIPTION =
-            TestDataRecipeIdentityEntity.getInvalidNewTitleTooShortDescriptionDefault();
+            TestDataRecipeIdentityEntity.getInvalidNewTitleTooShort();
     private static final RecipeIdentityEntity INVALID_NEW_TITLE_TOO_SHORT_VALID_DESCRIPTION =
             TestDataRecipeIdentityEntity.getInvalidNewTitleTooShortDescriptionValid();
 
     private static final RecipeIdentityEntity VALID_NEW_TITLE_VALID_DEFAULT_DESCRIPTION =
-            TestDataRecipeIdentityEntity.getValidNewTitleValidDescriptionDefault();
+            TestDataRecipeIdentityEntity.getValidNewTitleValid();
     private static final RecipeIdentityEntity VALID_NEW_COMPLETE =
             TestDataRecipeIdentityEntity.getValidNewComplete();
 

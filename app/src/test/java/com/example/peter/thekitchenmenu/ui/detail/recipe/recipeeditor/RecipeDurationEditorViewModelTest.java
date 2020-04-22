@@ -53,7 +53,7 @@ public class RecipeDurationEditorViewModelTest {
 
     // region constants ----------------------------------------------------------------------------
     private static final RecipeDurationEntity VALID_NEW_EMPTY =
-            TestDataRecipeDurationEntity.getValidNewEmpty();
+            TestDataRecipeDurationEntity.getValidNew();
     private static final RecipeDurationEntity INVALID_NEW_PREP_TIME_INVALID =
             TestDataRecipeDurationEntity.getInvalidNewPrepTimeInvalid();
     private static final RecipeDurationEntity INVALID_NEW_COOK_TIME_INVALID =

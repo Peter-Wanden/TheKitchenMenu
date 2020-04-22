@@ -1,8 +1,10 @@
 package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.datasource;
 
 import com.example.peter.thekitchenmenu.data.repository.recipe.duration.TestDataRecipeDuration;
-import com.example.peter.thekitchenmenu.data.repository.recipe.metadata.TestDataRecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDurationPersistenceModel;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TestDataRecipeDurationEntity {
 
@@ -14,7 +16,7 @@ public class TestDataRecipeDurationEntity {
         return 6000;
     }
 
-    public static RecipeDurationEntity getValidNewEmpty() {
+    public static RecipeDurationEntity getValidNew() {
         return convertDomainModelToDatabaseEntity(TestDataRecipeDuration.
                 getValidNew());
     }
@@ -42,6 +44,14 @@ public class TestDataRecipeDurationEntity {
     public static RecipeDurationEntity getValidNewComplete() {
         return convertDomainModelToDatabaseEntity(TestDataRecipeDuration.
                 getValidNewComplete());
+    }
+
+    public static List<RecipeDurationEntity> getAllNew() {
+        List<RecipeDurationEntity> entities = new ArrayList<>();
+        for (RecipeDurationPersistenceModel m : TestDataRecipeDuration.getAllNew()) {
+            entities.add(convertDomainModelToDatabaseEntity(m));
+        }
+        return entities;
     }
 
     public static RecipeDurationEntity getInvalidExistingComplete() {

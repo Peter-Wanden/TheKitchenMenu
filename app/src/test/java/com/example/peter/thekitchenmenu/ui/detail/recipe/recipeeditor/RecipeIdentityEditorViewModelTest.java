@@ -51,13 +51,13 @@ public class RecipeIdentityEditorViewModelTest {
     private static final RecipeIdentityEntity INVALID_NEW_EMPTY =
             TestDataRecipeIdentityEntity.getInvalidNewEmpty();
     private static final RecipeIdentityEntity INVALID_NEW_TITLE_TOO_SHORT =
-            TestDataRecipeIdentityEntity.getInvalidNewTitleTooShortDescriptionDefault();
+            TestDataRecipeIdentityEntity.getInvalidNewTitleTooShort();
     private static final RecipeIdentityEntity INVALID_NEW_TITLE_TOO_LONG =
-            TestDataRecipeIdentityEntity.getInvalidNewTitleTooLongDescriptionDefault();
+            TestDataRecipeIdentityEntity.getInvalidNewTitleTooLong();
     private static final RecipeIdentityEntity INVALID_NEW_TITLE_INVALID_DESCRIPTION_VALID =
             TestDataRecipeIdentityEntity.getInvalidNewTitleTooShortDescriptionValid();
     private static final RecipeIdentityEntity VALID_NEW_TITLE_VALID =
-            TestDataRecipeIdentityEntity.getValidNewTitleValidDescriptionDefault();
+            TestDataRecipeIdentityEntity.getValidNewTitleValid();
     private static final RecipeIdentityEntity VALID_NEW_COMPLETE =
             TestDataRecipeIdentityEntity.getValidNewComplete();
 

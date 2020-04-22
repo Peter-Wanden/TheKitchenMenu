@@ -3,6 +3,9 @@ package com.example.peter.thekitchenmenu.data.repository.recipe.duration;
 import com.example.peter.thekitchenmenu.data.repository.recipe.metadata.TestDataRecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDurationPersistenceModel;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class TestDataRecipeDuration {
 
     public static final int MIN_PREP_TIME = 0;
@@ -28,7 +31,7 @@ public class TestDataRecipeDuration {
                 setPrepTime(MIN_PREP_TIME).
                 setCookTime(MIN_COOK_TIME).
                 setCreateDate(10L).
-                setLastUpdate(10L).
+                setLastUpdate(20L).
                 build();
     }
 
@@ -39,7 +42,7 @@ public class TestDataRecipeDuration {
                 setPrepTime(MAX_PREP_TIME + 1).
                 setCookTime(MIN_COOK_TIME).
                 setCreateDate(10L).
-                setLastUpdate(10L).
+                setLastUpdate(30L).
                 build();
     }
 
@@ -50,7 +53,7 @@ public class TestDataRecipeDuration {
                 setPrepTime(MIN_PREP_TIME).
                 setCookTime(MAX_COOK_TIME + 1).
                 setCreateDate(10L).
-                setLastUpdate(10L).
+                setLastUpdate(40L).
                 build();
     }
 
@@ -61,7 +64,7 @@ public class TestDataRecipeDuration {
                 setPrepTime(MAX_PREP_TIME).
                 setCookTime(MIN_COOK_TIME).
                 setCreateDate(10L).
-                setLastUpdate(10L).
+                setLastUpdate(50L).
                 build();
     }
 
@@ -72,7 +75,7 @@ public class TestDataRecipeDuration {
                 setPrepTime(MIN_PREP_TIME).
                 setCookTime(MAX_COOK_TIME).
                 setCreateDate(10L).
-                setLastUpdate(10L).
+                setLastUpdate(60L).
                 build();
     }
 
@@ -83,8 +86,19 @@ public class TestDataRecipeDuration {
                 setPrepTime(MAX_PREP_TIME).
                 setCookTime(MAX_COOK_TIME).
                 setCreateDate(10L).
-                setLastUpdate(10L).
+                setLastUpdate(70L).
                 build();
+    }
+
+    public static List<RecipeDurationPersistenceModel> getAllNew() {
+        return Arrays.asList(
+                getValidNew(),
+                getInvalidNewPrepTimeInvalid(),
+                getInvalidNewCookTimeInvalid(),
+                getValidNewPrepTimeValid(),
+                getValidNewCookTimeValid(),
+                getValidNewComplete()
+                );
     }
 
     public static RecipeDurationPersistenceModel getInvalidExistingComplete() {
