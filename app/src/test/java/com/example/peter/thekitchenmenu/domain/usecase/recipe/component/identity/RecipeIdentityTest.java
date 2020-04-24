@@ -3,8 +3,6 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identit
 import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess.GetDomainModelCallback;
 import com.example.peter.thekitchenmenu.data.repository.recipe.identity.TestDataRecipeIdentity;
-import com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter.PrimitiveDataSource.GetPrimitiveCallback;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.datasource.RecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeIdentity;
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.model.FailReasons;
@@ -14,7 +12,6 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMet
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentState;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
-import com.example.peter.thekitchenmenu.testdata.TestDataRecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 
 import org.junit.*;
@@ -94,8 +91,8 @@ public class RecipeIdentityTest {
         // Assert
         assertEquals(
                 ComponentState.INVALID_UNCHANGED,
-                onErrorResponse.getMetadata().getState());
-
+                onErrorResponse.getMetadata().getState()
+        );
         assertTrue(
                 onErrorResponse.getMetadata().
                         getFailReasons().
@@ -371,14 +368,52 @@ public class RecipeIdentityTest {
     @Test
     public void existingRequest_titleValidDescriptionValid_VALID_UNCHANGED() {
         // Arrange
-        RecipeIdentityPersistenceModel testModel = TestDataRecipeIdentity.
+        RecipeIdentityPersistenceModel modelUnderTest = TestDataRecipeIdentity.
                 getValidExistingTitleValidDescriptionValid();
         // Act
-        simulateExistingInitialisationRequest(testModel);
+        simulateExistingInitialisationRequest(modelUnderTest);
         // Assert
         assertEquals(
-                RecipeMetadata.ComponentState.VALID_UNCHANGED,
+                ComponentState.VALID_UNCHANGED,
                 onSuccessResponse.getMetadata().getState()
+        );
+
+    }
+
+    @Test
+    public void existingRequest_titleValidDescriptionValid_correctValuesReturned() {
+        // Arrange
+        RecipeIdentityPersistenceModel modelUnderTest = TestDataRecipeIdentity.
+                getValidExistingTitleValidDescriptionValid();
+        // Act
+        simulateExistingInitialisationRequest(modelUnderTest);
+
+        // Assert metadata
+        assertEquals(
+                modelUnderTest.getDataId(),
+                onSuccessResponse.getDataId()
+        );
+        assertEquals(
+                modelUnderTest.getDomainId(),
+                onSuccessResponse.getDomainId()
+        );
+        assertEquals(
+                modelUnderTest.getCreateDate(),
+                onSuccessResponse.getMetadata().getCreateDate()
+        );
+        assertEquals(
+                modelUnderTest.getLastUpdate(),
+                onSuccessResponse.getMetadata().getLasUpdate()
+        );
+
+        // Assert domain data
+        assertEquals(
+                modelUnderTest.getTitle(),
+                onSuccessResponse.getModel().getTitle()
+        );
+        assertEquals(
+                modelUnderTest.getDescription(),
+                onSuccessResponse.getModel().getDescription()
         );
     }
 
@@ -585,7 +620,8 @@ public class RecipeIdentityTest {
     }
 
     // region helper methods -----------------------------------------------------------------------
-    private void simulateNewInitialisationRequest(RecipeIdentityPersistenceModel modelUnderTest) {
+    private void simulateNewInitialisationRequest(
+            RecipeIdentityPersistenceModel modelUnderTest) {
         // Arrange
         callbackClient = new IdentityCallbackClient();
 
@@ -604,7 +640,7 @@ public class RecipeIdentityTest {
                 build();
         // Act
         handler.execute(SUT, initialisationRequest, callbackClient);
-        // Assert
+        // Assert repo called, no model found, return model unavailable
         verify(repoIdentityMock).getActiveByDomainId(
                 eq(modelUnderTest.getDomainId()),
                 repoCallback.capture()

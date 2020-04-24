@@ -10,15 +10,15 @@ import java.util.List;
 
 public class TestDataRecipeIdentity {
 
-    public static final String NEW_RECIPE_ID = TestDataRecipeMetadata.
+    private static final String NEW_RECIPE_ID = TestDataRecipeMetadata.
             getDataUnavailable().
             getDomainId();
 
-    public static final String EXISTING_RECIPE_ID = TestDataRecipeMetadata.
+    private static final String EXISTING_RECIPE_ID = TestDataRecipeMetadata.
             getValidUnchanged().
             getDomainId();
 
-    public static final String RECIPE_ID_FROM_ANOTHER_USER = TestDataRecipeMetadata.
+    private static final String RECIPE_ID_FROM_ANOTHER_USER = TestDataRecipeMetadata.
             getValidFromAnotherUser().getDomainId();
 
     public static RecipeIdentityPersistenceModel getInvalidNewEmpty() {

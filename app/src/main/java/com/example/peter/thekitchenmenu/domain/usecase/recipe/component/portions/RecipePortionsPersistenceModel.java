@@ -72,14 +72,14 @@ public final class RecipePortionsPersistenceModel
         public Builder getDefault() {
             model.dataId = "";
             model.domainId = "";
-            model.servings = 0;
-            model.sittings = 0;
+            model.servings = 1;
+            model.sittings = 1;
             model.createDate = 0L;
             model.lastUpdate = 0L;
             return self();
         }
 
-        public Builder basedOnPersistenceModel(
+        public Builder basedOnModel(
                 @Nonnull RecipePortionsPersistenceModel m) {
             model.dataId = m.getDataId();
             model.domainId = m.getDomainId();

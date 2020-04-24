@@ -22,8 +22,8 @@ import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.TestDataRecipeCourseEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.datasource.TestDataRecipeDurationEntity;
-import com.example.peter.thekitchenmenu.testdata.TestDataRecipeIdentityEntity;
-import com.example.peter.thekitchenmenu.testdata.TestDataRecipePortionsEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.datasource.TestDataRecipeIdentityEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.datasource.TestDataRecipePortionsEntity;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -72,15 +72,15 @@ public class RecipeCopyTest {
     private static final RecipeDurationEntity DURATION_VALID_NEW_CLONED_PREP_TIME_UPDATED =
             TestDataRecipeDurationEntity.getValidNewCopiedPrepTimeUpdated();
     private static final RecipePortionsEntity PORTION_VALID_EXISTING_CLONE =
-            TestDataRecipePortionsEntity.getExistingValidClone();
+            TestDataRecipePortionsEntity.getExistingValidCopied();
     private static final RecipePortionsEntity PORTION_VALID_EXISTING_CLONE_UPDATED_SITTINGS_SERVINGS =
-            TestDataRecipePortionsEntity.getExistingClonedUpdatedSittingsServings();
+            TestDataRecipePortionsEntity.getExistingCopiedUpdatedSittingsServings();
     private static final RecipePortionsEntity PORTIONS_EXISTING_VALID_CLONE =
-            TestDataRecipePortionsEntity.getExistingValidClone();
+            TestDataRecipePortionsEntity.getExistingValidCopied();
     private static final RecipePortionsEntity PORTIONS_EXISTING_VALID_CLONE_UPDATED_SITTINGS_SERVINGS =
-            TestDataRecipePortionsEntity.getExistingClonedUpdatedSittingsServings();
+            TestDataRecipePortionsEntity.getExistingCopiedUpdatedSittingsServings();
     private static final RecipePortionsEntity PORTIONS_EXISTING_VALID_FROM_ANOTHER_USER =
-            TestDataRecipePortionsEntity.getValidCloneFromAnotherUser();
+            TestDataRecipePortionsEntity.getValidCopiedFromAnotherUser();
     // endregion constants -------------------------------------------------------------------------
 
     // region helper fields ------------------------------------------------------------------------

@@ -2,13 +2,13 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portion
 
 import android.annotation.SuppressLint;
 
+import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.model.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadata;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
+
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.*;
 
 public class RecipePortions extends UseCase
         implements DomainDataAccess.GetDomainModelCallback<RecipePortionsPersistenceModel> {
@@ -118,26 +120,26 @@ public class RecipePortions extends UseCase
     @Override
     public void onModelLoaded(RecipePortionsPersistenceModel model) {
         persistenceModel = model;
-        validateData();
-        buildResponse();
+        dataId = model.getDataId();
+        processChanges();
     }
 
     @Override
     public void onModelUnavailable() {
         persistenceModel = createNewPersistenceModel();
-        failReasons.add(CommonFailReason.DATA_UNAVAILABLE);
-
+        save();
+        failReasons.add(CommonFailReason.NONE);
         buildResponse();
     }
 
     private RecipePortionsPersistenceModel createNewPersistenceModel() {
         long currentTime = timeProvider.getCurrentTimeInMills();
         dataId = idProvider.getUId();
+
         return new RecipePortionsPersistenceModel.Builder().
+                getDefault().
                 setDataId(dataId).
                 setDomainId(recipeId).
-                setServings(MIN_SERVINGS).
-                setSittings(MIN_SITTINGS).
                 setCreateDate(currentTime).
                 setLastUpdate(currentTime).
                 build();
@@ -154,63 +156,81 @@ public class RecipePortions extends UseCase
     }
 
     private void validateData() {
-        int servings;
-        int sittings;
-        if (isNewRequest) {
-            servings = persistenceModel.getServings();
-            sittings = persistenceModel.getSittings();
-        } else {
-            servings = requestModel.getServings();
-            sittings = requestModel.getSittings();
-        }
-        if (servings < MIN_SERVINGS) {
-            failReasons.add(FailReason.SERVINGS_TOO_LOW);
-        } else if (servings > maxServings) {
-            failReasons.add(FailReason.SERVINGS_TOO_HIGH);
-        }
-        if (sittings < MIN_SITTINGS) {
-            failReasons.add(FailReason.SITTINGS_TOO_LOW);
-        } else if (sittings > maxSittings) {
-            failReasons.add(FailReason.SITTINGS_TOO_HIGH);
-        }
+        validateServings();
+        validateSittings();
+
         if (failReasons.isEmpty()) {
             failReasons.add(CommonFailReason.NONE);
         }
     }
 
-    private void buildResponse() {
-        RecipePortionsResponse response = new RecipePortionsResponse.Builder().
-                setDataId(dataId).
-                setDomainId(recipeId).
-                setMetadata(getMetadata()).
-                setModel(getResponseModel()).
-                build();
+    private void validateServings() {
+        int servings = getCorrectServings();
 
-        if (response.getMetadata().getState() == RecipeMetadata.ComponentState.VALID_CHANGED) {
-            save(updatePersistenceFromRequestModel());
+        if (servings < MIN_SERVINGS) {
+            failReasons.add(FailReason.SERVINGS_TOO_LOW);
+        } else if (servings > maxServings) {
+            failReasons.add(FailReason.SERVINGS_TOO_HIGH);
         }
-        sendResponse(response);
     }
 
-    private UseCaseMetadata getMetadata() {
+    private int getCorrectServings() {
+        return isNewRequest ? persistenceModel.getServings() : requestModel.getServings();
+    }
+
+    private void validateSittings() {
+        int sittings = getCorrectSittings();
+
+        if (sittings < MIN_SITTINGS) {
+            failReasons.add(FailReason.SITTINGS_TOO_LOW);
+        } else if (sittings > maxSittings) {
+            failReasons.add(FailReason.SITTINGS_TOO_HIGH);
+        }
+    }
+
+    private int getCorrectSittings() {
+        return isNewRequest ? persistenceModel.getSittings() : requestModel.getSittings();
+    }
+
+    private void buildResponse() {
+        RecipePortionsResponse.Builder builder = new RecipePortionsResponse.Builder();
+        builder.setDomainId(recipeId);
+
+        if (ComponentState.VALID_CHANGED == getComponentState()) {
+            RecipePortionsPersistenceModel m = updatePersistenceModel();
+            builder.setMetadata(getMetadata(m));
+            persistenceModel = m;
+            save();
+
+        } else {
+            builder.setMetadata(getMetadata(persistenceModel));
+        }
+
+        builder.setModel(getResponseModel());
+        builder.setDataId(dataId);
+        sendResponse(builder.build());
+    }
+
+    private UseCaseMetadata getMetadata(RecipePortionsPersistenceModel m) {
         return new UseCaseMetadata.Builder().
                 setState(getComponentState()).
                 setFailReasons(new ArrayList<>(failReasons)).
-                setCreateDate(persistenceModel.getCreateDate()). // TODO - These times may be wrong
-                setLasUpdate(persistenceModel.getLastUpdate()).  //  as they are updated after called
+                setCreatedBy(Constants.getUserId()).
+                setCreateDate(m.getCreateDate()).
+                setLasUpdate(m.getLastUpdate()).
                 build();
     }
 
-    private RecipeMetadata.ComponentState getComponentState() {
+    private ComponentState getComponentState() {
         boolean isValid = failReasons.contains(CommonFailReason.NONE);
         if (!isValid && !isChanged()) {
-            return RecipeMetadata.ComponentState.INVALID_UNCHANGED;
+            return ComponentState.INVALID_UNCHANGED;
         } else if (isValid && !isChanged()) {
-            return RecipeMetadata.ComponentState.VALID_UNCHANGED;
+            return ComponentState.VALID_UNCHANGED;
         } else if (!isValid && isChanged()) {
-            return RecipeMetadata.ComponentState.INVALID_CHANGED;
+            return ComponentState.INVALID_CHANGED;
         } else {
-            return RecipeMetadata.ComponentState.VALID_CHANGED;
+            return ComponentState.VALID_CHANGED;
         }
     }
 
@@ -226,9 +246,11 @@ public class RecipePortions extends UseCase
         return persistenceModel.getSittings() != requestModel.getSittings();
     }
 
-    private RecipePortionsPersistenceModel updatePersistenceFromRequestModel() {
+    private RecipePortionsPersistenceModel updatePersistenceModel() {
+        dataId = idProvider.getUId();
         return new RecipePortionsPersistenceModel.Builder().
-                basedOnPersistenceModel(persistenceModel).
+                basedOnModel(persistenceModel).
+                setDataId(dataId).
                 setSittings(requestModel.getSittings()).
                 setServings(requestModel.getServings()).
                 setLastUpdate(timeProvider.getCurrentTimeInMills()).
@@ -261,7 +283,7 @@ public class RecipePortions extends UseCase
         }
     }
 
-    private void save(RecipePortionsPersistenceModel model) {
-        repository.save(model);
+    private void save() {
+        repository.save(persistenceModel);
     }
 }

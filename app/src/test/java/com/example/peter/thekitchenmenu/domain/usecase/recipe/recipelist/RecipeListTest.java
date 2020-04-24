@@ -1,6 +1,5 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipelist;
 
-import com.example.peter.thekitchenmenu.commonmocks.RecipeComponents;
 import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.RecipeCourseEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.datasource.RecipeDurationEntity;
@@ -15,18 +14,9 @@ import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeP
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseFactory;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDuration;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentity;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortions;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDurationTest;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortionsTest;
-import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
-import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidatorTest;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
-import com.example.peter.thekitchenmenu.testdata.TestDataRecipeIdentityEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.datasource.TestDataRecipeIdentityEntity;
 
 import org.junit.*;
 import org.mockito.*;
@@ -34,7 +24,6 @@ import org.mockito.*;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 public class RecipeListTest {
 

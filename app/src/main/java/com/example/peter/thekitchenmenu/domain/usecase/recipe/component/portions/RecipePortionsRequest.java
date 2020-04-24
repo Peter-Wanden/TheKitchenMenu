@@ -17,6 +17,7 @@ public final class RecipePortionsRequest
 
         public Builder() {
             message = new RecipePortionsRequest();
+            message.model = new RecipePortionsRequest.Model();
         }
 
         public Builder getDefault() {
@@ -86,7 +87,7 @@ public final class RecipePortionsRequest
                 return self();
             }
 
-            public Builder basedOnPortionsResponseModel(RecipePortionsResponse.Model m) {
+            public Builder basedResponseModel(RecipePortionsResponse.Model m) {
                 model.sittings = m.getSittings();
                 model.servings = m.getServings();
                 return self();

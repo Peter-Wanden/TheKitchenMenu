@@ -4,6 +4,7 @@ import android.content.res.Resources;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
+import com.example.peter.thekitchenmenu.data.repository.recipe.portions.TestDataRecipePortions;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.RecipeCourseEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.datasource.RecipeDurationEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.parent.RecipeMetadataParentEntity;
@@ -26,8 +27,8 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.TestDataRecipeCourseEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.datasource.TestDataRecipeDurationEntity;
-import com.example.peter.thekitchenmenu.testdata.TestDataRecipeIdentityEntity;
-import com.example.peter.thekitchenmenu.testdata.TestDataRecipePortionsEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.datasource.TestDataRecipeIdentityEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.datasource.TestDataRecipePortionsEntity;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
@@ -51,10 +52,10 @@ public class RecipePortionsEditorViewModelTest {
     // region constants ----------------------------------------------------------------------------
     private static final String ERROR_MESSAGE_SERVINGS = "ERROR_MESSAGE_SERVINGS";
     private static final String ERROR_MESSAGE_SITTINGS = "ERROR_MESSAGE_SITTINGS";
-    private final int MIN_SERVINGS = TestDataRecipePortionsEntity.getMinServings();
-    private final int MAX_SERVINGS = TestDataRecipePortionsEntity.getMaxServings();
-    private final int MIN_SITTINGS = TestDataRecipePortionsEntity.getMinSittings();
-    private final int MAX_SITTINGS = TestDataRecipePortionsEntity.getMaxSittings();
+    private final int MIN_SERVINGS = TestDataRecipePortions.MIN_SERVINGS;
+    private final int MAX_SERVINGS = TestDataRecipePortions.MAX_SERVINGS;
+    private final int MIN_SITTINGS = TestDataRecipePortions.MIN_SITTINGS;
+    private final int MAX_SITTINGS = TestDataRecipePortions.MAX_SITTINGS;
 
     private final RecipePortionsEntity NEW_EMPTY =
             TestDataRecipePortionsEntity.getNewValidEmpty();

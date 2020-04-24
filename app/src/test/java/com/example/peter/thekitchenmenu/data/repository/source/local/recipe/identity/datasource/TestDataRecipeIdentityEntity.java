@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.testdata;
+package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.datasource;
 
 import com.example.peter.thekitchenmenu.commonmocks.StringMaker;
 import com.example.peter.thekitchenmenu.data.repository.recipe.identity.TestDataRecipeIdentity;

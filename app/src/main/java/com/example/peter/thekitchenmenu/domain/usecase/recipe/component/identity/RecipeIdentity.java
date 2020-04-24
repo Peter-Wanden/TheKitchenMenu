@@ -127,8 +127,8 @@ public class RecipeIdentity
     @Override
     public void onModelLoaded(RecipeIdentityPersistenceModel model) {
         persistenceModel = model;
-        validateData();
-        buildResponse();
+        dataId = model.getDataId();
+        processChanges();
     }
 
     @Override
@@ -165,7 +165,10 @@ public class RecipeIdentity
                 TITLE_TEXT_TYPE,
                 new TextValidatorModel(getCorrectTitle())
         );
-        handler.execute(textValidator, request, new UseCase.Callback<TextValidatorResponse>() {
+        handler.execute(
+                textValidator,
+                request,
+                new UseCase.Callback<TextValidatorResponse>() {
                     @Override
                     public void onSuccess(TextValidatorResponse response) {
                         validateDescription();
@@ -228,32 +231,21 @@ public class RecipeIdentity
     }
 
     private void buildResponse() {
-        if (ComponentState.VALID_CHANGED == getComponentState()) {
-            // update persistence model
-            RecipeIdentityPersistenceModel m = updatePersistenceModel();
-            // save
-            save(m);
-            // build response response
-            RecipeIdentityResponse.Builder builder = new RecipeIdentityResponse.Builder().
-                    setDataId(m.getDataId()).
-                    setDomainId(recipeId).
-                    setMetadata(getMetadata(m)).
-                    setModel(new RecipeIdentityResponse.Model.Builder().
-                            setTitle(m.getTitle()).setDescription(m.getDescription()).build()
-                    );
-            persistenceModel = m;
-            sendResponse(builder.build());
-        } else {
-            // send response
-            RecipeIdentityResponse response = new RecipeIdentityResponse.Builder().
-                    setDataId(dataId).
-                    setDomainId(recipeId).
-                    setMetadata(getMetadata(persistenceModel)).
-                    setModel(getResponseModel()).
-                    build();
+        RecipeIdentityResponse.Builder builder = new RecipeIdentityResponse.Builder();
+        builder.setDomainId(recipeId);
 
-            sendResponse(response);
+        if (ComponentState.VALID_CHANGED == getComponentState()) {
+            RecipeIdentityPersistenceModel m = updatePersistenceModel();
+            builder.setMetadata(getMetadata(m));
+            persistenceModel = m;
+            save();
+
+        } else {
+            builder.setMetadata(getMetadata(persistenceModel));
         }
+        builder.setModel(getResponseModel());
+        builder.setDataId(dataId);
+        sendResponse(builder.build());
     }
 
     private UseCaseMetadata getMetadata(RecipeIdentityPersistenceModel m) {
@@ -331,8 +323,7 @@ public class RecipeIdentity
         isNewRequest = false;
     }
 
-    private void save(RecipeIdentityPersistenceModel model) {
-        System.out.println(TAG + "saving: " + model);
-        repository.save(model);
+    private void save() {
+        repository.save(persistenceModel);
     }
 }

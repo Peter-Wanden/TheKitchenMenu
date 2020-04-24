@@ -15,11 +15,11 @@ public abstract class BaseDomainMessageModelMetadata<
     @Nonnull
     @Override
     public String toString() {
-        return "UseCaseDomainMessageBaseModelMetadata{" +
-                "metadata=" + metadata +
-                ", model=" + model +
-                ", dataId='" + dataId + '\'' +
+        return "BaseDomainMessageModelMetadata{" +
+                "dataId='" + dataId + '\'' +
                 ", domainId='" + domainId + '\'' +
+                ", metadata=" + metadata +
+                ", model=" + model +
                 '}';
     }
 

@@ -41,8 +41,8 @@ import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.cour
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.datasource.TestDataRecipeDurationEntity;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
-import com.example.peter.thekitchenmenu.testdata.TestDataRecipeIdentityEntity;
-import com.example.peter.thekitchenmenu.testdata.TestDataRecipePortionsEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.datasource.TestDataRecipeIdentityEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.datasource.TestDataRecipePortionsEntity;
 
 import org.junit.*;
 import org.mockito.*;
