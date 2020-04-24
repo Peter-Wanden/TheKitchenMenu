@@ -50,11 +50,11 @@ public class RecipeCopyTest {
     private static final RecipeIdentityEntity IDENTITY_INVALID_FROM_ANOTHER_USER =
             TestDataRecipeIdentityEntity.getInvalidFromAnotherUser();
     private static final RecipeIdentityEntity IDENTITY_VALID_NEW_CLONED =
-            TestDataRecipeIdentityEntity.getValidCompleteAfterCloned();
+            TestDataRecipeIdentityEntity.getValidCompleteAfterCopied();
     private static final RecipeIdentityEntity IDENTITY_INVALID_NEW_CLONED =
-            TestDataRecipeIdentityEntity.getValidAfterInvalidClonedData();
+            TestDataRecipeIdentityEntity.getValidAfterInvalidCopy();
     private static final RecipeIdentityEntity IDENTITY_VALID_CLONED_DESCRIPTION_UPDATED =
-            TestDataRecipeIdentityEntity.getValidClonedDescriptionUpdated();
+            TestDataRecipeIdentityEntity.getValidCopiedDescriptionUpdated();
     private static final RecipeDurationEntity IDENTITY_DURATION_VALID_COMPLETE_FROM_ANOTHER_USER =
             TestDataRecipeDurationEntity.getValidCompleteFromAnotherUser();
     private static final RecipeDurationEntity IDENTITY_DURATION_VALID_NEW_CLONED =

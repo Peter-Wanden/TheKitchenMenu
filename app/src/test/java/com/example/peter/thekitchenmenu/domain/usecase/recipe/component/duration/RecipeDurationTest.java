@@ -6,6 +6,7 @@ import com.example.peter.thekitchenmenu.data.repository.recipe.duration.TestData
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeDuration;
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.model.FailReasons;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
@@ -758,9 +759,9 @@ public class RecipeDurationTest {
     }
 
     // region helper methods -----------------------------------------------------------------------
-    private Callback<RecipeDurationResponse> getUseCaseCallback() {
+    private UseCase.Callback<RecipeDurationResponse> getUseCaseCallback() {
 
-        return new Callback<RecipeDurationResponse>() {
+        return new UseCase.Callback<RecipeDurationResponse>() {
             @Override
             public void onSuccess(RecipeDurationResponse response) {
                 durationOnSuccessResponse = response;

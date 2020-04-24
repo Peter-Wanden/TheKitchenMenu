@@ -1,19 +1,26 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity;
 
 import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
+import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess.GetDomainModelCallback;
+import com.example.peter.thekitchenmenu.data.repository.recipe.identity.TestDataRecipeIdentity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter.PrimitiveDataSource.GetPrimitiveCallback;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.datasource.RecipeIdentityEntity;
-import com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeIdentity;
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
+import com.example.peter.thekitchenmenu.domain.model.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentState;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
+import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 
 import org.junit.*;
 import org.mockito.*;
+
+import java.util.List;
 
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
@@ -24,60 +31,20 @@ public class RecipeIdentityTest {
     private static final String TAG = "tkm-" + RecipeIdentityTest.class.getSimpleName() + ": ";
 
     // region constants ----------------------------------------------------------------------------
-    private static final RecipeIdentityEntity INVALID_NEW_EMPTY =
-            TestDataRecipeIdentityEntity.getInvalidNewEmpty();
-    private static final RecipeIdentityEntity INVALID_NEW_TITLE_TOO_LONG_DESCRIPTION_TOO_LONG =
-            TestDataRecipeIdentityEntity.getInvalidNewTitleTooLongDescriptionTooLong();
-    private static final RecipeIdentityEntity INVALID_NEW_TITLE_TOO_SHORT_DEFAULT_DESCRIPTION =
-            TestDataRecipeIdentityEntity.getInvalidNewTitleTooShort();
-    private static final RecipeIdentityEntity INVALID_NEW_TITLE_TOO_SHORT_VALID_DESCRIPTION =
-            TestDataRecipeIdentityEntity.getInvalidNewTitleTooShortDescriptionValid();
-
-    private static final RecipeIdentityEntity VALID_NEW_TITLE_VALID_DEFAULT_DESCRIPTION =
-            TestDataRecipeIdentityEntity.getValidNewTitleValid();
-    private static final RecipeIdentityEntity VALID_NEW_COMPLETE =
-            TestDataRecipeIdentityEntity.getValidNewComplete();
-
-    private static final RecipeIdentityEntity INVALID_EXISTING_TITLE_TOO_SHORT_DEFAULT_DESCRIPTION =
-            TestDataRecipeIdentityEntity.getInvalidExistingTitleTooShortDefaultDescription();
-    private static final RecipeIdentityEntity INVALID_EXISTING_TITLE_TOO_LONG_DEFAULT_DESCRIPTION =
-            TestDataRecipeIdentityEntity.getInvalidExistingTitleTooLongDefaultDescription();
-    private static final RecipeIdentityEntity INVALID_EXISTING_TITLE_VALID_DESCRIPTION_TOO_LONG =
-            TestDataRecipeIdentityEntity.getInvalidExistingTitleValidDescriptionTooLong();
-    private static final RecipeIdentityEntity INVALID_EXISTING_TITLE_TOO_SHORT_DESCRIPTION_TOO_LONG =
-            TestDataRecipeIdentityEntity.getInvalidExistingTitleTooShortDescriptionTooLong();
-    private static final RecipeIdentityEntity INVALID_EXISTING_TITLE_TOO_LONG_DESCRIPTION_TOO_LONG =
-            TestDataRecipeIdentityEntity.getInvalidExistingTitleTooLongDescriptionTooLong();
-    private static final RecipeIdentityEntity VALID_EXISTING_TITLE_VALID_DESCRIPTION_DEFAULT =
-            TestDataRecipeIdentityEntity.getValidExistingTitleValidDescriptionDefault();
-    private static final RecipeIdentityEntity VALID_EXISTING_TITLE_VALID_DESCRIPTION_VALID =
-            TestDataRecipeIdentityEntity.getValidExistingTitleValidDescriptionValid();
-
-    private static final RecipeIdentityEntity VALID_EXISTING_COMPLETE =
-            TestDataRecipeIdentityEntity.getValidExistingTitleValidDescriptionValid();
-
-//    private static final RecipeIdentityEntity INVALID_FROM_ANOTHER_USER_TITLE_TOO_LONG_DESCRIPTION_TOO_LONG =
-//            TestDataRecipeIdentityEntity.getInvalidFromAnotherUser();
-//    private static final RecipeIdentityEntity VALID_AFTER_INVALID_FROM_ANOTHER_USER =
-//            TestDataRecipeIdentityEntity.getValidAfterInvalidClonedData();
-//    private static final RecipeIdentityEntity VALID_COMPLETE_FROM_ANOTHER_USER =
-//            TestDataRecipeIdentityEntity.getValidCompleteFromAnotherUser();
-//    private static final RecipeIdentityEntity VALID_COMPLETE_AFTER_CLONED =
-//            TestDataRecipeIdentityEntity.getValidCompleteAfterCloned();
-//    private static final RecipeIdentityEntity VALID_COMPLETE_AFTER_CLONE_DESCRIPTION_UPDATED =
-//            TestDataRecipeIdentityEntity.getValidClonedDescriptionUpdated();
-
     // endregion constants -------------------------------------------------------------------------
 
     // region helper fields ------------------------------------------------------------------------
     @Mock
     RepositoryRecipeIdentity repoIdentityMock;
     @Captor
-    ArgumentCaptor<PrimitiveDataSource.GetPrimitiveCallback<RecipeIdentityEntity>> repoCallback;
+    ArgumentCaptor<GetDomainModelCallback<RecipeIdentityPersistenceModel>> repoCallback;
     @Mock
     TimeProvider timeProviderMock;
+    @Mock
+    UniqueIdProvider idProvider;
 
     private UseCaseHandler handler;
+    private IdentityCallbackClient callbackClient;
     private RecipeIdentityResponse onSuccessResponse;
     private RecipeIdentityResponse onErrorResponse;
 
@@ -109,526 +76,507 @@ public class RecipeIdentityTest {
                 setLongTextMaxLength(LONG_TEXT_MAX_LENGTH).
                 build();
 
-        return null;
-//        new RecipeIdentity(
-//                repoIdentityMock,
-//                timeProviderMock,
-//                handler,
-//                textValidator);
+        return new RecipeIdentity(
+                repoIdentityMock,
+                idProvider,
+                timeProviderMock,
+                handler,
+                textValidator);
     }
 
     @Test
-    public void newId_emptyModel_stateINVALID_UNCHANGED_recipeStateListenerUpdated() {
+    public void newRequest_stateINVALID_UNCHANGED_failReasonDATA_UNAVAILABLE() {
         // Arrange
+        RecipeIdentityPersistenceModel testModel = TestDataRecipeIdentity.
+                getInvalidNewEmpty();
         // Act
-        verifyIdentityDatabaseCalledWithNewIdAndReturnDataNotAvailable();
-        // Assert
-        assertEquals(RecipeMetadata.ComponentState.INVALID_UNCHANGED, onErrorResponse.getMetadata().getState());
-        assertTrue(onErrorResponse.getMetadata().
-                getFailReasons().
-                contains(CommonFailReason.DATA_UNAVAILABLE));
-    }
-
-    @Test
-    public void newId_titleTooLongDescriptionTooLong_stateINVALID_CHANGED() {
-        // Arrange
-        String recipeId = INVALID_NEW_EMPTY.getDataId();
-        String titleTooLong = INVALID_NEW_TITLE_TOO_LONG_DESCRIPTION_TOO_LONG.getTitle();
-        String descriptionTooLong = INVALID_NEW_TITLE_TOO_LONG_DESCRIPTION_TOO_LONG.getDescription();
-
-        RecipeIdentityRequest.Model model = new RecipeIdentityRequest.Model.Builder().
-                setTitle(titleTooLong).
-                setDescription(descriptionTooLong).
-                build();
-        verifyIdentityDatabaseCalledWithNewIdAndReturnDataNotAvailable();
-        // Act
-        handler.execute(
-                SUT,
-                getRequest(recipeId, model),
-                getCallback());
-        // Assert
-        assertEquals(RecipeMetadata.ComponentState.INVALID_CHANGED, onErrorResponse.getMetadata().getState());
-    }
-
-    @Test
-    public void newId_titleTooLongDescriptionTooLong_failReasonsTITLE_TOO_LONG_DESCRIPTION_TOO_LONG() {
-        // Arrange
-        String recipeId = INVALID_NEW_EMPTY.getDataId();
-        String title = INVALID_NEW_TITLE_TOO_LONG_DESCRIPTION_TOO_LONG.getTitle();
-        String description = INVALID_NEW_TITLE_TOO_LONG_DESCRIPTION_TOO_LONG.getDescription();
-
-        RecipeIdentityRequest.Model model = new RecipeIdentityRequest.Model.Builder().
-                setTitle(title).
-                setDescription(description).
-                build();
-        verifyIdentityDatabaseCalledWithNewIdAndReturnDataNotAvailable();
-        // Act
-        handler.execute(
-                SUT,
-                getRequest(recipeId, model),
-                getCallback());
-        // Assert
-        assertTrue(onErrorResponse.
-                getMetadata().
-                getFailReasons().
-                contains(RecipeIdentity.FailReason.TITLE_TOO_LONG));
-        assertTrue(onErrorResponse.
-                getMetadata().
-                getFailReasons().
-                contains(RecipeIdentity.FailReason.DESCRIPTION_TOO_LONG));
-    }
-
-    @Test
-    public void newId_titleTooShortDescriptionValid_stateINVALID_CHANGED() {
-        // Arrange
-        String recipeId = INVALID_NEW_EMPTY.getDataId();
-        String invalidTitle = INVALID_NEW_TITLE_TOO_SHORT_VALID_DESCRIPTION.getTitle();
-        String validDescription = INVALID_NEW_TITLE_TOO_SHORT_VALID_DESCRIPTION.getDescription();
-
-        RecipeIdentityRequest.Model model = new RecipeIdentityRequest.Model.Builder().
-                setTitle(invalidTitle).
-                setDescription(validDescription).
-                build();
-
-        // Act
-        verifyIdentityDatabaseCalledWithNewIdAndReturnDataNotAvailable();
-        handler.execute(
-                SUT,
-                getRequest(recipeId, model),
-                getCallback());
-
-        // Assert
-        assertEquals(RecipeMetadata.ComponentState.INVALID_CHANGED, onErrorResponse.getMetadata().getState());
-        System.out.println(TAG + onErrorResponse);
-
-        assertTrue(onErrorResponse.
-                getMetadata().
-                getFailReasons().
-                contains(RecipeIdentity.FailReason.TITLE_TOO_SHORT));
-        assertEquals(invalidTitle, onErrorResponse.getModel().getTitle());
-        assertEquals(validDescription, onErrorResponse.getModel().getDescription());
-    }
-
-    @Test
-    public void newId_titleTooShortDescriptionDefault_stateINVALID_CHANGED() {
-        // Arrange
-        String recipeId = INVALID_NEW_EMPTY.getDataId();
-        String invalidTitle = INVALID_NEW_TITLE_TOO_SHORT_DEFAULT_DESCRIPTION.getTitle();
-        String description = INVALID_NEW_TITLE_TOO_SHORT_DEFAULT_DESCRIPTION.getDescription();
-
-        verifyIdentityDatabaseCalledWithNewIdAndReturnDataNotAvailable();
-
-        RecipeIdentityRequest.Model model = new RecipeIdentityRequest.Model.Builder().
-                basedOnResponseModel(onErrorResponse.getModel()).
-                setTitle(invalidTitle).
-                setDescription(description).
-                build();
-        // Act
-        handler.execute(
-                SUT,
-                getRequest(recipeId, model),
-                getCallback());
-
-        // Assert
-        assertEquals(RecipeMetadata.ComponentState.INVALID_CHANGED, onErrorResponse.getMetadata().getState());
-        assertTrue(onErrorResponse.
-                getMetadata().
-                getFailReasons().
-                contains(RecipeIdentity.FailReason.TITLE_TOO_SHORT));
-    }
-
-    @Test
-    public void newId_titleValidDescriptionDefault_valuesPersisted() {
-        // Arrange
-        whenTimeProviderReturnTime(VALID_NEW_TITLE_VALID_DEFAULT_DESCRIPTION.getCreateDate());
-        verifyIdentityDatabaseCalledWithNewIdAndReturnDataNotAvailable();
-
-        String recipeId = VALID_NEW_TITLE_VALID_DEFAULT_DESCRIPTION.getDataId();
-        String validTitle = VALID_NEW_TITLE_VALID_DEFAULT_DESCRIPTION.getTitle();
-
-        RecipeIdentityRequest.Model validTitleModel = new RecipeIdentityRequest.Model.Builder().
-                setTitle(validTitle).
-                setDescription(onErrorResponse.getModel().getDescription()).
-                build();
-
-        // Act
-        handler.execute(
-                SUT,
-                getRequest(recipeId, validTitleModel),
-                getCallback()
-        );
-
-        // Assert
-//        verify(repoIdentityMock).save(eq(VALID_NEW_TITLE_VALID_DEFAULT_DESCRIPTION));
-        assertEquals(RecipeMetadata.ComponentState.VALID_CHANGED, onSuccessResponse.getMetadata().getState());
-    }
-
-    @Test
-    public void newId_titleValidDescriptionDefault_stateVALID_CHANGED() {
-        // Arrange
-        whenTimeProviderReturnTime(VALID_NEW_TITLE_VALID_DEFAULT_DESCRIPTION.getCreateDate());
-        verifyIdentityDatabaseCalledWithNewIdAndReturnDataNotAvailable();
-
-        String recipeId = VALID_NEW_TITLE_VALID_DEFAULT_DESCRIPTION.getDataId();
-        String validTitle = VALID_NEW_TITLE_VALID_DEFAULT_DESCRIPTION.getTitle();
-
-        RecipeIdentityRequest.Model model = new RecipeIdentityRequest.Model.Builder().
-                basedOnResponseModel(onErrorResponse.getModel()).
-                setTitle(validTitle).
-                build();
-        // Act
-        handler.execute(
-                SUT,
-                getRequest(recipeId, model),
-                getCallback());
+        simulateNewInitialisationRequest(testModel);
         // Assert
         assertEquals(
-                RecipeMetadata.ComponentState.VALID_CHANGED,
-                onSuccessResponse.getMetadata().getState());
+                ComponentState.INVALID_UNCHANGED,
+                onErrorResponse.getMetadata().getState());
+
         assertTrue(
-                onSuccessResponse.getMetadata().getFailReasons().contains(CommonFailReason.NONE));
+                onErrorResponse.getMetadata().
+                        getFailReasons().
+                        contains(CommonFailReason.DATA_UNAVAILABLE)
+        );
     }
 
     @Test
-    public void newId_titleValidDescriptionValid_valuesPersisted() {
+    public void newRequest_titleTooLongDescriptionTooLong_stateINVALID_CHANGED() {
         // Arrange
-        whenTimeProviderReturnTime(VALID_NEW_COMPLETE.getCreateDate());
-        verifyIdentityDatabaseCalledWithNewIdAndReturnDataNotAvailable();
+        RecipeIdentityPersistenceModel testModel = TestDataRecipeIdentity.
+                getInvalidNewTitleTooLongDescriptionTooLong();
 
-        RecipeIdentityRequest.Model requestModel = new RecipeIdentityRequest.Model.Builder().
-                setTitle(VALID_NEW_COMPLETE.getTitle()).
-                setDescription(VALID_NEW_COMPLETE.getDescription()).
+        simulateNewInitialisationRequest(testModel);
+
+        RecipeIdentityRequest.Model model = new RecipeIdentityRequest.Model.Builder().
+                setTitle(testModel.getTitle()).
+                setDescription(testModel.getDescription()).
                 build();
 
         RecipeIdentityRequest request = new RecipeIdentityRequest.Builder().
-                setDataId(INVALID_NEW_EMPTY.getDataId()).
-                setModel(requestModel).
+                setDataId(onErrorResponse.getDataId()).
+                setDomainId(onErrorResponse.getDomainId()).
+                setModel(model).
                 build();
-        // Act
-        handler.execute(SUT, request, getCallback());
 
+        // Act
+        handler.execute(SUT, request, callbackClient);
         // Assert
-//        verify(repoIdentityMock).save(VALID_NEW_COMPLETE);
-        assertEquals(RecipeMetadata.ComponentState.VALID_CHANGED, onSuccessResponse.getMetadata().getState());
+        assertEquals(
+                ComponentState.INVALID_CHANGED,
+                onErrorResponse.getMetadata().getState()
+        );
     }
 
     @Test
-    public void newId_titleValidThenDescriptionValid_stateVALID_CHANGED() {
+    public void newRequest_titleTooLongDescriptionTooLong_failReasonsTITLE_TOO_LONG_DESCRIPTION_TOO_LONG() {
         // Arrange
-        String recipeId = INVALID_NEW_EMPTY.getDataId();
-        ArgumentCaptor<RecipeIdentityEntity> identityEntity = ArgumentCaptor.forClass(RecipeIdentityEntity.class);
-        whenTimeProviderReturnTime(VALID_NEW_COMPLETE.getCreateDate());
-        // RecipeRequestAbstract/Response 1
-        verifyIdentityDatabaseCalledWithNewIdAndReturnDataNotAvailable();
+        RecipeIdentityPersistenceModel testModel = TestDataRecipeIdentity.
+                getInvalidNewTitleTooLongDescriptionTooLong();
 
-        // RecipeRequestAbstract/Response 2
-        String validTitle = VALID_NEW_COMPLETE.getTitle();
-        RecipeIdentityRequest.Model validTitleModel = new RecipeIdentityRequest.Model.Builder().
-                basedOnResponseModel(onErrorResponse.getModel()).
-                setTitle(validTitle).
+        simulateNewInitialisationRequest(testModel);
+
+        RecipeIdentityRequest.Model model = new RecipeIdentityRequest.Model.Builder().
+                setTitle(testModel.getTitle()).
+                setDescription(testModel.getDescription()).
                 build();
-        handler.execute(
-                SUT,
-                getRequest(recipeId, validTitleModel),
-                getCallback());
 
-        // RecipeRequestAbstract/Response 3
-        String validDescription = VALID_NEW_COMPLETE.getDescription();
-        RecipeIdentityRequest.Model validTitleDescriptionModel = new RecipeIdentityRequest.Model.Builder().
-                basedOnResponseModel(onSuccessResponse.getModel()).
-                setDescription(validDescription).
+        RecipeIdentityRequest request = new RecipeIdentityRequest.Builder().
+                setDataId(onErrorResponse.getDataId()).
+                setDomainId(onErrorResponse.getDomainId()).
+                setModel(model).
+                build();
+
+        // Act
+        handler.execute(SUT, request, callbackClient);
+        // Assert
+        List<FailReasons> failReasons = onErrorResponse.getMetadata().getFailReasons();
+        assertTrue(failReasons.contains(RecipeIdentity.FailReason.TITLE_TOO_LONG));
+        assertTrue(failReasons.contains(RecipeIdentity.FailReason.DESCRIPTION_TOO_LONG));
+    }
+
+    @Test
+    public void newRequest_titleTooShortDescriptionValid_stateINVALID_CHANGED() {
+        // Arrange
+        RecipeIdentityPersistenceModel testModel = TestDataRecipeIdentity.
+                getInvalidNewTitleTooShortDescriptionValid();
+
+        simulateNewInitialisationRequest(testModel);
+
+        RecipeIdentityRequest.Model model = new RecipeIdentityRequest.Model.Builder().
+                setTitle(testModel.getTitle()).
+                setDescription(testModel.getDescription()).
+                build();
+
+        RecipeIdentityRequest request = new RecipeIdentityRequest.Builder().
+                setDataId(onErrorResponse.getDataId()).
+                setDomainId(onErrorResponse.getDomainId()).
+                setModel(model).
+                build();
+
+        // Act
+        handler.execute(SUT, request, callbackClient);
+
+        // Assert
+        assertEquals(
+                ComponentState.INVALID_CHANGED,
+                onErrorResponse.getMetadata().getState()
+        );
+        List<FailReasons> failReasons = onErrorResponse.getMetadata().getFailReasons();
+        assertTrue(failReasons.contains(RecipeIdentity.FailReason.TITLE_TOO_SHORT));
+    }
+
+    @Test
+    public void newRequest_titleTooShort_stateINVALID_CHANGED() {
+        // Arrange
+        RecipeIdentityPersistenceModel testModel = TestDataRecipeIdentity.
+                getInvalidNewTitleTooShort();
+
+        simulateNewInitialisationRequest(testModel);
+
+        RecipeIdentityRequest.Model model = new RecipeIdentityRequest.Model.Builder().
+                setTitle(testModel.getTitle()).
+                setDescription(testModel.getDescription()).
+                build();
+
+        RecipeIdentityRequest request = new RecipeIdentityRequest.Builder().
+                setDataId(onErrorResponse.getDataId()).
+                setDomainId(onErrorResponse.getDomainId()).
+                setModel(model).
                 build();
         // Act
-        handler.execute(
-                SUT,
-                getRequest(recipeId, validTitleDescriptionModel),
-                getCallback());
-        // Assert save
-//        verify(repoIdentityMock, times((2))).save(identityEntity.capture());
-        assertEquals(VALID_NEW_COMPLETE, identityEntity.getValue());
-        // Assert values
-        assertEquals(validTitle, onSuccessResponse.getModel().getTitle());
-        assertEquals(validDescription, onSuccessResponse.getModel().getDescription());
+        handler.execute(SUT, request, callbackClient);
+
+        // Assert
+        assertEquals(
+                ComponentState.INVALID_CHANGED,
+                onErrorResponse.getMetadata().getState()
+        );
+        List<FailReasons> failReasons = onErrorResponse.getMetadata().getFailReasons();
+        assertTrue(failReasons.contains(RecipeIdentity.FailReason.TITLE_TOO_SHORT));
+    }
+
+    @Test
+    public void newRequest_titleValid_valuesPersisted() {
+        // Arrange
+        RecipeIdentityPersistenceModel testModel = TestDataRecipeIdentity.
+                getValidNewTitleValid();
+
+        simulateNewInitialisationRequest(testModel);
+
+        RecipeIdentityRequest.Model model = new RecipeIdentityRequest.Model.Builder().
+                setTitle(testModel.getTitle()).
+                setDescription(testModel.getDescription()).
+                build();
+
+        RecipeIdentityRequest request = new RecipeIdentityRequest.Builder().
+                setDataId(onErrorResponse.getDataId()).
+                setDomainId(onErrorResponse.getDomainId()).
+                setModel(model).
+                build();
+
+        // title updated, new persistence model created
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(testModel.getLastUpdate());
+        when(idProvider.getUId()).thenReturn(testModel.getDataId());
+        // Act
+        handler.execute(SUT, request, callbackClient);
+        // Assert
+        verify(repoIdentityMock).save(eq(testModel));
+    }
+
+    @Test
+    public void newRequest_titleValid_stateVALID_CHANGED() {
+        // Arrange
+        RecipeIdentityPersistenceModel testModel = TestDataRecipeIdentity.
+                getValidNewTitleValid();
+
+        simulateNewInitialisationRequest(testModel);
+
+        RecipeIdentityRequest.Model model = new RecipeIdentityRequest.Model.Builder().
+                setTitle(testModel.getTitle()).
+                setDescription(testModel.getDescription()).
+                build();
+
+        RecipeIdentityRequest request = new RecipeIdentityRequest.Builder().
+                setDataId(onErrorResponse.getDataId()).
+                setDomainId(onErrorResponse.getDomainId()).
+                setModel(model).
+                build();
+
+        // new persistence model created, requires date stamp and new data id
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(testModel.getLastUpdate());
+        when(idProvider.getUId()).thenReturn(testModel.getDataId());
+        // Act
+        handler.execute(SUT, request, callbackClient);
+        // Assert
+        assertEquals(
+                RecipeMetadata.ComponentState.VALID_CHANGED,
+                onSuccessResponse.getMetadata().getState()
+        );
+        List<FailReasons> failReasons = onSuccessResponse.getMetadata().getFailReasons();
+        assertTrue(failReasons.contains(CommonFailReason.NONE));
+    }
+
+    @Test
+    public void newRequest_titleValidDescriptionValid_valuesPersisted() {
+        // Arrange
+        RecipeIdentityPersistenceModel testModel = TestDataRecipeIdentity.
+                getValidNewComplete();
+
+        simulateNewInitialisationRequest(testModel);
+
+        RecipeIdentityRequest.Model model = new RecipeIdentityRequest.Model.Builder().
+                setTitle(testModel.getTitle()).
+                setDescription(testModel.getDescription()).
+                build();
+
+        RecipeIdentityRequest request = new RecipeIdentityRequest.Builder().
+                setDataId(onErrorResponse.getDataId()).
+                setDomainId(onErrorResponse.getDomainId()).
+                setModel(model).
+                build();
+
+        // new persistence model created, requires date stamp and new data id
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(testModel.getLastUpdate());
+        when(idProvider.getUId()).thenReturn(testModel.getDataId());
+        // Act
+        handler.execute(SUT, request, callbackClient);
+
+        // Assert
+        verify(repoIdentityMock).save(testModel);
+        assertEquals(
+                RecipeMetadata.ComponentState.VALID_CHANGED,
+                onSuccessResponse.getMetadata().getState()
+        );
+    }
+
+    @Test
+    public void newRequest_titleValidThenDescriptionValid_stateVALID_CHANGED() {
+        // Arrange
+        RecipeIdentityPersistenceModel testModel = TestDataRecipeIdentity.
+                getValidNewComplete();
+
+        simulateNewInitialisationRequest(testModel);
+
+        // Request 1: Arrange valid new title request
+        RecipeIdentityRequest.Model titleModel = new RecipeIdentityRequest.Model.Builder().
+                getDefault().
+                setTitle(testModel.getTitle()).
+                build();
+        RecipeIdentityRequest titleRequest = new RecipeIdentityRequest.Builder().
+                setDataId(onErrorResponse.getDataId()).
+                setDomainId(onErrorResponse.getDomainId()).
+                setModel(titleModel).
+                build();
+
+        // new persistence model created, requires date stamp and new data id
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(testModel.getLastUpdate());
+        when(idProvider.getUId()).thenReturn(testModel.getDataId());
+        // Act
+        handler.execute(SUT, titleRequest, callbackClient);
+
+        // Request 2: Arrange valid new description request, copy previous values from last response
+        RecipeIdentityRequest.Model descriptionModel = new RecipeIdentityRequest.Model.Builder().
+                basedOnResponseModel(onSuccessResponse.getModel()).
+                setDescription(testModel.getDescription()).
+                build();
+        RecipeIdentityRequest descriptionRequest = new RecipeIdentityRequest.Builder().
+                setDataId(onSuccessResponse.getDataId()).
+                setDomainId(onSuccessResponse.getDomainId()).
+                setModel(descriptionModel).
+                build();
+
+        // another new persistence model created, requires date stamp and new data id
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(testModel.getLastUpdate());
+        when(idProvider.getUId()).thenReturn(testModel.getDataId());
+        // Act
+        handler.execute(SUT, descriptionRequest, callbackClient);
+
+        // Assert second save equal to test model
+        verify(repoIdentityMock).save(eq(testModel));
+
         // Assert state
         assertEquals(
                 RecipeMetadata.ComponentState.VALID_CHANGED,
-                onSuccessResponse.getMetadata().getState());
-        assertEquals(1, onSuccessResponse.getMetadata().getFailReasons().size());
+                onSuccessResponse.getMetadata().getState()
+        );
+        List<FailReasons> failReasons = onSuccessResponse.getMetadata().getFailReasons();
+        assertTrue(failReasons.contains(CommonFailReason.NONE)
+        );
+    }
+
+    @Test
+    public void existingRequest_titleValidDescriptionValid_VALID_UNCHANGED() {
+        // Arrange
+        RecipeIdentityPersistenceModel testModel = TestDataRecipeIdentity.
+                getValidExistingTitleValidDescriptionValid();
+        // Act
+        simulateExistingInitialisationRequest(testModel);
+        // Assert
+        assertEquals(
+                RecipeMetadata.ComponentState.VALID_UNCHANGED,
+                onSuccessResponse.getMetadata().getState()
+        );
+    }
+
+    @Test
+    public void existingRequest_titleTooShort_stateINVALID_UNCHANGED() {
+        // Arrange
+        RecipeIdentityPersistenceModel testModel = TestDataRecipeIdentity.
+                getInvalidExistingTitleTooShort();
+        // Act
+        simulateExistingInitialisationRequest(testModel);
+        // Assert
+        assertEquals(
+                RecipeMetadata.ComponentState.INVALID_UNCHANGED,
+                onErrorResponse.getMetadata().getState()
+        );
+    }
+
+    @Test
+    public void existingRequest_titleTooShort_failReasonsTITLE_TOO_SHORT() {
+        // Arrange
+        RecipeIdentityPersistenceModel testModel = TestDataRecipeIdentity.
+                getInvalidExistingTitleTooShort();
+        // Act
+        simulateExistingInitialisationRequest(testModel);
+        // Assert
+        List<FailReasons> failReasons = onErrorResponse.getMetadata().getFailReasons();
+        assertTrue(failReasons.contains(RecipeIdentity.FailReason.TITLE_TOO_SHORT));
+    }
+
+    @Test
+    public void existingRequest_titleTooLong_stateINVALID_UNCHANGED() {
+        // Arrange
+        RecipeIdentityPersistenceModel testModel = TestDataRecipeIdentity.
+                getInvalidExistingTitleTooLong();
+        // Act
+        simulateExistingInitialisationRequest(testModel);
+        // Assert
+        assertEquals(
+                RecipeMetadata.ComponentState.INVALID_UNCHANGED,
+                onErrorResponse.getMetadata().getState()
+        );
+    }
+
+    @Test
+    public void existingRequest_titleValidDescriptionTooLong_stateINVALID_UNCHANGED() {
+        // Arrange
+        RecipeIdentityPersistenceModel testModel = TestDataRecipeIdentity.
+                getInvalidExistingTitleValidDescriptionTooLong();
+        // Act
+        simulateExistingInitialisationRequest(testModel);
+        // Assert
+        assertEquals(
+                RecipeMetadata.ComponentState.INVALID_UNCHANGED,
+                onErrorResponse.getMetadata().getState()
+        );
+    }
+
+    @Test
+    public void existingRequest_titleValidDescriptionTooLong_failReasonsDESCRIPTION_TOO_LONG() {
+        // Arrange
+        RecipeIdentityPersistenceModel testModel = TestDataRecipeIdentity.
+                getInvalidExistingTitleValidDescriptionTooLong();
+        // Act
+        simulateExistingInitialisationRequest(testModel);
+        // Assert
+        List<FailReasons> failReasons = onErrorResponse.getMetadata().getFailReasons();
+        assertTrue(failReasons.contains(RecipeIdentity.FailReason.DESCRIPTION_TOO_LONG));
+    }
+
+    @Test
+    public void existingRequest_titleTooShortDescriptionTooLong_stateINVALID_UNCHANGED() {
+        // Arrange
+        RecipeIdentityPersistenceModel testModel = TestDataRecipeIdentity.
+                getInvalidExistingTitleTooShortDescriptionTooLong();
+        // Act
+        simulateExistingInitialisationRequest(testModel);
+        // Assert
+        assertEquals(
+                RecipeMetadata.ComponentState.INVALID_UNCHANGED,
+                onErrorResponse.getMetadata().getState()
+        );
+    }
+
+    @Test
+    public void existingRequest_titleTooShortDescriptionTooLong_failReasonsTITLE_TOO_SHORT_DESCRIPTION_TOO_LONG() {
+        // Arrange
+        int expectedNumberOfFailReasons = 2;
+        RecipeIdentityPersistenceModel testModel = TestDataRecipeIdentity.
+                getInvalidExistingTitleTooShortDescriptionTooLong();
+        // Act
+        simulateExistingInitialisationRequest(testModel);
+        // Assert
+        List<FailReasons> failReasons = onErrorResponse.getMetadata().getFailReasons();
+        assertEquals(
+                expectedNumberOfFailReasons,
+                failReasons.size()
+        );
+        assertTrue(failReasons.contains(RecipeIdentity.FailReason.TITLE_TOO_SHORT));
+        assertTrue(failReasons.contains(RecipeIdentity.FailReason.DESCRIPTION_TOO_LONG));
+    }
+
+    @Test
+    public void existingRequest_titleTooLongDescriptionTooLong_stateINVALID_UNCHANGED() {
+        // Arrange
+        RecipeIdentityPersistenceModel testModel = TestDataRecipeIdentity.
+                getInvalidExistingTitleTooLongDescriptionTooLong();
+        // Act
+        simulateExistingInitialisationRequest(testModel);
+        // Assert
+        assertEquals(
+                RecipeMetadata.ComponentState.INVALID_UNCHANGED,
+                onErrorResponse.getMetadata().getState()
+        );
+    }
+
+    @Test
+    public void existingRequest_titleTooLongDescriptionTooLong_failReasonsTITLE_TOO_LONG_DESCRIPTION_TOO_LONG() {
+        // Arrange
+        int expectedNumberOfFailReasons = 2;
+        RecipeIdentityPersistenceModel testModel = TestDataRecipeIdentity.
+                getInvalidExistingTitleTooLongDescriptionTooLong();
+        // Act
+        simulateExistingInitialisationRequest(testModel);
+        // Assert
+        List<FailReasons> failReasons = onErrorResponse.getMetadata().getFailReasons();
+        assertEquals(
+                expectedNumberOfFailReasons, failReasons.size()
+        );
+        assertTrue(failReasons.contains(RecipeIdentity.FailReason.TITLE_TOO_LONG));
+        assertTrue(failReasons.contains(RecipeIdentity.FailReason.DESCRIPTION_TOO_LONG));
+    }
+
+    @Test
+    public void existingRequest_titleValid_stateVAILD_UNCHANGED() {
+        // Arrange
+        RecipeIdentityPersistenceModel testModel = TestDataRecipeIdentity.
+                getValidExistingTitleValid();
+        // Act
+        simulateExistingInitialisationRequest(testModel);
+        // Assert
+        assertEquals(
+                RecipeMetadata.ComponentState.VALID_UNCHANGED,
+                onSuccessResponse.getMetadata().getState()
+        );
+    }
+
+    @Test
+    public void existingRequest_titleValidDescriptionDefault_failReasonsNONE() {
+        // Arrange
+        RecipeIdentityPersistenceModel testModel = TestDataRecipeIdentity.
+                getValidExistingTitleValid();
+        // Act
+        simulateExistingInitialisationRequest(testModel);
+        // Assert
         assertTrue(onSuccessResponse.
                 getMetadata().
                 getFailReasons().
-                contains(CommonFailReason.NONE));
-    }
-
-    @Test
-    public void existingId_titleValidDescriptionValid_VALID_UNCHANGED() {
-        // Arrange
-        RecipeIdentityRequest request = getRequest(
-                VALID_EXISTING_COMPLETE.getDataId(),
-                getDefaultModel());
-        // Act
-        handler.execute(SUT, request, getCallback());
-
-        simulateGetValidExistingCompleteFromDatabase();
-        // Assert
-        assertEquals(RecipeMetadata.ComponentState.VALID_UNCHANGED, onSuccessResponse.getMetadata().getState());
-    }
-
-    @Test
-    public void existingId_titleTooShortDescriptionDefault_stateINVALID_UNCHANGED() {
-        // Arrange
-        String recipeId = INVALID_EXISTING_TITLE_TOO_SHORT_DEFAULT_DESCRIPTION.getDataId();
-        // Act
-        handler.execute(
-                SUT,
-                getRequest(recipeId, getDefaultModel()),
-                getCallback());
-        // Assert
-//        verify(repoIdentityMock).getByDataId(eq(recipeId), repoCallback.capture());
-        repoCallback.getValue().onEntityLoaded(INVALID_EXISTING_TITLE_TOO_SHORT_DEFAULT_DESCRIPTION);
-        // Assert state
-        assertEquals(RecipeMetadata.ComponentState.INVALID_UNCHANGED,
-                onErrorResponse.getMetadata().getState());
-    }
-
-    @Test
-    public void existingId_titleTooShortDescriptionDefault_failReasonsTITLE_TOO_SHORT() {
-        // Arrange
-        String recipeId = INVALID_EXISTING_TITLE_TOO_SHORT_DEFAULT_DESCRIPTION.getDataId();
-        // Act
-        handler.execute(
-                SUT,
-                getRequest(recipeId, getDefaultModel()),
-                getCallback());
-        // Assert
-//        verify(repoIdentityMock).getByDataId(eq(recipeId), repoCallback.capture());
-        repoCallback.getValue().onEntityLoaded(INVALID_EXISTING_TITLE_TOO_SHORT_DEFAULT_DESCRIPTION);
-        // Assert fail reasons
-        assertEquals(1, onErrorResponse.getMetadata().getFailReasons().size());
-        assertTrue(onErrorResponse.
-                getMetadata().
-                getFailReasons().
-                contains(RecipeIdentity.FailReason.TITLE_TOO_SHORT));
-    }
-
-    @Test
-    public void existingId_titleTooLongDescriptionDefault_stateINVALID_UNCHANGED() {
-        // Arrange
-        String recipeId = INVALID_EXISTING_TITLE_TOO_LONG_DEFAULT_DESCRIPTION.getDataId();
-        // Act
-        handler.execute(
-                SUT,
-                getRequest(recipeId, getDefaultModel()),
-                getCallback());
-        // Assert
-//        verify(repoIdentityMock).getByDataId(eq(recipeId), repoCallback.capture());
-        repoCallback.getValue().onEntityLoaded(INVALID_EXISTING_TITLE_TOO_LONG_DEFAULT_DESCRIPTION);
-        // assert state
-        assertEquals(
-                RecipeMetadata.ComponentState.INVALID_UNCHANGED,
-                onErrorResponse.getMetadata().getState());
-    }
-
-    @Test
-    public void existingId_titleValidDescriptionTooLong_stateINVALID_UNCHANGED() {
-        // Arrange
-        String recipeId = INVALID_EXISTING_TITLE_VALID_DESCRIPTION_TOO_LONG.getDataId();
-        // Act
-        handler.execute(
-                SUT,
-                getRequest(recipeId, getDefaultModel()),
-                getCallback()
+                contains(CommonFailReason.NONE)
         );
-        // Assert
-//        verify(repoIdentityMock).getByDataId(eq(recipeId), repoCallback.capture());
-        repoCallback.getValue().onEntityLoaded(INVALID_EXISTING_TITLE_VALID_DESCRIPTION_TOO_LONG);
-
-        assertEquals(
-                RecipeMetadata.ComponentState.INVALID_UNCHANGED,
-                onErrorResponse.getMetadata().getState());
-        assertEquals(1, onErrorResponse.getMetadata().getFailReasons().size());
-        assertTrue(onErrorResponse.
-                getMetadata().
-                getFailReasons().
-                contains(RecipeIdentity.FailReason.DESCRIPTION_TOO_LONG));
     }
 
     @Test
-    public void existingId_titleValidDescriptionTooLong_failReasonsDESCRIPTION_TOO_LONG() {
+    public void existingRequest_titleValidDescriptionValid_stateVALID_UNCHANGED() {
         // Arrange
-        String recipeId = INVALID_EXISTING_TITLE_VALID_DESCRIPTION_TOO_LONG.getDataId();
+        RecipeIdentityPersistenceModel testModel = TestDataRecipeIdentity.
+                getValidExistingTitleValid();
         // Act
-        handler.execute(
-                SUT,
-                getRequest(recipeId, getDefaultModel()),
-                getCallback()
-        );
+        simulateExistingInitialisationRequest(testModel);
         // Assert
-//        verify(repoIdentityMock).getByDataId(eq(recipeId), repoCallback.capture());
-        repoCallback.getValue().onEntityLoaded(INVALID_EXISTING_TITLE_VALID_DESCRIPTION_TOO_LONG);
-
-        assertEquals(1, onErrorResponse.getMetadata().getFailReasons().size());
-        assertTrue(onErrorResponse.
-                getMetadata().
-                getFailReasons().
-                contains(RecipeIdentity.FailReason.DESCRIPTION_TOO_LONG));
-    }
-
-    @Test
-    public void existingId_titleTooShortDescriptionTooLong_stateINVALID_UNCHANGED() {
-        // Arrange
-        String recipeId = INVALID_EXISTING_TITLE_TOO_SHORT_DESCRIPTION_TOO_LONG.getDataId();
-        // Act
-        handler.execute(
-                SUT,
-                getRequest(recipeId, getDefaultModel()),
-                getCallback());
-        // Assert
-//        verify(repoIdentityMock).getByDataId(eq(recipeId), repoCallback.capture());
-        repoCallback.getValue().onEntityLoaded(INVALID_EXISTING_TITLE_TOO_SHORT_DESCRIPTION_TOO_LONG);
-
-        assertEquals(
-                RecipeMetadata.ComponentState.INVALID_UNCHANGED,
-                onErrorResponse.getMetadata().getState());
-    }
-
-    @Test
-    public void existingId_titleTooShortDescriptionTooLong_failReasonsTITLE_TOO_SHORT_DESCRIPTION_TOO_LONG() {
-        // Arrange
-        String recipeId = INVALID_EXISTING_TITLE_TOO_SHORT_DESCRIPTION_TOO_LONG.getDataId();
-        // Act
-        RecipeIdentityRequest request = new RecipeIdentityRequest.Builder().
-                setDataId(recipeId).
-                setModel(getDefaultModel()).
-                build();
-
-        handler.execute(SUT, request, getCallback());
-        // Assert
-//        verify(repoIdentityMock).getByDataId(eq(recipeId), repoCallback.capture());
-        repoCallback.getValue().onEntityLoaded(INVALID_EXISTING_TITLE_TOO_SHORT_DESCRIPTION_TOO_LONG);
-
-        assertEquals(2, onErrorResponse.getMetadata().getFailReasons().size());
-        assertTrue(onErrorResponse.
-                getMetadata().
-                getFailReasons().
-                contains(RecipeIdentity.FailReason.TITLE_TOO_SHORT));
-        assertTrue(onErrorResponse.
-                getMetadata().
-                getFailReasons().
-                contains(RecipeIdentity.FailReason.DESCRIPTION_TOO_LONG));
-    }
-
-    @Test
-    public void existingId_titleTooLongDescriptionTooLong_stateINVALID_UNCHANGED() {
-        // Arrange
-        String recipeId = INVALID_EXISTING_TITLE_TOO_LONG_DESCRIPTION_TOO_LONG.getDataId();
-        // Act
-        handler.execute(SUT, getRequest(recipeId, getDefaultModel()), getCallback());
-        // Assert
-//        verify(repoIdentityMock).getByDataId(eq(recipeId), repoCallback.capture());
-        repoCallback.getValue().onEntityLoaded(INVALID_EXISTING_TITLE_TOO_LONG_DESCRIPTION_TOO_LONG);
-        // Assert state
-        assertEquals(
-                RecipeMetadata.ComponentState.INVALID_UNCHANGED,
-                onErrorResponse.getMetadata().getState());
-    }
-
-    @Test
-    public void existingId_titleTooLongDescriptionTooLong_failReasonsTITLE_TOO_LONG_DESCRIPTION_TOO_LONG() {
-        // Arrange
-        String recipeId = INVALID_EXISTING_TITLE_TOO_LONG_DESCRIPTION_TOO_LONG.getDataId();
-        // Act
-        handler.execute(SUT, getRequest(recipeId, getDefaultModel()), getCallback());
-        // Assert
-//        verify(repoIdentityMock).getByDataId(eq(recipeId), repoCallback.capture());
-        repoCallback.getValue().onEntityLoaded(INVALID_EXISTING_TITLE_TOO_LONG_DESCRIPTION_TOO_LONG);
-        // Assert fail reasons
-        assertEquals(2, onErrorResponse.getMetadata().getFailReasons().size());
-        assertTrue(onErrorResponse.
-                getMetadata().
-                getFailReasons().
-                contains(RecipeIdentity.FailReason.TITLE_TOO_LONG));
-        assertTrue(onErrorResponse.
-                getMetadata().
-                getFailReasons().
-                contains(RecipeIdentity.FailReason.DESCRIPTION_TOO_LONG));
-    }
-
-    @Test
-    public void existingId_titleValidDescriptionDefault_stateVAILD_UNCHANGED() {
-        // Arrange
-        String recipeId = VALID_EXISTING_TITLE_VALID_DESCRIPTION_DEFAULT.getDataId();
-        // Act
-        handler.execute(SUT, getRequest(recipeId, getDefaultModel()), getCallback());
-        // Assert
-//        verify(repoIdentityMock).getByDataId(eq(recipeId), repoCallback.capture());
-        repoCallback.getValue().onEntityLoaded(VALID_EXISTING_TITLE_VALID_DESCRIPTION_DEFAULT);
-        // Assert state
         assertEquals(
                 RecipeMetadata.ComponentState.VALID_UNCHANGED,
                 onSuccessResponse.getMetadata().getState());
     }
 
     @Test
-    public void existingId_titleValidDescriptionDefault_failReasonsNONE() {
+    public void existingRequest_titleValidDescriptionValid_failReasonsNONE() {
         // Arrange
-        String recipeId = VALID_EXISTING_TITLE_VALID_DESCRIPTION_DEFAULT.getDataId();
+        RecipeIdentityPersistenceModel testModel = TestDataRecipeIdentity.
+                getValidExistingTitleValidDescriptionValid();
         // Act
-        handler.execute(SUT, getRequest(recipeId, getDefaultModel()), getCallback());
+        simulateExistingInitialisationRequest(testModel);
         // Assert
-//        verify(repoIdentityMock).getByDataId(eq(recipeId), repoCallback.capture());
-        repoCallback.getValue().onEntityLoaded(VALID_EXISTING_TITLE_VALID_DESCRIPTION_DEFAULT);
-        // Assert fail reasons
         assertEquals(1, onSuccessResponse.getMetadata().getFailReasons().size());
         assertTrue(onSuccessResponse.
                 getMetadata().
                 getFailReasons().
-                contains(CommonFailReason.NONE));
+                contains(CommonFailReason.NONE)
+        );
     }
 
     @Test
-    public void existingId_titleValidDescriptionValid_stateVALID_UNCHANGED() {
+    public void existingRequest_titleTooLong_failReasonsTITLE_TOO_LONG() {
         // Arrange
-        String recipeId = VALID_EXISTING_TITLE_VALID_DESCRIPTION_VALID.getDataId();
+        RecipeIdentityPersistenceModel testModel = TestDataRecipeIdentity.
+                getInvalidExistingTitleTooLong();
         // Act
-        handler.execute(SUT, getRequest(recipeId, getDefaultModel()), getCallback());
-
-//        verify(repoIdentityMock).getByDataId(eq(recipeId), repoCallback.capture());
-        repoCallback.getValue().onEntityLoaded(VALID_EXISTING_TITLE_VALID_DESCRIPTION_VALID);
-        // Assert state
-        assertEquals(
-                RecipeMetadata.ComponentState.VALID_UNCHANGED,
-                onSuccessResponse.getMetadata().getState());
-    }
-
-    @Test
-    public void existingId_titleValidDescriptionValid_failReasonsNONE() {
-        // Arrange
-        String recipeId = VALID_EXISTING_TITLE_VALID_DESCRIPTION_VALID.getDataId();
-        // Act
-        handler.execute(SUT, getRequest(recipeId, getDefaultModel()), getCallback());
-
-//        verify(repoIdentityMock).getByDataId(eq(recipeId), repoCallback.capture());
-        repoCallback.getValue().onEntityLoaded(VALID_EXISTING_TITLE_VALID_DESCRIPTION_VALID);
-        // Assert values
-        // Assert state
-        assertEquals(1, onSuccessResponse.getMetadata().getFailReasons().size());
-        assertTrue(onSuccessResponse.
-                getMetadata().
-                getFailReasons().
-                contains(CommonFailReason.NONE));
-    }
-
-    @Test
-    public void existingId_titleTooLongDescriptionDefault_failReasonsTITLE_TOO_LONG() {
-        // Arrange
-        String recipeId = INVALID_EXISTING_TITLE_TOO_LONG_DEFAULT_DESCRIPTION.getDataId();
-        // Act
-        handler.execute(SUT, getRequest(recipeId, getDefaultModel()), getCallback());
+        simulateExistingInitialisationRequest(testModel);
         // Assert
-//        verify(repoIdentityMock).getByDataId(eq(recipeId), repoCallback.capture());
-        repoCallback.getValue().onEntityLoaded(INVALID_EXISTING_TITLE_TOO_LONG_DEFAULT_DESCRIPTION);
-        // Assert fail reasons
         assertEquals(1, onErrorResponse.getMetadata().getFailReasons().size());
         assertTrue(onErrorResponse.
                 getMetadata().
@@ -637,59 +585,70 @@ public class RecipeIdentityTest {
     }
 
     // region helper methods -----------------------------------------------------------------------
-    private void verifyIdentityDatabaseCalledWithNewIdAndReturnDataNotAvailable() {
-        handler.execute(
-                SUT,
-                getRequest(INVALID_NEW_EMPTY.getDataId(), getDefaultModel()),
-                getCallback());
-        simulateNothingReturnedFromDatabase();
-    }
+    private void simulateNewInitialisationRequest(RecipeIdentityPersistenceModel modelUnderTest) {
+        // Arrange
+        callbackClient = new IdentityCallbackClient();
 
-    private RecipeIdentityRequest.Model getDefaultModel() {
-        return new RecipeIdentityRequest.Model.Builder().getDefault().build();
-    }
+        // data id requested when creating a new persistence model
+        when(idProvider.getUId()).thenReturn(TestDataRecipeIdentity.
+                getInvalidNewEmpty().
+                getDataId());
+        // create date and last update requested when creating a new persistence model
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(TestDataRecipeIdentity.
+                getInvalidNewEmpty().
+                getCreateDate());
 
-    private RecipeIdentityRequest getRequest(String recipeId,
-                                             RecipeIdentityRequest.Model model) {
-        return new RecipeIdentityRequest.Builder().
-                setDataId(recipeId).
-                setModel(model).
+        RecipeIdentityRequest initialisationRequest = new RecipeIdentityRequest.Builder().
+                getDefault().
+                setDomainId(modelUnderTest.getDomainId()).
                 build();
+        // Act
+        handler.execute(SUT, initialisationRequest, callbackClient);
+        // Assert
+        verify(repoIdentityMock).getActiveByDomainId(
+                eq(modelUnderTest.getDomainId()),
+                repoCallback.capture()
+        );
+        repoCallback.getValue().onModelUnavailable();
     }
 
-    private UseCase.Callback<RecipeIdentityResponse> getCallback() {
-        return new UseCase.Callback<RecipeIdentityResponse>() {
+    private void simulateExistingInitialisationRequest(
+            RecipeIdentityPersistenceModel modelUnderTest) {
+        // Arrange
+        callbackClient = new IdentityCallbackClient();
 
-            @Override
-            public void onSuccess(RecipeIdentityResponse response) {
-                onSuccessResponse = response;
-            }
-
-            @Override
-            public void onError(RecipeIdentityResponse response) {
-                onErrorResponse = response;
-            }
-        };
-    }
-
-    private void simulateNothingReturnedFromDatabase() {
-//        verify(repoIdentityMock).getByDataId(eq(INVALID_NEW_EMPTY.getDataId()),
-//                repoCallback.capture());
-        repoCallback.getValue().onDataUnavailable();
-    }
-
-    private void simulateGetValidExistingCompleteFromDatabase() {
-//        verify(repoIdentityMock).getByDataId(eq(VALID_EXISTING_COMPLETE.getDataId()),
-//                repoCallback.capture());
-        repoCallback.getValue().onEntityLoaded(VALID_EXISTING_COMPLETE);
-    }
-
-    private void whenTimeProviderReturnTime(long time) {
-        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(time);
+        RecipeIdentityRequest initialisationRequest = new RecipeIdentityRequest.Builder().
+                getDefault().
+                setDomainId(modelUnderTest.getDomainId()).
+                build();
+        // Act
+        handler.execute(SUT, initialisationRequest, callbackClient);
+        verify(repoIdentityMock).getActiveByDomainId(
+                eq(modelUnderTest.getDomainId()),
+                repoCallback.capture()
+        );
+        repoCallback.getValue().onModelLoaded(modelUnderTest);
     }
     // endregion helper methods --------------------------------------------------------------------
 
     // region helper classes -----------------------------------------------------------------------
+    private class IdentityCallbackClient
+            implements UseCase.Callback<RecipeIdentityResponse> {
 
+        private final String TAG = RecipeIdentityTest.TAG +
+                IdentityCallbackClient.class.getSimpleName() + ": ";
+
+        @Override
+        public void onSuccess(RecipeIdentityResponse r) {
+            System.out.println(TAG + "onSuccess: " + r);
+            onSuccessResponse = r;
+        }
+
+        @Override
+        public void onError(RecipeIdentityResponse r) {
+            System.out.println(TAG + "onError: " + r);
+            onErrorResponse = r;
+        }
+    }
     // endregion helper classes --------------------------------------------------------------------
 }

@@ -62,7 +62,7 @@ public class RecipeIdentityEditorViewModelTest {
             TestDataRecipeIdentityEntity.getValidNewComplete();
 
     private static final RecipeIdentityEntity INVALID_EXISTING_INCOMPLETE_INVALID_TITLE =
-            TestDataRecipeIdentityEntity.getInvalidExistingTitleTooShortDefaultDescription();
+            TestDataRecipeIdentityEntity.getInvalidExistingTitleTooShort();
     private static final RecipeIdentityEntity VALID_EXISTING_COMPLETE =
             TestDataRecipeIdentityEntity.getValidExistingTitleValidDescriptionValid();
 

@@ -70,7 +70,7 @@ public final class RecipeIdentityResponse
         public String toString() {
             return "Model{" +
                     "title='" + title + '\'' +
-                    ", description='" + description +
+                    ", description='" + description + '\'' +
                     '}';
         }
 
