@@ -79,7 +79,7 @@ public class RecipeCourseEditorViewModelTest {
     private static final RecipePortionsEntity PORTIONS_VALID_EXISTING_NINE =
             TestDataRecipePortionsEntity.getExistingValidNinePortions();
     private static final List<RecipeCourseEntity> COURSES_VALID_EXISTING_ALL =
-            TestDataRecipeCourseEntity.getAllRecipeCourses();
+            TestDataRecipeCourseEntity.getAllExistingActiveRecipeCourses();
 
     // endregion constants -------------------------------------------------------------------------
 
@@ -253,8 +253,8 @@ public class RecipeCourseEditorViewModelTest {
     @Test
     public void courseZeroSelected_true_courseZeroAndRecipeIdSavedToDatabase() {
         // Arrange
-        when(idProviderMock.getUId()).thenReturn(getRecipeCourseZero().getDataId());
-        whenTimeProviderCalledReturnTime(getRecipeCourseZero().getCreateDate());
+        when(idProviderMock.getUId()).thenReturn(getExistingActiveRecipeCourseZero().getDataId());
+        whenTimeProviderCalledReturnTime(getExistingActiveRecipeCourseZero().getCreateDate());
 
         // An initial request to load the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
@@ -299,8 +299,8 @@ public class RecipeCourseEditorViewModelTest {
     @Test
     public void courseOneSelected_true_courseOneSavedToDatabase() {
         // Arrange
-        when(idProviderMock.getUId()).thenReturn(getRecipeCourseOne().getDataId());
-        whenTimeProviderCalledReturnTime(getRecipeCourseFour().getCreateDate());
+        when(idProviderMock.getUId()).thenReturn(getExistingActiveRecipeCourseOne().getDataId());
+        whenTimeProviderCalledReturnTime(getExistingActiveRecipeCourseFour().getCreateDate());
         // Act
         // An initial request to load the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
@@ -347,8 +347,8 @@ public class RecipeCourseEditorViewModelTest {
     @Test
     public void courseTwoSelected_true_courseId2AndRecipeIdSavedToDatabase() {
         // Arrange
-        when(idProviderMock.getUId()).thenReturn(getRecipeCourseTwo().getDataId());
-        whenTimeProviderCalledReturnTime(getRecipeCourseTwo().getCreateDate());
+        when(idProviderMock.getUId()).thenReturn(getExistingActiveRecipeCourseTwo().getDataId());
+        whenTimeProviderCalledReturnTime(getExistingActiveRecipeCourseTwo().getCreateDate());
 
         // An initial request to load the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
@@ -394,8 +394,8 @@ public class RecipeCourseEditorViewModelTest {
     @Test
     public void courseThreeSelected_true_courseId3AndRecipeIdSavedToDatabase() {
         // Arrange
-        when(idProviderMock.getUId()).thenReturn(getRecipeCourseThree().getDataId());
-        whenTimeProviderCalledReturnTime(getRecipeCourseThree().getCreateDate());
+        when(idProviderMock.getUId()).thenReturn(getExistingActiveRecipeCourseThree().getDataId());
+        whenTimeProviderCalledReturnTime(getExistingActiveRecipeCourseThree().getCreateDate());
 
         // An initial request to load the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
@@ -443,8 +443,8 @@ public class RecipeCourseEditorViewModelTest {
     @Test
     public void courseFourSelected_true_courseId4AndRecipeIdSavedToDatabase() {
         // Arrange
-        when(idProviderMock.getUId()).thenReturn(getRecipeCourseFour().getDataId());
-        whenTimeProviderCalledReturnTime(getRecipeCourseFour().getCreateDate());
+        when(idProviderMock.getUId()).thenReturn(getExistingActiveRecipeCourseFour().getDataId());
+        whenTimeProviderCalledReturnTime(getExistingActiveRecipeCourseFour().getCreateDate());
 
         // An initial request to load the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
@@ -492,8 +492,8 @@ public class RecipeCourseEditorViewModelTest {
     @Test
     public void courseFiveSelected_true_courseId5AndRecipeIdSavedToDatabase() {
         // Arrange
-        when(idProviderMock.getUId()).thenReturn(getRecipeCourseFive().getDataId());
-        whenTimeProviderCalledReturnTime(getRecipeCourseFive().getCreateDate());
+        when(idProviderMock.getUId()).thenReturn(getExistingActiveRecipeCourseFive().getDataId());
+        whenTimeProviderCalledReturnTime(getExistingActiveRecipeCourseFive().getCreateDate());
 
         // An initial request to load the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
@@ -539,8 +539,8 @@ public class RecipeCourseEditorViewModelTest {
     @Test
     public void courseSixSelected_true_courseId6AndRecipeIdSavedToDatabase() {
         // Arrange
-        when(idProviderMock.getUId()).thenReturn(getRecipeCourseSix().getDataId());
-        whenTimeProviderCalledReturnTime(getRecipeCourseSix().getCreateDate());
+        when(idProviderMock.getUId()).thenReturn(getExistingActiveRecipeCourseSix().getDataId());
+        whenTimeProviderCalledReturnTime(getExistingActiveRecipeCourseSix().getCreateDate());
         // An initial request to load the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 setDataId(EXISTING_RECIPE_ID).
@@ -587,8 +587,8 @@ public class RecipeCourseEditorViewModelTest {
     @Test
     public void courseSevenSelected_true_courseId7AndRecipeIdSavedToDatabase() {
         // Arrange
-        when(idProviderMock.getUId()).thenReturn(getRecipeCourseSeven().getDataId());
-        whenTimeProviderCalledReturnTime(getRecipeCourseSeven().getCreateDate());
+        when(idProviderMock.getUId()).thenReturn(getExistingActiveRecipeCourseSeven().getDataId());
+        whenTimeProviderCalledReturnTime(getExistingActiveRecipeCourseSeven().getCreateDate());
 
         // An initial request to load the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().

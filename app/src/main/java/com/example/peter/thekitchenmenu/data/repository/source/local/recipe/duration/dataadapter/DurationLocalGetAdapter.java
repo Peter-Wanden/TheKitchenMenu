@@ -14,6 +14,8 @@ import javax.annotation.Nonnull;
 
 public class DurationLocalGetAdapter {
 
+    private static final String TAG = "tkm-" + DurationLocalGetAdapter.class.getSimpleName() + ": ";
+
     @Nonnull
     private final RecipeDurationLocalDataSource dataSource;
     @Nonnull

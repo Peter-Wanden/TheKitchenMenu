@@ -40,18 +40,6 @@ public class TestDataRecipeMetadata {
                 build();
     }
 
-    public static RecipeMetadataParentEntity getDataUnavailableParentEntity() {
-        return getParentEntityFromPersistenceModel(getDataUnavailable());
-    }
-
-    public static List<RecipeFailReasonEntity> getDataUnavailableFailReasonEntities() {
-        return getFailReasonEntitiesFromPersistentModel(getDataUnavailable());
-    }
-
-    public static List<RecipeComponentStateEntity> getDataUnavailableComponentStateEntities() {
-        return getComponentStateEntitiesFromPersistentModel(getDataUnavailable());
-    }
-
     /*
     RecipeState.INVALID_UNCHANGED - Represents the state of a recipe that:
      1. has all required components
@@ -73,19 +61,6 @@ public class TestDataRecipeMetadata {
 
     }
 
-    public static RecipeMetadataParentEntity getInvalidUnchangedParentEntity() {
-        return getParentEntityFromPersistenceModel(getInvalidUnchangedPersistentModel());
-    }
-
-    public static List<RecipeFailReasonEntity> getInvalidUnchangedFailReasonEntities() {
-        return getFailReasonEntitiesFromPersistentModel(getValidUnchanged());
-    }
-
-    public static List<RecipeComponentStateEntity> getInvalidUnchangedComponentStateEntities() {
-        return getComponentStateEntitiesFromPersistentModel(
-                getInvalidUnchangedPersistentModel());
-    }
-
     /*
     RecipeState.INVALID_CHANGED - Represents a recipe state that:
     1. has all required components
@@ -94,7 +69,6 @@ public class TestDataRecipeMetadata {
      */
     public static RecipeMetadataPersistenceModel getInvalidChanged() {
         RecipeMetadataPersistenceModel validModel = getValidChanged0();
-
         return new RecipeMetadataPersistenceModel.Builder().
                 setDataId("dataId-recipeMetadata-Id2").
                 setDomainId(validModel.getDomainId()).
@@ -106,18 +80,6 @@ public class TestDataRecipeMetadata {
                 setCreateDate(30L).
                 setLastUpdate(30L).
                 build();
-    }
-
-    public static RecipeMetadataParentEntity getInvalidChangedParentEntity() {
-        return getParentEntityFromPersistenceModel(getInvalidChanged());
-    }
-
-    public static List<RecipeFailReasonEntity> getInvalidChangedFailReasonEntities() {
-        return getFailReasonEntitiesFromPersistentModel(getInvalidChanged());
-    }
-
-    public static List<RecipeComponentStateEntity> getInvalidChangedComponentStateEntities() {
-        return getComponentStateEntitiesFromPersistentModel(getInvalidChanged());
     }
 
     /*
@@ -140,18 +102,6 @@ public class TestDataRecipeMetadata {
                 build();
     }
 
-    public static RecipeMetadataParentEntity getValidChanged0ParentEntity() {
-        return getParentEntityFromPersistenceModel(getValidChanged0());
-    }
-
-    public static List<RecipeFailReasonEntity> getValidChanged0FailReasonEntities() {
-        return getFailReasonEntitiesFromPersistentModel(getValidChanged0());
-    }
-
-    public static List<RecipeComponentStateEntity> getValidChanged0ComponentStateEntities() {
-        return getComponentStateEntitiesFromPersistentModel(getValidChanged0());
-    }
-
     // getValidChanged() previous state
     public static RecipeMetadataPersistenceModel getValidChanged1() {
         return new RecipeMetadataPersistenceModel.Builder().
@@ -165,18 +115,6 @@ public class TestDataRecipeMetadata {
                 setCreateDate(40L).
                 setLastUpdate(50L).
                 build();
-    }
-
-    public static RecipeMetadataParentEntity getValidChanged1ParentEntity() {
-        return getParentEntityFromPersistenceModel(getValidChanged1());
-    }
-
-    public static List<RecipeFailReasonEntity> getValidChanged1FailReasonEntities() {
-        return getFailReasonEntitiesFromPersistentModel(getValidChanged1());
-    }
-
-    public static List<RecipeComponentStateEntity> getValidChanged1ComponentStateEntities() {
-        return getComponentStateEntitiesFromPersistentModel(getValidChanged1());
     }
 
     // getValidChanged() previous state
@@ -194,18 +132,6 @@ public class TestDataRecipeMetadata {
                 build();
     }
 
-    public static RecipeMetadataParentEntity getValidChanged2ParentEntity() {
-        return getParentEntityFromPersistenceModel(getValidChanged2());
-    }
-
-    public static List<RecipeFailReasonEntity> getValidChanged2FailReasonEntities() {
-        return getFailReasonEntitiesFromPersistentModel(getValidChanged2());
-    }
-
-    public static List<RecipeComponentStateEntity> getValidChangedComponentStateEntities() {
-        return getComponentStateEntitiesFromPersistentModel(getValidChanged2());
-    }
-
     // getValidChanged() previous states
     public static List<RecipeMetadataPersistenceModel> getValidChangedList() {
         List<RecipeMetadataPersistenceModel> models = new ArrayList<>();
@@ -213,14 +139,6 @@ public class TestDataRecipeMetadata {
         models.add(1, getValidChanged1());
         models.add(2, getValidChanged2());
         return models;
-    }
-
-    public static List<RecipeMetadataParentEntity> getValidChangedParentEntityList() {
-        List<RecipeMetadataParentEntity> entities = new ArrayList<>();
-        entities.add(0, getValidChanged0ParentEntity());
-        entities.add(1, getValidChanged1ParentEntity());
-        entities.add(2, getValidChanged2ParentEntity());
-        return entities;
     }
 
     /*
@@ -243,18 +161,6 @@ public class TestDataRecipeMetadata {
                 build();
     }
 
-    public static RecipeMetadataParentEntity getValidUnchangedParentEntity() {
-        return getParentEntityFromPersistenceModel(getValidUnchanged());
-    }
-
-    public static List<RecipeFailReasonEntity> getValidUnchangedFailReasonEntities() {
-        return getFailReasonEntitiesFromPersistentModel(getValidUnchanged());
-    }
-
-    public static List<RecipeComponentStateEntity> getValidUnchangedComponentStateEntities() {
-        return getComponentStateEntitiesFromPersistentModel(getValidUnchanged());
-    }
-
     /*
     Represents a valid recipe created using an user Id that is different from the one in the 
     current session.
@@ -273,19 +179,6 @@ public class TestDataRecipeMetadata {
                 build();
     }
 
-    public static RecipeMetadataParentEntity getValidFromAnotherUserParentEntity() {
-        return getParentEntityFromPersistenceModel(getValidFromAnotherUser());
-    }
-
-    public static List<RecipeFailReasonEntity> getValidFromAnotherUserFailReasonEntities() {
-        return getFailReasonEntitiesFromPersistentModel(getValidFromAnotherUser());
-    }
-
-    public static List<RecipeComponentStateEntity>
-    getValidFromAnotherUserComponentStateEntities() {
-        return getComponentStateEntitiesFromPersistentModel(getValidFromAnotherUser());
-    }
-
     /*
     Represents an invalid recipe created using an user Id that is different from the one in the 
     current session.  
@@ -302,19 +195,6 @@ public class TestDataRecipeMetadata {
                 setCreateDate(80L).
                 setLastUpdate(90L).
                 build();
-    }
-
-    public static RecipeMetadataParentEntity getInvalidFromAnotherUserParentEntity() {
-        return getParentEntityFromPersistenceModel(getInvalidFromAnotherUser());
-    }
-
-    public static List<RecipeFailReasonEntity> getInvalidFromAnotherUserFailReasonEntities() {
-        return getFailReasonEntitiesFromPersistentModel(getInvalidFromAnotherUser());
-    }
-
-    public static List<RecipeComponentStateEntity>
-    getInvalidFromAnotherUserComponentStateEntities() {
-        return getComponentStateEntitiesFromPersistentModel(getInvalidFromAnotherUser());
     }
 
     /*
@@ -336,18 +216,6 @@ public class TestDataRecipeMetadata {
                 build();
     }
 
-    public static RecipeMetadataParentEntity getValidCopiedParentEntity() {
-        return getParentEntityFromPersistenceModel(getValidCopied());
-    }
-
-    public static List<RecipeFailReasonEntity> getValidCopiedFailReasonEntities() {
-        return getFailReasonEntitiesFromPersistentModel(getValidCopied());
-    }
-
-    public static List<RecipeComponentStateEntity> getValidCopiedComponentStateEntities() {
-        return getComponentStateEntitiesFromPersistentModel(getValidCopied());
-    }
-
     /*
     Represents an invalid recipe that has been copied from another user to the user in the 
     current session.
@@ -367,21 +235,7 @@ public class TestDataRecipeMetadata {
                 build();
     }
 
-    public static RecipeMetadataParentEntity getInvalidCopiedParentEntity() {
-        return getParentEntityFromPersistenceModel(getInvalidCopied());
-    }
-
-    public static List<RecipeFailReasonEntity> getInvalidCopiedFailReasonEntities() {
-        return getFailReasonEntitiesFromPersistentModel(getInvalidCopied());
-    }
-
-    public static List<RecipeComponentStateEntity> getInvalidCopiedComponentStateEntities() {
-        return getComponentStateEntitiesFromPersistentModel(getInvalidCopied());
-    }
-
     // TODO - Valid and invalid parent from same user!!
-
-
     private static List<FailReasons> getDataUnavailableFailReasons() {
         List<FailReasons> f = new ArrayList<>();
         f.add(CommonFailReason.DATA_UNAVAILABLE);
@@ -442,7 +296,8 @@ public class TestDataRecipeMetadata {
 
     public static List<RecipeComponentStateEntity> getDataUnavailableComponentStateEntities(
             String parentDataId) {
-        return getComponentStateEntities(parentDataId, getDataUnavailableComponentStates());
+        return getComponentStateEntities(parentDataId, getDataUnavailableComponentStates()
+        );
     }
 
     private static HashMap<ComponentName, ComponentState> getInvalidUnchangedComponentStates() {
@@ -456,7 +311,8 @@ public class TestDataRecipeMetadata {
 
     public static List<RecipeComponentStateEntity> getInvalidUnchangedComponentStateEntities(
             String parentDataId) {
-        return getComponentStateEntities(parentDataId, getInvalidUnchangedComponentStates());
+        return getComponentStateEntities(parentDataId, getInvalidUnchangedComponentStates()
+        );
     }
 
     private static HashMap<ComponentName, ComponentState> getInvalidChangedComponentStates() {
@@ -470,7 +326,8 @@ public class TestDataRecipeMetadata {
 
     public static List<RecipeComponentStateEntity> getInvalidChangedComponentStateEntities(
             String parentDataId) {
-        return getComponentStateEntities(parentDataId, getInvalidChangedComponentStates());
+        return getComponentStateEntities(parentDataId, getInvalidChangedComponentStates()
+        );
     }
 
     private static HashMap<ComponentName, ComponentState> getValidChangedComponentStates() {
@@ -484,7 +341,8 @@ public class TestDataRecipeMetadata {
 
     public static List<RecipeComponentStateEntity> getValidChangedComponentStateEntities(
             String parentDataId) {
-        return getComponentStateEntities(parentDataId, getValidChangedComponentStates());
+        return getComponentStateEntities(parentDataId, getValidChangedComponentStates()
+        );
     }
 
     private static HashMap<ComponentName, ComponentState> getValidUnchangedComponentStates() {
@@ -498,7 +356,8 @@ public class TestDataRecipeMetadata {
 
     private static List<RecipeComponentStateEntity> getValidUnchangedComponentStateEntities(
             String parentDataId) {
-        return getComponentStateEntities(parentDataId, getValidUnchangedComponentStates());
+        return getComponentStateEntities(parentDataId, getValidUnchangedComponentStates()
+        );
     }
 
     private static List<RecipeComponentStateEntity> getComponentStateEntities(

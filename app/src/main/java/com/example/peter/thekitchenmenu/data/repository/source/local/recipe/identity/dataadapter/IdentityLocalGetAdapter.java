@@ -15,6 +15,8 @@ import static com.example.peter.thekitchenmenu.data.repository.DomainDataAccess.
 
 public class IdentityLocalGetAdapter {
 
+    private static final String TAG = "tkm-" + IdentityLocalGetAdapter.class.getSimpleName() + ": ";
+
     @Nonnull
     private final RecipeIdentityLocalDataSource dataSource;
     @Nonnull
@@ -78,7 +80,8 @@ public class IdentityLocalGetAdapter {
                     public void onModelsUnavailable() {
                         callback.onModelUnavailable();
                     }
-                });
+                }
+        );
     }
 
     private RecipeIdentityPersistenceModel filterForActiveModel(

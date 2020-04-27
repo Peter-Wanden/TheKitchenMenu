@@ -555,7 +555,8 @@ public class RecipeTest {
     public void coursesRequestNewId_newCourseAdded_coursesStateVALID_CHANGED() {
         // Arrange
         CourseCallbackClient callback = new CourseCallbackClient();
-        RecipeCourseEntity expectedCourseEntity = TestDataRecipeCourseEntity.getRecipeCourseZero();
+        RecipeCourseEntity expectedCourseEntity = TestDataRecipeCourseEntity.
+                getExistingActiveRecipeCourseZero();
         ArgumentCaptor<RecipeCourseEntity> actualCourseEntity = ArgumentCaptor.forClass(RecipeCourseEntity.class);
 
         String recipeId = expectedCourseEntity.getRecipeId();
@@ -779,7 +780,7 @@ public class RecipeTest {
         repoIdentityCallback.getValue().onEntityLoaded(IDENTITY_VALID_EXISTING_COMPLETE);
 
 //        verify(repoCourseMock).getAllByDomainId(eq(recipeId), repoCourseCallback.capture());
-        repoCourseCallback.getValue().onAllLoaded(TestDataRecipeCourseEntity.getAllByDomainId(recipeId));
+        repoCourseCallback.getValue().onAllLoaded(TestDataRecipeCourseEntity.getAllExistingActiveByDomainId(recipeId));
 
 //        verify(repoDurationMock).getByDataId(eq(recipeId), repoDurationCallback.capture());
         repoDurationCallback.getValue().onEntityLoaded(DURATION_VALID_EXISTING_COMPLETE);

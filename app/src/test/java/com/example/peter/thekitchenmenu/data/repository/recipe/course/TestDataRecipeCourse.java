@@ -42,7 +42,8 @@ public class TestDataRecipeCourse {
 
     // State of recipe course data after new courses added
     public static List<RecipeCoursePersistenceModel> getNewActiveCourses() {
-        return Arrays.asList(getNewActiveRecipeCourseZero(), getNewActiveRecipeCourseOne());
+        return Arrays.asList(getNewActiveRecipeCourseZero(), getNewActiveRecipeCourseOne()
+        );
     }
 
     // First course updated to deactivated
@@ -260,6 +261,38 @@ public class TestDataRecipeCourse {
 
     public static List<RecipeCoursePersistenceModel> getAllRecipeCourseCopies() {
         return Arrays.asList(
+                getCopiedRecipeCourseZero(),
+                getCopiedRecipeCourseOne(),
+                getCopiedRecipeCourseTwo(),
+                getCopiedRecipeCourseFour(),
+                getCopiedRecipeCourseSix()
+        );
+    }
+
+    public static List<RecipeCoursePersistenceModel> getAllByCourse(RecipeCourse.Course c) {
+        List<RecipeCoursePersistenceModel> models = new ArrayList<>();
+        for (RecipeCoursePersistenceModel m : getAll()) {
+            if (c == m.getCourse()) {
+                models.add(m);
+            }
+        }
+        return models;
+    }
+
+    public static List<RecipeCoursePersistenceModel> getAll() {
+        return Arrays.asList(
+                getNewActiveRecipeCourseZero(),
+                getNewActiveRecipeCourseOne(),
+                getNewDeactivatedRecipeCourseZero(),
+                getNewDeactivatedRecipeCourseOne(),
+                getExistingActiveRecipeCourseZero(),
+                getExistingActiveRecipeCourseOne(),
+                getExistingActiveRecipeCourseTwo(),
+                getExistingActiveRecipeCourseThree(),
+                getExistingActiveRecipeCourseFour(),
+                getExistingActiveRecipeCourseFive(),
+                getExistingActiveRecipeCourseSix(),
+                getExistingActiveRecipeCourseSeven(),
                 getCopiedRecipeCourseZero(),
                 getCopiedRecipeCourseOne(),
                 getCopiedRecipeCourseTwo(),

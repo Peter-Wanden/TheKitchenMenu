@@ -7,40 +7,40 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TestDataRecipeCourseEntity {
-    public static RecipeCourseEntity getRecipeCourseZero() {
+    public static RecipeCourseEntity getExistingActiveRecipeCourseZero() {
         return convertToDatabaseEntity(TestDataRecipeCourse.getExistingActiveRecipeCourseZero()
         );
     }
 
-    public static RecipeCourseEntity getRecipeCourseOne() {
+    public static RecipeCourseEntity getExistingActiveRecipeCourseOne() {
         return convertToDatabaseEntity(TestDataRecipeCourse.getExistingActiveRecipeCourseOne());
     }
 
-    public static RecipeCourseEntity getRecipeCourseTwo() {
+    public static RecipeCourseEntity getExistingActiveRecipeCourseTwo() {
         return convertToDatabaseEntity(TestDataRecipeCourse.getExistingActiveRecipeCourseTwo());
     }
 
-    public static RecipeCourseEntity getRecipeCourseThree() {
+    public static RecipeCourseEntity getExistingActiveRecipeCourseThree() {
         return convertToDatabaseEntity(TestDataRecipeCourse.getExistingActiveRecipeCourseThree());
     }
 
-    public static RecipeCourseEntity getRecipeCourseFour() {
+    public static RecipeCourseEntity getExistingActiveRecipeCourseFour() {
         return convertToDatabaseEntity(TestDataRecipeCourse.getExistingActiveRecipeCourseFour());
     }
 
-    public static RecipeCourseEntity getRecipeCourseFive() {
+    public static RecipeCourseEntity getExistingActiveRecipeCourseFive() {
         return convertToDatabaseEntity(TestDataRecipeCourse.getExistingActiveRecipeCourseFive());
     }
 
-    public static RecipeCourseEntity getRecipeCourseSix() {
+    public static RecipeCourseEntity getExistingActiveRecipeCourseSix() {
         return convertToDatabaseEntity(TestDataRecipeCourse.getExistingActiveRecipeCourseSix());
     }
 
-    public static RecipeCourseEntity getRecipeCourseSeven() {
+    public static RecipeCourseEntity getExistingActiveRecipeCourseSeven() {
         return convertToDatabaseEntity(TestDataRecipeCourse.getExistingActiveRecipeCourseSeven());
     }
 
-    public static List<RecipeCourseEntity> getAllRecipeCourses() {
+    public static List<RecipeCourseEntity> getAllExistingActiveRecipeCourses() {
         List<RecipeCourseEntity> es = new ArrayList<>();
         for (RecipeCoursePersistenceModel m : TestDataRecipeCourse.
                 getAllExistingActiveRecipeCourses()) {
@@ -49,7 +49,7 @@ public class TestDataRecipeCourseEntity {
         return es;
     }
 
-    public static List<RecipeCourseEntity> getAllEvenRecipeCourses() {
+    public static List<RecipeCourseEntity> getAllExistingActiveEvenRecipeCourses() {
         List<RecipeCourseEntity> es = new ArrayList<>();
         for (RecipeCoursePersistenceModel m : TestDataRecipeCourse.
                 getAllExistingActiveEvenRecipeCourses()) {
@@ -58,12 +58,12 @@ public class TestDataRecipeCourseEntity {
         return es;
     }
 
-    public static List<RecipeCourseEntity> getAllByDomainId(String recipeId) {
+    public static List<RecipeCourseEntity> getAllExistingActiveByDomainId(String recipeId) {
         if ("idFromAnotherUser".equals(recipeId)) {
             return getAllRecipeCourseCopies();
         }
         List<RecipeCourseEntity> es = new ArrayList<>();
-        for (RecipeCourseEntity e : getAllRecipeCourses()) {
+        for (RecipeCourseEntity e : getAllExistingActiveRecipeCourses()) {
             if (e.getRecipeId().equals(recipeId)) {
                 es.add(e);
             }
@@ -103,6 +103,24 @@ public class TestDataRecipeCourseEntity {
             es.add(convertToDatabaseEntity(m));
         }
         return es;
+    }
+
+    public static List<RecipeCourseEntity> getAllByCourseNo(int courseNo) {
+        List<RecipeCourseEntity> entities = new ArrayList<>();
+        for (RecipeCoursePersistenceModel m : TestDataRecipeCourse.getAll()) {
+            if (courseNo == m.getCourse().getCourseNo()) {
+                entities.add(convertToDatabaseEntity(m));
+            }
+        }
+        return entities;
+    }
+
+    public static List<RecipeCourseEntity> getAll() {
+        List<RecipeCourseEntity> entities = new ArrayList<>();
+        for (RecipeCoursePersistenceModel m : TestDataRecipeCourse.getAll()) {
+            entities.add(convertToDatabaseEntity(m));
+        }
+        return entities;
     }
 
     private static RecipeCourseEntity convertToDatabaseEntity(RecipeCoursePersistenceModel m) {

@@ -983,7 +983,7 @@ public class RecipeDurationEditorViewModelTest {
                 getValidExistingTitleValidDescriptionValid());
 
 //        verify(repoCourseMock).getAllByDomainId(eq(recipeId), repoCourseCallback.capture());
-        repoCourseCallback.getValue().onAllLoaded(TestDataRecipeCourseEntity.getAllByDomainId(recipeId));
+        repoCourseCallback.getValue().onAllLoaded(TestDataRecipeCourseEntity.getAllExistingActiveByDomainId(recipeId));
 
 //        verify(repoPortionsMock).getAllByDomainId(eq(recipeId), repoPortionsCallback.capture());
         repoPortionsCallback.getValue().onEntityLoaded(TestDataRecipePortionsEntity.

@@ -1,10 +1,8 @@
 package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.datasource;
 
-import com.example.peter.thekitchenmenu.commonmocks.StringMaker;
 import com.example.peter.thekitchenmenu.data.repository.recipe.identity.TestDataRecipeIdentity;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.datasource.RecipeIdentityEntity;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentity;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityPersistenceModel;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityTest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,6 +50,24 @@ public class TestDataRecipeIdentityEntity {
         return convertModelToEntity(
                 TestDataRecipeIdentity.getValidNewComplete()
         );
+    }
+
+    public static List<RecipeIdentityEntity> getAllNew() {
+        List<RecipeIdentityEntity> entities = new ArrayList<>();
+        for (RecipeIdentityPersistenceModel m : TestDataRecipeIdentity.getAllNew()) {
+            entities.add(convertModelToEntity(m)
+            );
+        }
+        return entities;
+    }
+
+    public static List<RecipeIdentityEntity> getAllByDomainId(String domainId) {
+        List<RecipeIdentityEntity> entities = new ArrayList<>();
+        for (RecipeIdentityPersistenceModel m : TestDataRecipeIdentity.getAllByDomainId(domainId)) {
+            entities.add(convertModelToEntity(m)
+            );
+        }
+        return entities;
     }
 
     public static RecipeIdentityEntity getInvalidExistingTitleTooShort() {
@@ -128,7 +144,15 @@ public class TestDataRecipeIdentityEntity {
 
     public static List<RecipeIdentityEntity> getValidIdentityEntities() {
         List<RecipeIdentityEntity> entities = new ArrayList<>();
-        for (RecipeIdentityPersistenceModel m : TestDataRecipeIdentity.getValidModels()) {
+        for (RecipeIdentityPersistenceModel m : TestDataRecipeIdentity.getAllValidModels()) {
+            entities.add(convertModelToEntity(m));
+        }
+        return entities;
+    }
+
+    public static List<RecipeIdentityEntity> getAll() {
+        List<RecipeIdentityEntity> entities = new ArrayList<>();
+        for (RecipeIdentityPersistenceModel m : TestDataRecipeIdentity.getAll()) {
             entities.add(convertModelToEntity(m));
         }
         return entities;

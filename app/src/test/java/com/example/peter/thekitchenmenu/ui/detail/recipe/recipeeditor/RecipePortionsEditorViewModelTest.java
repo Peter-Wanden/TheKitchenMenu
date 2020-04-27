@@ -664,7 +664,7 @@ public class RecipePortionsEditorViewModelTest {
 
 //        verify(repoCourseMock).getAllByDomainId(eq(recipeId), repoCourseCallback.capture());
         repoCourseCallback.getValue().onAllLoaded(TestDataRecipeCourseEntity.
-                getAllByDomainId(recipeId));
+                getAllExistingActiveByDomainId(recipeId));
 
 //        verify(repoDurationMock).getByDataId(eq(recipeId), repoDurationCallback.capture());
         repoDurationCallback.getValue().onEntityLoaded(TestDataRecipeDurationEntity.

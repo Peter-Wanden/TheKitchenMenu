@@ -38,6 +38,8 @@ public class DurationLocalGetAdapterTest {
     ArgumentCaptor<GetPrimitiveCallback<RecipeDurationEntity>> repoCallback;
     @Captor
     ArgumentCaptor<GetAllPrimitiveCallback<RecipeDurationEntity>> repoGetAllCallback;
+
+    private GetDomainModelCallbackClient callbackClient;
     // endregion helper fields ---------------------------------------------------------------------
 
     private DurationLocalGetAdapter SUT;
@@ -55,10 +57,10 @@ public class DurationLocalGetAdapterTest {
     }
 
     @Test
-    public void getByDataId_DATA_UNAVAILABLE() {
+    public void getByDataId_MODELSL_UNAVAILABLE() {
         // Arrange
         String dataId = "dataIdNotInTestData";
-        DomainModelCallbackClient callbackClient = new DomainModelCallbackClient();
+        callbackClient = new GetDomainModelCallbackClient();
         // Act
         SUT.getByDataId(dataId, callbackClient);
         // Assert database called and return data unavailable
@@ -71,15 +73,19 @@ public class DurationLocalGetAdapterTest {
     @Test
     public void getByDataId_domainModelReturned() {
         // Arrange
-        RecipeDurationPersistenceModel expectedModel = TestDataRecipeDuration.getValidExistingComplete();
-        DomainModelCallbackClient callbackClient = new DomainModelCallbackClient();
+        RecipeDurationPersistenceModel expectedModel = TestDataRecipeDuration.
+                getValidExistingComplete();
+        callbackClient = new GetDomainModelCallbackClient();
         // Act
         SUT.getByDataId(expectedModel.getDataId(), callbackClient);
         // Assert
-        verify(repoMock).getByDataId(eq(expectedModel.getDataId()), repoCallback.capture());
+        verify(repoMock).getByDataId(
+                eq(expectedModel.getDataId()),
+                repoCallback.capture()
+        );
         repoCallback.getValue().onEntityLoaded(TestDataRecipeDurationEntity.
-                getValidExistingComplete());
-
+                getValidExistingComplete()
+        );
         assertEquals(
                 expectedModel,
                 callbackClient.model
@@ -90,22 +96,25 @@ public class DurationLocalGetAdapterTest {
     public void getActiveModelByDomainId_returnMostRecentModel() {
         // Arrange
         long lastUpdate = 0L;
-        RecipeDurationPersistenceModel expectedModel = new RecipeDurationPersistenceModel.Builder().
+        RecipeDurationPersistenceModel modelUnderTest = new RecipeDurationPersistenceModel.Builder().
                 getDefault().build();
         for (RecipeDurationPersistenceModel m : TestDataRecipeDuration.getAllNew()) {
             if (m.getLastUpdate() > lastUpdate) {
-                expectedModel = m;
+                modelUnderTest = m;
             }
         }
-        DomainModelCallbackClient callbackClient = new DomainModelCallbackClient();
+        callbackClient = new GetDomainModelCallbackClient();
         // Act
-        SUT.getActiveByDomainId(expectedModel.getDomainId(), callbackClient);
+        SUT.getActiveByDomainId(modelUnderTest.getDomainId(), callbackClient);
         // Assert database called, return list of entities
-        verify(repoMock).getAllByDomainId(eq(expectedModel.getDomainId()), repoGetAllCallback.capture());
-        repoGetAllCallback.getValue().onAllLoaded(TestDataRecipeDurationEntity.getAllNew());
+        verify(repoMock).getAllByDomainId(eq(modelUnderTest.getDomainId()),
+                repoGetAllCallback.capture()
+        );
+        repoGetAllCallback.getValue().onAllLoaded(TestDataRecipeDurationEntity.getAllNew()
+        );
         // Assert correct entity converted to model and returned
         assertEquals(
-                expectedModel,
+                modelUnderTest,
                 callbackClient.model
         );
     }
@@ -113,16 +122,16 @@ public class DurationLocalGetAdapterTest {
     @Test
     public void getAll_returnsAllModels() {
         // Arrange
-        GetAllCallbackClient getAllCallbackClient = new GetAllCallbackClient();
+        GetAllModelsCallbackClient getAllModelsCallbackClient = new GetAllModelsCallbackClient();
         // Act
-        SUT.getAll(getAllCallbackClient);
+        SUT.getAll(getAllModelsCallbackClient);
         // Assert database called and return all new
         verify(repoMock).getAll(repoGetAllCallback.capture());
         repoGetAllCallback.getValue().onAllLoaded(TestDataRecipeDurationEntity.getAllNew());
         // Assert models returned
         assertEquals(
                 TestDataRecipeDuration.getAllNew(),
-                getAllCallbackClient.models
+                getAllModelsCallbackClient.models
         );
     }
 
@@ -130,13 +139,13 @@ public class DurationLocalGetAdapterTest {
     // endregion helper methods --------------------------------------------------------------------
 
     // region helper classes -----------------------------------------------------------------------
-    private static class DomainModelCallbackClient
+    private static class GetDomainModelCallbackClient
             implements GetDomainModelCallback<RecipeDurationPersistenceModel> {
 
-        private final String TAG = DurationLocalGetAdapterTest.TAG +
-                "DomainModeCallback: ";
-        boolean onModelUnavailable;
-        RecipeDurationPersistenceModel model;
+        private static final String TAG = DurationLocalGetAdapterTest.TAG +
+                GetDomainModelCallbackClient.class.getSimpleName() + ": " ;
+        private RecipeDurationPersistenceModel model;
+        private boolean onModelUnavailable;
 
         @Override
         public void onModelLoaded(RecipeDurationPersistenceModel m) {
@@ -146,18 +155,18 @@ public class DurationLocalGetAdapterTest {
 
         @Override
         public void onModelUnavailable() {
-            System.out.println(TAG + "onModelUnavailable");
             onModelUnavailable = true;
+            System.out.println(TAG + "onModelUnavailable");
         }
     }
 
-    private static class GetAllCallbackClient
+    private static class GetAllModelsCallbackClient
             implements GetAllDomainModelsCallback<RecipeDurationPersistenceModel> {
 
         private final String TAG = DurationLocalGetAdapterTest.TAG + "GetAllCallback: ";
 
-        List<RecipeDurationPersistenceModel> models;
-        boolean onModelsUnavailable;
+        private List<RecipeDurationPersistenceModel> models;
+        private boolean onModelsUnavailable;
 
         @Override
         public void onAllLoaded(List<RecipeDurationPersistenceModel> m) {

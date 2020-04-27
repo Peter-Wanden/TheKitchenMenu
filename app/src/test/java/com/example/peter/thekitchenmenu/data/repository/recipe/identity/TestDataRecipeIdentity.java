@@ -5,12 +5,13 @@ import com.example.peter.thekitchenmenu.data.repository.recipe.metadata.TestData
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityPersistenceModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityTest;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class TestDataRecipeIdentity {
 
-    private static final String NEW_RECIPE_ID = TestDataRecipeMetadata.
+    public static final String NEW_RECIPE_ID = TestDataRecipeMetadata.
             getDataUnavailable().
             getDomainId();
 
@@ -124,6 +125,18 @@ public class TestDataRecipeIdentity {
                 build();
     }
 
+    public static List<RecipeIdentityPersistenceModel> getAllNew() {
+        return Arrays.asList(
+                getInvalidNewEmpty(),
+                getInvalidNewTitleTooShort(),
+                getInvalidNewTitleTooLong(),
+                getInvalidNewTitleTooLongDescriptionTooLong(),
+                getInvalidNewTitleTooShortDescriptionValid(),
+                getValidNewTitleValid(),
+                getValidNewComplete()
+        );
+    }
+
     public static RecipeIdentityPersistenceModel getInvalidExistingTitleTooShort() {
         String invalidExistingTitleTooShort = new StringMaker().
                 makeStringOfExactLength(RecipeIdentityTest.TITLE_MIN_LENGTH).
@@ -227,6 +240,18 @@ public class TestDataRecipeIdentity {
                 build();
     }
 
+    public static List<RecipeIdentityPersistenceModel> getAllExisting() {
+        return Arrays.asList(
+                getInvalidExistingTitleTooShort(),
+                getInvalidExistingTitleTooLong(),
+                getInvalidExistingTitleValidDescriptionTooLong(),
+                getInvalidExistingTitleTooShortDescriptionTooLong(),
+                getInvalidExistingTitleTooLongDescriptionTooLong(),
+                getValidExistingTitleValidDescriptionValid(),
+                getValidExistingTitleValid()
+        );
+    }
+
     public static RecipeIdentityPersistenceModel getValidCompleteFromAnotherUser() {
         String validCompleteFromAnotherUserTitle = new StringMaker().
                 makeStringOfExactLength(RecipeIdentityTest.TITLE_MAX_LENGTH).
@@ -267,6 +292,13 @@ public class TestDataRecipeIdentity {
                 setCreateDate(30L).
                 setLastUpdate(40L).
                 build();
+    }
+
+    public static List<RecipeIdentityPersistenceModel> getAllFromAnotherUser() {
+        return Arrays.asList(
+                getValidCompleteFromAnotherUser(),
+                getInvalidFromAnotherUser()
+        );
     }
 
     public static RecipeIdentityPersistenceModel getValidCompleteAfterCopied() {
@@ -315,7 +347,15 @@ public class TestDataRecipeIdentity {
                 build();
     }
 
-    public static List<RecipeIdentityPersistenceModel> getValidModels() {
+    public static List<RecipeIdentityPersistenceModel> getAllCopied() {
+        return Arrays.asList(
+                getValidCompleteAfterCopied(),
+                getValidCopiedDescriptionUpdated(),
+                getValidAfterInvalidCopy()
+        );
+    }
+
+    public static List<RecipeIdentityPersistenceModel> getAllValidModels() {
         return Arrays.asList(
                 getValidNewComplete(),
                 getValidNewTitleValid(),
@@ -326,6 +366,25 @@ public class TestDataRecipeIdentity {
                 getValidCopiedDescriptionUpdated(),
                 getValidAfterInvalidCopy()
         );
+    }
+
+    public static List<RecipeIdentityPersistenceModel> getAllByDomainId(String domainId) {
+        List<RecipeIdentityPersistenceModel> models = new ArrayList<>();
+        for (RecipeIdentityPersistenceModel m : getAll()) {
+            if (domainId.equals(m.getDomainId())) {
+                models.add(m);
+            }
+        }
+        return models;
+    }
+
+    public static List<RecipeIdentityPersistenceModel> getAll() {
+        List<RecipeIdentityPersistenceModel> models = new ArrayList<>();
+        models.addAll(getAllNew());
+        models.addAll(getAllExisting());
+        models.addAll(getAllFromAnotherUser());
+        models.addAll(getAllCopied());
+        return models;
     }
 }
 

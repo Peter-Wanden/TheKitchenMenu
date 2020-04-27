@@ -2,6 +2,7 @@ package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.met
 
 import com.example.peter.thekitchenmenu.data.repository.recipe.metadata.TestDataRecipeMetadata;
 import com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter.PrimitiveDataSource.GetPrimitiveCallback;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.TestDataRecipeMetadataEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.componentstate.RecipeComponentStateEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.componentstate.RecipeComponentStateLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.failreason.RecipeFailReasonEntity;
@@ -93,24 +94,24 @@ public class RecipeMetadataLocalGetAdapterTest {
                 parentCallback.capture()
         );
         // Return parent
-        parentCallback.getValue().onEntityLoaded(
-                TestDataRecipeMetadata.getDataUnavailableParentEntity()
+        parentCallback.getValue().onEntityLoaded(TestDataRecipeMetadataEntity.
+                getDataUnavailableParentEntity()
         );
         // Assert component states called
         verify(componentStateDataSourceMock).getAllByParentDataId(eq(dataId),
                 componentStateDataSourceCallback.capture()
         );
         // Return component states
-        componentStateDataSourceCallback.getValue().onAllLoaded(
-                TestDataRecipeMetadata.getDataUnavailableComponentStateEntities()
+        componentStateDataSourceCallback.getValue().onAllLoaded(TestDataRecipeMetadataEntity.
+                getDataUnavailableComponentStateEntities()
         );
         // Assert fail reasons called
         verify(failReasonsDataSourceMock).getAllByParentDataId(eq(dataId),
                 failReasonDataSourceCallback.capture()
         );
         // Return fail reasons
-        failReasonDataSourceCallback.getValue().onAllLoaded(
-                TestDataRecipeMetadata.getDataUnavailableFailReasonEntities()
+        failReasonDataSourceCallback.getValue().onAllLoaded(TestDataRecipeMetadataEntity.
+                        getDataUnavailableFailReasonEntities()
         );
         // Assert result
         assertEquals(TestDataRecipeMetadata.getDataUnavailable(),
@@ -135,21 +136,21 @@ public class RecipeMetadataLocalGetAdapterTest {
                 parentListCallback.capture()
         );
         // Return parent entity list
-        parentListCallback.getValue().onAllLoaded(TestDataRecipeMetadata.
+        parentListCallback.getValue().onAllLoaded(TestDataRecipeMetadataEntity.
                 getValidChangedParentEntityList());
         // Assert child called with correct parent data Id
         verify(failReasonsDataSourceMock).getAllByParentDataId(eq(parentDataId),
                 failReasonDataSourceCallback.capture()
         );
         // Return fail reasons
-        failReasonDataSourceCallback.getValue().onAllLoaded(TestDataRecipeMetadata.
+        failReasonDataSourceCallback.getValue().onAllLoaded(TestDataRecipeMetadataEntity.
                         getValidChanged0FailReasonEntities()
         );
         // Assert child called with correct data Id
         verify(componentStateDataSourceMock).getAllByParentDataId(eq(parentDataId),
                 componentStateDataSourceCallback.capture());
         // Return component state entities
-        componentStateDataSourceCallback.getValue().onAllLoaded(TestDataRecipeMetadata.
+        componentStateDataSourceCallback.getValue().onAllLoaded(TestDataRecipeMetadataEntity.
                         getValidChanged0ComponentStateEntities()
         );
 
@@ -162,32 +163,34 @@ public class RecipeMetadataLocalGetAdapterTest {
         String domainId = TestDataRecipeMetadata.getValidChanged0().getDomainId();
         GetAllCallbackClient getAllCallbackClient = new GetAllCallbackClient ();
 
-        String correctParentDataId = TestDataRecipeMetadata.getValidChanged0ParentEntity().getDataId();
+        String correctParentDataId = TestDataRecipeMetadataEntity.
+                getValidChanged0ParentEntity().
+                getDataId();
 
         // Act
         SUT.getAllActive(getAllCallbackClient);
         // Assert parent data source called
         verify(parentDataSourceMock).getAll(parentListCallback.capture());
         // Return all parents
-        parentListCallback.getValue().onAllLoaded(TestDataRecipeMetadata.
+        parentListCallback.getValue().onAllLoaded(TestDataRecipeMetadataEntity.
                 getValidChangedParentEntityList());
 
         // Assert parent entities requested
         verify(parentDataSourceMock).getAllByDomainId(eq(domainId), parentListCallback.capture());
-        parentListCallback.getValue().onAllLoaded(TestDataRecipeMetadata.
+        parentListCallback.getValue().onAllLoaded(TestDataRecipeMetadataEntity.
                 getValidChangedParentEntityList());
         // Assert fail reasons data source called with correct parent data Id
         verify(failReasonsDataSourceMock).getAllByParentDataId(eq(correctParentDataId),
                 failReasonDataSourceCallback.capture()
         );
-        failReasonDataSourceCallback.getValue().onAllLoaded(TestDataRecipeMetadata.
+        failReasonDataSourceCallback.getValue().onAllLoaded(TestDataRecipeMetadataEntity.
                 getValidChanged0FailReasonEntities()
         );
         // Assert component states data source called with correct parent data id
         verify(componentStateDataSourceMock).getAllByParentDataId(eq(correctParentDataId),
                 componentStateDataSourceCallback.capture());
         componentStateDataSourceCallback.getValue().onAllLoaded(
-                TestDataRecipeMetadata.getValidChanged0ComponentStateEntities()
+                TestDataRecipeMetadataEntity.getValidChanged0ComponentStateEntities()
         );
 
         assertEquals(TestDataRecipeMetadata.getValidChanged0(), getAllCallbackClient.models.get(0));

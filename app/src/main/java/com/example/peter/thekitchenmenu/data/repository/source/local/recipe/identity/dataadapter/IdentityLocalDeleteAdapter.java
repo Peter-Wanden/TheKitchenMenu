@@ -7,7 +7,7 @@ import javax.annotation.Nonnull;
 public class IdentityLocalDeleteAdapter {
 
     @Nonnull
-    RecipeIdentityLocalDataSource dataSource;
+    private RecipeIdentityLocalDataSource dataSource;
 
     public IdentityLocalDeleteAdapter(@Nonnull RecipeIdentityLocalDataSource dataSource) {
         this.dataSource = dataSource;
