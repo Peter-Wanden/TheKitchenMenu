@@ -27,7 +27,7 @@ import static org.mockito.Mockito.when;
 
 public class RecipeDurationTest {
 
-    private static final String TAG = "tag-" + RecipeDurationTest.class.getSimpleName() + ": ";
+//    private static final String TAG = "tag-" + RecipeDurationTest.class.getSimpleName() + ": ";
 
     // region constants ----------------------------------------------------------------------------
     public static int MAX_PREP_TIME = TestDataRecipeDuration.MAX_PREP_TIME;
@@ -89,7 +89,7 @@ public class RecipeDurationTest {
     @Test
     public void newRequest_componentStateINVALID_UNCHANGED() {
         // Arrange / Act
-        sendInitialiseRequestForNewModel();
+        simulateNewInitialisationRequest();
         // Assert
         assertEquals(
                 RecipeMetadata.ComponentState.INVALID_UNCHANGED,
@@ -106,7 +106,7 @@ public class RecipeDurationTest {
     @Test
     public void newRequest_invalidPrepHours_invalidValueNotSaved() {
         // Arrange
-        sendInitialiseRequestForNewModel();
+        simulateNewInitialisationRequest();
 
         RecipeDurationRequest.Model invalidRequestModel = new RecipeDurationRequest.Model.Builder().
                 basedOnResponseModel(durationOnErrorResponse.getModel()).
@@ -126,7 +126,7 @@ public class RecipeDurationTest {
     @Test
     public void newRequest_invalidPrepHours_resultINVALID_CHANGED() {
         // Arrange
-        sendInitialiseRequestForNewModel();
+        simulateNewInitialisationRequest();
 
         RecipeDurationRequest.Model invalidModel = new RecipeDurationRequest.Model.Builder().
                 basedOnResponseModel(durationOnErrorResponse.getModel()).
@@ -148,7 +148,7 @@ public class RecipeDurationTest {
     @Test
     public void newRequest_invalidPrepHours_FaiReasonINVALID_PREP_TIME() {
         // Arrange
-        sendInitialiseRequestForNewModel();
+        simulateNewInitialisationRequest();
         expectedNoOfFailReasons = 1;
 
         RecipeDurationRequest.Model invalidModel = new RecipeDurationRequest.Model.Builder().
@@ -179,7 +179,7 @@ public class RecipeDurationTest {
     @Test
     public void newRequest_validPrepHours_resultVALID_CHANGED() {
         // Arrange
-        sendInitialiseRequestForNewModel();
+        simulateNewInitialisationRequest();
 
         RecipeDurationRequest.Model validModel = new RecipeDurationRequest.Model.Builder().
                 basedOnResponseModel(durationOnErrorResponse.getModel()).
@@ -201,7 +201,7 @@ public class RecipeDurationTest {
     @Test
     public void newRequest_validPrepHours_failReasonNONE() {
         // Arrange
-        sendInitialiseRequestForNewModel();
+        simulateNewInitialisationRequest();
 
         RecipeDurationRequest.Model validModel = new RecipeDurationRequest.Model.Builder().
                 basedOnResponseModel(durationOnErrorResponse.getModel()).
@@ -227,7 +227,7 @@ public class RecipeDurationTest {
         whenTimeProviderCalledReturn(VALID_NEW_PREP_TIME_VALID.getCreateDate());
         when(idProviderMock.getUId()).thenReturn(VALID_NEW_PREP_TIME_VALID.getDataId());
 
-        sendInitialiseRequestForNewModel();
+        simulateNewInitialisationRequest();
 
         RecipeDurationRequest.Model validModel = new RecipeDurationRequest.Model.Builder().
                 basedOnResponseModel(durationOnErrorResponse.getModel()).
@@ -247,7 +247,7 @@ public class RecipeDurationTest {
     @Test
     public void newRequest_invalidPrepMinutes_invalidValueNotSaved() {
         // Arrange
-        sendInitialiseRequestForNewModel();
+        simulateNewInitialisationRequest();
 
         RecipeDurationRequest.Model invalidModel = new RecipeDurationRequest.Model.Builder().
                 basedOnResponseModel(durationOnErrorResponse.getModel()).
@@ -266,7 +266,7 @@ public class RecipeDurationTest {
     @Test
     public void newRequest_invalidPrepMinutes_resultINVALID_CHANGED() {
         // Arrange
-        sendInitialiseRequestForNewModel();
+        simulateNewInitialisationRequest();
 
         RecipeDurationRequest.Model invalidModel = new RecipeDurationRequest.Model.Builder().
                 basedOnResponseModel(durationOnErrorResponse.getModel()).
@@ -288,7 +288,7 @@ public class RecipeDurationTest {
     @Test
     public void newRequest_invalidPrepMinutes_FaiReasonINVALID_PREP_TIME() {
         // Arrange
-        sendInitialiseRequestForNewModel();
+        simulateNewInitialisationRequest();
         expectedNoOfFailReasons = 1;
         RecipeDurationRequest.Model invalidModel = new RecipeDurationRequest.Model.Builder().
                 basedOnResponseModel(durationOnErrorResponse.getModel()).
@@ -309,7 +309,7 @@ public class RecipeDurationTest {
     @Test
     public void newRequest_validPrepMinutes_resultVALID_CHANGED() {
         // Arrange
-        sendInitialiseRequestForNewModel();
+        simulateNewInitialisationRequest();
 
         RecipeDurationRequest.Model validModel = new RecipeDurationRequest.Model.Builder().
                 basedOnResponseModel(durationOnErrorResponse.getModel()).
@@ -331,7 +331,7 @@ public class RecipeDurationTest {
     @Test
     public void newRequest_validPrepMinutes_failReasonNONE() {
         // Arrange
-        sendInitialiseRequestForNewModel();
+        simulateNewInitialisationRequest();
         expectedNoOfFailReasons = 1;
 
         RecipeDurationRequest.Model validModel = new RecipeDurationRequest.Model.Builder().
@@ -355,7 +355,7 @@ public class RecipeDurationTest {
 
     @Test
     public void newRequest_validPrepMinutes_prepMinutesSaved() {
-        sendInitialiseRequestForNewModel();
+        simulateNewInitialisationRequest();
         when(idProviderMock.getUId()).thenReturn(VALID_NEW_PREP_TIME_VALID.getDataId());
         whenTimeProviderCalledReturn(VALID_NEW_PREP_TIME_VALID.getCreateDate());
 
@@ -376,7 +376,7 @@ public class RecipeDurationTest {
     @Test
     public void newRequest_invalidCookHours_invalidValueNotSaved() {
         // Arrange
-        sendInitialiseRequestForNewModel();
+        simulateNewInitialisationRequest();
 
         RecipeDurationRequest.Model invalidModel = new RecipeDurationRequest.Model.Builder().
                 basedOnResponseModel(durationOnErrorResponse.getModel()).
@@ -395,7 +395,7 @@ public class RecipeDurationTest {
     @Test
     public void newRequest_invalidCookHours_resultINVALID_CHANGED() {
         // Arrange
-        sendInitialiseRequestForNewModel();
+        simulateNewInitialisationRequest();
 
         RecipeDurationRequest.Model invalidModel = new RecipeDurationRequest.Model.Builder().
                 basedOnResponseModel(durationOnErrorResponse.getModel()).
@@ -417,7 +417,7 @@ public class RecipeDurationTest {
     @Test
     public void newRequest_invalidCookHours_failReasonINVALID_COOK_TIME() {
         // Arrange
-        sendInitialiseRequestForNewModel();
+        simulateNewInitialisationRequest();
         expectedNoOfFailReasons = 1;
 
         RecipeDurationRequest.Model invalidModel = new RecipeDurationRequest.Model.Builder().
@@ -445,7 +445,7 @@ public class RecipeDurationTest {
         whenTimeProviderCalledReturn(VALID_NEW_COOK_TIME_VALID.getCreateDate());
         when(idProviderMock.getUId()).thenReturn(VALID_NEW_COOK_TIME_VALID.getDataId());
 
-        sendInitialiseRequestForNewModel();
+        simulateNewInitialisationRequest();
 
         RecipeDurationRequest.Model validModel = new RecipeDurationRequest.Model.Builder().
                 basedOnResponseModel(durationOnErrorResponse.getModel()).
@@ -463,7 +463,7 @@ public class RecipeDurationTest {
 
     @Test
     public void newRequest_validCookHours_resultVALID_CHANGED() {
-        sendInitialiseRequestForNewModel();
+        simulateNewInitialisationRequest();
 
         RecipeDurationRequest.Model validModel = new RecipeDurationRequest.Model.Builder().
                 basedOnResponseModel(durationOnErrorResponse.getModel()).
@@ -485,7 +485,7 @@ public class RecipeDurationTest {
     @Test
     public void newRequest_validCookHours_failReasonNONE() {
         expectedNoOfFailReasons = 1;
-        sendInitialiseRequestForNewModel();
+        simulateNewInitialisationRequest();
 
         RecipeDurationRequest.Model validModel = new RecipeDurationRequest.Model.Builder().
                 basedOnResponseModel(durationOnErrorResponse.getModel()).
@@ -509,7 +509,7 @@ public class RecipeDurationTest {
     @Test
     public void newRequest_invalidCookMinutes_invalidValueNotSaved() {
         // Arrange
-        sendInitialiseRequestForNewModel();
+        simulateNewInitialisationRequest();
 
         RecipeDurationRequest.Model invalidModel = new RecipeDurationRequest.Model.Builder().
                 basedOnResponseModel(durationOnErrorResponse.getModel()).
@@ -528,7 +528,7 @@ public class RecipeDurationTest {
     @Test
     public void newRequest_invalidCookMinutes_resultINVALID_CHANGED() {
         // Arrange
-        sendInitialiseRequestForNewModel();
+        simulateNewInitialisationRequest();
 
         RecipeDurationRequest.Model invalidModel = new RecipeDurationRequest.Model.Builder().
                 basedOnResponseModel(durationOnErrorResponse.getModel()).
@@ -550,7 +550,7 @@ public class RecipeDurationTest {
     public void newRequest_invalidCookMinutes_failReasonINVALID_COOK_TIME() {
         // Arrange
         expectedNoOfFailReasons = 1;
-        sendInitialiseRequestForNewModel();
+        simulateNewInitialisationRequest();
 
         RecipeDurationRequest.Model invalidModel = new RecipeDurationRequest.Model.Builder().
                 basedOnResponseModel(durationOnErrorResponse.getModel()).
@@ -575,10 +575,13 @@ public class RecipeDurationTest {
     @Test
     public void startNewId_validCookMinutes_validValueSaved() {
         // Arrange
-        whenTimeProviderCalledReturn(VALID_NEW_COOK_TIME_VALID.getCreateDate());
-        when(idProviderMock.getUId()).thenReturn(VALID_NEW_COOK_TIME_VALID.getDataId());
+        RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
+                getValidNewCookTimeValid();
 
-        sendInitialiseRequestForNewModel();
+        whenTimeProviderCalledReturn(modelUnderTest.getCreateDate());
+        whenIdProviderThenReturn(modelUnderTest.getDataId());
+
+        simulateNewInitialisationRequest();
 
         RecipeDurationRequest.Model model = new RecipeDurationRequest.Model.Builder().
                 basedOnResponseModel(durationOnErrorResponse.getModel()).
@@ -600,7 +603,7 @@ public class RecipeDurationTest {
         whenTimeProviderCalledReturn(VALID_NEW_COOK_TIME_VALID.getCreateDate());
         when(idProviderMock.getUId()).thenReturn(VALID_NEW_COOK_TIME_VALID.getDataId());
 
-        sendInitialiseRequestForNewModel();
+        simulateNewInitialisationRequest();
 
         RecipeDurationRequest.Model model = new RecipeDurationRequest.Model.Builder().
                 basedOnResponseModel(durationOnErrorResponse.getModel()).
@@ -626,7 +629,7 @@ public class RecipeDurationTest {
         when(idProviderMock.getUId()).thenReturn(VALID_NEW_COOK_TIME_VALID.getDataId());
         expectedNoOfFailReasons = 1;
 
-        sendInitialiseRequestForNewModel();
+        simulateNewInitialisationRequest();
 
         RecipeDurationRequest.Model model = new RecipeDurationRequest.Model.Builder().
                 basedOnResponseModel(durationOnErrorResponse.getModel()).
@@ -651,7 +654,7 @@ public class RecipeDurationTest {
     public void newRequest_invalidPrepAndInvalidCookTime_failReasonsINVALID_PREP_TIME_INVALID_COOK_TIME() {
         // Arrange
         expectedNoOfFailReasons = 2;
-        sendInitialiseRequestForNewModel();
+        simulateNewInitialisationRequest();
 
         RecipeDurationRequest.Model model = new RecipeDurationRequest.Model.Builder().
                 basedOnResponseModel(durationOnErrorResponse.getModel()).
@@ -688,7 +691,7 @@ public class RecipeDurationTest {
         when(idProviderMock.getUId()).thenReturn(VALID_NEW_COOK_TIME_VALID.getDataId());
         expectedNoOfFailReasons = 1;
 
-        sendInitialiseRequestForNewModel();
+        simulateNewInitialisationRequest();
 
         RecipeDurationRequest.Model model = new RecipeDurationRequest.Model.Builder().
                 basedOnResponseModel(durationOnErrorResponse.getModel()).
@@ -778,13 +781,12 @@ public class RecipeDurationTest {
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(time);
     }
 
-    private void simulateModelUnavailableReturnedFromRepo() {
-        verify(repoMock).getActiveByDomainId(eq(RecipeDurationTest.VALID_NEW_EMPTY_DOMAIN_ID),
-                repoCallback.capture());
-        repoCallback.getValue().onModelUnavailable();
+    private void whenIdProviderThenReturn(String dataId) {
+        when(idProviderMock.getUId()).thenReturn(dataId);
     }
 
-    private void sendInitialiseRequestForNewModel() {
+    private void simulateNewInitialisationRequest() {
+        // Arrange
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
                 getDefault().
                 setDomainId(RecipeDurationTest.VALID_NEW_EMPTY_DOMAIN_ID).
@@ -792,6 +794,16 @@ public class RecipeDurationTest {
 
         handler.execute(SUT, request, getUseCaseCallback());
         simulateModelUnavailableReturnedFromRepo();
+    }
+
+    private void simulateNewInitialRequest(RecipeDurationPersistenceModel modelUnderTest) {
+
+    }
+
+    private void simulateModelUnavailableReturnedFromRepo() {
+        verify(repoMock).getActiveByDomainId(eq(RecipeDurationTest.VALID_NEW_EMPTY_DOMAIN_ID),
+                repoCallback.capture());
+        repoCallback.getValue().onModelUnavailable();
     }
 
     private void sendInitialiseRequestForValidExistingModel() {
