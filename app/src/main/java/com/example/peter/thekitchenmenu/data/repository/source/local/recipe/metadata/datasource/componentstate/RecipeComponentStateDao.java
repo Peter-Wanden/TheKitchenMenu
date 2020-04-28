@@ -28,6 +28,9 @@ public interface RecipeComponentStateDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(RecipeComponentStateEntity... entities);
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insert(List<RecipeComponentStateEntity> entities);
+
     @Update
     void update(RecipeComponentStateEntity e);
 

@@ -73,10 +73,10 @@ public class RecipeMetadataLocalSaveAdapter {
                             parentId,
                             componentNameAsInt,
                             componentStateAsInt
-                    ));
+                    )
+            );
         }
-        RecipeComponentStateEntity[] saveArray = new RecipeComponentStateEntity[entityList.size()];
-        componentStateDataSource.saveAll(entityList.toArray(saveArray));
+        componentStateDataSource.save(entityList.toArray(new RecipeComponentStateEntity[0]));
     }
 
     private void saveFailReasons(RecipeMetadataPersistenceModel model) {
@@ -94,6 +94,6 @@ public class RecipeMetadataLocalSaveAdapter {
             ));
         }
         RecipeFailReasonEntity[] saveArray = new RecipeFailReasonEntity[entityList.size()];
-        failReasonsDataSource.saveAll(entityList.toArray(saveArray));
+        failReasonsDataSource.save(entityList.toArray(saveArray));
     }
 }

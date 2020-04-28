@@ -9,7 +9,7 @@ public interface PrimitiveDataSourceChild<T extends PrimitiveModel>
 
     void getAllByParentDataId(@Nonnull String parentDataId, GetAllPrimitiveCallback<T> callback);
 
-    void saveAll(@Nonnull T[] entities);
+    void save(@Nonnull T[] entity);
 
     void deleteAllByParentId(@Nonnull String parentId);
 }

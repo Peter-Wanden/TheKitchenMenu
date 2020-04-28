@@ -65,7 +65,7 @@ public class RecipeMetadataLocalGetAdapter {
         domainModels = new ArrayList<>();
     }
 
-    public void getModelByDataId(
+    public void getByDataId(
             @Nonnull String dataId,
             @Nonnull GetDomainModelCallback<RecipeMetadataPersistenceModel> callback) {
         this.getModelCallback = callback;
@@ -92,7 +92,7 @@ public class RecipeMetadataLocalGetAdapter {
         );
     }
 
-    public void getActiveModelByDomainId(
+    public void getActiveByDomainId(
             @Nonnull String domainId,
             @Nonnull GetDomainModelCallback<RecipeMetadataPersistenceModel> callback) {
 
@@ -276,7 +276,7 @@ public class RecipeMetadataLocalGetAdapter {
 
     private void getActiveModels() {
         for (String domainId : uniqueDomainIdList) {
-            getActiveModelByDomainId(
+            getActiveByDomainId(
                     domainId,
                     new GetDomainModelCallback<RecipeMetadataPersistenceModel>() {
                         @Override

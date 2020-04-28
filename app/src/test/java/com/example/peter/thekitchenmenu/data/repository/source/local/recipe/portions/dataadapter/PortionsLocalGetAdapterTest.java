@@ -1,11 +1,15 @@
-package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.dataadapter;
+package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.dataadapter;
 
-import com.example.peter.thekitchenmenu.data.repository.recipe.identity.TestDataRecipeIdentity;
+import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess.GetAllDomainModelsCallback;
+import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess.GetDomainModelCallback;
 import com.example.peter.thekitchenmenu.data.repository.recipe.metadata.TestDataRecipeMetadata;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.datasource.RecipeIdentityEntity;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.datasource.RecipeIdentityLocalDataSource;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.datasource.TestDataRecipeIdentityEntity;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityPersistenceModel;
+import com.example.peter.thekitchenmenu.data.repository.recipe.portions.TestDataRecipePortions;
+import com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter.PrimitiveDataSource.GetAllPrimitiveCallback;
+import com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter.PrimitiveDataSource.GetPrimitiveCallback;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.datasource.RecipePortionsEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.datasource.RecipePortionsLocalDataSource;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.datasource.TestDataRecipePortionsEntity;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortionsPersistenceModel;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -16,15 +20,13 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.List;
 
-import static com.example.peter.thekitchenmenu.data.repository.DomainDataAccess.*;
-import static com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter.PrimitiveDataSource.*;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 
-public class IdentityLocalGetAdapterTest {
+public class PortionsLocalGetAdapterTest {
 
-    private static final String TAG = "tkm-" + IdentityLocalGetAdapterTest.class.getSimpleName() +
+    private static final String TAG = "tkm-" + PortionsLocalGetAdapterTest.class.getSimpleName() +
             ": ";
 
     // region constants ----------------------------------------------------------------------------
@@ -32,18 +34,17 @@ public class IdentityLocalGetAdapterTest {
 
     // region helper fields ------------------------------------------------------------------------
     @Mock
-    RecipeIdentityLocalDataSource repoMock;
+    RecipePortionsLocalDataSource repoMock;
     @Captor
-    ArgumentCaptor<GetPrimitiveCallback<RecipeIdentityEntity>> repoCallback;
+    ArgumentCaptor<GetPrimitiveCallback<RecipePortionsEntity>> repoCallbackMock;
     @Captor
-    ArgumentCaptor<GetAllPrimitiveCallback<RecipeIdentityEntity>> repoGetAllCallback;
+    ArgumentCaptor<GetAllPrimitiveCallback<RecipePortionsEntity>> repoGetAllCallback;
 
     private GetDomainModelCallbackClient callbackClient;
     private GetAllDomainModelsCallbackClient getAllCallbackClient;
-
     // endregion helper fields ---------------------------------------------------------------------
 
-    private IdentityLocalGetAdapter SUT;
+    private PortionsLocalGetAdapter SUT;
 
     @Before
     public void setup() {
@@ -51,11 +52,11 @@ public class IdentityLocalGetAdapterTest {
         callbackClient = new GetDomainModelCallbackClient();
         getAllCallbackClient = new GetAllDomainModelsCallbackClient();
 
-        SUT = givenUseCase();
+        SUT = givenSystemUnderTest();
     }
 
-    private IdentityLocalGetAdapter givenUseCase() {
-        return new IdentityLocalGetAdapter(
+    private PortionsLocalGetAdapter givenSystemUnderTest() {
+        return new PortionsLocalGetAdapter(
                 repoMock
         );
     }
@@ -67,8 +68,8 @@ public class IdentityLocalGetAdapterTest {
         // Act
         SUT.getByDataId(dataId, callbackClient);
         // Assert
-        verify(repoMock).getByDataId(eq(dataId), repoCallback.capture());
-        repoCallback.getValue().onDataUnavailable();
+        verify(repoMock).getByDataId(eq(dataId), repoCallbackMock.capture());
+        repoCallbackMock.getValue().onDataUnavailable();
 
         assertTrue(
                 callbackClient.isModelUnavailable
@@ -78,16 +79,16 @@ public class IdentityLocalGetAdapterTest {
     @Test
     public void getByDataId_domainModelReturned() {
         // Arrange
-        RecipeIdentityPersistenceModel modelUnderTest = TestDataRecipeIdentity.
-                getValidExistingTitleValidDescriptionValid();
+        RecipePortionsPersistenceModel modelUnderTest = TestDataRecipePortions.
+                getExistingValidNinePortions();
         // Act
         SUT.getByDataId(modelUnderTest.getDataId(), callbackClient);
         // Assert
-        verify(repoMock).getByDataId(eq(modelUnderTest.getDataId()), repoCallback.capture()
+        verify(repoMock).getByDataId(eq(modelUnderTest.getDataId()), repoCallbackMock.capture());
+        repoCallbackMock.getValue().onEntityLoaded(TestDataRecipePortionsEntity.
+                getExistingValidNinePortions()
         );
-        repoCallback.getValue().onEntityLoaded(TestDataRecipeIdentityEntity.
-                getValidExistingTitleValidDescriptionValid()
-        );
+
         assertEquals(
                 modelUnderTest,
                 callbackClient.model
@@ -97,7 +98,7 @@ public class IdentityLocalGetAdapterTest {
     @Test
     public void getAllByDomainId_MODELS_UNAVAILABLE() {
         // Arrange
-        String domainId = "domainIdNotInTestData";
+        String domainId = "idNotInTestData";
         // Act
         SUT.getAllByDomainId(domainId, getAllCallbackClient);
         // Assert
@@ -105,7 +106,7 @@ public class IdentityLocalGetAdapterTest {
         repoGetAllCallback.getValue().onDataUnavailable();
 
         assertTrue(
-                getAllCallbackClient.isModelsUnavailable
+                getAllCallbackClient.isModelUnavailable
         );
     }
 
@@ -113,14 +114,14 @@ public class IdentityLocalGetAdapterTest {
     public void getAllByDomainId_returnAllModelsForDomainId() {
         // Arrange
         String domainId = TestDataRecipeMetadata.getDataUnavailable().getDomainId();
-        List<RecipeIdentityPersistenceModel> models = TestDataRecipeIdentity.
+        List<RecipePortionsPersistenceModel> models = TestDataRecipePortions.
                 getAllByDomainId(domainId);
         // Act
         SUT.getAllByDomainId(domainId, getAllCallbackClient);
         // Assert
         verify(repoMock).getAllByDomainId(eq(domainId), repoGetAllCallback.capture()
         );
-        repoGetAllCallback.getValue().onAllLoaded(TestDataRecipeIdentityEntity.
+        repoGetAllCallback.getValue().onAllLoaded(TestDataRecipePortionsEntity.
                 getAllByDomainId(domainId)
         );
         assertEquals(
@@ -130,9 +131,9 @@ public class IdentityLocalGetAdapterTest {
     }
 
     @Test
-    public void getActiveByDomainId_MODELS_UNAVAILABLE() {
+    public void getActiveByDomainId_MODEL_UNAVAILABLE() {
         // Arrange
-        String domainId = "domainIdNotInTestData";
+        String domainId = "idNotInTestData";
         // Act
         SUT.getActiveByDomainId(domainId, callbackClient);
         // Assert
@@ -151,9 +152,9 @@ public class IdentityLocalGetAdapterTest {
     public void getActiveByDomainId_returnMostRecentModel() {
         // Arrange
         long lastUpdate = 0L;
-        RecipeIdentityPersistenceModel modelUnderTest = new RecipeIdentityPersistenceModel.Builder().
+        RecipePortionsPersistenceModel modelUnderTest = new RecipePortionsPersistenceModel.Builder().
                 getDefault().build();
-        for (RecipeIdentityPersistenceModel m : TestDataRecipeIdentity.getAllNew()) {
+        for (RecipePortionsPersistenceModel m : TestDataRecipePortions.getAllNew()) {
             if (m.getLastUpdate() > lastUpdate) {
                 modelUnderTest = m;
                 lastUpdate = m.getLastUpdate();
@@ -161,13 +162,14 @@ public class IdentityLocalGetAdapterTest {
         }
         // Act
         SUT.getActiveByDomainId(modelUnderTest.getDomainId(), callbackClient);
-        // Assert database called, return list of entities
-        verify(repoMock).getAllByDomainId(eq(modelUnderTest.getDomainId()),
+        // Assert
+        verify(repoMock).getAllByDomainId(
+                eq(modelUnderTest.getDomainId()),
                 repoGetAllCallback.capture()
         );
-        repoGetAllCallback.getValue().onAllLoaded(TestDataRecipeIdentityEntity.getAllNew()
+        repoGetAllCallback.getValue().onAllLoaded(TestDataRecipePortionsEntity.
+                getAllByDomainId(modelUnderTest.getDomainId())
         );
-        // Assert correct entity converted to model and returned
         assertEquals(
                 modelUnderTest,
                 callbackClient.model
@@ -184,19 +186,19 @@ public class IdentityLocalGetAdapterTest {
         repoGetAllCallback.getValue().onDataUnavailable();
 
         assertTrue(
-                getAllCallbackClient.isModelsUnavailable
+                getAllCallbackClient.isModelUnavailable
         );
     }
 
     @Test
     public void getAll_returnAllModels() {
         // Arrange
-        List<RecipeIdentityPersistenceModel> modelsUnderTest = TestDataRecipeIdentity.getAll();
+        List<RecipePortionsPersistenceModel> modelsUnderTest = TestDataRecipePortions.getAll();
         // Act
         SUT.getAll(getAllCallbackClient);
         // Assert
         verify(repoMock).getAll(repoGetAllCallback.capture());
-        repoGetAllCallback.getValue().onAllLoaded(TestDataRecipeIdentityEntity.getAll());
+        repoGetAllCallback.getValue().onAllLoaded(TestDataRecipePortionsEntity.getAll());
 
         assertEquals(
                 modelsUnderTest,
@@ -209,17 +211,17 @@ public class IdentityLocalGetAdapterTest {
 
     // region helper classes -----------------------------------------------------------------------
     private static class GetDomainModelCallbackClient
-            implements GetDomainModelCallback<RecipeIdentityPersistenceModel> {
+            implements GetDomainModelCallback<RecipePortionsPersistenceModel> {
 
-        private static final String TAG = IdentityLocalGetAdapterTest.TAG +
+        private static final String TAG = PortionsLocalGetAdapterTest.TAG +
                 GetDomainModelCallbackClient.class.getSimpleName() + ": ";
 
-        private RecipeIdentityPersistenceModel model;
+        private RecipePortionsPersistenceModel model;
         private boolean isModelUnavailable;
 
         @Override
-        public void onModelLoaded(RecipeIdentityPersistenceModel m) {
-            System.out.println(TAG + model);
+        public void onModelLoaded(RecipePortionsPersistenceModel m) {
+            System.out.println(TAG + m);
             model = m;
         }
 
@@ -231,24 +233,24 @@ public class IdentityLocalGetAdapterTest {
     }
 
     private static class GetAllDomainModelsCallbackClient
-            implements GetAllDomainModelsCallback<RecipeIdentityPersistenceModel> {
+            implements GetAllDomainModelsCallback<RecipePortionsPersistenceModel> {
 
-        private static final String TAG = IdentityLocalGetAdapterTest.TAG +
+        private static final String TAG = PortionsLocalGetAdapterTest.TAG +
                 GetAllDomainModelsCallbackClient.class.getSimpleName() + ": ";
 
-        private List<RecipeIdentityPersistenceModel> models;
-        private boolean isModelsUnavailable;
+        private List<RecipePortionsPersistenceModel> models;
+        private boolean isModelUnavailable;
 
         @Override
-        public void onAllLoaded(List<RecipeIdentityPersistenceModel> m) {
-            System.out.println(TAG + m);
+        public void onAllLoaded(List<RecipePortionsPersistenceModel> m) {
+            System.out.println(TAG + "onAllLoaded: " + m);
             models = m;
         }
 
         @Override
         public void onModelsUnavailable() {
-            isModelsUnavailable = true;
-            System.out.println(TAG + "isModelUnavailable=" + isModelsUnavailable);
+            isModelUnavailable = true;
+            System.out.println(TAG + "isModelUnavailable" + isModelUnavailable);
         }
     }
     // endregion helper classes --------------------------------------------------------------------

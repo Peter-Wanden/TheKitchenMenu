@@ -11,6 +11,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 public class RecipeMetadataLocalDeleteAdapter {
+
     @Nonnull
     private final RecipeMetadataParentLocalDataSource parentDataSource;
     @Nonnull
@@ -18,9 +19,10 @@ public class RecipeMetadataLocalDeleteAdapter {
     @Nonnull
     private final RecipeFailReasonsLocalDataSource recipeFailReasonsDataSource;
 
-    public RecipeMetadataLocalDeleteAdapter(@Nonnull RecipeMetadataParentLocalDataSource parentDataSource,
-                                     @Nonnull RecipeComponentStateLocalDataSource componentStateDataSource,
-                                     @Nonnull RecipeFailReasonsLocalDataSource recipeFailReasonsDataSource) {
+    public RecipeMetadataLocalDeleteAdapter(
+            @Nonnull RecipeMetadataParentLocalDataSource parentDataSource,
+            @Nonnull RecipeComponentStateLocalDataSource componentStateDataSource,
+            @Nonnull RecipeFailReasonsLocalDataSource recipeFailReasonsDataSource) {
         this.parentDataSource = parentDataSource;
         this.componentStateDataSource = componentStateDataSource;
         this.recipeFailReasonsDataSource = recipeFailReasonsDataSource;

@@ -76,7 +76,7 @@ public class RepositoryRecipeMetadataLocal
     public void getByDataId(
             @Nonnull String dataId,
             @Nonnull GetDomainModelCallback<RecipeMetadataPersistenceModel> callback) {
-        getAdapter.getModelByDataId(
+        getAdapter.getByDataId(
                 dataId,
                 new GetDomainModelCallback<RecipeMetadataPersistenceModel>() {
                     @Override
@@ -96,7 +96,7 @@ public class RepositoryRecipeMetadataLocal
     public void getActiveByDomainId(
             @Nonnull String domainId,
             @Nonnull GetDomainModelCallback<RecipeMetadataPersistenceModel> callback) {
-        getAdapter.getActiveModelByDomainId(
+        getAdapter.getActiveByDomainId(
                 domainId,
                 new GetDomainModelCallback<RecipeMetadataPersistenceModel>() {
                     @Override

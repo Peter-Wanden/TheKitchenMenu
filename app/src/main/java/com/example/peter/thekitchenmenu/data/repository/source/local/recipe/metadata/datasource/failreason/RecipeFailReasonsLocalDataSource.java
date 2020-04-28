@@ -87,8 +87,9 @@ public class RecipeFailReasonsLocalDataSource
     }
 
     @Override
-    public void saveAll(@Nonnull RecipeFailReasonEntity... entities) {
-        Runnable r = () -> dao.insertAll(entities);
+    public void save(@Nonnull RecipeFailReasonEntity[] entities) {
+        Runnable r = () -> dao.insert(entities);
+        executors.diskIO().execute(r);
     }
 
     @Override

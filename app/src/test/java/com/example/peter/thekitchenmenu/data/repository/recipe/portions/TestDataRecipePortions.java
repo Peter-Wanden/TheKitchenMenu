@@ -3,6 +3,10 @@ package com.example.peter.thekitchenmenu.data.repository.recipe.portions;
 import com.example.peter.thekitchenmenu.data.repository.recipe.metadata.TestDataRecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortionsPersistenceModel;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class TestDataRecipePortions {
 
     private static final String NEW_RECIPE_ID = TestDataRecipeMetadata.
@@ -98,6 +102,18 @@ public class TestDataRecipePortions {
                 build();
     }
 
+    public static List<RecipePortionsPersistenceModel> getAllNew() {
+        return Arrays.asList(
+                getNewValidEmpty(),
+                getNewValidFourPortions(),
+                getNewValidSixteenPortions(),
+                getNewInvalidTooHighServingsInvalidTooHighSittings(),
+                getNewInvalidTooHighServingsValidSittings(),
+                getNewValidServingsInvalidTooHighSittings(),
+                getNewValidServingsValidSittings()
+        );
+    }
+
     public static RecipePortionsPersistenceModel getExistingInvalidTooHighSittingsInvalidTooHighServings() {
         return new RecipePortionsPersistenceModel.Builder().
                 setDataId("dataId-recipePortions-id10").
@@ -162,6 +178,17 @@ public class TestDataRecipePortions {
                 build();
     }
 
+    public static List<RecipePortionsPersistenceModel> getAllExisting() {
+        return Arrays.asList(
+                getExistingInvalidTooHighSittingsInvalidTooHighServings(),
+                getExistingValidNinePortions(),
+                getExistingValidUpdatedServings(),
+                getExistingValidUpdatedSittings(),
+                getExistingValidCopied(),
+                getExistingCopiedUpdatedSittingsServings()
+        );
+    }
+
     public static RecipePortionsPersistenceModel getValidFromAnotherUser() {
         return new RecipePortionsPersistenceModel.Builder().
                 setDataId("dataId-recipePortions-id20").
@@ -182,5 +209,30 @@ public class TestDataRecipePortions {
                 setCreateDate(30L).
                 setLastUpdate(30L).
                 build();
+    }
+
+    public static List<RecipePortionsPersistenceModel> getAllFromAnotherUser() {
+        return Arrays.asList(
+                getValidFromAnotherUser(),
+                getValidCopiedFromAnotherUser()
+        );
+    }
+
+    public static List<RecipePortionsPersistenceModel> getAll() {
+        List<RecipePortionsPersistenceModel> models = new ArrayList<>();
+        models.addAll(getAllNew());
+        models.addAll(getAllExisting());
+        models.addAll(getAllFromAnotherUser());
+        return models;
+    }
+
+    public static List<RecipePortionsPersistenceModel> getAllByDomainId(String domainId) {
+        List<RecipePortionsPersistenceModel> models = new ArrayList<>();
+        for (RecipePortionsPersistenceModel m : getAll()) {
+            if (domainId.equals(m.getDomainId())) {
+                models.add(m);
+            }
+        }
+        return models;
     }
 }

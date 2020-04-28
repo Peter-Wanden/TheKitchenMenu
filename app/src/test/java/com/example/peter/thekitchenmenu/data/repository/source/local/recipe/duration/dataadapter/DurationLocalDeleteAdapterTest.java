@@ -1,7 +1,7 @@
-package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.dataadapter;
+package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.dataadapter;
 
 import com.example.peter.thekitchenmenu.data.repository.recipe.metadata.TestDataRecipeMetadata;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.datasource.RecipeIdentityLocalDataSource;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.datasource.RecipeDurationLocalDataSource;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -11,29 +11,30 @@ import org.mockito.MockitoAnnotations;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 
-public class IdentityLocalDeleteAdapterTest {
+public class DurationLocalDeleteAdapterTest {
 
     // region constants ----------------------------------------------------------------------------
     // endregion constants -------------------------------------------------------------------------
 
     // region helper fields ------------------------------------------------------------------------
     @Mock
-    RecipeIdentityLocalDataSource repoMock;
+    RecipeDurationLocalDataSource repoMock;
 
     private String dataId = TestDataRecipeMetadata.getValidChanged0().getDataId();
     private String domainId = TestDataRecipeMetadata.getValidChanged0().getDomainId();
     // endregion helper fields ---------------------------------------------------------------------
 
-    private IdentityLocalDeleteAdapter SUT;
+    private DurationLocalDeleteAdapter SUT;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
         SUT = givenSystemUnderTest();
+
     }
 
-    private IdentityLocalDeleteAdapter givenSystemUnderTest() {
-        return new IdentityLocalDeleteAdapter(
+    private DurationLocalDeleteAdapter givenSystemUnderTest() {
+        return new DurationLocalDeleteAdapter(
                 repoMock
         );
     }

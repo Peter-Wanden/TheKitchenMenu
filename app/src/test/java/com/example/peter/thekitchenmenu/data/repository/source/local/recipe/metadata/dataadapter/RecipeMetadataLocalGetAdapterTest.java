@@ -75,7 +75,7 @@ public class RecipeMetadataLocalGetAdapterTest {
         String dataId = "";
         GetDomainModelCallbackClient callbackClient = new GetDomainModelCallbackClient();
         // Act
-        SUT.getModelByDataId(dataId, callbackClient);
+        SUT.getByDataId(dataId, callbackClient);
         // Assert
         verify(parentDataSourceMock).getByDataId(eq(dataId), parentCallback.capture());
         parentCallback.getValue().onDataUnavailable();
@@ -88,7 +88,7 @@ public class RecipeMetadataLocalGetAdapterTest {
         String dataId = TestDataRecipeMetadata.getDataUnavailable().getDataId();
         GetDomainModelCallbackClient callbackClient = new GetDomainModelCallbackClient();
         // Act
-        SUT.getModelByDataId(dataId, callbackClient);
+        SUT.getByDataId(dataId, callbackClient);
         // Assert parent requested
         verify(parentDataSourceMock).getByDataId(eq(dataId),
                 parentCallback.capture()
@@ -120,7 +120,7 @@ public class RecipeMetadataLocalGetAdapterTest {
     }
 
     @Test
-    public void getActiveModelFromDomainId_returnMostRecentDomainModel() {
+    public void getActiveByDomainId_returnMostRecentDomainModel() {
         // Arrange
         RecipeMetadataPersistenceModel expectedModel = TestDataRecipeMetadata.getValidChanged0();
         String domainId = expectedModel.getDomainId();
@@ -129,7 +129,7 @@ public class RecipeMetadataLocalGetAdapterTest {
         GetDomainModelCallbackClient callbackClient = new GetDomainModelCallbackClient();
 
         // Act
-        SUT.getActiveModelByDomainId(domainId, callbackClient);
+        SUT.getActiveByDomainId(domainId, callbackClient);
 
         // Assert parent data source called
         verify(parentDataSourceMock).getAllByDomainId(eq(domainId),

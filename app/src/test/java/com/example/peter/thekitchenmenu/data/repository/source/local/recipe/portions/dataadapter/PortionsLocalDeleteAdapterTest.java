@@ -1,39 +1,45 @@
-package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.dataadapter;
+package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.dataadapter;
 
 import com.example.peter.thekitchenmenu.data.repository.recipe.metadata.TestDataRecipeMetadata;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.datasource.RecipeIdentityLocalDataSource;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.datasource.RecipePortionsLocalDataSource;
+
+import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 
-public class IdentityLocalDeleteAdapterTest {
+public class PortionsLocalDeleteAdapterTest {
 
     // region constants ----------------------------------------------------------------------------
     // endregion constants -------------------------------------------------------------------------
 
     // region helper fields ------------------------------------------------------------------------
     @Mock
-    RecipeIdentityLocalDataSource repoMock;
+    RecipePortionsLocalDataSource repoMock;
 
     private String dataId = TestDataRecipeMetadata.getValidChanged0().getDataId();
     private String domainId = TestDataRecipeMetadata.getValidChanged0().getDomainId();
     // endregion helper fields ---------------------------------------------------------------------
 
-    private IdentityLocalDeleteAdapter SUT;
+    private PortionsLocalDeleteAdapter SUT;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
         SUT = givenSystemUnderTest();
+
     }
 
-    private IdentityLocalDeleteAdapter givenSystemUnderTest() {
-        return new IdentityLocalDeleteAdapter(
+    private PortionsLocalDeleteAdapter givenSystemUnderTest() {
+        return new PortionsLocalDeleteAdapter(
                 repoMock
         );
     }

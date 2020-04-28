@@ -25,7 +25,7 @@ public interface RecipeFailReasonDao {
     void insert(RecipeFailReasonEntity e);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertAll(RecipeFailReasonEntity... entities);
+    void insert(RecipeFailReasonEntity... entities);
 
     @Update
     void update(RecipeFailReasonEntity e);

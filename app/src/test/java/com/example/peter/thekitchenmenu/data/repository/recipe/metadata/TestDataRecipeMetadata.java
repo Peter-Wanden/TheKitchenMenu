@@ -9,6 +9,7 @@ import com.example.peter.thekitchenmenu.domain.model.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadataPersistenceModel;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -248,41 +249,10 @@ public class TestDataRecipeMetadata {
         return f;
     }
 
-    public static List<RecipeFailReasonEntity> getInvalidComponentsFailReasonsEntities(
-            String parentDataId) {
-        List<RecipeFailReasonEntity> e = new ArrayList<>();
-        int dataId = 0;
-        for (FailReasons f : getInvalidComponentsFailReasons()) {
-            e.add(new RecipeFailReasonEntity(
-                            String.valueOf(dataId),
-                            parentDataId,
-                            f.getId()
-                    )
-            );
-            dataId++;
-        }
-        return e;
-    }
-
     private static List<FailReasons> getFailReasonsNone() {
         List<FailReasons> f = new ArrayList<>();
         f.add(CommonFailReason.NONE);
         return f;
-    }
-
-    private static List<RecipeFailReasonEntity> getFailReasonsNoneEntities(String parentDataId) {
-        List<RecipeFailReasonEntity> e = new ArrayList<>();
-        int dataId = 0;
-        for (FailReasons f : getFailReasonsNone()) {
-            e.add(new RecipeFailReasonEntity(
-                            String.valueOf(dataId),
-                            parentDataId,
-                            f.getId()
-                    )
-            );
-            dataId++;
-        }
-        return e;
     }
 
     private static HashMap<ComponentName, ComponentState> getDataUnavailableComponentStates() {
@@ -294,12 +264,6 @@ public class TestDataRecipeMetadata {
         return s;
     }
 
-    public static List<RecipeComponentStateEntity> getDataUnavailableComponentStateEntities(
-            String parentDataId) {
-        return getComponentStateEntities(parentDataId, getDataUnavailableComponentStates()
-        );
-    }
-
     private static HashMap<ComponentName, ComponentState> getInvalidUnchangedComponentStates() {
         HashMap<ComponentName, ComponentState> s = new HashMap<>();
         s.put(ComponentName.COURSE, ComponentState.INVALID_UNCHANGED);
@@ -307,12 +271,6 @@ public class TestDataRecipeMetadata {
         s.put(ComponentName.IDENTITY, ComponentState.INVALID_UNCHANGED);
         s.put(ComponentName.PORTIONS, ComponentState.INVALID_UNCHANGED);
         return s;
-    }
-
-    public static List<RecipeComponentStateEntity> getInvalidUnchangedComponentStateEntities(
-            String parentDataId) {
-        return getComponentStateEntities(parentDataId, getInvalidUnchangedComponentStates()
-        );
     }
 
     private static HashMap<ComponentName, ComponentState> getInvalidChangedComponentStates() {
@@ -324,12 +282,6 @@ public class TestDataRecipeMetadata {
         return s;
     }
 
-    public static List<RecipeComponentStateEntity> getInvalidChangedComponentStateEntities(
-            String parentDataId) {
-        return getComponentStateEntities(parentDataId, getInvalidChangedComponentStates()
-        );
-    }
-
     private static HashMap<ComponentName, ComponentState> getValidChangedComponentStates() {
         HashMap<ComponentName, ComponentState> s = new HashMap<>();
         s.put(ComponentName.COURSE, ComponentState.VALID_CHANGED);
@@ -337,12 +289,6 @@ public class TestDataRecipeMetadata {
         s.put(ComponentName.IDENTITY, ComponentState.VALID_CHANGED);
         s.put(ComponentName.PORTIONS, ComponentState.VALID_CHANGED);
         return s;
-    }
-
-    public static List<RecipeComponentStateEntity> getValidChangedComponentStateEntities(
-            String parentDataId) {
-        return getComponentStateEntities(parentDataId, getValidChangedComponentStates()
-        );
     }
 
     private static HashMap<ComponentName, ComponentState> getValidUnchangedComponentStates() {
@@ -354,71 +300,29 @@ public class TestDataRecipeMetadata {
         return s;
     }
 
-    private static List<RecipeComponentStateEntity> getValidUnchangedComponentStateEntities(
-            String parentDataId) {
-        return getComponentStateEntities(parentDataId, getValidUnchangedComponentStates()
+    public static List<RecipeMetadataPersistenceModel> getAll() {
+        return Arrays.asList(
+                getDataUnavailable(),
+                getInvalidUnchangedPersistentModel(),
+                getInvalidChanged(),
+                getValidChanged0(),
+                getValidChanged1(),
+                getValidChanged2(),
+                getValidUnchanged(),
+                getValidFromAnotherUser(),
+                getInvalidFromAnotherUser(),
+                getValidCopied(),
+                getInvalidCopied()
         );
     }
 
-    private static List<RecipeComponentStateEntity> getComponentStateEntities(
-            String parentDataId,
-            HashMap<ComponentName, ComponentState> componentStates) {
-        int dataId = 0;
-        List<RecipeComponentStateEntity> e = new ArrayList<>();
-        for (ComponentName name : componentStates.keySet()) {
-            e.add(new RecipeComponentStateEntity(
-                            String.valueOf(dataId),
-                            parentDataId,
-                            name.getId(),
-                            componentStates.get(name).getId()
-                    )
-            );
+    public static List<RecipeMetadataPersistenceModel> getAllByDomainId(String domainId) {
+        List<RecipeMetadataPersistenceModel> models = new ArrayList<>();
+        for (RecipeMetadataPersistenceModel m : getAll()) {
+            if (domainId.equals(m.getDomainId())) {
+                models.add(m);
+            }
         }
-        return e;
-    }
-
-    private static RecipeMetadataParentEntity getParentEntityFromPersistenceModel(
-            RecipeMetadataPersistenceModel m) {
-        return new RecipeMetadataParentEntity.Builder().
-                setDataId(m.getDataId()).
-                setDomainId(m.getDomainId()).
-                setRecipeParentDomainId(m.getParentDomainId()).
-                setRecipeStateId(m.getRecipeState().getId()).
-                setCreatedBy(m.getCreatedBy()).
-                setCreateDate(m.getCreateDate()).
-                setLastUpdate(m.getLastUpdate()).
-                build();
-    }
-
-    private static List<RecipeFailReasonEntity> getFailReasonEntitiesFromPersistentModel(
-            RecipeMetadataPersistenceModel m) {
-        List<RecipeFailReasonEntity> e = new ArrayList<>();
-        int dataId = 0;
-        for (FailReasons f : m.getFailReasons()) {
-            e.add(new RecipeFailReasonEntity(
-                            String.valueOf(dataId),
-                            m.getDataId(),
-                            f.getId()
-                    )
-            );
-            dataId++;
-        }
-        return e;
-    }
-
-    private static List<RecipeComponentStateEntity> getComponentStateEntitiesFromPersistentModel(
-            RecipeMetadataPersistenceModel model) {
-        List<RecipeComponentStateEntity> e = new ArrayList<>();
-        int dataId = 0;
-        for (ComponentName name : model.getComponentStates().keySet()) {
-            e.add(new RecipeComponentStateEntity(
-                            String.valueOf(dataId),
-                            model.getDataId(),
-                            name.getId(),
-                            model.getComponentStates().get(name).getId()
-                    )
-            );
-        }
-        return e;
+        return models;
     }
 }

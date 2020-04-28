@@ -237,14 +237,26 @@ public class TestDataRecipeMetadataEntity {
         List<RecipeComponentStateEntity> e = new ArrayList<>();
         int dataId = 0;
         for (RecipeMetadata.ComponentName name : model.getComponentStates().keySet()) {
-            e.add(new RecipeComponentStateEntity(
+            e.add(
+                    new RecipeComponentStateEntity(
                             String.valueOf(dataId),
                             model.getDataId(),
                             name.getId(),
                             model.getComponentStates().get(name).getId()
                     )
             );
+            dataId++;
         }
         return e;
+    }
+
+    public static List<RecipeMetadataParentEntity> getAllByDomainId(String domainId) {
+        List<RecipeMetadataParentEntity> entities = new ArrayList<>();
+        for (RecipeMetadataPersistenceModel m : TestDataRecipeMetadata.getAll()) {
+            if (domainId.equals(m.getDomainId())) {
+                entities.add(getParentEntityFromPersistenceModel(m));
+            }
+        }
+        return entities;
     }
 }

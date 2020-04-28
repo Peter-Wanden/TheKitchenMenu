@@ -3,6 +3,9 @@ package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.por
 import com.example.peter.thekitchenmenu.data.repository.recipe.portions.TestDataRecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortionsPersistenceModel;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class TestDataRecipePortionsEntity {
 
     public static RecipePortionsEntity getNewValidEmpty() {
@@ -47,6 +50,14 @@ public class TestDataRecipePortionsEntity {
         );
     }
 
+    public static List<RecipePortionsEntity> getAllNew() {
+        List<RecipePortionsEntity> entities = new ArrayList<>();
+        for (RecipePortionsPersistenceModel m : TestDataRecipePortions.getAllNew()) {
+            entities.add(convertModelToEntity(m));
+        }
+        return entities;
+     }
+
     public static RecipePortionsEntity getExistingInvalidTooHighSittingsInvalidTooHighServings() {
         return convertModelToEntity(TestDataRecipePortions.
                 getExistingInvalidTooHighSittingsInvalidTooHighServings()
@@ -83,6 +94,14 @@ public class TestDataRecipePortionsEntity {
         );
     }
 
+    public static List<RecipePortionsEntity> getAllExisting() {
+        List<RecipePortionsEntity> entities = new ArrayList<>();
+        for (RecipePortionsPersistenceModel m : TestDataRecipePortions.getAllExisting()) {
+            entities.add(convertModelToEntity(m));
+        }
+        return entities;
+    }
+
     public static RecipePortionsEntity getValidFromAnotherUser() {
         return convertModelToEntity(TestDataRecipePortions.
                 getValidFromAnotherUser()
@@ -93,6 +112,32 @@ public class TestDataRecipePortionsEntity {
         return convertModelToEntity(TestDataRecipePortions.
                 getValidCopiedFromAnotherUser()
         );
+    }
+
+    public static List<RecipePortionsEntity> getAllFromAnotherUser() {
+        List<RecipePortionsEntity> entities = new ArrayList<>();
+        for (RecipePortionsPersistenceModel m : TestDataRecipePortions.getAllFromAnotherUser()) {
+            entities.add(convertModelToEntity(m));
+        }
+        return entities;
+    }
+
+    public static List<RecipePortionsEntity> getAll() {
+        List<RecipePortionsEntity> entities = new ArrayList<>();
+        entities.addAll(getAllNew());
+        entities.addAll(getAllExisting());
+        entities.addAll(getAllFromAnotherUser());
+        return entities;
+    }
+
+    public static List<RecipePortionsEntity> getAllByDomainId(String domainId) {
+        List<RecipePortionsEntity> entities = new ArrayList<>();
+        for (RecipePortionsPersistenceModel m : TestDataRecipePortions.getAll()) {
+            if (domainId.equals(m.getDomainId())) {
+                entities.add(convertModelToEntity(m));
+            }
+        }
+        return entities;
     }
 
     private static RecipePortionsEntity convertModelToEntity(RecipePortionsPersistenceModel m) {

@@ -87,7 +87,7 @@ public class RecipeComponentStateLocalDataSource
     }
 
     @Override
-    public void saveAll(@Nonnull RecipeComponentStateEntity... entities) {
+    public void save(@Nonnull RecipeComponentStateEntity... entities) {
         Runnable r = () -> dao.insert(entities);
         executors.diskIO().execute(r);
     }
@@ -105,7 +105,7 @@ public class RecipeComponentStateLocalDataSource
     }
 
     @Override
-    public void deleteAllByParentId(String parentDataId) {
+    public void deleteAllByParentId(@Nonnull String parentDataId) {
         Runnable r = () -> dao.deleteAllByParentDataId(parentDataId);
         executors.diskIO().execute(r);
     }
