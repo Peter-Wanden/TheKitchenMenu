@@ -1,17 +1,22 @@
-package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.dataadapter;
+package com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.dataadapter;
 
 import com.example.peter.thekitchenmenu.data.repository.recipe.metadata.TestDataRecipeMetadata;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.datasource.RecipeIdentityLocalDataSource;
+import com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.datasource.IngredientLocalDataSource;
+
+import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 
-public class IdentityLocalDeleteAdapterTest {
+public class IngredientLocalDeleteAdapterTest {
 
     // region constants ----------------------------------------------------------------------------
     private static final String DATA_ID = TestDataRecipeMetadata.getValidChanged0().getDataId();
@@ -20,10 +25,10 @@ public class IdentityLocalDeleteAdapterTest {
 
     // region helper fields ------------------------------------------------------------------------
     @Mock
-    RecipeIdentityLocalDataSource repoMock;
+    IngredientLocalDataSource repoMock;
     // endregion helper fields ---------------------------------------------------------------------
 
-    private IdentityLocalDeleteAdapter SUT;
+    private IngredientLocalDeleteAdapter SUT;
 
     @Before
     public void setup() {
@@ -31,8 +36,8 @@ public class IdentityLocalDeleteAdapterTest {
         SUT = givenSystemUnderTest();
     }
 
-    private IdentityLocalDeleteAdapter givenSystemUnderTest() {
-        return new IdentityLocalDeleteAdapter(
+    private IngredientLocalDeleteAdapter givenSystemUnderTest() {
+        return new IngredientLocalDeleteAdapter(
                 repoMock
         );
     }
@@ -52,7 +57,7 @@ public class IdentityLocalDeleteAdapterTest {
         // Act
         SUT.deleteAllByDomainId(DOMAIN_ID);
         // Assert
-        verify(repoMock).deleteAllByDomainId(eq(DOMAIN_ID));
+        verify(repoMock).deleteAllByDomainId(DOMAIN_ID);
     }
 
     @Test
@@ -68,6 +73,5 @@ public class IdentityLocalDeleteAdapterTest {
     // endregion helper methods --------------------------------------------------------------------
 
     // region helper classes -----------------------------------------------------------------------
-
     // endregion helper classes --------------------------------------------------------------------
 }
