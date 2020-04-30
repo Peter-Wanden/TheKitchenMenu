@@ -130,7 +130,7 @@ public class IdentityLocalGetAdapterTest {
     }
 
     @Test
-    public void getActiveByDomainId_MODELS_UNAVAILABLE() {
+    public void getActiveByDomainId_MODEL_UNAVAILABLE() {
         // Arrange
         String domainId = "domainIdNotInTestData";
         // Act

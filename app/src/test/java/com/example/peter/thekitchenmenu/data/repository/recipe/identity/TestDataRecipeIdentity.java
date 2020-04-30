@@ -11,22 +11,22 @@ import java.util.List;
 
 public class TestDataRecipeIdentity {
 
-    public static final String NEW_RECIPE_ID = TestDataRecipeMetadata.
+    public static final String NEW_RECIPE_DOMAIN_ID = TestDataRecipeMetadata.
             getDataUnavailable().
             getDomainId();
 
-    private static final String EXISTING_RECIPE_ID = TestDataRecipeMetadata.
+    private static final String EXISTING_RECIPE_DOMAIN_ID = TestDataRecipeMetadata.
             getValidUnchanged().
             getDomainId();
 
-    private static final String RECIPE_ID_FROM_ANOTHER_USER = TestDataRecipeMetadata.
+    private static final String RECIPE_DOMAIN_ID_FROM_ANOTHER_USER = TestDataRecipeMetadata.
             getValidFromAnotherUser().getDomainId();
 
     public static RecipeIdentityPersistenceModel getInvalidNewEmpty() {
         return new RecipeIdentityPersistenceModel.Builder().
                 getDefault().
                 setDataId("dataId-recipeIdentity-id0").
-                setDomainId(NEW_RECIPE_ID).
+                setDomainId(NEW_RECIPE_DOMAIN_ID).
                 setCreateDate(10L).
                 setLastUpdate(10L).
                 build();
@@ -42,7 +42,7 @@ public class TestDataRecipeIdentity {
         return new RecipeIdentityPersistenceModel.Builder().
                 getDefault().
                 setDataId("dataId-recipeIdentity-id1").
-                setDomainId(NEW_RECIPE_ID).
+                setDomainId(NEW_RECIPE_DOMAIN_ID).
                 setTitle(titleTooShort).
                 setCreateDate(10L).
                 setLastUpdate(20L).
@@ -53,12 +53,13 @@ public class TestDataRecipeIdentity {
         String titleTooLong = new StringMaker().
                 makeStringOfExactLength(RecipeIdentityTest.TITLE_MAX_LENGTH).
                 includeStringAtStart("newTitleTooLong").
-                thenAddOneCharacter().build();
+                thenAddOneCharacter().
+                build();
 
         return new RecipeIdentityPersistenceModel.Builder().
                 getDefault().
                 setDataId("dataId-recipeIdentity=id2").
-                setDomainId(NEW_RECIPE_ID).
+                setDomainId(NEW_RECIPE_DOMAIN_ID).
                 setTitle(titleTooLong).
                 setCreateDate(10L).
                 setLastUpdate(30L).
@@ -75,7 +76,7 @@ public class TestDataRecipeIdentity {
         return new RecipeIdentityPersistenceModel.Builder().
                 getDefault().
                 setDataId("dataId-recipeIdentity-id3").
-                setDomainId(NEW_RECIPE_ID).
+                setDomainId(NEW_RECIPE_DOMAIN_ID).
                 setTitle(getInvalidNewTitleTooLong().getTitle()).
                 setDescription(descriptionTooLong).
                 setCreateDate(10L).
@@ -86,7 +87,7 @@ public class TestDataRecipeIdentity {
     public static RecipeIdentityPersistenceModel getInvalidNewTitleTooShortDescriptionValid() {
         return new RecipeIdentityPersistenceModel.Builder().
                 setDataId("dataId-recipeIdentity-id4").
-                setDomainId(NEW_RECIPE_ID).
+                setDomainId(NEW_RECIPE_DOMAIN_ID).
                 setTitle(getInvalidNewTitleTooShort().getTitle()).
                 setDescription(getValidNewComplete().getDescription()).
                 setCreateDate(10L).
@@ -98,7 +99,7 @@ public class TestDataRecipeIdentity {
         return new RecipeIdentityPersistenceModel.Builder().
                 getDefault().
                 setDataId("dataId-recipeIdentity=id5").
-                setDomainId(NEW_RECIPE_ID).
+                setDomainId(NEW_RECIPE_DOMAIN_ID).
                 setTitle(getValidNewComplete().getTitle()).
                 setCreateDate(10L).
                 setLastUpdate(60L).
@@ -117,7 +118,7 @@ public class TestDataRecipeIdentity {
 
         return new RecipeIdentityPersistenceModel.Builder().
                 setDataId("dataId-recipeIdentity-id6").
-                setDomainId(NEW_RECIPE_ID).
+                setDomainId(NEW_RECIPE_DOMAIN_ID).
                 setTitle(validTitle).
                 setDescription(validDescription).
                 setCreateDate(10L).
@@ -147,7 +148,7 @@ public class TestDataRecipeIdentity {
         return new RecipeIdentityPersistenceModel.Builder().
                 getDefault().
                 setDataId("dataId-recipeIdentity-id10").
-                setDomainId(EXISTING_RECIPE_ID).
+                setDomainId(EXISTING_RECIPE_DOMAIN_ID).
                 setTitle(invalidExistingTitleTooShort).
                 setCreateDate(20L).
                 setLastUpdate(20L).
@@ -163,7 +164,7 @@ public class TestDataRecipeIdentity {
         return new RecipeIdentityPersistenceModel.Builder().
                 getDefault().
                 setDataId("dataId-recipeIdentity-id11").
-                setDomainId(EXISTING_RECIPE_ID).
+                setDomainId(EXISTING_RECIPE_DOMAIN_ID).
                 setTitle(invalidExistingTitleTooLong).
                 setCreateDate(20L).
                 setLastUpdate(30L).
@@ -179,7 +180,7 @@ public class TestDataRecipeIdentity {
 
         return new RecipeIdentityPersistenceModel.Builder().
                 setDataId("dataId-recipeIdentity-12").
-                setDomainId(EXISTING_RECIPE_ID).
+                setDomainId(EXISTING_RECIPE_DOMAIN_ID).
                 setTitle(getValidExistingTitleValidDescriptionValid().getTitle()).
                 setDescription(existingDescriptionTooLong).
                 setCreateDate(20L).
@@ -190,7 +191,7 @@ public class TestDataRecipeIdentity {
     public static RecipeIdentityPersistenceModel getInvalidExistingTitleTooShortDescriptionTooLong() {
         return new RecipeIdentityPersistenceModel.Builder().
                 setDataId("dataID-recipeIdentity-13").
-                setDomainId(EXISTING_RECIPE_ID).
+                setDomainId(EXISTING_RECIPE_DOMAIN_ID).
                 setTitle(getInvalidExistingTitleTooShort().getTitle()).
                 setDescription(getInvalidExistingTitleValidDescriptionTooLong().getDescription()).
                 setCreateDate(20L).
@@ -201,7 +202,7 @@ public class TestDataRecipeIdentity {
     public static RecipeIdentityPersistenceModel getInvalidExistingTitleTooLongDescriptionTooLong() {
         return new RecipeIdentityPersistenceModel.Builder().
                 setDataId("dataId-recipeIdentity-14").
-                setDomainId(EXISTING_RECIPE_ID).
+                setDomainId(EXISTING_RECIPE_DOMAIN_ID).
                 setTitle(getInvalidExistingTitleTooLong().getTitle()).
                 setDescription(getInvalidExistingTitleValidDescriptionTooLong().getDescription()).
                 setCreateDate(20L).
@@ -221,7 +222,7 @@ public class TestDataRecipeIdentity {
 
         return new RecipeIdentityPersistenceModel.Builder().
                 setDataId("dataId-recipeIdentity-id15").
-                setDomainId(EXISTING_RECIPE_ID).
+                setDomainId(EXISTING_RECIPE_DOMAIN_ID).
                 setTitle(validExistingCompleteTitle).
                 setDescription(validExistingCompleteDescription).
                 setCreateDate(20L).
@@ -233,7 +234,7 @@ public class TestDataRecipeIdentity {
         return new RecipeIdentityPersistenceModel.Builder().
                 getDefault().
                 setDataId("dataId-recipeIdentity-id16").
-                setDomainId(EXISTING_RECIPE_ID).
+                setDomainId(EXISTING_RECIPE_DOMAIN_ID).
                 setTitle(getValidExistingTitleValidDescriptionValid().getTitle()).
                 setCreateDate(20L).
                 setLastUpdate(80L).
@@ -264,7 +265,7 @@ public class TestDataRecipeIdentity {
 
         return new RecipeIdentityPersistenceModel.Builder().
                 setDataId("dataId-recipeIdentity-id20").
-                setDomainId(RECIPE_ID_FROM_ANOTHER_USER).
+                setDomainId(RECIPE_DOMAIN_ID_FROM_ANOTHER_USER).
                 setTitle(validCompleteFromAnotherUserTitle).
                 setDescription(validCompleteFromAnotherUserDescription).
                 setCreateDate(30L).
@@ -286,7 +287,7 @@ public class TestDataRecipeIdentity {
 
         return new RecipeIdentityPersistenceModel.Builder().
                 setDataId("dataId-recipeIdentity-id21").
-                setDomainId(RECIPE_ID_FROM_ANOTHER_USER).
+                setDomainId(RECIPE_DOMAIN_ID_FROM_ANOTHER_USER).
                 setTitle(invalidCompleteFromAnotherUserTitle).
                 setDescription(invalidCompleteFromAnotherUserDescription).
                 setCreateDate(30L).
@@ -304,7 +305,7 @@ public class TestDataRecipeIdentity {
     public static RecipeIdentityPersistenceModel getValidCompleteAfterCopied() {
         return new RecipeIdentityPersistenceModel.Builder().
                 setDataId("dataId-recipeIdentity-id30").
-                setDomainId(NEW_RECIPE_ID).
+                setDomainId(NEW_RECIPE_DOMAIN_ID).
                 setTitle(getValidCompleteFromAnotherUser().getTitle()).
                 setDescription(getValidCompleteFromAnotherUser().getDescription()).
                 setCreateDate(40L).
@@ -320,7 +321,7 @@ public class TestDataRecipeIdentity {
 
         return new RecipeIdentityPersistenceModel.Builder().
                 setDataId("dataId-recipeIdentity-id31")    .
-                setDomainId(NEW_RECIPE_ID).
+                setDomainId(NEW_RECIPE_DOMAIN_ID).
                 setTitle(getValidCompleteFromAnotherUser().getTitle()).
                 setDescription(validCopiedUpdatedDescription).
                 setCreateDate(40L).
@@ -339,7 +340,7 @@ public class TestDataRecipeIdentity {
 
         return new RecipeIdentityPersistenceModel.Builder().
                 setDataId("dataId-recipeIdentity-id32").
-                setDomainId(NEW_RECIPE_ID).
+                setDomainId(NEW_RECIPE_DOMAIN_ID).
                 setTitle(truncatedTitle.toString()).
                 setDescription(truncatedDescription.toString()).
                 setCreateDate(40L).

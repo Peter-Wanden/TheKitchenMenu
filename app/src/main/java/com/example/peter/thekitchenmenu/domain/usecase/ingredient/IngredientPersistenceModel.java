@@ -10,7 +10,8 @@ import javax.annotation.Nonnull;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.ingredient.Ingredient.CREATE_NEW_INGREDIENT;
 
-public final class IngredientPersistenceModel extends BasePersistence {
+public final class IngredientPersistenceModel
+        extends BasePersistence {
 
     private String name;
     private String description;
@@ -66,7 +67,27 @@ public final class IngredientPersistenceModel extends BasePersistence {
                 createDate, lastUpdate);
     }
 
-    public static class Builder extends DomainModelBuilder<Builder, IngredientPersistenceModel> {
+    @Nonnull
+    @Override
+    public String toString() {
+        return "IngredientPersistenceModel{" +
+                "dataId='" + dataId + '\'' +
+                ", domainId='" + domainId + '\'' +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", conversionFactor=" + conversionFactor +
+                ", createdBy='" + createdBy + '\'' +
+                ", createDate=" + createDate +
+                ", lastUpdate=" + lastUpdate +
+                '}';
+    }
+
+    public static class Builder
+            extends DomainModelBuilder<Builder, IngredientPersistenceModel> {
+
+        public Builder() {
+            model = new IngredientPersistenceModel();
+        }
 
         @Override
         public Builder getDefault() {
@@ -81,16 +102,16 @@ public final class IngredientPersistenceModel extends BasePersistence {
             return self();
         }
 
-        public Builder basedOnPersistenceModel(@Nonnull IngredientPersistenceModel m) {
-            return new Builder().
-                    setDataId(m.getDataId()).
-                    setDomainId(m.getDomainId()).
-                    setName(m.getName()).
-                    setDescription(m.getDescription()).
-                    setConversionFactor(m.getConversionFactor()).
-                    setCreatedBy(m.getCreatedBy()).
-                    setCreateDate(m.getCreateDate()).
-                    setLastUpdate(m.getLastUpdate());
+        public Builder basedOnModel(@Nonnull IngredientPersistenceModel m) {
+            model.dataId = m.getDataId();
+            model.domainId = m.getDomainId();
+            model.name = m.getName();
+            model.description = m.getDescription();
+            model.conversionFactor = m.getConversionFactor();
+            model.createdBy = m.getCreatedBy();
+            model.createDate = m.getCreateDate();
+            model.lastUpdate = m.getLastUpdate();
+            return self();
         }
 
         public Builder setDataId(String dataId) {

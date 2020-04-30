@@ -1,37 +1,22 @@
 package com.example.peter.thekitchenmenu.testdata;
 
-import com.example.peter.thekitchenmenu.app.Constants;
+import com.example.peter.thekitchenmenu.data.repository.ingredient.TestDataIngredient;
 import com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.datasource.IngredientEntity;
-import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants;
+import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientPersistenceModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class TestDataIngredientEntity {
 
-    public static IngredientEntity getNew() {
-        return null;
-//        new IngredientEntity(
-//                "1",
-//                "",
-//                "",
-//                1,
-//                Constants.getUserId(),
-//                10L,
-//                10L);
+    public static IngredientEntity getInvalidNewEmpty() {
+        return convertModelToEntity(TestDataIngredient.getInvalidNewEmpty()
+        );
     }
 
-    public static IngredientEntity getNewInvalidName() {
-        return null;
-//        new IngredientEntity(
-//                "2",
-//                "na",
-//                getNew().getDescription(),
-//                1,
-//                getNew().getCreatedBy(),
-//                getNew().getCreateDate(),
-//                20L
-//        );
+    public static IngredientEntity getInvalidNewNameTooShort() {
+        return convertModelToEntity(TestDataIngredient.getInvalidNewNameTooShort()
+        );
     }
 
     public static IngredientEntity getNewValidName() {
@@ -207,8 +192,8 @@ public class TestDataIngredientEntity {
 
     public static List<IngredientEntity> getAllIngredients() {
         List<IngredientEntity> ingredients = new ArrayList<>();
-        ingredients.add(getNew());
-        ingredients.add(getNewInvalidName());
+        ingredients.add(getInvalidNewEmpty());
+        ingredients.add(getInvalidNewNameTooShort());
         ingredients.add(getNewValidName());
         ingredients.add(getNewValidNameMaxConversionFactor());
         ingredients.add(getNewValidNameInvalidDescription());
@@ -231,5 +216,18 @@ public class TestDataIngredientEntity {
 
     public static String getValidNonDuplicatedDescription() {
         return "nonDuplicatedDescription";
+    }
+
+    private static IngredientEntity convertModelToEntity(IngredientPersistenceModel m) {
+        return new IngredientEntity(
+                m.getDataId(),
+                m.getDomainId(),
+                m.getName(),
+                m.getDescription(),
+                m.getConversionFactor(),
+                m.getCreatedBy(),
+                m.getCreateDate(),
+                m.getLastUpdate()
+        );
     }
 }

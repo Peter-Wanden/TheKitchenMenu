@@ -112,6 +112,7 @@ public class RecipeIdentity
             recipeId = r.getDomainId();
             loadData(recipeId);
         } else {
+            setupUseCase();
             processChanges();
         }
     }
@@ -135,6 +136,7 @@ public class RecipeIdentity
     public void onModelUnavailable() {
         persistenceModel = createNewPersistenceModel();
         failReasons.add(CommonFailReason.DATA_UNAVAILABLE);
+
         buildResponse();
     }
 
@@ -151,6 +153,11 @@ public class RecipeIdentity
                 build();
     }
 
+    private void setupUseCase() {
+        failReasons.clear();
+        isNewRequest = false;
+    }
+
     private void processChanges() {
         validateData();
         buildResponse();
@@ -163,7 +170,7 @@ public class RecipeIdentity
     private void validateTitle() {
         TextValidatorRequest request = new TextValidatorRequest(
                 TITLE_TEXT_TYPE,
-                new TextValidatorModel(getCorrectTitle())
+                new TextValidatorModel(selectTitle())
         );
         handler.execute(
                 textValidator,
@@ -183,7 +190,7 @@ public class RecipeIdentity
         );
     }
 
-    private String getCorrectTitle() {
+    private String selectTitle() {
         return isNewRequest ? persistenceModel.getTitle() : requestModel.getTitle();
     }
 
@@ -201,7 +208,10 @@ public class RecipeIdentity
                 DESCRIPTION_TEXT_TYPE,
                 new TextValidatorModel(getCorrectDescription())
         );
-        handler.execute(textValidator, request, new UseCase.Callback<TextValidatorResponse>() {
+        handler.execute(
+                textValidator,
+                request,
+                new UseCase.Callback<TextValidatorResponse>() {
                     @Override
                     public void onSuccess(TextValidatorResponse response) {
                         if (failReasons.isEmpty()) {
@@ -211,7 +221,7 @@ public class RecipeIdentity
 
                     @Override
                     public void onError(TextValidatorResponse response) {
-                        addDescriptionFailReasonFromTextValidator(response.getFailReason());
+                        addDescriptionFailReasons(response.getFailReason());
                     }
                 }
         );
@@ -221,7 +231,7 @@ public class RecipeIdentity
         return isNewRequest ? persistenceModel.getDescription() : requestModel.getDescription();
     }
 
-    private void addDescriptionFailReasonFromTextValidator(FailReasons failReason) {
+    private void addDescriptionFailReasons(FailReasons failReason) {
         if (failReason == TextValidator.FailReason.TOO_SHORT) {
             failReasons.add(FailReason.DESCRIPTION_TOO_SHORT);
 
@@ -260,15 +270,12 @@ public class RecipeIdentity
 
     private ComponentState getComponentState() {
         boolean isValid = failReasons.contains(CommonFailReason.NONE);
-        if (!isValid && !isChanged()) {
-            return ComponentState.INVALID_UNCHANGED;
-        } else if (isValid && !isChanged()) {
-            return ComponentState.VALID_UNCHANGED;
-        } else if (!isValid && isChanged()) {
-            return ComponentState.INVALID_CHANGED;
-        } else {
-            return ComponentState.VALID_CHANGED;
-        }
+
+        return isValid
+                ?
+                (isChanged() ? ComponentState.VALID_CHANGED : ComponentState.VALID_UNCHANGED)
+                :
+                (isChanged() ? ComponentState.INVALID_CHANGED : ComponentState.INVALID_UNCHANGED);
     }
 
     private boolean isChanged() {
@@ -309,18 +316,12 @@ public class RecipeIdentity
 
     private void sendResponse(RecipeIdentityResponse response) {
         System.out.println(TAG + response);
-        resetState();
 
         if (response.getMetadata().getFailReasons().contains(CommonFailReason.NONE)) {
             getUseCaseCallback().onSuccess(response);
         } else {
             getUseCaseCallback().onError(response);
         }
-    }
-
-    private void resetState() {
-        failReasons.clear();
-        isNewRequest = false;
     }
 
     private void save() {

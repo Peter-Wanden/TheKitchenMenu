@@ -22,6 +22,8 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.*;
+
 public class RecipeCourse
         extends UseCase
         implements DomainDataAccess.GetAllDomainModelsCallback<RecipeCoursePersistenceModel> {
@@ -258,18 +260,14 @@ public class RecipeCourse
                 build();
     }
 
-    private RecipeMetadata.ComponentState getComponentState() {
+    private ComponentState getComponentState() {
         if (!isValid()) createDate = 0L;
 
-        if (!isValid() && !isChanged) {
-            return RecipeMetadata.ComponentState.INVALID_UNCHANGED;
-        } else if (isValid() && !isChanged) {
-            return RecipeMetadata.ComponentState.VALID_UNCHANGED;
-        } else if (!isValid() && isChanged) {
-            return RecipeMetadata.ComponentState.INVALID_CHANGED;
-        } else {
-            return RecipeMetadata.ComponentState.VALID_CHANGED;
-        }
+        return isValid()
+                ?
+                (isChanged ? ComponentState.VALID_CHANGED : ComponentState.VALID_UNCHANGED)
+                :
+                (isChanged ? ComponentState.INVALID_CHANGED : ComponentState.INVALID_UNCHANGED);
     }
 
     private boolean isValid() {

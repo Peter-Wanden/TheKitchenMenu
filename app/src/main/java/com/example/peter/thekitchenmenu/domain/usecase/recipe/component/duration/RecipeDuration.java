@@ -221,15 +221,11 @@ public class RecipeDuration
     private ComponentState getComponentState() {
         boolean isValid = failReasons.contains(CommonFailReason.NONE);
 
-        if (!isValid && !isChanged()) {
-            return ComponentState.INVALID_UNCHANGED;
-        } else if (isValid && !isChanged()) {
-            return ComponentState.VALID_UNCHANGED;
-        } else if (!isValid && isChanged()) {
-            return ComponentState.INVALID_CHANGED;
-        } else {
-            return ComponentState.VALID_CHANGED;
-        }
+        return isValid
+                ?
+                (isChanged() ? ComponentState.VALID_CHANGED : ComponentState.VALID_UNCHANGED)
+                :
+                (isChanged() ? ComponentState.INVALID_CHANGED : ComponentState.INVALID_UNCHANGED);
     }
 
     private boolean isChanged() {

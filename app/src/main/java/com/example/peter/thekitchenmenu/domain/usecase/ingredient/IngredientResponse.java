@@ -8,9 +8,22 @@ import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadata;
 
 import java.util.Objects;
 
+import javax.annotation.Nonnull;
+
 public final class IngredientResponse
         extends BaseDomainMessageModelMetadata<IngredientResponse.Model>
         implements UseCase.Response {
+
+    @Nonnull
+    @Override
+    public String toString() {
+        return "IngredientResponse{" +
+                "dataId='" + dataId + '\'' +
+                ", domainId='" + domainId + '\'' +
+                ", metadata=" + metadata +
+                ", model=" + model +
+                '}';
+    }
 
     private IngredientResponse() {}
 

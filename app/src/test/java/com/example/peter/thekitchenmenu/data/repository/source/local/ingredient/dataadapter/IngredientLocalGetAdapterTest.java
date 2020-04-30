@@ -1,15 +1,12 @@
 package com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.dataadapter;
 
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
-import com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter.PrimitiveDataSource;
+import com.example.peter.thekitchenmenu.data.repository.ingredient.TestDataIngredient;
 import com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter.PrimitiveDataSource.GetAllPrimitiveCallback;
 import com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter.PrimitiveDataSource.GetPrimitiveCallback;
 import com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.datasource.IngredientEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.datasource.IngredientLocalDataSource;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.dataadapter.RecipeMetadataLocalGetAdapterTest;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.recipeingredient.datasource.RecipeIngredientLocalDataSource;
 import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientPersistenceModel;
-import com.google.android.gms.common.util.WorkSourceUtil;
 
 import static org.junit.Assert.*;
 
@@ -22,7 +19,6 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.List;
 
-import static org.junit.Assert.*;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 
@@ -44,11 +40,16 @@ public class IngredientLocalGetAdapterTest {
     // endregion helper fields ---------------------------------------------------------------------
 
     private IngredientLocalGetAdapter SUT;
+    private GetDomainModelCallbackClient callbackClient;
+    private GetAllDomainModelsCallbackClient getAllCallbackClient;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
         SUT = givenSystemUnderTest();
+
+        callbackClient = new GetDomainModelCallbackClient();
+        getAllCallbackClient = new GetAllDomainModelsCallbackClient();
     }
 
     private IngredientLocalGetAdapter givenSystemUnderTest() {
@@ -60,26 +61,64 @@ public class IngredientLocalGetAdapterTest {
     @Test
     public void getByDataId_MODELS_UNAVAILABLE() {
         // Arrange
+        String dataId = "dataIdNotInTestData";
+        // Act
+        SUT.getByDataId(dataId, callbackClient);
+        // Assert
+        verify(repoMock).getByDataId(eq(dataId), repoCallback.capture());
+        repoCallback.getValue().onDataUnavailable();
+
+        assertTrue(
+                callbackClient.isModelUnavailable
+        );
+    }
+
+    @Test
+    public void getByDataId_domainModelReturned() {
+        // Arrange
+        IngredientPersistenceModel modelUnderTest = TestDataIngredient.getInvalidNewEmpty();
+
         // Act
         // Assert
     }
 
     @Test
-    public void getAllByDomainId() {
+    public void getAllByDomainId_MODELS_UNAVAILABLE() {
         // Arrange
         // Act
         // Assert
     }
 
     @Test
-    public void getActiveByDomainId() {
+    public void getAllByDomainId_returnAllModelsForDomainId() {
         // Arrange
         // Act
         // Assert
     }
 
     @Test
-    public void getAll() {
+    public void getActiveByDomainId_MODEL_UNAVAILABLE() {
+        // Arrange
+        // Act
+        // Assert
+    }
+
+    @Test
+    public void getActiveByDomainId_returnMostRecentModel() {
+        // Arrange
+        // Act
+        // Assert
+    }
+
+    @Test
+    public void getAll_MODELS_UNAVAILABLE() {
+        // Arrange
+        // Act
+        // Assert
+    }
+
+    @Test
+    public void getAll_returnAllModels() {
         // Arrange
         // Act
         // Assert
@@ -89,11 +128,11 @@ public class IngredientLocalGetAdapterTest {
     // endregion helper methods --------------------------------------------------------------------
 
     // region helper classes -----------------------------------------------------------------------
-    private static class GetDomainModelCallback implements
+    private static class GetDomainModelCallbackClient implements
             DomainDataAccess.GetDomainModelCallback<IngredientPersistenceModel> {
 
         private static final String TAG = IngredientLocalGetAdapterTest.TAG +
-                GetDomainModelCallback.class.getSimpleName() + ": ";
+                GetDomainModelCallbackClient.class.getSimpleName() + ": ";
 
         private IngredientPersistenceModel model;
         private boolean isModelUnavailable;
@@ -111,11 +150,11 @@ public class IngredientLocalGetAdapterTest {
         }
     }
 
-    private static class GetAllDomainModelsCallback
+    private static class GetAllDomainModelsCallbackClient
             implements DomainDataAccess.GetAllDomainModelsCallback<IngredientPersistenceModel> {
 
         private static final String TAG = IngredientLocalGetAdapterTest.TAG +
-                GetAllDomainModelsCallback.class.getSimpleName() + ": ";
+                GetAllDomainModelsCallbackClient.class.getSimpleName() + ": ";
 
         private List<IngredientPersistenceModel> models;
         private boolean isModelsUnavailable;

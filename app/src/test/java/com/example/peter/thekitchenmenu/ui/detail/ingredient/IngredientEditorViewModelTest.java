@@ -11,7 +11,6 @@ import com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.
 import com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.ingredient.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.ingredient.Ingredient;
 import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientDuplicateChecker;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
 import com.example.peter.thekitchenmenu.testdata.TestDataIngredientEntity;
@@ -36,9 +35,9 @@ public class IngredientEditorViewModelTest {
 
     // region constants ----------------------------------------------------------------------------
     private IngredientEntity NEW =
-            TestDataIngredientEntity.getNew();
+            TestDataIngredientEntity.getInvalidNewEmpty();
     private IngredientEntity NEW_INVALID_NAME =
-            TestDataIngredientEntity.getNewInvalidName();
+            TestDataIngredientEntity.getInvalidNewNameTooShort();
     private IngredientEntity NEW_VALID_NAME =
             TestDataIngredientEntity.getNewValidName();
     private IngredientEntity NEW_VALID_NAME_INVALID_DESCRIPTION =

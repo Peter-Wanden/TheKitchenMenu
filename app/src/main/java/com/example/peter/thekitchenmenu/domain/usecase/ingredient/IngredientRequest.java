@@ -13,6 +13,16 @@ public final class IngredientRequest
         extends BaseDomainMessageModel<IngredientRequest.Model>
         implements UseCase.Request {
 
+    @Nonnull
+    @Override
+    public String toString() {
+        return "IngredientRequest{" +
+                "dataId='" + dataId + '\'' +
+                ", domainId='" + domainId + '\'' +
+                ", model=" + model +
+                '}';
+    }
+
     private IngredientRequest() {}
 
     public static class Builder

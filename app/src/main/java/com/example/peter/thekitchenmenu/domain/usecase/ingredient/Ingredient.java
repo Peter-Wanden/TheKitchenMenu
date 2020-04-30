@@ -89,7 +89,6 @@ public class Ingredient
     private String ingredientId = "";
     private boolean isNewRequest;
 
-    private IngredientRequest request;
     private IngredientRequest.Model requestModel;
     private IngredientPersistenceModel persistenceModel;
 
@@ -114,14 +113,15 @@ public class Ingredient
     @Override
     protected <Q extends Request> void execute(Q request) {
         IngredientRequest r = (IngredientRequest) request;
-        this.request = r;
-        System.out.println(TAG + "request:" + r);
+        requestModel = r.getModel();
+        System.out.println(TAG + r);
 
         if (isNewRequest(r)) {
             dataId = r.getDataId();
             ingredientId = r.getDomainId();
             loadData(ingredientId);
         } else {
+            setupUseCase();
             processChanges();
         }
     }
@@ -131,7 +131,7 @@ public class Ingredient
     }
 
     private void loadData(String ingredientId) {
-        repository.getByDataId(ingredientId, this);
+        repository.getActiveByDomainId(ingredientId, this);
     }
 
     @Override
@@ -156,7 +156,6 @@ public class Ingredient
     private IngredientPersistenceModel createNewPersistenceModel() {
         long currentTime = timeProvider.getCurrentTimeInMills();
         dataId = idProvider.getUId();
-        ingredientId = idProvider.getUId();
 
         return new IngredientPersistenceModel.Builder().
                 getDefault().
@@ -167,126 +166,146 @@ public class Ingredient
                 build();
     }
 
-    private void processChanges() {
-            validateData();
+    private void setupUseCase() {
+        failReasons.clear();
+        isNewRequest = false;
     }
 
-    private void validateData() {
+    private void processChanges() {
         checkForDuplicateName();
     }
 
     private void checkForDuplicateName() {
         duplicateNameChecker.checkForDuplicateAndNotify(
-                request.getModel().getName(),
-                request.getDomainId(),
+                requestModel.getName(),
+                ingredientId,
 
                 duplicateId -> {
                     if (!NO_DUPLICATE_FOUND.equals(duplicateId)) {
                         failReasons.add(FailReason.DUPLICATE);
                     }
-                    validateName();
-                });
+                    validateData();
+                }
+        );
+    }
+
+    private void validateData() {
+        validateName();
     }
 
     private void validateName() {
-        String name;
-        if (isNewRequest) {
-            name = persistenceModel.getName();
-        } else {
-            name = requestModel.getName();
-        }
         TextValidatorRequest request = new TextValidatorRequest(
                 NAME_TEXT_TYPE,
-                new TextValidatorModel(name)
+                new TextValidatorModel(selectName())
         );
-        handler.execute(textValidator, request, new UseCase.Callback<TextValidatorResponse>() {
-            @Override
-            public void onSuccess(TextValidatorResponse response) {
-                validateDescription();
-            }
+        handler.execute(
+                textValidator,
+                request,
+                new UseCase.Callback<TextValidatorResponse>() {
+                    @Override
+                    public void onSuccess(TextValidatorResponse response) {
+                        validateDescription();
+                    }
 
-            @Override
-            public void onError(TextValidatorResponse response) {
-                FailReasons failReason = response.getFailReason();
-                if (TextValidator.FailReason.TOO_SHORT.equals(failReason)) {
-                    failReasons.add(FailReason.NAME_TOO_SHORT);
-
-                } else if (TextValidator.FailReason.TOO_LONG == failReason) {
-                    failReasons.add(FailReason.NAME_TOO_LONG);
+                    @Override
+                    public void onError(TextValidatorResponse response) {
+                        addNameFailReason(response.getFailReason());
+                        validateDescription();
+                    }
                 }
-                validateDescription();
-            }
-        });
+        );
+    }
+
+    private String selectName() {
+        return isNewRequest ? persistenceModel.getName() : requestModel.getName();
+    }
+
+    private void addNameFailReason(FailReasons failReason) {
+        if (failReason == TextValidator.FailReason.TOO_SHORT) {
+            failReasons.add(FailReason.NAME_TOO_SHORT);
+
+        } else if (failReason == TextValidator.FailReason.TOO_LONG) {
+            failReasons.add(FailReason.NAME_TOO_LONG);
+        }
     }
 
     private void validateDescription() {
-        String description;
-        if (isNewRequest) {
-            description = persistenceModel.getDescription();
-        } else {
-            description = requestModel.getDescription();
-        }
         TextValidatorRequest request = new TextValidatorRequest(
                 DESCRIPTION_TEXT_TYPE,
-                new TextValidatorModel(description)
+                new TextValidatorModel(selectDescription())
         );
-        handler.execute(textValidator, request, new UseCase.Callback<TextValidatorResponse>() {
-            @Override
-            public void onSuccess(TextValidatorResponse response) {
-                if (failReasons.isEmpty()) {
-                    failReasons.add(CommonFailReason.NONE);
-                }
-                buildResponse();
-            }
+        handler.execute(
+                textValidator,
+                request,
+                new UseCase.Callback<TextValidatorResponse>() {
+                    @Override
+                    public void onSuccess(TextValidatorResponse response) {
+                        if (failReasons.isEmpty()) {
+                            failReasons.add(CommonFailReason.NONE);
+                        }
+                        buildResponse();
+                    }
 
-            @Override
-            public void onError(TextValidatorResponse response) {
-                FailReasons failReason = response.getFailReason();
-                if (TextValidator.FailReason.TOO_SHORT == failReason) {
-                    failReasons.add(FailReason.DESCRIPTION_TOO_SHORT);
-                } else {
-                    failReasons.add(FailReason.DESCRIPTION_TOO_LONG);
+                    @Override
+                    public void onError(TextValidatorResponse response) {
+                        addDescriptionFailReason(response.getFailReason()
+                        );
+                        buildResponse();
+                    }
                 }
-                buildResponse();
-            }
-        });
+        );
+    }
+
+    private String selectDescription() {
+        return isNewRequest ? persistenceModel.getDescription() : requestModel.getDescription();
+    }
+
+    private void addDescriptionFailReason(FailReasons failReason) {
+        if (TextValidator.FailReason.TOO_SHORT == failReason) {
+            failReasons.add(FailReason.DESCRIPTION_TOO_SHORT);
+        } else {
+            failReasons.add(FailReason.DESCRIPTION_TOO_LONG);
+        }
     }
 
     private void buildResponse() {
-        IngredientResponse response = new IngredientResponse.Builder().
-                setDataId(dataId).
-                setDomainId(ingredientId).
-                setMetadata(getMetadata()).
-                setModel(getResponseModel()).
-                build();
+        IngredientResponse.Builder builder = new IngredientResponse.Builder();
+        builder.setDomainId(ingredientId);
 
-        if (ComponentState.VALID_CHANGED == response.getMetadata().getState()) {
-            save(updatePersistenceFromRequestModel());
+        if (ComponentState.VALID_CHANGED == getComponentState()) {
+            IngredientPersistenceModel m = updatePersistenceModel();
+            builder.setMetadata(getMetadata(m));
+            persistenceModel = m;
+            save();
+
+        } else {
+            builder.setMetadata(getMetadata(persistenceModel));
         }
-        sendResponse(response);
+        builder.setModel(getResponseModel());
+        builder.setDataId(dataId);
+        sendResponse(builder.build());
     }
 
-    private UseCaseMetadata getMetadata() {
+    private UseCaseMetadata getMetadata(IngredientPersistenceModel m) {
         return new UseCaseMetadata.Builder().
                 setState(getComponentState()).
                 setFailReasons(new ArrayList<>(failReasons)).
-                setCreateDate(persistenceModel.getCreateDate()).
-                setLasUpdate(persistenceModel.getLastUpdate()).
+                setCreatedBy(Constants.getUserId()).
+                setCreateDate(m.getCreateDate()).
+                setLasUpdate(m.getLastUpdate()).
                 build();
     }
 
     private ComponentState getComponentState() {
         boolean isValid = failReasons.contains(CommonFailReason.NONE);
 
-        if (!isValid && !isChanged()) {
-            return ComponentState.INVALID_UNCHANGED;
-        } else if (isValid && !isChanged()) {
-            return ComponentState.VALID_UNCHANGED;
-        } else if (!isValid && isChanged()) {
-            return ComponentState.INVALID_CHANGED;
-        } else {
-            return ComponentState.VALID_CHANGED;
-        }
+        return isValid ?
+                (isChanged() ?
+                        ComponentState.VALID_CHANGED : ComponentState.VALID_UNCHANGED
+                ) :
+                (isChanged() ?
+                        ComponentState.INVALID_CHANGED : ComponentState.INVALID_UNCHANGED
+                );
     }
 
     private boolean isChanged() {
@@ -299,12 +318,12 @@ public class Ingredient
 
     private boolean isNameChanged() {
         return !persistenceModel.getName().toLowerCase().trim().
-                equals(request.getModel().getName().toLowerCase().trim());
+                equals(requestModel.getName().toLowerCase().trim());
     }
 
     private boolean isDescriptionChanged() {
         return !persistenceModel.getDescription().toLowerCase().trim().
-                equals(request.getModel().getDescription().toLowerCase().trim());
+                equals(requestModel.getDescription().toLowerCase().trim());
     }
 
     private IngredientResponse.Model getResponseModel() {
@@ -321,32 +340,27 @@ public class Ingredient
                 build();
     }
 
-    private IngredientPersistenceModel updatePersistenceFromRequestModel() {
+    private IngredientPersistenceModel updatePersistenceModel() {
         return new IngredientPersistenceModel.Builder().
-                basedOnPersistenceModel(persistenceModel).
-                setConversionFactor(persistenceModel.getConversionFactor()).
-                setName(persistenceModel.getName()).
-                setDescription(persistenceModel.getDescription()).
+                basedOnModel(persistenceModel).
+                setDataId(idProvider.getUId()).
+                setName(requestModel.getName()).
+                setDescription(requestModel.getDescription()).
+                setConversionFactor(requestModel.getConversionFactor()).
+                setLastUpdate(timeProvider.getCurrentTimeInMills()).
                 build();
     }
 
-    private void save(IngredientPersistenceModel model) {
-        repository.save(model);
+    private void save() {
+        repository.save(persistenceModel);
     }
 
     private void sendResponse(IngredientResponse response) {
         System.out.println(TAG + response);
-        resetState();
-
-        if (response.getMetadata().getFailReasons().contains(CommonFailReason.NONE)) {
+        if (failReasons.contains(CommonFailReason.NONE)) {
             getUseCaseCallback().onSuccess(response);
         } else {
             getUseCaseCallback().onError(response);
         }
-    }
-
-    private void resetState() {
-        failReasons.clear();
-        isNewRequest = false;
     }
 }

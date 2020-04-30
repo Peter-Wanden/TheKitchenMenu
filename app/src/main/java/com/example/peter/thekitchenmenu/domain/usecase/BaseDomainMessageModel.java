@@ -1,7 +1,5 @@
 package com.example.peter.thekitchenmenu.domain.usecase;
 
-import javax.annotation.Nonnull;
-
 public abstract class BaseDomainMessageModel<DM extends BaseDomainModel>
         extends BaseDomainMessage {
 
@@ -9,16 +7,6 @@ public abstract class BaseDomainMessageModel<DM extends BaseDomainModel>
 
     public DM getModel() {
         return model;
-    }
-
-    @Nonnull
-    @Override
-    public String toString() {
-        return "UseCaseDomainMessageBaseModel{" +
-                "dataId='" + dataId + '\'' +
-                ", domainId='" + domainId + '\'' +
-                ", model=" + model +
-                '}';
     }
 
     public static abstract class UseCaseMessageBuilderModel
