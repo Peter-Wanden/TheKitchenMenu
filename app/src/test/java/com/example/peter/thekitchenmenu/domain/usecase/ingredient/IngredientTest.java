@@ -8,6 +8,7 @@ import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.model.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentState;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
@@ -389,8 +390,165 @@ public class IngredientTest {
         // Arrange
         IngredientPersistenceModel modelUnderTest = TestDataIngredient.
                 getValidExistingNameValidDescriptionValid();
+
         // Act
+        simulateExistingInitialisationRequest(modelUnderTest);
+
+        // Assert metadata
+        assertEquals(
+                modelUnderTest.getDomainId(),
+                callbackClient.onSuccessResponse.getDomainId()
+        );
+        assertEquals(
+                modelUnderTest.getDataId(),
+                callbackClient.onSuccessResponse.getDataId()
+        );
+
+        UseCaseMetadata metadata = callbackClient.onSuccessResponse.getMetadata();
+        assertEquals(
+                ComponentState.VALID_UNCHANGED,
+                metadata.getState()
+        );
+        assertTrue(metadata.getFailReasons().contains(CommonFailReason.NONE)
+        );
+        assertEquals(
+                modelUnderTest.getCreateDate(),
+                metadata.getCreateDate()
+        );
+        assertEquals(
+                modelUnderTest.getLastUpdate(),
+                metadata.getLasUpdate()
+        );
+        assertEquals(
+                modelUnderTest.getCreatedBy(),
+                metadata.getCreatedBy()
+        );
+
+        // Assert domain data Model
+        IngredientResponse.Model model = callbackClient.onSuccessResponse.getModel();
+        assertEquals(
+                modelUnderTest.getName(),
+                model.getName()
+        );
+        assertEquals(
+                modelUnderTest.getDescription(),
+                model.getDescription()
+        );
+        assertEquals(
+                modelUnderTest.getConversionFactor(),
+                model.getConversionFactor(),
+                0
+        );
+    }
+
+    @Test
+    public void existingRequest_nameTooShort_stateINVALID_UNCHANGED() {
+        // Arrange
+        IngredientPersistenceModel modelUnderTest = TestDataIngredient.
+                getInvalidExistingNameTooShort();
+        // Act
+        simulateExistingInitialisationRequest(modelUnderTest);
         // Assert
+        assertEquals(
+                ComponentState.INVALID_UNCHANGED,
+                callbackClient.onErrorResponse.getMetadata().getState()
+        );
+    }
+
+    @Test
+    public void existingRequest_nameTooShort_failReasonsNAME_TOO_SHORT() {
+        // Arrange
+        IngredientPersistenceModel modelUnderTest = TestDataIngredient.
+                getInvalidExistingNameTooShort();
+        // Act
+        simulateExistingInitialisationRequest(modelUnderTest);
+        // Assert
+        assertTrue(
+                callbackClient.onErrorResponse.
+                        getMetadata().
+                        getFailReasons().
+                        contains(Ingredient.FailReason.NAME_TOO_SHORT)
+        );
+    }
+
+    @Test
+    public void existingRequest_nameTooLong_stateINVALID_UNCHANGED() {
+        // Arrange
+        IngredientPersistenceModel modelUnderTest = TestDataIngredient.
+                getInvalidExistingNameTooLong();
+        // Act
+        simulateExistingInitialisationRequest(modelUnderTest);
+        // Assert
+        assertEquals(
+                ComponentState.INVALID_UNCHANGED,
+                callbackClient.onErrorResponse.getMetadata().getState()
+        );
+        assertTrue(
+                callbackClient.onErrorResponse.getMetadata().getFailReasons().
+                        contains(Ingredient.FailReason.NAME_TOO_LONG)
+        );
+    }
+
+    @Test
+    public void existingRequest_nameValidDescriptionTooLong_stateINVALID_UNCHANGED() {
+        // Arrange
+        IngredientPersistenceModel modelUnderTest = TestDataIngredient.
+                getInvalidExistingNameValidDescriptionTooLong();
+        // Act
+        simulateExistingInitialisationRequest(modelUnderTest);
+        // Assert
+        assertEquals(
+                ComponentState.INVALID_UNCHANGED,
+                callbackClient.onErrorResponse.getMetadata().getState()
+        );
+        assertTrue(
+                callbackClient.onErrorResponse.getMetadata().getFailReasons().
+                        contains(Ingredient.FailReason.DESCRIPTION_TOO_LONG)
+        );
+    }
+
+    @Test
+    public void existingRequest_nameTooShortDescriptionTooLong_INVALID_UNCHANGED() {
+        // Arrange
+        IngredientPersistenceModel modelUnderTest = TestDataIngredient.
+                getInvalidExistingNameTooShortDescriptionTooLong();
+        expectedNoOfFailReasons = 2;
+        // Act
+        simulateExistingInitialisationRequest(modelUnderTest);
+        // Assert
+        assertEquals(
+                ComponentState.INVALID_UNCHANGED,
+                callbackClient.onErrorResponse.getMetadata().getState()
+        );
+
+        List<FailReasons> failReasons = callbackClient.onErrorResponse.
+                getMetadata().
+                getFailReasons();
+
+        assertEquals(
+                expectedNoOfFailReasons,
+                failReasons.size()
+        );
+        assertTrue(failReasons.contains(Ingredient.FailReason.NAME_TOO_SHORT));
+        assertTrue(failReasons.contains(Ingredient.FailReason.DESCRIPTION_TOO_LONG));
+    }
+
+    @Test
+    public void existingRequest_titleValid_stateVALID_UNCHANGED() {
+        // Arrange
+        IngredientPersistenceModel modelUnderTest = TestDataIngredient.
+                getValidExistingNameValid();
+        // Act
+        simulateExistingInitialisationRequest(modelUnderTest);
+        // Assert
+        assertEquals(
+                ComponentState.VALID_UNCHANGED,
+                callbackClient.onSuccessResponse.getMetadata().getState()
+        );
+        assertTrue(
+                callbackClient.onSuccessResponse.getMetadata().getFailReasons().
+                        contains(CommonFailReason.NONE)
+        );
     }
 
     // region helper methods -----------------------------------------------------------------------
@@ -420,14 +578,13 @@ public class IngredientTest {
     private void simulateExistingInitialisationRequest(IngredientPersistenceModel modelUnderTest) {
         // Arrange
         IngredientRequest initialisationRequest = new IngredientRequest.Builder().
-                getDefault().setDomainId(modelUnderTest.
-                getDomainId()).
+                getDefault().
+                setDomainId(modelUnderTest.getDomainId()).
                 build();
 
         handler.execute(SUT, initialisationRequest, callbackClient);
         // Assert
-        verify(repoMock).getActiveByDomainId(
-                eq(modelUnderTest.getDomainId()),
+        verify(repoMock).getActiveByDomainId(eq(modelUnderTest.getDomainId()),
                 repoCallbackCaptor.capture()
         );
         repoCallbackCaptor.getValue().onModelLoaded(modelUnderTest);

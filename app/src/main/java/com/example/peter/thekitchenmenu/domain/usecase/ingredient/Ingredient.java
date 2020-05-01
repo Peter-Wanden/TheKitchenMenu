@@ -137,6 +137,9 @@ public class Ingredient
     @Override
     public void onModelLoaded(IngredientPersistenceModel model) {
         persistenceModel = model;
+        dataId = model.getDataId();
+        ingredientId = model.getDomainId();
+
         if (isEditable()) {
             validateData();
         } else {
@@ -248,8 +251,7 @@ public class Ingredient
 
                     @Override
                     public void onError(TextValidatorResponse response) {
-                        addDescriptionFailReason(response.getFailReason()
-                        );
+                        addDescriptionFailReason(response.getFailReason());
                         buildResponse();
                     }
                 }
@@ -300,11 +302,9 @@ public class Ingredient
         boolean isValid = failReasons.contains(CommonFailReason.NONE);
 
         return isValid ?
-                (isChanged() ?
-                        ComponentState.VALID_CHANGED : ComponentState.VALID_UNCHANGED
+                (isChanged() ? ComponentState.VALID_CHANGED : ComponentState.VALID_UNCHANGED
                 ) :
-                (isChanged() ?
-                        ComponentState.INVALID_CHANGED : ComponentState.INVALID_UNCHANGED
+                (isChanged() ? ComponentState.INVALID_CHANGED : ComponentState.INVALID_UNCHANGED
                 );
     }
 

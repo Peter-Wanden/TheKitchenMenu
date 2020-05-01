@@ -600,7 +600,7 @@ public class RecipeIdentityTest {
     }
 
     @Test
-    public void existingRequest_titleValid_stateVAILD_UNCHANGED() {
+    public void existingRequest_titleValidDescriptionDefault_stateVAILD_UNCHANGED() {
         // Arrange
         RecipeIdentityPersistenceModel modelUnderTest = TestDataRecipeIdentity.
                 getValidExistingTitleValid();

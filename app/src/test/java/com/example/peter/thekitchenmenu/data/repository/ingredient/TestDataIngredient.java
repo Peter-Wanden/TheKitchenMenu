@@ -1,6 +1,7 @@
 package com.example.peter.thekitchenmenu.data.repository.ingredient;
 
 import com.example.peter.thekitchenmenu.commonmocks.StringMaker;
+import com.example.peter.thekitchenmenu.domain.usecase.ingredient.Ingredient;
 import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientPersistenceModel;
 import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientTest;
 
@@ -130,12 +131,86 @@ public class TestDataIngredient {
 
         return new IngredientPersistenceModel.Builder().
                 getDefault().
-                setDataId("dataId-ingredient-").
+                setDataId("dataId-ingredient-id10").
                 setDomainId(EXISTING_INGREDIENT_DOMAIN_ID).
                 setName(validName).
                 setDescription(validDescription).
                 setCreateDate(20L).
                 setLastUpdate(20L).
+                build();
+    }
+
+    public static IngredientPersistenceModel getInvalidExistingNameTooShort() {
+        String nameTooShort = new StringMaker().
+                makeStringOfExactLength(IngredientTest.NAME_MIN_LENGTH).
+                includeStringAtStart("existingNmeTooShort").
+                thenRemoveOneCharacter().
+                build();
+
+        return new IngredientPersistenceModel.Builder().
+                getDefault().
+                setDataId("dataId-ingredient-id11").
+                setDomainId(EXISTING_INGREDIENT_DOMAIN_ID).
+                setName(nameTooShort).
+                setCreateDate(20L).
+                setLastUpdate(30L).
+                build();
+    }
+
+    public static IngredientPersistenceModel getInvalidExistingNameTooLong() {
+        String nameTooLong = new StringMaker().
+                makeStringOfExactLength(IngredientTest.NAME_MAX_LENGTH).
+                includeStringAtStart("nameTooLong").
+                thenAddOneCharacter().
+                build();
+
+        return new IngredientPersistenceModel.Builder().
+                getDefault().
+                setDataId("dataId-ingredient-id12").
+                setDomainId(EXISTING_INGREDIENT_DOMAIN_ID).
+                setName(nameTooLong).
+                setCreateDate(20L).
+                setLastUpdate(40L).
+                build();
+    }
+
+    public static IngredientPersistenceModel getInvalidExistingNameValidDescriptionTooLong() {
+        String descriptionTooLong = new StringMaker().
+                makeStringOfExactLength(IngredientTest.DESCRIPTION_MAX_LENGTH).
+                includeStringAtStart("descriptionTooLong").
+                thenAddOneCharacter().
+                build();
+
+        return new IngredientPersistenceModel.Builder().
+                getDefault().
+                setDataId("dataId-ingredient-id13").
+                setDomainId(EXISTING_INGREDIENT_DOMAIN_ID).
+                setName(getValidExistingNameValidDescriptionValid().getName()).
+                setDescription(descriptionTooLong).
+                setCreateDate(20L).
+                setLastUpdate(50L).
+                build();
+    }
+
+    public static IngredientPersistenceModel getInvalidExistingNameTooShortDescriptionTooLong() {
+        return new IngredientPersistenceModel.Builder().
+                getDefault().
+                setDataId("dataId-ingredient-id14").
+                setDomainId(EXISTING_INGREDIENT_DOMAIN_ID).
+                setName(getInvalidExistingNameTooShort().getName()).
+                setDescription(getInvalidExistingNameValidDescriptionTooLong().getDescription()).
+                setCreateDate(20L).
+                setLastUpdate(60L).
+                build();
+    }
+
+    public static IngredientPersistenceModel getValidExistingNameValid() {
+        return new IngredientPersistenceModel.Builder().getDefault().
+                setDataId("dataId-ingredient-id5").
+                setDomainId(EXISTING_INGREDIENT_DOMAIN_ID).
+                setName(getValidExistingNameValidDescriptionValid().getName()).
+                setCreateDate(20L).
+                setLastUpdate(70L).
                 build();
     }
 }
