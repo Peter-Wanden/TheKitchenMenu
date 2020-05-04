@@ -1,5 +1,6 @@
 package com.example.peter.thekitchenmenu.testdata;
 
+import com.example.peter.thekitchenmenu.data.repository.ingredient.TestDataIngredient;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;
 import com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.ConversionFactorStatusRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.ConversionFactorStatus;
@@ -12,7 +13,7 @@ public class TestDataUseCaseConversionFactorStatusRequestResponse {
         return new ConversionFactorStatusRequest(
                 MeasurementSubtype.fromInt(TestDataRecipeIngredientQuantityEntity.
                         getNewValidMetric().getMeasurementSubtype()),
-                TestDataIngredientEntity.getNewValidNameValidDescription().getDataId());
+                TestDataIngredient.getValidNewNameValidDescriptionValid().getDomainId());
     }
 
     public static ConversionFactorStatusResponse
@@ -25,7 +26,7 @@ public class TestDataUseCaseConversionFactorStatusRequestResponse {
     getRequestWithConversionFactorFromAnotherUser() {
         return new ConversionFactorStatusRequest(
                 MeasurementSubtype.IMPERIAL_SPOON,
-                TestDataIngredientEntity.getExistingValidNameValidDescriptionFromAnotherUser().
+                TestDataIngredientEntity.getExistingValidNameValidDescriptionValidFromAnotherUser().
                         getDataId());
     }
     public static ConversionFactorStatusResponse
@@ -38,7 +39,7 @@ public class TestDataUseCaseConversionFactorStatusRequestResponse {
     getRequestWithConversionFactorEnabledUnset() {
         return new ConversionFactorStatusRequest(
                 MeasurementSubtype.IMPERIAL_SPOON,
-                TestDataIngredientEntity.getNewInvalidNameValidDescription().getDataId());
+                TestDataIngredient.getInvalidNewNameTooShortDescriptionValid().getDomainId());
     }
     public static ConversionFactorStatusResponse
     getResponseConversionFactorEnabledUnset() {
@@ -50,7 +51,7 @@ public class TestDataUseCaseConversionFactorStatusRequestResponse {
     getRequestWithConversionFactorEnabledSet() {
         return new ConversionFactorStatusRequest(
                 MeasurementSubtype.IMPERIAL_SPOON,
-                TestDataIngredientEntity.getExistingValidWithConversionFactor().getDataId());
+                TestDataIngredientEntity.getExistingValidMinimumConversionFactor().getDataId());
     }
     public static ConversionFactorStatusResponse
     getResponseConversionFactorEnabledSet() {

@@ -51,10 +51,10 @@ public class IdentityLocalGetAdapterTest {
         callbackClient = new GetDomainModelCallbackClient();
         getAllCallbackClient = new GetAllDomainModelsCallbackClient();
 
-        SUT = givenUseCase();
+        SUT = givenSystemUnderTest();
     }
 
-    private IdentityLocalGetAdapter givenUseCase() {
+    private IdentityLocalGetAdapter givenSystemUnderTest() {
         return new IdentityLocalGetAdapter(
                 repoMock
         );

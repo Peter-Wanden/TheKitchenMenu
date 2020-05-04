@@ -39,7 +39,7 @@ public class IngredientTest {
     // region constants ----------------------------------------------------------------------------
     public static final int NAME_MIN_LENGTH = TextValidatorTest.SHORT_TEXT_MIN_LENGTH;
     public static final int NAME_MAX_LENGTH = TextValidatorTest.SHORT_TEXT_MAX_LENGTH;
-    public static final int DESCRIPTION_MIN_LENGTH = TextValidatorTest.LONG_TEXT_MIN_LENGTH;
+//    public static final int DESCRIPTION_MIN_LENGTH = TextValidatorTest.LONG_TEXT_MIN_LENGTH;
     public static final int DESCRIPTION_MAX_LENGTH = TextValidatorTest.LONG_TEXT_MAX_LENGTH;
     // endregion constants -------------------------------------------------------------------------
 
@@ -300,7 +300,7 @@ public class IngredientTest {
     public void newRequest_nameValidDescriptionValid_valuesPersisted() {
         // Arrange
         IngredientPersistenceModel modelUnderTest = TestDataIngredient.
-                getValidNewComplete();
+                getValidNewNameValidDescriptionValid();
 
         simulateNewInitialisationRequest(modelUnderTest);
 
@@ -331,7 +331,7 @@ public class IngredientTest {
     public void newRequest_titleValid_then_descriptionValid_stateVALID_CHANGED() {
         // Arrange
         IngredientPersistenceModel modelUnderTest = TestDataIngredient.
-                getValidNewComplete();
+                getValidNewNameValidDescriptionValid();
 
         // Request 1: initialisation
         simulateNewInitialisationRequest(modelUnderTest);

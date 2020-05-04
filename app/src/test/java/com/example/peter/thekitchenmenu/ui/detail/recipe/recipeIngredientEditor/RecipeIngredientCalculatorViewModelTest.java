@@ -92,10 +92,10 @@ public class RecipeIngredientCalculatorViewModelTest {
 
     // region - INGREDIENT TEST DATA
     private IngredientEntity INGREDIENT_NEW_VALID_NAME_DESCRIPTION =
-            TestDataIngredientEntity.getNewValidNameValidDescription();
+            TestDataIngredientEntity.getValidNewNameValidDescriptionValid();
 
     private IngredientEntity INGREDIENT_EXISTING_VALID_NAME_DESCRIPTION =
-            TestDataIngredientEntity.getExistingValidNameValidDescriptionNoConversionFactor();
+            TestDataIngredientEntity.getExistingValidDefaultConversionFactor();
     // endregion - INGREDIENT TEST DATA
 
     // region - PORTIONS TEST DATA

@@ -6,7 +6,7 @@ import com.google.android.gms.common.util.Strings;
 
 import java.util.LinkedHashMap;
 import java.util.List;
-
+// TODO - Modify, database get where name = name, instead of getAll()
 public class IngredientDuplicateChecker
         implements DomainDataAccess.GetAllDomainModelsCallback<IngredientPersistenceModel> {
 
@@ -53,7 +53,7 @@ public class IngredientDuplicateChecker
 
         for (IngredientPersistenceModel ingredient : ingredients) {
             String key = makeKey(ingredient.getName());
-            existingIngredients.put(key, ingredient.getDataId());
+            existingIngredients.put(key, ingredient.getDomainId());
         }
     }
 

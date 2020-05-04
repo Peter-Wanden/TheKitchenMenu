@@ -37,19 +37,20 @@ public class IngredientLocalGetAdapterTest {
     ArgumentCaptor<GetPrimitiveCallback<IngredientEntity>> repoCallback;
     @Captor
     ArgumentCaptor<GetAllPrimitiveCallback<IngredientEntity>> repoGetAllCallback;
+
+    private GetDomainModelCallbackClient callbackClient;
+    private GetAllDomainModelsCallbackClient getAllCallbackClient;
     // endregion helper fields ---------------------------------------------------------------------
 
     private IngredientLocalGetAdapter SUT;
-    private GetDomainModelCallbackClient callbackClient;
-    private GetAllDomainModelsCallbackClient getAllCallbackClient;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        SUT = givenSystemUnderTest();
-
         callbackClient = new GetDomainModelCallbackClient();
         getAllCallbackClient = new GetAllDomainModelsCallbackClient();
+
+        SUT = givenSystemUnderTest();
     }
 
     private IngredientLocalGetAdapter givenSystemUnderTest() {
@@ -76,7 +77,8 @@ public class IngredientLocalGetAdapterTest {
     @Test
     public void getByDataId_domainModelReturned() {
         // Arrange
-        IngredientPersistenceModel modelUnderTest = TestDataIngredient.getInvalidNewEmpty();
+        IngredientPersistenceModel modelUnderTest = TestDataIngredient.
+                getValidExistingNameValidDescriptionValid();
 
         // Act
         // Assert

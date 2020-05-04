@@ -125,7 +125,7 @@ public class TestDataRecipeIngredientQuantityEntity {
 
     private static double getItemBaseUnitsWithConversionFactorApplied() {
         double conversionFactor = TestDataIngredientEntity.
-                        getNewValidNameValidDescriptionConversionFactorUpdated().
+                getNewValidConversionFactorUpdated().
                         getConversionFactor();
 
         int numberOfPortions = TestDataRecipePortionsEntity.getNewValidFourPortions().getServings() *

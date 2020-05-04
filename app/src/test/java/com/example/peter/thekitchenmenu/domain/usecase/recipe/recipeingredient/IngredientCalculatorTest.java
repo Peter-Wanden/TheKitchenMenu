@@ -73,17 +73,17 @@ public class IngredientCalculatorTest {
     // endregion - RECIPE PORTIONS TEST DATA
 
     // region - INGREDIENT TEST DATA
-    private IngredientEntity INGREDIENT_NEW_VALID_NAME =
-            TestDataIngredientEntity.getNewValidName();
+//    private IngredientEntity INGREDIENT_NEW_VALID_NAME =
+//            TestDataIngredientEntity.getNewValidName();
 
     private IngredientEntity INGREDIENT_NEW_VALID_NAME_MAX_CONVERSION_FACTOR =
-            TestDataIngredientEntity.getNewValidNameMaxConversionFactor();
+            TestDataIngredientEntity.getNewValidMaxConversionFactor();
 
     private IngredientEntity INGREDIENT_EXISTING_VALID_NAME_DESCRIPTION =
-            TestDataIngredientEntity.getExistingValidNameValidDescriptionNoConversionFactor();
+            TestDataIngredientEntity.getExistingValidDefaultConversionFactor();
 
     private IngredientEntity INGREDIENT_NEW_VALID_NAME_DESCRIPTION =
-            TestDataIngredientEntity.getNewValidNameValidDescription();
+            TestDataIngredientEntity.getValidNewNameValidDescriptionValid();
     // endregion - INGREDIENT TEST DATA
 
     // region - REQUEST & RESPONSE PAIRS TEST DATA
@@ -1042,7 +1042,7 @@ public class IngredientCalculatorTest {
 //        verify(repoIngredientMock).getByDataId(
 //                eq(INGREDIENT_NEW_VALID_NAME.getDataId()),
 //                getIngredientCallbackCaptor.capture());
-        getIngredientCallbackCaptor.getValue().onEntityLoaded(INGREDIENT_NEW_VALID_NAME);
+//        getIngredientCallbackCaptor.getValue().onEntityLoaded(INGREDIENT_NEW_VALID_NAME);
     }
 
     private void verifyRepoIngredientCalledReturnNewValidNameValidDescription() {

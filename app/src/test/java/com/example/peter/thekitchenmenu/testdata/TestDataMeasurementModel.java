@@ -578,7 +578,7 @@ public class TestDataMeasurementModel {
     }
 
     private static double getExistingValidConversionFactor() {
-        return TestDataIngredientEntity.getExistingValidNameValidDescriptionNoConversionFactor().getConversionFactor();
+        return TestDataIngredientEntity.getExistingValidDefaultConversionFactor().getConversionFactor();
     }
 
     public static MeasurementModel getExistingImperialSpoonValidConversionFactorNotSet() {
