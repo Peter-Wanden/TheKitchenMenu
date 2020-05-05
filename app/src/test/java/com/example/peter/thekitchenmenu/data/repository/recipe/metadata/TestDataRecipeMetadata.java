@@ -22,17 +22,19 @@ import static com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.Re
  */
 public class TestDataRecipeMetadata {
 
+    public static final String NEW_RECIPE_DOMAIN_ID = getDataUnavailable().getDomainId();
+
     /*
     RecipeState.DATA_UNAVAILABLE - Represents the state of a recipe that:
     1. is newly created
-    2. has one or more components reporting data unavailable (as it has not been entered yet).
+    2. has one or more components reporting data unavailable (as it may have not been entered yet).
      */
     public static RecipeMetadataPersistenceModel getDataUnavailable() {
         return new RecipeMetadataPersistenceModel.Builder().
                 setDataId("dataId-recipeMetadata-id0").
                 setDomainId("domainId-recipe-id0").
                 setParentDomainId("").
-                setRecipeState(RecipeState.DATA_UNAVAILABLE).
+                setRecipeState(ComponentState.DATA_UNAVAILABLE).
                 setComponentStates(getDataUnavailableComponentStates()).
                 setFailReasons(getDataUnavailableFailReasons()).
                 setCreatedBy(Constants.getUserId()).
@@ -52,7 +54,7 @@ public class TestDataRecipeMetadata {
                 setDataId("dataId-recipeMetadata-id1").
                 setDomainId("domainId-recipe-Id1").
                 setParentDomainId("").
-                setRecipeState(RecipeState.INVALID_UNCHANGED).
+                setRecipeState(ComponentState.INVALID_UNCHANGED).
                 setFailReasons(getInvalidComponentsFailReasons()).
                 setComponentStates(getInvalidUnchangedComponentStates()).
                 setCreatedBy(Constants.getUserId()).
@@ -74,7 +76,7 @@ public class TestDataRecipeMetadata {
                 setDataId("dataId-recipeMetadata-Id2").
                 setDomainId(validModel.getDomainId()).
                 setParentDomainId(validModel.getParentDomainId()).
-                setRecipeState(RecipeState.INVALID_CHANGED).
+                setRecipeState(ComponentState.INVALID_CHANGED).
                 setFailReasons(getInvalidComponentsFailReasons()).
                 setComponentStates(getInvalidChangedComponentStates()).
                 setCreatedBy(Constants.getUserId()).
@@ -94,7 +96,7 @@ public class TestDataRecipeMetadata {
                 setDataId(getDataUnavailable().getDataId()).
                 setDomainId(getDataUnavailable().getDomainId()).
                 setParentDomainId(getDataUnavailable().getParentDomainId()).
-                setRecipeState(RecipeState.VALID_CHANGED).
+                setRecipeState(ComponentState.VALID_CHANGED).
                 setFailReasons(getFailReasonsNone()).
                 setComponentStates(getValidChangedComponentStates()).
                 setCreatedBy(Constants.getUserId()).
@@ -109,7 +111,7 @@ public class TestDataRecipeMetadata {
                 setDataId(getDataUnavailable().getDataId()).
                 setDomainId(getDataUnavailable().getDomainId()).
                 setParentDomainId(getDataUnavailable().getParentDomainId()).
-                setRecipeState(RecipeState.VALID_CHANGED).
+                setRecipeState(ComponentState.VALID_CHANGED).
                 setFailReasons(getFailReasonsNone()).
                 setComponentStates(getValidChangedComponentStates()).
                 setCreatedBy(Constants.getUserId()).
@@ -124,7 +126,7 @@ public class TestDataRecipeMetadata {
                 setDataId(getDataUnavailable().getDataId()).
                 setDomainId(getDataUnavailable().getDomainId()).
                 setParentDomainId(getDataUnavailable().getParentDomainId()).
-                setRecipeState(RecipeState.VALID_CHANGED).
+                setRecipeState(ComponentState.VALID_CHANGED).
                 setFailReasons(getFailReasonsNone()).
                 setComponentStates(getValidChangedComponentStates()).
                 setCreatedBy(Constants.getUserId()).
@@ -153,7 +155,7 @@ public class TestDataRecipeMetadata {
                 setDataId("dataId-recipeMetadata-Id3").
                 setDomainId("domainId-recipe-Id2").
                 setParentDomainId("").
-                setRecipeState(RecipeState.VALID_UNCHANGED).
+                setRecipeState(ComponentState.VALID_UNCHANGED).
                 setFailReasons(getFailReasonsNone()).
                 setComponentStates(getValidUnchangedComponentStates()).
                 setCreatedBy(Constants.getUserId()).
@@ -171,7 +173,7 @@ public class TestDataRecipeMetadata {
                 setDataId("dataId-recipeMetadata-Id4").
                 setDomainId("domainId-recipe-Id20").
                 setParentDomainId("").
-                setRecipeState(RecipeState.VALID_UNCHANGED).
+                setRecipeState(ComponentState.VALID_UNCHANGED).
                 setFailReasons(getFailReasonsNone()).
                 setComponentStates(getValidUnchangedComponentStates()).
                 setCreatedBy("anotherUsersId").
@@ -189,7 +191,7 @@ public class TestDataRecipeMetadata {
                 setDataId(getValidFromAnotherUser().getDataId()).
                 setDomainId("domainId-recipe-Id21").
                 setParentDomainId("").
-                setRecipeState(RecipeState.INVALID_UNCHANGED).
+                setRecipeState(ComponentState.INVALID_UNCHANGED).
                 setFailReasons(getInvalidComponentsFailReasons()).
                 setComponentStates(getInvalidUnchangedComponentStates()).
                 setCreatedBy(getValidFromAnotherUser().getCreatedBy()).
@@ -324,5 +326,18 @@ public class TestDataRecipeMetadata {
             }
         }
         return models;
+    }
+
+    public static RecipeMetadataPersistenceModel getActiveByDomainId(String domainId) {
+        long lastUpdate = 0;
+        RecipeMetadataPersistenceModel model = new RecipeMetadataPersistenceModel.Builder().
+                getDefault().build();
+        for (RecipeMetadataPersistenceModel m : getAllByDomainId(domainId)) {
+            if (lastUpdate < m.getLastUpdate()) {
+                model = m;
+                lastUpdate = m.getLastUpdate();
+            }
+        }
+        return model;
     }
 }

@@ -10,6 +10,15 @@ public final class RecipePortionsRequest
         extends BaseDomainMessageModel<RecipePortionsRequest.Model>
         implements UseCase.Request {
 
+    @Override
+    public String toString() {
+        return "RecipePortionsRequest{" +
+                "dataId='" + dataId + '\'' +
+                ", domainId='" + domainId + '\'' +
+                ", model=" + model +
+                '}';
+    }
+
     private RecipePortionsRequest() {}
 
     public static class Builder

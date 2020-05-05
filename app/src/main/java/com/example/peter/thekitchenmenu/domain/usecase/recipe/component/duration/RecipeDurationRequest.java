@@ -13,6 +13,15 @@ public final class RecipeDurationRequest
         extends BaseDomainMessageModel<RecipeDurationRequest.Model>
         implements UseCase.Request {
 
+    @Override
+    public String toString() {
+        return "RecipeDurationRequest{" +
+                "dataId='" + dataId + '\'' +
+                ", domainId='" + domainId + '\'' +
+                ", model=" + model +
+                '}';
+    }
+
     private RecipeDurationRequest() {}
 
     public static class Builder

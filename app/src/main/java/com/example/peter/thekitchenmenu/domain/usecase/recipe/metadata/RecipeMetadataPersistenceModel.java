@@ -21,7 +21,7 @@ import static com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.Re
 public final class RecipeMetadataPersistenceModel extends BasePersistence {
 
     private String parentDomainId;
-    private RecipeState recipeState;
+    private ComponentState recipeState;
     private HashMap<ComponentName, ComponentState> componentStates;
     private List<FailReasons> failReasons;
     private String createdBy;
@@ -71,7 +71,7 @@ public final class RecipeMetadataPersistenceModel extends BasePersistence {
         return parentDomainId;
     }
 
-    public RecipeState getRecipeState() {
+    public ComponentState getRecipeState() {
         return recipeState;
     }
 
@@ -109,7 +109,7 @@ public final class RecipeMetadataPersistenceModel extends BasePersistence {
             model.dataId = "";
             model.domainId = "";
             model.parentDomainId = "";
-            model.recipeState = RecipeState.DATA_UNAVAILABLE;
+            model.recipeState = ComponentState.DATA_UNAVAILABLE;
             model.componentStates = new HashMap<>();
             model.failReasons = new ArrayList<>();
             model.createdBy = Constants.getUserId();
@@ -133,8 +133,8 @@ public final class RecipeMetadataPersistenceModel extends BasePersistence {
             return self();
         }
 
-        public Builder setRecipeState(RecipeState recipeState) {
-            model.recipeState = recipeState;
+        public Builder setRecipeState(ComponentState state) {
+            model.recipeState = state;
             return self();
         }
 

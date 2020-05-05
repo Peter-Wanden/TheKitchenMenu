@@ -85,12 +85,12 @@ public class IngredientLocalGetAdapter {
             List<IngredientPersistenceModel> models) {
         long lastUpdated = 0;
         IngredientPersistenceModel activeModel = new IngredientPersistenceModel.Builder().
-                getDefault().
-                build();
+                getDefault().build();
 
         for (IngredientPersistenceModel m : models) {
             if (m.getLastUpdate() > lastUpdated) {
                 activeModel = m;
+                lastUpdated = m.getLastUpdate();
             }
         }
         return activeModel;

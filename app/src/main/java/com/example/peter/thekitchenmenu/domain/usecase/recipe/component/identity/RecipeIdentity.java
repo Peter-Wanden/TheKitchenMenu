@@ -112,7 +112,7 @@ public class RecipeIdentity
             recipeId = r.getDomainId();
             loadData(recipeId);
         } else {
-            setupUseCase();
+            setupComponent();
             processChanges();
         }
     }
@@ -153,7 +153,7 @@ public class RecipeIdentity
                 build();
     }
 
-    private void setupUseCase() {
+    private void setupComponent() {
         failReasons.clear();
         isNewRequest = false;
     }
@@ -170,7 +170,7 @@ public class RecipeIdentity
     private void validateTitle() {
         TextValidatorRequest request = new TextValidatorRequest(
                 TITLE_TEXT_TYPE,
-                new TextValidatorModel(selectTitle())
+                new TextValidatorModel(getTitle())
         );
         handler.execute(
                 textValidator,
@@ -190,7 +190,7 @@ public class RecipeIdentity
         );
     }
 
-    private String selectTitle() {
+    private String getTitle() {
         return isNewRequest ? persistenceModel.getTitle() : requestModel.getTitle();
     }
 
@@ -206,7 +206,7 @@ public class RecipeIdentity
     private void validateDescription() {
         TextValidatorRequest request = new TextValidatorRequest(
                 DESCRIPTION_TEXT_TYPE,
-                new TextValidatorModel(getCorrectDescription())
+                new TextValidatorModel(getDescription())
         );
         handler.execute(
                 textValidator,
@@ -227,7 +227,7 @@ public class RecipeIdentity
         );
     }
 
-    private String getCorrectDescription() {
+    private String getDescription() {
         return isNewRequest ? persistenceModel.getDescription() : requestModel.getDescription();
     }
 
@@ -253,8 +253,10 @@ public class RecipeIdentity
         } else {
             builder.setMetadata(getMetadata(persistenceModel));
         }
+
         builder.setModel(getResponseModel());
         builder.setDataId(dataId);
+
         sendResponse(builder.build());
     }
 

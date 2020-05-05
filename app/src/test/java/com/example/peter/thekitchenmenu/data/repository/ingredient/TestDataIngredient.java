@@ -6,6 +6,7 @@ import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasur
 import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientPersistenceModel;
 import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientTest;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -15,7 +16,7 @@ public class TestDataIngredient {
     public static final String EXISTING_INGREDIENT_DOMAIN_ID = "domainId-ingredient-10";
     private static final String INGREDIENT_DOMAIN_ID_FROM_ANOTHER_USER = "domainId-ingredient-20";
 
-    // Test data new, text fields
+    // Test data for newly created models:
     public static IngredientPersistenceModel getInvalidNewEmpty() {
         return new IngredientPersistenceModel.Builder().
                 getDefault().
@@ -123,7 +124,7 @@ public class TestDataIngredient {
                 build();
     }
 
-    // Test data existing, text fields
+    // Test data for existing models being queried
     public static IngredientPersistenceModel getValidExistingNameValidDescriptionValid() {
         String validName = new StringMaker().
                 makeStringOfExactLength(IngredientTest.NAME_MAX_LENGTH).
@@ -221,7 +222,7 @@ public class TestDataIngredient {
                 build();
     }
 
-    // Test data from another user
+    // Test data for existing models created by another user
     public static IngredientPersistenceModel getExistingValidNameValidDescriptionValidFromAnotherUser() {
         String validNameFromAnotherUser = new StringMaker().
                 makeStringOfExactLength(IngredientTest.NAME_MAX_LENGTH).
@@ -244,7 +245,7 @@ public class TestDataIngredient {
                 build();
     }
 
-    // Test data conversion factor
+    // Test data for conversion factor tests
     public static IngredientPersistenceModel getNewValidMaxConversionFactor() {
         return new IngredientPersistenceModel.Builder().
                 setDataId("dataId-ingredient-id7").
@@ -297,7 +298,7 @@ public class TestDataIngredient {
                 build();
     }
 
-    public static List<IngredientPersistenceModel> getAllIngredients() {
+    public static List<IngredientPersistenceModel> getAll() {
         return Arrays.asList(
                 getInvalidNewEmpty(),
                 getInvalidNewNameTooShort(),
@@ -317,7 +318,20 @@ public class TestDataIngredient {
                 getNewValidConversionFactorUpdated(),
                 getExistingValidDefaultConversionFactor(),
                 getExistingValidMinimumConversionFactor()
-                );
+        );
+    }
+
+    public static List<IngredientPersistenceModel> getAllByDomainId(String domainId) {
+        List<IngredientPersistenceModel> models = new ArrayList<>();
+
+        getAll().forEach(
+                (ingredient) -> {
+                    if (domainId.equals(ingredient.getDomainId())) {
+                        models.add(ingredient);
+                    }
+                }
+        );
+        return models;
     }
 
     // Duplicate checker test data

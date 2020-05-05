@@ -8,10 +8,22 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMet
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
+import javax.annotation.Nonnull;
+
 
 public final class RecipeResponse
         extends BaseDomainMessageModel<RecipeResponse.Model>
         implements UseCase.Response {
+
+    @Nonnull
+    @Override
+    public String toString() {
+        return "RecipeResponse{" +
+                "dataId='" + dataId + '\'' +
+                ", domainId='" + domainId + '\'' +
+                ", model=" + model +
+                '}';
+    }
 
     private RecipeResponse() {
     }
@@ -38,6 +50,7 @@ public final class RecipeResponse
     }
 
     public static final class Model extends BaseDomainModel {
+
         private HashMap<RecipeMetadata.ComponentName, UseCase.Response> componentResponses;
 
         public Model() {
@@ -45,6 +58,13 @@ public final class RecipeResponse
 
         public HashMap<RecipeMetadata.ComponentName, UseCase.Response> getComponentResponses() {
             return componentResponses;
+        }
+
+        @Override
+        public String toString() {
+            return "Model{" +
+                    "componentResponses=" + componentResponses +
+                    '}';
         }
 
         public static class Builder

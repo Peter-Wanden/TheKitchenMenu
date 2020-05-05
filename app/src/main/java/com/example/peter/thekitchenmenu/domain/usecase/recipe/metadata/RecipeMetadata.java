@@ -2,6 +2,7 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata;
 
 import android.annotation.SuppressLint;
 
+import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
@@ -10,6 +11,7 @@ import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
+import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,37 +33,6 @@ public class RecipeMetadata
         implements DomainDataAccess.GetDomainModelCallback<RecipeMetadataPersistenceModel> {
 
     private static final String TAG = "tkm-" + RecipeMetadata.class.getSimpleName() + ": ";
-
-    public enum RecipeState {
-        DATA_UNAVAILABLE(400),
-        INVALID_UNCHANGED(401),
-        INVALID_CHANGED(402),
-        VALID_CHANGED(403),
-        VALID_UNCHANGED(404),
-        COMPLETE(405);
-
-        private final int id;
-
-        @SuppressLint("UseSparseArrays")
-        private static Map<Integer, RecipeState> options = new HashMap<>();
-
-        RecipeState(int id) {
-            this.id = id;
-        }
-
-        static {
-            for (RecipeState s : RecipeState.values())
-                options.put(s.id, s);
-        }
-
-        public static RecipeState getById(int id) {
-            return options.get(id);
-        }
-
-        public int getId() {
-            return id;
-        }
-    }
 
     public enum FailReason implements FailReasons {
         MISSING_COMPONENTS(400),
@@ -155,59 +126,68 @@ public class RecipeMetadata
     }
 
     @Nonnull
-    private final TimeProvider timeProvider;
-    @Nonnull
     private final RepositoryRecipeMetadata repository;
+    @Nonnull
+    private final UniqueIdProvider idProvider;
+    @Nonnull
+    private final TimeProvider timeProvider;
     @Nonnull
     private final Set<ComponentName> requiredComponents;
     @Nonnull
     private final List<FailReasons> failReasons;
 
-    private RecipeMetadataPersistenceModel persistenceModel;
-    private RecipeState recipeState;
     private String dataId = "";
     private String recipeId = "";
-    private String parentId = "";
-    private HashMap<ComponentName, ComponentState> componentStates;
+    private boolean isNewRequest;
+
     private RecipeMetadataRequest.Model requestModel;
+    private RecipeMetadataPersistenceModel persistenceModel;
+
+    private ComponentState componentState;
+    private String parentDomainId = "";
+    private HashMap<ComponentName, ComponentState> componentStates;
 
     private boolean hasRequiredComponents;
     private boolean hasInvalidModels;
-    private boolean isNewRequest;
 
-    //  TODO - last update - should be the time of the last updated component
+    // TODO - last update - should be the time of the last updated component
     // TODO - Data layer:
-    //  keep a copy of all metadata as it changes
+    //  - keep a copy of all metadata as it changes
 
-    public RecipeMetadata(@Nonnull TimeProvider timeProvider,
-                          @Nonnull RepositoryRecipeMetadata repository,
+    public RecipeMetadata(@Nonnull RepositoryRecipeMetadata repository,
+                          @Nonnull UniqueIdProvider idProvider,
+                          @Nonnull TimeProvider timeProvider,
                           @Nonnull Set<ComponentName> requiredComponents) {
 
-        this.timeProvider = timeProvider;
         this.repository = repository;
+        this.idProvider = idProvider;
+        this.timeProvider = timeProvider;
         this.requiredComponents = requiredComponents;
 
-        recipeState = RecipeState.COMPLETE;
+        componentState = ComponentState.DATA_UNAVAILABLE;
         failReasons = new ArrayList<>();
+        componentStates = new HashMap<>();
     }
 
     @Override
     protected <Q extends Request> void execute(Q request) {
-        RecipeMetadataRequest metadataRequest = (RecipeMetadataRequest) request;
-        System.out.println(TAG + metadataRequest);
+        RecipeMetadataRequest r = (RecipeMetadataRequest) request;
+        requestModel = r.getModel();
+        System.out.println(TAG + r);
 
-        if (isNewRequest(metadataRequest.getDomainId())) {
-            dataId = metadataRequest.getDataId();
-            recipeId = metadataRequest.getDomainId();
+        if (isNewRequest(r)) {
+            dataId = r.getDataId();
+            recipeId = r.getDomainId();
+            parentDomainId = r.getModel().getParentDomainId();
             loadData(recipeId);
         } else {
-            requestModel = metadataRequest.getModel();
+            setupComponent();
             calculateState();
         }
     }
 
-    private boolean isNewRequest(String recipeId) {
-        return isNewRequest = !this.recipeId.equals(recipeId);
+    private boolean isNewRequest(RecipeMetadataRequest r) {
+        return isNewRequest = !r.getDomainId().equals(recipeId);
     }
 
     private void loadData(String recipeId) {
@@ -217,6 +197,7 @@ public class RecipeMetadata
     @Override
     public void onModelLoaded(RecipeMetadataPersistenceModel model) {
         persistenceModel = model;
+        dataId = model.getDataId();
         buildResponse();
     }
 
@@ -229,6 +210,7 @@ public class RecipeMetadata
 
     private RecipeMetadataPersistenceModel createNewPersistenceModel() {
         long currentTime = timeProvider.getCurrentTimeInMills();
+        dataId = idProvider.getUId();
 
         return new RecipeMetadataPersistenceModel.Builder().
                 getDefault().
@@ -237,6 +219,12 @@ public class RecipeMetadata
                 setCreateDate(currentTime).
                 setLastUpdate(currentTime).
                 build();
+    }
+
+    private void setupComponent() {
+        componentState = ComponentState.DATA_UNAVAILABLE;
+        failReasons.clear();
+        componentStates.clear();
     }
 
     private void calculateState() {
@@ -248,21 +236,24 @@ public class RecipeMetadata
     }
 
     private void checkForRequiredComponents() {
-
         int noOfRequiredComponents = requiredComponents.size();
         int noOfRequiredComponentsSubmitted = 0;
 
         for (ComponentName componentName : requiredComponents) {
-            if (componentStates.containsKey(componentName) &&
-                    componentStates.get(componentName) != ComponentState.DATA_UNAVAILABLE) {
+            if (isComponentSateSubmitted(componentName)) {
                 noOfRequiredComponentsSubmitted++;
             } else {
                 componentStates.put(componentName, ComponentState.DATA_UNAVAILABLE);
-                recipeState = RecipeState.DATA_UNAVAILABLE;
+                componentState = ComponentState.DATA_UNAVAILABLE;
                 addFailReasonMissingModels();
             }
         }
         hasRequiredComponents = noOfRequiredComponentsSubmitted >= noOfRequiredComponents;
+    }
+
+    private boolean isComponentSateSubmitted(ComponentName componentName) {
+        return componentStates.containsKey(componentName) &&
+                componentStates.get(componentName) != ComponentState.DATA_UNAVAILABLE;
     }
 
     private void addFailReasonMissingModels() {
@@ -277,15 +268,15 @@ public class RecipeMetadata
                 ComponentState componentState = componentStates.get(componentName);
 
                 if (ComponentState.INVALID_UNCHANGED == componentState &&
-                        recipeState.getId() > RecipeState.INVALID_UNCHANGED.getId()) {
+                        this.componentState.getId() > ComponentState.INVALID_UNCHANGED.getId()) {
 
-                    recipeState = RecipeState.INVALID_UNCHANGED;
+                    this.componentState = ComponentState.INVALID_UNCHANGED;
                     addFailReasonInvalidComponents();
 
                 } else if (componentState == ComponentState.INVALID_CHANGED &&
-                        recipeState.getId() > RecipeState.INVALID_CHANGED.getId()) {
+                        this.componentState.getId() > ComponentState.INVALID_CHANGED.getId()) {
 
-                    recipeState = RecipeState.INVALID_CHANGED;
+                    this.componentState = ComponentState.INVALID_CHANGED;
                     addFailReasonInvalidComponents();
                 }
             }
@@ -303,15 +294,15 @@ public class RecipeMetadata
 
                 ComponentState componentState = componentStates.get(componentName);
                 if (componentState == ComponentState.VALID_UNCHANGED &&
-                        recipeState.getId() > RecipeState.VALID_UNCHANGED.id) {
+                        this.componentState.getId() > ComponentState.VALID_UNCHANGED.id) {
 
-                    recipeState = RecipeState.VALID_UNCHANGED;
+                    this.componentState = ComponentState.VALID_UNCHANGED;
                     addFailReasonNone();
 
                 } else if (componentState == ComponentState.VALID_CHANGED &&
-                        recipeState.getId() > RecipeState.VALID_CHANGED.id) {
+                        this.componentState.getId() > ComponentState.VALID_CHANGED.id) {
 
-                    recipeState = RecipeState.VALID_CHANGED;
+                    this.componentState = ComponentState.VALID_CHANGED;
                     addFailReasonNone();
                 }
             }
@@ -325,57 +316,64 @@ public class RecipeMetadata
     }
 
     private boolean isValid() {
-        return recipeState == RecipeState.VALID_UNCHANGED ||
-                recipeState == RecipeState.VALID_CHANGED ||
-                recipeState == RecipeState.COMPLETE;
-    }
-
-    // todo - What should the metadata for the metadata look like? Should it exist?
-    private UseCaseMetadata getMetadata() {
-        List<FailReasons> failReasons = new ArrayList<>();
-        failReasons.add(CommonFailReason.NONE);
-        return new UseCaseMetadata.Builder().
-                setState(ComponentState.VALID_CHANGED).
-                setFailReasons(failReasons).
-                setCreateDate(0L).
-                setLasUpdate(0L).
-                build();
+        return componentState == ComponentState.VALID_UNCHANGED ||
+                componentState == ComponentState.VALID_CHANGED;
     }
 
     private void buildResponse() {
-        addFailReasonNone();
-        RecipeMetadataResponse response = new RecipeMetadataResponse.Builder().
-                setDataId(dataId).
-                setDomainId(recipeId).
-                setModel(getModel()).
-                build();
+        RecipeMetadataResponse.Builder builder = new RecipeMetadataResponse.Builder();
+        builder.setDomainId(recipeId);
 
-        save(getUpdatedPersistenceModel());
+        if (ComponentState.VALID_CHANGED == getComponentState()) {
+            RecipeMetadataPersistenceModel m = updatePersistenceModel();
+            builder.setMetadata(getMetadata(m));
+            persistenceModel = m;
+            save();
 
-        sendResponse(response);
+        } else {
+            builder.setMetadata(getMetadata(persistenceModel));
+        }
+
+        builder.setModel(getResponseModel());
+        builder.setDataId(dataId);
+
+        sendResponse(builder.build());
     }
 
-    private RecipeMetadataResponse.Model getModel() {
-        return new RecipeMetadataResponse.Model.Builder().
-                setParentId(persistenceModel.getParentDomainId()).
-                setRecipeState(RecipeState.getById(recipeState.getId())).
+    private UseCaseMetadata getMetadata(RecipeMetadataPersistenceModel m) {
+        return new UseCaseMetadata.Builder().
+                setState(getComponentState()).
                 setFailReasons(new ArrayList<>(failReasons)).
+                setCreatedBy(Constants.getUserId()).
+                setCreateDate(m.getCreateDate()).
+                setLasUpdate(m.getLastUpdate()).
+                build();
+    }
+
+    private ComponentState getComponentState() {
+        boolean isValid = failReasons.contains(CommonFailReason.NONE);
+
+        return isValid
+                ?
+                (isChanged() ? ComponentState.VALID_CHANGED : ComponentState.VALID_UNCHANGED)
+                :
+                (isChanged() ? ComponentState.INVALID_CHANGED : ComponentState.INVALID_UNCHANGED);
+    }
+
+    // TODO - is changed???
+    private boolean isChanged() {
+        return !isNewRequest;
+    }
+
+    private RecipeMetadataResponse.Model getResponseModel() {
+        return new RecipeMetadataResponse.Model.Builder().
+                setParentDomainId(persistenceModel.getParentDomainId()).
                 setComponentStates(new LinkedHashMap<>(componentStates)).
                 build();
     }
 
-    private RecipeMetadataPersistenceModel getUpdatedPersistenceModel() {
+    private RecipeMetadataPersistenceModel updatePersistenceModel() {
         return new RecipeMetadataPersistenceModel.Builder().build();
-    }
-
-    private boolean isChanged() {
-        return false;
-    }
-
-    private void resetState() {
-        recipeState = RecipeState.COMPLETE;
-        failReasons.clear();
-        componentStates.clear();
     }
 
     private void sendResponse(RecipeMetadataResponse response) {
@@ -387,7 +385,7 @@ public class RecipeMetadata
         }
     }
 
-    private void save(RecipeMetadataPersistenceModel model) {
-        repository.save(model);
+    private void save() {
+        repository.save(persistenceModel);
     }
 }

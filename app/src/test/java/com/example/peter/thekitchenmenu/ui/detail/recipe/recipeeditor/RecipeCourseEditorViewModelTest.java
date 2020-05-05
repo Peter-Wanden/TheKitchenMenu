@@ -133,8 +133,9 @@ public class RecipeCourseEditorViewModelTest {
                 build();
 
         RecipeMetadata recipeMetadata = new RecipeMetadata(
-                timeProviderMock,
                 repoMetadataMock,
+                idProviderMock,
+                timeProviderMock,
                 RecipeComponents.requiredComponents
         );
 

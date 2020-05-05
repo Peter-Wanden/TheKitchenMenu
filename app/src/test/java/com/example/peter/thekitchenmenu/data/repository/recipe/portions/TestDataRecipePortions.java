@@ -235,4 +235,17 @@ public class TestDataRecipePortions {
         }
         return models;
     }
+
+    public static RecipePortionsPersistenceModel getActiveByDomainId(String domainId) {
+        long lastUpdate = 0;
+        RecipePortionsPersistenceModel model = new RecipePortionsPersistenceModel.Builder().
+                getDefault().build();
+        for (RecipePortionsPersistenceModel m : getAllByDomainId(domainId)) {
+            if (lastUpdate < m.getLastUpdate()) {
+                model = m;
+                lastUpdate = m.getLastUpdate();
+            }
+        }
+        return model;
+    }
 }

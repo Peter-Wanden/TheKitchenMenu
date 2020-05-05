@@ -13,6 +13,16 @@ public final class RecipeIdentityResponse
         extends BaseDomainMessageModelMetadata<RecipeIdentityResponse.Model>
         implements UseCase.Response {
 
+    @Override
+    public String toString() {
+        return "RecipeIdentityResponse{" +
+                "dataId='" + dataId + '\'' +
+                ", domainId='" + domainId + '\'' +
+                ", metadata=" + metadata +
+                ", model=" + model +
+                '}';
+    }
+
     private RecipeIdentityResponse() {}
 
     public static class Builder extends UseCaseMessageBuilderMetadata

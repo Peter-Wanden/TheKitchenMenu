@@ -15,6 +15,15 @@ public final class RecipeMetadataRequest
         extends BaseDomainMessageModel<RecipeMetadataRequest.Model>
         implements UseCase.Request {
 
+    @Override
+    public String toString() {
+        return "RecipeMetadataRequest{" +
+                "dataId='" + dataId + '\'' +
+                ", domainId='" + domainId + '\'' +
+                ", model=" + model +
+                '}';
+    }
+
     private RecipeMetadataRequest() {}
 
     public static class Builder
@@ -34,7 +43,7 @@ public final class RecipeMetadataRequest
         public Builder basedOnResponse(RecipeMetadataResponse r) {
             message.dataId = r.getDataId();
             message.domainId = r.getDomainId();
-            message.model.parentId = r.getModel().getParentId();
+            message.model.parentDomainId = r.getModel().getParentDomainId();
             message.model.componentStates = r.getModel().getComponentStates();
             return self();
         }
@@ -46,12 +55,12 @@ public final class RecipeMetadataRequest
     }
 
     public static final class Model extends BaseDomainModel {
-        private String parentId;
+        private String parentDomainId;
         private HashMap<ComponentName, ComponentState> componentStates;
 
         @Nonnull
-        public String getParentId() {
-            return parentId;
+        public String getParentDomainId() {
+            return parentDomainId;
         }
 
         @Nonnull
@@ -64,20 +73,20 @@ public final class RecipeMetadataRequest
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             Model model = (Model) o;
-            return Objects.equals(parentId, model.parentId) &&
+            return Objects.equals(parentDomainId, model.parentDomainId) &&
                     Objects.equals(componentStates, model.componentStates);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(parentId, componentStates);
+            return Objects.hash(parentDomainId, componentStates);
         }
 
         @Nonnull
         @Override
         public String toString() {
             return "Model{" +
-                    "parentId='" + parentId + '\'' +
+                    "parentDomainId='" + parentDomainId + '\'' +
                     ", componentStates=" + componentStates +
                     '}';
         }
@@ -89,13 +98,13 @@ public final class RecipeMetadataRequest
             }
 
             public Builder getDefault() {
-                model.parentId = "";
+                model.parentDomainId = "";
                 model.componentStates = new HashMap<>();
                 return self();
             }
 
             public Builder setParentId(String parentId) {
-                model.parentId = parentId;
+                model.parentDomainId = parentId;
                 return self();
             }
 

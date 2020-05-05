@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.testdata;
+package com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.datasource;
 
 import com.example.peter.thekitchenmenu.data.repository.ingredient.TestDataIngredient;
 import com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.datasource.IngredientEntity;
@@ -86,6 +86,7 @@ public class TestDataIngredientEntity {
                 getValidExistingNameValid()
         );
     }
+
     // Test data conversion factor
     public static IngredientEntity getNewValidMaxConversionFactor() {
         return convertModelToEntity(TestDataIngredient.
@@ -117,9 +118,20 @@ public class TestDataIngredientEntity {
         );
     }
 
-    public static List<IngredientEntity> getAllIngredients() {
+    public static List<IngredientEntity> getAll() {
         List<IngredientEntity> ingredients = new ArrayList<>();
-        for (IngredientPersistenceModel m : TestDataIngredient.getAllIngredients()) {
+
+        TestDataIngredient.getAll().forEach((ingredient) -> {
+                    ingredients.add(convertModelToEntity(ingredient));
+                }
+        );
+        return ingredients;
+    }
+
+    public static List<IngredientEntity> getAllByDomainId(String domainId) {
+        List<IngredientEntity> ingredients = new ArrayList<>();
+
+        for (IngredientPersistenceModel m : TestDataIngredient.getAllByDomainId(domainId)) {
             ingredients.add(convertModelToEntity(m));
         }
         return ingredients;

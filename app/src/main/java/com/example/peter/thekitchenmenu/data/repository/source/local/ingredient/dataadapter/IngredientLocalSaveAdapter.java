@@ -6,6 +6,7 @@ import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientPers
 import javax.annotation.Nonnull;
 
 public class IngredientLocalSaveAdapter {
+
     @Nonnull
     private final IngredientLocalDataSource dataSource;
     @Nonnull

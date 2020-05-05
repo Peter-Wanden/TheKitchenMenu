@@ -43,14 +43,6 @@ public class Recipe extends UseCase {
 
     private static final String TAG = "tkm-" + Recipe.class.getSimpleName() + ": ";
 
-    enum RequestType {
-        CREATE,
-        EDIT,
-        FAVORITE,
-        COPY,
-        DELETE
-    }
-
     public static final String CREATE_NEW_RECIPE = "CREATE_NEW_RECIPE";
 
     public interface RecipeMetadataListener {
@@ -110,7 +102,7 @@ public class Recipe extends UseCase {
 
         if (isNewRequest(r.getDomainId()) || RECIPE == requestOriginator) {
             dataId = r.getDataId();
-            recipeId = r.getDataId();
+            recipeId = r.getDomainId();
             startComponents();
         } else {
             processRequest(request);
@@ -131,6 +123,7 @@ public class Recipe extends UseCase {
         } else {
             throw new UnsupportedOperationException("Request type not supported:" + request);
         }
+        System.out.println(TAG + "extractRequestOriginator: " + requestOriginator);
     }
 
     private boolean isNewRequest(String recipeId) {
@@ -172,7 +165,7 @@ public class Recipe extends UseCase {
                 recipeMetadata,
                 new RecipeMetadataRequest.Builder().
                         getDefault().
-                        setDataId(recipeId).
+                        setDomainId(recipeId).
                         build(),
                 new RecipeMetadataCallback()
         );
@@ -192,7 +185,7 @@ public class Recipe extends UseCase {
                 identity,
                 new RecipeIdentityRequest.Builder().
                         getDefault().
-                        setDataId(recipeId).
+                        setDomainId(recipeId).
                         build(),
                 new IdentityCallback()
         );
@@ -217,7 +210,7 @@ public class Recipe extends UseCase {
                 course,
                 new RecipeCourseRequest.Builder().
                         getDefault().
-                        setDataId(recipeId).
+                        setDomainId(recipeId).
                         build(),
                 new CourseCallback()
         );
@@ -241,7 +234,7 @@ public class Recipe extends UseCase {
                 duration,
                 new RecipeDurationRequest.Builder().
                         getDefault().
-                        setDataId(recipeId).
+                        setDomainId(recipeId).
                         build(),
                 new DurationCallback()
         );
@@ -266,7 +259,7 @@ public class Recipe extends UseCase {
                 portions,
                 new RecipePortionsRequest.Builder().
                         getDefault().
-                        setDataId(recipeId).
+                        setDomainId(recipeId).
                         build(),
                 new PortionsCallback()
         );
@@ -295,7 +288,6 @@ public class Recipe extends UseCase {
     }
 
     private void checkComponentsUpdated() {
-        System.out.println(TAG + "componentStatesUpdated: " + componentResponses.keySet());
         if (isAllComponentsUpdated()) {
             updateRecipeMetadata();
         }
@@ -313,9 +305,10 @@ public class Recipe extends UseCase {
         System.out.println(TAG + "updateRecipeMetadata called");
 
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
-                setDataId(recipeId).
+                setDataId(recipeMetadataResponse.getDataId()).
+                setDomainId(recipeId).
                 setModel(new RecipeMetadataRequest.Model.Builder().
-                        setParentId(recipeMetadataResponse.getModel().getParentId()).
+                        setParentId(recipeMetadataResponse.getModel().getParentDomainId()).
                         setComponentStates(componentStates).
                         build()).
                 build();
@@ -401,7 +394,7 @@ public class Recipe extends UseCase {
     }
 
     private boolean isValid() {
-        return recipeMetadataResponse.getModel().getFailReasons().contains(CommonFailReason.NONE);
+        return recipeMetadataResponse.getMetadata().getFailReasons().contains(CommonFailReason.NONE);
     }
 
     public void registerComponentCallback(Pair<
@@ -412,9 +405,6 @@ public class Recipe extends UseCase {
 
     @SuppressWarnings("unchecked")
     private void notifyComponentCallbacks() {
-        System.out.println(TAG + "notifyComponentCallbacks called:" + componentListeners);
-        System.out.println(TAG + "componentResponses:" + componentResponses);
-
         for (Pair<
                 ComponentName,
                 UseCase.Callback<? extends UseCase.Response>>
@@ -483,7 +473,7 @@ public class Recipe extends UseCase {
     }
 
     private void notifyRequestOriginator() {
-        System.out.println(TAG + "notifyRequestOriginator called:" + requestOriginator);
+        System.out.println(TAG + "notifyRequestOriginator: " + requestOriginator);
 
         List<FailReasons> f;
 
@@ -498,7 +488,7 @@ public class Recipe extends UseCase {
                         build();
 
                 f = ((RecipeMetadataResponse) componentResponses.get(RECIPE_METADATA)).
-                        getModel().
+                        getMetadata().
                         getFailReasons();
 
                 if (f.contains(CommonFailReason.NONE)) {
@@ -512,7 +502,7 @@ public class Recipe extends UseCase {
                 sendResponse(
                         componentResponses.get(RECIPE_METADATA),
                         ((RecipeMetadataResponse) componentResponses.get(RECIPE_METADATA)).
-                                getModel().
+                                getMetadata().
                                 getFailReasons());
 
                 break;
@@ -583,5 +573,4 @@ public class Recipe extends UseCase {
         } else {
             getUseCaseCallback().onError(r);
         }
-    }
-}
+    }}

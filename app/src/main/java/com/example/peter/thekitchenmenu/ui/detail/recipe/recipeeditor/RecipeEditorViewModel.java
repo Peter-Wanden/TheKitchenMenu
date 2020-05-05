@@ -11,6 +11,7 @@ import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.RecipeResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentState;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadataRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadataResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
@@ -193,12 +194,12 @@ public class RecipeEditorViewModel extends ViewModel {
 
     private void updateButtonVisibility() {
 
-        if (metadataResponse.getModel().getState() == RecipeMetadata.RecipeState.VALID_CHANGED) {
+        if (metadataResponse.getMetadata().getState() == ComponentState.VALID_CHANGED) {
             showIngredientsButtonObservable.set(true);
             showReviewButton = true;
             navigator.refreshOptionsMenu();
 
-        } else if (metadataResponse.getModel().getState() == RecipeMetadata.RecipeState.VALID_UNCHANGED) {
+        } else if (metadataResponse.getMetadata().getState() == ComponentState.VALID_UNCHANGED) {
             showIngredientsButtonObservable.set(true);
             showReviewButton = false;
             navigator.refreshOptionsMenu();
@@ -219,7 +220,7 @@ public class RecipeEditorViewModel extends ViewModel {
     }
 
     void upOrBackPressed() {
-        if (metadataResponse.getModel().getState() == RecipeMetadata.RecipeState.INVALID_CHANGED) {
+        if (metadataResponse.getMetadata().getState() == ComponentState.INVALID_CHANGED) {
             navigator.showUnsavedChangedDialog();
         } else {
             navigator.cancelEditing();

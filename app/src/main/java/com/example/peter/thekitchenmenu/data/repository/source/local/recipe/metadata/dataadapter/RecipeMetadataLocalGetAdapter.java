@@ -147,7 +147,7 @@ public class RecipeMetadataLocalGetAdapter {
                 setDataId(e.getDataId()).
                 setDomainId(e.getDomainId()).
                 setParentDomainId(e.getParentDomainId()).
-                setRecipeState(RecipeState.getById(e.getRecipeStateId())).
+                setRecipeState(ComponentState.getFromId(e.getRecipeStateId())).
                 setCreatedBy(e.getCreatedBy()).
                 setCreateDate(e.getCreateDate()).
                 setLastUpdate(e.getLastUpdate()

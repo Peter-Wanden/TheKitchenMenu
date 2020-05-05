@@ -3,6 +3,7 @@ package com.example.peter.thekitchenmenu.data.repository.recipe.duration;
 import com.example.peter.thekitchenmenu.data.repository.recipe.metadata.TestDataRecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDurationPersistenceModel;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -123,6 +124,13 @@ public class TestDataRecipeDuration {
                 build();
     }
 
+    public static List<RecipeDurationPersistenceModel> getAllExisting() {
+        return Arrays.asList(
+                getInvalidExistingComplete(),
+                getValidExistingComplete()
+        );
+    }
+
     public static RecipeDurationPersistenceModel getValidCompleteFromAnotherUser() {
         return new RecipeDurationPersistenceModel.Builder().
                 setDataId("dataId-recipeDuration-anotherUser-id0").
@@ -143,6 +151,13 @@ public class TestDataRecipeDuration {
                 setCreateDate(30L).
                 setLastUpdate(30L).
                 build();
+    }
+
+    public static List<RecipeDurationPersistenceModel> getAllFromAnotherUser() {
+        return Arrays.asList(
+                getValidCompleteFromAnotherUser(),
+                getInvalidCompleteFromAnotherUser()
+        );
     }
 
     public static RecipeDurationPersistenceModel getValidNewCopied() {
@@ -176,5 +191,35 @@ public class TestDataRecipeDuration {
                 setCreateDate(getInvalidNewCopied().getCreateDate()).
                 setLastUpdate(50L).
                 build();
+    }
+
+    public static List<RecipeDurationPersistenceModel> getAllCopied() {
+        return Arrays.asList(
+                getValidNewCopied(),
+                getInvalidNewCopied(),
+                getValidNewCopiedPrepTimeUpdated()
+        );
+    }
+
+    public static List<RecipeDurationPersistenceModel> getAll() {
+        List<RecipeDurationPersistenceModel> models = new ArrayList<>();
+        models.addAll(getAllNew());
+        models.addAll(getAllExisting());
+        models.addAll(getAllFromAnotherUser());
+        models.addAll(getAllCopied());
+        return models;
+    }
+
+    public static RecipeDurationPersistenceModel getActiveByDomainId(String domainId) {
+        long lastUpdate = 0;
+        RecipeDurationPersistenceModel model = new RecipeDurationPersistenceModel.Builder().
+                getDefault().build();
+        for (RecipeDurationPersistenceModel m : getAll()) {
+            if (lastUpdate < m.getLastUpdate()) {
+                model = m;
+                lastUpdate = m.getLastUpdate();
+            }
+        }
+        return model;
     }
 }

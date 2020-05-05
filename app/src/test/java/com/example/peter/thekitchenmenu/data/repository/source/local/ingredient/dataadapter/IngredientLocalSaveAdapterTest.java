@@ -1,9 +1,9 @@
-package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.dataadapter;
+package com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.dataadapter;
 
-import com.example.peter.thekitchenmenu.data.repository.recipe.identity.TestDataRecipeIdentity;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.datasource.RecipeIdentityLocalDataSource;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.datasource.TestDataRecipeIdentityEntity;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityPersistenceModel;
+import com.example.peter.thekitchenmenu.data.repository.ingredient.TestDataIngredient;
+import com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.datasource.IngredientLocalDataSource;
+import com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.datasource.TestDataIngredientEntity;
+import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientPersistenceModel;
 
 import static org.junit.Assert.*;
 
@@ -18,26 +18,27 @@ import static org.junit.Assert.*;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 
-public class IdentityLocalSaveAdapterTest {
+public class IngredientLocalSaveAdapterTest {
 
     // region constants ----------------------------------------------------------------------------
     // endregion constants -------------------------------------------------------------------------
 
     // region helper fields ------------------------------------------------------------------------
     @Mock
-    RecipeIdentityLocalDataSource repoMock;
+    IngredientLocalDataSource repoMock;
     // endregion helper fields ---------------------------------------------------------------------
 
-    private IdentityLocalSaveAdapter SUT;
+    private IngredientLocalSaveAdapter SUT;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
         SUT = givenSystemUnderTest();
+
     }
 
-    private IdentityLocalSaveAdapter givenSystemUnderTest() {
-        return new IdentityLocalSaveAdapter(
+    private IngredientLocalSaveAdapter givenSystemUnderTest() {
+        return new IngredientLocalSaveAdapter(
                 repoMock
         );
     }
@@ -45,17 +46,17 @@ public class IdentityLocalSaveAdapterTest {
     @Test
     public void save() {
         // Arrange
-        RecipeIdentityPersistenceModel modelUnderTest = TestDataRecipeIdentity.getValidNewComplete();
+        IngredientPersistenceModel modelUnderTest = TestDataIngredient.
+                getValidNewNameValidDescriptionValid();
         // Act
         SUT.save(modelUnderTest);
         // Assert
-        verify(repoMock).save(eq(TestDataRecipeIdentityEntity.getValidNewComplete()));
+        verify(repoMock).save(eq(TestDataIngredientEntity.getValidNewNameValidDescriptionValid()));
     }
 
     // region helper methods -----------------------------------------------------------------------
     // endregion helper methods --------------------------------------------------------------------
 
     // region helper classes -----------------------------------------------------------------------
-
     // endregion helper classes --------------------------------------------------------------------
 }

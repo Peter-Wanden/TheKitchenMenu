@@ -7,8 +7,6 @@ import com.example.peter.thekitchenmenu.data.repository.ingredient.RepositoryIng
 import org.junit.*;
 import org.mockito.*;
 
-import java.util.List;
-
 import static org.mockito.Mockito.*;
 
 public class IngredientDuplicateCheckerTest {
@@ -119,7 +117,7 @@ public class IngredientDuplicateCheckerTest {
     // region helper methods -----------------------------------------------------------------------
     private void simulateGetAllFromDatabase() {
         verify(repoMock).getAll(getRepoCallbackCaptor.capture());
-        getRepoCallbackCaptor.getValue().onAllLoaded(TestDataIngredient.getAllIngredients());
+        getRepoCallbackCaptor.getValue().onAllLoaded(TestDataIngredient.getAll());
     }
     // endregion helper methods --------------------------------------------------------------------
 

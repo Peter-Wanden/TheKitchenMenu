@@ -1,11 +1,14 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata;
 
 import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.parent.RecipeMetadataParentEntity;
-import com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter.PrimitiveDataSource;
+import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess.GetDomainModelCallback;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeMetadata;
+import com.example.peter.thekitchenmenu.data.repository.recipe.metadata.TestDataRecipeMetadata;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.TestDataRecipeMetadataEntity;
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentState;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
@@ -23,6 +26,12 @@ import java.util.Set;
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import org.junit.*;
+import org.mockito.*;
 
 public class RecipeMetadataTest {
     private static final String TAG = "tkm-" + RecipeMetadataTest.class.getSimpleName() + ": ";
@@ -31,23 +40,23 @@ public class RecipeMetadataTest {
     // endregion constants -------------------------------------------------------------------------
 
     // region helper fields ------------------------------------------------------------------------
-//    @Mock
-//    RepositoryRecipeComponentState repoRecipeMetadataMock;
+    @Mock
+    RepositoryRecipeMetadata repoMock;
     @Captor
-    ArgumentCaptor<PrimitiveDataSource.GetPrimitiveCallback<RecipeMetadataParentEntity>> repoMetadataCallback;
+    ArgumentCaptor<GetDomainModelCallback<RecipeMetadataPersistenceModel>> repoMetadataCallback;
     @Mock
     UniqueIdProvider idProviderMock;
     @Mock
     TimeProvider timeProviderMock;
-    private UseCaseHandler handler;
 
+    private UseCaseHandler handler;
     private HashMap<ComponentName, ComponentState> componentStates;
     private RecipeMetadataResponse onSuccessResponse;
     private RecipeMetadataResponse onErrorResponse;
 
     // endregion helper fields ---------------------------------------------------------------------
 
-    private com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata SUT;
+    private RecipeMetadata SUT;
 
     @Before
     public void setup() {
@@ -56,7 +65,7 @@ public class RecipeMetadataTest {
 
     }
 
-    private com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata givenUseCase() {
+    private RecipeMetadata givenUseCase() {
         handler = new UseCaseHandler(new UseCaseSchedulerMock());
         componentStates = new HashMap<>();
 
@@ -66,25 +75,29 @@ public class RecipeMetadataTest {
         requiredComponents.add(ComponentName.DURATION);
         requiredComponents.add(ComponentName.PORTIONS);
 
-//        return new com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata(
-//                timeProviderMock,
-//                repoRecipeMetadataMock,
-//                requiredComponents
-//        );
-        return null;
+        return new RecipeMetadata(
+                repoMock,
+                idProviderMock,
+                timeProviderMock,
+                requiredComponents
+        );
     }
 
-    // TODO -
-    //  - save data
+    // TODO - save data
 
     @Test
-    public void newId_databaseCalled_responseDATA_UNAVAILABLE() {
+    public void newId_databaseCalled_DATA_UNAVAILABLE() {
         // Arrange
-//        String recipeId = TestDataRecipeMetadataEntity.getNewInvalidParent().getDataId();
+        String recipeId = TestDataRecipeMetadata.NEW_RECIPE_DOMAIN_ID;
+        when(idProviderMock.getUId()).thenReturn(TestDataRecipeMetadata.
+                getDataUnavailable().getDataId());
         // Act
-//        givenNewIdAsInitialRequest(recipeId);
+        givenNewIdAsInitialRequest(recipeId);
         // Assert response
-        assertTrue(onErrorResponse.getModel().getFailReasons().contains(CommonFailReason.DATA_UNAVAILABLE));
+        assertTrue(
+                onErrorResponse.getMetadata().getFailReasons().
+                        contains(CommonFailReason.DATA_UNAVAILABLE)
+        );
     }
 
     @Test
@@ -111,10 +124,11 @@ public class RecipeMetadataTest {
         // Act
 //        handler.execute(SUT, request, new MetadataCallbackClient());
         // Assert
-        assertEquals(RecipeState.DATA_UNAVAILABLE, onErrorResponse.getModel().getState());
-        assertTrue(onErrorResponse.getModel().
+        assertEquals(ComponentState.DATA_UNAVAILABLE, onErrorResponse.getMetadata().getState());
+        assertTrue(onErrorResponse.getMetadata().
                 getFailReasons().
-                contains(FailReason.MISSING_COMPONENTS));
+                contains(FailReason.MISSING_COMPONENTS)
+        );
     }
 
     @Test
@@ -142,9 +156,13 @@ public class RecipeMetadataTest {
         // Act
 //        handler.execute(SUT, request, new MetadataCallbackClient());
         // Assert
-        assertEquals(RecipeState.INVALID_UNCHANGED, onErrorResponse.getModel().getState());
-        assertTrue(onErrorResponse.getModel().getFailReasons().
-                contains(com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.FailReason.INVALID_COMPONENTS));
+        assertEquals(
+                ComponentState.INVALID_UNCHANGED,
+                onErrorResponse.getMetadata().getState()
+        );
+        assertTrue(onErrorResponse.getMetadata().getFailReasons().
+                contains(RecipeMetadata.FailReason.INVALID_COMPONENTS)
+        );
     }
 
     @Test
@@ -154,10 +172,10 @@ public class RecipeMetadataTest {
 //        givenNewIdAsInitialRequest(recipeId);
 
         // Arrange INVALID_CHANGED / INVALID_COMPONENTS state
-        componentStates.put(com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentName.IDENTITY, com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentState.VALID_UNCHANGED);
-        componentStates.put(com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentName.DURATION, com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentState.VALID_UNCHANGED);
-        componentStates.put(com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentName.COURSE, com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentState.VALID_UNCHANGED);
-        componentStates.put(com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentName.PORTIONS, com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentState.INVALID_CHANGED);
+        componentStates.put(RecipeMetadata.ComponentName.IDENTITY, RecipeMetadata.ComponentState.VALID_UNCHANGED);
+        componentStates.put(RecipeMetadata.ComponentName.DURATION, RecipeMetadata.ComponentState.VALID_UNCHANGED);
+        componentStates.put(RecipeMetadata.ComponentName.COURSE, RecipeMetadata.ComponentState.VALID_UNCHANGED);
+        componentStates.put(RecipeMetadata.ComponentName.PORTIONS, RecipeMetadata.ComponentState.INVALID_CHANGED);
 
         RecipeMetadataRequest.Model model = new RecipeMetadataRequest.Model.Builder().
                 getDefault().
@@ -172,9 +190,13 @@ public class RecipeMetadataTest {
         // Act
 //        handler.execute(SUT, request, new MetadataCallbackClient());
         // Assert
-        assertEquals(RecipeState.INVALID_CHANGED, onErrorResponse.getModel().getState());
-        assertTrue(onErrorResponse.getModel().getFailReasons().
-                contains(com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.FailReason.INVALID_COMPONENTS));
+        assertEquals(
+                ComponentState.INVALID_CHANGED,
+                onErrorResponse.getMetadata().getState()
+        );
+        assertTrue(
+                onErrorResponse.getMetadata().getFailReasons().
+                contains(RecipeMetadata.FailReason.INVALID_COMPONENTS));
     }
 
     @Test
@@ -202,9 +224,12 @@ public class RecipeMetadataTest {
         // Act
 //        handler.execute(SUT, request, new MetadataCallbackClient());
         // Assert
-        assertEquals(RecipeState.VALID_UNCHANGED, onSuccessResponse.getModel().getState());
-//        assertTrue(onSuccessResponse.getModel().getFailReasons().
-//                contains(com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.FailReason.NONE));
+        assertEquals(
+                ComponentState.VALID_UNCHANGED,
+                onSuccessResponse.getMetadata().getState()
+        );
+        assertTrue(onSuccessResponse.getMetadata().getFailReasons().
+                contains(CommonFailReason.NONE));
     }
 
     @Test
@@ -214,10 +239,10 @@ public class RecipeMetadataTest {
 //        givenNewIdAsInitialRequest(recipeId);
 
         // Arrange VALID_CHANGED / CommonFailReason.NONE state
-        componentStates.put(com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentName.IDENTITY, com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentState.VALID_UNCHANGED);
-        componentStates.put(com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentName.DURATION, com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentState.VALID_UNCHANGED);
-        componentStates.put(com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentName.COURSE, com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentState.VALID_UNCHANGED);
-        componentStates.put(com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentName.PORTIONS, com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentState.VALID_CHANGED);
+        componentStates.put(RecipeMetadata.ComponentName.IDENTITY, RecipeMetadata.ComponentState.VALID_UNCHANGED);
+        componentStates.put(RecipeMetadata.ComponentName.DURATION, RecipeMetadata.ComponentState.VALID_UNCHANGED);
+        componentStates.put(RecipeMetadata.ComponentName.COURSE, RecipeMetadata.ComponentState.VALID_UNCHANGED);
+        componentStates.put(RecipeMetadata.ComponentName.PORTIONS, RecipeMetadata.ComponentState.VALID_CHANGED);
 
         RecipeMetadataRequest.Model model = new RecipeMetadataRequest.Model.Builder().
                 getDefault().
@@ -233,30 +258,33 @@ public class RecipeMetadataTest {
 //        handler.execute(SUT, request, new MetadataCallbackClient());
 
         // Assert
-        assertEquals(com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.RecipeState.VALID_CHANGED, onSuccessResponse.getModel().getState());
-//        assertTrue(onSuccessResponse.getModel().getFailReasons().
-//                contains(com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.FailReason.NONE));
+        assertEquals(
+                ComponentState.VALID_CHANGED,
+                onSuccessResponse.getMetadata().getState()
+        );
+        assertTrue(onSuccessResponse.getMetadata().getFailReasons().
+                contains(CommonFailReason.NONE)
+        );
     }
-
 
 
     // region helper methods -----------------------------------------------------------------------
-    private void givenNewIdAsInitialRequest(String id) {
+    private void givenNewIdAsInitialRequest(String domainId) {
         // Arrange/execute initial request
-//        when(timeProviderMock.getCurrentTimeInMills()).
-//                thenReturn(TestDataRecipeMetadataEntity.getNewInvalidParent().getCreateDate());
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(TestDataRecipeMetadata.
+                getDataUnavailable().getCreateDate());
 
         RecipeMetadataRequest initialRequest = new RecipeMetadataRequest.Builder().getDefault().
-                setDataId(id).
+                setDomainId(domainId).
                 build();
 
         handler.execute(SUT, initialRequest, new MetadataCallbackClient());
-        whenRepoRecipeMetadataCalledThenReturnDataUnavailable(id);
+        whenRepoRecipeMetadataCalledThenReturnDataUnavailable(domainId);
     }
 
-    private void whenRepoRecipeMetadataCalledThenReturnDataUnavailable(String id) {
-//        verify(repoRecipeMetadataMock).getById(eq(id), repoMetadataCallback.capture());
-        repoMetadataCallback.getValue().onDataUnavailable();
+    private void whenRepoRecipeMetadataCalledThenReturnDataUnavailable(String domainId) {
+        verify(repoMock).getActiveByDomainId(eq(domainId), repoMetadataCallback.capture());
+        repoMetadataCallback.getValue().onModelUnavailable();
     }
     // endregion helper methods --------------------------------------------------------------------
 
@@ -277,6 +305,4 @@ public class RecipeMetadataTest {
         }
     }
     // endregion helper classes --------------------------------------------------------------------
-
-
 }

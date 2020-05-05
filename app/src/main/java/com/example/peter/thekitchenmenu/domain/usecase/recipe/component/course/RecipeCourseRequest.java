@@ -16,6 +16,15 @@ public final class RecipeCourseRequest
         extends BaseDomainMessageModel<RecipeCourseRequest.Model>
         implements UseCase.Request {
 
+    @Override
+    public String toString() {
+        return "RecipeCourseRequest{" +
+                "dataId='" + dataId + '\'' +
+                ", domainId='" + domainId + '\'' +
+                ", model=" + model +
+                '}';
+    }
+
     private RecipeCourseRequest() {
     }
 

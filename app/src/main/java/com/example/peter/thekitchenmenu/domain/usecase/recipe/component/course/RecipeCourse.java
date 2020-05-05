@@ -231,7 +231,7 @@ public class RecipeCourse
                 setModel(getResponseModel()).
                 build();
 
-        System.out.println(TAG + "sendResponse() " + response);
+        System.out.println(TAG + response);
 
         sendResponse(response);
     }

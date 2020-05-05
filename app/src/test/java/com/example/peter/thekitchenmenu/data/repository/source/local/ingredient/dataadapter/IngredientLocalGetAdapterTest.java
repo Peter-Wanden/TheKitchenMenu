@@ -7,6 +7,7 @@ import com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter
 import com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.datasource.IngredientEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.datasource.IngredientLocalDataSource;
 import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientPersistenceModel;
+import com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.datasource.TestDataIngredientEntity;
 
 import static org.junit.Assert.*;
 
@@ -79,51 +80,123 @@ public class IngredientLocalGetAdapterTest {
         // Arrange
         IngredientPersistenceModel modelUnderTest = TestDataIngredient.
                 getValidExistingNameValidDescriptionValid();
-
         // Act
+        SUT.getByDataId(modelUnderTest.getDataId(), callbackClient);
         // Assert
+        verify(repoMock).getByDataId(eq(modelUnderTest.getDataId()), repoCallback.capture());
+        repoCallback.getValue().onEntityLoaded(TestDataIngredientEntity.
+                getValidExistingNameValidDescriptionValid());
+
+        assertEquals(
+                modelUnderTest,
+                callbackClient.model
+        );
     }
 
     @Test
     public void getAllByDomainId_MODELS_UNAVAILABLE() {
         // Arrange
+        String domainId = "domainIdNotInTestData";
         // Act
+        SUT.getAllByDomainId(domainId, getAllCallbackClient);
         // Assert
+        verify(repoMock).getAllByDomainId(eq(domainId), repoGetAllCallback.capture());
+        repoGetAllCallback.getValue().onDataUnavailable();
+
+        assertTrue(
+                getAllCallbackClient.isModelsUnavailable
+        );
     }
 
     @Test
     public void getAllByDomainId_returnAllModelsForDomainId() {
         // Arrange
+        String domainId = TestDataIngredient.getValidExistingNameValidDescriptionValid().
+                getDomainId();
+        List<IngredientPersistenceModel> models = TestDataIngredient.getAllByDomainId(domainId);
         // Act
+        SUT.getAllByDomainId(domainId, getAllCallbackClient);
         // Assert
+        verify(repoMock).getAllByDomainId(eq(domainId), repoGetAllCallback.capture());
+        repoGetAllCallback.getValue().onAllLoaded(TestDataIngredientEntity.
+                getAllByDomainId(domainId)
+        );
+        assertEquals(
+                models,
+                getAllCallbackClient.models
+        );
     }
 
     @Test
     public void getActiveByDomainId_MODEL_UNAVAILABLE() {
         // Arrange
+        String domainId = "domainIdNotInTestData";
         // Act
+        SUT.getActiveByDomainId(domainId, callbackClient);
         // Assert
+        verify(repoMock).getAllByDomainId(eq(domainId), repoGetAllCallback.capture());
+        repoGetAllCallback.getValue().onDataUnavailable();
+
+        assertTrue(
+                callbackClient.isModelUnavailable
+        );
     }
 
     @Test
     public void getActiveByDomainId_returnMostRecentModel() {
         // Arrange
+        String domainId = TestDataIngredient.EXISTING_INGREDIENT_DOMAIN_ID;
+        long lastUpdate = 0L;
+
+        IngredientPersistenceModel modelUnderTest = new IngredientPersistenceModel.Builder().
+                getDefault().build();
+
+        for (IngredientPersistenceModel m : TestDataIngredient.getAllByDomainId(domainId)) {
+            if (m.getLastUpdate() > lastUpdate) {
+                modelUnderTest = m;
+                lastUpdate = m.getLastUpdate();
+            }
+        }
         // Act
+        SUT.getActiveByDomainId(domainId, callbackClient);
         // Assert
+        verify(repoMock).getAllByDomainId(eq(domainId), repoGetAllCallback.capture());
+        repoGetAllCallback.getValue().onAllLoaded(TestDataIngredientEntity.getAllByDomainId(domainId));
+
+        assertEquals(
+                modelUnderTest,
+                callbackClient.model
+        );
     }
 
     @Test
     public void getAll_MODELS_UNAVAILABLE() {
         // Arrange
         // Act
+        SUT.getAll(getAllCallbackClient);
         // Assert
+        verify(repoMock).getAll(repoGetAllCallback.capture());
+        repoGetAllCallback.getValue().onDataUnavailable();
+
+        assertTrue(
+                getAllCallbackClient.isModelsUnavailable
+        );
     }
 
     @Test
     public void getAll_returnAllModels() {
         // Arrange
+        List<IngredientPersistenceModel> modelsUnderTest = TestDataIngredient.getAll();
         // Act
+        SUT.getAll(getAllCallbackClient);
         // Assert
+        verify(repoMock).getAll(repoGetAllCallback.capture());
+        repoGetAllCallback.getValue().onAllLoaded(TestDataIngredientEntity.getAll());
+
+        assertEquals(
+                modelsUnderTest,
+                getAllCallbackClient.models
+        );
     }
 
     // region helper methods -----------------------------------------------------------------------

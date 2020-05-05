@@ -1,22 +1,8 @@
 package com.example.peter.thekitchenmenu.domain.usecase;
 
-
-import javax.annotation.Nonnull;
-
 public abstract class BaseDomainMessageModelMetadata<
         DM extends BaseDomainModel>
         extends BaseDomainMessageModel<DM> {
-
-    @Nonnull
-    @Override
-    public String toString() {
-        return "BaseDomainMessageModelMetadata{" +
-                "metadata=" + metadata +
-                ", model=" + model +
-                ", dataId='" + dataId + '\'' +
-                ", domainId='" + domainId + '\'' +
-                '}';
-    }
 
     protected UseCaseMetadata metadata;
 

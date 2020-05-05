@@ -12,6 +12,15 @@ public final class RecipeIdentityRequest
         extends BaseDomainMessageModel<RecipeIdentityRequest.Model>
         implements UseCase.Request {
 
+    @Override
+    public String toString() {
+        return "RecipeIdentityRequest{" +
+                "dataId='" + dataId + '\'' +
+                ", domainId='" + domainId + '\'' +
+                ", model=" + model +
+                '}';
+    }
+
     private RecipeIdentityRequest() {}
 
     public static class Builder

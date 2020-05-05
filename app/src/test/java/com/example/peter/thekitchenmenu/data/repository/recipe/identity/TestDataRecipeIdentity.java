@@ -387,6 +387,19 @@ public class TestDataRecipeIdentity {
         models.addAll(getAllCopied());
         return models;
     }
+
+    public static RecipeIdentityPersistenceModel getActiveByDomainId(String domainId) {
+        long lastUpdate = 0;
+        RecipeIdentityPersistenceModel model = new RecipeIdentityPersistenceModel.Builder().
+                getDefault().build();
+        for (RecipeIdentityPersistenceModel m : getAllByDomainId(domainId)) {
+            if (m.getLastUpdate() > lastUpdate) {
+                model = m;
+                lastUpdate = m.getLastUpdate();
+            }
+        }
+        return model;
+    }
 }
 
 

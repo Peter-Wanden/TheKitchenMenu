@@ -171,8 +171,9 @@ public class UseCaseFactory {
         requiredComponents.add(RecipeMetadata.ComponentName.PORTIONS);
 
         return new RecipeMetadata(
-                new TimeProvider(),
                 recipeMetadataRepository,
+                new UniqueIdProvider(),
+                new TimeProvider(),
                 requiredComponents
         );
     }
