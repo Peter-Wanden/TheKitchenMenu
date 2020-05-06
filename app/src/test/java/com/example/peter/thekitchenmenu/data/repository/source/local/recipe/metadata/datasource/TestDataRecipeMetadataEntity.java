@@ -209,7 +209,7 @@ public class TestDataRecipeMetadataEntity {
                 setDataId(m.getDataId()).
                 setDomainId(m.getDomainId()).
                 setRecipeParentDomainId(m.getParentDomainId()).
-                setRecipeStateId(m.getRecipeState().getId()).
+                setRecipeStateId(m.getRecipeState().errorLevel()).
                 setCreatedBy(m.getCreatedBy()).
                 setCreateDate(m.getCreateDate()).
                 setLastUpdate(m.getLastUpdate()).
@@ -218,18 +218,18 @@ public class TestDataRecipeMetadataEntity {
 
     private static List<RecipeFailReasonEntity> getFailReasonEntitiesFromPersistentModel(
             RecipeMetadataPersistenceModel m) {
-        List<RecipeFailReasonEntity> e = new ArrayList<>();
+        List<RecipeFailReasonEntity> entities = new ArrayList<>();
         int dataId = 0;
         for (FailReasons f : m.getFailReasons()) {
-            e.add(new RecipeFailReasonEntity(
+            entities.add(
+                    new RecipeFailReasonEntity(
                             String.valueOf(dataId),
                             m.getDataId(),
-                            f.getId()
-                    )
+                            f.getId())
             );
             dataId++;
         }
-        return e;
+        return entities;
     }
 
     private static List<RecipeComponentStateEntity> getComponentStateEntitiesFromPersistentModel(
@@ -242,7 +242,7 @@ public class TestDataRecipeMetadataEntity {
                             String.valueOf(dataId),
                             model.getDataId(),
                             name.getId(),
-                            model.getComponentStates().get(name).getId()
+                            model.getComponentStates().get(name).errorLevel()
                     )
             );
             dataId++;

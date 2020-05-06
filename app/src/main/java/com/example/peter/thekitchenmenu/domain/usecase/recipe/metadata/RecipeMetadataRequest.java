@@ -1,15 +1,16 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata;
 
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainMessageModel;
 import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 
 import java.util.HashMap;
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.*;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentName;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentState;
 
 public final class RecipeMetadataRequest
         extends BaseDomainMessageModel<RecipeMetadataRequest.Model>
@@ -24,13 +25,15 @@ public final class RecipeMetadataRequest
                 '}';
     }
 
-    private RecipeMetadataRequest() {}
+    private RecipeMetadataRequest() {
+    }
 
     public static class Builder
             extends UseCaseMessageBuilderModel<Builder, RecipeMetadataRequest, Model> {
 
         public Builder() {
             message = new RecipeMetadataRequest();
+            message.model = new Model();
         }
 
         public Builder getDefault() {

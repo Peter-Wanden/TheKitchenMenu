@@ -49,7 +49,7 @@ public class RecipeMetadataLocalSaveAdapter {
                 setDataId(model.getDataId()).
                 setDomainId(model.getDomainId()).
                 setRecipeParentDomainId(model.getParentDomainId()).
-                setRecipeStateId(model.getRecipeState().getId()).
+                setRecipeStateId(model.getRecipeState().errorLevel()).
                 setCreatedBy(model.getCreatedBy()).
                 setCreateDate(model.getCreateDate()).
                 setLastUpdate(model.getLastUpdate()).
@@ -65,7 +65,7 @@ public class RecipeMetadataLocalSaveAdapter {
             String dataId = idProvider.getUId();
             String parentId = model.getDataId();
             int componentNameAsInt = name.getId();
-            int componentStateAsInt = model.getComponentStates().get(name).getId();
+            int componentStateAsInt = model.getComponentStates().get(name).errorLevel();
 
             entityList.add(
                     new RecipeComponentStateEntity(
