@@ -1,9 +1,6 @@
 package com.example.peter.thekitchenmenu.data.repository.recipe.metadata;
 
 import com.example.peter.thekitchenmenu.app.Constants;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.componentstate.RecipeComponentStateEntity;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.failreason.RecipeFailReasonEntity;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.parent.RecipeMetadataParentEntity;
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.model.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadataPersistenceModel;
@@ -13,7 +10,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.*;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentName;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentState;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.FailReason;
 
 /**
  * Persistence stores the state of an object (data model) each time it changes. Therefore there can
@@ -49,7 +48,7 @@ public class TestDataRecipeMetadata {
      2. has one or more components reporting invalid unchanged data
      3. remains unchanged by the current session
      */
-    public static RecipeMetadataPersistenceModel getInvalidUnchangedPersistentModel() {
+    public static RecipeMetadataPersistenceModel getInvalidUnchanged() {
         return new RecipeMetadataPersistenceModel.Builder().
                 setDataId("dataId-recipeMetadata-id1").
                 setDomainId("domainId-recipe-Id1").
@@ -86,14 +85,15 @@ public class TestDataRecipeMetadata {
     }
 
     /*
-    RecipeState.VALID_CHANGED - Represents the state of a recipe that:
+    RecipeState.VALID_CHANGED - Represents the state of a recipe which:
     1. is newly created
     2. has all required components
     3. all completed components are reporting valid data.
      */
+    // getValidChanged() final state
     public static RecipeMetadataPersistenceModel getValidChanged0() {
         return new RecipeMetadataPersistenceModel.Builder().
-                setDataId(getDataUnavailable().getDataId()).
+                setDataId("dataId-recipeMetadata-id5").
                 setDomainId(getDataUnavailable().getDomainId()).
                 setParentDomainId(getDataUnavailable().getParentDomainId()).
                 setRecipeState(ComponentState.VALID_CHANGED).
@@ -105,43 +105,34 @@ public class TestDataRecipeMetadata {
                 build();
     }
 
-    // getValidChanged() previous state
+    // getValidChanged() previous state 1
     public static RecipeMetadataPersistenceModel getValidChanged1() {
         return new RecipeMetadataPersistenceModel.Builder().
-                setDataId(getDataUnavailable().getDataId()).
+                setDataId("dataId-recipeMetadata-id4").
                 setDomainId(getDataUnavailable().getDomainId()).
                 setParentDomainId(getDataUnavailable().getParentDomainId()).
-                setRecipeState(ComponentState.VALID_CHANGED).
-                setFailReasons(getFailReasonsNone()).
-                setComponentStates(getValidChangedComponentStates()).
+                setRecipeState(ComponentState.INVALID_CHANGED).
+                setFailReasons(getInvalidComponentsFailReasons()).
+                setComponentStates(getInvalidChangedComponentStates()).
                 setCreatedBy(Constants.getUserId()).
                 setCreateDate(40L).
                 setLastUpdate(50L).
                 build();
     }
 
-    // getValidChanged() previous state
+    // getValidChanged() previous state 2
     public static RecipeMetadataPersistenceModel getValidChanged2() {
         return new RecipeMetadataPersistenceModel.Builder().
-                setDataId(getDataUnavailable().getDataId()).
+                setDataId("dataId-recipeMetadata-id3").
                 setDomainId(getDataUnavailable().getDomainId()).
                 setParentDomainId(getDataUnavailable().getParentDomainId()).
-                setRecipeState(ComponentState.VALID_CHANGED).
-                setFailReasons(getFailReasonsNone()).
-                setComponentStates(getValidChangedComponentStates()).
+                setRecipeState(ComponentState.DATA_UNAVAILABLE).
+                setFailReasons(getDataUnavailableFailReasons()).
+                setComponentStates(getDataUnavailableComponentStates()).
                 setCreatedBy(Constants.getUserId()).
                 setCreateDate(40L).
                 setLastUpdate(40L).
                 build();
-    }
-
-    // getValidChanged() previous states
-    public static List<RecipeMetadataPersistenceModel> getValidChangedList() {
-        List<RecipeMetadataPersistenceModel> models = new ArrayList<>();
-        models.add(0, getValidChanged0());
-        models.add(1, getValidChanged1());
-        models.add(2, getValidChanged2());
-        return models;
     }
 
     /*
@@ -152,7 +143,7 @@ public class TestDataRecipeMetadata {
      */
     public static RecipeMetadataPersistenceModel getValidUnchanged() {
         return new RecipeMetadataPersistenceModel.Builder().
-                setDataId("dataId-recipeMetadata-Id3").
+                setDataId("dataId-recipeMetadata-Id6").
                 setDomainId("domainId-recipe-Id2").
                 setParentDomainId("").
                 setRecipeState(ComponentState.VALID_UNCHANGED).
@@ -170,7 +161,7 @@ public class TestDataRecipeMetadata {
      */
     public static RecipeMetadataPersistenceModel getValidFromAnotherUser() {
         return new RecipeMetadataPersistenceModel.Builder().
-                setDataId("dataId-recipeMetadata-Id4").
+                setDataId("dataId-recipeMetadata-Id7").
                 setDomainId("domainId-recipe-Id20").
                 setParentDomainId("").
                 setRecipeState(ComponentState.VALID_UNCHANGED).
@@ -207,7 +198,7 @@ public class TestDataRecipeMetadata {
     public static RecipeMetadataPersistenceModel getValidCopied() {
         RecipeMetadataPersistenceModel validParentFromAnotherUser = getValidFromAnotherUser();
         return new RecipeMetadataPersistenceModel.Builder().
-                setDataId("dataId-recipeMetadata-Id5").
+                setDataId("dataId-recipeMetadata-Id30").
                 setDomainId("dataId-recipeMetadata-Id3").
                 setParentDomainId(validParentFromAnotherUser.getDomainId()).
                 setRecipeState(validParentFromAnotherUser.getRecipeState()).
@@ -226,7 +217,7 @@ public class TestDataRecipeMetadata {
     public static RecipeMetadataPersistenceModel getInvalidCopied() {
         RecipeMetadataPersistenceModel invalidParentFromAnotherUser = getInvalidFromAnotherUser();
         return new RecipeMetadataPersistenceModel.Builder().
-                setDataId("dataId-recipeMetadata-Idd6").
+                setDataId("dataId-recipeMetadata-Idd31").
                 setDomainId("domainId-recipeMetadata-Id4").
                 setParentDomainId(invalidParentFromAnotherUser.getDomainId()).
                 setRecipeState(invalidParentFromAnotherUser.getRecipeState()).
@@ -238,7 +229,6 @@ public class TestDataRecipeMetadata {
                 build();
     }
 
-    // TODO - Valid and invalid parent from same user!!
     private static List<FailReasons> getDataUnavailableFailReasons() {
         List<FailReasons> f = new ArrayList<>();
         f.add(CommonFailReason.DATA_UNAVAILABLE);
@@ -305,7 +295,7 @@ public class TestDataRecipeMetadata {
     public static List<RecipeMetadataPersistenceModel> getAll() {
         return Arrays.asList(
                 getDataUnavailable(),
-                getInvalidUnchangedPersistentModel(),
+                getInvalidUnchanged(),
                 getInvalidChanged(),
                 getValidChanged0(),
                 getValidChanged1(),

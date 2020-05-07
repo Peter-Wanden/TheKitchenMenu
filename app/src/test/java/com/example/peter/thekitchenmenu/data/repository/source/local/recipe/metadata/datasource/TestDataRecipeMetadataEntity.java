@@ -33,7 +33,7 @@ public class TestDataRecipeMetadataEntity {
 
     public static RecipeMetadataParentEntity getInvalidUnchangedParentEntity() {
         return getParentEntityFromPersistenceModel(TestDataRecipeMetadata.
-                getInvalidUnchangedPersistentModel()
+                getInvalidUnchanged()
         );
     }
 
@@ -45,7 +45,7 @@ public class TestDataRecipeMetadataEntity {
 
     public static List<RecipeComponentStateEntity> getInvalidUnchangedComponentStateEntities() {
         return getComponentStateEntitiesFromPersistentModel(TestDataRecipeMetadata.
-                getInvalidUnchangedPersistentModel()
+                getInvalidUnchanged()
         );
     }
 
@@ -209,7 +209,7 @@ public class TestDataRecipeMetadataEntity {
                 setDataId(m.getDataId()).
                 setDomainId(m.getDomainId()).
                 setRecipeParentDomainId(m.getParentDomainId()).
-                setRecipeStateId(m.getRecipeState().errorLevel()).
+                setRecipeStateId(m.getRecipeState().stateLevel()).
                 setCreatedBy(m.getCreatedBy()).
                 setCreateDate(m.getCreateDate()).
                 setLastUpdate(m.getLastUpdate()).
@@ -242,7 +242,7 @@ public class TestDataRecipeMetadataEntity {
                             String.valueOf(dataId),
                             model.getDataId(),
                             name.getId(),
-                            model.getComponentStates().get(name).errorLevel()
+                            model.getComponentStates().get(name).stateLevel()
                     )
             );
             dataId++;

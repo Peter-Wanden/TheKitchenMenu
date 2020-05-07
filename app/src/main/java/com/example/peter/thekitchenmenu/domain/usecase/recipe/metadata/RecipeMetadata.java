@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
 /**
  * Calculates and stores {@link Recipe} metadata state information based on recipe component
  * responses.
- *
+ * <p>
  * Always use as a {@link Recipe} component
  */
 public class RecipeMetadata
@@ -116,11 +116,11 @@ public class RecipeMetadata
                 options.put(c.id, c);
         }
 
-        public static ComponentState getFromId(int id) {
+        public static ComponentState getFromStateLevel(int id) {
             return options.get(id);
         }
 
-        public int errorLevel() {
+        public int stateLevel() {
             return id;
         }
     }
@@ -140,15 +140,11 @@ public class RecipeMetadata
     private String recipeId = "";
     private boolean isNewRequest;
 
-    private RecipeMetadataRequest.Model requestModel;
     private RecipeMetadataPersistenceModel persistenceModel;
 
     private ComponentState recipeState;
     private HashMap<ComponentName, ComponentState> componentStates;
     private HashMap<ComponentName, ComponentState> oldComponentStates;
-
-    private boolean hasRequiredComponents;
-    private boolean hasInvalidModels;
 
     // TODO - last update - should be the time of the last updated component
     // TODO - Data layer:
@@ -172,7 +168,6 @@ public class RecipeMetadata
     @Override
     protected <Q extends Request> void execute(Q request) {
         RecipeMetadataRequest r = (RecipeMetadataRequest) request;
-        requestModel = r.getModel();
         System.out.println(TAG + r);
 
         if (isNewRequest(r)) {
@@ -197,6 +192,9 @@ public class RecipeMetadata
     @Override
     public void onModelLoaded(RecipeMetadataPersistenceModel model) {
         persistenceModel = model;
+        recipeState = model.getRecipeState();
+        componentStates = model.getComponentStates();
+        failReasons.addAll(model.getFailReasons());
         dataId = model.getDataId();
         buildResponse();
     }
@@ -229,14 +227,20 @@ public class RecipeMetadata
     }
 
     private void calculateState() {
-        checkForRequiredComponents();
-        checkForInvalidComponents();
-        checkForValidComponents();
-
+        if (hasRequiredComponents()) {
+            checkForInvalidComponents();
+            if (isAllComponentsValid()) {
+                calculateValidState();
+            }
+        }
         buildResponse();
     }
 
-    private void checkForRequiredComponents() {
+    private boolean isAllComponentsValid() {
+        return recipeState.stateLevel() > ComponentState.INVALID_CHANGED.stateLevel();
+    }
+
+    private boolean hasRequiredComponents() {
         int noOfRequiredComponents = requiredComponents.size();
         int noOfComponentsSubmitted = 0;
 
@@ -247,7 +251,7 @@ public class RecipeMetadata
                 componentNotSubmitted(componentName);
             }
         }
-        hasRequiredComponents = noOfComponentsSubmitted == noOfRequiredComponents;
+        return noOfComponentsSubmitted == noOfRequiredComponents;
     }
 
     private boolean isComponentSateSubmitted(ComponentName componentName) {
@@ -258,59 +262,46 @@ public class RecipeMetadata
     private void componentNotSubmitted(ComponentName componentName) {
         componentStates.put(componentName, ComponentState.DATA_UNAVAILABLE);
         recipeState = ComponentState.DATA_UNAVAILABLE;
-        addFailReasonMissingModels();
-    }
 
-    private void addFailReasonMissingModels() {
         if (!failReasons.contains(FailReason.MISSING_COMPONENTS)) {
             failReasons.add(FailReason.MISSING_COMPONENTS);
         }
     }
 
     private void checkForInvalidComponents() {
-        if (hasRequiredComponents) {
-            for (ComponentName componentName : componentStates.keySet()) {
+        for (ComponentName componentName : componentStates.keySet()) {
+            ComponentState componentState = componentStates.get(componentName);
 
-                ComponentState componentState = componentStates.get(componentName);
-                if (ComponentState.INVALID_UNCHANGED == componentState &&
-                        recipeState.errorLevel() > ComponentState.INVALID_UNCHANGED.errorLevel()) {
+            if (ComponentState.INVALID_UNCHANGED == componentState &&
+                    ComponentState.INVALID_UNCHANGED.stateLevel() < recipeState.stateLevel()) {
 
-                    recipeState = ComponentState.INVALID_UNCHANGED;
-                    addFailReasonInvalidComponents();
+                recipeState = ComponentState.INVALID_UNCHANGED;
+                addFailReasonInvalidComponents();
 
-                } else if (componentState == ComponentState.INVALID_CHANGED &&
-                        recipeState.errorLevel() > ComponentState.INVALID_CHANGED.errorLevel()) {
+            } else if (ComponentState.INVALID_CHANGED == componentState &&
+                    ComponentState.INVALID_CHANGED.stateLevel() < recipeState.stateLevel()) {
 
-                    recipeState = ComponentState.INVALID_CHANGED;
-                    addFailReasonInvalidComponents();
-                }
+                recipeState = ComponentState.INVALID_CHANGED;
+                addFailReasonInvalidComponents();
             }
         }
     }
 
     private void addFailReasonInvalidComponents() {
-        hasInvalidModels = true;
         failReasons.add(FailReason.INVALID_COMPONENTS);
     }
 
-    private void checkForValidComponents() {
-        if (hasRequiredComponents && !hasInvalidModels) {
-            for (ComponentName componentName : componentStates.keySet()) {
+    private void calculateValidState() {
+        recipeState = ComponentState.VALID_UNCHANGED;
 
-                ComponentState componentState = componentStates.get(componentName);
-                if (componentState == ComponentState.VALID_UNCHANGED &&
-                        this.recipeState.errorLevel() > ComponentState.VALID_UNCHANGED.id) {
+        for (ComponentName componentName : componentStates.keySet()) {
+            ComponentState componentState = componentStates.get(componentName);
 
-                    this.recipeState = ComponentState.VALID_UNCHANGED;
-                    addFailReasonNone();
-
-                } else if (componentState == ComponentState.VALID_CHANGED &&
-                        this.recipeState.errorLevel() > ComponentState.VALID_CHANGED.id) {
-
-                    this.recipeState = ComponentState.VALID_CHANGED;
-                    addFailReasonNone();
-                }
+            if (ComponentState.VALID_CHANGED == componentState) {
+                recipeState = ComponentState.VALID_CHANGED;
             }
+
+            addFailReasonNone();
         }
     }
 
@@ -320,16 +311,11 @@ public class RecipeMetadata
         }
     }
 
-    private boolean isValid() {
-        return recipeState == ComponentState.VALID_UNCHANGED ||
-                recipeState == ComponentState.VALID_CHANGED;
-    }
-
     private void buildResponse() {
         RecipeMetadataResponse.Builder builder = new RecipeMetadataResponse.Builder();
         builder.setDomainId(recipeId);
 
-        if (ComponentState.VALID_CHANGED == getComponentState()) {
+        if (isChanged()) {
             RecipeMetadataPersistenceModel m = updatePersistenceModel();
             builder.setMetadata(getMetadata(m));
             persistenceModel = m;
@@ -347,7 +333,7 @@ public class RecipeMetadata
 
     private UseCaseMetadata getMetadata(RecipeMetadataPersistenceModel m) {
         return new UseCaseMetadata.Builder().
-                setState(getComponentState()).
+                setState(recipeState).
                 setFailReasons(new ArrayList<>(failReasons)).
                 setCreatedBy(Constants.getUserId()).
                 setCreateDate(m.getCreateDate()).
@@ -355,18 +341,8 @@ public class RecipeMetadata
                 build();
     }
 
-    private ComponentState getComponentState() {
-        boolean isValid = failReasons.contains(CommonFailReason.NONE);
-
-        return isValid ?
-                (isChanged() ? ComponentState.VALID_CHANGED : ComponentState.VALID_UNCHANGED)
-                :
-                (isChanged() ? ComponentState.INVALID_CHANGED : ComponentState.INVALID_UNCHANGED);
-    }
-
-    // TODO - is changed???
     private boolean isChanged() {
-        return !isNewRequest && this.componentStates.equals(oldComponentStates);
+        return !isNewRequest && !oldComponentStates.equals(componentStates);
     }
 
     private RecipeMetadataResponse.Model getResponseModel() {
@@ -377,7 +353,19 @@ public class RecipeMetadata
     }
 
     private RecipeMetadataPersistenceModel updatePersistenceModel() {
-        return new RecipeMetadataPersistenceModel.Builder().build();
+        RecipeMetadataRequest r = (RecipeMetadataRequest) getRequest();
+        dataId = idProvider.getUId();
+        return new RecipeMetadataPersistenceModel.Builder().
+                setDataId(dataId).
+                setDomainId(recipeId).
+                setParentDomainId(r.getModel().getParentDomainId()).
+                setRecipeState(recipeState).
+                setComponentStates(componentStates).
+                setFailReasons(failReasons).
+                setCreatedBy(Constants.getUserId()).
+                setCreateDate(persistenceModel.getCreateDate()).
+                setLastUpdate(timeProvider.getCurrentTimeInMills()).
+                build();
     }
 
     private void sendResponse(RecipeMetadataResponse response) {
@@ -387,6 +375,11 @@ public class RecipeMetadata
         } else {
             getUseCaseCallback().onError(response);
         }
+    }
+
+    private boolean isValid() { // Todo, change to: failReasons.contains(CommonFailReason.NONE);
+        return recipeState == ComponentState.VALID_UNCHANGED ||
+                recipeState == ComponentState.VALID_CHANGED;
     }
 
     private void save() {

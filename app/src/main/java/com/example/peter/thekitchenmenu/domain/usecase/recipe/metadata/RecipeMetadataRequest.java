@@ -106,6 +106,12 @@ public final class RecipeMetadataRequest
                 return self();
             }
 
+            public Builder basedOnResponseModel(RecipeMetadataResponse.Model m) {
+                model.parentDomainId = m.getParentDomainId();
+                model.componentStates = m.getComponentStates();
+                return self();
+            }
+
             public Builder setParentId(String parentId) {
                 model.parentDomainId = parentId;
                 return self();

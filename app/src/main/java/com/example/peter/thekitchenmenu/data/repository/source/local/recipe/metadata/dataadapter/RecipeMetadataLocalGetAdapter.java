@@ -23,7 +23,9 @@ import java.util.Set;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.*;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentName;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentState;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.FailReason;
 
 public class RecipeMetadataLocalGetAdapter {
 
@@ -147,7 +149,7 @@ public class RecipeMetadataLocalGetAdapter {
                 setDataId(e.getDataId()).
                 setDomainId(e.getDomainId()).
                 setParentDomainId(e.getParentDomainId()).
-                setRecipeState(ComponentState.getFromId(e.getRecipeStateId())).
+                setRecipeState(ComponentState.getFromStateLevel(e.getRecipeStateId())).
                 setCreatedBy(e.getCreatedBy()).
                 setCreateDate(e.getCreateDate()).
                 setLastUpdate(e.getLastUpdate()
@@ -217,7 +219,7 @@ public class RecipeMetadataLocalGetAdapter {
         for (RecipeComponentStateEntity e : entities) {
             s.put(
                     ComponentName.getFromId(e.getComponentNameId()),
-                    ComponentState.getFromId(e.getComponentStateId())
+                    ComponentState.getFromStateLevel(e.getComponentStateId())
             );
         }
         modelBuilder.setComponentStates(s);
