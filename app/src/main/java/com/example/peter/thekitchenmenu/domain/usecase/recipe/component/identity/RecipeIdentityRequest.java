@@ -1,8 +1,8 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity;
 
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainMessageModel;
 import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 
 import java.util.Objects;
 
@@ -12,6 +12,7 @@ public final class RecipeIdentityRequest
         extends BaseDomainMessageModel<RecipeIdentityRequest.Model>
         implements UseCase.Request {
 
+    @Nonnull
     @Override
     public String toString() {
         return "RecipeIdentityRequest{" +

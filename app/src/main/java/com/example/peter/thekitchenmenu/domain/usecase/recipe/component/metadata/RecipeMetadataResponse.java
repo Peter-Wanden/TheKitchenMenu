@@ -1,8 +1,8 @@
-package com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata;
+package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata;
 
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainMessageModelMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadata;
 
 import java.util.HashMap;
@@ -10,12 +10,14 @@ import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.*;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentName;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentState;
 
 public final class RecipeMetadataResponse
         extends BaseDomainMessageModelMetadata<RecipeMetadataResponse.Model>
         implements UseCase.Response {
 
+    @Nonnull
     @Override
     public String toString() {
         return "RecipeMetadataResponse{" +
@@ -23,7 +25,7 @@ public final class RecipeMetadataResponse
                 ", domainId='" + domainId + '\'' +
                 ", metadata=" + metadata +
                 ", model=" + model +
-                '}';
+                "'}'";
     }
 
     private RecipeMetadataResponse() {}

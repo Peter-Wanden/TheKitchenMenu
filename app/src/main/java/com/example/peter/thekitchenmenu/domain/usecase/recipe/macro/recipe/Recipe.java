@@ -1,36 +1,42 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe;
 
-
 import androidx.core.util.Pair;
 
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.model.FailReasons;
+import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainMessage;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.RecipeUseCaseCallback;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadataRequest;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadataResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourseRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourseResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDuration;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDurationRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDurationResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentity;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataRequest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortionsRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortionsResponse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentity;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDuration;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortions;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.RecipeUseCaseCallback;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.*;
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentName.*;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentName;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentName.COURSE;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentName.DURATION;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentName.IDENTITY;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentName.PORTIONS;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentName.RECIPE;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentName.RECIPE_METADATA;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentState;
 
 /**
  * A use case interactor acting as a command mediator enabling recipe components to work
@@ -98,7 +104,8 @@ public class Recipe extends UseCase {
     @Override
     public <Q extends Request> void execute(Q request) {
         extractRequestOriginator(request);
-        RecipeRequest r = (RecipeRequest) request;
+        // Cast to BaseDomainMessage to get access to data and domain Id's
+        BaseDomainMessage r = (BaseDomainMessage) request;
 
         if (isNewRequest(r.getDomainId()) || RECIPE == requestOriginator) {
             dataId = r.getDataId();
@@ -223,7 +230,8 @@ public class Recipe extends UseCase {
     private class CourseCallback extends RecipeUseCaseCallback<RecipeCourseResponse> {
         @Override
         protected void processResponse(RecipeCourseResponse response) {
-            addComponentState(COURSE, response.getMetadata().getState());
+            addComponentState(COURSE, response.getMetadata().getState()
+            );
             addComponentResponse(COURSE, response);
             checkComponentsUpdated();
         }
@@ -273,8 +281,10 @@ public class Recipe extends UseCase {
     private class PortionsCallback extends RecipeUseCaseCallback<RecipePortionsResponse> {
         @Override
         protected void processResponse(RecipePortionsResponse response) {
-            addComponentState(PORTIONS, response.getMetadata().getState());
+            addComponentState(PORTIONS, response.getMetadata().getState()
+            );
             addComponentResponse(PORTIONS, response);
+
             checkComponentsUpdated();
         }
     }
@@ -302,16 +312,17 @@ public class Recipe extends UseCase {
     }
 
     private void updateRecipeMetadata() {
-        System.out.println(TAG + "updateRecipeMetadata called");
-
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 setDataId(recipeMetadataResponse.getDataId()).
                 setDomainId(recipeId).
-                setModel(new RecipeMetadataRequest.Model.Builder().
-                        setParentId(recipeMetadataResponse.getModel().getParentDomainId()).
-                        setComponentStates(componentStates).
-                        build()).
+                setModel(
+                        new RecipeMetadataRequest.Model.Builder().
+                                setParentId(recipeMetadataResponse.getModel().getParentDomainId()).
+                                setComponentStates(componentStates).
+                                build()).
                 build();
+
+        System.out.println(TAG + "updateRecipeMetadata: " + request);
 
         handler.execute(recipeMetadata, request, new RecipeStateCallback());
     }
@@ -319,16 +330,13 @@ public class Recipe extends UseCase {
     private class RecipeStateCallback extends RecipeUseCaseCallback<RecipeMetadataResponse> {
         @Override
         protected void processResponse(RecipeMetadataResponse response) {
-            processRecipeMetadataResponse(response);
-        }
-    }
+            if (isMetadataChanged(response)) {
+                recipeMetadataResponse = response;
+                addComponentResponse(RECIPE_METADATA, response);
 
-    private void processRecipeMetadataResponse(RecipeMetadataResponse response) {
-        if (isMetadataChanged(response)) {
-            // todo - update recipe metadata with recipe state response
-
+            }
+            notifyMetadataListeners(response);
         }
-        notifyMetadataListeners(response);
     }
 
     public void registerMetadataListener(RecipeMetadataListener listener) {
@@ -336,12 +344,10 @@ public class Recipe extends UseCase {
     }
 
     private void notifyMetadataListeners(RecipeMetadataResponse response) {
-        if (isMetadataChanged(response)) {
-            recipeMetadataResponse = response;
-            for (RecipeMetadataListener listener : metaDataListeners) {
-                listener.recipeStateChanged(response);
-            }
+        for (RecipeMetadataListener listener : metaDataListeners) {
+            listener.recipeStateChanged(response);
         }
+
         notifyRecipeCallbacks();
     }
 
@@ -377,7 +383,8 @@ public class Recipe extends UseCase {
     }
 
     private RecipeResponse getRecipeResponse() {
-        return new RecipeResponse.Builder().setDataId(dataId).
+        return new RecipeResponse.Builder().
+                setDataId(dataId).
                 setDomainId(recipeId).
                 setModel(getRecipeResponseModel()).
                 build();
@@ -385,6 +392,7 @@ public class Recipe extends UseCase {
 
     private RecipeResponse.Model getRecipeResponseModel() {
         return new RecipeResponse.Model.Builder().
+                getDefault().
                 setComponentResponses(componentResponses).
                 build();
     }
@@ -409,6 +417,7 @@ public class Recipe extends UseCase {
                 ComponentName,
                 UseCase.Callback<? extends UseCase.Response>>
                 callbackPair : componentListeners) {
+
             ComponentName componentName = callbackPair.first;
 
             if (IDENTITY.equals(componentName)) {
@@ -475,27 +484,25 @@ public class Recipe extends UseCase {
     private void notifyRequestOriginator() {
         System.out.println(TAG + "notifyRequestOriginator: " + requestOriginator);
 
-        List<FailReasons> f;
+        List<FailReasons> failReasons;
 
         switch (requestOriginator) {
             case RECIPE:
                 RecipeResponse recipeResponse = new RecipeResponse.Builder().
+                        getDefault().
                         setDataId(dataId).
                         setDomainId(recipeId).
-                        setModel(new RecipeResponse.Model.Builder().
-                                setComponentResponses(componentResponses).
-                                build()).
+                        setModel(
+                                new RecipeResponse.Model.Builder().
+                                        setComponentResponses(componentResponses).
+                                        build()).
                         build();
 
-                f = ((RecipeMetadataResponse) componentResponses.get(RECIPE_METADATA)).
+                failReasons = ((RecipeMetadataResponse) componentResponses.get(RECIPE_METADATA)).
                         getMetadata().
                         getFailReasons();
 
-                if (f.contains(CommonFailReason.NONE)) {
-                    getUseCaseCallback().onSuccess(recipeResponse);
-                } else {
-                    getUseCaseCallback().onError(recipeResponse);
-                }
+                sendResponse(recipeResponse, failReasons);
                 break;
 
             case RECIPE_METADATA:
@@ -503,59 +510,44 @@ public class Recipe extends UseCase {
                         componentResponses.get(RECIPE_METADATA),
                         ((RecipeMetadataResponse) componentResponses.get(RECIPE_METADATA)).
                                 getMetadata().
-                                getFailReasons());
-
+                                getFailReasons()
+                );
                 break;
 
             case IDENTITY:
-                RecipeIdentityResponse identityResponse = (RecipeIdentityResponse)
-                        componentResponses.get(IDENTITY);
-
-                if (identityResponse.getMetadata().getFailReasons().
-                        contains(CommonFailReason.NONE)) {
-
-                    getUseCaseCallback().onSuccess(identityResponse);
-                } else {
-                    getUseCaseCallback().onError(identityResponse);
-                }
+                sendResponse(
+                        componentResponses.get(IDENTITY),
+                        ((RecipeIdentityResponse) componentResponses.get(IDENTITY)).
+                                getMetadata().
+                                getFailReasons()
+                );
                 break;
 
             case COURSE:
-                RecipeCourseResponse courseResponse = (RecipeCourseResponse)
-                        componentResponses.get(COURSE);
-
-                if (courseResponse.getMetadata().getFailReasons().
-                        contains(CommonFailReason.NONE)) {
-
-                    getUseCaseCallback().onSuccess(courseResponse);
-                } else {
-                    getUseCaseCallback().onError(courseResponse);
-                }
+                sendResponse(
+                        componentResponses.get(COURSE),
+                        ((RecipeCourseResponse) componentResponses.get(COURSE)).
+                                getMetadata().
+                                getFailReasons()
+                );
                 break;
 
             case DURATION:
-                RecipeDurationResponse durationResponse = (RecipeDurationResponse)
-                        componentResponses.get(DURATION);
-
-                if (durationResponse.getMetadata().getFailReasons().
-                        contains(CommonFailReason.NONE)) {
-
-                    getUseCaseCallback().onSuccess(durationResponse);
-                } else {
-                    getUseCaseCallback().onError(durationResponse);
-                }
+                sendResponse(
+                        componentResponses.get(DURATION),
+                        ((RecipeDurationResponse) componentResponses.get(DURATION)).
+                                getMetadata().
+                                getFailReasons()
+                );
                 break;
 
             case PORTIONS:
-                RecipePortionsResponse portionsResponse = (RecipePortionsResponse)
-                        componentResponses.get(PORTIONS);
-
-                if (portionsResponse.getMetadata().getFailReasons().
-                        contains(CommonFailReason.NONE)) {
-                    getUseCaseCallback().onSuccess(portionsResponse);
-                } else {
-                    getUseCaseCallback().onError(portionsResponse);
-                }
+                sendResponse(
+                        componentResponses.get(PORTIONS),
+                        ((RecipePortionsResponse) componentResponses.get(PORTIONS)).
+                                getMetadata().
+                                getFailReasons()
+                );
                 break;
 
             default:
@@ -566,11 +558,11 @@ public class Recipe extends UseCase {
         }
     }
 
-    private void sendResponse(UseCase.Response r, List<FailReasons> f) {
-
-        if (f.contains(CommonFailReason.NONE)) {
+    private void sendResponse(UseCase.Response r, List<FailReasons> failReasons) {
+        if (failReasons.contains(CommonFailReason.NONE)) {
             getUseCaseCallback().onSuccess(r);
         } else {
             getUseCaseCallback().onError(r);
         }
-    }}
+    }
+}

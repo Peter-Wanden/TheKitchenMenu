@@ -19,7 +19,7 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.*;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentState;
 
 public class RecipePortions extends UseCase
         implements DomainDataAccess.GetDomainModelCallback<RecipePortionsPersistenceModel> {
@@ -127,9 +127,8 @@ public class RecipePortions extends UseCase
     @Override
     public void onModelUnavailable() {
         persistenceModel = createNewPersistenceModel();
-        save();
-        failReasons.add(CommonFailReason.NONE);
-        buildResponse();
+        failReasons.add(CommonFailReason.DATA_UNAVAILABLE);
+        processChanges();
     }
 
     private RecipePortionsPersistenceModel createNewPersistenceModel() {
@@ -165,7 +164,7 @@ public class RecipePortions extends UseCase
     }
 
     private void validateServings() {
-        int servings = getCorrectServings();
+        int servings = getServings();
 
         if (servings < MIN_SERVINGS) {
             failReasons.add(FailReason.SERVINGS_TOO_LOW);
@@ -174,12 +173,12 @@ public class RecipePortions extends UseCase
         }
     }
 
-    private int getCorrectServings() {
+    private int getServings() {
         return isNewRequest ? persistenceModel.getServings() : requestModel.getServings();
     }
 
     private void validateSittings() {
-        int sittings = getCorrectSittings();
+        int sittings = getSittings();
 
         if (sittings < MIN_SITTINGS) {
             failReasons.add(FailReason.SITTINGS_TOO_LOW);
@@ -188,7 +187,7 @@ public class RecipePortions extends UseCase
         }
     }
 
-    private int getCorrectSittings() {
+    private int getSittings() {
         return isNewRequest ? persistenceModel.getSittings() : requestModel.getSittings();
     }
 
@@ -197,6 +196,7 @@ public class RecipePortions extends UseCase
         builder.setDomainId(recipeId);
 
         if (ComponentState.VALID_CHANGED == getComponentState()) {
+            System.out.println(TAG + "VALID CHANGED");
             RecipePortionsPersistenceModel m = updatePersistenceModel();
             builder.setMetadata(getMetadata(m));
             persistenceModel = m;

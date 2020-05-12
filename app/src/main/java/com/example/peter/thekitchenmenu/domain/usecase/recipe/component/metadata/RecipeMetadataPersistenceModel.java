@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata;
+package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata;
 
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.componentstate.RecipeComponentStateEntity;
@@ -12,7 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.*;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentName;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentState;
 
 /**
  * Represented in primitive form by {@link RecipeMetadataParentEntity},
@@ -109,7 +110,7 @@ public final class RecipeMetadataPersistenceModel extends BasePersistence {
             model.dataId = "";
             model.domainId = "";
             model.parentDomainId = "";
-            model.recipeState = ComponentState.DATA_UNAVAILABLE;
+            model.recipeState = ComponentState.INVALID_UNCHANGED;
             model.componentStates = new HashMap<>();
             model.failReasons = new ArrayList<>();
             model.createdBy = Constants.getUserId();

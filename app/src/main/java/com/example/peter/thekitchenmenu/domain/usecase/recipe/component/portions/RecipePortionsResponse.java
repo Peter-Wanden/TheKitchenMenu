@@ -1,9 +1,9 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions;
 
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainMessageModelMetadata;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadata;
 
 import java.util.Objects;
 
@@ -20,7 +20,7 @@ public final class RecipePortionsResponse
                 ", domainId='" + domainId + '\'' +
                 ", metadata=" + metadata +
                 ", model=" + model +
-                '}';
+                "'}'";
     }
 
     private RecipePortionsResponse() {}

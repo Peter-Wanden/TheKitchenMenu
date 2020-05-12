@@ -12,8 +12,7 @@ import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.meta
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.parent.RecipeMetadataParentLocalDataSource;
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.model.FailReasons;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadataPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataPersistenceModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,9 +22,9 @@ import java.util.Set;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentName;
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentState;
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.FailReason;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentName;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentState;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.FailReason;
 
 public class RecipeMetadataLocalGetAdapter {
 
@@ -184,9 +183,9 @@ public class RecipeMetadataLocalGetAdapter {
 
         for (RecipeFailReasonEntity e : entities) {
             CommonFailReason commonFailReason = CommonFailReason.getFromId(e.getFailReasonId());
-            RecipeMetadata.FailReason metadataFailReason = FailReason.getById(e.getFailReasonId());
+            FailReason metadataRecipeMetadataFailReason = FailReason.getById(e.getFailReasonId());
 
-            failReasons.add(commonFailReason == null ? metadataFailReason : commonFailReason);
+            failReasons.add(commonFailReason == null ? metadataRecipeMetadataFailReason : commonFailReason);
         }
         modelBuilder.setFailReasons(failReasons);
         isFailReasonsAdded = true;

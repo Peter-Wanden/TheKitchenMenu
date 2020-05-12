@@ -3,16 +3,16 @@ package com.example.peter.thekitchenmenu.data.repository.recipe.metadata;
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.model.FailReasons;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadataPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataPersistenceModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentName;
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentState;
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.FailReason;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentName;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentState;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.FailReason;
 
 /**
  * Persistence stores the state of an object (data model) each time it changes. Therefore there can
@@ -33,8 +33,8 @@ public class TestDataRecipeMetadata {
                 setDataId("dataId-recipeMetadata-id0").
                 setDomainId("domainId-recipe-id0").
                 setParentDomainId("").
-                setRecipeState(ComponentState.DATA_UNAVAILABLE).
-                setComponentStates(getDataUnavailableComponentStates()).
+                setRecipeState(ComponentState.INVALID_UNCHANGED).
+                setComponentStates(getInvalidUnchangedComponentStates()).
                 setFailReasons(getDataUnavailableFailReasons()).
                 setCreatedBy(Constants.getUserId()).
                 setCreateDate(10L).
@@ -126,9 +126,9 @@ public class TestDataRecipeMetadata {
                 setDataId("dataId-recipeMetadata-id3").
                 setDomainId(getDataUnavailable().getDomainId()).
                 setParentDomainId(getDataUnavailable().getParentDomainId()).
-                setRecipeState(ComponentState.DATA_UNAVAILABLE).
+                setRecipeState(ComponentState.INVALID_UNCHANGED).
                 setFailReasons(getDataUnavailableFailReasons()).
-                setComponentStates(getDataUnavailableComponentStates()).
+                setComponentStates(getInvalidUnchangedComponentStates()).
                 setCreatedBy(Constants.getUserId()).
                 setCreateDate(40L).
                 setLastUpdate(40L).
@@ -245,15 +245,6 @@ public class TestDataRecipeMetadata {
         List<FailReasons> f = new ArrayList<>();
         f.add(CommonFailReason.NONE);
         return f;
-    }
-
-    private static HashMap<ComponentName, ComponentState> getDataUnavailableComponentStates() {
-        HashMap<ComponentName, ComponentState> s = new HashMap<>();
-        s.put(ComponentName.COURSE, ComponentState.DATA_UNAVAILABLE);
-        s.put(ComponentName.DURATION, ComponentState.DATA_UNAVAILABLE);
-        s.put(ComponentName.IDENTITY, ComponentState.DATA_UNAVAILABLE);
-        s.put(ComponentName.PORTIONS, ComponentState.DATA_UNAVAILABLE);
-        return s;
     }
 
     private static HashMap<ComponentName, ComponentState> getInvalidUnchangedComponentStates() {

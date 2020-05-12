@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata;
+package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata;
 
 import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainMessageModel;
 import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainModel;
@@ -9,13 +9,14 @@ import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentName;
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentState;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentName;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentState;
 
 public final class RecipeMetadataRequest
         extends BaseDomainMessageModel<RecipeMetadataRequest.Model>
         implements UseCase.Request {
 
+    @Nonnull
     @Override
     public String toString() {
         return "RecipeMetadataRequest{" +

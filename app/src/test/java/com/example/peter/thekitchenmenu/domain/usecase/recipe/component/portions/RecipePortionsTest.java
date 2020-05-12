@@ -2,22 +2,27 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portion
 
 import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess.GetDomainModelCallback;
-import com.example.peter.thekitchenmenu.data.repository.recipe.portions.TestDataRecipePortions;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipePortions;
+import com.example.peter.thekitchenmenu.data.repository.recipe.metadata.TestDataRecipeMetadata;
+import com.example.peter.thekitchenmenu.data.repository.recipe.portions.TestDataRecipePortions;
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.model.FailReasons;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentState;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentState;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
-import org.junit.*;
-import org.mockito.*;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import java.util.List;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortions.*;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortions.FailReason;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
@@ -73,21 +78,21 @@ public class RecipePortionsTest {
     }
 
     @Test
-    public void newRequest_defaultModelGenerated_failReasonNONE() {
+    public void newRequest_defaultModelGenerated_failReasonDATA_UNAVAILABLE() {
         // Arrange // Act
         expectedNoOfFailReasons = 1;
         simulateNewInitialisationRequest();
         // Assert
         assertEquals(
-                ComponentState.VALID_UNCHANGED,
-                portionsOnSuccessResponse.getMetadata().getState()
+                ComponentState.INVALID_UNCHANGED,
+                portionsOnErrorResponse.getMetadata().getState()
         );
-        failReasons = portionsOnSuccessResponse.getMetadata().getFailReasons();
+        failReasons = portionsOnErrorResponse.getMetadata().getFailReasons();
         assertEquals(
                 expectedNoOfFailReasons,
                 failReasons.size()
         );
-        assertTrue(failReasons.contains(CommonFailReason.NONE)
+        assertTrue(failReasons.contains(CommonFailReason.DATA_UNAVAILABLE)
         );
     }
 
@@ -97,8 +102,8 @@ public class RecipePortionsTest {
         simulateNewInitialisationRequest();
         // Assert
         assertEquals(
-                ComponentState.VALID_UNCHANGED,
-                portionsOnSuccessResponse.getMetadata().getState()
+                ComponentState.INVALID_UNCHANGED,
+                portionsOnErrorResponse.getMetadata().getState()
         );
     }
 
@@ -117,7 +122,7 @@ public class RecipePortionsTest {
                 build();
 
         RecipePortionsRequest request = new RecipePortionsRequest.Builder().
-                basedOnResponse(portionsOnSuccessResponse).
+                basedOnResponse(portionsOnErrorResponse).
                 setModel(model).
                 build();
 
@@ -151,7 +156,7 @@ public class RecipePortionsTest {
                 build();
 
         RecipePortionsRequest request = new RecipePortionsRequest.Builder().
-                basedOnResponse(portionsOnSuccessResponse).
+                basedOnResponse(portionsOnErrorResponse).
                 setModel(model).
                 build();
 
@@ -175,6 +180,7 @@ public class RecipePortionsTest {
         // Arrange
         RecipePortionsPersistenceModel modelUnderTest = TestDataRecipePortions.
                 getNewValidServingsInvalidTooHighSittings();
+
         expectedNoOfFailReasons = 1;
 
         simulateNewInitialisationRequest();
@@ -185,7 +191,7 @@ public class RecipePortionsTest {
                 build();
 
         RecipePortionsRequest request = new RecipePortionsRequest.Builder().
-                basedOnResponse(portionsOnSuccessResponse).
+                basedOnResponse(portionsOnErrorResponse).
                 setModel(model).
                 build();
 
@@ -218,7 +224,7 @@ public class RecipePortionsTest {
                 build();
 
         RecipePortionsRequest request = new RecipePortionsRequest.Builder().
-                basedOnResponse(portionsOnSuccessResponse).
+                basedOnResponse(portionsOnErrorResponse).
                 setModel(model).
                 build();
 
@@ -258,14 +264,15 @@ public class RecipePortionsTest {
                 build();
 
         RecipePortionsRequest request = new RecipePortionsRequest.Builder().
-                basedOnResponse(portionsOnSuccessResponse).
+                basedOnResponse(portionsOnErrorResponse).
                 setModel(model).
                 build();
 
         // Required for save of new valid model
-        whenIdProviderReturn(modelUnderTest.getDataId());
-        whenTimeProviderReturn(modelUnderTest.getLastUpdate());
-
+        whenIdProviderReturn(modelUnderTest.getDataId()
+        );
+        whenTimeProviderReturn(modelUnderTest.getLastUpdate()
+        );
         // Act
         handler.execute(SUT, request, callbackClient);
 
@@ -454,31 +461,23 @@ public class RecipePortionsTest {
         // Arrange
         callbackClient = new PortionsCallbackClient();
 
-        RecipePortionsPersistenceModel defaultNewModel = TestDataRecipePortions.
-                getNewValidEmpty();
-
-        // data id requested when creating new persistence model
-        whenIdProviderReturn(defaultNewModel.getDataId());
-        // create date and last update requested when creating new persistence model
-        whenTimeProviderReturn(defaultNewModel.getCreateDate());
-
         RecipePortionsRequest initialisationRequest = new RecipePortionsRequest.Builder().
                 getDefault().
-                setDomainId(defaultNewModel.getDomainId()).
+                setDomainId(TestDataRecipeMetadata.getDataUnavailable().getDomainId()).
                 build();
+
+        // provide time for creation of new model
+        whenTimeProviderReturn(TestDataRecipeMetadata.getDataUnavailable().getCreateDate());
 
         // Act
         handler.execute(SUT, initialisationRequest, callbackClient);
 
         // Assert repo called, no model found, return model unavailable
         verify(repoPortionsMock).getActiveByDomainId(
-                eq(defaultNewModel.getDomainId()),
+                eq(TestDataRecipeMetadata.getDataUnavailable().getDomainId()),
                 repoPortionsCallback.capture()
         );
         repoPortionsCallback.getValue().onModelUnavailable();
-
-        // Assert default model save
-        verify(repoPortionsMock).save(eq(defaultNewModel));
     }
 
     private void simulateExistingInitialisationRequest(

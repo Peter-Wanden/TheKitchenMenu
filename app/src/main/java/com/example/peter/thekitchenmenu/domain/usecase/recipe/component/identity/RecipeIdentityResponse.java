@@ -1,9 +1,9 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity;
 
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainMessageModelMetadata;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadata;
 
 import java.util.Objects;
 
@@ -13,6 +13,7 @@ public final class RecipeIdentityResponse
         extends BaseDomainMessageModelMetadata<RecipeIdentityResponse.Model>
         implements UseCase.Response {
 
+    @Nonnull
     @Override
     public String toString() {
         return "RecipeIdentityResponse{" +
@@ -20,7 +21,7 @@ public final class RecipeIdentityResponse
                 ", domainId='" + domainId + '\'' +
                 ", metadata=" + metadata +
                 ", model=" + model +
-                '}';
+                "'}'";
     }
 
     private RecipeIdentityResponse() {}
@@ -76,6 +77,7 @@ public final class RecipeIdentityResponse
             return Objects.hash(title, description);
         }
 
+        @Nonnull
         @Override
         public String toString() {
             return "Model{" +
