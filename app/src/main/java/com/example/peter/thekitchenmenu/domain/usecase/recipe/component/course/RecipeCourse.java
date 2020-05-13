@@ -78,6 +78,8 @@ public class RecipeCourse
             new LinkedHashMap<>();
     private final List<Course> updatedCourseList = new ArrayList<>();
 
+    private int accessCount;
+
     public RecipeCourse(@Nonnull RepositoryRecipeCourse repository,
                         @Nonnull UniqueIdProvider idProvider,
                         @Nonnull TimeProvider timeProvider) {
@@ -88,13 +90,13 @@ public class RecipeCourse
 
     @Override
     protected <Q extends Request> void execute(Q request) {
+        accessCount++;
         RecipeCourseRequest r = (RecipeCourseRequest) request;
+        System.out.println(TAG + "Request No:" + accessCount + " - " + r);
 
         if (r.getDomainId() == null) {
             throw new IllegalArgumentException("domain id cannot be null!");
         }
-
-        System.out.println(TAG + r);
 
         if (isNewRequest(r)) {
             dataId = r.getDataId();
@@ -223,16 +225,16 @@ public class RecipeCourse
     }
 
     private void buildResponse() {
-        RecipeCourseResponse response = new RecipeCourseResponse.Builder().
+        RecipeCourseResponse r = new RecipeCourseResponse.Builder().
                 setDataId(dataId).
                 setDomainId(recipeId).
                 setMetadata(getMetadata()).
                 setModel(getResponseModel()).
                 build();
 
-        System.out.println(TAG + response);
+        System.out.println(TAG + "Response No:" + accessCount + " - " + r);
 
-        sendResponse(response);
+        sendResponse(r);
     }
 
     private void sendResponse(RecipeCourseResponse response) {

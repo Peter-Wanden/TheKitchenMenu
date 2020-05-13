@@ -86,6 +86,8 @@ public class RecipeIdentity
     private RecipeIdentityRequest.Model requestModel;
     private RecipeIdentityPersistenceModel persistenceModel;
 
+    private int accessCount;
+
     public RecipeIdentity(@Nonnull RepositoryRecipeIdentity repository,
                           @Nonnull UniqueIdProvider idProvider,
                           @Nonnull TimeProvider timeProvider,
@@ -103,9 +105,10 @@ public class RecipeIdentity
 
     @Override
     protected <Q extends Request> void execute(Q request) {
+        accessCount++;
         RecipeIdentityRequest r = (RecipeIdentityRequest) request;
         requestModel = r.getModel();
-        System.out.println(TAG + r);
+        System.out.println(TAG + "Request No:" + accessCount + " - " + r);
 
         if (isNewRequest(r)) {
             dataId = r.getDataId();
@@ -316,13 +319,13 @@ public class RecipeIdentity
                 build();
     }
 
-    private void sendResponse(RecipeIdentityResponse response) {
-        System.out.println(TAG + response);
+    private void sendResponse(RecipeIdentityResponse r) {
+        System.out.println(TAG + "Response No:" + accessCount + " - " + r);
 
-        if (response.getMetadata().getFailReasons().contains(CommonFailReason.NONE)) {
-            getUseCaseCallback().onSuccess(response);
+        if (r.getMetadata().getFailReasons().contains(CommonFailReason.NONE)) {
+            getUseCaseCallback().onSuccess(r);
         } else {
-            getUseCaseCallback().onError(response);
+            getUseCaseCallback().onError(r);
         }
     }
 

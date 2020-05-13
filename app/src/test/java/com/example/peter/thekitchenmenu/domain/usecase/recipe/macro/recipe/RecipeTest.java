@@ -15,8 +15,6 @@ import com.example.peter.thekitchenmenu.data.repository.recipe.duration.TestData
 import com.example.peter.thekitchenmenu.data.repository.recipe.identity.TestDataRecipeIdentity;
 import com.example.peter.thekitchenmenu.data.repository.recipe.metadata.TestDataRecipeMetadata;
 import com.example.peter.thekitchenmenu.data.repository.recipe.portions.TestDataRecipePortions;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.datasource.RecipeIdentityEntity;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.datasource.TestDataRecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.parent.RecipeMetadataParentEntity;
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.model.FailReasons;
@@ -71,7 +69,6 @@ import javax.annotation.Nonnull;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -85,10 +82,6 @@ public class RecipeTest {
     // region constants ----------------------------------------------------------------------------
     private static final String NEW_RECIPE_DOMAIN_ID = TestDataRecipeMetadata.NEW_RECIPE_DOMAIN_ID;
 
-    private static final RecipeIdentityEntity IDENTITY_INVALID_NEW_EMPTY =
-            TestDataRecipeIdentityEntity.getInvalidNewEmpty();
-    private static final RecipeIdentityEntity IDENTITY_VALID_NEW_COMPLETE =
-            TestDataRecipeIdentityEntity.getValidNewComplete();
     private static final RecipeMetadataParentEntity RECIPE_VALID_EXISTING = null;
     // endregion constants -------------------------------------------------------------------------
 
@@ -236,7 +229,7 @@ public class RecipeTest {
         verifyAllReposCalledAndReturnModelUnavailable(recipeId);
 
         // Assert recipe metadata listener updated with correct value
-        verify(metadataListener1).recipeStateChanged(recipeMetadataCaptor.capture()
+        verify(metadataListener1).onRecipeMetadataChanged(recipeMetadataCaptor.capture()
         );
         RecipeMetadataResponse.Model model = recipeMetadataCaptor.getValue().getModel();
         UseCaseMetadata recipeMetadata = recipeMetadataCaptor.getValue().getMetadata();
@@ -598,7 +591,7 @@ public class RecipeTest {
         verify(
                 repoIdentityMock, times(saveTitleThenSaveDescription)).
                 save(persistenceModelCaptor.capture()
-        );
+                );
 
         assertEquals(
                 modelUnderTest,
@@ -633,25 +626,23 @@ public class RecipeTest {
     @Test
     public void coursesRequestNewId_newCourseAdded_coursesStateVALID_CHANGED() {
         // Arrange
-        CourseCallbackClient callback = new CourseCallbackClient();
-
-        RecipeCoursePersistenceModel expectedPersistenceModel = TestDataRecipeCourse.
+        RecipeCoursePersistenceModel modelUnderTest = TestDataRecipeCourse.
                 getExistingActiveRecipeCourseZero();
+        String recipeId = modelUnderTest.getDomainId();
 
-        String recipeId = expectedPersistenceModel.getDomainId();
-
-        whenTimeProviderReturnTime(expectedPersistenceModel.getCreateDate()
+        whenTimeProviderReturnTime(modelUnderTest.getCreateDate()
         );
-        when(idProviderMock.getUId()).thenReturn(expectedPersistenceModel.getDataId()
+        when(idProviderMock.getUId()).thenReturn(modelUnderTest.getDataId()
         );
 
-        // Arrange initial request, load data
+        CourseCallbackClient callback = new CourseCallbackClient();
+        SUT.registerMetadataListener(metadataListener1);
+
+        // Arrange, initial request to load data
         RecipeCourseRequest initialRequest = new RecipeCourseRequest.Builder().
                 getDefault().
                 setDomainId(recipeId).
                 build();
-
-        SUT.registerMetadataListener(metadataListener1);
 
         // Act
         handler.execute(SUT, initialRequest, callback);
@@ -659,82 +650,94 @@ public class RecipeTest {
         // Assert
         verifyAllReposCalledAndReturnModelUnavailable(recipeId);
 
-        // Arrange
-        List<RecipeCourse.Course> courses = Collections.singletonList(
-                RecipeCourse.Course.COURSE_ZERO);
-
+        // Arrange, second request to add a course
         RecipeCourseRequest addCourseRequest = new RecipeCourseRequest.Builder().
                 basedOnResponse(callback.response).
-                setModel(new RecipeCourseRequest.Model.Builder().
-                        setCourseList(courses).build()).
+                setModel(
+                        new RecipeCourseRequest.Model.Builder().
+                                setCourseList(
+                                        Collections.singletonList(RecipeCourse.Course.COURSE_ZERO)).
+                                build()).
                 build();
 
         // Act
         handler.execute(SUT, addCourseRequest, callback);
 
         // Assert correct values saved
-        verify(repoCourseMock).save(eq(expectedPersistenceModel)
+        verify(repoCourseMock).save(eq(modelUnderTest)
         );
 
         // Assert courses response
-        RecipeCourseResponse courseResponse = callback.response;
+        RecipeCourseResponse response = callback.response;
 
         assertEquals(
                 ComponentState.VALID_CHANGED,
-                courseResponse.getMetadata().getState()
+                response.getMetadata().getState()
         );
         assertTrue(
-                courseResponse.getModel().getCourseList().
+                response.getModel().getCourseList().
                         containsKey(RecipeCourse.Course.COURSE_ZERO)
         );
         // Assert listener updated
         int expectedNumberOfUpdates = 2; // Once for initial request, once for add course request
         verify(
                 metadataListener1, times(expectedNumberOfUpdates)).
-                recipeStateChanged(recipeMetadataCaptor.capture()
+                onRecipeMetadataChanged(recipeMetadataCaptor.capture()
                 );
-        System.out.println(TAG + recipeMetadataCaptor.getAllValues()
-        );
+
+        ComponentState actualCourseComponentState = recipeMetadataCaptor.getValue().
+                getModel().
+                getComponentStates().
+                get(ComponentName.COURSE);
         assertEquals(
                 ComponentState.VALID_CHANGED,
-                recipeMetadataCaptor.getValue().getModel().getComponentStates().
-                        get(ComponentName.COURSE)
+                actualCourseComponentState
         );
     }
 
     @Test
     public void recipeRequestExistingId_validData_onlyRegisteredListenersNotified() {
         // Arrange
-        String recipeId = RECIPE_VALID_EXISTING.getDataId();
-        RecipeMetadataCallback callback = new RecipeMetadataCallback();
+        RecipeMetadataPersistenceModel modelUnderTest = TestDataRecipeMetadata.getValidUnchanged();
+        String recipeId =modelUnderTest.getDomainId();
 
-        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
+        // A RecipeRequest / RecipeCallbackClient will return all data and state for a recipe
+        RecipeRequest initialRequest = new RecipeRequest.Builder().
                 getDefault().
-                setDataId(recipeId).
+                setDomainId(recipeId).
                 build();
-        // Act
+        RecipeCallbackClient recipeCallback = new RecipeCallbackClient();
+        //
         SUT.registerMetadataListener(metadataListener1);
         SUT.registerMetadataListener(metadataListener2);
         SUT.unregisterStateListener(metadataListener2);
-        handler.execute(SUT, request, callback);
+
+        // Act
+        handler.execute(SUT, initialRequest, recipeCallback);
 
         // Assert database called and return valid data for all components
         verifyAllReposCalledAndReturnValidExisting(recipeId);
 
-        // Assert listeners called
-        verify(metadataListener1).recipeStateChanged(any(RecipeMetadataResponse.class));
+        // Metadata listener response
+        RecipeMetadataResponse expectedMetadataResponse = recipeCallback.recipeMetadataResponse;
+
+        // Assert listener1 called and listener 2 not called
+        verify(metadataListener1).onRecipeMetadataChanged(eq(expectedMetadataResponse));
         verifyNoMoreInteractions(metadataListener2);
     }
 
     @Test
-    public void recipeRequestExistingId_validData_componentStateVALID_UNCHANGED() {
+    public void requestExistingId_validData_componentStateVALID_UNCHANGED() {
         // Arrange
-        String recipeId = RECIPE_VALID_EXISTING.getDataId();
-        RecipeMetadataCallback callback = new RecipeMetadataCallback();
+        RecipeMetadataPersistenceModel modelUnderTest = TestDataRecipeMetadata.getValidUnchanged();
+        String recipeId = modelUnderTest.getDomainId();
+
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 getDefault().
                 setDataId(recipeId).
                 build();
+        RecipeMetadataCallback callback = new RecipeMetadataCallback();
+
         // Act
         SUT.registerMetadataListener(metadataListener1);
         SUT.registerMetadataListener(metadataListener2);
@@ -744,8 +747,8 @@ public class RecipeTest {
         verifyAllReposCalledAndReturnValidExisting(recipeId);
 
         // Assert listeners called
-        verify(metadataListener1).recipeStateChanged(recipeMetadataCaptor.capture());
-        verify(metadataListener2).recipeStateChanged(recipeMetadataCaptor.capture());
+        verify(metadataListener1).onRecipeMetadataChanged(recipeMetadataCaptor.capture());
+        verify(metadataListener2).onRecipeMetadataChanged(recipeMetadataCaptor.capture());
 
         // Assert recipe component states
         HashMap<ComponentName, ComponentState> componentStates =
@@ -787,7 +790,7 @@ public class RecipeTest {
         verifyAllReposCalledAndReturnValidExisting(recipeId);
 
         // Assert listeners called
-        verify(metadataListener1).recipeStateChanged(recipeMetadataCaptor.capture());
+        verify(metadataListener1).onRecipeMetadataChanged(recipeMetadataCaptor.capture());
 
         // Assert correct recipe state
         ComponentState recipeState = recipeMetadataCaptor.getValue().getMetadata().getState();
@@ -818,7 +821,7 @@ public class RecipeTest {
         verifyAllReposCalledAndReturnValidExisting(recipeId);
 
         // Assert recipe state listeners updated
-        verify(metadataListener1).recipeStateChanged(recipeMetadataCaptor.capture());
+        verify(metadataListener1).onRecipeMetadataChanged(recipeMetadataCaptor.capture());
         ComponentState recipeStateListenerState = recipeMetadataCaptor.getValue().getMetadata().getState();
         assertEquals(ComponentState.VALID_UNCHANGED, recipeStateListenerState);
 
@@ -883,7 +886,7 @@ public class RecipeTest {
         repoIdentityCallback.getValue().onModelLoaded(TestDataRecipeIdentity.
                 getActiveByDomainId(recipeId)
         );
-        verify(repoCourseMock).getAllByDomainId(eq(recipeId), repoCourseCallback.capture());
+        verify(repoCourseMock).getAllActiveByDomainId(eq(recipeId), repoCourseCallback.capture());
         repoCourseCallback.getValue().onAllLoaded(TestDataRecipeCourse.
                 getAllExistingActiveByDomainId(recipeId)
         );
@@ -907,7 +910,7 @@ public class RecipeTest {
         private RecipeMetadataResponse response;
 
         @Override
-        public void recipeStateChanged(RecipeMetadataResponse response) {
+        public void onRecipeMetadataChanged(RecipeMetadataResponse response) {
             this.response = response;
         }
 

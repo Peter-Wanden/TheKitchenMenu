@@ -52,7 +52,7 @@ public class Recipe extends UseCase {
     public static final String CREATE_NEW_RECIPE = "CREATE_NEW_RECIPE";
 
     public interface RecipeMetadataListener {
-        void recipeStateChanged(RecipeMetadataResponse response);
+        void onRecipeMetadataChanged(RecipeMetadataResponse response);
     }
 
     private final UseCaseHandler handler;
@@ -82,6 +82,8 @@ public class Recipe extends UseCase {
     private final List<UseCase.Callback<RecipeResponse>>
             recipeResponseListeners = new ArrayList<>();
 
+    private int requestNo;
+
     public Recipe(UseCaseHandler handler,
                   RecipeMetadata recipeMetadata,
                   RecipeIdentity identity,
@@ -103,8 +105,11 @@ public class Recipe extends UseCase {
 
     @Override
     public <Q extends Request> void execute(Q request) {
+        requestNo ++;
+        System.out.println(TAG + "Request No:" + requestNo);
+
         extractRequestOriginator(request);
-        // Cast to BaseDomainMessage to get access to data and domain Id's
+        // Cast every request to BaseDomainMessage to get access to data and domain Id's
         BaseDomainMessage r = (BaseDomainMessage) request;
 
         if (isNewRequest(r.getDomainId()) || RECIPE == requestOriginator) {
@@ -322,8 +327,6 @@ public class Recipe extends UseCase {
                                 build()).
                 build();
 
-        System.out.println(TAG + "updateRecipeMetadata: " + request);
-
         handler.execute(recipeMetadata, request, new RecipeStateCallback());
     }
 
@@ -345,7 +348,7 @@ public class Recipe extends UseCase {
 
     private void notifyMetadataListeners(RecipeMetadataResponse response) {
         for (RecipeMetadataListener listener : metaDataListeners) {
-            listener.recipeStateChanged(response);
+            listener.onRecipeMetadataChanged(response);
         }
 
         notifyRecipeCallbacks();

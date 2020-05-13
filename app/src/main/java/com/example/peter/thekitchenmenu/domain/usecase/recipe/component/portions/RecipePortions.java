@@ -77,6 +77,8 @@ public class RecipePortions extends UseCase
     private RecipePortionsRequest.Model requestModel;
     private RecipePortionsPersistenceModel persistenceModel;
 
+    private int accessCount;
+
     public RecipePortions(@Nonnull RepositoryRecipePortions repository,
                           @Nonnull UniqueIdProvider idProvider,
                           @Nonnull TimeProvider timeProvider,
@@ -95,9 +97,11 @@ public class RecipePortions extends UseCase
 
     @Override
     protected <Q extends Request> void execute(Q request) {
+        accessCount ++;
         RecipePortionsRequest r = (RecipePortionsRequest) request;
         requestModel = r.getModel();
-        System.out.println(TAG + r);
+
+        System.out.println(TAG + "Request No:" + accessCount + " - " + r);
 
         if (isNewRequest(r)) {
             dataId = r.getDataId();
@@ -196,7 +200,6 @@ public class RecipePortions extends UseCase
         builder.setDomainId(recipeId);
 
         if (ComponentState.VALID_CHANGED == getComponentState()) {
-            System.out.println(TAG + "VALID CHANGED");
             RecipePortionsPersistenceModel m = updatePersistenceModel();
             builder.setMetadata(getMetadata(m));
             persistenceModel = m;
@@ -271,12 +274,12 @@ public class RecipePortions extends UseCase
                 build();
     }
 
-    private void sendResponse(RecipePortionsResponse response) {
-        System.out.println(TAG + response);
-        if (response.getMetadata().getFailReasons().contains(CommonFailReason.NONE)) {
-            getUseCaseCallback().onSuccess(response);
+    private void sendResponse(RecipePortionsResponse r) {
+        System.out.println(TAG + "Response No:" + accessCount + " - " + r);
+        if (r.getMetadata().getFailReasons().contains(CommonFailReason.NONE)) {
+            getUseCaseCallback().onSuccess(r);
         } else {
-            getUseCaseCallback().onError(response);
+            getUseCaseCallback().onError(r);
         }
     }
 

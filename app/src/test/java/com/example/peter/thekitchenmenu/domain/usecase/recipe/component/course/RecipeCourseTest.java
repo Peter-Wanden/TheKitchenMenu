@@ -114,18 +114,15 @@ public class RecipeCourseTest {
 
         int noOfCoursesToDeactivate = 2;
 
-        List<RecipeCoursePersistenceModel> newActiveModels =
-                TestDataRecipeCourse.
-                        getNewActiveCourses();
+        List<RecipeCoursePersistenceModel> newActiveModels = TestDataRecipeCourse.
+                getNewActiveCourses();
 
-        List<RecipeCoursePersistenceModel> expectedDeactivatedModels =
-                TestDataRecipeCourse.
-                        getNewDeactivatedRecipeCourses();
+        List<RecipeCoursePersistenceModel> expectedDeactivatedModels = TestDataRecipeCourse.
+                getNewDeactivatedRecipeCourses();
         // Completes the updated timestamp
-        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
-                expectedDeactivatedModels.
-                        get(0).
-                        getLastUpdate()
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(expectedDeactivatedModels.
+                get(0).
+                getLastUpdate()
         );
 
         RecipeCourseRequest initialisationRequest = new RecipeCourseRequest.Builder().
@@ -142,9 +139,11 @@ public class RecipeCourseTest {
         // Arrange - deactivate courses request
         RecipeCourseRequest deactivateRequest = new RecipeCourseRequest.Builder().
                 basedOnResponse(onSuccessResponse).
-                setModel(new RecipeCourseRequest.Model.Builder().
-                        setCourseList(new ArrayList<>()). // Empty list will deactivate all courses
-                        build()).
+                setModel(
+                        new RecipeCourseRequest.Model.Builder().
+                                setCourseList(
+                                        new ArrayList<>()). // Empty list deactivates all courses
+                                build()).
                 build();
 
         // Act

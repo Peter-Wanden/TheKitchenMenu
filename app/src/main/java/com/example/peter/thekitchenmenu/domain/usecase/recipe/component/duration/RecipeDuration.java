@@ -74,6 +74,8 @@ public class RecipeDuration
     private RecipeDurationRequest.Model requestModel;
     private RecipeDurationPersistenceModel persistenceModel;
 
+    private int accessCount;
+
     public RecipeDuration(@Nonnull RepositoryRecipeDuration repository,
                           @Nonnull TimeProvider timeProvider,
                           @Nonnull UniqueIdProvider idProvider,
@@ -92,14 +94,15 @@ public class RecipeDuration
 
     @Override
     protected <Q extends Request> void execute(Q request) {
+        accessCount++;
         RecipeDurationRequest r = (RecipeDurationRequest) request;
+        System.out.println(TAG + "Request No:" + accessCount + " - " + r);
 
         if (r.getDomainId() == null || r.getDomainId().isEmpty()) {
             throw new IllegalArgumentException("domain id cannot be empty or null!");
         }
 
         requestModel = r.getModel();
-        System.out.println(TAG + r);
 
         if (isNewRequest(r)) {
             dataId = r.getDataId();
@@ -316,18 +319,17 @@ public class RecipeDuration
                 build();
     }
 
-    private void sendResponse(RecipeDurationResponse response) {
-        System.out.println(TAG + response);
+    private void sendResponse(RecipeDurationResponse r) {
+        System.out.println(TAG + "Response No:" + accessCount + " - " + r);
 
-        if (response.getMetadata().getFailReasons().contains(CommonFailReason.NONE)) {
-            getUseCaseCallback().onSuccess(response);
+        if (r.getMetadata().getFailReasons().contains(CommonFailReason.NONE)) {
+            getUseCaseCallback().onSuccess(r);
         } else {
-            getUseCaseCallback().onError(response);
+            getUseCaseCallback().onError(r);
         }
     }
 
     private void save() {
-        System.out.println(TAG + "savingPersistenceModel:" + persistenceModel);
         repository.save(persistenceModel);
     }
 }

@@ -1,12 +1,15 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata;
 
+import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess.GetDomainModelCallback;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeMetadata;
 import com.example.peter.thekitchenmenu.data.repository.recipe.metadata.TestDataRecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
+import com.example.peter.thekitchenmenu.domain.model.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentName;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentState;
@@ -25,6 +28,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.FailReason;
@@ -81,6 +85,76 @@ public class RecipeMetadataTest {
                 idProviderMock,
                 timeProviderMock,
                 requiredComponents
+        );
+    }
+
+    // Tests the initial request on which all other tests depend
+    @Test
+    public void testNewInitialRequest() {
+        // Arrange
+        RecipeMetadataPersistenceModel modelUnderTest = TestDataRecipeMetadata.getDataUnavailable();
+        // Expected default component states
+        componentStates.put(ComponentName.IDENTITY, ComponentState.INVALID_UNCHANGED);
+        componentStates.put(ComponentName.DURATION, ComponentState.INVALID_UNCHANGED);
+        componentStates.put(ComponentName.COURSE, ComponentState.INVALID_UNCHANGED);
+        componentStates.put(ComponentName.PORTIONS, ComponentState.INVALID_UNCHANGED);
+
+        String recipeId = TestDataRecipeMetadata.NEW_RECIPE_DOMAIN_ID;
+
+        // Act
+        givenNewIdAsInitialRequest(recipeId);
+
+        // Assert response values
+        assertEquals(
+                modelUnderTest.getDataId(),
+                onErrorResponse.getDataId()
+        );
+        assertEquals(
+                modelUnderTest.getDomainId(),
+                onErrorResponse.getDomainId()
+        );
+
+        // Assert metadata state
+        UseCaseMetadata responseMetadata = onErrorResponse.getMetadata();
+        assertEquals(
+                ComponentState.INVALID_UNCHANGED,
+                responseMetadata.getState()
+        );
+        // Assert metadata fail reasons
+        int expectedNoOfFailReasons = 2;
+        List<FailReasons> failReasons = responseMetadata.getFailReasons();
+        assertEquals(
+                expectedNoOfFailReasons,
+                failReasons.size()
+        );
+        assertTrue(
+                failReasons.contains(CommonFailReason.DATA_UNAVAILABLE)
+        );
+        assertTrue(
+                failReasons.contains(FailReason.MISSING_COMPONENTS)
+        );
+        assertEquals(
+                Constants.getUserId(),
+                responseMetadata.getCreatedBy()
+        );
+        assertEquals(
+                modelUnderTest.getCreateDate(),
+                responseMetadata.getCreateDate()
+        );
+        assertEquals(
+                modelUnderTest.getLastUpdate(),
+                responseMetadata.getLasUpdate()
+        );
+
+        // Assert response model
+        RecipeMetadataResponse.Model responseModel = onErrorResponse.getModel();
+        assertEquals(
+                modelUnderTest.getParentDomainId(),
+                responseModel.getParentDomainId()
+        );
+        assertEquals(
+                componentStates,
+                responseModel.getComponentStates()
         );
     }
 
@@ -276,7 +350,6 @@ public class RecipeMetadataTest {
 
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 basedOnResponse(onErrorResponse).
-                setDataId(recipeId).
                 setModel(model).
                 build();
 
@@ -292,6 +365,79 @@ public class RecipeMetadataTest {
                 contains(CommonFailReason.NONE)
         );
     }
+
+    @Test
+    public void invalidChanged_stateINVALID_CHANGED() {
+        // Arrange
+        String recipeId = TestDataRecipeMetadata.NEW_RECIPE_DOMAIN_ID;
+
+        RecipeMetadataRequest initialRequest = new RecipeMetadataRequest.Builder().
+                getDefault().
+                setDomainId(recipeId).
+                build();
+
+        when(idProviderMock.getUId()).thenReturn(TestDataRecipeMetadata.
+                getDataUnavailable().
+                getDataId()
+        );
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(TestDataRecipeMetadata.
+                getDataUnavailable().
+                getCreateDate()
+        );
+        // Act
+        handler.execute(SUT, initialRequest, new MetadataCallbackClient());
+
+        // Assert
+        verify(repoMock).getActiveByDomainId(eq(recipeId), repoMetadataCallback.capture());
+        repoMetadataCallback.getValue().onModelUnavailable();
+
+        // Arrange for second request
+        componentStates.put(ComponentName.IDENTITY, ComponentState.INVALID_UNCHANGED);
+        componentStates.put(ComponentName.COURSE, ComponentState.INVALID_UNCHANGED);
+        componentStates.put(ComponentName.DURATION, ComponentState.INVALID_UNCHANGED);
+        componentStates.put(ComponentName.PORTIONS, ComponentState.INVALID_UNCHANGED);
+
+
+        RecipeMetadataRequest secondRequest = new RecipeMetadataRequest.Builder().
+                basedOnResponse(onErrorResponse).
+                setModel(
+                        new RecipeMetadataRequest.Model.Builder().
+                                basedOnResponseModel(onErrorResponse.getModel()).
+                                setComponentStates(componentStates).
+                                build()).
+                build();
+
+        // Act
+        handler.execute(SUT, secondRequest, new MetadataCallbackClient());
+
+        // Arrange for third request
+        componentStates.clear();
+
+        componentStates.put(ComponentName.IDENTITY, ComponentState.INVALID_UNCHANGED);
+        componentStates.put(ComponentName.COURSE, ComponentState.VALID_CHANGED);
+        componentStates.put(ComponentName.DURATION, ComponentState.INVALID_UNCHANGED);
+        componentStates.put(ComponentName.PORTIONS, ComponentState.INVALID_UNCHANGED);
+
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
+                basedOnResponse(onErrorResponse).
+                setModel(
+                        new RecipeMetadataRequest.Model.Builder().
+                                basedOnResponseModel(onErrorResponse.getModel()).
+                                setComponentStates(componentStates).
+                                build()
+                ).
+                build();
+
+        // Act
+        handler.execute(SUT, request, new MetadataCallbackClient());
+
+//        // Assert
+//        assertEquals(
+//                ComponentState.INVALID_CHANGED,
+//                onErrorResponse.getMetadata().getState()
+//        );
+    }
+
     // endregion componentStatesTests
 
     // region persistenceTests
@@ -489,7 +635,8 @@ public class RecipeMetadataTest {
         when(idProviderMock.getUId()).thenReturn(TestDataRecipeMetadata.
                 getDataUnavailable().getDataId());
 
-        RecipeMetadataRequest initialRequest = new RecipeMetadataRequest.Builder().getDefault().
+        RecipeMetadataRequest initialRequest = new RecipeMetadataRequest.Builder().
+                getDefault().
                 setDomainId(domainId).
                 build();
 

@@ -240,7 +240,7 @@ public class RecipeEditorActivity
 
     private static class RecipeMetadataListener implements Recipe.RecipeMetadataListener {
         @Override
-        public void recipeStateChanged(RecipeMetadataResponse response) {
+        public void onRecipeMetadataChanged(RecipeMetadataResponse response) {
 
         }
     }

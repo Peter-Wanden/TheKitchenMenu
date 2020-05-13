@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
  * Calculates and stores {@link Recipe} metadata state information based on recipe component
  * responses.
  * <p>
- * Always use as a {@link Recipe} component
+ * Always use as part of a {@link Recipe} macro component
  */
 public class RecipeMetadata
         extends UseCase
@@ -142,6 +142,8 @@ public class RecipeMetadata
     private ComponentState recipeState;
     private HashMap<ComponentName, ComponentState> componentStates;
 
+    private int accessCount;
+
     public RecipeMetadata(@Nonnull RepositoryRecipeMetadata repository,
                           @Nonnull UniqueIdProvider idProvider,
                           @Nonnull TimeProvider timeProvider,
@@ -152,25 +154,25 @@ public class RecipeMetadata
         this.timeProvider = timeProvider;
         this.requiredComponents = requiredComponents;
 
-        recipeState = ComponentState.VALID_CHANGED;
+        recipeState = ComponentState.INVALID_UNCHANGED;
         failReasons = new ArrayList<>();
         componentStates = new HashMap<>();
     }
 
     @Override
     protected <Q extends Request> void execute(Q request) {
+        accessCount++;
         RecipeMetadataRequest r = (RecipeMetadataRequest) request;
-        System.out.println(TAG + r);
+        System.out.println(TAG + "Request No:" + accessCount + " - " + r);
 
         if (isNewRequest(r)) {
             dataId = r.getDataId();
             recipeId = r.getDomainId();
             loadData(recipeId);
         } else {
-            setupComponent();
+            failReasons.clear();
             componentStates = r.getModel().getComponentStates();
-            getState();
-            buildResponse();
+            processChanges();
         }
     }
 
@@ -189,15 +191,14 @@ public class RecipeMetadata
         componentStates = model.getComponentStates();
         failReasons.addAll(model.getFailReasons());
         dataId = model.getDataId();
-        buildResponse();
+        processChanges();
     }
 
     @Override
     public void onModelUnavailable() {
         persistenceModel = createNewPersistenceModel();
         failReasons.add(CommonFailReason.DATA_UNAVAILABLE);
-        getState();
-        buildResponse();
+        processChanges();
     }
 
     private RecipeMetadataPersistenceModel createNewPersistenceModel() {
@@ -213,12 +214,12 @@ public class RecipeMetadata
                 build();
     }
 
-    private void setupComponent() {
-        failReasons.clear();
-        componentStates.clear();
+    private void processChanges() {
+        setState();
+        buildResponse();
     }
 
-    private void getState() {
+    private void setState() {
         if (hasRequiredComponents()) {
             if (!isValid() && !isChanged()) {
                 recipeState = ComponentState.INVALID_UNCHANGED;
@@ -230,8 +231,6 @@ public class RecipeMetadata
                 addFailReasonNone();
                 recipeState = ComponentState.VALID_CHANGED;
             }
-        } else {
-            buildResponse();
         }
     }
 
@@ -353,12 +352,12 @@ public class RecipeMetadata
                 build();
     }
 
-    private void sendResponse(RecipeMetadataResponse response) {
-        System.out.println(TAG + response);
+    private void sendResponse(RecipeMetadataResponse r) {
+        System.out.println(TAG + "Response No:" + accessCount + " - " + r);
         if (isValid()) {
-            getUseCaseCallback().onSuccess(response);
+            getUseCaseCallback().onSuccess(r);
         } else {
-            getUseCaseCallback().onError(response);
+            getUseCaseCallback().onError(r);
         }
     }
 

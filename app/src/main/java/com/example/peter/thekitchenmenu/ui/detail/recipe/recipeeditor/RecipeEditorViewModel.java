@@ -119,7 +119,7 @@ public class RecipeEditorViewModel extends ViewModel {
 
         private final String TAG = "tkm-" + RecipeMetadataListener.class.getSimpleName() + ": ";
         @Override
-        public void recipeStateChanged(RecipeMetadataResponse response) {
+        public void onRecipeMetadataChanged(RecipeMetadataResponse response) {
             if (isRecipeStateChanged(response)) {
                 System.out.println(RecipeEditorViewModel.TAG + TAG + response);
                 RecipeEditorViewModel.this.metadataResponse = response;

@@ -653,7 +653,7 @@ public class RecipeEditorViewModelTest {
         RecipeMetadataResponse response;
 
         @Override
-        public void recipeStateChanged(RecipeMetadataResponse response) {
+        public void onRecipeMetadataChanged(RecipeMetadataResponse response) {
             this.response = response;
         }
 
