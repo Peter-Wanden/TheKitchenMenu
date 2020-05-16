@@ -4,19 +4,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-        <import type="android.view.View"/>
-        <import type="android.view.View.OnClickListener"/>
-
-        <variable
-            name="recipeModel"
-            type="com.example.peter.thekitchenmenu.domain.usecase.recipe.recipelist.RecipeListItemModel" />
-
-        <variable
-            name="listener"
-            type="com.example.peter.thekitchenmenu.ui.catalog.recipe.RecipeItemUserActionsListener" />
-    </data>
-
     <androidx.cardview.widget.CardView
         android:id="@+id/recipe_list_item_cardView"
         android:layout_width="match_parent"
@@ -27,10 +14,7 @@
         android:layout_marginBottom="@dimen/card_view_margin_top_bottom"
         android:elevation="@dimen/card_view_elevation"
         app:cardCornerRadius="4dp"
-        android:onClick="@{() -> listener.onRecipeClicked(recipeModel)}"
         >
-
-        <!-- android:onClick="@{() -> listener.onRecipeClicked(recipeMetadataParentEntity)}" -->
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/recipe_list_item_constraintLayout"
@@ -53,7 +37,6 @@
                 android:paddingTop="@dimen/list_item_top_half_margin"
                 android:textStyle="bold"
                 android:textSize="18sp"
-                android:text="@{recipeModel.recipeName}"
                 app:layout_constraintEnd_toStartOf="@+id/guideline"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -68,7 +51,6 @@
                 android:paddingStart="@dimen/list_item_top_full_margin"
                 android:paddingTop="@dimen/list_item_top_half_margin"
                 android:textSize="16sp"
-                android:text="@{recipeModel.recipeDescription}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="@id/guideline"
                 app:layout_constraintTop_toBottomOf="@+id/recipe_list_item_title"
@@ -95,10 +77,9 @@
                 />
 
             <TextView
-                android:id="@+id/recipe_list_item_pre_time"
+                android:id="@+id/recipe_list_item_prep_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{`` + recipeModel.prepTime}"
                 app:layout_constraintStart_toEndOf="@id/time_guideline"
                 app:layout_constraintBaseline_toBaselineOf="@id/recipe_list_item_prep_time_label"
                 tools:text="10"
@@ -120,7 +101,6 @@
                 android:id="@+id/recipe_list_item_cook_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{`` + recipeModel.cookTime}"
                 app:layout_constraintStart_toEndOf="@id/time_guideline"
                 app:layout_constraintBaseline_toBaselineOf="@id/recipe_list_item_cook_time_label"
                 tools:text="10"
@@ -142,14 +122,13 @@
                 android:id="@+id/recipe_list_item_total_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{`` + recipeModel.totalTime}"
                 app:layout_constraintStart_toEndOf="@id/time_guideline"
                 app:layout_constraintBaseline_toBaselineOf="@id/recipe_list_item_total_time_label"
                 tools:text="100"
                 />
 
             <ImageView
-                android:id="@+id/product_list_item_image"
+                android:id="@+id/recipe_list_item_image"
                 android:contentDescription="@string/cd_picture_of_product"
                 android:layout_width="0dp"
                 android:layout_height="0dp"

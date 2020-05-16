@@ -60,8 +60,6 @@ public class RecipeEditorViewModel extends ViewModel {
         recipeResponseListener = new RecipeResponseListener();
 
         recipeMacro.registerRecipeCallback(recipeResponseListener);
-
-        recipeMacro.registerMetadataListener(new RecipeMetadataListener());
     }
 
     void setNavigator(AddEditRecipeNavigator navigator) {
@@ -113,20 +111,6 @@ public class RecipeEditorViewModel extends ViewModel {
 
     private boolean isRecipeResponseChanged(RecipeResponse recipeResponse) {
         return !this.recipeResponse.equals(recipeResponse);
-    }
-
-    private class RecipeMetadataListener implements Recipe.RecipeMetadataListener {
-
-        private final String TAG = "tkm-" + RecipeMetadataListener.class.getSimpleName() + ": ";
-        @Override
-        public void onRecipeMetadataChanged(RecipeMetadataResponse response) {
-            if (isRecipeStateChanged(response)) {
-                System.out.println(RecipeEditorViewModel.TAG + TAG + response);
-                RecipeEditorViewModel.this.metadataResponse = response;
-                updateButtonVisibility();
-            }
-        }
-
     }
 
     private boolean isRecipeStateChanged(RecipeMetadataResponse metadataResponse) {

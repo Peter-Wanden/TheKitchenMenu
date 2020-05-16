@@ -26,7 +26,6 @@ public class RecipeCatalogViewModel extends ViewModel {
     private UseCaseHandler handler;
     @Nonnull
     private RecipeList useCase;
-    private RecipeNavigator navigator;
 
     public ObservableBoolean dataLoading = new ObservableBoolean(); // todo - setup empty screen
     public ObservableBoolean isDataLoadingError = new ObservableBoolean();
@@ -38,14 +37,6 @@ public class RecipeCatalogViewModel extends ViewModel {
                                   @Nonnull RecipeList useCase) {
         this.handler = handler;
         this.useCase = useCase;
-    }
-
-    void setNavigator(RecipeNavigator navigator) {
-        this.navigator = navigator;
-    }
-
-    void onActivityDestroyed() {
-        navigator = null;
     }
 
     MutableLiveData<List<RecipeListItemModel>> getRecipeListLiveData() {
@@ -70,10 +61,8 @@ public class RecipeCatalogViewModel extends ViewModel {
         return new RecipeListRequest(filter);
     }
 
-    private UseCase.Callback<RecipeListResponse>
-    getCallback() {
+    private UseCase.Callback<RecipeListResponse> getCallback() {
         return new UseCase.Callback<RecipeListResponse>() {
-
             @Override
             public void onSuccess(RecipeListResponse response) {
                 dataLoading.set(false);

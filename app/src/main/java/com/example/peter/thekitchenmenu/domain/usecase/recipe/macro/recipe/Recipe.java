@@ -39,7 +39,7 @@ import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.m
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentState;
 
 /**
- * A use case interactor acting as a command mediator enabling recipe components to work
+ * A use case interactor acting as a command mediator macro enabling recipe components to work
  * together.
  * All recipe component requests should be routed through an instance of this class.
  * The first request sent through, regardless of type, will only load and return data. Subsequent
@@ -109,7 +109,7 @@ public class Recipe extends UseCase {
         System.out.println(TAG + "Request No:" + requestNo);
 
         extractRequestOriginator(request);
-        // Cast every request to BaseDomainMessage to get access to data and domain Id's
+        // Downcast to BaseDomainMessage to get access to data and domain Id's
         BaseDomainMessage r = (BaseDomainMessage) request;
 
         if (isNewRequest(r.getDomainId()) || RECIPE == requestOriginator) {
@@ -132,8 +132,12 @@ public class Recipe extends UseCase {
             requestOriginator = DURATION;
         } else if (request instanceof RecipePortionsRequest) {
             requestOriginator = PORTIONS;
+        } else if (request instanceof RecipeMetadata) {
+            throw new UnsupportedOperationException("\nTo access recipe metadata use a " +
+                    "RecipeRequest and extract recipe metadata from the response, or " +
+                    "register a RecipeMetadataListener to this macro instance.");
         } else {
-            throw new UnsupportedOperationException("Request type not supported:" + request);
+            throw new UnsupportedOperationException("\nRequest type not supported: " + request);
         }
         System.out.println(TAG + "extractRequestOriginator: " + requestOriginator);
     }

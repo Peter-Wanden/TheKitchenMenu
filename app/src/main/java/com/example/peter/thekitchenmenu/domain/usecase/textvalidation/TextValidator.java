@@ -62,7 +62,7 @@ public class TextValidator extends UseCase {
     }
 
     @Override
-    protected <Q extends Request> void execute(Q request) {
+    public  <Q extends Request> void execute(Q request) {
         TextValidatorRequest tvr = (TextValidatorRequest) request;
         System.out.println(TAG + tvr);
         if (tvr.getType() == TextType.SHORT_TEXT) {

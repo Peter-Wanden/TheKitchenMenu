@@ -50,7 +50,7 @@
                 android:paddingEnd="@dimen/list_item_top_full_margin"
                 android:paddingStart="@dimen/list_item_top_full_margin"
                 android:paddingTop="@dimen/list_item_top_half_margin"
-                app:layout_constraintEnd_toStartOf="@+id/product_list_item_image"
+                app:layout_constraintEnd_toStartOf="@+id/recipe_list_item_image"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:text="@{productModel.productEntity.description}"
@@ -58,7 +58,7 @@
                 />
 
             <ImageView
-                android:id="@+id/product_list_item_image"
+                android:id="@+id/recipe_list_item_image"
                 android:contentDescription="@string/cd_picture_of_product"
                 android:layout_width="0dp"
                 android:layout_height="0dp"

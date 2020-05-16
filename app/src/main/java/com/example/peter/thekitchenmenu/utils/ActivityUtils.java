@@ -9,7 +9,7 @@ import javax.annotation.Nonnull;
 import static androidx.core.util.Preconditions.checkNotNull;
 
 /**
- * This provides methods to help Activities load their UI.
+ * Provides methods to help Activities load their UI.
  */
 public class ActivityUtils {
 
@@ -20,8 +20,6 @@ public class ActivityUtils {
      */
     public static void replaceFragmentInActivity(@Nonnull FragmentManager fragmentManager,
                                                  @Nonnull Fragment fragment, int frameId) {
-        checkNotNull(fragmentManager);
-        checkNotNull(fragment);
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(frameId, fragment);
         transaction.commit();
@@ -34,8 +32,6 @@ public class ActivityUtils {
      */
     public static void replaceFragmentInActivity(@Nonnull FragmentManager fragmentManager,
                                                  @Nonnull Fragment fragment, String tag) {
-        checkNotNull(fragmentManager);
-        checkNotNull(fragment);
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.add(fragment, tag);
         transaction.commit();

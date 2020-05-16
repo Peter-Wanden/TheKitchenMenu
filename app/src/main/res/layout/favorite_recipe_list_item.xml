@@ -56,7 +56,7 @@
                 />
 
             <ImageView
-                android:id="@+id/product_list_item_image"
+                android:id="@+id/recipe_list_item_image"
                 android:contentDescription="@string/cd_picture_of_product"
                 android:layout_width="0dp"
                 android:layout_height="0dp"

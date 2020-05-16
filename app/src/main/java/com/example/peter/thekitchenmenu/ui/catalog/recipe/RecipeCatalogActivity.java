@@ -2,10 +2,10 @@ package com.example.peter.thekitchenmenu.ui.catalog.recipe;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -14,12 +14,19 @@ import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.databinding.RecipeCatalogActivityBinding;
 import com.example.peter.thekitchenmenu.ui.ViewModelFactoryRecipe;
 import com.example.peter.thekitchenmenu.ui.catalog.CatalogFragmentPageAdapter;
+import com.example.peter.thekitchenmenu.ui.catalog.recipe.mvc.RecipeCatalogFragment;
+import com.example.peter.thekitchenmenu.ui.catalog.recipe.mvc.RecipeCatalogView;
+import com.example.peter.thekitchenmenu.ui.common.controllers.BaseActivity;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeEditorActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-public class RecipeCatalogActivity extends AppCompatActivity implements RecipeNavigator {
+public class RecipeCatalogActivity
+        extends BaseActivity
+        implements RecipeNavigator {
 
     private static final String TAG = "tkm-" + RecipeCatalogActivity.class.getSimpleName() + ":";
+
+    private RecipeCatalogView parentViewMvc;
 
     private RecipeCatalogViewModel viewModel;
     private RecipeCatalogActivityBinding binding;
@@ -27,6 +34,10 @@ public class RecipeCatalogActivity extends AppCompatActivity implements RecipeNa
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        parentViewMvc = new RecipeCatalogView(LayoutInflater.from(this), null);
+
+        setContentView(parentViewMvc.getRootView());
 
         initialiseBindings();
         setupToolbar();
@@ -64,7 +75,6 @@ public class RecipeCatalogActivity extends AppCompatActivity implements RecipeNa
 
     private void setupViewModel() {
         viewModel = obtainViewModel(this);
-        viewModel.setNavigator(this);
         viewModel.start();
     }
 
@@ -72,7 +82,7 @@ public class RecipeCatalogActivity extends AppCompatActivity implements RecipeNa
         CatalogFragmentPageAdapter fragmentPageAdapter =
                 new CatalogFragmentPageAdapter(getSupportFragmentManager());
 
-        fragmentPageAdapter.addFragment(RecipeCatalogAllFragment.newInstance(),
+        fragmentPageAdapter.addFragment(RecipeCatalogFragment.newInstance(),
                 getString(R.string.activity_catalog_recipes_tab_1_title));
         fragmentPageAdapter.addFragment(RecipeCatalogFavoritesFragment.newInstance(),
                 getString(R.string.activity_catalog_recipes_tab_2_title));
@@ -80,12 +90,6 @@ public class RecipeCatalogActivity extends AppCompatActivity implements RecipeNa
         binding.recipeCatalogActivityViewPager.setAdapter(fragmentPageAdapter);
         binding.recipeCatalogActivityTabLayout.setupWithViewPager(
                 binding.recipeCatalogActivityViewPager);
-    }
-
-    @Override
-    protected void onDestroy() {
-        viewModel.onActivityDestroyed();
-        super.onDestroy();
     }
 
     public static RecipeCatalogViewModel obtainViewModel(FragmentActivity activity) {
@@ -107,17 +111,7 @@ public class RecipeCatalogActivity extends AppCompatActivity implements RecipeNa
     }
 
     @Override
-    public void viewRecipe(String recipeId) {
-
-    }
-
-    @Override
-    public void editRecipe(String recipeId) {
-
-    }
-
-    @Override
-    public void addRecipeToPlanner(String recipeId) {
+    public void viewRecipe(String recipeDomainId) {
 
     }
 }

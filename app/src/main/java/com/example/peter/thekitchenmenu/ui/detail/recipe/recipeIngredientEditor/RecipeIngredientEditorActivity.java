@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredienteditor;
+package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeIngredientEditor;
 
 import android.content.Intent;
 import android.os.Bundle;

@@ -1,6 +1,5 @@
-package com.example.peter.thekitchenmenu.ui.catalog.recipe;
+package com.example.peter.thekitchenmenu.ui.catalog.recipe.mvc;
 
-import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
@@ -14,30 +13,30 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.RecipeRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.RecipeResponse;
-import com.example.peter.thekitchenmenu.ui.catalog.recipe.mvc.RecipeListItemView;
 import com.example.peter.thekitchenmenu.ui.catalog.recipe.mvc.RecipeListItemView.RecipeListItemUserActionsListener;
-import com.example.peter.thekitchenmenu.ui.catalog.recipe.mvc.RecipeListItemViewImpl;
+import com.example.peter.thekitchenmenu.ui.common.ViewFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nonnull;
 
-public class RecipeCatalogFavoritesRecyclerAdapter
+public class RecipeCatalogRecyclerAdapter
         extends
-        RecyclerView.Adapter<RecipeCatalogFavoritesRecyclerAdapter.ViewHolder>
+        RecyclerView.Adapter<RecipeCatalogRecyclerAdapter.ViewHolder>
         implements
         Filterable,
-        RecipeListItemUserActionsListener {
+        RecipeListItemView.RecipeListItemUserActionsListener {
 
-    private static final String TAG = "tkm-" + RecipeCatalogFavoritesRecyclerAdapter.class.
-            getSimpleName() + ":";
+    private static final String TAG = "tkm-" + RecipeCatalogRecyclerAdapter.class.getSimpleName()
+            + ": ";
 
+    /* Inner class for creating ViewHolders */
     static class ViewHolder extends RecyclerView.ViewHolder {
 
         private final RecipeListItemView viewMvc;
 
-        private ViewHolder(RecipeListItemView viewMvc) {
+        ViewHolder(RecipeListItemView viewMvc) {
             super(viewMvc.getRootView());
             this.viewMvc = viewMvc;
         }
@@ -45,16 +44,19 @@ public class RecipeCatalogFavoritesRecyclerAdapter
 
     @Nonnull
     private final UseCaseHandler handler;
-    private List<Recipe> recipeList = new ArrayList<>();
-    private List<Recipe> recipeListFull = new ArrayList<>();
+    private final ViewFactory viewFactory;
+    private List<Recipe> recipeList;
+    private List<Recipe> recipeListFull;
     private RecipeListItemUserActionsListener listener;
 
-    RecipeCatalogFavoritesRecyclerAdapter(RecipeListItemUserActionsListener listener) {
-        handler = UseCaseHandler.getInstance();
+    RecipeCatalogRecyclerAdapter(RecipeListItemUserActionsListener listener,
+                                 ViewFactory viewFactory) {
+        this.handler = UseCaseHandler.getInstance();
         this.listener = listener;
+        this.viewFactory = viewFactory;
     }
 
-    void bindRecipes(List<Recipe> recipes) {
+    public void bindRecipes(List<Recipe> recipes) {
         recipeList = new ArrayList<>(recipes);
         recipeListFull = new ArrayList<>(recipes);
         notifyDataSetChanged();
@@ -64,8 +66,7 @@ public class RecipeCatalogFavoritesRecyclerAdapter
     @Override
     public ViewHolder onCreateViewHolder(@Nonnull ViewGroup parent, int viewType) {
 
-        RecipeListItemView viewMvc = new RecipeListItemViewImpl(
-                LayoutInflater.from(parent.getContext()), parent);
+        RecipeListItemView viewMvc = viewFactory.getRecipeListItemView(parent);
         viewMvc.registerListener(this);
 
         return new ViewHolder(viewMvc);

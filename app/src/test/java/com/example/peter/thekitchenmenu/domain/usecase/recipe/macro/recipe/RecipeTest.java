@@ -15,7 +15,6 @@ import com.example.peter.thekitchenmenu.data.repository.recipe.duration.TestData
 import com.example.peter.thekitchenmenu.data.repository.recipe.identity.TestDataRecipeIdentity;
 import com.example.peter.thekitchenmenu.data.repository.recipe.metadata.TestDataRecipeMetadata;
 import com.example.peter.thekitchenmenu.data.repository.recipe.portions.TestDataRecipePortions;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.parent.RecipeMetadataParentEntity;
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.model.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
@@ -40,7 +39,6 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentState;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.FailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataPersistenceModel;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortionsPersistenceModel;
@@ -81,8 +79,6 @@ public class RecipeTest {
 
     // region constants ----------------------------------------------------------------------------
     private static final String NEW_RECIPE_DOMAIN_ID = TestDataRecipeMetadata.NEW_RECIPE_DOMAIN_ID;
-
-    private static final RecipeMetadataParentEntity RECIPE_VALID_EXISTING = null;
     // endregion constants -------------------------------------------------------------------------
 
     // region helper fields ------------------------------------------------------------------------
@@ -110,13 +106,12 @@ public class RecipeTest {
     TimeProvider timeProviderMock;
     @Mock
     UniqueIdProvider idProviderMock;
-
     @Captor
     ArgumentCaptor<RecipeMetadataResponse> recipeMetadataCaptor;
     @Mock
-    MetadataListener metadataListener1;
+    RecipeMetadataListener metadataListener1;
     @Mock
-    MetadataListener metadataListener2;
+    RecipeMetadataListener metadataListener2;
 
     private UseCaseHandler handler;
     private Recipe SUT;
@@ -327,7 +322,7 @@ public class RecipeTest {
         RecipeCallbackClient passedInCallback = new RecipeCallbackClient();
 
         // Registered callback listening for changes to identity data only
-        IdentityCallbackClient registeredIdentityCallback = new IdentityCallbackClient();
+        RecipeIdentityCallbackClient registeredIdentityCallback = new RecipeIdentityCallbackClient();
         SUT.registerComponentCallback(
                 new Pair<>(ComponentName.IDENTITY, registeredIdentityCallback)
         );
@@ -358,7 +353,7 @@ public class RecipeTest {
                 setDomainId(recipeId).
                 build();
         // Identity response callback to go with Identity request
-        IdentityCallbackClient callback = new IdentityCallbackClient();
+        RecipeIdentityCallbackClient callback = new RecipeIdentityCallbackClient();
         // Act
         handler.execute(SUT, identityRequest, callback);
 
@@ -382,7 +377,7 @@ public class RecipeTest {
                 getDefault().
                 setDomainId(recipeId).
                 build();
-        IdentityCallbackClient callback = new IdentityCallbackClient();
+        RecipeIdentityCallbackClient callback = new RecipeIdentityCallbackClient();
 
         // Register RecipeCallback to get access to all recipe responses
         RecipeCallbackClient macroCallback = new RecipeCallbackClient();
@@ -546,7 +541,7 @@ public class RecipeTest {
                 setDomainId(recipeId).
                 build();
 
-        IdentityCallbackClient callbackClient = new IdentityCallbackClient();
+        RecipeIdentityCallbackClient callbackClient = new RecipeIdentityCallbackClient();
 
         // Act
         handler.execute(SUT, initialRequest, callbackClient);
@@ -699,7 +694,7 @@ public class RecipeTest {
     public void recipeRequestExistingId_validData_onlyRegisteredListenersNotified() {
         // Arrange
         RecipeMetadataPersistenceModel modelUnderTest = TestDataRecipeMetadata.getValidUnchanged();
-        String recipeId =modelUnderTest.getDomainId();
+        String recipeId = modelUnderTest.getDomainId();
 
         // A RecipeRequest / RecipeCallbackClient will return all data and state for a recipe
         RecipeRequest initialRequest = new RecipeRequest.Builder().
@@ -732,27 +727,24 @@ public class RecipeTest {
         RecipeMetadataPersistenceModel modelUnderTest = TestDataRecipeMetadata.getValidUnchanged();
         String recipeId = modelUnderTest.getDomainId();
 
-        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
+        // A RecipeRequest / RecipeCallbackClient will return all data and state for a recipe
+        RecipeRequest initialRequest = new RecipeRequest.Builder().
                 getDefault().
-                setDataId(recipeId).
+                setDomainId(recipeId).
                 build();
-        RecipeMetadataCallback callback = new RecipeMetadataCallback();
+        RecipeCallbackClient recipeCallback = new RecipeCallbackClient();
 
         // Act
-        SUT.registerMetadataListener(metadataListener1);
-        SUT.registerMetadataListener(metadataListener2);
-        handler.execute(SUT, request, callback);
+        handler.execute(SUT, initialRequest, recipeCallback);
 
-        // Assert database called and return data
+        // Assert database called and return existing data
         verifyAllReposCalledAndReturnValidExisting(recipeId);
 
-        // Assert listeners called
-        verify(metadataListener1).onRecipeMetadataChanged(recipeMetadataCaptor.capture());
-        verify(metadataListener2).onRecipeMetadataChanged(recipeMetadataCaptor.capture());
-
         // Assert recipe component states
-        HashMap<ComponentName, ComponentState> componentStates =
-                recipeMetadataCaptor.getValue().getModel().getComponentStates();
+        HashMap<ComponentName, ComponentState> componentStates = recipeCallback.
+                recipeMetadataResponse.
+                getModel().
+                getComponentStates();
         assertEquals(
                 ComponentState.VALID_UNCHANGED,
                 componentStates.get(ComponentName.IDENTITY)
@@ -774,73 +766,79 @@ public class RecipeTest {
     @Test
     public void recipeRequestExistingId_validData_recipeStateVALID_UNCHANGED() {
         // Arrange
-        String recipeId = RECIPE_VALID_EXISTING.getDataId();
-        RecipeMetadataCallback callback = new RecipeMetadataCallback();
+        RecipeMetadataPersistenceModel modelUnderTest = TestDataRecipeMetadata.getValidUnchanged();
+        String recipeId = modelUnderTest.getDomainId();
 
-        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
+        // A RecipeRequest / RecipeCallbackClient will return all data and state for a recipe
+        RecipeRequest initialRequest = new RecipeRequest.Builder().
                 getDefault().
-                setDataId(recipeId).
+                setDomainId(recipeId).
                 build();
+        RecipeCallbackClient recipeCallback = new RecipeCallbackClient();
 
         // Act
-        SUT.registerMetadataListener(metadataListener1);
-        handler.execute(SUT, request, callback);
+        handler.execute(SUT, initialRequest, recipeCallback);
 
-        // Assert database called by components and return valid data
+        // Assert database called and return existing data
         verifyAllReposCalledAndReturnValidExisting(recipeId);
 
-        // Assert listeners called
-        verify(metadataListener1).onRecipeMetadataChanged(recipeMetadataCaptor.capture());
-
         // Assert correct recipe state
-        ComponentState recipeState = recipeMetadataCaptor.getValue().getMetadata().getState();
+        ComponentState recipeState = recipeCallback.recipeMetadataResponse.getMetadata().getState();
         assertEquals(ComponentState.VALID_UNCHANGED, recipeState);
     }
 
     @Test
     public void recipeRequest_validId_registeredComponentCallbacksCalled() {
         // Arrange
-        String recipeId = RECIPE_VALID_EXISTING.getDataId();
+        RecipeMetadataPersistenceModel modelUnderTest = TestDataRecipeMetadata.getValidUnchanged();
+        String recipeId = modelUnderTest.getDomainId();
 
-        RecipeCallbackClient recipeCallbackClient = new RecipeCallbackClient();
-        IdentityCallbackClient identityCallbackClient = new IdentityCallbackClient();
-
-        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
+        // A RecipeRequest / RecipeCallbackClient will return all data and state for a recipe
+        RecipeRequest initialRequest = new RecipeRequest.Builder().
                 getDefault().
-                setDataId(recipeId).
+                setDomainId(recipeId).
                 build();
-        RecipeMetadataCallback callback = new RecipeMetadataCallback();
+
+        // Callback clients
+        RecipeCallbackClient passedInRecipeCallback = new RecipeCallbackClient();
+        RecipeCallbackClient registeredRecipeCallback = new RecipeCallbackClient();
+        RecipeMetadataListener registeredMetadataCallback = new RecipeMetadataListener();
+        RecipeIdentityCallbackClient registeredIdentityCallback = new RecipeIdentityCallbackClient();
+
+        // Register callbacks
+        SUT.registerRecipeCallback(registeredRecipeCallback);
+        SUT.registerMetadataListener(registeredMetadataCallback);
+        SUT.registerComponentCallback(new Pair<>(ComponentName.IDENTITY, registeredIdentityCallback)
+        );
 
         // Act
-        SUT.registerMetadataListener(metadataListener1);
-        SUT.registerRecipeCallback(recipeCallbackClient);
-        SUT.registerComponentCallback(new Pair<>(ComponentName.IDENTITY, identityCallbackClient));
-
-        handler.execute(SUT, request, callback);
+        handler.execute(SUT, initialRequest, passedInRecipeCallback);
         // Assert
         verifyAllReposCalledAndReturnValidExisting(recipeId);
 
-        // Assert recipe state listeners updated
-        verify(metadataListener1).onRecipeMetadataChanged(recipeMetadataCaptor.capture());
-        ComponentState recipeStateListenerState = recipeMetadataCaptor.getValue().getMetadata().getState();
-        assertEquals(ComponentState.VALID_UNCHANGED, recipeStateListenerState);
+        // Assert recipe response callback
+        // Recipe callback
+        UseCaseMetadata metadata = passedInRecipeCallback.recipeMetadataResponse.getMetadata();
+        List<FailReasons> failReasons = metadata.getFailReasons();
+        assertTrue(
+                failReasons.contains(CommonFailReason.NONE)
+        );
 
-        // Assert recipe macro response updated
-//        ComponentState recipeStateMacroState = recipeCallbackClient.
-//                getRecipeResponseOnSuccess().
-//                getModel().
-//                getRecipeStateResponse().
-//                getState();
-//        assertEquals(ComponentState.VALID_UNCHANGED, recipeStateMacroState);
+        // Assert recipe metadata callback
+        UseCaseMetadata metadata1 = registeredMetadataCallback.response.getMetadata();
+        ComponentState actualRecipeState = metadata1.getState();
+        assertEquals(
+                ComponentState.VALID_UNCHANGED,
+                actualRecipeState
+        );
 
-        // Assert recipe component callback
-        ComponentState identityComponentState = identityCallbackClient.
-                getResponse().
-                getMetadata().
-                getState();
-        assertEquals(ComponentState.VALID_UNCHANGED, identityComponentState);
-
-        System.out.println(TAG + metadataListener1.getResponse());
+        // Assert recipe identity component callback
+        UseCaseMetadata metadata2 = registeredIdentityCallback.response.getMetadata();
+        ComponentState identityComponentState = metadata2.getState();
+        assertEquals(
+                ComponentState.VALID_UNCHANGED,
+                identityComponentState
+        );
     }
 
     // region helper methods -----------------------------------------------------------------------
@@ -906,7 +904,7 @@ public class RecipeTest {
     // endregion helper methods --------------------------------------------------------------------
 
     // region helper classes -----------------------------------------------------------------------
-    private static class MetadataListener implements Recipe.RecipeMetadataListener {
+    private static class RecipeMetadataListener implements Recipe.RecipeMetadataListener {
         private RecipeMetadataResponse response;
 
         @Override
@@ -1078,37 +1076,10 @@ public class RecipeTest {
         }
     }
 
-    private static class RecipeMetadataCallback implements UseCase.Callback<RecipeMetadataResponse> {
-
-        private RecipeMetadataResponse response;
-
-        @Override
-        public void onSuccess(RecipeMetadataResponse response) {
-            this.response = response;
-        }
-
-        @Override
-        public void onError(RecipeMetadataResponse response) {
-            this.response = response;
-        }
-
-        public RecipeMetadataResponse getResponse() {
-            return response;
-        }
-
-        @Nonnull
-        @Override
-        public String toString() {
-            return "RecipeCallbackClient{" +
-                    "response=" + response +
-                    '}';
-        }
-    }
-
-    private static class IdentityCallbackClient implements UseCase.Callback<RecipeIdentityResponse> {
+    private static class RecipeIdentityCallbackClient implements UseCase.Callback<RecipeIdentityResponse> {
 
         private final String TAG = "tkm-" +
-                IdentityCallbackClient.class.getSimpleName() + ": ";
+                RecipeIdentityCallbackClient.class.getSimpleName() + ": ";
 
         private RecipeIdentityResponse response;
 

@@ -81,6 +81,7 @@ public class UseCaseMetadata {
         return Objects.hash(state, failReasons, createdBy, createDate, lasUpdate);
     }
 
+    @Nonnull
     @Override
     public String toString() {
         return "UseCaseMetadata{" +

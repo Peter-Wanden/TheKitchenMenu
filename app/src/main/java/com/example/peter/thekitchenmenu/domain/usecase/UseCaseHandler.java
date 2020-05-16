@@ -30,8 +30,7 @@ public class UseCaseHandler {
         useCaseScheduler.execute(useCase::run);
     }
 
-    public <V extends UseCase.Response>
-    void notifyResponse(final V response,
+    public <V extends UseCase.Response> void notifyResponse(final V response,
                         final UseCase.Callback<V> callback) {
         useCaseScheduler.notifyResponse(response, callback);
     }

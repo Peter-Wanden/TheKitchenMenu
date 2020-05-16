@@ -20,7 +20,6 @@ import javax.annotation.Nonnull;
 public class RecipeCatalogFavoritesFragment extends Fragment {
 
     private RecipeCatalogViewModel viewModel;
-    private RecipeCatalogFavoritesRecyclerAdapter adapter;
 
     public RecipeCatalogFavoritesFragment(){}
 
@@ -49,26 +48,6 @@ public class RecipeCatalogFavoritesFragment extends Fragment {
 
         viewModel = RecipeCatalogActivity.obtainViewModel(requireActivity());
         binding.setViewModel(viewModel);
-
-        if (getResources().getBoolean(R.bool.is_tablet) ||
-                getResources().getBoolean(R.bool.is_landscape)) {
-
-            GridLayoutManager gridManager = new GridLayoutManager(requireActivity().
-                    getApplicationContext(), 2);
-
-            binding.recipeCatalogFavoritesFragmentRecyclerView.setLayoutManager(gridManager);
-
-        } else {
-            LinearLayoutManager linearManager = new
-                    LinearLayoutManager(requireActivity().getApplicationContext(),
-                    RecyclerView.VERTICAL, false);
-
-            binding.recipeCatalogFavoritesFragmentRecyclerView.setLayoutManager(linearManager);
-        }
-
-        binding.recipeCatalogFavoritesFragmentRecyclerView.setHasFixedSize(true);
-        adapter = new RecipeCatalogFavoritesRecyclerAdapter(viewModel);
-        binding.recipeCatalogFavoritesFragmentRecyclerView.setAdapter(adapter);
 
         return binding.getRoot();
     }

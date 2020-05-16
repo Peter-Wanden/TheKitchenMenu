@@ -95,8 +95,6 @@ public class RecipeEditorActivity
         createCourseViewModel(this, recipeMacro);
         createDurationViewModel(this, recipeMacro);
         createPortionsViewModel(this, recipeMacro);
-
-        recipeMacro.registerMetadataListener(new RecipeMetadataListener());
     }
 
     static RecipeEditorViewModel createRecipeEditorViewModel(FragmentActivity activity,
@@ -236,13 +234,6 @@ public class RecipeEditorActivity
         //  - if the recipe is being used byu others, make a copy and allow uses to update their
         //     copy if they want to
         //  See {@link RecipeEditorViewModel}
-    }
-
-    private static class RecipeMetadataListener implements Recipe.RecipeMetadataListener {
-        @Override
-        public void onRecipeMetadataChanged(RecipeMetadataResponse response) {
-
-        }
     }
 
     @Override
