@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.ui.catalog.recipe.mvc;
+package com.example.peter.thekitchenmenu.ui.catalog.recipe.mvc.recipelistitem;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,18 +11,19 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentName;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.RecipeResponse;
+import com.example.peter.thekitchenmenu.ui.catalog.recipe.mvc.recipelistitem.RecipeListItemView;
+import com.example.peter.thekitchenmenu.ui.common.views.BaseObservableViewMvc;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nonnull;
 
-public class RecipeListItemViewImpl implements RecipeListItemView {
-
-    @Nonnull
-    private View rootView;
-    @Nonnull
-    private final List<RecipeListItemUserActionsListener> listeners;
+public class RecipeListItemViewImpl
+        extends
+        BaseObservableViewMvc<RecipeListItemView.RecipeListItemUserActionsListener>
+        implements
+        RecipeListItemView {
 
     private RecipeResponse recipeResponse;
     private TextView title;
@@ -35,25 +36,14 @@ public class RecipeListItemViewImpl implements RecipeListItemView {
     private ImageView removeFromFavorites;
 
     public RecipeListItemViewImpl(LayoutInflater inflater, ViewGroup parent) {
-        listeners = new ArrayList<>();
-
-        rootView = inflater.inflate(
+        setRootView(inflater.inflate(
                 R.layout.recipe_list_item,
                 parent,
-                false
+                false)
         );
+
         initialiseViews();
         setViewClickListeners();
-    }
-
-    @Nonnull
-    @Override
-    public View getRootView() {
-        return rootView;
-    }
-
-    private <T extends View> T findViewById(int id) {
-        return getRootView().findViewById(id);
     }
 
     private void initialiseViews() {
@@ -68,18 +58,18 @@ public class RecipeListItemViewImpl implements RecipeListItemView {
     }
 
     private void setViewClickListeners() {
-        rootView.setOnClickListener(v ->
-                listeners.forEach((listener) ->
+        getRootView().setOnClickListener(v ->
+                getListeners().forEach((listener) ->
                         listener.onRecipeClicked(recipeResponse.getDomainId()))
         );
-        addToFavorites.setOnClickListener(
-                v -> listeners.forEach((listener) ->
+        addToFavorites.setOnClickListener(v ->
+                getListeners().forEach((listener) ->
                         listener.onAddToFavoritesClicked(recipeResponse.getDomainId()))
         );
-        removeFromFavorites.setOnClickListener(
-                v -> listeners.forEach((listener) ->
+        removeFromFavorites.setOnClickListener(v ->
+                getListeners().forEach((listener) ->
                         listener.onRemoveFromFavoritesClicked(recipeResponse.getDomainId()))
-                );
+        );
     }
 
     @Override
@@ -105,15 +95,5 @@ public class RecipeListItemViewImpl implements RecipeListItemView {
         );
         totalTime.setText(duration.getModel().getTotalCookTime()
         );
-    }
-
-    @Override
-    public void registerListener(RecipeListItemUserActionsListener listener) {
-        listeners.add(listener);
-    }
-
-    @Override
-    public void unregisterListener(RecipeListItemUserActionsListener listener) {
-        listeners.remove(listener);
     }
 }

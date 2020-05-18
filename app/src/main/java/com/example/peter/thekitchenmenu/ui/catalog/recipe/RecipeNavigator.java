@@ -1,8 +1,12 @@
 package com.example.peter.thekitchenmenu.ui.catalog.recipe;
 
+import android.widget.FrameLayout;
+
 public interface RecipeNavigator {
 
-    void viewRecipe(String recipeDomainId);
+        void onRecipeClicked(String recipeDomainId);
 
-    void addRecipe();
+        void onAddRecipeClicked();
+
+        void onNavigateUpClicked();
 }

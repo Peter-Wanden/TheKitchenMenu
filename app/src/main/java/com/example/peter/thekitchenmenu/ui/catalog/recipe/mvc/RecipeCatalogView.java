@@ -1,33 +1,12 @@
 package com.example.peter.thekitchenmenu.ui.catalog.recipe.mvc;
 
-import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import androidx.viewpager.widget.ViewPager;
 
-import com.example.peter.thekitchenmenu.R;
+import com.example.peter.thekitchenmenu.ui.catalog.recipe.RecipeNavigator;
+import com.example.peter.thekitchenmenu.ui.common.views.ObservableViewMvc;
 
-public class RecipeCatalogView {
+public interface RecipeCatalogView extends
+        ObservableViewMvc<RecipeNavigator> {
 
-    private View rootView;
-
-    public RecipeCatalogView(LayoutInflater inflater, ViewGroup parent) {
-        rootView = inflater.inflate(
-                R.layout.recipe_catalog_activity,
-                parent,
-                false
-        );
-    }
-
-    private <T extends View> T findViewById(int id) {
-        return getRootView().findViewById(id);
-    }
-
-    public View getRootView() {
-        return rootView;
-    }
-
-    private Context getContext() {
-        return getRootView().getContext();
-    }
+    ViewPager getViewPager();
 }

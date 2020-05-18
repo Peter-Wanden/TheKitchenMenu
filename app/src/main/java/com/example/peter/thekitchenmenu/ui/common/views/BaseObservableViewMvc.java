@@ -4,8 +4,15 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-public class BaseObservableViewMvc<ListenerType> extends BaseViewMvc
-        implements ObservableViewMvc<ListenerType> {
+/**
+ * Extended by all observable views in the application
+ * @param <ListenerType> the listener interface specific to the view
+ */
+public abstract class BaseObservableViewMvc<ListenerType>
+        extends
+        BaseViewMvc
+        implements
+        ObservableViewMvc<ListenerType> {
 
     private Set<ListenerType> mListeners = new HashSet<>();
 

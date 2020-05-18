@@ -19,8 +19,6 @@ import javax.annotation.Nonnull;
 
 public class RecipeCatalogFavoritesFragment extends Fragment {
 
-    private RecipeCatalogViewModel viewModel;
-
     public RecipeCatalogFavoritesFragment(){}
 
     public static RecipeCatalogFavoritesFragment newInstance() {
@@ -45,9 +43,6 @@ public class RecipeCatalogFavoritesFragment extends Fragment {
                 R.layout.recipe_catalog_favorites_fragment,
                 container,
                 false);
-
-        viewModel = RecipeCatalogActivity.obtainViewModel(requireActivity());
-        binding.setViewModel(viewModel);
 
         return binding.getRoot();
     }

@@ -88,12 +88,11 @@ public class RecipeCatalogViewModel extends ViewModel {
     }
 
     void addRecipe() {
-        if (navigator != null)
-            navigator.addRecipe();
+
     }
 
     void viewRecipe(RecipeListItemModel listItemModel) {
-        navigator.viewRecipe(listItemModel.getRecipeId());
+
     }
 
     void addToFavorites(RecipeListItemModel listItemModel) {

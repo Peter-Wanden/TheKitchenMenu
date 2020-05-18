@@ -14,9 +14,9 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.RecipeRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.RecipeResponse;
-import com.example.peter.thekitchenmenu.ui.catalog.recipe.mvc.RecipeListItemView;
-import com.example.peter.thekitchenmenu.ui.catalog.recipe.mvc.RecipeListItemView.RecipeListItemUserActionsListener;
-import com.example.peter.thekitchenmenu.ui.catalog.recipe.mvc.RecipeListItemViewImpl;
+import com.example.peter.thekitchenmenu.ui.catalog.recipe.mvc.recipelistitem.RecipeListItemView;
+import com.example.peter.thekitchenmenu.ui.catalog.recipe.mvc.recipelistitem.RecipeListItemView.RecipeListItemUserActionsListener;
+import com.example.peter.thekitchenmenu.ui.catalog.recipe.mvc.recipelistitem.RecipeListItemViewImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +28,7 @@ public class RecipeCatalogFavoritesRecyclerAdapter
         RecyclerView.Adapter<RecipeCatalogFavoritesRecyclerAdapter.ViewHolder>
         implements
         Filterable,
-        RecipeListItemUserActionsListener {
+        RecipeListItemView.RecipeListItemUserActionsListener {
 
     private static final String TAG = "tkm-" + RecipeCatalogFavoritesRecyclerAdapter.class.
             getSimpleName() + ":";

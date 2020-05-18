@@ -19,7 +19,6 @@ public class RecipeCatalogFragment extends BaseFragment {
         return new RecipeCatalogFragment();
     }
 
-    private RecipeCatalogListView viewMvc;
     private RecipeCatalogRecyclerAdapter adapter;
 
     @Nullable
@@ -28,7 +27,10 @@ public class RecipeCatalogFragment extends BaseFragment {
                              @Nullable ViewGroup parent,
                              @Nullable Bundle savedInstanceState) {
 
-        viewMvc = getCompositionRoot().getViewMvcFactory().getRecipeCatalogListView(parent);
+        RecipeCatalogListView viewMvc = getCompositionRoot().
+                getViewMvcFactory().
+                getRecipeCatalogListView(parent);
+        viewMvc.registerListener(this);
 
         return viewMvc.getRootView();
     }

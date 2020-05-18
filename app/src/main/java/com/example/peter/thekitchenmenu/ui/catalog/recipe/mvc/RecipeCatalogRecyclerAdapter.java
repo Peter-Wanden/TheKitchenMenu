@@ -13,8 +13,9 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.RecipeRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.RecipeResponse;
-import com.example.peter.thekitchenmenu.ui.catalog.recipe.mvc.RecipeListItemView.RecipeListItemUserActionsListener;
-import com.example.peter.thekitchenmenu.ui.common.ViewFactory;
+import com.example.peter.thekitchenmenu.ui.catalog.recipe.mvc.recipelistitem.RecipeListItemView;
+import com.example.peter.thekitchenmenu.ui.catalog.recipe.mvc.recipelistitem.RecipeListItemView.RecipeListItemUserActionsListener;
+import com.example.peter.thekitchenmenu.ui.common.views.ViewFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,9 +46,11 @@ public class RecipeCatalogRecyclerAdapter
     @Nonnull
     private final UseCaseHandler handler;
     private final ViewFactory viewFactory;
+    private RecipeListItemUserActionsListener listener;
+
     private List<Recipe> recipeList;
     private List<Recipe> recipeListFull;
-    private RecipeListItemUserActionsListener listener;
+
 
     RecipeCatalogRecyclerAdapter(RecipeListItemUserActionsListener listener,
                                  ViewFactory viewFactory) {

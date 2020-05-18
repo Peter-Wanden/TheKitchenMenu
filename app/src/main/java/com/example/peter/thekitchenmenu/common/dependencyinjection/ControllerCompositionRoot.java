@@ -7,13 +7,16 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseFactory;
-import com.example.peter.thekitchenmenu.ui.common.ViewFactory;
+import com.example.peter.thekitchenmenu.ui.common.controllers.ControllerFactory;
+import com.example.peter.thekitchenmenu.ui.common.views.ViewFactory;
 
 public class ControllerCompositionRoot {
 
+    private final CompositionRoot compositionRoot;
     private final FragmentActivity activity;
 
-    public ControllerCompositionRoot(FragmentActivity activity) {
+    public ControllerCompositionRoot(CompositionRoot compositionRoot, FragmentActivity activity) {
+        this.compositionRoot = compositionRoot;
         this.activity = activity;
     }
 
@@ -39,5 +42,9 @@ public class ControllerCompositionRoot {
 
     public UseCaseFactory getUseCaseFactory() {
         return UseCaseFactory.getInstance(getActivity().getApplication());
+    }
+
+    public ControllerFactory getControllerFactory() {
+        return new ControllerFactory();
     }
 }
