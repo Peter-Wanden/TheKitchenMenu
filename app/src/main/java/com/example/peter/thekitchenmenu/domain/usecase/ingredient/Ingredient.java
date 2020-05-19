@@ -206,12 +206,12 @@ public class Ingredient
                 request,
                 new UseCase.Callback<TextValidatorResponse>() {
                     @Override
-                    public void onSuccess(TextValidatorResponse response) {
+                    public void onUseCaseSuccess(TextValidatorResponse response) {
                         validateDescription();
                     }
 
                     @Override
-                    public void onError(TextValidatorResponse response) {
+                    public void onUseCaseError(TextValidatorResponse response) {
                         addNameFailReason(response.getFailReason());
                         validateDescription();
                     }
@@ -242,7 +242,7 @@ public class Ingredient
                 request,
                 new UseCase.Callback<TextValidatorResponse>() {
                     @Override
-                    public void onSuccess(TextValidatorResponse response) {
+                    public void onUseCaseSuccess(TextValidatorResponse response) {
                         if (failReasons.isEmpty()) {
                             failReasons.add(CommonFailReason.NONE);
                         }
@@ -250,7 +250,7 @@ public class Ingredient
                     }
 
                     @Override
-                    public void onError(TextValidatorResponse response) {
+                    public void onUseCaseError(TextValidatorResponse response) {
                         addDescriptionFailReason(response.getFailReason());
                         buildResponse();
                     }
@@ -358,9 +358,9 @@ public class Ingredient
     private void sendResponse(IngredientResponse response) {
         System.out.println(TAG + response);
         if (failReasons.contains(CommonFailReason.NONE)) {
-            getUseCaseCallback().onSuccess(response);
+            getUseCaseCallback().onUseCaseSuccess(response);
         } else {
-            getUseCaseCallback().onError(response);
+            getUseCaseCallback().onUseCaseError(response);
         }
     }
 }

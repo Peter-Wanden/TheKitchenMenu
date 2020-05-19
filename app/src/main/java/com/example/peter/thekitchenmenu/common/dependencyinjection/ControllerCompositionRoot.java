@@ -7,7 +7,9 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseFactory;
-import com.example.peter.thekitchenmenu.ui.common.controllers.ControllerFactory;
+import com.example.peter.thekitchenmenu.ui.catalog.recipe.mvc.RecipeCatalogController;
+import com.example.peter.thekitchenmenu.ui.catalog.recipe.mvc.RecipeCatalogListController;
+import com.example.peter.thekitchenmenu.ui.common.ScreensNavigator;
 import com.example.peter.thekitchenmenu.ui.common.views.ViewFactory;
 
 public class ControllerCompositionRoot {
@@ -36,15 +38,27 @@ public class ControllerCompositionRoot {
         return LayoutInflater.from(getContext());
     }
 
-    public ViewFactory getViewMvcFactory() {
+    public ViewFactory getViewFactory() {
         return new ViewFactory(getLayoutInflater());
     }
 
-    public UseCaseFactory getUseCaseFactory() {
+    private UseCaseFactory getUseCaseFactory() {
         return UseCaseFactory.getInstance(getActivity().getApplication());
     }
 
-    public ControllerFactory getControllerFactory() {
-        return new ControllerFactory();
+    private ScreensNavigator getScreensNavigator() {
+        return new ScreensNavigator(getActivity(), getFragmentManager());
+    }
+
+    public RecipeCatalogController getRecipeCatalogController() {
+        return new RecipeCatalogController(getScreensNavigator());
+    }
+
+    public RecipeCatalogListController getRecipeCatalogListController() {
+        return new RecipeCatalogListController(
+                getUseCaseFactory().getUseCaseHandler(),
+                getUseCaseFactory().getRecipeListUseCase(),
+                getScreensNavigator()
+        );
     }
 }

@@ -25,12 +25,14 @@ public final class RecipeIdentityRequest
     private RecipeIdentityRequest() {}
 
     public static class Builder
-            extends UseCaseMessageBuilderModel<Builder, RecipeIdentityRequest, Model> {
+            extends
+            UseCaseMessageBuilderModel<Builder, RecipeIdentityRequest, Model> {
 
         public Builder() {
             message = new RecipeIdentityRequest();
         }
 
+        @Override
         public Builder getDefault() {
             message.dataId = "";
             message.domainId = "";

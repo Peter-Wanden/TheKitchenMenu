@@ -93,7 +93,7 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
         if (modelClass.isAssignableFrom(RecipeCatalogViewModel.class)) {
             return (T) new RecipeCatalogViewModel(
                     useCaseHandler,
-                    useCaseFactory.provideRecipeIdentityAndDurationList()
+                    useCaseFactory.getRecipeListUseCase()
             );
         } else if (modelClass.isAssignableFrom(RecipeEditorViewModel.class)) {
             return (T) new RecipeEditorViewModel(
@@ -128,8 +128,8 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
         } else if (modelClass.isAssignableFrom(RecipeIngredientCalculatorViewModel.class)) {
             return (T) new RecipeIngredientCalculatorViewModel(
                     useCaseHandler,
-                    useCaseFactory.provideIngredientCalculator(),
-                    useCaseFactory.provideConversionFactorStatus(),
+                    useCaseFactory.getIngredientCalculatorUseCase(),
+                    useCaseFactory.getConversionFactorStatusUseCase(),
                     application.getResources(),
                     new NumberFormatter(application.getResources()),
                     new MeasurementErrorMessageMaker(application.getResources(),
@@ -138,13 +138,13 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
         } else if (modelClass.isAssignableFrom(RecipeNameAndPortionsViewModel.class)) {
             return (T) new RecipeNameAndPortionsViewModel(
                     useCaseHandler,
-                    useCaseFactory.provideRecipeIdentity(),
-                    useCaseFactory.provideRecipePortions()
+                    useCaseFactory.getRecipeIdentityUseCase(),
+                    useCaseFactory.getRecipePortionsUseCase()
             );
         } else if (modelClass.isAssignableFrom(RecipeIngredientListViewModel.class)) {
             return (T) new RecipeIngredientListViewModel(
                     useCaseHandler,
-                    useCaseFactory.provideRecipeIngredientList()
+                    useCaseFactory.getRecipeIngredientListUseCase()
             );
         } else if (modelClass.isAssignableFrom(RecipeIngredientListItemViewModel.class)) {
             return (T) new RecipeIngredientListItemViewModel(

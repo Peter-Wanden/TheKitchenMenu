@@ -60,7 +60,7 @@ public class RecipeDurationEditorViewModel extends ObservableViewModel {
 
     private class DurationCallbackListener implements UseCase.Callback<RecipeDurationResponse> {
         @Override
-        public void onSuccess(RecipeDurationResponse response) {
+        public void onUseCaseSuccess(RecipeDurationResponse response) {
             isDataLoading.set(false);
             if (isStateChanged(response)) {
                 System.out.println(TAG + "onSuccess:" + response);
@@ -70,7 +70,7 @@ public class RecipeDurationEditorViewModel extends ObservableViewModel {
         }
 
         @Override
-        public void onError(RecipeDurationResponse response) {
+        public void onUseCaseError(RecipeDurationResponse response) {
             isDataLoading.set(false);
             if (isStateChanged(response)) {
                 RecipeDurationEditorViewModel.this.response = response;

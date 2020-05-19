@@ -55,6 +55,7 @@ public class UseCaseFactory {
                            RepositoryRecipeIdentity recipeIdentityRepository,
                            RepositoryRecipeDuration recipeDurationRepository,
                            RepositoryRecipeCourse recipeCourseRepository) {
+
         this.application = application;
         this.recipeMetadataRepository = recipeMetadataRepository;
         this.recipePortionsRepository = recipePortionsRepository;
@@ -98,7 +99,7 @@ public class UseCaseFactory {
         return INSTANCE;
     }
 
-    public RecipeIngredient provideIngredientCalculator() {
+    public RecipeIngredient getIngredientCalculatorUseCase() {
         return new RecipeIngredient(
                 recipePortionsRepository,
                 recipeIngredientRepository,
@@ -108,13 +109,13 @@ public class UseCaseFactory {
         );
     }
 
-    public ConversionFactorStatus provideConversionFactorStatus() {
+    public ConversionFactorStatus getConversionFactorStatusUseCase() {
         return new ConversionFactorStatus(
                 ingredientRepository
         );
     }
 
-    public RecipeIngredientList provideRecipeIngredientList() {
+    public RecipeIngredientList getRecipeIngredientListUseCase() {
         return new RecipeIngredientList(
                 recipeIngredientRepository,
                 ingredientRepository,
@@ -122,14 +123,15 @@ public class UseCaseFactory {
         );
     }
 
-    public RecipeList provideRecipeIdentityAndDurationList() {
+    public RecipeList getRecipeListUseCase() {
         return new RecipeList(
+                getUseCaseHandler(),
                 this,
-                UseCaseHandler.getInstance()
+                recipeMetadataRepository
         );
     }
 
-    public RecipeCourse provideRecipeCourse() {
+    public RecipeCourse getRecipeCourseUseCase() {
         return new RecipeCourse(
                 recipeCourseRepository,
                 new UniqueIdProvider(),
@@ -137,7 +139,7 @@ public class UseCaseFactory {
         );
     }
 
-    public TextValidator provideTextValidator() {
+    public TextValidator getTextValidatorUseCase() {
         Resources resources = application.getResources();
 
         return new TextValidator.Builder().
@@ -152,18 +154,18 @@ public class UseCaseFactory {
                 build();
     }
 
-    public Ingredient provideIngredient() {
+    public Ingredient getIngredientUseCase() {
         return new Ingredient(
                 ingredientRepository,
                 new UniqueIdProvider(),
                 new TimeProvider(),
                 new IngredientDuplicateChecker(ingredientRepository),
-                UseCaseHandler.getInstance(),
-                provideTextValidator()
+                getUseCaseHandler(),
+                getTextValidatorUseCase()
         );
     }
 
-    private RecipeMetadata provideRecipeMetadata() {
+    private RecipeMetadata getRecipeMetadataUseCase() {
         final Set<RecipeMetadata.ComponentName> requiredComponents = new HashSet<>();
         requiredComponents.add(RecipeMetadata.ComponentName.IDENTITY);
         requiredComponents.add(RecipeMetadata.ComponentName.COURSE);
@@ -178,7 +180,7 @@ public class UseCaseFactory {
         );
     }
 
-    public RecipePortions provideRecipePortions() {
+    public RecipePortions getRecipePortionsUseCase() {
         Resources resources = application.getResources();
         return new RecipePortions(
                 recipePortionsRepository,
@@ -189,7 +191,7 @@ public class UseCaseFactory {
         );
     }
 
-    private RecipeDuration provideRecipeDuration() {
+    private RecipeDuration getRecipeDurationUseCase() {
         Resources resources = application.getResources();
         return new RecipeDuration(
                 recipeDurationRepository,
@@ -200,32 +202,36 @@ public class UseCaseFactory {
         );
     }
 
-    public RecipeIdentity provideRecipeIdentity() {
+    public RecipeIdentity getRecipeIdentityUseCase() {
         return new RecipeIdentity(
                 recipeIdentityRepository,
                 new UniqueIdProvider(),
                 new TimeProvider(),
-                UseCaseHandler.getInstance(),
-                provideTextValidator());
+                getUseCaseHandler(),
+                getTextValidatorUseCase());
     }
 
-    public Recipe provideRecipeMacro() {
+    public Recipe getRecipeUseCase() {
         return new Recipe(
-                UseCaseHandler.getInstance(),
-                provideRecipeMetadata(),
-                provideRecipeIdentity(),
-                provideRecipeCourse(),
-                provideRecipeDuration(),
-                provideRecipePortions()
+                getUseCaseHandler(),
+                getRecipeMetadataUseCase(),
+                getRecipeIdentityUseCase(),
+                getRecipeCourseUseCase(),
+                getRecipeDurationUseCase(),
+                getRecipePortionsUseCase()
         );
     }
 
-    public RecipeCopy provideRecipeMacroClone() {
+    public RecipeCopy getRecipeMacroCloneUseCase() {
         return new RecipeCopy(
-                UseCaseHandler.getInstance(),
+                getUseCaseHandler(),
                 new UniqueIdProvider(),
-                provideRecipeMacro(),
-                provideRecipeMacro()
+                getRecipeUseCase(),
+                getRecipeUseCase()
         );
+    }
+
+    public UseCaseHandler getUseCaseHandler() {
+        return UseCaseHandler.getInstance();
     }
 }

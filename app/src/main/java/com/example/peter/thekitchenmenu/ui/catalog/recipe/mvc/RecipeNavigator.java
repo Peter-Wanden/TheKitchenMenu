@@ -1,6 +1,4 @@
-package com.example.peter.thekitchenmenu.ui.catalog.recipe;
-
-import android.widget.FrameLayout;
+package com.example.peter.thekitchenmenu.ui.catalog.recipe.mvc;
 
 public interface RecipeNavigator {
 

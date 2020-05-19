@@ -40,13 +40,13 @@ public class UseCaseThreadPoolScheduler implements UseCaseScheduler {
             final V response,
             final UseCase.Callback<V> callback) {
 
-        handler.post(() -> callback.onSuccess(response));
+        handler.post(() -> callback.onUseCaseSuccess(response));
     }
 
     @Override
     public <V extends UseCase.Response> void onError(
             final V response,
             final UseCase.Callback<V> callback) {
-        handler.post(() -> callback.onError(response));
+        handler.post(() -> callback.onUseCaseError(response));
     }
 }

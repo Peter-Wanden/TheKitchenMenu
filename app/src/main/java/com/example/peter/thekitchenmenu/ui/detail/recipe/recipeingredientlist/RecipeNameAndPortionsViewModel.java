@@ -48,12 +48,12 @@ public class RecipeNameAndPortionsViewModel extends ViewModel {
                 new UseCase.Callback<RecipeIdentityResponse>() {
 
             @Override
-            public void onSuccess(RecipeIdentityResponse response) {
+            public void onUseCaseSuccess(RecipeIdentityResponse response) {
                 setIdentityToView(response.getModel());
             }
 
             @Override
-            public void onError(RecipeIdentityResponse response) {
+            public void onUseCaseError(RecipeIdentityResponse response) {
 
             }
         });
@@ -75,12 +75,12 @@ public class RecipeNameAndPortionsViewModel extends ViewModel {
                 new UseCase.Callback<RecipePortionsResponse>() {
 
             @Override
-            public void onSuccess(RecipePortionsResponse response) {
+            public void onUseCaseSuccess(RecipePortionsResponse response) {
                 setPortionsToView(response.getModel());
             }
 
             @Override
-            public void onError(RecipePortionsResponse response) {
+            public void onUseCaseError(RecipePortionsResponse response) {
 
             }
         });

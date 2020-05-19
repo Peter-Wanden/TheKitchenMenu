@@ -59,8 +59,8 @@ public class ViewModelFactoryIngredient extends ViewModelProvider.NewInstanceFac
             return (T) new IngredientEditorViewModel(
                     application.getResources(),
                     useCaseHandler,
-                    useCaseFactory.provideTextValidator(),
-                    useCaseFactory.provideIngredient());
+                    useCaseFactory.getTextValidatorUseCase(),
+                    useCaseFactory.getIngredientUseCase());
 
         } else if (modelClass.isAssignableFrom(IngredientViewerViewModel.class)) {
             return (T) new IngredientViewerViewModel(

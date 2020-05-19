@@ -1,6 +1,5 @@
 package com.example.peter.thekitchenmenu.ui.catalog.recipe;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -12,8 +11,6 @@ import com.example.peter.thekitchenmenu.ui.catalog.recipe.mvc.RecipeCatalogContr
 import com.example.peter.thekitchenmenu.ui.catalog.recipe.mvc.RecipeCatalogFragment;
 import com.example.peter.thekitchenmenu.ui.catalog.recipe.mvc.RecipeCatalogView;
 import com.example.peter.thekitchenmenu.ui.common.controllers.BaseActivity;
-import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeEditorActivity;
-import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeviewer.RecipeViewerActivity;
 import com.google.android.material.tabs.TabLayout;
 
 public class RecipeCatalogActivity
@@ -21,17 +18,18 @@ public class RecipeCatalogActivity
 
     private static final String TAG = "tkm-" + RecipeCatalogActivity.class.getSimpleName() + ":";
 
-
     private RecipeCatalogController controller;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        view = getCompositionRoot().getViewMvcFactory().getRecipeCatalogView(null);
-        view.registerListener(this);
+        RecipeCatalogView view = getCompositionRoot().
+                getViewFactory().
+                getRecipeCatalogView(null);
 
-        controller = getCompositionRoot().getControllerFactory().getRecipeCatalogController();
+        controller = getCompositionRoot().getRecipeCatalogController();
+        controller.bindView(view);
 
         setContentView(view.getRootView());
 

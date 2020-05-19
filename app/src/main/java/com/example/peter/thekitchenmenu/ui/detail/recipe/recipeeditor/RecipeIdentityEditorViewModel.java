@@ -66,7 +66,7 @@ public class RecipeIdentityEditorViewModel extends ObservableViewModel {
      */
     private class IdentityCallbackListener implements UseCase.Callback<RecipeIdentityResponse> {
         @Override
-        public void onSuccess(RecipeIdentityResponse response) {
+        public void onUseCaseSuccess(RecipeIdentityResponse response) {
             isDataLoading.set(false);
             if (isStateChanged(response)) {
                 System.out.println(TAG + "onSuccess:" + response);
@@ -76,7 +76,7 @@ public class RecipeIdentityEditorViewModel extends ObservableViewModel {
         }
 
         @Override
-        public void onError(RecipeIdentityResponse response) {
+        public void onUseCaseError(RecipeIdentityResponse response) {
             isDataLoading.set(false);
             if (isStateChanged(response)) {
                 System.out.println(TAG + "onError:" + response);

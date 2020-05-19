@@ -26,7 +26,7 @@ public final class RecipeIdentityResponse
 
     private RecipeIdentityResponse() {}
 
-    public static class Builder extends UseCaseMessageBuilderMetadata
+    public static class Builder extends UseCaseMessageMetadataBuilder
             <Builder, RecipeIdentityResponse, Model> {
 
         public Builder() {

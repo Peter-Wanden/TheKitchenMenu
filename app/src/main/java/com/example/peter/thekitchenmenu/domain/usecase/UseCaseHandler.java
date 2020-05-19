@@ -54,12 +54,12 @@ public class UseCaseHandler {
         }
 
         @Override
-        public void onSuccess(V response) {
+        public void onUseCaseSuccess(V response) {
             handler.notifyResponse(response, callback);
         }
 
         @Override
-        public void onError(V response) {
+        public void onUseCaseError(V response) {
             handler.notifyError(response, callback);
         }
     }

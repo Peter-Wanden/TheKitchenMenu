@@ -656,13 +656,13 @@ public class RecipeMetadataTest {
         private static final String TAG = "MetadataCallbackClient: ";
 
         @Override
-        public void onSuccess(RecipeMetadataResponse response) {
+        public void onUseCaseSuccess(RecipeMetadataResponse response) {
             System.out.println(RecipeMetadataTest.TAG + TAG + "onSuccess: " + response);
             onSuccessResponse = response;
         }
 
         @Override
-        public void onError(RecipeMetadataResponse response) {
+        public void onUseCaseError(RecipeMetadataResponse response) {
             System.out.println(RecipeMetadataTest.TAG + TAG + "onError: " + response);
             onErrorResponse = response;
         }

@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeIngredientEditor;
+package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredienteditor;
 
 import android.content.res.Resources;
 
@@ -355,13 +355,13 @@ public class RecipeIngredientCalculatorViewModel extends ObservableViewModel {
                 request,
                 new UseCase.Callback<RecipeIngredientResponse>() {
                     @Override
-                    public void onSuccess(RecipeIngredientResponse response) {
+                    public void onUseCaseSuccess(RecipeIngredientResponse response) {
                         processModelResult(response.getModel());
                         processResultStatus(response.getResultStatus());
                     }
 
                     @Override
-                    public void onError(RecipeIngredientResponse response) {
+                    public void onUseCaseError(RecipeIngredientResponse response) {
                         processModelResult(response.getModel());
                         processResultStatus(response.getResultStatus());
                     }
@@ -442,12 +442,12 @@ public class RecipeIngredientCalculatorViewModel extends ObservableViewModel {
         return new Callback<ConversionFactorStatusResponse>() {
 
             @Override
-            public void onSuccess(ConversionFactorStatusResponse response) {
+            public void onUseCaseSuccess(ConversionFactorStatusResponse response) {
                 processConversionFactorResult(response.getResult());
             }
 
             @Override
-            public void onError(ConversionFactorStatusResponse response) {
+            public void onUseCaseError(ConversionFactorStatusResponse response) {
                 processConversionFactorResult(response.getResult());
             }
         };

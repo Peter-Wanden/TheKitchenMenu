@@ -12,12 +12,12 @@ public class UseCaseSchedulerMock implements UseCaseScheduler {
     @Override
     public <V extends UseCase.Response> void notifyResponse(
             V response, UseCase.Callback<V> callback) {
-        callback.onSuccess(response);
+        callback.onUseCaseSuccess(response);
     }
 
     @Override
     public <V extends UseCase.Response> void onError(
             V response, UseCase.Callback<V> callback) {
-        callback.onError(response);
+        callback.onUseCaseError(response);
     }
 }

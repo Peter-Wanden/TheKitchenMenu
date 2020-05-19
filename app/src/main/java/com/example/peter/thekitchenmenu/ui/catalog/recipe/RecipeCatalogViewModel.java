@@ -52,25 +52,25 @@ public class RecipeCatalogViewModel extends ViewModel {
 
         handler.execute(
                 useCase,
-                getRequestModel(RecipeFilter.ALL),
+                getRequestModel(RecipeListFilter.ALL),
                 getCallback()
         );
     }
 
-    private RecipeListRequest getRequestModel(RecipeFilter filter) {
+    private RecipeListRequest getRequestModel(RecipeListFilter filter) {
         return new RecipeListRequest(filter);
     }
 
     private UseCase.Callback<RecipeListResponse> getCallback() {
         return new UseCase.Callback<RecipeListResponse>() {
             @Override
-            public void onSuccess(RecipeListResponse response) {
+            public void onUseCaseSuccess(RecipeListResponse response) {
                 dataLoading.set(false);
                 RecipeCatalogViewModel.this.recipeList.setValue(response.getRecipeListItemModels());
             }
 
             @Override
-            public void onError(RecipeListResponse response) {
+            public void onUseCaseError(RecipeListResponse response) {
                 dataLoading.set(false);
                 dataLoadingFailed(response.getResultStatus());
 

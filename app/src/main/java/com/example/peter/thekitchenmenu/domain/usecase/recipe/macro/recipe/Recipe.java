@@ -376,9 +376,9 @@ public class Recipe extends UseCase {
         if (isRecipeResponseChanged(response)) {
             for (UseCase.Callback<RecipeResponse> callback : recipeResponseListeners) {
                 if (isValid()) {
-                    callback.onSuccess(response);
+                    callback.onUseCaseSuccess(response);
                 } else {
-                    callback.onError(response);
+                    callback.onUseCaseError(response);
                 }
             }
         }
@@ -435,9 +435,9 @@ public class Recipe extends UseCase {
                         (UseCase.Callback<RecipeIdentityResponse>) callbackPair.second;
 
                 if (response.getMetadata().getFailReasons().contains(CommonFailReason.NONE)) {
-                    callback.onSuccess(response);
+                    callback.onUseCaseSuccess(response);
                 } else {
-                    callback.onError(response);
+                    callback.onUseCaseError(response);
                 }
 
             } else if (COURSE.equals(componentName)) {
@@ -448,9 +448,9 @@ public class Recipe extends UseCase {
                         (UseCase.Callback<RecipeCourseResponse>) callbackPair.second;
 
                 if (response.getMetadata().getFailReasons().contains(CommonFailReason.NONE)) {
-                    callback.onSuccess(response);
+                    callback.onUseCaseSuccess(response);
                 } else {
-                    callback.onError(response);
+                    callback.onUseCaseError(response);
                 }
 
             } else if (DURATION.equals(componentName)) {
@@ -461,9 +461,9 @@ public class Recipe extends UseCase {
                         (UseCase.Callback<RecipeDurationResponse>) callbackPair.second;
 
                 if (response.getMetadata().getFailReasons().contains(CommonFailReason.NONE)) {
-                    callback.onSuccess(response);
+                    callback.onUseCaseSuccess(response);
                 } else {
-                    callback.onError(response);
+                    callback.onUseCaseError(response);
                 }
 
             } else if (PORTIONS.equals(componentName)) {
@@ -474,9 +474,9 @@ public class Recipe extends UseCase {
                         (UseCase.Callback<RecipePortionsResponse>) callbackPair.second;
 
                 if (response.getMetadata().getFailReasons().contains(CommonFailReason.NONE)) {
-                    callback.onSuccess(response);
+                    callback.onUseCaseSuccess(response);
                 } else {
-                    callback.onError(response);
+                    callback.onUseCaseError(response);
                 }
             }
         }
@@ -567,9 +567,9 @@ public class Recipe extends UseCase {
 
     private void sendResponse(UseCase.Response r, List<FailReasons> failReasons) {
         if (failReasons.contains(CommonFailReason.NONE)) {
-            getUseCaseCallback().onSuccess(r);
+            getUseCaseCallback().onUseCaseSuccess(r);
         } else {
-            getUseCaseCallback().onError(r);
+            getUseCaseCallback().onUseCaseError(r);
         }
     }
 }

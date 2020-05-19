@@ -4,12 +4,9 @@ import android.annotation.SuppressLint;
 
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess.GetDomainModelCallback;
 import com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.datasource.IngredientEntity;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.recipeingredient.datasource.RecipeIngredientEntity;
-import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.ingredient.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeIngredient;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipePortions;
-import com.example.peter.thekitchenmenu.data.repository.source.remote.recipe.RepositoryRecipePortionsRemote;
 import com.example.peter.thekitchenmenu.domain.model.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModelBuilder;
@@ -17,7 +14,6 @@ import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasur
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModel;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortionsPersistenceModel;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
@@ -235,7 +231,7 @@ public class RecipeIngredient extends UseCase {
                 UnitOfMeasureConstants.DEFAULT_MEASUREMENT_MODEL,
                 status);
         System.out.println(TAG + response);
-        getUseCaseCallback().onError(response);
+        getUseCaseCallback().onUseCaseError(response);
     }
 
     private void setupUnitOfMeasure() {
@@ -354,7 +350,7 @@ public class RecipeIngredient extends UseCase {
         saveIfValid();
         RecipeIngredientResponse response = getResponse();
         System.out.println(TAG + response);
-        getUseCaseCallback().onSuccess(response);
+        getUseCaseCallback().onUseCaseSuccess(response);
     }
 
     private RecipeIngredientResponse getResponse() {

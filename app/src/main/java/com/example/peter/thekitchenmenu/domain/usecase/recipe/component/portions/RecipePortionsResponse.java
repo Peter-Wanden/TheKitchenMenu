@@ -26,7 +26,7 @@ public final class RecipePortionsResponse
     private RecipePortionsResponse() {}
 
     public static class Builder
-            extends UseCaseMessageBuilderMetadata<Builder, RecipePortionsResponse, Model> {
+            extends UseCaseMessageMetadataBuilder<Builder, RecipePortionsResponse, Model> {
 
         public Builder() {
             message = new RecipePortionsResponse();

@@ -86,7 +86,7 @@ public class RecipeIdentity
     private RecipeIdentityRequest.Model requestModel;
     private RecipeIdentityPersistenceModel persistenceModel;
 
-    private int accessCount;
+    private int accessCount; // For testing
 
     public RecipeIdentity(@Nonnull RepositoryRecipeIdentity repository,
                           @Nonnull UniqueIdProvider idProvider,
@@ -180,12 +180,12 @@ public class RecipeIdentity
                 request,
                 new UseCase.Callback<TextValidatorResponse>() {
                     @Override
-                    public void onSuccess(TextValidatorResponse response) {
+                    public void onUseCaseSuccess(TextValidatorResponse response) {
                         validateDescription();
                     }
 
                     @Override
-                    public void onError(TextValidatorResponse response) {
+                    public void onUseCaseError(TextValidatorResponse response) {
                         addTitleFailReasonFromTextValidator(response.getFailReason());
                         validateDescription();
                     }
@@ -216,14 +216,14 @@ public class RecipeIdentity
                 request,
                 new UseCase.Callback<TextValidatorResponse>() {
                     @Override
-                    public void onSuccess(TextValidatorResponse response) {
+                    public void onUseCaseSuccess(TextValidatorResponse response) {
                         if (failReasons.isEmpty()) {
                             failReasons.add(CommonFailReason.NONE);
                         }
                     }
 
                     @Override
-                    public void onError(TextValidatorResponse response) {
+                    public void onUseCaseError(TextValidatorResponse response) {
                         addDescriptionFailReasons(response.getFailReason());
                     }
                 }
@@ -323,9 +323,9 @@ public class RecipeIdentity
         System.out.println(TAG + "Response No:" + accessCount + " - " + r);
 
         if (r.getMetadata().getFailReasons().contains(CommonFailReason.NONE)) {
-            getUseCaseCallback().onSuccess(r);
+            getUseCaseCallback().onUseCaseSuccess(r);
         } else {
-            getUseCaseCallback().onError(r);
+            getUseCaseCallback().onUseCaseError(r);
         }
     }
 

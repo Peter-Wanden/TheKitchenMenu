@@ -8,8 +8,8 @@ import java.util.List;
 
 public interface RecipeCatalogListView
         extends
-        ObservableViewMvc<RecipeListItemView.RecipeListItemUserActionsListener>,
-        RecipeListItemView.RecipeListItemUserActionsListener {
+        ObservableViewMvc<RecipeListItemView.RecipeListItemUserActions>,
+        RecipeListItemView.RecipeListItemUserActions {
 
     void bindRecipes(List<Recipe> recipes);
 }

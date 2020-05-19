@@ -134,7 +134,7 @@ public class RecipeListTest {
 //        );
 
         RecipeListRequest request = new RecipeListRequest(
-                RecipeList.RecipeFilter.ALL
+                RecipeList.RecipeListFilter.ALL
         );
         // Act
         handler.execute(SUT, request, getCallback());
@@ -151,14 +151,14 @@ public class RecipeListTest {
     private UseCase.Callback<RecipeListResponse> getCallback() {
         return new UseCase.Callback<RecipeListResponse>() {
             @Override
-            public void onSuccess(RecipeListResponse response) {
+            public void onUseCaseSuccess(RecipeListResponse response) {
                 if (response != null) {
                     onSuccessResponse = response;
                 }
             }
 
             @Override
-            public void onError(RecipeListResponse response) {
+            public void onUseCaseError(RecipeListResponse response) {
                 if (response != null) {
                     onErrorResponse = response;
                 }

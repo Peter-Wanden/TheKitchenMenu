@@ -18,7 +18,7 @@ import javax.annotation.Nullable;
 
 public class RecipeCatalogListViewImpl
         extends
-        BaseObservableViewMvc<RecipeListItemView.RecipeListItemUserActionsListener>
+        BaseObservableViewMvc<RecipeListItemView.RecipeListItemUserActions>
         implements
         RecipeCatalogListView {
 

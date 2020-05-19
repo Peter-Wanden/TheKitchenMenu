@@ -740,13 +740,13 @@ public class RecipeIdentityTest {
         private RecipeIdentityResponse onErrorResponse;
 
         @Override
-        public void onSuccess(RecipeIdentityResponse r) {
+        public void onUseCaseSuccess(RecipeIdentityResponse r) {
             System.out.println(TAG + "onSuccess: " + r);
             onSuccessResponse = r;
         }
 
         @Override
-        public void onError(RecipeIdentityResponse r) {
+        public void onUseCaseError(RecipeIdentityResponse r) {
             System.out.println(TAG + "onError: " + r);
             onErrorResponse = r;
         }

@@ -69,7 +69,7 @@ public class RecipePortionsEditorViewModel extends ObservableViewModel {
      */
     private class PortionsCallbackListener implements UseCase.Callback<RecipePortionsResponse> {
         @Override
-        public void onSuccess(RecipePortionsResponse response) {
+        public void onUseCaseSuccess(RecipePortionsResponse response) {
             isDataLoading.set(false);
             if (isStateChanged(response)) {
                 System.out.println(TAG + "onSuccess:" + response);
@@ -79,12 +79,12 @@ public class RecipePortionsEditorViewModel extends ObservableViewModel {
         }
 
         @Override
-        public void onError(RecipePortionsResponse response) {
+        public void onUseCaseError(RecipePortionsResponse response) {
             isDataLoading.set(false);
             if (isStateChanged(response)) {
                 System.out.println(TAG + "onError:" + response);
                 RecipePortionsEditorViewModel.this.response = response;
-                onUseCaseError(response);
+                this.onUseCaseError(response);
             }
         }
     }

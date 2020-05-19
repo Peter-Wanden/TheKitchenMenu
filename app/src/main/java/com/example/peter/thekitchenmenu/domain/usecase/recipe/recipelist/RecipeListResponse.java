@@ -1,6 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipelist;
 
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
 
 import java.util.List;
 import java.util.Objects;
@@ -10,13 +11,12 @@ import javax.annotation.Nonnull;
 public class RecipeListResponse implements UseCase.Response {
     @Nonnull
     private final RecipeList.ResultStatus resultStatus;
-
     @Nonnull
-    private final List<RecipeListItemModel> recipeListItemModels;
+    private final List<Recipe> recipeListItemModels;
 
     public RecipeListResponse(
             @Nonnull RecipeList.ResultStatus resultStatus,
-            @Nonnull List<RecipeListItemModel> recipeListItemModels) {
+            @Nonnull List<Recipe> recipeListItemModels) {
         this.resultStatus = resultStatus;
         this.recipeListItemModels = recipeListItemModels;
     }
@@ -27,7 +27,7 @@ public class RecipeListResponse implements UseCase.Response {
     }
 
     @Nonnull
-    public List<RecipeListItemModel> getRecipeListItemModels() {
+    public List<Recipe> getRecipeListItemModels() {
         return recipeListItemModels;
     }
 

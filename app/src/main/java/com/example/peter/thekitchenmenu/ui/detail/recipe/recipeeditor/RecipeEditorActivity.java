@@ -1,5 +1,6 @@
 package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -17,7 +18,6 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.databinding.RecipeEditorActivityBinding;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseFactory;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.RecipeRequest;
 import com.example.peter.thekitchenmenu.ui.UnsavedChangesDialogFragment;
@@ -36,7 +36,7 @@ public class RecipeEditorActivity
 
     private static final String TAG = "tkm-" + RecipeEditorActivity.class.getSimpleName() + ": ";
 
-    public static final String EXTRA_RECIPE_ID = "";
+    public static final String EXTRA_RECIPE_DOMAIN_ID = "";
     public static final int REQUEST_ADD_EDIT_RECIPE = 50;
     public static final int RESULT_ADD_EDIT_RECIPE_OK = RESULT_FIRST_USER + 1;
     public static final int RESULT_ADD_EDIT_RECIPE_CANCELLED = RESULT_FIRST_USER + 2;
@@ -56,12 +56,6 @@ public class RecipeEditorActivity
         setupFragments();
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        start();
-    }
-
     private void initialiseBindings() {
         binding = DataBindingUtil.setContentView(this, R.layout.recipe_editor_activity);
         binding.setLifecycleOwner(this);
@@ -77,7 +71,7 @@ public class RecipeEditorActivity
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
 
-        if (getIntent().getStringExtra(EXTRA_RECIPE_ID) != null) {
+        if (getIntent().getStringExtra(EXTRA_RECIPE_DOMAIN_ID) != null) {
             actionBar.setTitle(R.string.activity_title_edit_recipe);
         } else {
             actionBar.setTitle(R.string.activity_title_add_new_recipe);
@@ -85,7 +79,7 @@ public class RecipeEditorActivity
     }
 
     private void setupViewModels() {
-        recipeMacro = UseCaseFactory.getInstance(getApplication()).provideRecipeMacro();
+        recipeMacro = UseCaseFactory.getInstance(getApplication()).getRecipeUseCase();
 
         recipeEditorViewModel = createRecipeEditorViewModel(this, recipeMacro);
         recipeEditorViewModel.setNavigator(this);
@@ -221,17 +215,17 @@ public class RecipeEditorActivity
     }
 
     private void start() {
-        String recipeId = getIntent().hasExtra(EXTRA_RECIPE_ID) ?
-                getIntent().getStringExtra(EXTRA_RECIPE_ID) :
+        String recipeId = getIntent().hasExtra(EXTRA_RECIPE_DOMAIN_ID) ?
+                getIntent().getStringExtra(EXTRA_RECIPE_DOMAIN_ID) :
                 CREATE_NEW_RECIPE;
 
         RecipeRequest request = new RecipeRequest.Builder().setDomainId(recipeId).build();
         // TODO -
         //  if there is no recipe id create a new recipe
         //  if there is a recipe id, load the recipe:
-        //  - if the recipe creator is not the user copy the recipe
-        //  - if the recipe creator is the user edit the recipe
-        //  - if the recipe is being used byu others, make a copy and allow uses to update their
+        //  - if the recipe creator is not the user, copy the recipe
+        //  - if the recipe creator is the user, edit the recipe
+        //  - if the recipe is being used by others, make a copy and allow uses to update their
         //     copy if they want to
         //  See {@link RecipeEditorViewModel}
     }
@@ -336,5 +330,20 @@ public class RecipeEditorActivity
     protected void onDestroy() {
         recipeEditorViewModel.onActivityDestroyed();
         super.onDestroy();
+    }
+
+    /*
+    Static methods for starting this activity
+     */
+    // Create new recipe
+    public static void launch(Context context) {
+        Intent intent = new Intent(context, RecipeEditorActivity.class);
+        context.startActivity(intent);
+    }
+
+    // Edit recipe
+    public static void launch(Context context, String recipeDomainId) {
+        Intent intent = new Intent(context, RecipeEditorActivity.class);
+        intent.putExtra(EXTRA_RECIPE_DOMAIN_ID, recipeDomainId);
     }
 }

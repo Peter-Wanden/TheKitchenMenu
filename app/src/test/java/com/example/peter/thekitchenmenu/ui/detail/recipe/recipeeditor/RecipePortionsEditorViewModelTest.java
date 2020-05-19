@@ -718,13 +718,13 @@ public class RecipePortionsEditorViewModelTest {
         private RecipeMetadataResponse response;
 
         @Override
-        public void onSuccess(RecipeMetadataResponse response) {
+        public void onUseCaseSuccess(RecipeMetadataResponse response) {
             System.out.println(RecipePortionsEditorViewModelTest.TAG + TAG + "onSuccess:" + response);
             this.response = response;
         }
 
         @Override
-        public void onError(RecipeMetadataResponse response) {
+        public void onUseCaseError(RecipeMetadataResponse response) {
             System.out.println(RecipePortionsEditorViewModelTest.TAG + TAG + "onError:" + response);
             this.response = response;
         }

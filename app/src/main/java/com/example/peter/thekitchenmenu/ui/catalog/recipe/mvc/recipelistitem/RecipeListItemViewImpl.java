@@ -1,7 +1,6 @@
 package com.example.peter.thekitchenmenu.ui.catalog.recipe.mvc.recipelistitem;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -11,17 +10,11 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentName;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.RecipeResponse;
-import com.example.peter.thekitchenmenu.ui.catalog.recipe.mvc.recipelistitem.RecipeListItemView;
 import com.example.peter.thekitchenmenu.ui.common.views.BaseObservableViewMvc;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Nonnull;
 
 public class RecipeListItemViewImpl
         extends
-        BaseObservableViewMvc<RecipeListItemView.RecipeListItemUserActionsListener>
+        BaseObservableViewMvc<RecipeListItemView.RecipeListItemUserActions>
         implements
         RecipeListItemView {
 

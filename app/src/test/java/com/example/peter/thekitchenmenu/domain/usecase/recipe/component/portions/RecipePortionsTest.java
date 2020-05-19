@@ -516,13 +516,13 @@ public class RecipePortionsTest {
                 PortionsCallbackClient.class.getSimpleName() + ": ";
 
         @Override
-        public void onSuccess(RecipePortionsResponse r) {
+        public void onUseCaseSuccess(RecipePortionsResponse r) {
             System.out.println(TAG + "onSuccess: " + r);
             portionsOnSuccessResponse = r;
         }
 
         @Override
-        public void onError(RecipePortionsResponse r) {
+        public void onUseCaseError(RecipePortionsResponse r) {
             System.out.println(TAG + "onError: " + r);
             portionsOnErrorResponse = r;
         }

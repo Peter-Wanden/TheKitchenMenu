@@ -104,7 +104,7 @@ public class TextValidator extends UseCase {
 
         TextValidatorResponse response = responseBuilder.build();
         System.out.println(TAG + response);
-        getUseCaseCallback().onError(response);
+        getUseCaseCallback().onUseCaseError(response);
     }
 
     private void sendTextTooLongResponse(TextValidatorRequest request) {
@@ -115,7 +115,7 @@ public class TextValidator extends UseCase {
 
         TextValidatorResponse response = responseBuilder.build();
         System.out.println(TAG + response);
-        getUseCaseCallback().onError(response);
+        getUseCaseCallback().onUseCaseError(response);
     }
 
     private void sendTextValidatedResponse(TextValidatorRequest request) {
@@ -126,7 +126,7 @@ public class TextValidator extends UseCase {
 
         TextValidatorResponse response = responseBuilder.build();
         System.out.println(TAG + response);
-        getUseCaseCallback().onSuccess(response);
+        getUseCaseCallback().onUseCaseSuccess(response);
     }
 
     private TextValidatorResponse.Builder addRequiredLengths(TextValidatorRequest request,

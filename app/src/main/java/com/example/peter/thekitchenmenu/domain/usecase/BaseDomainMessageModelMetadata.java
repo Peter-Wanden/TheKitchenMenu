@@ -1,8 +1,8 @@
 package com.example.peter.thekitchenmenu.domain.usecase;
 
-public abstract class BaseDomainMessageModelMetadata<
-        DM extends BaseDomainModel>
-        extends BaseDomainMessageModel<DM> {
+public abstract class BaseDomainMessageModelMetadata<DM extends BaseDomainModel>
+        extends
+        BaseDomainMessageModel<DM> {
 
     protected UseCaseMetadata metadata;
 
@@ -10,8 +10,8 @@ public abstract class BaseDomainMessageModelMetadata<
         return metadata;
     }
 
-    public static abstract class UseCaseMessageBuilderMetadata
-            <SELF extends UseCaseMessageBuilderMetadata<SELF, M, DM>,
+    public static abstract class UseCaseMessageMetadataBuilder
+            <SELF extends UseCaseMessageMetadataBuilder<SELF, M, DM>,
                     M extends BaseDomainMessageModelMetadata<DM>,
                     DM extends BaseDomainModel>
             extends UseCaseMessageBuilderModel<SELF, M, DM> {

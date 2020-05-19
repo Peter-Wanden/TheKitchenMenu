@@ -136,12 +136,12 @@ public class TextValidatorTest {
     private UseCase.Callback<TextValidatorResponse> getCallback() {
         return new UseCase.Callback<TextValidatorResponse>() {
             @Override
-            public void onSuccess(TextValidatorResponse response) {
+            public void onUseCaseSuccess(TextValidatorResponse response) {
                 actualResponse = response;
             }
 
             @Override
-            public void onError(TextValidatorResponse response) {
+            public void onUseCaseError(TextValidatorResponse response) {
                 actualResponse = response;
             }
         };

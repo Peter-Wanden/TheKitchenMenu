@@ -5,9 +5,9 @@ import com.example.peter.thekitchenmenu.ui.common.views.ObservableViewMvc;
 
 public interface RecipeListItemView
         extends
-        ObservableViewMvc<RecipeListItemView.RecipeListItemUserActionsListener> {
+        ObservableViewMvc<RecipeListItemView.RecipeListItemUserActions> {
 
-    interface RecipeListItemUserActionsListener {
+    interface RecipeListItemUserActions {
         void onRecipeClicked(String recipeDomainId);
 
         void onAddToFavoritesClicked(String recipeDomainId);

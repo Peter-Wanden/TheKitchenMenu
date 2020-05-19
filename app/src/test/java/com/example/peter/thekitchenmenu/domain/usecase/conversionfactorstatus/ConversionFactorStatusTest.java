@@ -151,12 +151,12 @@ public class ConversionFactorStatusTest {
     private UseCase.Callback<ConversionFactorStatusResponse> getResponseCallback() {
         return new UseCase.Callback<ConversionFactorStatusResponse>() {
             @Override
-            public void onSuccess(ConversionFactorStatusResponse response) {
+            public void onUseCaseSuccess(ConversionFactorStatusResponse response) {
                 ConversionFactorStatusTest.this.actualResponse = response;
             }
 
             @Override
-            public void onError(ConversionFactorStatusResponse response) {
+            public void onUseCaseError(ConversionFactorStatusResponse response) {
                 ConversionFactorStatusTest.this.actualResponse = response;
             }
         };

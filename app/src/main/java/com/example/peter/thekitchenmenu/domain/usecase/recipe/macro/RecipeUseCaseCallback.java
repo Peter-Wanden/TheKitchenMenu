@@ -6,12 +6,12 @@ public abstract class RecipeUseCaseCallback<R extends UseCase.Response>
         implements UseCase.Callback<R> {
 
     @Override
-    public void onSuccess(R response) {
+    public void onUseCaseSuccess(R response) {
         processResponse(response);
     }
 
     @Override
-    public void onError(R response) {
+    public void onUseCaseError(R response) {
         processResponse(response);
     }
 

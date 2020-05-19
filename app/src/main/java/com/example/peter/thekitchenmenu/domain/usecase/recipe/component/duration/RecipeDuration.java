@@ -323,9 +323,9 @@ public class RecipeDuration
         System.out.println(TAG + "Response No:" + accessCount + " - " + r);
 
         if (r.getMetadata().getFailReasons().contains(CommonFailReason.NONE)) {
-            getUseCaseCallback().onSuccess(r);
+            getUseCaseCallback().onUseCaseSuccess(r);
         } else {
-            getUseCaseCallback().onError(r);
+            getUseCaseCallback().onUseCaseError(r);
         }
     }
 

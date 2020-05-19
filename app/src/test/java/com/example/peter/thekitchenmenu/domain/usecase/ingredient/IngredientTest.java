@@ -613,13 +613,13 @@ public class IngredientTest {
         private IngredientResponse onErrorResponse;
 
         @Override
-        public void onSuccess(IngredientResponse response) {
+        public void onUseCaseSuccess(IngredientResponse response) {
             System.out.println(TAG + response);
             onSuccessResponse = response;
         }
 
         @Override
-        public void onError(IngredientResponse response) {
+        public void onUseCaseError(IngredientResponse response) {
             System.out.println(TAG + response);
             onErrorResponse = response;
         }

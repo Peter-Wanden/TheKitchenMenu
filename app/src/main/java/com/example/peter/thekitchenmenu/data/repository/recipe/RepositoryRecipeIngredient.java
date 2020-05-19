@@ -34,7 +34,7 @@ public class RepositoryRecipeIngredient
             @Nonnull String recipeId,
             @Nonnull GetAllDomainModelsCallback<RecipeIngredientPersistenceModel> callback) {
 
-        List<RecipeIngredientPersistenceModel> cachedEntities = getFromCachedByRecipeId(recipeId);
+        List<RecipeIngredientPersistenceModel> cachedEntities = getFromCachedByRecipeDomainId(recipeId);
 
         if (cachedEntities != null && !cachedEntities.isEmpty()) {
             callback.onAllLoaded(cachedEntities);
@@ -84,7 +84,7 @@ public class RepositoryRecipeIngredient
             @Nonnull String productId,
             @Nonnull GetAllDomainModelsCallback<RecipeIngredientPersistenceModel> callback) {
 
-        List<RecipeIngredientPersistenceModel> cache = getFromCacheByProductId(productId);
+        List<RecipeIngredientPersistenceModel> cache = getFromCacheByProductDataId(productId);
 
         if (cache == null || !cache.isEmpty()) {
             callback.onAllLoaded(cache);
@@ -174,50 +174,61 @@ public class RepositoryRecipeIngredient
                                     }
                                 });
                     }
+                });
+    }
+
+    private List<RecipeIngredientPersistenceModel> getFromCachedByRecipeDomainId(
+            String recipeDomainId) {
+
+        if (cache == null) {
+            return null;
+        } else {
+            List<RecipeIngredientPersistenceModel> recipeIngredients = new ArrayList<>();
+
+            cache.values().forEach((recipeIngredient) -> {
+                if (recipeDomainId.equals(recipeIngredient.getRecipeDomainId())) {
+                    recipeIngredients.add(recipeIngredient);
                 }
-        );
-    }
+            });
 
-    private List<RecipeIngredientPersistenceModel> getFromCachedByRecipeId(String recipeId) {
-
-        if (cache == null)
-            return null;
-        else {
-            List<RecipeIngredientPersistenceModel> models = new ArrayList<>();
-
-            for (RecipeIngredientPersistenceModel m : cache.values())
-                if (recipeId.equals(m.getDomainId()))
-                    models.add(m);
-
-            return models;
+            return recipeIngredients;
         }
     }
 
-    private List<RecipeIngredientPersistenceModel> getFromCacheByProductId(String productId) {
+    private List<RecipeIngredientPersistenceModel> getFromCacheByProductDataId(
+            String productDataId) {
 
-        if (cache == null)
+        if (cache == null) {
             return null;
-        else {
-            List<RecipeIngredientPersistenceModel> models = new ArrayList<>();
+        } else {
+            List<RecipeIngredientPersistenceModel> recipeIngredients = new ArrayList<>();
 
-            for (RecipeIngredientPersistenceModel m : models)
-                if (productId.equals(m.getProductDataId()))
-                    models.add(m);
+            cache.values().forEach((recipeIngredient) -> {
+                if (productDataId.equals(recipeIngredient.getProductDataId())) {
+                    recipeIngredients.add(recipeIngredient);
+                }
+            });
 
-            return models;
+            return recipeIngredients;
         }
     }
 
-    private List<RecipeIngredientPersistenceModel> getFromCacheByIngredientId(String ingredientId) {
+    private List<RecipeIngredientPersistenceModel> getFromCacheByIngredientId(
+            String recipeIngredientDomainId) {
 
-        if (cache == null)
+        if (cache == null) {
             return null;
-        else {
-            List<RecipeIngredientPersistenceModel> models = new ArrayList<>();
-            for (RecipeIngredientPersistenceModel m : models)
-                if (ingredientId.equals(m.getIngredientDomainId()))
-                    models.add(m);
-            return models;
+        } else {
+            List<RecipeIngredientPersistenceModel> recipeIngredients = new ArrayList<>();
+
+            cache.values().forEach((recipeIngredient) -> {
+                if (recipeIngredientDomainId.equals(recipeIngredient.getDomainId())) {
+                    recipeIngredients.add(recipeIngredient);
+                }
+            });
+
+            return recipeIngredients;
         }
     }
 }
+

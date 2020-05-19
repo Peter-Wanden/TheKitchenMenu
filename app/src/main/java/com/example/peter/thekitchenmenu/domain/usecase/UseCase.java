@@ -47,8 +47,9 @@ public abstract class UseCase {
     }
 
     public interface Callback<R> {
-        void onSuccess(R response);
 
-        void onError(R response);
+        void onUseCaseSuccess(R response);
+
+        void onUseCaseError(R response);
     }
 }

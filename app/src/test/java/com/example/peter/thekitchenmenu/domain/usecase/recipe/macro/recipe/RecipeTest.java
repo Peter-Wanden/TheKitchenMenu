@@ -940,7 +940,7 @@ public class RecipeTest {
         private RecipePortionsResponse portionsOnError;
 
         @Override
-        public void onSuccess(RecipeResponse response) {
+        public void onUseCaseSuccess(RecipeResponse response) {
             if (response != null) {
                 System.out.println(TAG + "recipeMacroResponseOnSuccess: " + response);
                 recipeResponseOnSuccess = response;
@@ -968,7 +968,7 @@ public class RecipeTest {
         }
 
         @Override
-        public void onError(RecipeResponse response) {
+        public void onUseCaseError(RecipeResponse response) {
             if (response != null) {
                 System.out.println(TAG + "recipeMacroResponseOnError: " + response);
                 recipeResponseOnError = response;
@@ -1084,13 +1084,13 @@ public class RecipeTest {
         private RecipeIdentityResponse response;
 
         @Override
-        public void onSuccess(RecipeIdentityResponse response) {
+        public void onUseCaseSuccess(RecipeIdentityResponse response) {
             System.out.println(TAG + response);
             this.response = response;
         }
 
         @Override
-        public void onError(RecipeIdentityResponse response) {
+        public void onUseCaseError(RecipeIdentityResponse response) {
             System.out.println(TAG + response);
             this.response = response;
         }
@@ -1116,13 +1116,13 @@ public class RecipeTest {
         private RecipeDurationResponse response;
 
         @Override
-        public void onSuccess(RecipeDurationResponse response) {
+        public void onUseCaseSuccess(RecipeDurationResponse response) {
             System.out.println(TAG + "onSuccess:" + response);
             this.response = response;
         }
 
         @Override
-        public void onError(RecipeDurationResponse response) {
+        public void onUseCaseError(RecipeDurationResponse response) {
             System.out.println(TAG + "onError:" + response);
             this.response = response;
         }
@@ -1147,13 +1147,13 @@ public class RecipeTest {
         private RecipeCourseResponse response;
 
         @Override
-        public void onSuccess(RecipeCourseResponse response) {
+        public void onUseCaseSuccess(RecipeCourseResponse response) {
             System.out.println(TAG + response);
             this.response = response;
         }
 
         @Override
-        public void onError(RecipeCourseResponse response) {
+        public void onUseCaseError(RecipeCourseResponse response) {
             System.out.println(TAG + response);
             this.response = response;
         }
@@ -1178,13 +1178,13 @@ public class RecipeTest {
         private RecipePortionsResponse response;
 
         @Override
-        public void onSuccess(RecipePortionsResponse response) {
+        public void onUseCaseSuccess(RecipePortionsResponse response) {
             System.out.println(TAG + "onSuccess:" + response);
             this.response = response;
         }
 
         @Override
-        public void onError(RecipePortionsResponse response) {
+        public void onUseCaseError(RecipePortionsResponse response) {
             System.out.println(TAG + "onError:" + response);
             this.response = response;
         }

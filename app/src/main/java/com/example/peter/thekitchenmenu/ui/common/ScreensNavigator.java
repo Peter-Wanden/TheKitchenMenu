@@ -1,24 +1,31 @@
 package com.example.peter.thekitchenmenu.ui.common;
 
-import android.content.Context;
-import android.content.Intent;
+import android.app.Activity;
+
+import androidx.fragment.app.FragmentManager;
 
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeEditorActivity;
 
 public class ScreensNavigator {
 
-    private final Context context;
+    private final Activity activity;
+    private final FragmentManager fragmentManager;
 
-    public ScreensNavigator(Context context) {
-        this.context = context;
+    public ScreensNavigator(Activity activity,
+                            FragmentManager fragmentManager) {
+        this.activity = activity;
+        this.fragmentManager = fragmentManager;
+    }
+
+    public void toRecipeEditor() {
+        RecipeEditorActivity.launch(activity);
     }
 
     public void toRecipeEditor(String recipeDomainId) {
-        Intent intent = new Intent(context, RecipeEditorActivity.class);
-        context.startActivity(intent);
+        RecipeEditorActivity.launch(activity, recipeDomainId);
     }
 
     public void onSupportNavigateUp() {
-        context
+        activity.onNavigateUp();
     }
 }

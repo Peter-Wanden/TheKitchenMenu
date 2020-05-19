@@ -355,9 +355,9 @@ public class RecipeMetadata
     private void sendResponse(RecipeMetadataResponse r) {
         System.out.println(TAG + "Response No:" + accessCount + " - " + r);
         if (isValid()) {
-            getUseCaseCallback().onSuccess(r);
+            getUseCaseCallback().onUseCaseSuccess(r);
         } else {
-            getUseCaseCallback().onError(r);
+            getUseCaseCallback().onUseCaseError(r);
         }
     }
 

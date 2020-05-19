@@ -1,23 +1,34 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipelist;
 
+import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseFactory;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataRequest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.RecipeUseCaseCallback;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.RecipeRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.RecipeResponse;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecipeList extends UseCase {
+import javax.annotation.Nonnull;
+
+public class RecipeList
+        extends
+        UseCase
+        implements
+        DomainDataAccess.GetAllDomainModelsCallback<RecipeMetadataPersistenceModel> {
 
     private static final String TAG = "tkm:" + RecipeList.class.getSimpleName() +
             ": ";
 
-    public enum RecipeFilter {
-        ALL,
-        FAVORITE
+    public enum RecipeListFilter {
+        NONE,
+        ALL_RECIPES,
+        FAVORITE_RECIPES
     }
 
     public enum ResultStatus {
@@ -26,58 +37,78 @@ public class RecipeList extends UseCase {
         RESULT_OK
     }
 
+    @Nonnull
     private final UseCaseFactory factory;
+    @Nonnull
     private final UseCaseHandler handler;
+    @Nonnull
+    private final RepositoryRecipeMetadata repository;
 
-    private List<RecipeListItemModel> recipeListItemModels = new ArrayList<>();
+    private List<Recipe> recipes;
 
-    private final List<Recipe> recipeMacros = new ArrayList<>();
-    private final List<RecipeResponse> recipeResponse = new ArrayList<>();
+    private RecipeListRequest.Model requestModel;
+    private RecipeListFilter filter;
+    private boolean isNewRequest;
+    private int accessCount;
 
-    public RecipeList(UseCaseFactory factory,
-                      UseCaseHandler handler) {
-        this.factory = factory;
+    public RecipeList(@Nonnull UseCaseHandler handler,
+                      @Nonnull UseCaseFactory factory,
+                      @Nonnull RepositoryRecipeMetadata repository) {
         this.handler = handler;
+        this.factory = factory;
+        this.repository = repository;
+
+        requestModel = new RecipeListRequest.Model.Builder().getDefault().build();
+        filter = RecipeListFilter.NONE;
+        recipes = new ArrayList<>();
     }
 
     @Override
     protected <Q extends Request> void execute(Q request) {
-        RecipeListRequest recipeListRequest = (RecipeListRequest) request;
+        accessCount ++;
+        RecipeListRequest r = (RecipeListRequest) request;
+        requestModel = r.getModel();
+        System.out.println(TAG + "Request No: " + accessCount + " - " + r);
 
-        System.out.println(TAG + recipeListRequest);
-        if (recipeListRequest.getFilter() == RecipeFilter.ALL) {
-            getAllRecipes();
-        } else if (recipeListRequest.getFilter() == RecipeFilter.FAVORITE)
-            getFavorites();
+        if (isNewRequest(r)) {
+            filter = requestModel.getFilter();
+            loadData();
+        }
     }
 
-    private void getAllRecipes() {
-        // TODO - Create a list of all recipeMacros using a RecipeMacro for each RecipeMacro :)
-
-        Recipe recipeMacro = factory.provideRecipeMacro();
-        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
-                getDefault().
-                setDataId("recipeId").
-                build();
-
-        handler.execute(recipeMacro, request, getRecipeResponseCallback());
+    private boolean isNewRequest(RecipeListRequest r) {
+        return isNewRequest = filter != requestModel.getFilter();
     }
 
-    private UseCase.Callback<RecipeResponse> getRecipeResponseCallback() {
-        return new UseCase.Callback<RecipeResponse>() {
-            @Override
-            public void onSuccess(RecipeResponse response) {
-                recipeResponse.add(response);
-            }
-
-            @Override
-            public void onError(RecipeResponse response) {
-                recipeResponse.add(response);
-            }
-        };
+    private void loadData() {
+        if (filter == RecipeListFilter.ALL_RECIPES) {
+            repository.getAll(this);
+        }
     }
 
-    private void getFavorites() {
-        // TODO
+    @Override
+    public void onAllLoaded(List<RecipeMetadataPersistenceModel> models) {
+        models.forEach((metadataModel) -> {
+            Recipe recipe = factory.getRecipeUseCase();
+            RecipeRequest request = new RecipeRequest.Builder().getDefault().build();
+            handler.execute(recipe, request, new RecipeUseCaseCallback<RecipeResponse>() {
+                @Override
+                protected void processResponse(RecipeResponse response) {
+                    recipes.add(recipe);
+                    if (models.size() == recipes.size()) {
+                        buildResponse();
+                    }
+                }
+            });
+        });
+    }
+
+    @Override
+    public void onModelsUnavailable() {
+
+    }
+
+    private void buildResponse() {
+        
     }
 }

@@ -1025,13 +1025,13 @@ public class IngredientCalculatorTest {
         return new Callback<RecipeIngredientResponse>() {
 
             @Override
-            public void onSuccess(RecipeIngredientResponse response) {
+            public void onUseCaseSuccess(RecipeIngredientResponse response) {
                 IngredientCalculatorTest.this.responses.add(response);
                 IngredientCalculatorTest.this.actualResponse = response;
             }
 
             @Override
-            public void onError(RecipeIngredientResponse response) {
+            public void onUseCaseError(RecipeIngredientResponse response) {
                 IngredientCalculatorTest.this.responses.add(response);
                 IngredientCalculatorTest.this.actualResponse = response;
             }

@@ -4,10 +4,8 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import androidx.appcompat.widget.Toolbar;
-import androidx.viewpager.widget.ViewPager;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.ui.catalog.recipe.RecipeNavigator;
 import com.example.peter.thekitchenmenu.ui.common.views.ViewFactory;
 import com.example.peter.thekitchenmenu.ui.common.toolbar.ToolbarView;
 import com.example.peter.thekitchenmenu.ui.common.views.BaseObservableViewMvc;
@@ -44,11 +42,6 @@ public class RecipeCatalogViewImpl
         FloatingActionButton fab = findViewById(R.id.recipe_catalog_activity_fab);
         fab.setOnClickListener(v -> getListeners().
                 forEach((RecipeNavigator::onAddRecipeClicked)));
-    }
-
-    @Override
-    public ViewPager getViewPager() {
-        return null;
     }
 
     private void setUpToolbar() {

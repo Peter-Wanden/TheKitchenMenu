@@ -91,7 +91,7 @@ public class RecipeEditorViewModel extends ViewModel {
         private final String TAG = "tkm-" + RecipeResponseListener.class.
                 getSimpleName() + ": ";
         @Override
-        public void onSuccess(RecipeResponse response) {
+        public void onUseCaseSuccess(RecipeResponse response) {
             if (isRecipeResponseChanged(response)) {
                 System.out.println(RecipeEditorViewModel.TAG + TAG + "onSuccess:" + response);
                 recipeResponse = response;
@@ -100,7 +100,7 @@ public class RecipeEditorViewModel extends ViewModel {
         }
 
         @Override
-        public void onError(RecipeResponse response) {
+        public void onUseCaseError(RecipeResponse response) {
             if (isRecipeResponseChanged(response)) {
                 System.out.println(RecipeEditorViewModel.TAG + TAG + "onError:" + response);
                 recipeResponse = response;

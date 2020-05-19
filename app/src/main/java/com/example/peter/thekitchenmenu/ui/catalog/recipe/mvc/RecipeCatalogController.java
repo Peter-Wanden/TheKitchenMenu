@@ -1,11 +1,6 @@
 package com.example.peter.thekitchenmenu.ui.catalog.recipe.mvc;
 
-import android.content.Intent;
-
-import com.example.peter.thekitchenmenu.ui.catalog.recipe.RecipeNavigator;
 import com.example.peter.thekitchenmenu.ui.common.ScreensNavigator;
-import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeEditorActivity;
-import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeviewer.RecipeViewerActivity;
 
 public class RecipeCatalogController
         implements RecipeNavigator {
@@ -31,7 +26,7 @@ public class RecipeCatalogController
 
     @Override
     public void onAddRecipeClicked() {
-        navigator.toRecipeEditor("");
+        navigator.toRecipeEditor();
     }
 
     @Override

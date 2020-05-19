@@ -7,11 +7,14 @@ import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
 
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.ui.common.controllers.BaseFragment;
 
 import javax.annotation.Nonnull;
 
-public class RecipeCatalogFragment extends BaseFragment {
+public class RecipeCatalogFragment
+        extends
+        BaseFragment {
 
     private static final String TAG = "tkm-" + RecipeCatalogFragment.class.getSimpleName() + " ";
 
@@ -19,7 +22,8 @@ public class RecipeCatalogFragment extends BaseFragment {
         return new RecipeCatalogFragment();
     }
 
-    private RecipeCatalogRecyclerAdapter adapter;
+    UseCaseHandler handler;
+    RecipeCatalogListController controller;
 
     @Nullable
     @Override
@@ -27,11 +31,28 @@ public class RecipeCatalogFragment extends BaseFragment {
                              @Nullable ViewGroup parent,
                              @Nullable Bundle savedInstanceState) {
 
-        RecipeCatalogListView viewMvc = getCompositionRoot().
-                getViewMvcFactory().
+        RecipeCatalogListView view = getCompositionRoot().
+                getViewFactory().
                 getRecipeCatalogListView(parent);
-        viewMvc.registerListener(this);
 
-        return viewMvc.getRootView();
+        controller = getCompositionRoot().
+                getRecipeCatalogListController();
+        controller.bindView(view);
+
+        view.registerListener(controller);
+
+        return view.getRootView();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        controller.onStart();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        controller.onStop();
     }
 }

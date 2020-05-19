@@ -858,13 +858,13 @@ public class RecipeCourseEditorViewModelTest {
         private RecipeMetadataResponse response;
 
         @Override
-        public void onSuccess(RecipeMetadataResponse response) {
+        public void onUseCaseSuccess(RecipeMetadataResponse response) {
             System.out.println(RecipeCourseEditorViewModelTest.TAG + TAG + "onSuccess:" + response);
             this.response = response;
         }
 
         @Override
-        public void onError(RecipeMetadataResponse response) {
+        public void onUseCaseError(RecipeMetadataResponse response) {
             System.out.println(RecipeCourseEditorViewModelTest.TAG + TAG + "onError:" + response);
             this.response = response;
         }
@@ -887,12 +887,12 @@ public class RecipeCourseEditorViewModelTest {
         RecipeResponse response;
 
         @Override
-        public void onSuccess(RecipeResponse response) {
+        public void onUseCaseSuccess(RecipeResponse response) {
             this.response = response;
         }
 
         @Override
-        public void onError(RecipeResponse response) {
+        public void onUseCaseError(RecipeResponse response) {
             this.response = response;
         }
 

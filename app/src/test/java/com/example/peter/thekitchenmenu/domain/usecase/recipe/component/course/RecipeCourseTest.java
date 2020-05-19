@@ -336,13 +336,13 @@ public class RecipeCourseTest {
                     + ": ";
 
             @Override
-            public void onSuccess(RecipeCourseResponse response) {
+            public void onUseCaseSuccess(RecipeCourseResponse response) {
                 System.out.println(TAG + "onSuccess: " + response);
                 onSuccessResponse = response;
             }
 
             @Override
-            public void onError(RecipeCourseResponse response) {
+            public void onUseCaseError(RecipeCourseResponse response) {
                 System.out.println(TAG + "onError: " + response);
                 onErrorResponse = response;
             }

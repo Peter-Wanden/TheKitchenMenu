@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeIngredientEditor;
+package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredienteditor;
 
 import android.content.res.Resources;
 
@@ -22,7 +22,6 @@ import com.example.peter.thekitchenmenu.testdata.TestDataRecipeIngredientQuantit
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.datasource.TestDataRecipePortionsEntity;
 import com.example.peter.thekitchenmenu.testdata.TestDataUseCasePortionCalculatorRequestResponse;
 import com.example.peter.thekitchenmenu.ui.detail.common.MeasurementErrorMessageMaker;
-import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredienteditor.RecipeIngredientCalculatorViewModel;
 import com.example.peter.thekitchenmenu.ui.utils.NumberFormatter;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;

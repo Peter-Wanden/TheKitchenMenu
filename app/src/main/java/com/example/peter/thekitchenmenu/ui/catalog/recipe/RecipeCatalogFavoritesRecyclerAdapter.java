@@ -15,7 +15,7 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recip
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.RecipeRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.RecipeResponse;
 import com.example.peter.thekitchenmenu.ui.catalog.recipe.mvc.recipelistitem.RecipeListItemView;
-import com.example.peter.thekitchenmenu.ui.catalog.recipe.mvc.recipelistitem.RecipeListItemView.RecipeListItemUserActionsListener;
+import com.example.peter.thekitchenmenu.ui.catalog.recipe.mvc.recipelistitem.RecipeListItemView.RecipeListItemUserActions;
 import com.example.peter.thekitchenmenu.ui.catalog.recipe.mvc.recipelistitem.RecipeListItemViewImpl;
 
 import java.util.ArrayList;
@@ -28,7 +28,7 @@ public class RecipeCatalogFavoritesRecyclerAdapter
         RecyclerView.Adapter<RecipeCatalogFavoritesRecyclerAdapter.ViewHolder>
         implements
         Filterable,
-        RecipeListItemView.RecipeListItemUserActionsListener {
+        RecipeListItemUserActions {
 
     private static final String TAG = "tkm-" + RecipeCatalogFavoritesRecyclerAdapter.class.
             getSimpleName() + ":";
@@ -47,9 +47,9 @@ public class RecipeCatalogFavoritesRecyclerAdapter
     private final UseCaseHandler handler;
     private List<Recipe> recipeList = new ArrayList<>();
     private List<Recipe> recipeListFull = new ArrayList<>();
-    private RecipeListItemUserActionsListener listener;
+    private RecipeListItemUserActions listener;
 
-    RecipeCatalogFavoritesRecyclerAdapter(RecipeListItemUserActionsListener listener) {
+    RecipeCatalogFavoritesRecyclerAdapter(RecipeListItemUserActions listener) {
         handler = UseCaseHandler.getInstance();
         this.listener = listener;
     }
@@ -78,12 +78,12 @@ public class RecipeCatalogFavoritesRecyclerAdapter
         RecipeRequest request = new RecipeRequest.Builder().getDefault().build();
         handler.execute(recipe, request, new UseCase.Callback<RecipeResponse>() {
             @Override
-            public void onSuccess(RecipeResponse response) {
+            public void onUseCaseSuccess(RecipeResponse response) {
                 holder.viewMvc.bindRecipe(response);
             }
 
             @Override
-            public void onError(RecipeResponse response) {
+            public void onUseCaseError(RecipeResponse response) {
                 holder.viewMvc.bindRecipe(response);
             }
         });
@@ -119,13 +119,13 @@ public class RecipeCatalogFavoritesRecyclerAdapter
                             getDefault().build();
                     handler.execute(recipe, request, new UseCase.Callback<RecipeIdentityResponse>() {
                         @Override
-                        public void onSuccess(RecipeIdentityResponse response) {
+                        public void onUseCaseSuccess(RecipeIdentityResponse response) {
                             title = response.getModel().getTitle();
                             addRecipe(recipe);
                         }
 
                         @Override
-                        public void onError(RecipeIdentityResponse response) {
+                        public void onUseCaseError(RecipeIdentityResponse response) {
                             title = response.getModel().getTitle();
                             addRecipe(recipe);
                         }

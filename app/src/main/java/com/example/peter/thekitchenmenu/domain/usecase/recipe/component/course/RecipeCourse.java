@@ -73,7 +73,7 @@ public class RecipeCourse
     private boolean isChanged;
 
     private String dataId = "";
-    private String recipeId = "";
+    private String recipeDomainId = "";
     private final HashMap<Course, RecipeCoursePersistenceModel> activeCourseList =
             new LinkedHashMap<>();
     private final List<Course> updatedCourseList = new ArrayList<>();
@@ -100,8 +100,8 @@ public class RecipeCourse
 
         if (isNewRequest(r)) {
             dataId = r.getDataId();
-            recipeId = r.getDomainId();
-            loadData(recipeId);
+            recipeDomainId = r.getDomainId();
+            loadData(recipeDomainId);
         } else {
             setupUseCase();
             processRequest();
@@ -109,7 +109,7 @@ public class RecipeCourse
     }
 
     private boolean isNewRequest(RecipeCourseRequest r) {
-        return !r.getDomainId().equals(recipeId);
+        return !r.getDomainId().equals(recipeDomainId);
     }
 
     private void setupUseCase() {
@@ -183,7 +183,7 @@ public class RecipeCourse
         lastUpdate = timeProvider.getCurrentTimeInMills();
         return new RecipeCoursePersistenceModel.Builder().
                 setDataId(idProvider.getUId()).
-                setDomainId(recipeId).
+                setDomainId(recipeDomainId).
                 setCourse(course).
                 setIsActive(true).
                 setCreateDate(lastUpdate).
@@ -227,7 +227,7 @@ public class RecipeCourse
     private void buildResponse() {
         RecipeCourseResponse r = new RecipeCourseResponse.Builder().
                 setDataId(dataId).
-                setDomainId(recipeId).
+                setDomainId(recipeDomainId).
                 setMetadata(getMetadata()).
                 setModel(getResponseModel()).
                 build();
@@ -239,9 +239,9 @@ public class RecipeCourse
 
     private void sendResponse(RecipeCourseResponse response) {
         if (isValid()) {
-            getUseCaseCallback().onSuccess(response);
+            getUseCaseCallback().onUseCaseSuccess(response);
         } else {
-            getUseCaseCallback().onError(response);
+            getUseCaseCallback().onUseCaseError(response);
         }
     }
 
