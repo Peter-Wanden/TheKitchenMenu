@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipelist.RecipeList;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipelist.RecipeListItemModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipelist.RecipeListRequest;
@@ -31,7 +32,7 @@ public class RecipeCatalogViewModel extends ViewModel {
     public ObservableBoolean isDataLoadingError = new ObservableBoolean();
     public ObservableBoolean showEmptyScreen = new ObservableBoolean();
 
-    private MutableLiveData<List<RecipeListItemModel>> recipeList = new MutableLiveData<>();
+    private MutableLiveData<List<Recipe>> recipeList = new MutableLiveData<>();
 
     public RecipeCatalogViewModel(@Nonnull UseCaseHandler handler,
                                   @Nonnull RecipeList useCase) {
@@ -39,7 +40,7 @@ public class RecipeCatalogViewModel extends ViewModel {
         this.useCase = useCase;
     }
 
-    MutableLiveData<List<RecipeListItemModel>> getRecipeListLiveData() {
+    MutableLiveData<List<Recipe>> getRecipeListLiveData() {
         return recipeList;
     }
 
@@ -52,13 +53,19 @@ public class RecipeCatalogViewModel extends ViewModel {
 
         handler.execute(
                 useCase,
-                getRequestModel(RecipeListFilter.ALL),
+                getRequestModel(RecipeListFilter.ALL_RECIPES),
                 getCallback()
         );
     }
 
     private RecipeListRequest getRequestModel(RecipeListFilter filter) {
-        return new RecipeListRequest(filter);
+        return new RecipeListRequest.Builder().getDefault().
+                setModel(
+                        new RecipeListRequest.Model.Builder().
+                                getDefault().
+                                setFilter(filter).
+                                build()).
+                build();
     }
 
     private UseCase.Callback<RecipeListResponse> getCallback() {
@@ -66,26 +73,26 @@ public class RecipeCatalogViewModel extends ViewModel {
             @Override
             public void onUseCaseSuccess(RecipeListResponse response) {
                 dataLoading.set(false);
-                RecipeCatalogViewModel.this.recipeList.setValue(response.getRecipeListItemModels());
+//                recipeList.setValue(response.getRecipeListItemModels());
             }
 
             @Override
             public void onUseCaseError(RecipeListResponse response) {
                 dataLoading.set(false);
-                dataLoadingFailed(response.getResultStatus());
+//                dataLoadingFailed(response.getResultStatus());
 
             }
         };
     }
 
-    private void dataLoadingFailed(ResultStatus reason) {
-        dataLoading.set(false);
-        if (reason == ResultStatus.DATA_NOT_AVAILABLE) {
-            showEmptyScreen.set(true);
-        } else if (reason == ResultStatus.DATA_LOADING_ERROR) {
-            isDataLoadingError.set(true);
-        }
-    }
+//    private void dataLoadingFailed(ResultStatus reason) {
+//        dataLoading.set(false);
+//        if (reason == ResultStatus.DATA_NOT_AVAILABLE) {
+//            showEmptyScreen.set(true);
+//        } else if (reason == ResultStatus.DATA_LOADING_ERROR) {
+//            isDataLoadingError.set(true);
+//        }
+//    }
 
     void addRecipe() {
 

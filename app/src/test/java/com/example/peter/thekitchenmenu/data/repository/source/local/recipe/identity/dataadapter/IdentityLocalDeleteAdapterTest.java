@@ -14,8 +14,8 @@ import static org.mockito.Mockito.verify;
 public class IdentityLocalDeleteAdapterTest {
 
     // region constants ----------------------------------------------------------------------------
-    private static final String DATA_ID = TestDataRecipeMetadata.getValidChanged0().getDataId();
-    private static final String DOMAIN_ID = TestDataRecipeMetadata.getValidChanged0().getDomainId();
+    private static final String DATA_ID = TestDataRecipeMetadata.getValidChangedThree().getDataId();
+    private static final String DOMAIN_ID = TestDataRecipeMetadata.getValidChangedThree().getDomainId();
     // endregion constants -------------------------------------------------------------------------
 
     // region helper fields ------------------------------------------------------------------------

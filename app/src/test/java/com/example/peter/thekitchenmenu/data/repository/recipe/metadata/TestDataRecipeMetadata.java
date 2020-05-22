@@ -70,7 +70,7 @@ public class TestDataRecipeMetadata {
     3. one or more components data has been changed in the current session
      */
     public static RecipeMetadataPersistenceModel getInvalidChanged() {
-        RecipeMetadataPersistenceModel validModel = getValidChanged0();
+        RecipeMetadataPersistenceModel validModel = getValidChangedThree();
         return new RecipeMetadataPersistenceModel.Builder().
                 setDataId("dataId-recipeMetadata-Id2").
                 setDomainId(validModel.getDomainId()).
@@ -91,7 +91,7 @@ public class TestDataRecipeMetadata {
     3. all completed components are reporting valid data.
      */
     // getValidChanged() final state
-    public static RecipeMetadataPersistenceModel getValidChanged0() {
+    public static RecipeMetadataPersistenceModel getValidChangedThree() {
         return new RecipeMetadataPersistenceModel.Builder().
                 setDataId("dataId-recipeMetadata-id5").
                 setDomainId(getDataUnavailable().getDomainId()).
@@ -106,7 +106,7 @@ public class TestDataRecipeMetadata {
     }
 
     // getValidChanged() previous state 1
-    public static RecipeMetadataPersistenceModel getValidChanged1() {
+    public static RecipeMetadataPersistenceModel getValidChangedTwo() {
         return new RecipeMetadataPersistenceModel.Builder().
                 setDataId("dataId-recipeMetadata-id4").
                 setDomainId(getDataUnavailable().getDomainId()).
@@ -121,7 +121,7 @@ public class TestDataRecipeMetadata {
     }
 
     // getValidChanged() previous state 2
-    public static RecipeMetadataPersistenceModel getValidChanged2() {
+    public static RecipeMetadataPersistenceModel getValidChangedOne() {
         return new RecipeMetadataPersistenceModel.Builder().
                 setDataId("dataId-recipeMetadata-id3").
                 setDomainId(getDataUnavailable().getDomainId()).
@@ -199,7 +199,7 @@ public class TestDataRecipeMetadata {
         RecipeMetadataPersistenceModel validParentFromAnotherUser = getValidFromAnotherUser();
         return new RecipeMetadataPersistenceModel.Builder().
                 setDataId("dataId-recipeMetadata-Id30").
-                setDomainId("dataId-recipeMetadata-Id3").
+                setDomainId("domainId-recipe-Id30").
                 setParentDomainId(validParentFromAnotherUser.getDomainId()).
                 setRecipeState(validParentFromAnotherUser.getRecipeState()).
                 setFailReasons(validParentFromAnotherUser.getFailReasons()).
@@ -218,7 +218,7 @@ public class TestDataRecipeMetadata {
         RecipeMetadataPersistenceModel invalidParentFromAnotherUser = getInvalidFromAnotherUser();
         return new RecipeMetadataPersistenceModel.Builder().
                 setDataId("dataId-recipeMetadata-Idd31").
-                setDomainId("domainId-recipeMetadata-Id4").
+                setDomainId("domainId-recipe-Id40").
                 setParentDomainId(invalidParentFromAnotherUser.getDomainId()).
                 setRecipeState(invalidParentFromAnotherUser.getRecipeState()).
                 setFailReasons(invalidParentFromAnotherUser.getFailReasons()).
@@ -247,7 +247,15 @@ public class TestDataRecipeMetadata {
         return f;
     }
 
-    private static HashMap<ComponentName, ComponentState> getInvalidUnchangedComponentStates() {
+    public static HashMap<ComponentName, ComponentState> getInvalidMissingComponentsStates() {
+        HashMap<ComponentName, ComponentState> s = new HashMap<>();
+        s.put(ComponentName.IDENTITY, ComponentState.VALID_UNCHANGED);
+        s.put(ComponentName.DURATION, ComponentState.VALID_UNCHANGED);
+        s.put(ComponentName.COURSE, ComponentState.VALID_UNCHANGED);
+        return s;
+    }
+
+    public static HashMap<ComponentName, ComponentState> getInvalidUnchangedComponentStates() {
         HashMap<ComponentName, ComponentState> s = new HashMap<>();
         s.put(ComponentName.COURSE, ComponentState.INVALID_UNCHANGED);
         s.put(ComponentName.DURATION, ComponentState.INVALID_UNCHANGED);
@@ -256,25 +264,25 @@ public class TestDataRecipeMetadata {
         return s;
     }
 
-    private static HashMap<ComponentName, ComponentState> getInvalidChangedComponentStates() {
+    public static HashMap<ComponentName, ComponentState> getInvalidChangedComponentStates() {
         HashMap<ComponentName, ComponentState> s = new HashMap<>();
-        s.put(ComponentName.COURSE, ComponentState.INVALID_CHANGED);
+        s.put(ComponentName.COURSE, ComponentState.VALID_UNCHANGED);
         s.put(ComponentName.DURATION, ComponentState.INVALID_CHANGED);
-        s.put(ComponentName.IDENTITY, ComponentState.INVALID_CHANGED);
-        s.put(ComponentName.PORTIONS, ComponentState.INVALID_CHANGED);
+        s.put(ComponentName.IDENTITY, ComponentState.VALID_UNCHANGED);
+        s.put(ComponentName.PORTIONS, ComponentState.VALID_UNCHANGED);
         return s;
     }
 
-    private static HashMap<ComponentName, ComponentState> getValidChangedComponentStates() {
+    public static HashMap<ComponentName, ComponentState> getValidChangedComponentStates() {
         HashMap<ComponentName, ComponentState> s = new HashMap<>();
-        s.put(ComponentName.COURSE, ComponentState.VALID_CHANGED);
+        s.put(ComponentName.COURSE, ComponentState.VALID_UNCHANGED);
         s.put(ComponentName.DURATION, ComponentState.VALID_CHANGED);
         s.put(ComponentName.IDENTITY, ComponentState.VALID_CHANGED);
         s.put(ComponentName.PORTIONS, ComponentState.VALID_CHANGED);
         return s;
     }
 
-    private static HashMap<ComponentName, ComponentState> getValidUnchangedComponentStates() {
+    public static HashMap<ComponentName, ComponentState> getValidUnchangedComponentStates() {
         HashMap<ComponentName, ComponentState> s = new HashMap<>();
         s.put(ComponentName.COURSE, ComponentState.VALID_UNCHANGED);
         s.put(ComponentName.DURATION, ComponentState.VALID_UNCHANGED);
@@ -288,9 +296,9 @@ public class TestDataRecipeMetadata {
                 getDataUnavailable(),
                 getInvalidUnchanged(),
                 getInvalidChanged(),
-                getValidChanged0(),
-                getValidChanged1(),
-                getValidChanged2(),
+                getValidChangedThree(),
+                getValidChangedTwo(),
+                getValidChangedOne(),
                 getValidUnchanged(),
                 getValidFromAnotherUser(),
                 getInvalidFromAnotherUser(),

@@ -31,12 +31,6 @@ public class RecipeList
         FAVORITE_RECIPES
     }
 
-    public enum ResultStatus {
-        DATA_LOADING_ERROR,
-        DATA_NOT_AVAILABLE,
-        RESULT_OK
-    }
-
     @Nonnull
     private final UseCaseFactory factory;
     @Nonnull
@@ -70,45 +64,69 @@ public class RecipeList
         requestModel = r.getModel();
         System.out.println(TAG + "Request No: " + accessCount + " - " + r);
 
-        if (isNewRequest(r)) {
+        if (isNewRequest()) {
             filter = requestModel.getFilter();
             loadData();
         }
     }
 
-    private boolean isNewRequest(RecipeListRequest r) {
+    private boolean isNewRequest() {
         return isNewRequest = filter != requestModel.getFilter();
     }
 
     private void loadData() {
-        if (filter == RecipeListFilter.ALL_RECIPES) {
+        System.out.println(TAG + "loadDataCalled");
+        if (RecipeListFilter.ALL_RECIPES == filter) {
             repository.getAll(this);
+        } else {
+            throw new UnsupportedOperationException("RequestFilter not recognised: " + filter);
         }
     }
 
     @Override
-    public void onAllLoaded(List<RecipeMetadataPersistenceModel> models) {
-        models.forEach((metadataModel) -> {
+    public void onAllLoaded(List<RecipeMetadataPersistenceModel> metadataModels) {
+        System.out.println(TAG + "onAllLoadedCalled");
+
+        for (RecipeMetadataPersistenceModel metadataModel : metadataModels) {
             Recipe recipe = factory.getRecipeUseCase();
-            RecipeRequest request = new RecipeRequest.Builder().getDefault().build();
+            recipes.add(recipe);
+
+            // Request the recipe load its data
+            RecipeRequest request = new RecipeRequest.Builder().
+                    getDefault().
+                    setDomainId(metadataModel.getDomainId()).
+                    build();
+
             handler.execute(recipe, request, new RecipeUseCaseCallback<RecipeResponse>() {
                 @Override
                 protected void processResponse(RecipeResponse response) {
-                    recipes.add(recipe);
-                    if (models.size() == recipes.size()) {
+                    if (metadataModels.size() == recipes.size()) {
                         buildResponse();
                     }
                 }
             });
-        });
+        }
     }
 
     @Override
     public void onModelsUnavailable() {
-
+        getUseCaseCallback().onUseCaseError(new RecipeListResponse.Builder().getDefault().build());
     }
 
     private void buildResponse() {
-        
+        System.out.println(TAG + "buildResponse called");
+        RecipeListResponse response = new RecipeListResponse.Builder().
+                getDefault().
+                setModel(new RecipeListResponse.Model.Builder().
+                        getDefault().
+                        setRecipes(recipes).
+                        build()).
+                build();
+
+        if (recipes.size() > 0) {
+            getUseCaseCallback().onUseCaseSuccess(response);
+        } else {
+            getUseCaseCallback().onUseCaseError(response);
+        }
     }
 }

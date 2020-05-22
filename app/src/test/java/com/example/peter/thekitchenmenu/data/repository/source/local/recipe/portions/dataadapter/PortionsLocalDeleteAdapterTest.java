@@ -3,16 +3,11 @@ package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.por
 import com.example.peter.thekitchenmenu.data.repository.recipe.metadata.TestDataRecipeMetadata;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.datasource.RecipePortionsLocalDataSource;
 
-import static org.junit.Assert.*;
-
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import static org.junit.Assert.*;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 
@@ -25,8 +20,8 @@ public class PortionsLocalDeleteAdapterTest {
     @Mock
     RecipePortionsLocalDataSource repoMock;
 
-    private String dataId = TestDataRecipeMetadata.getValidChanged0().getDataId();
-    private String domainId = TestDataRecipeMetadata.getValidChanged0().getDomainId();
+    private String dataId = TestDataRecipeMetadata.getValidChangedThree().getDataId();
+    private String domainId = TestDataRecipeMetadata.getValidChangedThree().getDomainId();
     // endregion helper fields ---------------------------------------------------------------------
 
     private PortionsLocalDeleteAdapter SUT;

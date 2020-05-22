@@ -11,8 +11,10 @@ import javax.annotation.Nonnull;
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipelist.RecipeList.*;
 
 public class RecipeListRequest
-        extends BaseDomainMessageModel<RecipeListRequest.Model>
-        implements UseCase.Request {
+        extends
+        BaseDomainMessageModel<RecipeListRequest.Model>
+        implements
+        UseCase.Request {
 
     @Nonnull
     @Override
@@ -24,7 +26,7 @@ public class RecipeListRequest
                 '}';
     }
 
-    public RecipeListRequest() {}
+    private RecipeListRequest() {}
 
     public static class Builder
             extends
@@ -44,7 +46,7 @@ public class RecipeListRequest
 
         @Override
         protected Builder self() {
-            return null;
+            return this;
         }
     }
 
@@ -84,7 +86,7 @@ public class RecipeListRequest
 
             @Override
             public Builder getDefault() {
-                model.filter = RecipeListFilter.ALL;
+                model.filter = RecipeListFilter.ALL_RECIPES;
                 return self();
             }
 

@@ -14,7 +14,7 @@ public class RecipeCatalogListController
         RecipeListItemView.RecipeListItemUserActions {
 
     private enum ScreenState {
-        IDLE, LOADING, LOADING_ERROR;
+        IDLE, LOADING, LOADING_ERROR, RECIPES_SHOWN
     }
 
     private final UseCaseHandler handler;
@@ -22,6 +22,8 @@ public class RecipeCatalogListController
     private final ScreensNavigator navigator;
 
     private RecipeCatalogListView view;
+
+    private ScreenState screenState = ScreenState.IDLE;
 
     public RecipeCatalogListController(UseCaseHandler handler,
                                        RecipeList useCase,
@@ -47,7 +49,7 @@ public class RecipeCatalogListController
     private void loadRecipes() {
         RecipeListRequest.Model model = new RecipeListRequest.Model.Builder().
                 getDefault().
-                setFilter(RecipeList.RecipeListFilter.ALL).
+                setFilter(RecipeList.RecipeListFilter.ALL_RECIPES).
                 build();
 
         RecipeListRequest request = new RecipeListRequest.Builder().
@@ -60,17 +62,19 @@ public class RecipeCatalogListController
 
     @Override
     public void onUseCaseSuccess(RecipeListResponse response) {
-
+        screenState = ScreenState.RECIPES_SHOWN;
+        view.bindRecipes(response.getModel().getRecipes());
     }
 
     @Override
     public void onUseCaseError(RecipeListResponse response) {
+        screenState = ScreenState.LOADING_ERROR;
 
     }
 
     @Override
     public void onRecipeClicked(String recipeDomainId) {
-
+        navigator.toRecipeEditor(recipeDomainId);
     }
 
     @Override

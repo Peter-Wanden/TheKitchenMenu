@@ -123,7 +123,7 @@ public class RecipeMetadataLocalGetAdapterTest {
     @Test
     public void getActiveByDomainId_returnMostRecentDomainModel() {
         // Arrange
-        RecipeMetadataPersistenceModel expectedModel = TestDataRecipeMetadata.getValidChanged0();
+        RecipeMetadataPersistenceModel expectedModel = TestDataRecipeMetadata.getValidChangedThree();
         String domainId = expectedModel.getDomainId();
         String parentDataId = expectedModel.getDataId();
 
@@ -161,7 +161,7 @@ public class RecipeMetadataLocalGetAdapterTest {
     @Test
     public void getAllActive_returnOnlyMostRecentModels() {
         // Arrange
-        String domainId = TestDataRecipeMetadata.getValidChanged0().getDomainId();
+        String domainId = TestDataRecipeMetadata.getValidChangedThree().getDomainId();
         GetAllCallbackClient getAllCallbackClient = new GetAllCallbackClient ();
 
         String correctParentDataId = TestDataRecipeMetadataEntity.
@@ -194,7 +194,7 @@ public class RecipeMetadataLocalGetAdapterTest {
                 TestDataRecipeMetadataEntity.getValidChanged0ComponentStateEntities()
         );
 
-        assertEquals(TestDataRecipeMetadata.getValidChanged0(), getAllCallbackClient.models.get(0));
+        assertEquals(TestDataRecipeMetadata.getValidChangedThree(), getAllCallbackClient.models.get(0));
     }
 
     // region helper methods -----------------------------------------------------------------------

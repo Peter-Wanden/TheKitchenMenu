@@ -60,7 +60,7 @@ public class RecipeMetadataLocalSaveAdapterTest {
     @Test
     public void save() {
         // Arrange
-        RecipeMetadataPersistenceModel modelUnderTest = TestDataRecipeMetadata.getValidChanged0();
+        RecipeMetadataPersistenceModel modelUnderTest = TestDataRecipeMetadata.getValidChangedThree();
         List<RecipeComponentStateEntity> stateEntities = TestDataRecipeMetadataEntity.
                 getValidChanged0ComponentStateEntities();
         RecipeComponentStateEntity[] states =

@@ -180,8 +180,8 @@ public class RecipeMetadata
         return !r.getDomainId().equals(recipeId);
     }
 
-    private void loadData(String recipeId) {
-        repository.getActiveByDomainId(recipeId, this);
+    private void loadData(String recipeDomainId) {
+        repository.getActiveByDomainId(recipeDomainId, this);
     }
 
     @Override

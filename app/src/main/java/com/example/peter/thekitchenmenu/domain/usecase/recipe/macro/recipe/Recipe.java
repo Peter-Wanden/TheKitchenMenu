@@ -67,7 +67,7 @@ public class Recipe extends UseCase {
     private RecipeMetadataResponse recipeMetadataResponse;
     private ComponentName requestOriginator;
     private String dataId = "";
-    private String recipeId = "";
+    private String recipeDomainId = "";
 
     private final HashMap<ComponentName, UseCase.Response>
             componentResponses = new LinkedHashMap<>();
@@ -114,7 +114,7 @@ public class Recipe extends UseCase {
 
         if (isNewRequest(r.getDomainId()) || RECIPE == requestOriginator) {
             dataId = r.getDataId();
-            recipeId = r.getDomainId();
+            recipeDomainId = r.getDomainId();
             startComponents();
         } else {
             processRequest(request);
@@ -143,7 +143,7 @@ public class Recipe extends UseCase {
     }
 
     private boolean isNewRequest(String recipeId) {
-        return !this.recipeId.equals(recipeId);
+        return !this.recipeDomainId.equals(recipeId);
     }
 
     private void startComponents() {
@@ -177,14 +177,14 @@ public class Recipe extends UseCase {
     }
 
     private void startRecipeMetadataComponent() {
-        handler.execute(
-                recipeMetadata,
-                new RecipeMetadataRequest.Builder().
-                        getDefault().
-                        setDomainId(recipeId).
-                        build(),
-                new RecipeMetadataCallback()
-        );
+        System.out.println(TAG + "startRecipeMetadataComponent");
+
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
+                getDefault().
+                setDomainId(recipeDomainId).
+                build();
+        System.out.println(TAG + request);
+        handler.execute(recipeMetadata, request, new RecipeMetadataCallback());
     }
 
     private class RecipeMetadataCallback extends RecipeUseCaseCallback<RecipeMetadataResponse> {
@@ -201,7 +201,7 @@ public class Recipe extends UseCase {
                 identity,
                 new RecipeIdentityRequest.Builder().
                         getDefault().
-                        setDomainId(recipeId).
+                        setDomainId(recipeDomainId).
                         build(),
                 new IdentityCallback()
         );
@@ -226,7 +226,7 @@ public class Recipe extends UseCase {
                 course,
                 new RecipeCourseRequest.Builder().
                         getDefault().
-                        setDomainId(recipeId).
+                        setDomainId(recipeDomainId).
                         build(),
                 new CourseCallback()
         );
@@ -251,7 +251,7 @@ public class Recipe extends UseCase {
                 duration,
                 new RecipeDurationRequest.Builder().
                         getDefault().
-                        setDomainId(recipeId).
+                        setDomainId(recipeDomainId).
                         build(),
                 new DurationCallback()
         );
@@ -276,7 +276,7 @@ public class Recipe extends UseCase {
                 portions,
                 new RecipePortionsRequest.Builder().
                         getDefault().
-                        setDomainId(recipeId).
+                        setDomainId(recipeDomainId).
                         build(),
                 new PortionsCallback()
         );
@@ -323,7 +323,7 @@ public class Recipe extends UseCase {
     private void updateRecipeMetadata() {
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 setDataId(recipeMetadataResponse.getDataId()).
-                setDomainId(recipeId).
+                setDomainId(recipeDomainId).
                 setModel(
                         new RecipeMetadataRequest.Model.Builder().
                                 setParentId(recipeMetadataResponse.getModel().getParentDomainId()).
@@ -392,7 +392,7 @@ public class Recipe extends UseCase {
     private RecipeResponse getRecipeResponse() {
         return new RecipeResponse.Builder().
                 setDataId(dataId).
-                setDomainId(recipeId).
+                setDomainId(recipeDomainId).
                 setModel(getRecipeResponseModel()).
                 build();
     }
@@ -498,7 +498,7 @@ public class Recipe extends UseCase {
                 RecipeResponse recipeResponse = new RecipeResponse.Builder().
                         getDefault().
                         setDataId(dataId).
-                        setDomainId(recipeId).
+                        setDomainId(recipeDomainId).
                         setModel(
                                 new RecipeResponse.Model.Builder().
                                         setComponentResponses(componentResponses).

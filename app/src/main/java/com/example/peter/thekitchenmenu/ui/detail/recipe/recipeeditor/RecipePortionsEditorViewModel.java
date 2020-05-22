@@ -74,7 +74,7 @@ public class RecipePortionsEditorViewModel extends ObservableViewModel {
             if (isStateChanged(response)) {
                 System.out.println(TAG + "onSuccess:" + response);
                 RecipePortionsEditorViewModel.this.response = response;
-                onUseCaseSuccess();
+                onUseCaseSuccess(response);
             }
         }
 

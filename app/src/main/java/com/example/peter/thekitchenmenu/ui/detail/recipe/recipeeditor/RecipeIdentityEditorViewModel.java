@@ -71,7 +71,7 @@ public class RecipeIdentityEditorViewModel extends ObservableViewModel {
             if (isStateChanged(response)) {
                 System.out.println(TAG + "onSuccess:" + response);
                 RecipeIdentityEditorViewModel.this.response = response;
-                onUseCaseSuccess();
+                onUseCaseSuccess(response);
             }
         }
 
@@ -81,7 +81,7 @@ public class RecipeIdentityEditorViewModel extends ObservableViewModel {
             if (isStateChanged(response)) {
                 System.out.println(TAG + "onError:" + response);
                 RecipeIdentityEditorViewModel.this.response = response;
-                onUseCaseError();
+                onUseCaseError(response);
             }
         }
     }

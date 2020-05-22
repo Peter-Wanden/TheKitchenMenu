@@ -69,55 +69,55 @@ public class TestDataRecipeMetadataEntity {
 
     public static RecipeMetadataParentEntity getValidChanged0ParentEntity() {
         return getParentEntityFromPersistenceModel(TestDataRecipeMetadata.
-                getValidChanged0()
+                getValidChangedThree()
         );
     }
 
     public static List<RecipeFailReasonEntity> getValidChanged0FailReasonEntities() {
         return getFailReasonEntitiesFromPersistentModel(TestDataRecipeMetadata.
-                getValidChanged0()
+                getValidChangedThree()
         );
     }
 
     public static List<RecipeComponentStateEntity> getValidChanged0ComponentStateEntities() {
         return getComponentStateEntitiesFromPersistentModel(TestDataRecipeMetadata.
-                getValidChanged0()
+                getValidChangedThree()
         );
     }
 
     public static RecipeMetadataParentEntity getValidChanged1ParentEntity() {
         return getParentEntityFromPersistenceModel(TestDataRecipeMetadata.
-                getValidChanged1()
+                getValidChangedTwo()
         );
     }
 
     public static List<RecipeFailReasonEntity> getValidChanged1FailReasonEntities() {
         return getFailReasonEntitiesFromPersistentModel(TestDataRecipeMetadata.
-                getValidChanged1()
+                getValidChangedTwo()
         );
     }
 
     public static List<RecipeComponentStateEntity> getValidChanged1ComponentStateEntities() {
         return getComponentStateEntitiesFromPersistentModel(TestDataRecipeMetadata.
-                getValidChanged1()
+                getValidChangedTwo()
         );
     }
 
     public static RecipeMetadataParentEntity getValidChanged2ParentEntity() {
         return getParentEntityFromPersistenceModel(TestDataRecipeMetadata.
-                getValidChanged2()
+                getValidChangedOne()
         );
     }
 
     public static List<RecipeFailReasonEntity> getValidChanged2FailReasonEntities() {
         return getFailReasonEntitiesFromPersistentModel(TestDataRecipeMetadata.
-                getValidChanged2()
+                getValidChangedOne()
         );
     }
 
     public static List<RecipeComponentStateEntity> getValidChanged2ComponentStateEntities() {
         return getComponentStateEntitiesFromPersistentModel(TestDataRecipeMetadata.
-                getValidChanged2()
+                getValidChangedOne()
         );
     }
 

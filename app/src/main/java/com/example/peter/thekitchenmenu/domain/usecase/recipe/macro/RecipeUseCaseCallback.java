@@ -2,6 +2,10 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.macro;
 
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 
+/**
+ * A shortened version of the {@link UseCase.Callback}
+ * @param <R> the use case callback
+ */
 public abstract class RecipeUseCaseCallback<R extends UseCase.Response>
         implements UseCase.Callback<R> {
 

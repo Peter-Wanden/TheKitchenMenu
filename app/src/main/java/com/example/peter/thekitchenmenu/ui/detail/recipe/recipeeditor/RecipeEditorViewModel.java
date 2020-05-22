@@ -95,7 +95,7 @@ public class RecipeEditorViewModel extends ViewModel {
             if (isRecipeResponseChanged(response)) {
                 System.out.println(RecipeEditorViewModel.TAG + TAG + "onSuccess:" + response);
                 recipeResponse = response;
-                onUseCaseSuccess();
+                onUseCaseSuccess(response);
             }
         }
 
@@ -104,7 +104,7 @@ public class RecipeEditorViewModel extends ViewModel {
             if (isRecipeResponseChanged(response)) {
                 System.out.println(RecipeEditorViewModel.TAG + TAG + "onError:" + response);
                 recipeResponse = response;
-                onUseCaseError();
+                onUseCaseError(response);
             }
         }
     }

@@ -52,7 +52,7 @@ public final class RecipeCourseResponse
 
         private HashMap<RecipeCourse.Course, RecipeCoursePersistenceModel> courseList;
 
-        private Model() {}
+        private Model(){}
 
         @Nonnull
         public HashMap<RecipeCourse.Course, RecipeCoursePersistenceModel> getCourseList() {

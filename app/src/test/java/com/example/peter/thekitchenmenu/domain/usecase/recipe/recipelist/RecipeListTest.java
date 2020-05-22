@@ -1,64 +1,44 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipelist;
 
 import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.RecipeCourseEntity;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.datasource.RecipeDurationEntity;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.parent.RecipeMetadataParentEntity;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.datasource.RecipeIdentityEntity;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.datasource.RecipePortionsEntity;
-import com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter.PrimitiveDataSource;
-import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeCourse;
-import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeDuration;
-import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeIdentity;
-import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipePortions;
+import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess.GetAllDomainModelsCallback;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeMetadata;
+import com.example.peter.thekitchenmenu.data.repository.recipe.metadata.TestDataRecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseFactory;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.RecipeUseCaseCallback;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.RecipeResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadataTest;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.datasource.TestDataRecipeIdentityEntity;
 
 import org.junit.*;
 import org.mockito.*;
 
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class RecipeListTest {
 
     // region constants ----------------------------------------------------------------------------
+    private static final String TAG = "tkm-" + RecipeListTest.class.getSimpleName() + ": ";
     // endregion constants -------------------------------------------------------------------------
 
     // region helper fields ------------------------------------------------------------------------
-//    @Mock
-//    RepositoryRecipeComponentState repoRecipeMock;
-    @Captor
-    ArgumentCaptor<PrimitiveDataSource.GetPrimitiveCallback<RecipeMetadataParentEntity>> repoRecipeCallback;
     @Mock
     UseCaseFactory useCaseFactoryMock;
     @Mock
-    RepositoryRecipeIdentity repoIdentityMock;
+    RepositoryRecipeMetadata repoMetadataMock;
     @Captor
-    ArgumentCaptor<PrimitiveDataSource.GetPrimitiveCallback<RecipeIdentityEntity>> repoIdentityCallback;
-    @Captor
-    ArgumentCaptor<PrimitiveDataSource.GetAllPrimitiveCallback<RecipeIdentityEntity>> repoIdentityALLCallback;
-    @Mock
-    RepositoryRecipeDuration repoDurationMock;
-    @Captor
-    ArgumentCaptor<PrimitiveDataSource.GetPrimitiveCallback<RecipeDurationEntity>> repoDurationCallback;
-    @Mock
-    RepositoryRecipeCourse repoCourseMock;
-    @Captor
-    ArgumentCaptor<PrimitiveDataSource.GetAllPrimitiveCallback<RecipeCourseEntity>> repoCourseCallback;
-    @Mock
-    RepositoryRecipePortions repoPortionsMock;
-    @Captor
-    ArgumentCaptor<PrimitiveDataSource.GetPrimitiveCallback<RecipePortionsEntity>> repoPortionsCallback;
-    @Mock
-    TimeProvider timeProviderMock;
-    @Mock
-    UniqueIdProvider idProvideMock;
+    ArgumentCaptor<GetAllDomainModelsCallback<RecipeMetadataPersistenceModel>>
+            repoMetadataGetAllCallback;
 
     private UseCaseHandler handler;
 
@@ -72,122 +52,86 @@ public class RecipeListTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
+        handler = new UseCaseHandler(new UseCaseSchedulerMock());
+
         SUT = givenUseCase();
     }
 
     private RecipeList givenUseCase() {
-        handler = new UseCaseHandler(new UseCaseSchedulerMock());
-
         return new RecipeList(
+                handler,
                 useCaseFactoryMock,
-                handler);
+                repoMetadataMock);
     }
 
     @Test
-    public void identityAndDurationRequest_getAllRecipes_recipesReturned() {
+    public void newRequest_getAll_recipeListReturned() {
         // Arrange
-//        when(useCaseFactoryMock.provideRecipeMacro()).thenReturn(
-//                new Recipe(
-//                        handler,
-//
-//                        new RecipeStateCalculator(),
-//
-//                        new com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata(
-//                                timeProviderMock,
-//                                repoRecipeMock,
-//                                RecipeComponents.requiredComponents
-//                        ),
-//                        new RecipeIdentity(
-//                                repoIdentityMock,
-//                                timeProviderMock,
-//                                handler,
-//                                new TextValidator.Builder().
-//                                        setShortTextMinLength(
-//                                                TextValidatorTest.SHORT_TEXT_MIN_LENGTH).
-//                                        setShortTextMaxLength(
-//                                                TextValidatorTest.SHORT_TEXT_MAX_LENGTH).
-//                                        setLongTextMinLength(
-//                                                TextValidatorTest.LONG_TEXT_MIN_LENGTH).
-//                                        setLongTextMaxLength(
-//                                                TextValidatorTest.LONG_TEXT_MAX_LENGTH).
-//                                        build()
-//                        ),
-//                        new RecipeCourse(
-//                                repoCourseMock,
-//                                idProvideMock,
-//                                timeProviderMock
-//                        ),
-//                        new RecipeDuration(
-//                                repoDurationMock,
-//                                timeProviderMock,
-//                                RecipeDurationTest.MAX_PREP_TIME,
-//                                RecipeDurationTest.MAX_COOK_TIME
-//                        ),
-//                        new RecipePortions(
-//                                repoPortionsMock,
-//                                idProvideMock,
-//                                timeProviderMock,
-//                                RecipePortionsTest.MAX_SERVINGS,
-//                                RecipePortionsTest.MAX_SITTINGS
-//                        )
-//                )
-//        );
+        // A list of metadata persistent models to load into RecipeList
+        List<RecipeMetadataPersistenceModel> metadataModels = TestDataRecipeMetadata.getAll();
+        int expectedNoOfRecipes = metadataModels.size();
 
-        RecipeListRequest request = new RecipeListRequest(
-                RecipeList.RecipeListFilter.ALL
-        );
+        // A helper that provides mock recipes and testing capabilities
+        RecipeListTestRecipeHelper listHelper = new RecipeListTestRecipeHelper();
+        listHelper.setUp();
+        listHelper.createRecipeMocksForMetadataModels(metadataModels);
+
+        // When a recipe is requested from the factory, return a recipe from the list helper
+        List<Recipe> recipes = listHelper.getRecipeList();
+        Recipe firstRecipe = recipes.remove(0);
+        Recipe[] recipeArray = new Recipe[expectedNoOfRecipes - 1];
+        recipeArray = recipes.toArray(recipeArray);
+        when(useCaseFactoryMock.getRecipeUseCase()).thenReturn(firstRecipe, recipeArray);
+
+        // A list request to return all recipes
+        RecipeListRequest request = new RecipeListRequest.Builder().
+                getDefault().
+                setModel(new RecipeListRequest.Model.Builder().
+                        getDefault().
+                        setFilter(RecipeList.RecipeListFilter.ALL_RECIPES).
+                        build()).
+                build();
+
         // Act
-        handler.execute(SUT, request, getCallback());
+        handler.execute(SUT, request, new RecipeListClient());
 
-//        verify(repoIdentityMock).getAll(repoIdentityALLCallback.capture());
-        repoIdentityALLCallback.getValue().onAllLoaded(TestDataRecipeIdentityEntity.
-                getValidIdentityEntities());
+        // Assert metadata models requested and return metadata model list
+        verify(repoMetadataMock).getAll(repoMetadataGetAllCallback.capture());
+        repoMetadataGetAllCallback.getValue().onAllLoaded(metadataModels);
+        // Assert recipe components have loaded their data
+        listHelper.requestRecipeComponentsLoadData();
 
-        // Assert
+        RecipeListResponse response = onSuccessResponse;
+        RecipeListResponse.Model model = response.getModel();
 
+        assertEquals(
+                expectedNoOfRecipes,
+                model.getRecipes().size()
+        );
     }
 
     // region helper methods -----------------------------------------------------------------------
-    private UseCase.Callback<RecipeListResponse> getCallback() {
-        return new UseCase.Callback<RecipeListResponse>() {
-            @Override
-            public void onUseCaseSuccess(RecipeListResponse response) {
-                if (response != null) {
-                    onSuccessResponse = response;
-                }
-            }
-
-            @Override
-            public void onUseCaseError(RecipeListResponse response) {
-                if (response != null) {
-                    onErrorResponse = response;
-                }
-            }
-        };
-    }
-
     // endregion helper methods --------------------------------------------------------------------
-    private void verifyIdentityDatabaseCalledWithIdAndReturnDataUnavailable(String recipeId) {
-//        verify(repoIdentityMock).getByDataId(eq(recipeId), repoIdentityCallback.capture());
-        repoIdentityCallback.getValue().onDataUnavailable();
-    }
 
-    private void verifyCoursesDatabaseCalledWithIdAndReturnDataUnavailable(String recipeId) {
-//        verify(repoCourseMock).getAllByDomainId(eq(recipeId), repoCourseCallback.capture());
-        repoCourseCallback.getValue().onDataUnavailable();
-    }
-
-    private void verifyDurationDatabaseCalledWithIdAndReturnDataUnavailable(String recipeId) {
-//        verify(repoDurationMock).getByDataId(eq(recipeId), repoDurationCallback.capture());
-        repoDurationCallback.getValue().onDataUnavailable();
-    }
-
-    private void verifyPortionsDatabaseCalledWithIdAndReturnDataUnavailable(String recipeId) {
-//        verify(repoPortionsMock).getAllByDomainId(eq(recipeId), repoPortionsCallback.capture());
-        repoPortionsCallback.getValue().onDataUnavailable();
-    }
     // region helper classes -----------------------------------------------------------------------
+    private final class RecipeListClient
+            implements
+            UseCase.Callback<RecipeListResponse> {
+
+        private final String TAG = RecipeListTest.TAG + RecipeListClient.class.
+                getSimpleName() + ": ";
+
+        @Override
+        public void onUseCaseSuccess(RecipeListResponse response) {
+            System.out.println(TAG + "onSuccess: " + response);
+            onSuccessResponse = response;
+        }
+
+        @Override
+        public void onUseCaseError(RecipeListResponse response) {
+            System.out.println(TAG + "onError: " + response);
+            onErrorResponse = response;
+        }
+    }
     // endregion helper classes --------------------------------------------------------------------
-
-
 }
