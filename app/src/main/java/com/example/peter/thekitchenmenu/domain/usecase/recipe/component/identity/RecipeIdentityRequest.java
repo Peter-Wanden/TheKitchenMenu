@@ -1,16 +1,16 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity;
 
-import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainMessageModel;
+import com.example.peter.thekitchenmenu.domain.usecase.MessageModelDataId;
 import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainModel;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
 public final class RecipeIdentityRequest
-        extends BaseDomainMessageModel<RecipeIdentityRequest.Model>
-        implements UseCase.Request {
+        extends MessageModelDataId<RecipeIdentityRequest.Model>
+        implements UseCaseBase.Request {
 
     @Nonnull
     @Override
@@ -26,7 +26,7 @@ public final class RecipeIdentityRequest
 
     public static class Builder
             extends
-            UseCaseMessageBuilderModel<Builder, RecipeIdentityRequest, Model> {
+            MessageModelDataIdBuilder<Builder, RecipeIdentityRequest, Model> {
 
         public Builder() {
             message = new RecipeIdentityRequest();
@@ -90,31 +90,33 @@ public final class RecipeIdentityRequest
                     '}';
         }
 
-        public static class Builder extends DomainModelBuilder<Builder, Model> {
+        public static class Builder
+                extends
+                DomainModelBuilder<Builder, Model> {
 
             public Builder() {
-                model = new Model();
+                domainModel = new Model();
             }
 
             public Builder getDefault() {
-                model.title = "";
-                model.description = "";
+                domainModel.title = "";
+                domainModel.description = "";
                 return self();
             }
 
             public Builder basedOnResponseModel(RecipeIdentityResponse.Model model) {
-                this.model.title = model.getTitle();
-                this.model.description = model.getDescription();
+                this.domainModel.title = model.getTitle();
+                this.domainModel.description = model.getDescription();
                 return self();
             }
 
             public Builder setTitle(String title) {
-                model.title = title;
+                domainModel.title = title;
                 return self();
             }
 
             public Builder setDescription(String description) {
-                model.description = description;
+                domainModel.description = description;
                 return self();
             }
 

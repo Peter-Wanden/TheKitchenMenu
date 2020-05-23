@@ -1,6 +1,6 @@
 package com.example.peter.thekitchenmenu.ui.catalog.recipe.mvc;
 
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipelist.RecipeList;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipelist.RecipeListRequest;
@@ -10,7 +10,7 @@ import com.example.peter.thekitchenmenu.ui.common.ScreensNavigator;
 
 public class RecipeCatalogListController
         implements
-        UseCase.Callback<RecipeListResponse>,
+        UseCaseBase.Callback<RecipeListResponse>,
         RecipeListItemView.RecipeListItemUserActions {
 
     private enum ScreenState {
@@ -57,17 +57,17 @@ public class RecipeCatalogListController
                 setModel(model).
                 build();
 
-        handler.execute(useCase, request, this);
+        handler.executeAsync(useCase, request, this);
     }
 
     @Override
-    public void onUseCaseSuccess(RecipeListResponse response) {
+    public void onSuccessResponse(RecipeListResponse response) {
         screenState = ScreenState.RECIPES_SHOWN;
         view.bindRecipes(response.getModel().getRecipes());
     }
 
     @Override
-    public void onUseCaseError(RecipeListResponse response) {
+    public void onErrorResponse(RecipeListResponse response) {
         screenState = ScreenState.LOADING_ERROR;
 
     }

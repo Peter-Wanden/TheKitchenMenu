@@ -4,16 +4,11 @@ import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess.GetAllDomainModelsCallback;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeMetadata;
 import com.example.peter.thekitchenmenu.data.repository.recipe.metadata.TestDataRecipeMetadata;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseFactory;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataPersistenceModel;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.RecipeUseCaseCallback;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.RecipeResponse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadataTest;
-import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
-import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
 import org.junit.*;
 import org.mockito.*;
@@ -93,7 +88,7 @@ public class RecipeListTest {
                 build();
 
         // Act
-        handler.execute(SUT, request, new RecipeListClient());
+        handler.executeAsync(SUT, request, new RecipeListClient());
 
         // Assert metadata models requested and return metadata model list
         verify(repoMetadataMock).getAll(repoMetadataGetAllCallback.capture());
@@ -116,19 +111,19 @@ public class RecipeListTest {
     // region helper classes -----------------------------------------------------------------------
     private final class RecipeListClient
             implements
-            UseCase.Callback<RecipeListResponse> {
+            UseCaseBase.Callback<RecipeListResponse> {
 
         private final String TAG = RecipeListTest.TAG + RecipeListClient.class.
                 getSimpleName() + ": ";
 
         @Override
-        public void onUseCaseSuccess(RecipeListResponse response) {
+        public void onSuccessResponse(RecipeListResponse response) {
             System.out.println(TAG + "onSuccess: " + response);
             onSuccessResponse = response;
         }
 
         @Override
-        public void onUseCaseError(RecipeListResponse response) {
+        public void onErrorResponse(RecipeListResponse response) {
             System.out.println(TAG + "onError: " + response);
             onErrorResponse = response;
         }

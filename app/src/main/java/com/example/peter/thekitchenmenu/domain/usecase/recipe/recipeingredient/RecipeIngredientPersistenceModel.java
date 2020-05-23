@@ -69,77 +69,77 @@ public class RecipeIngredientPersistenceModel extends BasePersistence {
             RecipeIngredientPersistenceModel> {
 
         public Builder() {
-            model = new RecipeIngredientPersistenceModel();
+            domainModel = new RecipeIngredientPersistenceModel();
         }
 
         @Override
         public Builder getDefault() {
-            model.dataId = "";
-            model.recipeIngredientId = "";
-            model.recipeDataId = "";
-            model.recipeDomainId = "";
-            model.ingredientDataId = "";
-            model.ingredientDomainId = "";
-            model.productDataId = "";
-            model.measurementModel = null;
-            model.createdBy = "";
-            model.createDate = 0L;
-            model.lastUpdate = 0L;
+            domainModel.dataId = "";
+            domainModel.recipeIngredientId = "";
+            domainModel.recipeDataId = "";
+            domainModel.recipeDomainId = "";
+            domainModel.ingredientDataId = "";
+            domainModel.ingredientDomainId = "";
+            domainModel.productDataId = "";
+            domainModel.measurementModel = null;
+            domainModel.createdBy = "";
+            domainModel.createDate = 0L;
+            domainModel.lastUpdate = 0L;
             return self();
         }
 
         public Builder setDataId(String dataId) {
-            model.dataId = dataId;
+            domainModel.dataId = dataId;
             return this;
         }
 
         public Builder setRecipeIngredientId(String recipeIngredientId) {
-            model.recipeIngredientId = recipeIngredientId;
+            domainModel.recipeIngredientId = recipeIngredientId;
             return self();
         }
 
         public Builder setRecipeDataId(String recipeDataId) {
-            model.recipeDataId = recipeDataId;
+            domainModel.recipeDataId = recipeDataId;
             return self();
         }
 
         public Builder setRecipeDomainId(String recipeDomainId) {
-            model.recipeDomainId = recipeDomainId;
+            domainModel.recipeDomainId = recipeDomainId;
             return self();
         }
 
         public Builder setIngredientDataId(String ingredientDataId) {
-            model.ingredientDataId = ingredientDataId;
+            domainModel.ingredientDataId = ingredientDataId;
             return self();
         }
 
         public Builder setIngredientDomainId(String ingredientDomainId) {
-            model.ingredientDomainId = ingredientDomainId;
+            domainModel.ingredientDomainId = ingredientDomainId;
             return self();
         }
 
         public Builder setProductDataId(String productId) {
-            model.productDataId = productId;
+            domainModel.productDataId = productId;
             return self();
         }
 
         public Builder setMeasurementModel(MeasurementModel measurementModel) {
-            model.measurementModel = measurementModel;
+            domainModel.measurementModel = measurementModel;
             return self();
         }
 
         public Builder setCreatedBy(String createdBy) {
-            model.createdBy = createdBy;
+            domainModel.createdBy = createdBy;
             return self();
         }
 
         public Builder setCreateDate(long createDate) {
-            model.createDate = createDate;
+            domainModel.createDate = createDate;
             return self();
         }
 
         public Builder setLastUpdate(long lastUpdate) {
-            model.lastUpdate = lastUpdate;
+            domainModel.lastUpdate = lastUpdate;
             return self();
         }
 

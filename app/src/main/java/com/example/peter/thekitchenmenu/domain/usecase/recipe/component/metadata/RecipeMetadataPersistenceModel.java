@@ -102,65 +102,65 @@ public final class RecipeMetadataPersistenceModel extends BasePersistence {
             RecipeMetadataPersistenceModel> {
 
         public Builder() {
-            model = new RecipeMetadataPersistenceModel();
+            domainModel = new RecipeMetadataPersistenceModel();
         }
 
         @Override
         public Builder getDefault() {
-            model.dataId = "";
-            model.domainId = "";
-            model.parentDomainId = "";
-            model.recipeState = ComponentState.INVALID_UNCHANGED;
-            model.componentStates = new HashMap<>();
-            model.failReasons = new ArrayList<>();
-            model.createdBy = Constants.getUserId();
-            model.createDate = 0L;
-            model.lastUpdate = 0L;
+            domainModel.dataId = "";
+            domainModel.domainId = "";
+            domainModel.parentDomainId = "";
+            domainModel.recipeState = ComponentState.INVALID_UNCHANGED;
+            domainModel.componentStates = new HashMap<>();
+            domainModel.failReasons = new ArrayList<>();
+            domainModel.createdBy = Constants.getUserId();
+            domainModel.createDate = 0L;
+            domainModel.lastUpdate = 0L;
             return self();
         }
 
         public Builder setDataId(String dataId) {
-            model.dataId = dataId;
+            domainModel.dataId = dataId;
             return self();
         }
 
         public Builder setDomainId(String domainId) {
-            model.domainId = domainId;
+            domainModel.domainId = domainId;
             return self();
         }
 
         public Builder setParentDomainId(String parentDomainId) {
-            model.parentDomainId = parentDomainId;
+            domainModel.parentDomainId = parentDomainId;
             return self();
         }
 
         public Builder setRecipeState(ComponentState state) {
-            model.recipeState = state;
+            domainModel.recipeState = state;
             return self();
         }
 
         public Builder setComponentStates(HashMap<ComponentName, ComponentState> componentStates) {
-            model.componentStates = componentStates;
+            domainModel.componentStates = componentStates;
             return self();
         }
 
         public Builder setFailReasons(List<FailReasons> failReasons) {
-            model.failReasons = failReasons;
+            domainModel.failReasons = failReasons;
             return self();
         }
 
         public Builder setCreatedBy(String createdBy) {
-            model.createdBy = createdBy;
+            domainModel.createdBy = createdBy;
             return self();
         }
 
         public Builder setCreateDate(long createDate) {
-            model.createDate = createDate;
+            domainModel.createDate = createDate;
             return self();
         }
 
         public Builder setLastUpdate(long lastUpdate) {
-            model.lastUpdate = lastUpdate;
+            domainModel.lastUpdate = lastUpdate;
             return self();
         }
 

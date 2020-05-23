@@ -4,7 +4,7 @@ import com.example.peter.thekitchenmenu.commonmocks.StringMaker;
 import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
 
 import org.junit.*;
 import org.mockito.*;
@@ -47,7 +47,7 @@ public class TextValidatorTest {
                 TextValidator.TextType.SHORT_TEXT,
                 new TextValidatorModel(""));
         // Act
-        handler.execute(SUT, request, getCallback());
+        handler.executeAsync(SUT, request, getCallback());
         // Assert
         assertEquals(TextValidator.FailReason.TOO_SHORT, actualResponse.getFailReason());
     }
@@ -64,7 +64,7 @@ public class TextValidatorTest {
                 TextValidator.TextType.SHORT_TEXT,
                 new TextValidatorModel(shortTextToShort));
         // Act
-        handler.execute(SUT, request, getCallback());
+        handler.executeAsync(SUT, request, getCallback());
         // Assert
         assertEquals(TextValidator.FailReason.TOO_SHORT, actualResponse.getFailReason());
     }
@@ -81,7 +81,7 @@ public class TextValidatorTest {
                 TextValidator.TextType.SHORT_TEXT,
                 new TextValidatorModel(shortTextTooLong));
         // Act
-        handler.execute(SUT, request, getCallback());
+        handler.executeAsync(SUT, request, getCallback());
         // Assert
         assertEquals(TextValidator.FailReason.TOO_LONG, actualResponse.getFailReason());
     }
@@ -93,7 +93,7 @@ public class TextValidatorTest {
                 TextValidator.TextType.LONG_TEXT,
                 new TextValidatorModel(""));
         // Act
-        handler.execute(SUT, request, getCallback());
+        handler.executeAsync(SUT, request, getCallback());
         // Assert
         assertEquals(CommonFailReason.NONE, actualResponse.getFailReason());
     }
@@ -110,7 +110,7 @@ public class TextValidatorTest {
                 TextValidator.TextType.LONG_TEXT,
                 new TextValidatorModel(longTextMinLengthPlusOne));
         // Act
-        handler.execute(SUT, request, getCallback());
+        handler.executeAsync(SUT, request, getCallback());
         // Assert
         assertEquals(CommonFailReason.NONE, actualResponse.getFailReason());
     }
@@ -127,21 +127,21 @@ public class TextValidatorTest {
                 TextValidator.TextType.LONG_TEXT,
                 new TextValidatorModel(longTextTooLong));
         // Act
-        handler.execute(SUT, request, getCallback());
+        handler.executeAsync(SUT, request, getCallback());
         // Assert
         assertEquals(TextValidator.FailReason.TOO_LONG, actualResponse.getFailReason());
     }
 
     // region helper methods -----------------------------------------------------------------------
-    private UseCase.Callback<TextValidatorResponse> getCallback() {
-        return new UseCase.Callback<TextValidatorResponse>() {
+    private UseCaseBase.Callback<TextValidatorResponse> getCallback() {
+        return new UseCaseBase.Callback<TextValidatorResponse>() {
             @Override
-            public void onUseCaseSuccess(TextValidatorResponse response) {
+            public void onSuccessResponse(TextValidatorResponse response) {
                 actualResponse = response;
             }
 
             @Override
-            public void onUseCaseError(TextValidatorResponse response) {
+            public void onErrorResponse(TextValidatorResponse response) {
                 actualResponse = response;
             }
         };

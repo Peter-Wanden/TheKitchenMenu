@@ -16,7 +16,7 @@ import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.iden
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.datasource.TestDataRecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.parent.RecipeMetadataParentEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.datasource.RecipePortionsEntity;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityTest;
@@ -208,7 +208,7 @@ public class RecipeIdentityEditorViewModelTest {
                 build();
 
         // Act
-        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        handler.executeAsync(recipeMacro, request, new RecipeResponseCallback());
 
         // Assert
         verifyAllComponentReposCalledAndReturnDataUnavailable(recipeId);
@@ -229,7 +229,7 @@ public class RecipeIdentityEditorViewModelTest {
                 setDataId(recipeId).
                 build();
         // Act
-        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        handler.executeAsync(recipeMacro, request, new RecipeResponseCallback());
         // Assert
         verifyAllComponentReposCalledAndReturnDataUnavailable(recipeId);
 
@@ -247,7 +247,7 @@ public class RecipeIdentityEditorViewModelTest {
                 setDataId(recipeId).
                 build();
         // Act
-        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        handler.executeAsync(recipeMacro, request, new RecipeResponseCallback());
         verifyAllComponentReposCalledAndReturnDataUnavailable(recipeId);
 
         // Act
@@ -268,7 +268,7 @@ public class RecipeIdentityEditorViewModelTest {
                 build();
 
         // Act
-        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        handler.executeAsync(recipeMacro, request, new RecipeResponseCallback());
         verifyAllComponentReposCalledAndReturnDataUnavailable(recipeId);
 
         SUT.setTitle(invalidTitle);
@@ -288,7 +288,7 @@ public class RecipeIdentityEditorViewModelTest {
                 build();
 
         // Act
-        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        handler.executeAsync(recipeMacro, request, new RecipeResponseCallback());
         verifyAllComponentReposCalledAndReturnDataUnavailable(recipeId);
 
         SUT.setTitle(invalidTitle);
@@ -314,7 +314,7 @@ public class RecipeIdentityEditorViewModelTest {
                 build();
 
         // Act
-        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        handler.executeAsync(recipeMacro, request, new RecipeResponseCallback());
         verifyAllComponentReposCalledAndReturnDataUnavailable(recipeId);
 
         SUT.setTitle(invalidTitle);
@@ -335,7 +335,7 @@ public class RecipeIdentityEditorViewModelTest {
                 build();
 
         // Act
-        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        handler.executeAsync(recipeMacro, request, new RecipeResponseCallback());
         verifyAllComponentReposCalledAndReturnDataUnavailable(recipeId);
 
         SUT.setTitle(validTitle);
@@ -357,7 +357,7 @@ public class RecipeIdentityEditorViewModelTest {
                 build();
 
         // Act
-        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        handler.executeAsync(recipeMacro, request, new RecipeResponseCallback());
         verifyAllComponentReposCalledAndReturnDataUnavailable(recipeId);
 
         SUT.setTitle(title);
@@ -377,7 +377,7 @@ public class RecipeIdentityEditorViewModelTest {
                 build();
 
         // Act
-        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        handler.executeAsync(recipeMacro, request, new RecipeResponseCallback());
         verifyAllComponentReposCalledAndReturnDataUnavailable(recipeId);
 
         SUT.setTitle(title);
@@ -411,7 +411,7 @@ public class RecipeIdentityEditorViewModelTest {
                 build();
 
         // Act
-        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        handler.executeAsync(recipeMacro, request, new RecipeResponseCallback());
         verifyAllComponentReposCalledAndReturnDataUnavailable(recipeId);
 
         SUT.setTitle(validTitle);
@@ -439,7 +439,7 @@ public class RecipeIdentityEditorViewModelTest {
                 build();
 
         // Act
-        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        handler.executeAsync(recipeMacro, request, new RecipeResponseCallback());
         verifyAllComponentReposCalledAndReturnDataUnavailable(recipeId);
 
         SUT.setTitle(validTitle);
@@ -468,7 +468,7 @@ public class RecipeIdentityEditorViewModelTest {
                 build();
 
         // Act
-        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        handler.executeAsync(recipeMacro, request, new RecipeResponseCallback());
         verifyAllComponentReposCalledAndReturnDataUnavailable(recipeId);
 
         SUT.setTitle(validTitle);
@@ -496,7 +496,7 @@ public class RecipeIdentityEditorViewModelTest {
                 build();
 
         // Act
-        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        handler.executeAsync(recipeMacro, request, new RecipeResponseCallback());
         verifyAllComponentReposCalledAndReturnDataUnavailable(recipeId);
 
         SUT.setTitle(title);
@@ -521,7 +521,7 @@ public class RecipeIdentityEditorViewModelTest {
                 build();
 
         // Act
-        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        handler.executeAsync(recipeMacro, request, new RecipeResponseCallback());
         verifyAllComponentReposCalledAndReturnDataUnavailable(recipeId);
 
         // Assert
@@ -545,7 +545,7 @@ public class RecipeIdentityEditorViewModelTest {
                 build();
 
         // Act
-        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        handler.executeAsync(recipeMacro, request, new RecipeResponseCallback());
         verifyAllComponentReposCalledAndReturnDataUnavailable(recipeId);
 
         SUT.setTitle(validTitle);
@@ -574,7 +574,7 @@ public class RecipeIdentityEditorViewModelTest {
                 build();
 
         // Act
-        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        handler.executeAsync(recipeMacro, request, new RecipeResponseCallback());
 
         verifyRepoRecipeCalledAndReturnValidExistingComplete(recipeId);
         verifyRepoIdentityCalledAndReturnValidExistingComplete(recipeId);
@@ -598,7 +598,7 @@ public class RecipeIdentityEditorViewModelTest {
                 build();
 
         // Act
-        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        handler.executeAsync(recipeMacro, request, new RecipeResponseCallback());
 
         // Assert
         verifyRepoRecipeCalledAndReturnValidExistingComplete(recipeId);
@@ -627,7 +627,7 @@ public class RecipeIdentityEditorViewModelTest {
                 build();
 
         // Act
-        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        handler.executeAsync(recipeMacro, request, new RecipeResponseCallback());
 
         // Assert
 //        verify(repoRecipeMock).getById(eq(recipeId), repoRecipeCallback.capture());
@@ -734,7 +734,7 @@ public class RecipeIdentityEditorViewModelTest {
         }
     }
 
-    private static class RecipeResponseCallback implements UseCase.Callback<RecipeMetadataResponse> {
+    private static class RecipeResponseCallback implements UseCaseBase.Callback<RecipeMetadataResponse> {
 
         private static final String TAG = "tkm-" + RecipeResponseCallback.class.getSimpleName() +
                 ": ";
@@ -742,13 +742,13 @@ public class RecipeIdentityEditorViewModelTest {
         private RecipeMetadataResponse response;
 
         @Override
-        public void onUseCaseSuccess(RecipeMetadataResponse response) {
+        public void onSuccessResponse(RecipeMetadataResponse response) {
             System.out.println(RecipeIdentityEditorViewModelTest.TAG + TAG + "onSuccess:" + response);
             this.response = response;
         }
 
         @Override
-        public void onUseCaseError(RecipeMetadataResponse response) {
+        public void onErrorResponse(RecipeMetadataResponse response) {
             System.out.println(RecipeIdentityEditorViewModelTest.TAG + TAG + "onError:" + response);
             this.response = response;
         }
@@ -766,7 +766,7 @@ public class RecipeIdentityEditorViewModelTest {
         }
     }
 
-    private static class RecipeMacroResponseListener implements UseCase.Callback<RecipeResponse> {
+    private static class RecipeMacroResponseListener implements UseCaseBase.Callback<RecipeResponse> {
 
         private static final String TAG = "tkm-" + RecipeMacroResponseListener.class.
                 getSimpleName() + ": ";
@@ -774,13 +774,13 @@ public class RecipeIdentityEditorViewModelTest {
         RecipeResponse response;
 
         @Override
-        public void onUseCaseSuccess(RecipeResponse response) {
+        public void onSuccessResponse(RecipeResponse response) {
             System.out.println(RecipeIdentityEditorViewModelTest.TAG + TAG + "onSuccess:");
             this.response = response;
         }
 
         @Override
-        public void onUseCaseError(RecipeResponse response) {
+        public void onErrorResponse(RecipeResponse response) {
             System.out.println(RecipeIdentityEditorViewModelTest.TAG + TAG + "onError:");
             this.response = response;
         }

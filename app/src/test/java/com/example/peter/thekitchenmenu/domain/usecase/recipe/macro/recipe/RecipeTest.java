@@ -10,9 +10,9 @@ import com.example.peter.thekitchenmenu.data.repository.recipe.metadata.TestData
 import com.example.peter.thekitchenmenu.data.repository.recipe.portions.TestDataRecipePortions;
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.model.FailReasons;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadataModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCoursePersistenceModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourseRequest;
@@ -89,7 +89,7 @@ public class RecipeTest {
     @Test
     public void recipeRequest_noId_emptyRecipeReturned() {
         RecipeRequest request = new RecipeRequest.Builder().getDefault().build();
-        handler.execute(SUT, request, new RecipeCallbackClient());
+        handler.executeAsync(SUT, request, new RecipeCallbackClient());
 
 
     }
@@ -105,7 +105,7 @@ public class RecipeTest {
         when(recipeTestBase.getIdProviderMock().getUId()).thenReturn("");
 
         // Act
-        handler.execute(SUT, request, new RecipeCallbackClient());
+        handler.executeAsync(SUT, request, new RecipeCallbackClient());
 
         // Assert persistence called for every component.
         verifyAllReposCalledAndReturnModelUnavailable(NEW_RECIPE_DOMAIN_ID);
@@ -125,7 +125,7 @@ public class RecipeTest {
         SUT.registerMetadataListener(metadataListener2);
 
         // Act
-        handler.execute(SUT, request, new RecipeCallbackClient()
+        handler.executeAsync(SUT, request, new RecipeCallbackClient()
         );
         when(recipeTestBase.getIdProviderMock().getUId()).thenReturn("testDataId");
 
@@ -136,7 +136,7 @@ public class RecipeTest {
         verify(metadataListener1).onRecipeMetadataChanged(recipeMetadataCaptor.capture()
         );
         RecipeMetadataResponse.Model model = recipeMetadataCaptor.getValue().getModel();
-        UseCaseMetadata recipeMetadata = recipeMetadataCaptor.getValue().getMetadata();
+        UseCaseMetadataModel recipeMetadata = recipeMetadataCaptor.getValue().getMetadata();
 
         // Assert recipe state updated
         assertEquals(
@@ -197,13 +197,13 @@ public class RecipeTest {
         SUT.registerRecipeCallback(registeredCallback);
 
         // Act
-        handler.execute(SUT, request, passedInCallback);
+        handler.executeAsync(SUT, request, passedInCallback);
 
         // Assert database calls
         verifyAllReposCalledAndReturnModelUnavailable(recipeId);
 
         // Assert, callback updated with recipe response
-        UseCaseMetadata metadata = registeredCallback.recipeMetadataResponse.getMetadata();
+        UseCaseMetadataModel metadata = registeredCallback.recipeMetadataResponse.getMetadata();
 
         ComponentState expectedRecipeState = ComponentState.INVALID_UNCHANGED;
         ComponentState actualRecipeState = metadata.getState();
@@ -243,7 +243,7 @@ public class RecipeTest {
         when(recipeTestBase.getIdProviderMock().getUId()).thenReturn("");
 
         // Act
-        handler.execute(SUT, request, passedInCallback);
+        handler.executeAsync(SUT, request, passedInCallback);
         // Assert
         verifyAllReposCalledAndReturnModelUnavailable(recipeId);
 
@@ -267,7 +267,7 @@ public class RecipeTest {
         // Identity response callback to go with Identity request
         RecipeIdentityCallbackClient callback = new RecipeIdentityCallbackClient();
         // Act
-        handler.execute(SUT, identityRequest, callback);
+        handler.executeAsync(SUT, identityRequest, callback);
 
         // Assert
         verifyAllReposCalledAndReturnModelUnavailable(recipeId);
@@ -295,7 +295,7 @@ public class RecipeTest {
         RecipeCallbackClient macroCallback = new RecipeCallbackClient();
         SUT.registerRecipeCallback(macroCallback);
         // Act
-        handler.execute(SUT, request, callback);
+        handler.executeAsync(SUT, request, callback);
 
         // Assert database calls
         verifyAllReposCalledAndReturnModelUnavailable(recipeId);
@@ -373,7 +373,7 @@ public class RecipeTest {
                 setDomainId(recipeId).
                 build();
         // Act
-        handler.execute(SUT, courseRequest, callback);
+        handler.executeAsync(SUT, courseRequest, callback);
 
         // Assert all components receive recipe ID and call their repos
         verifyAllReposCalledAndReturnModelUnavailable(recipeId);
@@ -397,7 +397,7 @@ public class RecipeTest {
                 build();
 
         // Act
-        handler.execute(SUT, durationRequest, callback);
+        handler.executeAsync(SUT, durationRequest, callback);
 
         // Assert all components receive recipe ID and call their repos
         verifyAllReposCalledAndReturnModelUnavailable(recipeId);
@@ -421,7 +421,7 @@ public class RecipeTest {
                 setDomainId(recipeId).
                 build();
         // Act
-        handler.execute(SUT, portionsRequest, callback);
+        handler.executeAsync(SUT, portionsRequest, callback);
 
         // Assert all components receive recipe ID and call their repos
         verifyAllReposCalledAndReturnModelUnavailable(recipeId);
@@ -456,7 +456,7 @@ public class RecipeTest {
         RecipeIdentityCallbackClient callbackClient = new RecipeIdentityCallbackClient();
 
         // Act
-        handler.execute(SUT, initialRequest, callbackClient);
+        handler.executeAsync(SUT, initialRequest, callbackClient);
         // Assert all component repos called
         verifyAllReposCalledAndReturnModelUnavailable(recipeId);
 
@@ -473,7 +473,7 @@ public class RecipeTest {
                 setModel(validTitleModel).
                 build();
 
-        handler.execute(SUT, validTitleRequest, callbackClient);
+        handler.executeAsync(SUT, validTitleRequest, callbackClient);
 
         // Identity Request 3, existing request, update description
         String validDescription = modelUnderTest.getDescription();
@@ -492,7 +492,7 @@ public class RecipeTest {
                 thenReturn(modelUnderTest.getLastUpdate());
 
         // Act
-        handler.execute(SUT, validDescriptionRequest, callbackClient);
+        handler.executeAsync(SUT, validDescriptionRequest, callbackClient);
 
         // Assert identity component saved
         int saveTitleThenSaveDescription = 2;
@@ -553,7 +553,7 @@ public class RecipeTest {
                 build();
 
         // Act
-        handler.execute(SUT, initialRequest, callback);
+        handler.executeAsync(SUT, initialRequest, callback);
 
         // Assert
         verifyAllReposCalledAndReturnModelUnavailable(recipeId);
@@ -569,7 +569,7 @@ public class RecipeTest {
                 build();
 
         // Act
-        handler.execute(SUT, addCourseRequest, callback);
+        handler.executeAsync(SUT, addCourseRequest, callback);
 
         // Assert correct values saved
         verify(recipeTestBase.repoCourseMock).save(eq(modelUnderTest)
@@ -621,7 +621,7 @@ public class RecipeTest {
         SUT.unregisterStateListener(metadataListener2);
 
         // Act
-        handler.execute(SUT, initialRequest, recipeCallback);
+        handler.executeAsync(SUT, initialRequest, recipeCallback);
 
         // Assert database called and return valid data for all components
         verifyAllReposCalledAndReturnValidExisting(recipeId);
@@ -648,7 +648,7 @@ public class RecipeTest {
         RecipeCallbackClient recipeCallback = new RecipeCallbackClient();
 
         // Act
-        handler.execute(SUT, initialRequest, recipeCallback);
+        handler.executeAsync(SUT, initialRequest, recipeCallback);
 
         // Assert database called and return existing data
         verifyAllReposCalledAndReturnValidExisting(recipeId);
@@ -690,7 +690,7 @@ public class RecipeTest {
         RecipeCallbackClient recipeCallback = new RecipeCallbackClient();
 
         // Act
-        handler.execute(SUT, initialRequest, recipeCallback);
+        handler.executeAsync(SUT, initialRequest, recipeCallback);
 
         // Assert database called and return existing data
         verifyAllReposCalledAndReturnValidExisting(recipeId);
@@ -725,20 +725,20 @@ public class RecipeTest {
         );
 
         // Act
-        handler.execute(SUT, initialRequest, passedInRecipeCallback);
+        handler.executeAsync(SUT, initialRequest, passedInRecipeCallback);
         // Assert
         verifyAllReposCalledAndReturnValidExisting(recipeId);
 
         // Assert recipe response callback
         // Recipe callback
-        UseCaseMetadata metadata = passedInRecipeCallback.recipeMetadataResponse.getMetadata();
+        UseCaseMetadataModel metadata = passedInRecipeCallback.recipeMetadataResponse.getMetadata();
         List<FailReasons> failReasons = metadata.getFailReasons();
         assertTrue(
                 failReasons.contains(CommonFailReason.NONE)
         );
 
         // Assert recipe metadata callback
-        UseCaseMetadata metadata1 = registeredMetadataCallback.response.getMetadata();
+        UseCaseMetadataModel metadata1 = registeredMetadataCallback.response.getMetadata();
         ComponentState actualRecipeState = metadata1.getState();
         assertEquals(
                 ComponentState.VALID_UNCHANGED,
@@ -746,7 +746,7 @@ public class RecipeTest {
         );
 
         // Assert recipe identity component callback
-        UseCaseMetadata metadata2 = registeredIdentityCallback.response.getMetadata();
+        UseCaseMetadataModel metadata2 = registeredIdentityCallback.response.getMetadata();
         ComponentState identityComponentState = metadata2.getState();
         assertEquals(
                 ComponentState.VALID_UNCHANGED,
@@ -840,7 +840,7 @@ public class RecipeTest {
         }
     }
 
-    private static class RecipeCallbackClient implements UseCase.Callback<RecipeResponse> {
+    private static class RecipeCallbackClient implements UseCaseBase.Callback<RecipeResponse> {
 
         private final String TAG = "tkm-" + RecipeCallbackClient.class.
                 getSimpleName() + ": ";
@@ -863,7 +863,7 @@ public class RecipeTest {
         private RecipePortionsResponse portionsOnError;
 
         @Override
-        public void onUseCaseSuccess(RecipeResponse response) {
+        public void onSuccessResponse(RecipeResponse response) {
             if (response != null) {
                 System.out.println(TAG + "recipeMacroResponseOnSuccess: " + response);
                 recipeResponseOnSuccess = response;
@@ -891,7 +891,7 @@ public class RecipeTest {
         }
 
         @Override
-        public void onUseCaseError(RecipeResponse response) {
+        public void onErrorResponse(RecipeResponse response) {
             if (response != null) {
                 System.out.println(TAG + "recipeMacroResponseOnError: " + response);
                 recipeResponseOnError = response;
@@ -999,7 +999,7 @@ public class RecipeTest {
         }
     }
 
-    private static class RecipeIdentityCallbackClient implements UseCase.Callback<RecipeIdentityResponse> {
+    private static class RecipeIdentityCallbackClient implements UseCaseBase.Callback<RecipeIdentityResponse> {
 
         private final String TAG = "tkm-" +
                 RecipeIdentityCallbackClient.class.getSimpleName() + ": ";
@@ -1007,13 +1007,13 @@ public class RecipeTest {
         private RecipeIdentityResponse response;
 
         @Override
-        public void onUseCaseSuccess(RecipeIdentityResponse response) {
+        public void onSuccessResponse(RecipeIdentityResponse response) {
             System.out.println(TAG + response);
             this.response = response;
         }
 
         @Override
-        public void onUseCaseError(RecipeIdentityResponse response) {
+        public void onErrorResponse(RecipeIdentityResponse response) {
             System.out.println(TAG + response);
             this.response = response;
         }
@@ -1031,7 +1031,7 @@ public class RecipeTest {
         }
     }
 
-    private static class DurationCallbackClient implements UseCase.Callback<RecipeDurationResponse> {
+    private static class DurationCallbackClient implements UseCaseBase.Callback<RecipeDurationResponse> {
 
         private final String TAG = "tkm-" + DurationCallbackClient.class.getSimpleName()
                 + ": ";
@@ -1039,13 +1039,13 @@ public class RecipeTest {
         private RecipeDurationResponse response;
 
         @Override
-        public void onUseCaseSuccess(RecipeDurationResponse response) {
+        public void onSuccessResponse(RecipeDurationResponse response) {
             System.out.println(TAG + "onSuccess:" + response);
             this.response = response;
         }
 
         @Override
-        public void onUseCaseError(RecipeDurationResponse response) {
+        public void onErrorResponse(RecipeDurationResponse response) {
             System.out.println(TAG + "onError:" + response);
             this.response = response;
         }
@@ -1063,20 +1063,20 @@ public class RecipeTest {
         }
     }
 
-    private static class CourseCallbackClient implements UseCase.Callback<RecipeCourseResponse> {
+    private static class CourseCallbackClient implements UseCaseBase.Callback<RecipeCourseResponse> {
 
         private final String TAG = "tkm-" + CourseCallbackClient.class.getSimpleName() + ": ";
 
         private RecipeCourseResponse response;
 
         @Override
-        public void onUseCaseSuccess(RecipeCourseResponse response) {
+        public void onSuccessResponse(RecipeCourseResponse response) {
             System.out.println(TAG + response);
             this.response = response;
         }
 
         @Override
-        public void onUseCaseError(RecipeCourseResponse response) {
+        public void onErrorResponse(RecipeCourseResponse response) {
             System.out.println(TAG + response);
             this.response = response;
         }
@@ -1094,20 +1094,20 @@ public class RecipeTest {
         }
     }
 
-    private static class PortionCallbackClient implements UseCase.Callback<RecipePortionsResponse> {
+    private static class PortionCallbackClient implements UseCaseBase.Callback<RecipePortionsResponse> {
 
         private final String TAG = "tkm-" + PortionCallbackClient.class.getSimpleName() + ": ";
 
         private RecipePortionsResponse response;
 
         @Override
-        public void onUseCaseSuccess(RecipePortionsResponse response) {
+        public void onSuccessResponse(RecipePortionsResponse response) {
             System.out.println(TAG + "onSuccess:" + response);
             this.response = response;
         }
 
         @Override
-        public void onUseCaseError(RecipePortionsResponse response) {
+        public void onErrorResponse(RecipePortionsResponse response) {
             System.out.println(TAG + "onError:" + response);
             this.response = response;
         }

@@ -1,13 +1,15 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe;
 
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
-import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainMessage;
+import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecase.MessageModelDataId;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
+import com.example.peter.thekitchenmenu.domain.usecase.MessageModelBase;
 
 import javax.annotation.Nonnull;
 
 public final class RecipeRequest
-        extends BaseDomainMessage
-        implements UseCase.Request {
+        extends MessageModelDataId<RecipeRequest.Model>
+        implements UseCaseBase.Request {
 
     @Nonnull
     @Override
@@ -20,7 +22,7 @@ public final class RecipeRequest
 
     private RecipeRequest() {}
 
-    public static class Builder extends UseCaseMessageBuilder<Builder, RecipeRequest> {
+    public static class Builder extends MessageModelDataIdBuilder<Builder, RecipeRequest, Model> {
 
         public Builder() {
             message = new RecipeRequest();
@@ -37,5 +39,8 @@ public final class RecipeRequest
         protected Builder self() {
             return this;
         }
+    }
+
+    public static class Model extends BaseDomainModel {
     }
 }

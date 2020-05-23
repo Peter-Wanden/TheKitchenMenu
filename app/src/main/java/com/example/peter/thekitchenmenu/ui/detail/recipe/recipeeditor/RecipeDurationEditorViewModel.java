@@ -9,7 +9,7 @@ import androidx.databinding.ObservableField;
 
 import com.example.peter.thekitchenmenu.BR;
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDuration;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDurationRequest;
@@ -58,9 +58,9 @@ public class RecipeDurationEditorViewModel extends ObservableViewModel {
                 new DurationCallbackListener()));
     }
 
-    private class DurationCallbackListener implements UseCase.Callback<RecipeDurationResponse> {
+    private class DurationCallbackListener implements UseCaseBase.Callback<RecipeDurationResponse> {
         @Override
-        public void onUseCaseSuccess(RecipeDurationResponse response) {
+        public void onSuccessResponse(RecipeDurationResponse response) {
             isDataLoading.set(false);
             if (isStateChanged(response)) {
                 System.out.println(TAG + "onSuccess:" + response);
@@ -70,7 +70,7 @@ public class RecipeDurationEditorViewModel extends ObservableViewModel {
         }
 
         @Override
-        public void onUseCaseError(RecipeDurationResponse response) {
+        public void onErrorResponse(RecipeDurationResponse response) {
             isDataLoading.set(false);
             if (isStateChanged(response)) {
                 RecipeDurationEditorViewModel.this.response = response;
@@ -141,7 +141,7 @@ public class RecipeDurationEditorViewModel extends ObservableViewModel {
                                 setDomainId(response.getDomainId()).
                                 setModel(model).
                                 build();
-                        handler.execute(recipeMacro, request, new DurationCallbackListener());
+                        handler.executeAsync(recipeMacro, request, new DurationCallbackListener());
                     }
                 }
             }
@@ -176,7 +176,7 @@ public class RecipeDurationEditorViewModel extends ObservableViewModel {
                                 setDomainId(response.getDomainId()).
                                 setModel(model).
                                 build();
-                        handler.execute(recipeMacro, request, new DurationCallbackListener());
+                        handler.executeAsync(recipeMacro, request, new DurationCallbackListener());
                     }
                 }
             }
@@ -211,7 +211,7 @@ public class RecipeDurationEditorViewModel extends ObservableViewModel {
                                 setDomainId(response.getDomainId()).
                                 setModel(model).
                                 build();
-                        handler.execute(recipeMacro, request, new DurationCallbackListener());
+                        handler.executeAsync(recipeMacro, request, new DurationCallbackListener());
                     }
                 }
             }
@@ -246,7 +246,7 @@ public class RecipeDurationEditorViewModel extends ObservableViewModel {
                                 setDomainId(response.getDomainId()).
                                 setModel(model).
                                 build();
-                        handler.execute(recipeMacro, request, new DurationCallbackListener());
+                        handler.executeAsync(recipeMacro, request, new DurationCallbackListener());
                     }
                 }
             }

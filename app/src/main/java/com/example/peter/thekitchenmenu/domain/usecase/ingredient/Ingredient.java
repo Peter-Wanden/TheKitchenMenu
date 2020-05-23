@@ -7,9 +7,9 @@ import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.ingredient.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.model.FailReasons;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadataModel;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidatorModel;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidatorRequest;
@@ -29,7 +29,7 @@ import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.m
 import static com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator.TextType;
 
 public class Ingredient
-        extends UseCase
+        extends UseCaseBase
         implements DomainDataAccess.GetDomainModelCallback<IngredientPersistenceModel> {
 
     private static final String TAG = "tkm-" + Ingredient.class.getSimpleName() + ": ";
@@ -201,17 +201,17 @@ public class Ingredient
                 NAME_TEXT_TYPE,
                 new TextValidatorModel(selectName())
         );
-        handler.execute(
+        handler.executeAsync(
                 textValidator,
                 request,
-                new UseCase.Callback<TextValidatorResponse>() {
+                new UseCaseBase.Callback<TextValidatorResponse>() {
                     @Override
-                    public void onUseCaseSuccess(TextValidatorResponse response) {
+                    public void onSuccessResponse(TextValidatorResponse response) {
                         validateDescription();
                     }
 
                     @Override
-                    public void onUseCaseError(TextValidatorResponse response) {
+                    public void onErrorResponse(TextValidatorResponse response) {
                         addNameFailReason(response.getFailReason());
                         validateDescription();
                     }
@@ -237,12 +237,12 @@ public class Ingredient
                 DESCRIPTION_TEXT_TYPE,
                 new TextValidatorModel(selectDescription())
         );
-        handler.execute(
+        handler.executeAsync(
                 textValidator,
                 request,
-                new UseCase.Callback<TextValidatorResponse>() {
+                new UseCaseBase.Callback<TextValidatorResponse>() {
                     @Override
-                    public void onUseCaseSuccess(TextValidatorResponse response) {
+                    public void onSuccessResponse(TextValidatorResponse response) {
                         if (failReasons.isEmpty()) {
                             failReasons.add(CommonFailReason.NONE);
                         }
@@ -250,7 +250,7 @@ public class Ingredient
                     }
 
                     @Override
-                    public void onUseCaseError(TextValidatorResponse response) {
+                    public void onErrorResponse(TextValidatorResponse response) {
                         addDescriptionFailReason(response.getFailReason());
                         buildResponse();
                     }
@@ -288,8 +288,8 @@ public class Ingredient
         sendResponse(builder.build());
     }
 
-    private UseCaseMetadata getMetadata(IngredientPersistenceModel m) {
-        return new UseCaseMetadata.Builder().
+    private UseCaseMetadataModel getMetadata(IngredientPersistenceModel m) {
+        return new UseCaseMetadataModel.Builder().
                 setState(getComponentState()).
                 setFailReasons(new ArrayList<>(failReasons)).
                 setCreatedBy(Constants.getUserId()).
@@ -358,9 +358,9 @@ public class Ingredient
     private void sendResponse(IngredientResponse response) {
         System.out.println(TAG + response);
         if (failReasons.contains(CommonFailReason.NONE)) {
-            getUseCaseCallback().onUseCaseSuccess(response);
+            getUseCaseCallback().onSuccessResponse(response);
         } else {
-            getUseCaseCallback().onUseCaseError(response);
+            getUseCaseCallback().onErrorResponse(response);
         }
     }
 }

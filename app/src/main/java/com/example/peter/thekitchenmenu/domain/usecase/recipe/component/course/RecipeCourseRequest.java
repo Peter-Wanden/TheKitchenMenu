@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course;
 
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
-import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainMessageModel;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
+import com.example.peter.thekitchenmenu.domain.usecase.MessageModelDataId;
 import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainModel;
 
 import java.util.ArrayList;
@@ -13,8 +13,8 @@ import javax.annotation.Nonnull;
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse.*;
 
 public final class RecipeCourseRequest
-        extends BaseDomainMessageModel<RecipeCourseRequest.Model>
-        implements UseCase.Request {
+        extends MessageModelDataId<RecipeCourseRequest.Model>
+        implements UseCaseBase.Request {
 
     @Override
     public String toString() {
@@ -29,7 +29,7 @@ public final class RecipeCourseRequest
     }
 
     public static class Builder
-            extends UseCaseMessageBuilderModel<Builder, RecipeCourseRequest, Model> {
+            extends MessageModelDataIdBuilder<Builder, RecipeCourseRequest, Model> {
 
         public Builder() {
             message = new RecipeCourseRequest();
@@ -93,21 +93,21 @@ public final class RecipeCourseRequest
         public static class Builder extends DomainModelBuilder<Builder, Model> {
 
             public Builder() {
-                model = new Model();
+                domainModel = new Model();
             }
 
             public Builder getDefault() {
-                model.courseList = new ArrayList<>();
+                domainModel.courseList = new ArrayList<>();
                 return self();
             }
 
             public Builder basedOnResponseModel(RecipeCourseResponse.Model m) {
-                model.courseList = new ArrayList<>(m.getCourseList().keySet());
+                domainModel.courseList = new ArrayList<>(m.getCourseList().keySet());
                 return self();
             }
 
             public Builder setCourseList(List<Course> courseList) {
-                model.courseList = courseList;
+                domainModel.courseList = courseList;
                 return self();
             }
 

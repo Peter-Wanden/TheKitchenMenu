@@ -7,7 +7,7 @@ import androidx.databinding.ObservableField;
 import androidx.lifecycle.ViewModel;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentState;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataRequest;
@@ -80,31 +80,31 @@ public class RecipeEditorViewModel extends ViewModel {
             isNewRecipe = false;
             request.setDataId(recipeId);
         }
-        handler.execute(recipeMacro, request.build(), recipeResponseListener);
+        handler.executeAsync(recipeMacro, request.build(), recipeResponseListener);
     }
 
     /**
      * Registered recipe component callback listening for updates pushed from
      * {@link Recipe}
      */
-    private class RecipeResponseListener implements UseCase.Callback<RecipeResponse> {
+    private class RecipeResponseListener implements UseCaseBase.Callback<RecipeResponse> {
         private final String TAG = "tkm-" + RecipeResponseListener.class.
                 getSimpleName() + ": ";
         @Override
-        public void onUseCaseSuccess(RecipeResponse response) {
+        public void onSuccessResponse(RecipeResponse response) {
             if (isRecipeResponseChanged(response)) {
                 System.out.println(RecipeEditorViewModel.TAG + TAG + "onSuccess:" + response);
                 recipeResponse = response;
-                onUseCaseSuccess(response);
+                onSuccessResponse(response);
             }
         }
 
         @Override
-        public void onUseCaseError(RecipeResponse response) {
+        public void onErrorResponse(RecipeResponse response) {
             if (isRecipeResponseChanged(response)) {
                 System.out.println(RecipeEditorViewModel.TAG + TAG + "onError:" + response);
                 recipeResponse = response;
-                onUseCaseError(response);
+                onErrorResponse(response);
             }
         }
     }

@@ -1,13 +1,13 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredient;
 
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModel;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public final class RecipeIngredientRequest implements UseCase.Request {
+public final class RecipeIngredientRequest implements UseCaseBase.Request {
     @Nonnull
     private final String recipeId;
     @Nonnull

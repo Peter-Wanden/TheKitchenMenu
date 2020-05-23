@@ -7,9 +7,13 @@ import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.model.FailReasons;
-import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainMessage;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecase.MessageModelBase;
+import com.example.peter.thekitchenmenu.domain.usecase.MessageModelDataId;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseFramework;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadataModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityRequest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
@@ -30,7 +34,7 @@ import javax.annotation.Nonnull;
  * Always use as part of a {@link Recipe} macro component
  */
 public class RecipeMetadata
-        extends UseCase
+        extends UseCaseFramework
         implements DomainDataAccess.GetDomainModelCallback<RecipeMetadataPersistenceModel> {
 
     private static final String TAG = "tkm-" + RecipeMetadata.class.getSimpleName() + ": ";
@@ -161,9 +165,9 @@ public class RecipeMetadata
     }
 
     @Override
-    protected <Q extends Request> void execute(Q request) {
+    protected <REQUEST extends Request> void execute(REQUEST request) {
         accessCount++;
-        RecipeMetadataRequest r = (RecipeMetadataRequest) request;
+        MessageModelDataId r = (MessageModelDataId) request;
         System.out.println(TAG + "Request No:" + accessCount + " - " + r);
 
         if (requestHasNoDomainId()) {
@@ -178,8 +182,7 @@ public class RecipeMetadata
             loadData(recipeDomainId);
 
         } else if (domainIdsAreEqual()){
-            failReasons.clear();
-            componentStates = r.getModel().getComponentStates();
+            setupUseCase();
             processChanges();
 
         } else {
@@ -188,7 +191,7 @@ public class RecipeMetadata
     }
 
     private boolean requestHasNoDomainId() {
-        return ((BaseDomainMessage)getRequest()).getDomainId().equals("");
+        return ((MessageModelDataId)getRequest()).getDomainId().equals("");
     }
 
     private boolean useCaseHasNoDomainId() {
@@ -196,16 +199,17 @@ public class RecipeMetadata
     }
 
     private boolean domainIdsAreEqual() {
-        return ((BaseDomainMessage)getRequest()).getDomainId().equals(recipeDomainId);
+        return ((MessageModelDataId)getRequest()).getDomainId().equals(recipeDomainId);
     }
 
-    private boolean isNewRequest(RecipeMetadataRequest r) {
-        return !r.getDomainId().equals(recipeDomainId);
+    private void setupUseCase() {
+        failReasons.clear();
+        componentStates = ((RecipeMetadataRequest)getRequest()).getModel().getComponentStates();
     }
 
     private void sendEmptyResponse() {
         RecipeMetadataResponse response = new RecipeMetadataResponse.Builder().getDefault().build();
-        getUseCaseCallback().onUseCaseError(response);
+        getUseCaseCallback().onErrorResponse(response);
     }
 
     private void resendLastResponse() {
@@ -351,8 +355,8 @@ public class RecipeMetadata
         sendResponse(builder.build());
     }
 
-    private UseCaseMetadata getMetadata(RecipeMetadataPersistenceModel m) {
-        return new UseCaseMetadata.Builder().
+    private UseCaseMetadataModel getMetadata(RecipeMetadataPersistenceModel m) {
+        return new UseCaseMetadataModel.Builder().
                 setState(recipeState).
                 setFailReasons(new ArrayList<>(failReasons)).
                 setCreatedBy(Constants.getUserId()).
@@ -387,9 +391,9 @@ public class RecipeMetadata
     private void sendResponse(RecipeMetadataResponse r) {
         System.out.println(TAG + "Response No:" + accessCount + " - " + r);
         if (isValid()) {
-            getUseCaseCallback().onUseCaseSuccess(r);
+            getUseCaseCallback().onSuccessResponse(r);
         } else {
-            getUseCaseCallback().onUseCaseError(r);
+            getUseCaseCallback().onErrorResponse(r);
         }
     }
 

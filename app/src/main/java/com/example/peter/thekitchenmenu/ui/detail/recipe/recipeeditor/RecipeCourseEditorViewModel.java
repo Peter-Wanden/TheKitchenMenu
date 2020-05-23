@@ -4,7 +4,7 @@ import androidx.core.util.Pair;
 import androidx.databinding.Bindable;
 import androidx.databinding.ObservableBoolean;
 
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourseRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourseResponse;
@@ -50,9 +50,9 @@ public class RecipeCourseEditorViewModel extends ObservableViewModel {
      * Registered recipe component callback listening for updates pushed from
      * {@link Recipe}
      */
-    private class CourseCallbackListener implements UseCase.Callback<RecipeCourseResponse> {
+    private class CourseCallbackListener implements UseCaseBase.Callback<RecipeCourseResponse> {
         @Override
-        public void onUseCaseSuccess(RecipeCourseResponse response) {
+        public void onSuccessResponse(RecipeCourseResponse response) {
             isDataLoading.set(false);
             if (isStateChanged(response)) {
                 System.out.println(TAG + "onSuccess:" + response);
@@ -62,12 +62,12 @@ public class RecipeCourseEditorViewModel extends ObservableViewModel {
         }
 
         @Override
-        public void onUseCaseError(RecipeCourseResponse response) {
+        public void onErrorResponse(RecipeCourseResponse response) {
             isDataLoading.set(false);
             if (isStateChanged(response)) {
                 System.out.println(TAG + "onError:" + response);
                 RecipeCourseEditorViewModel.this.response = response;
-                this.onUseCaseError(response);
+                this.onErrorResponse(response);
             }
         }
     }
@@ -196,6 +196,6 @@ public class RecipeCourseEditorViewModel extends ObservableViewModel {
                         build()).
                 build();
 
-        handler.execute(recipeMacro, request, new CourseCallbackListener());
+        handler.executeAsync(recipeMacro, request, new CourseCallbackListener());
     }
 }

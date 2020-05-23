@@ -1,12 +1,12 @@
 package com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus;
 
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public final class ConversionFactorStatusResponse implements UseCase.Response {
+public final class ConversionFactorStatusResponse implements UseCaseBase.Response {
     @Nonnull
     private ConversionFactorStatus.Result result;
 

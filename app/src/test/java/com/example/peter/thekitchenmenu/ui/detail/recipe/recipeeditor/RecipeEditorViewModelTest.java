@@ -14,7 +14,7 @@ import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.dura
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.datasource.RecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.parent.RecipeMetadataParentEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.datasource.RecipePortionsEntity;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseFactory;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse;
@@ -670,7 +670,7 @@ public class RecipeEditorViewModelTest {
         }
     }
 
-    private static class RecipeResponseCallback implements UseCase.Callback<RecipeMetadataResponse> {
+    private static class RecipeResponseCallback implements UseCaseBase.Callback<RecipeMetadataResponse> {
 
         private static final String TAG = "tkm-" + RecipeResponseCallback.class.getSimpleName() +
                 ": ";
@@ -678,13 +678,13 @@ public class RecipeEditorViewModelTest {
         private RecipeMetadataResponse response;
 
         @Override
-        public void onUseCaseSuccess(RecipeMetadataResponse response) {
+        public void onSuccessResponse(RecipeMetadataResponse response) {
             System.out.println(RecipeEditorViewModelTest.TAG + TAG + "onSuccess:" + response);
             this.response = response;
         }
 
         @Override
-        public void onUseCaseError(RecipeMetadataResponse response) {
+        public void onErrorResponse(RecipeMetadataResponse response) {
             System.out.println(RecipeEditorViewModelTest.TAG + TAG + "onError:" + response);
             this.response = response;
         }
@@ -702,7 +702,7 @@ public class RecipeEditorViewModelTest {
         }
     }
 
-    private static class RecipeMacroResponseListener implements UseCase.Callback<RecipeResponse> {
+    private static class RecipeMacroResponseListener implements UseCaseBase.Callback<RecipeResponse> {
 
         private static final String TAG = "tkm-" + RecipeMacroResponseListener.class.
                 getSimpleName() + ": ";
@@ -710,13 +710,13 @@ public class RecipeEditorViewModelTest {
         RecipeResponse response;
 
         @Override
-        public void onUseCaseSuccess(RecipeResponse response) {
+        public void onSuccessResponse(RecipeResponse response) {
             System.out.println(RecipeEditorViewModelTest.TAG + TAG + "onSuccess:");
             this.response = response;
         }
 
         @Override
-        public void onUseCaseError(RecipeResponse response) {
+        public void onErrorResponse(RecipeResponse response) {
             System.out.println(RecipeEditorViewModelTest.TAG + TAG + "onError:");
             this.response = response;
         }

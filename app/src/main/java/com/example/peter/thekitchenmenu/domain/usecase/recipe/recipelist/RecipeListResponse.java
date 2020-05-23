@@ -1,9 +1,9 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipelist;
 
-import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainMessageModelMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.MessageModelDataIdMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainModel;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadataModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
 
 import java.util.ArrayList;
@@ -14,9 +14,9 @@ import javax.annotation.Nonnull;
 
 public class RecipeListResponse
         extends
-        BaseDomainMessageModelMetadata<RecipeListResponse.Model>
+        MessageModelDataIdMetadata<RecipeListResponse.Model>
         implements
-        UseCase.Response {
+        UseCaseBase.Response {
 
     @Nonnull
     @Override
@@ -32,7 +32,7 @@ public class RecipeListResponse
     public RecipeListResponse(){}
 
     public static class Builder
-            extends UseCaseMessageMetadataBuilder<Builder, RecipeListResponse, Model> {
+            extends MessageModelDataIdMetadataBuilder<Builder, RecipeListResponse, Model> {
 
         public Builder() {
             message = new RecipeListResponse();
@@ -41,7 +41,7 @@ public class RecipeListResponse
         public Builder getDefault() {
             message.dataId = "";
             message.domainId = "";
-            message.metadata = new UseCaseMetadata.Builder().getDefault().build();
+            message.metadata = new UseCaseMetadataModel.Builder().getDefault().build();
             message.model = new Model.Builder().getDefault().build();
             return self();
         }
@@ -85,16 +85,16 @@ public class RecipeListResponse
         public static class Builder extends DomainModelBuilder<Builder, Model> {
 
             public Builder() {
-                model = new Model();
+                domainModel = new Model();
             }
 
             public Builder getDefault() {
-                model.recipes = new ArrayList<>();
+                domainModel.recipes = new ArrayList<>();
                 return self();
             }
 
             public Builder setRecipes(List<Recipe> recipes) {
-                model.recipes = recipes;
+                domainModel.recipes = recipes;
                 return self();
             }
 

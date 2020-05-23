@@ -7,7 +7,7 @@ import com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.ingredient.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.domain.model.FailReasons;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasure;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants;
 import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientPersistenceModel;
@@ -15,7 +15,7 @@ import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientPers
 import java.util.HashMap;
 import java.util.Map;
 
-public class ConversionFactorStatus extends UseCase
+public class ConversionFactorStatus extends UseCaseBase
         implements DomainDataAccess.GetDomainModelCallback<IngredientPersistenceModel> {
 
     private static final String TAG = "tkm-" + ConversionFactorStatus.class.getSimpleName() + ": ";
@@ -90,7 +90,7 @@ public class ConversionFactorStatus extends UseCase
                 Result.DISABLED
         );
         System.out.println(TAG + "response" + response);
-        getUseCaseCallback().onUseCaseSuccess(response);
+        getUseCaseCallback().onSuccessResponse(response);
     }
 
     private void loadIngredient(String ingredientId) {
@@ -113,7 +113,7 @@ public class ConversionFactorStatus extends UseCase
                         Result.DATA_UNAVAILABLE
         );
         System.out.println(TAG + "response" + response);
-        getUseCaseCallback().onUseCaseError(response);
+        getUseCaseCallback().onErrorResponse(response);
     }
 
     private void checkEditableStatus() {
@@ -133,7 +133,7 @@ public class ConversionFactorStatus extends UseCase
                 Result.ENABLED_UNEDITABLE
         );
         System.out.println(TAG + "response" + response);
-        getUseCaseCallback().onUseCaseSuccess(response);
+        getUseCaseCallback().onSuccessResponse(response);
     }
 
     private void isConversionFactorPreviouslySet() {
@@ -153,7 +153,7 @@ public class ConversionFactorStatus extends UseCase
                 Result.ENABLED_EDITABLE_SET
         );
         System.out.println(TAG + "response" + response);
-        getUseCaseCallback().onUseCaseSuccess(response);
+        getUseCaseCallback().onSuccessResponse(response);
     }
 
     private void returnResultEnabledEditableUnSet() {
@@ -161,6 +161,6 @@ public class ConversionFactorStatus extends UseCase
                 Result.ENABLED_EDITABLE_UNSET
         );
         System.out.println(TAG + "response" + response);
-        getUseCaseCallback().onUseCaseSuccess(response);
+        getUseCaseCallback().onSuccessResponse(response);
     }
 }

@@ -1,8 +1,8 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipelist;
 
-import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainMessageModel;
+import com.example.peter.thekitchenmenu.domain.usecase.MessageModelDataId;
 import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainModel;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
 
 import java.util.Objects;
 
@@ -12,9 +12,9 @@ import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipelist.
 
 public class RecipeListRequest
         extends
-        BaseDomainMessageModel<RecipeListRequest.Model>
+        MessageModelDataId<RecipeListRequest.Model>
         implements
-        UseCase.Request {
+        UseCaseBase.Request {
 
     @Nonnull
     @Override
@@ -30,7 +30,7 @@ public class RecipeListRequest
 
     public static class Builder
             extends
-            UseCaseMessageBuilderModel<Builder, RecipeListRequest, Model> {
+            MessageModelDataIdBuilder<Builder, RecipeListRequest, Model> {
 
         public Builder() {
             message = new RecipeListRequest();
@@ -81,17 +81,17 @@ public class RecipeListRequest
         public static class Builder extends DomainModelBuilder<Builder, Model> {
 
             public Builder() {
-                model = new Model();
+                domainModel = new Model();
             }
 
             @Override
             public Builder getDefault() {
-                model.filter = RecipeListFilter.ALL_RECIPES;
+                domainModel.filter = RecipeListFilter.ALL_RECIPES;
                 return self();
             }
 
             public Builder setFilter(RecipeListFilter filter) {
-                model.filter = filter;
+                domainModel.filter = filter;
                 return self();
             }
 

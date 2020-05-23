@@ -4,7 +4,7 @@ import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
 import com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.datasource.IngredientEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.ingredient.RepositoryIngredient;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;
 import com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.datasource.TestDataIngredientEntity;
@@ -86,7 +86,7 @@ public class ConversionFactorStatusTest {
         String ingredientId = REQUEST_NO_DATA_AVAILABLE.getIngredientId();
         MeasurementSubtype subtype = REQUEST_NO_DATA_AVAILABLE.getSubtype();
         // Act
-        handler.execute(SUT, getRequestValues(subtype, ingredientId), getResponseCallback());
+        handler.executeAsync(SUT, getRequestValues(subtype, ingredientId), getResponseCallback());
         // Assert
 //        verify(repoMock).getByDataId(eq(ingredientId), getEntityCallbackCaptor.capture());
         getEntityCallbackCaptor.getValue().onDataUnavailable();
@@ -112,7 +112,7 @@ public class ConversionFactorStatusTest {
         String ingredientId = INGREDIENT_VALID_FROM_ANOTHER_USER.getDataId();
         MeasurementSubtype subtype = REQUEST_ENABLED_UNEDITABLE.getSubtype();
         // Act
-        handler.execute(SUT, getRequestValues(subtype, ingredientId), getResponseCallback());
+        handler.executeAsync(SUT, getRequestValues(subtype, ingredientId), getResponseCallback());
         // Assert
         verifyRepoCalledWithIngredientValidFromAnotherUser();
         assertEquals(RESPONSE_ENABLED_UNEDITABLE, actualResponse);
@@ -124,7 +124,7 @@ public class ConversionFactorStatusTest {
         String ingredientId = INGREDIENT_NEW_VALID_WITH_CONVERSION_FACTOR_UNSET.getDataId();
         MeasurementSubtype subtype = REQUEST_ENABLED_EDITABLE_UNSET.getSubtype();
         // Act
-        handler.execute(SUT, getRequestValues(subtype, ingredientId), getResponseCallback());
+        handler.executeAsync(SUT, getRequestValues(subtype, ingredientId), getResponseCallback());
         // Assert
         verifyRepoCalledWithIngredientNewValidNameDescription();
         assertEquals(RESPONSE_ENABLED_EDITABLE_UNSET, actualResponse);
@@ -136,7 +136,7 @@ public class ConversionFactorStatusTest {
         String ingredientId = INGREDIENT_VALID_WITH_CONVERSION_FACTOR.getDataId();
         MeasurementSubtype subtype = REQUEST_ENABLED_EDITABLE_SET.getSubtype();
         // Act
-        handler.execute(SUT, getRequestValues(subtype, ingredientId), getResponseCallback());
+        handler.executeAsync(SUT, getRequestValues(subtype, ingredientId), getResponseCallback());
         verifyRepoCalledWithIngredientValidWithConversionFactor();
         // Assert
         assertEquals(RESPONSE_ENABLED_EDITABLE_SET, actualResponse);
@@ -148,15 +148,15 @@ public class ConversionFactorStatusTest {
         return new ConversionFactorStatusRequest(subtype, ingredientId);
     }
 
-    private UseCase.Callback<ConversionFactorStatusResponse> getResponseCallback() {
-        return new UseCase.Callback<ConversionFactorStatusResponse>() {
+    private UseCaseBase.Callback<ConversionFactorStatusResponse> getResponseCallback() {
+        return new UseCaseBase.Callback<ConversionFactorStatusResponse>() {
             @Override
-            public void onUseCaseSuccess(ConversionFactorStatusResponse response) {
+            public void onSuccessResponse(ConversionFactorStatusResponse response) {
                 ConversionFactorStatusTest.this.actualResponse = response;
             }
 
             @Override
-            public void onUseCaseError(ConversionFactorStatusResponse response) {
+            public void onErrorResponse(ConversionFactorStatusResponse response) {
                 ConversionFactorStatusTest.this.actualResponse = response;
             }
         };

@@ -1,13 +1,13 @@
 package com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus;
 
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public final class ConversionFactorStatusRequest implements UseCase.Request {
+public final class ConversionFactorStatusRequest implements UseCaseBase.Request {
     @Nonnull
     private MeasurementSubtype subtype;
     @Nonnull

@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipelist.RecipeList;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipelist.RecipeListItemModel;
@@ -51,7 +51,7 @@ public class RecipeCatalogViewModel extends ViewModel {
     private void loadRecipes() {
         dataLoading.set(true);
 
-        handler.execute(
+        handler.executeAsync(
                 useCase,
                 getRequestModel(RecipeListFilter.ALL_RECIPES),
                 getCallback()
@@ -68,16 +68,16 @@ public class RecipeCatalogViewModel extends ViewModel {
                 build();
     }
 
-    private UseCase.Callback<RecipeListResponse> getCallback() {
-        return new UseCase.Callback<RecipeListResponse>() {
+    private UseCaseBase.Callback<RecipeListResponse> getCallback() {
+        return new UseCaseBase.Callback<RecipeListResponse>() {
             @Override
-            public void onUseCaseSuccess(RecipeListResponse response) {
+            public void onSuccessResponse(RecipeListResponse response) {
                 dataLoading.set(false);
 //                recipeList.setValue(response.getRecipeListItemModels());
             }
 
             @Override
-            public void onUseCaseError(RecipeListResponse response) {
+            public void onErrorResponse(RecipeListResponse response) {
                 dataLoading.set(false);
 //                dataLoadingFailed(response.getResultStatus());
 

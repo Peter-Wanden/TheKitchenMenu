@@ -7,7 +7,7 @@ import com.example.peter.thekitchenmenu.data.repository.recipe.metadata.TestData
 import com.example.peter.thekitchenmenu.data.repository.recipe.portions.TestDataRecipePortions;
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.model.FailReasons;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentState;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
@@ -126,7 +126,7 @@ public class RecipePortionsTest {
                 setModel(model).
                 build();
 
-        handler.execute(SUT, request, callbackClient);
+        handler.executeAsync(SUT, request, callbackClient);
         // Assert
         assertEquals(
                 ComponentState.INVALID_CHANGED,
@@ -160,7 +160,7 @@ public class RecipePortionsTest {
                 setModel(model).
                 build();
 
-        handler.execute(SUT, request, callbackClient);
+        handler.executeAsync(SUT, request, callbackClient);
         // Assert
         failReasons = portionsOnErrorResponse.getMetadata().getFailReasons();
         assertEquals(
@@ -195,7 +195,7 @@ public class RecipePortionsTest {
                 setModel(model).
                 build();
 
-        handler.execute(SUT, request, callbackClient);
+        handler.executeAsync(SUT, request, callbackClient);
         // Assert
         assertEquals(
                 ComponentState.INVALID_CHANGED,
@@ -233,7 +233,7 @@ public class RecipePortionsTest {
         whenTimeProviderReturn(modelUnderTest.getLastUpdate());
 
         // Act
-        handler.execute(SUT, request, callbackClient);
+        handler.executeAsync(SUT, request, callbackClient);
 
         // Assert
         assertEquals(
@@ -274,7 +274,7 @@ public class RecipePortionsTest {
         whenTimeProviderReturn(modelUnderTest.getLastUpdate()
         );
         // Act
-        handler.execute(SUT, request, callbackClient);
+        handler.executeAsync(SUT, request, callbackClient);
 
         // Assert
         verify(repoPortionsMock).save(eq(modelUnderTest));
@@ -357,7 +357,7 @@ public class RecipePortionsTest {
                 setModel(invalidModel).
                 build();
         // Act
-        handler.execute(SUT, invalidRequest, callbackClient);
+        handler.executeAsync(SUT, invalidRequest, callbackClient);
         // Assert
         verifyNoMoreInteractions(repoPortionsMock);
     }
@@ -388,7 +388,7 @@ public class RecipePortionsTest {
                 setModel(model).
                 build();
         // Act
-        handler.execute(SUT, validRequest, callbackClient);
+        handler.executeAsync(SUT, validRequest, callbackClient);
         // Assert
         verify(repoPortionsMock).save(eq(modelUnderTest));
     }
@@ -413,7 +413,7 @@ public class RecipePortionsTest {
                 build();
 
         // Act
-        handler.execute(SUT, request, callbackClient);
+        handler.executeAsync(SUT, request, callbackClient);
         // Assert
         verifyNoMoreInteractions(repoPortionsMock);
 
@@ -451,7 +451,7 @@ public class RecipePortionsTest {
                 build();
 
         // Act
-        handler.execute(SUT, request, callbackClient);
+        handler.executeAsync(SUT, request, callbackClient);
         // Assert
         verify(repoPortionsMock).save(eq(modelUnderTest));
     }
@@ -470,7 +470,7 @@ public class RecipePortionsTest {
         whenTimeProviderReturn(TestDataRecipeMetadata.getDataUnavailable().getCreateDate());
 
         // Act
-        handler.execute(SUT, initialisationRequest, callbackClient);
+        handler.executeAsync(SUT, initialisationRequest, callbackClient);
 
         // Assert repo called, no model found, return model unavailable
         verify(repoPortionsMock).getActiveByDomainId(
@@ -490,7 +490,7 @@ public class RecipePortionsTest {
                 setDomainId(modelUnderTest.getDomainId()).
                 build();
         // Act
-        handler.execute(SUT, request, callbackClient);
+        handler.executeAsync(SUT, request, callbackClient);
         // Assert
         verify(repoPortionsMock).getActiveByDomainId(
                 eq(modelUnderTest.getDomainId()),
@@ -510,19 +510,19 @@ public class RecipePortionsTest {
 
     // region helper classes -----------------------------------------------------------------------
     private class PortionsCallbackClient
-            implements UseCase.Callback<RecipePortionsResponse> {
+            implements UseCaseBase.Callback<RecipePortionsResponse> {
 
         private final String TAG = RecipePortionsTest.TAG +
                 PortionsCallbackClient.class.getSimpleName() + ": ";
 
         @Override
-        public void onUseCaseSuccess(RecipePortionsResponse r) {
+        public void onSuccessResponse(RecipePortionsResponse r) {
             System.out.println(TAG + "onSuccess: " + r);
             portionsOnSuccessResponse = r;
         }
 
         @Override
-        public void onUseCaseError(RecipePortionsResponse r) {
+        public void onErrorResponse(RecipePortionsResponse r) {
             System.out.println(TAG + "onError: " + r);
             portionsOnErrorResponse = r;
         }

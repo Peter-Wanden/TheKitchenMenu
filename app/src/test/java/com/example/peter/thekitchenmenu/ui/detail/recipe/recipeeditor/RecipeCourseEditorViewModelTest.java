@@ -20,7 +20,7 @@ import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.meta
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.datasource.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.datasource.TestDataRecipePortionsEntity;
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCoursePersistenceModel;
@@ -210,7 +210,7 @@ public class RecipeCourseEditorViewModelTest {
                 build();
 
         // Act
-        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        handler.executeAsync(recipeMacro, request, new RecipeResponseCallback());
 
         // Assert
         verifyAllOtherComponentReposCalledAndReturnValidExisting(recipeId);
@@ -229,7 +229,7 @@ public class RecipeCourseEditorViewModelTest {
                 build();
 
         // Act
-        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        handler.executeAsync(recipeMacro, request, new RecipeResponseCallback());
 
         // Assert
         verifyAllOtherComponentReposCalledAndReturnValidExisting(recipeId);
@@ -255,7 +255,7 @@ public class RecipeCourseEditorViewModelTest {
                 build();
 
         // Act
-        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        handler.executeAsync(recipeMacro, request, new RecipeResponseCallback());
 
         // Assert
         verifyAllOtherComponentReposCalledAndReturnValidExisting(EXISTING_RECIPE_ID);
@@ -282,7 +282,7 @@ public class RecipeCourseEditorViewModelTest {
                 build();
 
         // Act
-        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        handler.executeAsync(recipeMacro, request, new RecipeResponseCallback());
 
         // Assert
         verifyAllOtherComponentReposCalledAndReturnValidExisting(EXISTING_RECIPE_ID);
@@ -304,7 +304,7 @@ public class RecipeCourseEditorViewModelTest {
                 build();
 
         // Act
-        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        handler.executeAsync(recipeMacro, request, new RecipeResponseCallback());
 
         // Assert
         verifyAllOtherComponentReposCalledAndReturnValidExisting(EXISTING_RECIPE_ID);
@@ -328,7 +328,7 @@ public class RecipeCourseEditorViewModelTest {
                 build();
 
         // Act
-        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        handler.executeAsync(recipeMacro, request, new RecipeResponseCallback());
 
         // Assert
         verifyAllOtherComponentReposCalledAndReturnValidExisting(EXISTING_RECIPE_ID);
@@ -349,7 +349,7 @@ public class RecipeCourseEditorViewModelTest {
                 build();
 
         // Act
-        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        handler.executeAsync(recipeMacro, request, new RecipeResponseCallback());
 
         // Assert
         verifyAllOtherComponentReposCalledAndReturnValidExisting(EXISTING_RECIPE_ID);
@@ -376,7 +376,7 @@ public class RecipeCourseEditorViewModelTest {
                 build();
 
         // Act
-        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        handler.executeAsync(recipeMacro, request, new RecipeResponseCallback());
 
         // Assert
         verifyAllOtherComponentReposCalledAndReturnValidExisting(EXISTING_RECIPE_ID);
@@ -398,7 +398,7 @@ public class RecipeCourseEditorViewModelTest {
                 build();
 
         // Act
-        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        handler.executeAsync(recipeMacro, request, new RecipeResponseCallback());
 
         // Assert
         verifyAllOtherComponentReposCalledAndReturnValidExisting(EXISTING_RECIPE_ID);
@@ -423,7 +423,7 @@ public class RecipeCourseEditorViewModelTest {
                 build();
 
         // Act
-        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        handler.executeAsync(recipeMacro, request, new RecipeResponseCallback());
 
         // Assert
         verifyAllOtherComponentReposCalledAndReturnValidExisting(EXISTING_RECIPE_ID);
@@ -445,7 +445,7 @@ public class RecipeCourseEditorViewModelTest {
                 build();
 
         // Act
-        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        handler.executeAsync(recipeMacro, request, new RecipeResponseCallback());
 
         // Assert
         verifyAllOtherComponentReposCalledAndReturnValidExisting(EXISTING_RECIPE_ID);
@@ -472,7 +472,7 @@ public class RecipeCourseEditorViewModelTest {
                 build();
 
         // Act
-        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        handler.executeAsync(recipeMacro, request, new RecipeResponseCallback());
 
         // Assert
         verifyAllOtherComponentReposCalledAndReturnValidExisting(EXISTING_RECIPE_ID);
@@ -494,7 +494,7 @@ public class RecipeCourseEditorViewModelTest {
                 build();
 
         // Act
-        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        handler.executeAsync(recipeMacro, request, new RecipeResponseCallback());
 
         // Assert
         verifyAllOtherComponentReposCalledAndReturnValidExisting(EXISTING_RECIPE_ID);
@@ -521,7 +521,7 @@ public class RecipeCourseEditorViewModelTest {
                 build();
 
         // Act
-        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        handler.executeAsync(recipeMacro, request, new RecipeResponseCallback());
         verifyAllOtherComponentReposCalledAndReturnValidExisting(EXISTING_RECIPE_ID);
         verifyRepoCourseCalledAndReturnDataUnavailableForId(EXISTING_RECIPE_ID);
 
@@ -541,7 +541,7 @@ public class RecipeCourseEditorViewModelTest {
                 build();
 
         // Act
-        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        handler.executeAsync(recipeMacro, request, new RecipeResponseCallback());
 
         // Assert
         verifyAllOtherComponentReposCalledAndReturnValidExisting(EXISTING_RECIPE_ID);
@@ -567,7 +567,7 @@ public class RecipeCourseEditorViewModelTest {
                 build();
 
         // Act
-        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        handler.executeAsync(recipeMacro, request, new RecipeResponseCallback());
 
         // Assert
         verifyAllOtherComponentReposCalledAndReturnValidExisting(EXISTING_RECIPE_ID);
@@ -589,7 +589,7 @@ public class RecipeCourseEditorViewModelTest {
                 build();
 
         // Act
-        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        handler.executeAsync(recipeMacro, request, new RecipeResponseCallback());
 
         // Assert
         verifyAllOtherComponentReposCalledAndReturnValidExisting(EXISTING_RECIPE_ID);
@@ -616,7 +616,7 @@ public class RecipeCourseEditorViewModelTest {
                 build();
 
         // Act
-        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        handler.executeAsync(recipeMacro, request, new RecipeResponseCallback());
 
         // Assert
         verifyAllOtherComponentReposCalledAndReturnValidExisting(EXISTING_RECIPE_ID);
@@ -639,7 +639,7 @@ public class RecipeCourseEditorViewModelTest {
                 build();
 
         // Act
-        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        handler.executeAsync(recipeMacro, request, new RecipeResponseCallback());
 
         // Assert
         verifyAllOtherComponentReposCalledAndReturnValidExisting(EXISTING_RECIPE_ID);
@@ -665,7 +665,7 @@ public class RecipeCourseEditorViewModelTest {
 
         // Act
         recipeMacro.registerRecipeCallback(macroCallback);
-        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        handler.executeAsync(recipeMacro, request, new RecipeResponseCallback());
 
         // Assert
         verifyAllOtherComponentReposCalledAndReturnValidExisting(EXISTING_RECIPE_ID);
@@ -699,7 +699,7 @@ public class RecipeCourseEditorViewModelTest {
 
         // Act
         recipeMacro.registerRecipeCallback(macroCallback);
-        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        handler.executeAsync(recipeMacro, request, new RecipeResponseCallback());
 
         // Assert
         verifyAllOtherComponentReposCalledAndReturnValidExisting(EXISTING_RECIPE_ID);
@@ -729,7 +729,7 @@ public class RecipeCourseEditorViewModelTest {
 
         // Act
         recipeMacro.registerRecipeCallback(macroCallback);
-        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        handler.executeAsync(recipeMacro, request, new RecipeResponseCallback());
 
         // Assert
         verifyAllOtherComponentReposCalledAndReturnValidExisting(EXISTING_RECIPE_ID);
@@ -770,7 +770,7 @@ public class RecipeCourseEditorViewModelTest {
 
         // Act
         recipeMacro.registerRecipeCallback(macroCallback);
-        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        handler.executeAsync(recipeMacro, request, new RecipeResponseCallback());
 
         // Assert
         verifyAllOtherComponentReposCalledAndReturnValidExisting(EXISTING_RECIPE_ID);
@@ -850,7 +850,7 @@ public class RecipeCourseEditorViewModelTest {
     // endregion helper methods --------------------------------------------------------------------
 
     // region helper classes -----------------------------------------------------------------------
-    private static class RecipeResponseCallback implements UseCase.Callback<RecipeMetadataResponse> {
+    private static class RecipeResponseCallback implements UseCaseBase.Callback<RecipeMetadataResponse> {
 
         private static final String TAG = "tkm-" + RecipeCourseEditorViewModelTest.
                 RecipeResponseCallback.class.getSimpleName() + ": ";
@@ -858,13 +858,13 @@ public class RecipeCourseEditorViewModelTest {
         private RecipeMetadataResponse response;
 
         @Override
-        public void onUseCaseSuccess(RecipeMetadataResponse response) {
+        public void onSuccessResponse(RecipeMetadataResponse response) {
             System.out.println(RecipeCourseEditorViewModelTest.TAG + TAG + "onSuccess:" + response);
             this.response = response;
         }
 
         @Override
-        public void onUseCaseError(RecipeMetadataResponse response) {
+        public void onErrorResponse(RecipeMetadataResponse response) {
             System.out.println(RecipeCourseEditorViewModelTest.TAG + TAG + "onError:" + response);
             this.response = response;
         }
@@ -882,17 +882,17 @@ public class RecipeCourseEditorViewModelTest {
         }
     }
 
-    private static class RecipeMacroResponseCallback implements UseCase.Callback<RecipeResponse> {
+    private static class RecipeMacroResponseCallback implements UseCaseBase.Callback<RecipeResponse> {
 
         RecipeResponse response;
 
         @Override
-        public void onUseCaseSuccess(RecipeResponse response) {
+        public void onSuccessResponse(RecipeResponse response) {
             this.response = response;
         }
 
         @Override
-        public void onUseCaseError(RecipeResponse response) {
+        public void onErrorResponse(RecipeResponse response) {
             this.response = response;
         }
 

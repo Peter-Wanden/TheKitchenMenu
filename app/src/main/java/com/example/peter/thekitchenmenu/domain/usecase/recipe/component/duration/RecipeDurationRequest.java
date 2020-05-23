@@ -1,8 +1,8 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration;
 
 
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
-import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainMessageModel;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
+import com.example.peter.thekitchenmenu.domain.usecase.MessageModelDataId;
 import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainModel;
 
 import java.util.Objects;
@@ -10,8 +10,8 @@ import java.util.Objects;
 import javax.annotation.Nonnull;
 
 public final class RecipeDurationRequest
-        extends BaseDomainMessageModel<RecipeDurationRequest.Model>
-        implements UseCase.Request {
+        extends MessageModelDataId<RecipeDurationRequest.Model>
+        implements UseCaseBase.Request {
 
     @Override
     public String toString() {
@@ -25,7 +25,7 @@ public final class RecipeDurationRequest
     private RecipeDurationRequest() {}
 
     public static class Builder
-            extends UseCaseMessageBuilderModel<Builder, RecipeDurationRequest, Model> {
+            extends MessageModelDataIdBuilder<Builder, RecipeDurationRequest, Model> {
 
         public Builder() {
             message = new RecipeDurationRequest();
@@ -107,42 +107,42 @@ public final class RecipeDurationRequest
         public static class Builder extends DomainModelBuilder<Builder, Model> {
 
             public Builder() {
-                model = new Model();
+                domainModel = new Model();
             }
 
             public Builder getDefault() {
-                model.prepHours = 0;
-                model.prepMinutes = 0;
-                model.cookHours = 0;
-                model.prepMinutes = 0;
+                domainModel.prepHours = 0;
+                domainModel.prepMinutes = 0;
+                domainModel.cookHours = 0;
+                domainModel.prepMinutes = 0;
                 return self();
             }
 
             public Builder basedOnResponseModel(RecipeDurationResponse.Model m) {
-                model.prepHours = m.getPrepHours();
-                model.prepMinutes = m.getPrepMinutes();
-                model.cookHours = m.getCookHours();
-                model.prepMinutes = m.getCookMinutes();
+                domainModel.prepHours = m.getPrepHours();
+                domainModel.prepMinutes = m.getPrepMinutes();
+                domainModel.cookHours = m.getCookHours();
+                domainModel.prepMinutes = m.getCookMinutes();
                 return self();
             }
 
             public Builder setPrepHours(int prepHours) {
-                model.prepHours = prepHours;
+                domainModel.prepHours = prepHours;
                 return self();
             }
 
             public Builder setPrepMinutes(int prepMinutes) {
-                model.prepMinutes = prepMinutes;
+                domainModel.prepMinutes = prepMinutes;
                 return self();
             }
 
             public Builder setCookHours(int cookHours) {
-                model.cookHours = cookHours;
+                domainModel.cookHours = cookHours;
                 return self();
             }
 
             public Builder setCookMinutes(int cookMinutes) {
-                model.cookMinutes = cookMinutes;
+                domainModel.cookMinutes = cookMinutes;
                 return self();
             }
 

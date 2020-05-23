@@ -15,7 +15,7 @@ import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.iden
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.parent.RecipeMetadataParentEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.datasource.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.datasource.TestDataRecipePortionsEntity;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityTest;
@@ -926,7 +926,7 @@ public class RecipeCopyTest {
     // endregion helper methods --------------------------------------------------------------------
 
     // region helper classes -----------------------------------------------------------------------
-    private static class RecipeCloneCallBackListener implements UseCase.Callback<RecipeCopyResponse> {
+    private static class RecipeCloneCallBackListener implements UseCaseBase.Callback<RecipeCopyResponse> {
 
         private static final String TAG = "tkm-" + RecipeCloneCallBackListener.class.
                 getSimpleName() + ": ";
@@ -934,13 +934,13 @@ public class RecipeCopyTest {
         private RecipeCopyResponse response;
 
         @Override
-        public void onUseCaseSuccess(RecipeCopyResponse response) {
+        public void onSuccessResponse(RecipeCopyResponse response) {
             System.out.println(RecipeCopyTest.TAG + TAG + "onSuccess:" + response);
             this.response = response;
         }
 
         @Override
-        public void onUseCaseError(RecipeCopyResponse response) {
+        public void onErrorResponse(RecipeCopyResponse response) {
             System.out.println(RecipeCopyTest.TAG + TAG + "onError:" + response);
             this.response = response;
         }

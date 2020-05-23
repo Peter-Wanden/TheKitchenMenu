@@ -6,9 +6,9 @@ import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeI
 import com.example.peter.thekitchenmenu.data.repository.recipe.identity.TestDataRecipeIdentity;
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.model.FailReasons;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadataModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentity.FailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentState;
@@ -97,7 +97,7 @@ public class RecipeIdentityTest {
 
         // Assert - get elements to assert
         RecipeIdentityResponse response = callbackClient.onErrorResponse;
-        UseCaseMetadata metadata = response.getMetadata();
+        UseCaseMetadataModel metadata = response.getMetadata();
 
         // Assert component state
         ComponentState expectedComponentState = ComponentState.INVALID_UNCHANGED;
@@ -136,7 +136,7 @@ public class RecipeIdentityTest {
                 build();
 
         // Act
-        handler.execute(SUT, request, callbackClient);
+        handler.executeAsync(SUT, request, callbackClient);
 
         // Assert
         RecipeIdentityResponse response = callbackClient.onErrorResponse;
@@ -170,11 +170,11 @@ public class RecipeIdentityTest {
                 build();
 
         // Act
-        handler.execute(SUT, request, callbackClient);
+        handler.executeAsync(SUT, request, callbackClient);
 
         // Assert
         RecipeIdentityResponse response = callbackClient.onErrorResponse;
-        UseCaseMetadata metadata = response.getMetadata();
+        UseCaseMetadataModel metadata = response.getMetadata();
 
         // Assert fail reasons
         FailReasons[] expectedFailReasons = new FailReasons[]{
@@ -208,11 +208,11 @@ public class RecipeIdentityTest {
                 build();
 
         // Act
-        handler.execute(SUT, request, callbackClient);
+        handler.executeAsync(SUT, request, callbackClient);
 
         // Assert
         RecipeIdentityResponse response = callbackClient.onErrorResponse;
-        UseCaseMetadata metadata = response.getMetadata();
+        UseCaseMetadataModel metadata = response.getMetadata();
 
         ComponentState expectedComponentState = ComponentState.INVALID_CHANGED;
         ComponentState actualComponentState = metadata.getState();
@@ -248,11 +248,11 @@ public class RecipeIdentityTest {
                 setModel(model).
                 build();
         // Act
-        handler.execute(SUT, request, callbackClient);
+        handler.executeAsync(SUT, request, callbackClient);
 
         // Assert
         RecipeIdentityResponse response = callbackClient.onErrorResponse;
-        UseCaseMetadata metadata = response.getMetadata();
+        UseCaseMetadataModel metadata = response.getMetadata();
 
         ComponentState expectedComponentState = ComponentState.INVALID_CHANGED;
         ComponentState actualComponentState = metadata.getState();
@@ -292,7 +292,7 @@ public class RecipeIdentityTest {
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(modelUnderTest.getLastUpdate());
         when(idProvider.getUId()).thenReturn(modelUnderTest.getDataId());
         // Act
-        handler.execute(SUT, request, callbackClient);
+        handler.executeAsync(SUT, request, callbackClient);
         // Assert
         verify(repoIdentityMock).save(eq(modelUnderTest));
     }
@@ -320,11 +320,11 @@ public class RecipeIdentityTest {
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(modelUnderTest.getLastUpdate());
         when(idProvider.getUId()).thenReturn(modelUnderTest.getDataId());
         // Act
-        handler.execute(SUT, request, callbackClient);
+        handler.executeAsync(SUT, request, callbackClient);
 
         // Assert
         RecipeIdentityResponse response = callbackClient.onSuccessResponse;
-        UseCaseMetadata metadata = response.getMetadata();
+        UseCaseMetadataModel metadata = response.getMetadata();
 
         ComponentState expectedComponentState = ComponentState.VALID_CHANGED;
         ComponentState actualComponentState = metadata.getState();
@@ -364,13 +364,13 @@ public class RecipeIdentityTest {
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(modelUnderTest.getLastUpdate());
         when(idProvider.getUId()).thenReturn(modelUnderTest.getDataId());
         // Act
-        handler.execute(SUT, request, callbackClient);
+        handler.executeAsync(SUT, request, callbackClient);
 
         // Assert
         verify(repoIdentityMock).save(modelUnderTest);
 
         RecipeIdentityResponse response = callbackClient.onSuccessResponse;
-        UseCaseMetadata metadata = response.getMetadata();
+        UseCaseMetadataModel metadata = response.getMetadata();
 
         ComponentState expectedComponentState = ComponentState.VALID_CHANGED;
         ComponentState actualComponentState = metadata.getState();
@@ -405,7 +405,7 @@ public class RecipeIdentityTest {
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(modelUnderTest.getLastUpdate());
         when(idProvider.getUId()).thenReturn(modelUnderTest.getDataId());
         // Act
-        handler.execute(SUT, titleRequest, callbackClient);
+        handler.executeAsync(SUT, titleRequest, callbackClient);
 
         // Request 3: valid new description request, copy previous values from last response
         RecipeIdentityRequest.Model descriptionModel = new RecipeIdentityRequest.Model.Builder().
@@ -422,13 +422,13 @@ public class RecipeIdentityTest {
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(modelUnderTest.getLastUpdate());
         when(idProvider.getUId()).thenReturn(modelUnderTest.getDataId());
         // Act
-        handler.execute(SUT, descriptionRequest, callbackClient);
+        handler.executeAsync(SUT, descriptionRequest, callbackClient);
 
         // Assert second save equal to test model
         verify(repoIdentityMock).save(eq(modelUnderTest));
 
         RecipeIdentityResponse response = callbackClient.onSuccessResponse;
-        UseCaseMetadata metadata = response.getMetadata();
+        UseCaseMetadataModel metadata = response.getMetadata();
 
         // Assert state
         ComponentState expectedComponentState = ComponentState.VALID_CHANGED;
@@ -456,7 +456,7 @@ public class RecipeIdentityTest {
 
         // Assert
         RecipeIdentityResponse response = callbackClient.onSuccessResponse;
-        UseCaseMetadata metadata = response.getMetadata();
+        UseCaseMetadataModel metadata = response.getMetadata();
 
         ComponentState expectedComponentState = ComponentState.VALID_UNCHANGED;
         ComponentState actualComponentState = metadata.getState();
@@ -476,7 +476,7 @@ public class RecipeIdentityTest {
 
         // Assert
         RecipeIdentityResponse response = callbackClient.onSuccessResponse;
-        UseCaseMetadata metadata = response.getMetadata();
+        UseCaseMetadataModel metadata = response.getMetadata();
         RecipeIdentityResponse.Model model = response.getModel();
 
         String expectedDataId = modelUnderTest.getDataId();
@@ -552,7 +552,7 @@ public class RecipeIdentityTest {
 
         // Assert
         RecipeIdentityResponse response = callbackClient.onErrorResponse;
-        UseCaseMetadata metadata = response.getMetadata();
+        UseCaseMetadataModel metadata = response.getMetadata();
 
         FailReasons[] expectedFailReasons = new FailReasons[]{FailReason.TITLE_TOO_SHORT};
         FailReasons[] actualFailReasons = metadata.getFailReasons().toArray(new FailReasons[0]);
@@ -571,7 +571,7 @@ public class RecipeIdentityTest {
         simulateExistingInitialisationRequest(modelUnderTest);
 
         // Assert
-        UseCaseMetadata metadata = callbackClient.onErrorResponse.getMetadata();
+        UseCaseMetadataModel metadata = callbackClient.onErrorResponse.getMetadata();
 
         ComponentState expectedComponentState = ComponentState.INVALID_UNCHANGED;
         ComponentState actualComponentState = metadata.getState();
@@ -590,7 +590,7 @@ public class RecipeIdentityTest {
         simulateExistingInitialisationRequest(modelUnderTest);
 
         // Assert
-        UseCaseMetadata metadata = callbackClient.onErrorResponse.getMetadata();
+        UseCaseMetadataModel metadata = callbackClient.onErrorResponse.getMetadata();
 
         ComponentState expectedComponentState = ComponentState.INVALID_UNCHANGED;
         ComponentState actualComponentState = metadata.getState();
@@ -781,7 +781,7 @@ public class RecipeIdentityTest {
                 setDomainId(modelUnderTest.getDomainId()).
                 build();
         // Act
-        handler.execute(SUT, initialisationRequest, callbackClient);
+        handler.executeAsync(SUT, initialisationRequest, callbackClient);
         // Assert repo called, no model found, return model unavailable
         verify(repoIdentityMock).getActiveByDomainId(
                 eq(modelUnderTest.getDomainId()),
@@ -798,7 +798,7 @@ public class RecipeIdentityTest {
                 setDomainId(modelUnderTest.getDomainId()).
                 build();
         // Act
-        handler.execute(SUT, initialisationRequest, callbackClient);
+        handler.executeAsync(SUT, initialisationRequest, callbackClient);
         // Assert
         verify(repoIdentityMock).getActiveByDomainId(
                 eq(modelUnderTest.getDomainId()),
@@ -810,7 +810,7 @@ public class RecipeIdentityTest {
 
     // region helper classes -----------------------------------------------------------------------
     private static class IdentityCallbackClient
-            implements UseCase.Callback<RecipeIdentityResponse> {
+            implements UseCaseBase.Callback<RecipeIdentityResponse> {
 
         private final String TAG = RecipeIdentityTest.TAG +
                 IdentityCallbackClient.class.getSimpleName() + ": ";
@@ -819,13 +819,13 @@ public class RecipeIdentityTest {
         private RecipeIdentityResponse onErrorResponse;
 
         @Override
-        public void onUseCaseSuccess(RecipeIdentityResponse r) {
+        public void onSuccessResponse(RecipeIdentityResponse r) {
             System.out.println(TAG + "onSuccess: " + r);
             onSuccessResponse = r;
         }
 
         @Override
-        public void onUseCaseError(RecipeIdentityResponse r) {
+        public void onErrorResponse(RecipeIdentityResponse r) {
             System.out.println(TAG + "onError: " + r);
             onErrorResponse = r;
         }

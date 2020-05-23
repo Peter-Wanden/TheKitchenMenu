@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModel;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.model.FailReasons;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.ingredient.Ingredient;
 import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientRequest;
@@ -109,17 +109,17 @@ public class IngredientEditorViewModel extends ViewModel {
                 TextValidator.TextType.SHORT_TEXT,
                 new TextValidatorModel(name)
         );
-        handler.execute(
+        handler.executeAsync(
                 textValidator,
                 request,
-                new UseCase.Callback<TextValidatorResponse>() {
+                new UseCaseBase.Callback<TextValidatorResponse>() {
                     @Override
-                    public void onUseCaseSuccess(TextValidatorResponse response) {
+                    public void onSuccessResponse(TextValidatorResponse response) {
                         processNameTextValidationResponse(response);
                     }
 
                     @Override
-                    public void onUseCaseError(TextValidatorResponse response) {
+                    public void onErrorResponse(TextValidatorResponse response) {
                         processNameTextValidationResponse(response);
                     }
                 });
@@ -164,17 +164,17 @@ public class IngredientEditorViewModel extends ViewModel {
                 new TextValidatorModel(description)
         );
 
-        handler.execute(
+        handler.executeAsync(
                 textValidator,
                 request,
-                new UseCase.Callback<TextValidatorResponse>() {
+                new UseCaseBase.Callback<TextValidatorResponse>() {
                     @Override
-                    public void onUseCaseSuccess(TextValidatorResponse response) {
+                    public void onSuccessResponse(TextValidatorResponse response) {
                         processDescriptionTextValidationResponse(response);
                     }
 
                     @Override
-                    public void onUseCaseError(TextValidatorResponse response) {
+                    public void onErrorResponse(TextValidatorResponse response) {
                         processDescriptionTextValidationResponse(response);
                     }
                 });
@@ -205,14 +205,14 @@ public class IngredientEditorViewModel extends ViewModel {
     private void executeUseCaseIngredient(IngredientRequest request) {
         dataLoading.setValue(true);
 
-        handler.execute(ingredient, request, new UseCase.Callback<IngredientResponse>() {
+        handler.executeAsync(ingredient, request, new UseCaseBase.Callback<IngredientResponse>() {
             @Override
-            public void onUseCaseSuccess(IngredientResponse response) {
+            public void onSuccessResponse(IngredientResponse response) {
                 processUseCaseIngredientResponse(response);
             }
 
             @Override
-            public void onUseCaseError(IngredientResponse response) {
+            public void onErrorResponse(IngredientResponse response) {
                 processUseCaseIngredientResponse(response);
             }
         });

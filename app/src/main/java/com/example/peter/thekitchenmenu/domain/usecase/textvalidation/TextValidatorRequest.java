@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecase.textvalidation;
 
 
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
 
 import java.util.Objects;
 
@@ -9,7 +9,7 @@ import javax.annotation.Nonnull;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator.*;
 
-public final class TextValidatorRequest implements UseCase.Request {
+public final class TextValidatorRequest implements UseCaseBase.Request {
     @Nonnull
     private final TextType type;
     @Nonnull

@@ -8,7 +8,7 @@ import com.example.peter.thekitchenmenu.data.repository.ingredient.RepositoryIng
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeIngredient;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.domain.model.FailReasons;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModelBuilder;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasure;
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModel;
@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
 /**
  * Calculates the measurement of an ingredient for a single portion of a recipe.
  */
-public class RecipeIngredient extends UseCase {
+public class RecipeIngredient extends UseCaseBase {
 
     private static final String TAG = "tkm-" + RecipeIngredient.class.getSimpleName() + ": ";
 
@@ -231,7 +231,7 @@ public class RecipeIngredient extends UseCase {
                 UnitOfMeasureConstants.DEFAULT_MEASUREMENT_MODEL,
                 status);
         System.out.println(TAG + response);
-        getUseCaseCallback().onUseCaseError(response);
+        getUseCaseCallback().onErrorResponse(response);
     }
 
     private void setupUnitOfMeasure() {
@@ -350,7 +350,7 @@ public class RecipeIngredient extends UseCase {
         saveIfValid();
         RecipeIngredientResponse response = getResponse();
         System.out.println(TAG + response);
-        getUseCaseCallback().onUseCaseSuccess(response);
+        getUseCaseCallback().onSuccessResponse(response);
     }
 
     private RecipeIngredientResponse getResponse() {

@@ -7,9 +7,9 @@ import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeIdentity;
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.model.FailReasons;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadataModel;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidatorModel;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidatorRequest;
@@ -28,7 +28,7 @@ import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.m
 import static com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator.TextType;
 
 public class RecipeIdentity
-        extends UseCase
+        extends UseCaseBase
         implements DomainDataAccess.GetDomainModelCallback<RecipeIdentityPersistenceModel> {
 
     private static final String TAG = "tkm-" + RecipeIdentity.class.getSimpleName() + ": ";
@@ -175,17 +175,17 @@ public class RecipeIdentity
                 TITLE_TEXT_TYPE,
                 new TextValidatorModel(getTitle())
         );
-        handler.execute(
+        handler.executeAsync(
                 textValidator,
                 request,
-                new UseCase.Callback<TextValidatorResponse>() {
+                new UseCaseBase.Callback<TextValidatorResponse>() {
                     @Override
-                    public void onUseCaseSuccess(TextValidatorResponse response) {
+                    public void onSuccessResponse(TextValidatorResponse response) {
                         validateDescription();
                     }
 
                     @Override
-                    public void onUseCaseError(TextValidatorResponse response) {
+                    public void onErrorResponse(TextValidatorResponse response) {
                         addTitleFailReasonFromTextValidator(response.getFailReason());
                         validateDescription();
                     }
@@ -211,19 +211,19 @@ public class RecipeIdentity
                 DESCRIPTION_TEXT_TYPE,
                 new TextValidatorModel(getDescription())
         );
-        handler.execute(
+        handler.executeAsync(
                 textValidator,
                 request,
-                new UseCase.Callback<TextValidatorResponse>() {
+                new UseCaseBase.Callback<TextValidatorResponse>() {
                     @Override
-                    public void onUseCaseSuccess(TextValidatorResponse response) {
+                    public void onSuccessResponse(TextValidatorResponse response) {
                         if (failReasons.isEmpty()) {
                             failReasons.add(CommonFailReason.NONE);
                         }
                     }
 
                     @Override
-                    public void onUseCaseError(TextValidatorResponse response) {
+                    public void onErrorResponse(TextValidatorResponse response) {
                         addDescriptionFailReasons(response.getFailReason());
                     }
                 }
@@ -263,8 +263,8 @@ public class RecipeIdentity
         sendResponse(builder.build());
     }
 
-    private UseCaseMetadata getMetadata(RecipeIdentityPersistenceModel m) {
-        return new UseCaseMetadata.Builder().
+    private UseCaseMetadataModel getMetadata(RecipeIdentityPersistenceModel m) {
+        return new UseCaseMetadataModel.Builder().
                 setState(getComponentState()).
                 setFailReasons(new ArrayList<>(failReasons)).
                 setCreatedBy(Constants.getUserId()).
@@ -323,9 +323,9 @@ public class RecipeIdentity
         System.out.println(TAG + "Response No:" + accessCount + " - " + r);
 
         if (r.getMetadata().getFailReasons().contains(CommonFailReason.NONE)) {
-            getUseCaseCallback().onUseCaseSuccess(r);
+            getUseCaseCallback().onSuccessResponse(r);
         } else {
-            getUseCaseCallback().onUseCaseError(r);
+            getUseCaseCallback().onErrorResponse(r);
         }
     }
 

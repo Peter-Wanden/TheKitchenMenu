@@ -67,57 +67,57 @@ public final class RecipeDurationPersistenceModel
             extends DomainModelBuilder<Builder, RecipeDurationPersistenceModel> {
 
         public Builder() {
-            model = new RecipeDurationPersistenceModel();
+            domainModel = new RecipeDurationPersistenceModel();
         }
 
         public Builder getDefault() {
-            model.dataId = "";
-            model.domainId = "";
-            model.prepTime = 0;
-            model.cookTime = 0;
-            model.createDate = 0L;
-            model.lastUpdate = 0L;
+            domainModel.dataId = "";
+            domainModel.domainId = "";
+            domainModel.prepTime = 0;
+            domainModel.cookTime = 0;
+            domainModel.createDate = 0L;
+            domainModel.lastUpdate = 0L;
             return self();
         }
 
         public Builder basedOnPersistenceModel(
                 @Nonnull RecipeDurationPersistenceModel m) {
-            model.dataId = m.getDataId();
-            model.domainId = m.getDomainId();
-            model.prepTime = m.getPrepTime();
-            model.cookTime = m.getCookTime();
-            model.createDate = m.getCreateDate();
-            model.lastUpdate = m.getLastUpdate();
+            domainModel.dataId = m.getDataId();
+            domainModel.domainId = m.getDomainId();
+            domainModel.prepTime = m.getPrepTime();
+            domainModel.cookTime = m.getCookTime();
+            domainModel.createDate = m.getCreateDate();
+            domainModel.lastUpdate = m.getLastUpdate();
             return self();
         }
 
         public Builder setDataId(String dataId) {
-            model.dataId = dataId;
+            domainModel.dataId = dataId;
             return self();
         }
 
         public Builder setDomainId(String domainId) {
-            model.domainId = domainId;
+            domainModel.domainId = domainId;
             return self();
         }
 
         public Builder setPrepTime(int prepTime) {
-            model.prepTime = prepTime;
+            domainModel.prepTime = prepTime;
             return self();
         }
 
         public Builder setCookTime(int cookTime) {
-            model.cookTime = cookTime;
+            domainModel.cookTime = cookTime;
             return self();
         }
 
         public Builder setCreateDate(long createDate) {
-            model.createDate = createDate;
+            domainModel.createDate = createDate;
             return self();
         }
 
         public Builder setLastUpdate(long lastUpdate) {
-            model.lastUpdate = lastUpdate;
+            domainModel.lastUpdate = lastUpdate;
             return self();
         }
 

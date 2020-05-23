@@ -1,13 +1,13 @@
 package com.example.peter.thekitchenmenu.domain.entity.unitofmeasure;
 
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModel;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public class UnitOfMeasureRequest implements UseCase.Request {
+public class UnitOfMeasureRequest implements UseCaseBase.Request {
     @Nonnull
     private final MeasurementModel model;
 

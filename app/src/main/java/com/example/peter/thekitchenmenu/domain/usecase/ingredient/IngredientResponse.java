@@ -1,18 +1,18 @@
 package com.example.peter.thekitchenmenu.domain.usecase.ingredient;
 
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
-import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainMessageModelMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
+import com.example.peter.thekitchenmenu.domain.usecase.MessageModelDataIdMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainModel;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadataModel;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
 public final class IngredientResponse
-        extends BaseDomainMessageModelMetadata<IngredientResponse.Model>
-        implements UseCase.Response {
+        extends MessageModelDataIdMetadata<IngredientResponse.Model>
+        implements UseCaseBase.Response {
 
     @Nonnull
     @Override
@@ -28,7 +28,7 @@ public final class IngredientResponse
     private IngredientResponse() {}
 
     public static class Builder
-            extends UseCaseMessageMetadataBuilder<Builder, IngredientResponse, Model> {
+            extends MessageModelDataIdMetadataBuilder<Builder, IngredientResponse, Model> {
 
         public Builder() {
             message = new IngredientResponse();
@@ -37,7 +37,7 @@ public final class IngredientResponse
         public Builder getDefault() {
             message.dataId = "";
             message.domainId = "";
-            message.metadata = new UseCaseMetadata.Builder().getDefault().build();
+            message.metadata = new UseCaseMetadataModel.Builder().getDefault().build();
             message.model = new Model.Builder().getDefault().build();
             return self();
         }
@@ -94,13 +94,13 @@ public final class IngredientResponse
         public static class Builder extends DomainModelBuilder<Builder, Model> {
 
             public Builder() {
-                model = new Model();
+                domainModel = new Model();
             }
 
             public Builder getDefault() {
-                model.name = "";
-                model.description = "";
-                model.conversionFactor = UnitOfMeasureConstants.DEFAULT_CONVERSION_FACTOR;
+                domainModel.name = "";
+                domainModel.description = "";
+                domainModel.conversionFactor = UnitOfMeasureConstants.DEFAULT_CONVERSION_FACTOR;
                 return new Builder().
                         setName("").
                         setDescription("").
@@ -108,17 +108,17 @@ public final class IngredientResponse
             }
 
             public Builder setName(String name) {
-                model.name = name;
+                domainModel.name = name;
                 return self();
             }
 
             public Builder setDescription(String description) {
-                model.description = description;
+                domainModel.description = description;
                 return self();
             }
 
             public Builder setConversionFactor(double conversionFactor) {
-                model.conversionFactor = conversionFactor;
+                domainModel.conversionFactor = conversionFactor;
                 return self();
             }
 

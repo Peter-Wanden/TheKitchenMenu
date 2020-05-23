@@ -74,7 +74,7 @@ public class RecipeListItemViewImpl
     @Override
     public void bindRecipe(Recipe recipe) {
         RecipeRequest request = new RecipeRequest.Builder().getDefault().build();
-        handler.execute(recipe, request, new RecipeUseCaseCallback<RecipeResponse>() {
+        handler.executeAsync(recipe, request, new RecipeUseCaseCallback<RecipeResponse>() {
             @Override
             protected void processResponse(RecipeResponse recipeResponse) {
                 RecipeListItemViewImpl.this.recipeResponse = recipeResponse;

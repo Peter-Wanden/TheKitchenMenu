@@ -7,9 +7,9 @@ import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeM
 import com.example.peter.thekitchenmenu.data.repository.recipe.metadata.TestDataRecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.model.FailReasons;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadataModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentName;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentState;
@@ -33,7 +33,6 @@ import java.util.Set;
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.FailReason;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
@@ -94,19 +93,18 @@ public class RecipeMetadataTest {
         // Arrange
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().getDefault().build();
         // Act
-        handler.execute(SUT, request, new MetadataCallbackClient());
+        SUT.execute(request, new MetadataCallbackClient()); // NON THREADED
+
         // Assert
         RecipeMetadataResponse expectedResponse = new RecipeMetadataResponse.Builder().
                 getDefault().
                 build();
         RecipeMetadataResponse actualResponse = onErrorResponse;
-        System.out.println(TAG + "expectedResponse=" + expectedResponse);
-        System.out.println(TAG + "  actualResponse=" + actualResponse);
 
-        // Why has assert equals adding a space at the end of expected response!
         assertEquals(
                 expectedResponse,
-                actualResponse);
+                actualResponse
+        );
     }
 
     // This test is large because it tests the initial request on which the remainder of tests
@@ -141,7 +139,7 @@ public class RecipeMetadataTest {
         );
 
         // Assert metadata state
-        UseCaseMetadata metadata = response.getMetadata();
+        UseCaseMetadataModel metadata = response.getMetadata();
 
         ComponentState expectedRecipeState = modelUnderTest.getRecipeState();
         ComponentState actualRecipeState = metadata.getState();
@@ -221,7 +219,7 @@ public class RecipeMetadataTest {
                 build();
 
         // Act
-        handler.execute(SUT, request, new MetadataCallbackClient());
+        handler.executeAsync(SUT, request, new MetadataCallbackClient());
         // Assert
         assertEquals(
                 ComponentState.INVALID_UNCHANGED,
@@ -253,10 +251,10 @@ public class RecipeMetadataTest {
                 build();
 
         // Act
-        handler.execute(SUT, r, new MetadataCallbackClient());
+        handler.executeAsync(SUT, r, new MetadataCallbackClient());
 
         // Assert
-        UseCaseMetadata metadata = onErrorResponse.getMetadata();
+        UseCaseMetadataModel metadata = onErrorResponse.getMetadata();
 
         ComponentState expectedComponentState = ComponentState.INVALID_UNCHANGED;
         ComponentState actualComponentState = metadata.getState();
@@ -293,10 +291,10 @@ public class RecipeMetadataTest {
                 build();
 
         // Act
-        handler.execute(SUT, request, new MetadataCallbackClient());
+        handler.executeAsync(SUT, request, new MetadataCallbackClient());
 
         // Assert
-        UseCaseMetadata metadata = onErrorResponse.getMetadata();
+        UseCaseMetadataModel metadata = onErrorResponse.getMetadata();
 
         ComponentState expectedComponentState = ComponentState.INVALID_CHANGED;
         ComponentState actualComponentState = metadata.getState();
@@ -333,11 +331,11 @@ public class RecipeMetadataTest {
                 build();
 
         // Act
-        handler.execute(SUT, request, new MetadataCallbackClient()
+        handler.executeAsync(SUT, request, new MetadataCallbackClient()
         );
 
         // Assert
-        UseCaseMetadata metadata = onSuccessResponse.getMetadata();
+        UseCaseMetadataModel metadata = onSuccessResponse.getMetadata();
 
         ComponentState expectedRecipeState = ComponentState.VALID_UNCHANGED;
         ComponentState actualRecipeState = metadata.getState();
@@ -373,10 +371,10 @@ public class RecipeMetadataTest {
                 build();
 
         // Act
-        handler.execute(SUT, request, new MetadataCallbackClient()
+        handler.executeAsync(SUT, request, new MetadataCallbackClient()
         );
         // Assert
-        UseCaseMetadata metadata = onErrorResponse.getMetadata();
+        UseCaseMetadataModel metadata = onErrorResponse.getMetadata();
 
         ComponentState expectedComponentState = ComponentState.INVALID_UNCHANGED;
         ComponentState actualComponentState = metadata.getState();
@@ -413,10 +411,10 @@ public class RecipeMetadataTest {
                 build();
 
         // Act
-        handler.execute(SUT, request, new MetadataCallbackClient());
+        handler.executeAsync(SUT, request, new MetadataCallbackClient());
 
         // Assert
-        UseCaseMetadata metadata = onSuccessResponse.getMetadata();
+        UseCaseMetadataModel metadata = onSuccessResponse.getMetadata();
 
         ComponentState expectedComponentState = ComponentState.VALID_CHANGED;
         ComponentState actualComponentState = metadata.getState();
@@ -453,7 +451,7 @@ public class RecipeMetadataTest {
                 build();
 
         // Act - execute second request
-        handler.execute(SUT, secondRequest, new MetadataCallbackClient());
+        handler.executeAsync(SUT, secondRequest, new MetadataCallbackClient());
 
         // Arrange for third request
         componentStatesUnderTest = TestDataRecipeMetadata.getInvalidChangedComponentStates();
@@ -469,10 +467,10 @@ public class RecipeMetadataTest {
                 build();
 
         // Act
-        handler.execute(SUT, request, new MetadataCallbackClient());
+        handler.executeAsync(SUT, request, new MetadataCallbackClient());
 
         // Assert
-        UseCaseMetadata metadata = onErrorResponse.getMetadata();
+        UseCaseMetadataModel metadata = onErrorResponse.getMetadata();
 
         ComponentState expectedComponentState = ComponentState.INVALID_CHANGED;
         ComponentState actualComponentState = metadata.getState();
@@ -499,7 +497,7 @@ public class RecipeMetadataTest {
         givenNewIdAsInitialRequest(recipeId);
 
         // Assert response
-        UseCaseMetadata metadata = onErrorResponse.getMetadata();
+        UseCaseMetadataModel metadata = onErrorResponse.getMetadata();
 
         ComponentState expectedComponentState = ComponentState.INVALID_UNCHANGED;
         ComponentState actualComponentState = metadata.getState();
@@ -529,13 +527,13 @@ public class RecipeMetadataTest {
                 setDomainId(recipeId).
                 build();
         // Act
-        handler.execute(SUT, r, new MetadataCallbackClient());
+        handler.executeAsync(SUT, r, new MetadataCallbackClient());
 
         // Assert
         verify(repoMock).getActiveByDomainId(eq(recipeId), repoMetadataCallback.capture());
         repoMetadataCallback.getValue().onModelLoaded(modelUnderTest);
 
-        UseCaseMetadata metadata = onErrorResponse.getMetadata();
+        UseCaseMetadataModel metadata = onErrorResponse.getMetadata();
 
         ComponentState expectedComponentState = ComponentState.INVALID_UNCHANGED;
         ComponentState actualComponentState = metadata.getState();
@@ -563,13 +561,13 @@ public class RecipeMetadataTest {
                 setDomainId(recipeId).
                 build();
         // Act
-        handler.execute(SUT, r, new MetadataCallbackClient()
+        handler.executeAsync(SUT, r, new MetadataCallbackClient()
         );
         // Assert
         verify(repoMock).getActiveByDomainId(eq(recipeId), repoMetadataCallback.capture());
         repoMetadataCallback.getValue().onModelLoaded(modelUnderTest);
 
-        UseCaseMetadata metadata = onErrorResponse.getMetadata();
+        UseCaseMetadataModel metadata = onErrorResponse.getMetadata();
 
         ComponentState expectedComponentState = ComponentState.INVALID_CHANGED;
         ComponentState actualComponentState = metadata.getState();
@@ -597,13 +595,13 @@ public class RecipeMetadataTest {
                 setDomainId(recipeId).
                 build();
         // Act
-        handler.execute(SUT, r, new MetadataCallbackClient());
+        handler.executeAsync(SUT, r, new MetadataCallbackClient());
 
         // Assert
         verify(repoMock).getActiveByDomainId(eq(recipeId), repoMetadataCallback.capture());
         repoMetadataCallback.getValue().onModelLoaded(modelUnderTest);
 
-        UseCaseMetadata metadata = onSuccessResponse.getMetadata();
+        UseCaseMetadataModel metadata = onSuccessResponse.getMetadata();
 
         ComponentState expectedComponentState = ComponentState.VALID_UNCHANGED;
         ComponentState actualComponentState = metadata.getState();
@@ -628,9 +626,9 @@ public class RecipeMetadataTest {
         // Request current state returned by sending empty request
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().getDefault().build();
         // Act
-        handler.execute(SUT, request, new MetadataCallbackClient());
+        handler.executeAsync(SUT, request, new MetadataCallbackClient());
         // Assert
-        UseCaseMetadata metadata = onSuccessResponse.getMetadata();
+        UseCaseMetadataModel metadata = onSuccessResponse.getMetadata();
 
         ComponentState expectedComponentState = ComponentState.VALID_UNCHANGED;
         ComponentState actualComponentState = metadata.getState();
@@ -658,13 +656,13 @@ public class RecipeMetadataTest {
                 setDomainId(recipeId).
                 build();
         // Act
-        handler.execute(SUT, r, new MetadataCallbackClient()
+        handler.executeAsync(SUT, r, new MetadataCallbackClient()
         );
         // Assert
         verify(repoMock).getActiveByDomainId(eq(recipeId), repoMetadataCallback.capture());
         repoMetadataCallback.getValue().onModelLoaded(modelUnderTest);
 
-        UseCaseMetadata metadata = onSuccessResponse.getMetadata();
+        UseCaseMetadataModel metadata = onSuccessResponse.getMetadata();
 
         ComponentState expectedComponentState = ComponentState.VALID_CHANGED;
         ComponentState actualComponentState = metadata.getState();
@@ -692,14 +690,14 @@ public class RecipeMetadataTest {
                 setDomainId(recipeId).
                 build();
         // Act
-        handler.execute(SUT, initialiseRequest, new MetadataCallbackClient()
+        handler.executeAsync(SUT, initialiseRequest, new MetadataCallbackClient()
         );
 
         // Assert
         verify(repoMock).getActiveByDomainId(eq(recipeId), repoMetadataCallback.capture());
         repoMetadataCallback.getValue().onModelLoaded(modelUnderTestOne);
 
-        UseCaseMetadata metadata = onErrorResponse.getMetadata();
+        UseCaseMetadataModel metadata = onErrorResponse.getMetadata();
 
         ComponentState expectedModelUnderTestOneState = ComponentState.INVALID_UNCHANGED;
         ComponentState actualModelUnderTestOneState = metadata.getState();
@@ -727,7 +725,7 @@ public class RecipeMetadataTest {
         );
 
         // Act
-        handler.execute(SUT, requestTwo, new MetadataCallbackClient()
+        handler.executeAsync(SUT, requestTwo, new MetadataCallbackClient()
         );
 
         // Assert model saved
@@ -752,7 +750,7 @@ public class RecipeMetadataTest {
         );
 
         // Act
-        handler.execute(SUT, requestThree, new MetadataCallbackClient()
+        handler.executeAsync(SUT, requestThree, new MetadataCallbackClient()
         );
 
         // Assert new model saved
@@ -775,7 +773,7 @@ public class RecipeMetadataTest {
                 setDomainId(domainId).
                 build();
 
-        handler.execute(SUT, initialRequest, new MetadataCallbackClient());
+        handler.executeAsync(SUT, initialRequest, new MetadataCallbackClient());
 
         whenRepoCalledReturnDataUnavailable(domainId);
     }
@@ -789,17 +787,17 @@ public class RecipeMetadataTest {
     // region helper classes -----------------------------------------------------------------------
     private class MetadataCallbackClient
             implements
-            UseCase.Callback<RecipeMetadataResponse> {
+            UseCaseBase.Callback<RecipeMetadataResponse> {
         private static final String TAG = "MetadataCallbackClient: ";
 
         @Override
-        public void onUseCaseSuccess(RecipeMetadataResponse response) {
+        public void onSuccessResponse(RecipeMetadataResponse response) {
             System.out.println(RecipeMetadataTest.TAG + TAG + "onSuccess: " + response);
             onSuccessResponse = response;
         }
 
         @Override
-        public void onUseCaseError(RecipeMetadataResponse response) {
+        public void onErrorResponse(RecipeMetadataResponse response) {
             System.out.println(RecipeMetadataTest.TAG + TAG + "onError: " + response);
             onErrorResponse = response;
         }

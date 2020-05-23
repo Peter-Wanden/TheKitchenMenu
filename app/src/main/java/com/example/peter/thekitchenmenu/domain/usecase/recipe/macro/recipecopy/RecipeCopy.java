@@ -3,7 +3,7 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipecopy;
 import android.annotation.SuppressLint;
 
 import com.example.peter.thekitchenmenu.domain.model.FailReasons;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourseRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourseResponse;
@@ -27,7 +27,7 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 
-public class RecipeCopy extends UseCase {
+public class RecipeCopy extends UseCaseBase {
 
     public enum FailReason implements FailReasons {
         SOURCE_DATA_ERROR(999);
@@ -96,7 +96,7 @@ public class RecipeCopy extends UseCase {
                 setDataId(destinationId).
                 build();
 
-        handler.execute(destinationRecipe, request, new RecipeListener());
+        handler.executeAsync(destinationRecipe, request, new RecipeListener());
     }
 
     private class RecipeListener extends RecipeUseCaseCallback<RecipeResponse> {
@@ -109,7 +109,7 @@ public class RecipeCopy extends UseCase {
 
     private void loadSourceRecipe(String sourceId) {
         RecipeRequest request = new RecipeRequest.Builder().setDomainId(sourceId).build();
-        handler.execute(sourceRecipe, request, new SourceCallback());
+        handler.executeAsync(sourceRecipe, request, new SourceCallback());
     }
 
     private class SourceCallback extends RecipeUseCaseCallback<RecipeResponse> {
@@ -138,7 +138,7 @@ public class RecipeCopy extends UseCase {
                 setDataId(destinationId).
                 build();
 
-        handler.execute(destinationRecipe, request, new IdentityCallback());
+        handler.executeAsync(destinationRecipe, request, new IdentityCallback());
     }
 
     private class IdentityCallback extends RecipeUseCaseCallback<RecipeIdentityResponse> {
@@ -162,7 +162,7 @@ public class RecipeCopy extends UseCase {
                 setDataId(destinationId).
                 build();
 
-        handler.execute(destinationRecipe, request, new CourseCallback());
+        handler.executeAsync(destinationRecipe, request, new CourseCallback());
     }
 
     private class CourseCallback extends RecipeUseCaseCallback<RecipeCourseResponse> {
@@ -185,7 +185,7 @@ public class RecipeCopy extends UseCase {
                 setDataId(destinationId).
                 build();
 
-        handler.execute(destinationRecipe, request, new DurationCallback());
+        handler.executeAsync(destinationRecipe, request, new DurationCallback());
     }
 
     private class DurationCallback extends RecipeUseCaseCallback<RecipeDurationResponse> {
@@ -207,7 +207,7 @@ public class RecipeCopy extends UseCase {
                 setDataId(destinationId).
                 build();
 
-        handler.execute(destinationRecipe, request, new PortionsCallback());
+        handler.executeAsync(destinationRecipe, request, new PortionsCallback());
     }
 
     private class PortionsCallback extends RecipeUseCaseCallback<RecipePortionsResponse> {

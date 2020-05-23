@@ -11,7 +11,7 @@ import com.example.peter.thekitchenmenu.BR;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.model.FailReasons;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentity;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityRequest;
@@ -64,24 +64,24 @@ public class RecipeIdentityEditorViewModel extends ObservableViewModel {
      * Registered recipe component callback listening for updates pushed from
      * {@link Recipe}
      */
-    private class IdentityCallbackListener implements UseCase.Callback<RecipeIdentityResponse> {
+    private class IdentityCallbackListener implements UseCaseBase.Callback<RecipeIdentityResponse> {
         @Override
-        public void onUseCaseSuccess(RecipeIdentityResponse response) {
+        public void onSuccessResponse(RecipeIdentityResponse response) {
             isDataLoading.set(false);
             if (isStateChanged(response)) {
                 System.out.println(TAG + "onSuccess:" + response);
                 RecipeIdentityEditorViewModel.this.response = response;
-                onUseCaseSuccess(response);
+                onSuccessResponse(response);
             }
         }
 
         @Override
-        public void onUseCaseError(RecipeIdentityResponse response) {
+        public void onErrorResponse(RecipeIdentityResponse response) {
             isDataLoading.set(false);
             if (isStateChanged(response)) {
                 System.out.println(TAG + "onError:" + response);
                 RecipeIdentityEditorViewModel.this.response = response;
-                onUseCaseError(response);
+                onErrorResponse(response);
             }
         }
     }
@@ -102,7 +102,7 @@ public class RecipeIdentityEditorViewModel extends ObservableViewModel {
                     setDomainId(response.getDomainId()).
                     setModel(model).
                     build();
-            handler.execute(recipeMacro, request, new IdentityCallbackListener());
+            handler.executeAsync(recipeMacro, request, new IdentityCallbackListener());
         }
     }
 
@@ -129,7 +129,7 @@ public class RecipeIdentityEditorViewModel extends ObservableViewModel {
 
             System.out.println(TAG + response);
 
-            handler.execute(recipeMacro, request, new IdentityCallbackListener());
+            handler.executeAsync(recipeMacro, request, new IdentityCallbackListener());
         }
     }
 

@@ -1,8 +1,8 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata;
 
-import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainMessageModel;
+import com.example.peter.thekitchenmenu.domain.usecase.MessageModelDataId;
 import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainModel;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
 
 import java.util.HashMap;
 import java.util.Objects;
@@ -13,8 +13,8 @@ import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.m
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentState;
 
 public final class RecipeMetadataRequest
-        extends BaseDomainMessageModel<RecipeMetadataRequest.Model>
-        implements UseCase.Request {
+        extends MessageModelDataId<RecipeMetadataRequest.Model>
+        implements UseCaseBase.Request {
 
     @Nonnull
     @Override
@@ -30,7 +30,7 @@ public final class RecipeMetadataRequest
     }
 
     public static class Builder
-            extends UseCaseMessageBuilderModel<Builder, RecipeMetadataRequest, Model> {
+            extends MessageModelDataIdBuilder<Builder, RecipeMetadataRequest, Model> {
 
         public Builder() {
             message = new RecipeMetadataRequest();
@@ -98,29 +98,29 @@ public final class RecipeMetadataRequest
         public static class Builder extends DomainModelBuilder<Builder, Model> {
 
             public Builder() {
-                model = new Model();
+                domainModel = new Model();
             }
 
             public Builder getDefault() {
-                model.parentDomainId = "";
-                model.componentStates = new HashMap<>();
+                domainModel.parentDomainId = "";
+                domainModel.componentStates = new HashMap<>();
                 return self();
             }
 
             public Builder basedOnResponseModel(RecipeMetadataResponse.Model m) {
-                model.parentDomainId = m.getParentDomainId();
-                model.componentStates = m.getComponentStates();
+                domainModel.parentDomainId = m.getParentDomainId();
+                domainModel.componentStates = m.getComponentStates();
                 return self();
             }
 
             public Builder setParentId(String parentId) {
-                model.parentDomainId = parentId;
+                domainModel.parentDomainId = parentId;
                 return self();
             }
 
             public Builder setComponentStates(HashMap<ComponentName,
                     ComponentState> componentStates) {
-                model.componentStates = componentStates;
+                domainModel.componentStates = componentStates;
                 return self();
             }
 

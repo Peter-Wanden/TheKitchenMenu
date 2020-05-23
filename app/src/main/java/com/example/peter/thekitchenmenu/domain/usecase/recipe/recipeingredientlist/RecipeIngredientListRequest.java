@@ -1,10 +1,10 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredientlist;
 
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
 
 import javax.annotation.Nonnull;
 
-public final class RecipeIngredientListRequest implements UseCase.Request {
+public final class RecipeIngredientListRequest implements UseCaseBase.Request {
     @Nonnull
     private final String recipeId;
 

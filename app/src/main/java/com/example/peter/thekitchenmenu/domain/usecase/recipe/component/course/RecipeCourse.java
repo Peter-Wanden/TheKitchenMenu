@@ -7,8 +7,8 @@ import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeCourse;
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.model.FailReasons;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadataModel;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentState;
 
 public class RecipeCourse
-        extends UseCase
+        extends UseCaseBase
         implements DomainDataAccess.GetAllDomainModelsCallback<RecipeCoursePersistenceModel> {
 
     private static final String TAG = "tkm-" + RecipeCourse.class.getSimpleName() + ": ";
@@ -239,14 +239,14 @@ public class RecipeCourse
 
     private void sendResponse(RecipeCourseResponse response) {
         if (isValid()) {
-            getUseCaseCallback().onUseCaseSuccess(response);
+            getUseCaseCallback().onSuccessResponse(response);
         } else {
-            getUseCaseCallback().onUseCaseError(response);
+            getUseCaseCallback().onErrorResponse(response);
         }
     }
 
-    private UseCaseMetadata getMetadata() {
-        return new UseCaseMetadata.Builder().
+    private UseCaseMetadataModel getMetadata() {
+        return new UseCaseMetadataModel.Builder().
                 setState(getComponentState()).
                 setFailReasons(getFailReasons()).
                 setCreatedBy(Constants.getUserId()).

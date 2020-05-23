@@ -1,6 +1,6 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredient;
 
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModel;
 
 import java.util.Objects;
@@ -9,7 +9,7 @@ import javax.annotation.Nonnull;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredient.RecipeIngredient.*;
 
-public final class RecipeIngredientResponse implements UseCase.Response {
+public final class RecipeIngredientResponse implements UseCaseBase.Response {
     @Nonnull
     private final MeasurementModel model;
     @Nonnull

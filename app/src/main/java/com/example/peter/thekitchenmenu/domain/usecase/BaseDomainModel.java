@@ -1,8 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecase;
 
 /**
- * Base class for a domain data model extended as the domain data model in use case requests and
- * responses.
+ * Base class for a domain data model.
  */
 public abstract class BaseDomainModel {
 
@@ -11,13 +10,13 @@ public abstract class BaseDomainModel {
      * Always override self() in extending classes to return 'this'.
      * The use of self in this manner will return the last class in the inheritance tree.
      * @param <SELF> the {@link DomainModelBuilder} extending this base builder.
-     * @param <M> the {@link BaseDomainModel} being built.
+     * @param <DOMAIN_MODEL> the {@link BaseDomainModel} being built.
      */
     public static abstract class DomainModelBuilder<
-            SELF extends DomainModelBuilder<SELF, M>,
-            M extends BaseDomainModel> {
+            SELF extends DomainModelBuilder<SELF, DOMAIN_MODEL>,
+            DOMAIN_MODEL extends BaseDomainModel> {
 
-        protected M model;
+        protected DOMAIN_MODEL domainModel;
 
         public abstract SELF getDefault();
 
@@ -26,8 +25,8 @@ public abstract class BaseDomainModel {
             return (SELF) this;
         }
 
-        public M build() {
-            return model;
+        public DOMAIN_MODEL build() {
+            return domainModel;
         }
     }
 }

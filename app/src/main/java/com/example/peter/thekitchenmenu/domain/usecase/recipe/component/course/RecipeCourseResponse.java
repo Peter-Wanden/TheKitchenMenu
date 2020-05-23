@@ -1,9 +1,9 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course;
 
-import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainMessageModelMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.MessageModelDataIdMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainModel;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadataModel;
 
 import java.util.HashMap;
 import java.util.Objects;
@@ -11,8 +11,8 @@ import java.util.Objects;
 import javax.annotation.Nonnull;
 
 public final class RecipeCourseResponse
-        extends BaseDomainMessageModelMetadata<RecipeCourseResponse.Model>
-        implements UseCase.Response {
+        extends MessageModelDataIdMetadata<RecipeCourseResponse.Model>
+        implements UseCaseBase.Response {
 
     @Nonnull
     @Override
@@ -28,7 +28,7 @@ public final class RecipeCourseResponse
     private RecipeCourseResponse() {}
 
     public static class Builder
-            extends UseCaseMessageMetadataBuilder<Builder, RecipeCourseResponse, Model> {
+            extends MessageModelDataIdMetadataBuilder<Builder, RecipeCourseResponse, Model> {
 
         public Builder() {
             message = new RecipeCourseResponse();
@@ -37,7 +37,7 @@ public final class RecipeCourseResponse
         public Builder getDefault() {
             message.dataId = "";
             message.domainId = "";
-            message.metadata = new UseCaseMetadata.Builder().getDefault().build();
+            message.metadata = new UseCaseMetadataModel.Builder().getDefault().build();
             message.model = new Model.Builder().getDefault().build();
             return self();
         }
@@ -83,17 +83,17 @@ public final class RecipeCourseResponse
         public static class Builder extends DomainModelBuilder<Builder, Model> {
 
             public Builder() {
-                model = new Model();
+                domainModel = new Model();
             }
 
             public Builder getDefault() {
-                model.courseList = new HashMap<>();
+                domainModel.courseList = new HashMap<>();
                 return self();
             }
 
             public Builder setCourseList(
                     HashMap<RecipeCourse.Course, RecipeCoursePersistenceModel> courseList) {
-                model.courseList = courseList;
+                domainModel.courseList = courseList;
                 return self();
             }
 

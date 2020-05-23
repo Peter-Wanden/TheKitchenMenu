@@ -4,12 +4,12 @@ import android.annotation.SuppressLint;
 
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.model.FailReasons;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class TextValidator extends UseCase {
+public class TextValidator extends UseCaseBase {
 
     private static final String TAG = "tkm-" + TextValidator.class.getSimpleName() + ": ";
 
@@ -104,7 +104,7 @@ public class TextValidator extends UseCase {
 
         TextValidatorResponse response = responseBuilder.build();
         System.out.println(TAG + response);
-        getUseCaseCallback().onUseCaseError(response);
+        getUseCaseCallback().onErrorResponse(response);
     }
 
     private void sendTextTooLongResponse(TextValidatorRequest request) {
@@ -115,7 +115,7 @@ public class TextValidator extends UseCase {
 
         TextValidatorResponse response = responseBuilder.build();
         System.out.println(TAG + response);
-        getUseCaseCallback().onUseCaseError(response);
+        getUseCaseCallback().onErrorResponse(response);
     }
 
     private void sendTextValidatedResponse(TextValidatorRequest request) {
@@ -126,7 +126,7 @@ public class TextValidator extends UseCase {
 
         TextValidatorResponse response = responseBuilder.build();
         System.out.println(TAG + response);
-        getUseCaseCallback().onUseCaseSuccess(response);
+        getUseCaseCallback().onSuccessResponse(response);
     }
 
     private TextValidatorResponse.Builder addRequiredLengths(TextValidatorRequest request,

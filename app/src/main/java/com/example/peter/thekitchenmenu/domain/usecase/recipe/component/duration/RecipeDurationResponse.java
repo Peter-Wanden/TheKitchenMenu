@@ -1,17 +1,17 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration;
 
-import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainMessageModelMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.MessageModelDataIdMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainModel;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadataModel;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
 public final class RecipeDurationResponse
-        extends BaseDomainMessageModelMetadata<RecipeDurationResponse.Model>
-        implements UseCase.Response {
+        extends MessageModelDataIdMetadata<RecipeDurationResponse.Model>
+        implements UseCaseBase.Response {
 
     @Nonnull
     @Override
@@ -27,7 +27,7 @@ public final class RecipeDurationResponse
     private RecipeDurationResponse() {}
 
     public static class Builder
-            extends UseCaseMessageMetadataBuilder<Builder, RecipeDurationResponse, Model> {
+            extends MessageModelDataIdMetadataBuilder<Builder, RecipeDurationResponse, Model> {
 
         public Builder() {
             message = new RecipeDurationResponse();
@@ -36,7 +36,7 @@ public final class RecipeDurationResponse
         public Builder getDefault() {
             message.dataId = "";
             message.domainId = "";
-            message.metadata = new UseCaseMetadata.Builder().getDefault().build();
+            message.metadata = new UseCaseMetadataModel.Builder().getDefault().build();
             message.model = new Model.Builder().getDefault().build();
             return self();
         }
@@ -138,64 +138,64 @@ public final class RecipeDurationResponse
         public static class Builder extends DomainModelBuilder<Builder, Model> {
 
             public Builder() {
-                model = new Model();
+                domainModel = new Model();
             }
 
             public Builder getDefault() {
-                model.prepHours = 0;
-                model.prepMinutes = 0;
-                model.totalPrepTime = 0;
-                model.cookHours = 0;
-                model.cookMinutes = 0;
-                model.totalCookTime = 0;
-                model.totalTime = 0;
-                model.createDate = 0L;
-                model.lastUpdate = 0L;
+                domainModel.prepHours = 0;
+                domainModel.prepMinutes = 0;
+                domainModel.totalPrepTime = 0;
+                domainModel.cookHours = 0;
+                domainModel.cookMinutes = 0;
+                domainModel.totalCookTime = 0;
+                domainModel.totalTime = 0;
+                domainModel.createDate = 0L;
+                domainModel.lastUpdate = 0L;
                 return self();
             }
 
             public Builder setPrepHours(int prepHours) {
-                model.prepHours = prepHours;
+                domainModel.prepHours = prepHours;
                 return self();
             }
 
             public Builder setPrepMinutes(int prepMinutes) {
-                model.prepMinutes = prepMinutes;
+                domainModel.prepMinutes = prepMinutes;
                 return self();
             }
 
             public Builder setTotalPrepTime(int totalPrepTime) {
-                model.totalPrepTime = totalPrepTime;
+                domainModel.totalPrepTime = totalPrepTime;
                 return self();
             }
 
             public Builder setCookHours(int cookHours) {
-                model.cookHours = cookHours;
+                domainModel.cookHours = cookHours;
                 return self();
             }
 
             public Builder setCookMinutes(int cookMinutes) {
-                model.cookMinutes = cookMinutes;
+                domainModel.cookMinutes = cookMinutes;
                 return self();
             }
 
             public Builder setTotalCookTime(int totalCookTime) {
-                model.totalCookTime = totalCookTime;
+                domainModel.totalCookTime = totalCookTime;
                 return self();
             }
 
             public Builder setTotalTime(int totalTime) {
-                model.totalTime = totalTime;
+                domainModel.totalTime = totalTime;
                 return self();
             }
 
             public Builder setCreateDate(long createDate) {
-                model.createDate = createDate;
+                domainModel.createDate = createDate;
                 return self();
             }
 
             public Builder setLastUpdate(long lastUpdate) {
-                model.lastUpdate = lastUpdate;
+                domainModel.lastUpdate = lastUpdate;
                 return self();
             }
 

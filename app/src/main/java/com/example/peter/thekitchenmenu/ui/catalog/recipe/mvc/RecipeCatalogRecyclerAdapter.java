@@ -6,14 +6,11 @@ import android.widget.Filterable;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityResponse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.RecipeUseCaseCallback;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.RecipeRequest;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.RecipeResponse;
 import com.example.peter.thekitchenmenu.ui.catalog.recipe.mvc.recipelistitem.RecipeListItemView;
 import com.example.peter.thekitchenmenu.ui.catalog.recipe.mvc.recipelistitem.RecipeListItemView.RecipeListItemUserActions;
 import com.example.peter.thekitchenmenu.ui.common.views.ViewFactory;
@@ -108,15 +105,15 @@ public class RecipeCatalogRecyclerAdapter
 
                     RecipeIdentityRequest request = new RecipeIdentityRequest.Builder().
                             getDefault().build();
-                    handler.execute(recipe, request, new UseCase.Callback<RecipeIdentityResponse>() {
+                    handler.executeAsync(recipe, request, new UseCaseBase.Callback<RecipeIdentityResponse>() {
                         @Override
-                        public void onUseCaseSuccess(RecipeIdentityResponse response) {
+                        public void onSuccessResponse(RecipeIdentityResponse response) {
                             title = response.getModel().getTitle();
                             addRecipe(recipe);
                         }
 
                         @Override
-                        public void onUseCaseError(RecipeIdentityResponse response) {
+                        public void onErrorResponse(RecipeIdentityResponse response) {
                             title = response.getModel().getTitle();
                             addRecipe(recipe);
                         }

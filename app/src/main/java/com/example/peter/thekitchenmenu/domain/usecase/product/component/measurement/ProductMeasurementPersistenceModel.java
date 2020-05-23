@@ -94,65 +94,65 @@ public class ProductMeasurementPersistenceModel
             extends DomainModelBuilder<Builder, ProductMeasurementPersistenceModel> {
 
         public Builder() {
-            model = new ProductMeasurementPersistenceModel();
+            domainModel = new ProductMeasurementPersistenceModel();
         }
 
         @Override
         public Builder getDefault() {
-            model.dataId = "";
-            model.domainId = "";
-            model.productId = "";
-            model.shelfLife = ShelfLife.OPTION_1;
-            model.measurementSubtype = DEFAULT_UNIT_OF_MEASURE.getMeasurementSubtype();
-            model.baseUnits = 0.;
-            model.numberOfItems = MIN_NUMBER_OF_ITEMS;
-            model.createDate = 0L;
-            model.lastUpdate = 0L;
+            domainModel.dataId = "";
+            domainModel.domainId = "";
+            domainModel.productId = "";
+            domainModel.shelfLife = ShelfLife.OPTION_1;
+            domainModel.measurementSubtype = DEFAULT_UNIT_OF_MEASURE.getMeasurementSubtype();
+            domainModel.baseUnits = 0.;
+            domainModel.numberOfItems = MIN_NUMBER_OF_ITEMS;
+            domainModel.createDate = 0L;
+            domainModel.lastUpdate = 0L;
             return self();
         }
 
         public Builder setDataId(String dataId) {
-            model.dataId = dataId;
+            domainModel.dataId = dataId;
             return self();
         }
 
         public Builder setDomainId(String domainId) {
-            model.domainId = domainId;
+            domainModel.domainId = domainId;
             return self();
         }
 
         public Builder setProductId(String productId) {
-            model.productId = productId;
+            domainModel.productId = productId;
             return self();
         }
 
         public Builder setShelfLife(ShelfLife shelfLife) {
-            model.shelfLife = shelfLife;
+            domainModel.shelfLife = shelfLife;
             return self();
         }
 
         public Builder setMeasurementSubType(MeasurementSubtype measurementSubType) {
-            model.measurementSubtype = measurementSubType;
+            domainModel.measurementSubtype = measurementSubType;
             return self();
         }
 
         public Builder setBaseUnits(double baseUnits) {
-            model.baseUnits = baseUnits;
+            domainModel.baseUnits = baseUnits;
             return self();
         }
 
         public Builder setNumberOfItems(int numberOfItems) {
-            model.numberOfItems = numberOfItems;
+            domainModel.numberOfItems = numberOfItems;
             return self();
         }
 
         public Builder setCreateDate(long createDate) {
-            model.createDate = createDate;
+            domainModel.createDate = createDate;
             return self();
         }
 
         public Builder setLastUpdate(long lastUpdate) {
-            model.lastUpdate = lastUpdate;
+            domainModel.lastUpdate = lastUpdate;
             return self();
         }
 

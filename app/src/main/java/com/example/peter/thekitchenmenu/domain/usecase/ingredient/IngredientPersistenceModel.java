@@ -86,71 +86,71 @@ public final class IngredientPersistenceModel
             extends DomainModelBuilder<Builder, IngredientPersistenceModel> {
 
         public Builder() {
-            model = new IngredientPersistenceModel();
+            domainModel = new IngredientPersistenceModel();
         }
 
         @Override
         public Builder getDefault() {
-            model.dataId = "";
-            model.domainId = CREATE_NEW_INGREDIENT;;
-            model.name = "";
-            model.description = "";
-            model.conversionFactor = UnitOfMeasureConstants.DEFAULT_CONVERSION_FACTOR;
-            model.createdBy = Constants.getUserId();
-            model.createDate = 0L;
-            model.lastUpdate = 0L;
+            domainModel.dataId = "";
+            domainModel.domainId = CREATE_NEW_INGREDIENT;;
+            domainModel.name = "";
+            domainModel.description = "";
+            domainModel.conversionFactor = UnitOfMeasureConstants.DEFAULT_CONVERSION_FACTOR;
+            domainModel.createdBy = Constants.getUserId();
+            domainModel.createDate = 0L;
+            domainModel.lastUpdate = 0L;
             return self();
         }
 
         public Builder basedOnModel(@Nonnull IngredientPersistenceModel m) {
-            model.dataId = m.getDataId();
-            model.domainId = m.getDomainId();
-            model.name = m.getName();
-            model.description = m.getDescription();
-            model.conversionFactor = m.getConversionFactor();
-            model.createdBy = m.getCreatedBy();
-            model.createDate = m.getCreateDate();
-            model.lastUpdate = m.getLastUpdate();
+            domainModel.dataId = m.getDataId();
+            domainModel.domainId = m.getDomainId();
+            domainModel.name = m.getName();
+            domainModel.description = m.getDescription();
+            domainModel.conversionFactor = m.getConversionFactor();
+            domainModel.createdBy = m.getCreatedBy();
+            domainModel.createDate = m.getCreateDate();
+            domainModel.lastUpdate = m.getLastUpdate();
             return self();
         }
 
         public Builder setDataId(String dataId) {
-            model.dataId = dataId;
+            domainModel.dataId = dataId;
             return self();
         }
 
         public Builder setDomainId(String domainId) {
-            model.domainId = domainId;
+            domainModel.domainId = domainId;
             return self();
         }
 
         public Builder setName(String name) {
-            model.name = name;
+            domainModel.name = name;
             return self();
         }
 
         public Builder setDescription(String description) {
-            model.description = description;
+            domainModel.description = description;
             return self();
         }
 
         public Builder setConversionFactor(double conversionFactor) {
-            model.conversionFactor = conversionFactor;
+            domainModel.conversionFactor = conversionFactor;
             return self();
         }
 
         public Builder setCreatedBy(String createdBy) {
-            model.createdBy = createdBy;
+            domainModel.createdBy = createdBy;
             return self();
         }
 
         public Builder setCreateDate(long createDate) {
-            model.createDate = createDate;
+            domainModel.createDate = createDate;
             return self();
         }
 
         public Builder setLastUpdate(long lastUpdate) {
-            model.lastUpdate = lastUpdate;
+            domainModel.lastUpdate = lastUpdate;
             return self();
         }
 

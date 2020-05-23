@@ -7,7 +7,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.peter.thekitchenmenu.BR;
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModel;
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModelBuilder;
@@ -350,18 +350,18 @@ public class RecipeIngredientCalculatorViewModel extends ObservableViewModel {
                 recipeIngredientId,
                 model
         );
-        useCaseHandler.execute(
+        useCaseHandler.executeAsync(
                 ingredientCalculator,
                 request,
-                new UseCase.Callback<RecipeIngredientResponse>() {
+                new UseCaseBase.Callback<RecipeIngredientResponse>() {
                     @Override
-                    public void onUseCaseSuccess(RecipeIngredientResponse response) {
+                    public void onSuccessResponse(RecipeIngredientResponse response) {
                         processModelResult(response.getModel());
                         processResultStatus(response.getResultStatus());
                     }
 
                     @Override
-                    public void onUseCaseError(RecipeIngredientResponse response) {
+                    public void onErrorResponse(RecipeIngredientResponse response) {
                         processModelResult(response.getModel());
                         processResultStatus(response.getResultStatus());
                     }
@@ -425,7 +425,7 @@ public class RecipeIngredientCalculatorViewModel extends ObservableViewModel {
     }
 
     private void executeUseCaseConversionFactorStatus() {
-        useCaseHandler.execute(
+        useCaseHandler.executeAsync(
                 conversionFactorStatus,
                 getRequest(),
                 getNewResponseCallback());
@@ -442,12 +442,12 @@ public class RecipeIngredientCalculatorViewModel extends ObservableViewModel {
         return new Callback<ConversionFactorStatusResponse>() {
 
             @Override
-            public void onUseCaseSuccess(ConversionFactorStatusResponse response) {
+            public void onSuccessResponse(ConversionFactorStatusResponse response) {
                 processConversionFactorResult(response.getResult());
             }
 
             @Override
-            public void onUseCaseError(ConversionFactorStatusResponse response) {
+            public void onErrorResponse(ConversionFactorStatusResponse response) {
                 processConversionFactorResult(response.getResult());
             }
         };

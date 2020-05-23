@@ -2,13 +2,13 @@ package com.example.peter.thekitchenmenu.domain.usecase.textvalidation;
 
 
 import com.example.peter.thekitchenmenu.domain.model.FailReasons;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public final class TextValidatorResponse implements UseCase.Response {
+public final class TextValidatorResponse implements UseCaseBase.Response {
     @Nonnull
     private final FailReasons failReason;
     @Nonnull

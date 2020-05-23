@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipelist;
 
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeMetadata;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseFactory;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataPersistenceModel;
@@ -18,7 +18,7 @@ import javax.annotation.Nonnull;
 
 public class RecipeList
         extends
-        UseCase
+        UseCaseBase
         implements
         DomainDataAccess.GetAllDomainModelsCallback<RecipeMetadataPersistenceModel> {
 
@@ -97,7 +97,7 @@ public class RecipeList
                     setDomainId(metadataModel.getDomainId()).
                     build();
 
-            handler.execute(recipe, request, new RecipeUseCaseCallback<RecipeResponse>() {
+            handler.executeAsync(recipe, request, new RecipeUseCaseCallback<RecipeResponse>() {
                 @Override
                 protected void processResponse(RecipeResponse response) {
                     if (metadataModels.size() == recipes.size()) {
@@ -110,7 +110,7 @@ public class RecipeList
 
     @Override
     public void onModelsUnavailable() {
-        getUseCaseCallback().onUseCaseError(new RecipeListResponse.Builder().getDefault().build());
+        getUseCaseCallback().onErrorResponse(new RecipeListResponse.Builder().getDefault().build());
     }
 
     private void buildResponse() {
@@ -124,9 +124,9 @@ public class RecipeList
                 build();
 
         if (recipes.size() > 0) {
-            getUseCaseCallback().onUseCaseSuccess(response);
+            getUseCaseCallback().onSuccessResponse(response);
         } else {
-            getUseCaseCallback().onUseCaseError(response);
+            getUseCaseCallback().onErrorResponse(response);
         }
     }
 }

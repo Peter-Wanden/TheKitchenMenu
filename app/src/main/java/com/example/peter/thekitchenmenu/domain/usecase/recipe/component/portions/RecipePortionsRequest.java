@@ -1,14 +1,14 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions;
 
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
-import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainMessageModel;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
+import com.example.peter.thekitchenmenu.domain.usecase.MessageModelDataId;
 import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainModel;
 
 import java.util.Objects;
 
 public final class RecipePortionsRequest
-        extends BaseDomainMessageModel<RecipePortionsRequest.Model>
-        implements UseCase.Request {
+        extends MessageModelDataId<RecipePortionsRequest.Model>
+        implements UseCaseBase.Request {
 
     @Override
     public String toString() {
@@ -22,7 +22,7 @@ public final class RecipePortionsRequest
     private RecipePortionsRequest() {}
 
     public static class Builder
-            extends UseCaseMessageBuilderModel<Builder, RecipePortionsRequest, Model> {
+            extends MessageModelDataIdBuilder<Builder, RecipePortionsRequest, Model> {
 
         public Builder() {
             message = new RecipePortionsRequest();
@@ -87,28 +87,28 @@ public final class RecipePortionsRequest
         public static class Builder extends DomainModelBuilder<Builder, Model> {
 
             public Builder() {
-                model = new Model();
+                domainModel = new Model();
             }
 
             public Builder getDefault() {
-                model.servings = RecipePortions.MIN_SERVINGS;
-                model.sittings = RecipePortions.MIN_SITTINGS;
+                domainModel.servings = RecipePortions.MIN_SERVINGS;
+                domainModel.sittings = RecipePortions.MIN_SITTINGS;
                 return self();
             }
 
             public Builder basedResponseModel(RecipePortionsResponse.Model m) {
-                model.sittings = m.getSittings();
-                model.servings = m.getServings();
+                domainModel.sittings = m.getSittings();
+                domainModel.servings = m.getServings();
                 return self();
             }
 
             public Builder setServings(int servings) {
-                model.servings = servings;
+                domainModel.servings = servings;
                 return self();
             }
 
             public Builder setSittings(int sittings) {
-                model.sittings = sittings;
+                domainModel.sittings = sittings;
                 return self();
             }
 

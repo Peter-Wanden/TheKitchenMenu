@@ -19,7 +19,7 @@ import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.iden
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.parent.RecipeMetadataParentEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.datasource.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.datasource.TestDataRecipePortionsEntity;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityTest;
@@ -200,7 +200,7 @@ public class RecipePortionsEditorViewModelTest {
                 build();
 
         // Act
-        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        handler.executeAsync(recipeMacro, request, new RecipeResponseCallback());
 
         // Assert
         verifyAllOtherComponentReposCalledAndReturnDataUnavailable(recipeId);
@@ -222,7 +222,7 @@ public class RecipePortionsEditorViewModelTest {
                 build();
 
         // Act
-        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        handler.executeAsync(recipeMacro, request, new RecipeResponseCallback());
 
         // Assert
         verifyAllOtherComponentReposCalledAndReturnExistingValid(recipeId);
@@ -248,7 +248,7 @@ public class RecipePortionsEditorViewModelTest {
                 build();
 
         // Act
-        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        handler.executeAsync(recipeMacro, request, new RecipeResponseCallback());
 
         // Assert
         verifyAllOtherComponentReposCalledAndReturnDataUnavailable(recipeId);
@@ -277,7 +277,7 @@ public class RecipePortionsEditorViewModelTest {
                 build();
 
         // Act
-        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        handler.executeAsync(recipeMacro, request, new RecipeResponseCallback());
 
         // Assert
         verifyAllOtherComponentReposCalledAndReturnDataUnavailable(recipeId);
@@ -308,7 +308,7 @@ public class RecipePortionsEditorViewModelTest {
                 build();
 
         // Act
-        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        handler.executeAsync(recipeMacro, request, new RecipeResponseCallback());
 
         // Assert
         verifyAllOtherComponentReposCalledAndReturnDataUnavailable(recipeId);
@@ -339,7 +339,7 @@ public class RecipePortionsEditorViewModelTest {
                 build();
 
         // Act
-        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        handler.executeAsync(recipeMacro, request, new RecipeResponseCallback());
 
         // Assert
         verifyAllOtherComponentReposCalledAndReturnDataUnavailable(recipeId);
@@ -370,7 +370,7 @@ public class RecipePortionsEditorViewModelTest {
                 build();
 
         // Act
-        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        handler.executeAsync(recipeMacro, request, new RecipeResponseCallback());
 
         // Assert
         verifyAllOtherComponentReposCalledAndReturnDataUnavailable(recipeId);
@@ -395,7 +395,7 @@ public class RecipePortionsEditorViewModelTest {
                 build();
 
         // Act
-        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        handler.executeAsync(recipeMacro, request, new RecipeResponseCallback());
 
         // Assert
         verifyAllOtherComponentReposCalledAndReturnDataUnavailable(recipeId);
@@ -426,7 +426,7 @@ public class RecipePortionsEditorViewModelTest {
                 build();
 
         // Act
-        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        handler.executeAsync(recipeMacro, request, new RecipeResponseCallback());
 
         // Assert
         verifyAllOtherComponentReposCalledAndReturnDataUnavailable(recipeId);
@@ -452,7 +452,7 @@ public class RecipePortionsEditorViewModelTest {
                 build();
 
         // Act
-        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        handler.executeAsync(recipeMacro, request, new RecipeResponseCallback());
 
         // Assert
         verifyAllOtherComponentReposCalledAndReturnDataUnavailable(recipeId);
@@ -476,7 +476,7 @@ public class RecipePortionsEditorViewModelTest {
                 build();
 
         // Act
-        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        handler.executeAsync(recipeMacro, request, new RecipeResponseCallback());
         verifyAllOtherComponentReposCalledAndReturnExistingValid(recipeId);
         verifyRepoPortionsCalledAndReturnExistingValid(recipeId);
         // Assert
@@ -495,7 +495,7 @@ public class RecipePortionsEditorViewModelTest {
                 build();
 
         // Act
-        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        handler.executeAsync(recipeMacro, request, new RecipeResponseCallback());
 
         // Assert
         verifyAllOtherComponentReposCalledAndReturnExistingValid(recipeId);
@@ -521,7 +521,7 @@ public class RecipePortionsEditorViewModelTest {
                 build();
 
         // Act
-        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        handler.executeAsync(recipeMacro, request, new RecipeResponseCallback());
 
         // Assert
         verifyAllOtherComponentReposCalledAndReturnExistingValid(recipeId);
@@ -547,7 +547,7 @@ public class RecipePortionsEditorViewModelTest {
                 build();
 
         // Act
-        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        handler.executeAsync(recipeMacro, request, new RecipeResponseCallback());
 
         // Assert
         verifyAllOtherComponentReposCalledAndReturnExistingValid(recipeId);
@@ -573,7 +573,7 @@ public class RecipePortionsEditorViewModelTest {
                 build();
 
         // Act
-        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        handler.executeAsync(recipeMacro, request, new RecipeResponseCallback());
 
         // Assert
         verifyAllOtherComponentReposCalledAndReturnExistingValid(recipeId);
@@ -599,7 +599,7 @@ public class RecipePortionsEditorViewModelTest {
                 build();
 
         // Act
-        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        handler.executeAsync(recipeMacro, request, new RecipeResponseCallback());
 
         // Assert
         verifyAllOtherComponentReposCalledAndReturnExistingValid(recipeId);
@@ -710,7 +710,7 @@ public class RecipePortionsEditorViewModelTest {
         }
     }
 
-    private static class RecipeResponseCallback implements UseCase.Callback<RecipeMetadataResponse> {
+    private static class RecipeResponseCallback implements UseCaseBase.Callback<RecipeMetadataResponse> {
 
         private static final String TAG = "tkm-" + RecipeResponseCallback.class.getSimpleName() +
                 ": ";
@@ -718,13 +718,13 @@ public class RecipePortionsEditorViewModelTest {
         private RecipeMetadataResponse response;
 
         @Override
-        public void onUseCaseSuccess(RecipeMetadataResponse response) {
+        public void onSuccessResponse(RecipeMetadataResponse response) {
             System.out.println(RecipePortionsEditorViewModelTest.TAG + TAG + "onSuccess:" + response);
             this.response = response;
         }
 
         @Override
-        public void onUseCaseError(RecipeMetadataResponse response) {
+        public void onErrorResponse(RecipeMetadataResponse response) {
             System.out.println(RecipePortionsEditorViewModelTest.TAG + TAG + "onError:" + response);
             this.response = response;
         }

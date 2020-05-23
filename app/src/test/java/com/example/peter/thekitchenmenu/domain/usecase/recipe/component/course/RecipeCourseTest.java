@@ -6,7 +6,7 @@ import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeC
 import com.example.peter.thekitchenmenu.data.repository.recipe.course.TestDataRecipeCourse;
 import com.example.peter.thekitchenmenu.data.repository.recipe.metadata.TestDataRecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataPersistenceModel;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
@@ -87,7 +87,7 @@ public class RecipeCourseTest {
                 build();
 
         // Act
-        handler.execute(SUT, request, getCallback());
+        handler.executeAsync(SUT, request, getCallback());
         // Assert
         verifyRepoCalledAndReturnMatchingCourses(request.getDomainId());
 
@@ -131,7 +131,7 @@ public class RecipeCourseTest {
                 build();
 
         // Act
-        handler.execute(SUT, initialisationRequest, getCallback());
+        handler.executeAsync(SUT, initialisationRequest, getCallback());
         // Assert
         verify(repoCourseMock).getAllActiveByDomainId(eq(domainId), repoCourseCallback.capture());
         repoCourseCallback.getValue().onAllLoaded(newActiveModels);
@@ -147,7 +147,7 @@ public class RecipeCourseTest {
                 build();
 
         // Act
-        handler.execute(SUT, deactivateRequest, getCallback());
+        handler.executeAsync(SUT, deactivateRequest, getCallback());
 
         // Assert courses updated and deactivated
         verify(repoCourseMock, times(noOfCoursesToDeactivate)).update(
@@ -198,7 +198,7 @@ public class RecipeCourseTest {
                 build();
 
         // Act
-        handler.execute(SUT, initialisationRequest, getCallback());
+        handler.executeAsync(SUT, initialisationRequest, getCallback());
 
         // Assert request for data
         verify(repoCourseMock).getAllActiveByDomainId(eq(domainId), repoCourseCallback.capture());
@@ -220,7 +220,7 @@ public class RecipeCourseTest {
                 build();
 
         // Act
-        handler.execute(SUT, addCoursesRequest, getCallback());
+        handler.executeAsync(SUT, addCoursesRequest, getCallback());
         // Assert
         verify(repoCourseMock, times(numberOfAddedCourses)).save(capturedPersistentModel.capture());
 
@@ -252,7 +252,7 @@ public class RecipeCourseTest {
                 setDomainId(domainId).
                 build();
         // Act
-        handler.execute(SUT, initialisationRequest, getCallback());
+        handler.executeAsync(SUT, initialisationRequest, getCallback());
         // Assert
         verify(repoCourseMock).getAllActiveByDomainId(eq(domainId), repoCourseCallback.capture());
     }
@@ -267,7 +267,7 @@ public class RecipeCourseTest {
                 setDomainId(domainId).
                 build();
         // Act
-        handler.execute(SUT, initialisationRequest, getCallback());
+        handler.executeAsync(SUT, initialisationRequest, getCallback());
         // Assert
         verifyRepoCalledAndReturnMatchingCourses(domainId);
 
@@ -295,7 +295,7 @@ public class RecipeCourseTest {
                 setDomainId(domainId).
                 build();
         // Act
-        handler.execute(SUT, initialisationRequest, getCallback());
+        handler.executeAsync(SUT, initialisationRequest, getCallback());
         // Assert
         verifyRepoCalledAndReturnMatchingCourses(domainId);
         // Assert - verify all courses returned
@@ -313,7 +313,7 @@ public class RecipeCourseTest {
                 setDomainId(domainId).
                 build();
         // Act
-        handler.execute(SUT, requestWitNoCourses, getCallback());
+        handler.executeAsync(SUT, requestWitNoCourses, getCallback());
         // Assert expected sate after courses removed
         assertEquals(ComponentState.INVALID_CHANGED, onErrorResponse.
                 getMetadata().
@@ -329,20 +329,20 @@ public class RecipeCourseTest {
     }
 
     // region helper methods -----------------------------------------------------------------------
-    private UseCase.Callback<RecipeCourseResponse> getCallback() {
-        return new UseCase.Callback<RecipeCourseResponse>() {
+    private UseCaseBase.Callback<RecipeCourseResponse> getCallback() {
+        return new UseCaseBase.Callback<RecipeCourseResponse>() {
 
             private final String TAG = RecipeCourseTest.TAG + this.getClass().getSimpleName()
                     + ": ";
 
             @Override
-            public void onUseCaseSuccess(RecipeCourseResponse response) {
+            public void onSuccessResponse(RecipeCourseResponse response) {
                 System.out.println(TAG + "onSuccess: " + response);
                 onSuccessResponse = response;
             }
 
             @Override
-            public void onUseCaseError(RecipeCourseResponse response) {
+            public void onErrorResponse(RecipeCourseResponse response) {
                 System.out.println(TAG + "onError: " + response);
                 onErrorResponse = response;
             }
@@ -375,7 +375,7 @@ public class RecipeCourseTest {
                 build();
 
         // Act
-        handler.execute(SUT, initialRequest, getCallback());
+        handler.executeAsync(SUT, initialRequest, getCallback());
         // Assert
         verifyRepoCalledAndReturnMatchingCourses(initialRequest.getDomainId());
         // Assert component state

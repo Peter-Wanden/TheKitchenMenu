@@ -1,17 +1,17 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions;
 
-import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainMessageModelMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.MessageModelDataIdMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainModel;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadataModel;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
 public final class RecipePortionsResponse
-        extends BaseDomainMessageModelMetadata<RecipePortionsResponse.Model>
-        implements UseCase.Response {
+        extends MessageModelDataIdMetadata<RecipePortionsResponse.Model>
+        implements UseCaseBase.Response {
 
     @Override
     public String toString() {
@@ -26,7 +26,7 @@ public final class RecipePortionsResponse
     private RecipePortionsResponse() {}
 
     public static class Builder
-            extends UseCaseMessageMetadataBuilder<Builder, RecipePortionsResponse, Model> {
+            extends MessageModelDataIdMetadataBuilder<Builder, RecipePortionsResponse, Model> {
 
         public Builder() {
             message = new RecipePortionsResponse();
@@ -35,7 +35,7 @@ public final class RecipePortionsResponse
         public Builder getDefault() {
             message.dataId = "";
             message.domainId = "";
-            message.metadata = new UseCaseMetadata.Builder().getDefault().build();
+            message.metadata = new UseCaseMetadataModel.Builder().getDefault().build();
             message.model = new Model.Builder().getDefault().build();
             return self();
         }
@@ -95,28 +95,28 @@ public final class RecipePortionsResponse
         public static class Builder extends DomainModelBuilder<Builder, Model> {
 
             public Builder() {
-                model = new RecipePortionsResponse.Model();
+                domainModel = new RecipePortionsResponse.Model();
             }
 
             public Builder getDefault() {
-                model.servings = RecipePortions.MIN_SERVINGS;
-                model.sittings = RecipePortions.MIN_SITTINGS;
-                model.portions = RecipePortions.MIN_SERVINGS * RecipePortions.MIN_SITTINGS;
+                domainModel.servings = RecipePortions.MIN_SERVINGS;
+                domainModel.sittings = RecipePortions.MIN_SITTINGS;
+                domainModel.portions = RecipePortions.MIN_SERVINGS * RecipePortions.MIN_SITTINGS;
                 return self();
             }
 
             public Builder setServings(int servings) {
-                model.servings = servings;
+                domainModel.servings = servings;
                 return self();
             }
 
             public Builder setSittings(int sittings) {
-                model.sittings = sittings;
+                domainModel.sittings = sittings;
                 return self();
             }
 
             public Builder setPortions(int portions) {
-                model.portions = portions;
+                domainModel.portions = portions;
                 return self();
             }
 

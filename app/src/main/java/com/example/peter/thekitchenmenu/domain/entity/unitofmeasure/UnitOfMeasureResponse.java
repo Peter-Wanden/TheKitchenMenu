@@ -1,6 +1,6 @@
 package com.example.peter.thekitchenmenu.domain.entity.unitofmeasure;
 
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModel;
 
 import java.util.Objects;
@@ -9,7 +9,7 @@ import javax.annotation.Nonnull;
 
 import static com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureAbstract.*;
 
-public class UnitOfMeasureResponse implements UseCase.Response {
+public class UnitOfMeasureResponse implements UseCaseBase.Response {
 
     @Nonnull
     private final MeasurementModel model;

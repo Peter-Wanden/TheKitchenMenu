@@ -1,17 +1,17 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity;
 
-import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainMessageModelMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.MessageModelDataIdMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainModel;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadataModel;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
 public final class RecipeIdentityResponse
-        extends BaseDomainMessageModelMetadata<RecipeIdentityResponse.Model>
-        implements UseCase.Response {
+        extends MessageModelDataIdMetadata<RecipeIdentityResponse.Model>
+        implements UseCaseBase.Response {
 
     @Nonnull
     @Override
@@ -26,7 +26,7 @@ public final class RecipeIdentityResponse
 
     private RecipeIdentityResponse() {}
 
-    public static class Builder extends UseCaseMessageMetadataBuilder
+    public static class Builder extends MessageModelDataIdMetadataBuilder
             <Builder, RecipeIdentityResponse, Model> {
 
         public Builder() {
@@ -37,7 +37,7 @@ public final class RecipeIdentityResponse
             message.dataId = "";
             message.domainId = "";
             message.model = new Model.Builder().getDefault().build();
-            message.metadata = new UseCaseMetadata.Builder().getDefault().build();
+            message.metadata = new UseCaseMetadataModel.Builder().getDefault().build();
             return self();
         }
 
@@ -89,22 +89,22 @@ public final class RecipeIdentityResponse
         public static class Builder extends DomainModelBuilder<Builder, Model> {
 
             public Builder() {
-                model = new Model();
+                domainModel = new Model();
             }
 
             public Builder getDefault() {
-                model.title = "";
-                model.description = "";
+                domainModel.title = "";
+                domainModel.description = "";
                 return self();
             }
 
             public Builder setTitle(String title) {
-                model.title = title;
+                domainModel.title = title;
                 return self();
             }
 
             public Builder setDescription(String description) {
-                model.description = description;
+                domainModel.description = description;
                 return self();
             }
 

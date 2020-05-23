@@ -68,57 +68,57 @@ public final class RecipeCoursePersistenceModel
             extends DomainModelBuilder<Builder, RecipeCoursePersistenceModel> {
 
         public Builder() {
-            model = new RecipeCoursePersistenceModel();
+            domainModel = new RecipeCoursePersistenceModel();
         }
 
         @Override
         public Builder getDefault() {
-            model.dataId = "";
-            model.domainId = "";
-            model.course = RecipeCourse.Course.COURSE_ZERO;
-            model.isActive = false;
-            model.createDate = 0L;
-            model.lasUpdate = 0L;
+            domainModel.dataId = "";
+            domainModel.domainId = "";
+            domainModel.course = RecipeCourse.Course.COURSE_ZERO;
+            domainModel.isActive = false;
+            domainModel.createDate = 0L;
+            domainModel.lasUpdate = 0L;
             return self();
         }
 
         public Builder basedOnModel (RecipeCoursePersistenceModel m) {
-            model.dataId = m.getDataId();
-            model.domainId = m.getDomainId();
-            model.course = m.getCourse();
-            model.isActive = m.isActive();
-            model.createDate = m.getCreateDate();
-            model.lasUpdate = m.getLastUpdate();
+            domainModel.dataId = m.getDataId();
+            domainModel.domainId = m.getDomainId();
+            domainModel.course = m.getCourse();
+            domainModel.isActive = m.isActive();
+            domainModel.createDate = m.getCreateDate();
+            domainModel.lasUpdate = m.getLastUpdate();
             return self();
         }
 
         public Builder setDataId(String dataId) {
-            model.dataId = dataId;
+            domainModel.dataId = dataId;
             return self();
         }
 
         public Builder setDomainId(String recipeId) {
-            model.domainId = recipeId;
+            domainModel.domainId = recipeId;
             return self();
         }
 
         public Builder setCourse(RecipeCourse.Course course) {
-            model.course = course;
+            domainModel.course = course;
             return self();
         }
 
         public Builder setIsActive(boolean isActive) {
-            model.isActive = isActive;
+            domainModel.isActive = isActive;
             return self();
         }
 
         public Builder setCreateDate(long createDate) {
-            model.createDate = createDate;
+            domainModel.createDate = createDate;
             return self();
         }
 
         public Builder setLastUpdate(long lastUpdate) {
-            model.lasUpdate = lastUpdate;
+            domainModel.lasUpdate = lastUpdate;
             return self();
         }
 

@@ -3,7 +3,7 @@ package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredientlist;
 import androidx.databinding.ObservableField;
 import androidx.lifecycle.ViewModel;
 
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentity;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityRequest;
@@ -42,18 +42,18 @@ public class RecipeNameAndPortionsViewModel extends ViewModel {
                 setDataId(recipeId).
                 build();
 
-        handler.execute(
+        handler.executeAsync(
                 recipeIdentity,
                 request,
-                new UseCase.Callback<RecipeIdentityResponse>() {
+                new UseCaseBase.Callback<RecipeIdentityResponse>() {
 
             @Override
-            public void onUseCaseSuccess(RecipeIdentityResponse response) {
+            public void onSuccessResponse(RecipeIdentityResponse response) {
                 setIdentityToView(response.getModel());
             }
 
             @Override
-            public void onUseCaseError(RecipeIdentityResponse response) {
+            public void onErrorResponse(RecipeIdentityResponse response) {
 
             }
         });
@@ -69,18 +69,18 @@ public class RecipeNameAndPortionsViewModel extends ViewModel {
                 setDataId(recipeId).
                 build();
 
-        handler.execute(
+        handler.executeAsync(
                 recipePortions,
                 request,
-                new UseCase.Callback<RecipePortionsResponse>() {
+                new UseCaseBase.Callback<RecipePortionsResponse>() {
 
             @Override
-            public void onUseCaseSuccess(RecipePortionsResponse response) {
+            public void onSuccessResponse(RecipePortionsResponse response) {
                 setPortionsToView(response.getModel());
             }
 
             @Override
-            public void onUseCaseError(RecipePortionsResponse response) {
+            public void onErrorResponse(RecipePortionsResponse response) {
 
             }
         });

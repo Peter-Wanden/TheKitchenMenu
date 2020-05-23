@@ -19,9 +19,9 @@ import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.meta
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.datasource.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.datasource.TestDataRecipePortionsEntity;
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadataModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDuration;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDurationRequest;
@@ -116,7 +116,7 @@ public class RecipeDurationEditorViewModelTest {
     private Recipe recipeMacro;
     private RecipeMacroResponseListener macroListener;
     private DurationResponseListener durationListener;
-    private UseCaseMetadata metadata;
+    private UseCaseMetadataModel metadata;
     private RecipeDurationResponse.Model model;
 
     // endregion helper fields ---------------------------------------------------------------------
@@ -940,7 +940,7 @@ public class RecipeDurationEditorViewModelTest {
         recipeMacro.registerRecipeCallback(macroListener);
 
         // Act
-        handler.execute(recipeMacro, request, durationListener);
+        handler.executeAsync(recipeMacro, request, durationListener);
 
         // Assert
         verifyAllComponentReposCalledAndReturnDataUnavailable(recipeId);
@@ -1027,7 +1027,7 @@ public class RecipeDurationEditorViewModelTest {
         }
     }
 
-    private static class RecipeMacroResponseListener implements UseCase.Callback<RecipeResponse> {
+    private static class RecipeMacroResponseListener implements UseCaseBase.Callback<RecipeResponse> {
 
         private static final String TAG = "tkm-" + RecipeMacroResponseListener.class.
                 getSimpleName() + ": ";
@@ -1035,14 +1035,14 @@ public class RecipeDurationEditorViewModelTest {
         RecipeResponse response;
 
         @Override
-        public void onUseCaseSuccess(RecipeResponse response) {
+        public void onSuccessResponse(RecipeResponse response) {
             System.out.println(RecipeDurationEditorViewModelTest.TAG + TAG + "onSuccess:");
             this.response = response;
 
         }
 
         @Override
-        public void onUseCaseError(RecipeResponse response) {
+        public void onErrorResponse(RecipeResponse response) {
             System.out.println(RecipeDurationEditorViewModelTest.TAG + TAG + "onError:");
             this.response = response;
         }
@@ -1060,7 +1060,7 @@ public class RecipeDurationEditorViewModelTest {
         }
     }
 
-    private class DurationResponseListener implements UseCase.Callback<RecipeDurationResponse> {
+    private class DurationResponseListener implements UseCaseBase.Callback<RecipeDurationResponse> {
 
         private final String TAG = "tkm:" + DurationResponseListener.class.getSimpleName()
                 + ": ";
@@ -1069,7 +1069,7 @@ public class RecipeDurationEditorViewModelTest {
         private RecipeDurationResponse onErrorResponse;
 
         @Override
-        public void onUseCaseSuccess(RecipeDurationResponse response) {
+        public void onSuccessResponse(RecipeDurationResponse response) {
             System.out.println(RecipeDurationEditorViewModelTest.TAG + TAG + "onSuccess:" + response);
             onSuccessResponse = response;
             metadata = response.getMetadata();
@@ -1077,7 +1077,7 @@ public class RecipeDurationEditorViewModelTest {
         }
 
         @Override
-        public void onUseCaseError(RecipeDurationResponse response) {
+        public void onErrorResponse(RecipeDurationResponse response) {
             System.out.println(RecipeDurationEditorViewModelTest.TAG + TAG + "onError:" + response);
             onErrorResponse = response;
             metadata = response.getMetadata();

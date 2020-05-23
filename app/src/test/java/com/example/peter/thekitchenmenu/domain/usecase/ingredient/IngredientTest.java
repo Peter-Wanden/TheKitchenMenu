@@ -6,9 +6,9 @@ import com.example.peter.thekitchenmenu.data.repository.ingredient.RepositoryIng
 import com.example.peter.thekitchenmenu.data.repository.ingredient.TestDataIngredient;
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.model.FailReasons;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadataModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentState;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
@@ -135,7 +135,7 @@ public class IngredientTest {
                 setModel(model).
                 build();
         // Act
-        handler.execute(SUT, request, callbackClient);
+        handler.executeAsync(SUT, request, callbackClient);
         // Assert
         assertNoDuplicateFound(modelUnderTest);
 
@@ -167,7 +167,7 @@ public class IngredientTest {
                 setModel(model).
                 build();
         // Act
-        handler.execute(SUT, request, callbackClient);
+        handler.executeAsync(SUT, request, callbackClient);
         // Assert
         assertNoDuplicateFound(modelUnderTest);
 
@@ -204,7 +204,7 @@ public class IngredientTest {
                 setModel(model).
                 build();
         // Act
-        handler.execute(SUT, request, callbackClient);
+        handler.executeAsync(SUT, request, callbackClient);
         // Assert
         assertNoDuplicateFound(modelUnderTest);
 
@@ -246,7 +246,7 @@ public class IngredientTest {
                 build();
 
         // Act
-        handler.execute(SUT, request, callbackClient);
+        handler.executeAsync(SUT, request, callbackClient);
         // Assert
         assertNoDuplicateFound(modelUnderTest);
 
@@ -278,7 +278,7 @@ public class IngredientTest {
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(modelUnderTest.getLastUpdate());
 
         // Act
-        handler.execute(SUT, request, callbackClient);
+        handler.executeAsync(SUT, request, callbackClient);
         // Assert
         assertNoDuplicateFound(modelUnderTest);
 
@@ -320,7 +320,7 @@ public class IngredientTest {
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(modelUnderTest.getLastUpdate());
 
         // Act
-        handler.execute(SUT, request, callbackClient);
+        handler.executeAsync(SUT, request, callbackClient);
         // Assert
         assertNoDuplicateFound(modelUnderTest);
 
@@ -353,7 +353,7 @@ public class IngredientTest {
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(modelUnderTest.getLastUpdate());
 
         // Act
-        handler.execute(SUT, titleRequest, callbackClient);
+        handler.executeAsync(SUT, titleRequest, callbackClient);
         // Assert
         expectedNoOfDuplicateChecks = 1; // for name
         assertNoDuplicateFound(modelUnderTest);
@@ -376,7 +376,7 @@ public class IngredientTest {
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(modelUnderTest.getLastUpdate());
 
         // Act
-        handler.execute(SUT, descRequest, callbackClient);
+        handler.executeAsync(SUT, descRequest, callbackClient);
 
         // Assert
         expectedNoOfDuplicateChecks = 2; // for name and description
@@ -404,7 +404,7 @@ public class IngredientTest {
                 callbackClient.onSuccessResponse.getDataId()
         );
 
-        UseCaseMetadata metadata = callbackClient.onSuccessResponse.getMetadata();
+        UseCaseMetadataModel metadata = callbackClient.onSuccessResponse.getMetadata();
         assertEquals(
                 ComponentState.VALID_UNCHANGED,
                 metadata.getState()
@@ -566,7 +566,7 @@ public class IngredientTest {
                 build();
 
         // Act
-        handler.execute(SUT, initialisationRequest, callbackClient);
+        handler.executeAsync(SUT, initialisationRequest, callbackClient);
         // Assert repo called, no model found, return model unavailable
         verify(repoMock).getActiveByDomainId(
                 eq(modelUnderTest.getDomainId()),
@@ -582,7 +582,7 @@ public class IngredientTest {
                 setDomainId(modelUnderTest.getDomainId()).
                 build();
 
-        handler.execute(SUT, initialisationRequest, callbackClient);
+        handler.executeAsync(SUT, initialisationRequest, callbackClient);
         // Assert
         verify(repoMock).getActiveByDomainId(eq(modelUnderTest.getDomainId()),
                 repoCallbackCaptor.capture()
@@ -604,7 +604,7 @@ public class IngredientTest {
 
     // region helper classes -----------------------------------------------------------------------
     private static class GetDomainModelCallbackClient
-            implements UseCase.Callback<IngredientResponse> {
+            implements UseCaseBase.Callback<IngredientResponse> {
 
         private static final String TAG = IngredientTest.TAG +
                 GetDomainModelCallbackClient.class.getSimpleName() + ": ";
@@ -613,13 +613,13 @@ public class IngredientTest {
         private IngredientResponse onErrorResponse;
 
         @Override
-        public void onUseCaseSuccess(IngredientResponse response) {
+        public void onSuccessResponse(IngredientResponse response) {
             System.out.println(TAG + response);
             onSuccessResponse = response;
         }
 
         @Override
-        public void onUseCaseError(IngredientResponse response) {
+        public void onErrorResponse(IngredientResponse response) {
             System.out.println(TAG + response);
             onErrorResponse = response;
         }

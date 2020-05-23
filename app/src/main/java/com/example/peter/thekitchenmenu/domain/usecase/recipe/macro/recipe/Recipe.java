@@ -4,8 +4,9 @@ import androidx.core.util.Pair;
 
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.model.FailReasons;
-import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainMessage;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.MessageModelBase;
+import com.example.peter.thekitchenmenu.domain.usecase.MessageModelDataId;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourseRequest;
@@ -45,7 +46,7 @@ import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.m
  * The first request sent through, regardless of type, will only load and return data. Subsequent
  * requests will perform the requested operation.
  */
-public class Recipe extends UseCase {
+public class Recipe extends UseCaseBase {
 
     private static final String TAG = "tkm-" + Recipe.class.getSimpleName() + ": ";
 
@@ -69,17 +70,17 @@ public class Recipe extends UseCase {
     private String dataId = "";
     private String recipeDomainId = "";
 
-    private final HashMap<ComponentName, UseCase.Response>
+    private final HashMap<ComponentName, UseCaseBase.Response>
             componentResponses = new LinkedHashMap<>();
     private final HashMap<ComponentName, ComponentState>
             componentStates = new LinkedHashMap<>();
 
     // Listeners
-    private final List<Pair<ComponentName, Callback<? extends UseCase.Response>>>
+    private final List<Pair<ComponentName, Callback<? extends UseCaseBase.Response>>>
             componentListeners = new ArrayList<>();
     private final List<RecipeMetadataListener>
             metaDataListeners = new ArrayList<>();
-    private final List<UseCase.Callback<RecipeResponse>>
+    private final List<UseCaseBase.Callback<RecipeResponse>>
             recipeResponseListeners = new ArrayList<>();
 
     private int requestNo;
@@ -110,7 +111,7 @@ public class Recipe extends UseCase {
 
         extractRequestOriginator(request);
         // Downcast to BaseDomainMessage to get access to data and domain Id's
-        BaseDomainMessage r = (BaseDomainMessage) request;
+        MessageModelDataId r = (MessageModelDataId) request;
 
         if (isNewRequest(r.getDomainId()) || RECIPE == requestOriginator) {
             dataId = r.getDataId();
@@ -184,7 +185,7 @@ public class Recipe extends UseCase {
                 setDomainId(recipeDomainId).
                 build();
         System.out.println(TAG + request);
-        handler.execute(recipeMetadata, request, new RecipeMetadataCallback());
+        handler.executeAsync(recipeMetadata, request, new RecipeMetadataCallback());
     }
 
     private class RecipeMetadataCallback extends RecipeUseCaseCallback<RecipeMetadataResponse> {
@@ -197,7 +198,7 @@ public class Recipe extends UseCase {
     }
 
     private void startIdentityComponent() {
-        handler.execute(
+        handler.executeAsync(
                 identity,
                 new RecipeIdentityRequest.Builder().
                         getDefault().
@@ -208,7 +209,7 @@ public class Recipe extends UseCase {
     }
 
     private void processIdentityRequest(RecipeIdentityRequest request) {
-        handler.execute(identity, request, new IdentityCallback()
+        handler.executeAsync(identity, request, new IdentityCallback()
         );
     }
 
@@ -222,7 +223,7 @@ public class Recipe extends UseCase {
     }
 
     private void startCourseComponent() {
-        handler.execute(
+        handler.executeAsync(
                 course,
                 new RecipeCourseRequest.Builder().
                         getDefault().
@@ -233,7 +234,7 @@ public class Recipe extends UseCase {
     }
 
     private void processCourseRequest(RecipeCourseRequest request) {
-        handler.execute(course, request, new CourseCallback());
+        handler.executeAsync(course, request, new CourseCallback());
     }
 
     private class CourseCallback extends RecipeUseCaseCallback<RecipeCourseResponse> {
@@ -247,7 +248,7 @@ public class Recipe extends UseCase {
     }
 
     private void startDurationComponent() {
-        handler.execute(
+        handler.executeAsync(
                 duration,
                 new RecipeDurationRequest.Builder().
                         getDefault().
@@ -258,7 +259,7 @@ public class Recipe extends UseCase {
     }
 
     private void processDurationRequest(RecipeDurationRequest request) {
-        handler.execute(duration, request, new DurationCallback()
+        handler.executeAsync(duration, request, new DurationCallback()
         );
     }
 
@@ -272,7 +273,7 @@ public class Recipe extends UseCase {
     }
 
     private void startPortionsComponent() {
-        handler.execute(
+        handler.executeAsync(
                 portions,
                 new RecipePortionsRequest.Builder().
                         getDefault().
@@ -283,7 +284,7 @@ public class Recipe extends UseCase {
     }
 
     private void processPortionsRequest(RecipePortionsRequest request) {
-        handler.execute(portions, request, new PortionsCallback()
+        handler.executeAsync(portions, request, new PortionsCallback()
         );
     }
 
@@ -302,7 +303,7 @@ public class Recipe extends UseCase {
         componentStates.put(componentName, componentState);
     }
 
-    private void addComponentResponse(ComponentName componentName, UseCase.Response response) {
+    private void addComponentResponse(ComponentName componentName, UseCaseBase.Response response) {
         componentResponses.put(componentName, response);
     }
 
@@ -331,7 +332,7 @@ public class Recipe extends UseCase {
                                 build()).
                 build();
 
-        handler.execute(recipeMetadata, request, new RecipeStateCallback());
+        handler.executeAsync(recipeMetadata, request, new RecipeStateCallback());
     }
 
     private class RecipeStateCallback extends RecipeUseCaseCallback<RecipeMetadataResponse> {
@@ -366,7 +367,7 @@ public class Recipe extends UseCase {
         metaDataListeners.remove(listener);
     }
 
-    public void registerRecipeCallback(UseCase.Callback<RecipeResponse> callback) {
+    public void registerRecipeCallback(UseCaseBase.Callback<RecipeResponse> callback) {
         recipeResponseListeners.add(callback);
     }
 
@@ -374,18 +375,18 @@ public class Recipe extends UseCase {
         RecipeResponse response = getRecipeResponse();
 
         if (isRecipeResponseChanged(response)) {
-            for (UseCase.Callback<RecipeResponse> callback : recipeResponseListeners) {
+            for (UseCaseBase.Callback<RecipeResponse> callback : recipeResponseListeners) {
                 if (isValid()) {
-                    callback.onUseCaseSuccess(response);
+                    callback.onSuccessResponse(response);
                 } else {
-                    callback.onUseCaseError(response);
+                    callback.onErrorResponse(response);
                 }
             }
         }
         notifyComponentCallbacks();
     }
 
-    private void unregisterRecipeCallback(UseCase.Callback<RecipeResponse> callback) {
+    private void unregisterRecipeCallback(UseCaseBase.Callback<RecipeResponse> callback) {
         recipeResponseListeners.remove(callback);
     }
 
@@ -414,7 +415,7 @@ public class Recipe extends UseCase {
 
     public void registerComponentCallback(Pair<
             ComponentName,
-            UseCase.Callback<? extends UseCase.Response>> callbackPair) {
+            UseCaseBase.Callback<? extends UseCaseBase.Response>> callbackPair) {
         componentListeners.add(callbackPair);
     }
 
@@ -422,7 +423,7 @@ public class Recipe extends UseCase {
     private void notifyComponentCallbacks() {
         for (Pair<
                 ComponentName,
-                UseCase.Callback<? extends UseCase.Response>>
+                UseCaseBase.Callback<? extends UseCaseBase.Response>>
                 callbackPair : componentListeners) {
 
             ComponentName componentName = callbackPair.first;
@@ -431,60 +432,60 @@ public class Recipe extends UseCase {
                 RecipeIdentityResponse response = (RecipeIdentityResponse)
                         componentResponses.get(componentName);
 
-                UseCase.Callback<RecipeIdentityResponse> callback =
-                        (UseCase.Callback<RecipeIdentityResponse>) callbackPair.second;
+                UseCaseBase.Callback<RecipeIdentityResponse> callback =
+                        (UseCaseBase.Callback<RecipeIdentityResponse>) callbackPair.second;
 
                 if (response.getMetadata().getFailReasons().contains(CommonFailReason.NONE)) {
-                    callback.onUseCaseSuccess(response);
+                    callback.onSuccessResponse(response);
                 } else {
-                    callback.onUseCaseError(response);
+                    callback.onErrorResponse(response);
                 }
 
             } else if (COURSE.equals(componentName)) {
                 RecipeCourseResponse response = (RecipeCourseResponse)
                         componentResponses.get(componentName);
 
-                UseCase.Callback<RecipeCourseResponse> callback =
-                        (UseCase.Callback<RecipeCourseResponse>) callbackPair.second;
+                UseCaseBase.Callback<RecipeCourseResponse> callback =
+                        (UseCaseBase.Callback<RecipeCourseResponse>) callbackPair.second;
 
                 if (response.getMetadata().getFailReasons().contains(CommonFailReason.NONE)) {
-                    callback.onUseCaseSuccess(response);
+                    callback.onSuccessResponse(response);
                 } else {
-                    callback.onUseCaseError(response);
+                    callback.onErrorResponse(response);
                 }
 
             } else if (DURATION.equals(componentName)) {
                 RecipeDurationResponse response = (RecipeDurationResponse)
                         componentResponses.get(componentName);
 
-                UseCase.Callback<RecipeDurationResponse> callback =
-                        (UseCase.Callback<RecipeDurationResponse>) callbackPair.second;
+                UseCaseBase.Callback<RecipeDurationResponse> callback =
+                        (UseCaseBase.Callback<RecipeDurationResponse>) callbackPair.second;
 
                 if (response.getMetadata().getFailReasons().contains(CommonFailReason.NONE)) {
-                    callback.onUseCaseSuccess(response);
+                    callback.onSuccessResponse(response);
                 } else {
-                    callback.onUseCaseError(response);
+                    callback.onErrorResponse(response);
                 }
 
             } else if (PORTIONS.equals(componentName)) {
                 RecipePortionsResponse response = (RecipePortionsResponse)
                         componentResponses.get(componentName);
 
-                UseCase.Callback<RecipePortionsResponse> callback =
-                        (UseCase.Callback<RecipePortionsResponse>) callbackPair.second;
+                UseCaseBase.Callback<RecipePortionsResponse> callback =
+                        (UseCaseBase.Callback<RecipePortionsResponse>) callbackPair.second;
 
                 if (response.getMetadata().getFailReasons().contains(CommonFailReason.NONE)) {
-                    callback.onUseCaseSuccess(response);
+                    callback.onSuccessResponse(response);
                 } else {
-                    callback.onUseCaseError(response);
+                    callback.onErrorResponse(response);
                 }
             }
         }
         notifyRequestOriginator();
     }
 
-    private void unregisterComponentCallback(Pair<ComponentName, UseCase.Callback
-            <? extends UseCase.Response>> callback) {
+    private void unregisterComponentCallback(Pair<ComponentName, UseCaseBase.Callback
+            <? extends UseCaseBase.Response>> callback) {
         componentListeners.remove(callback);
     }
 
@@ -565,11 +566,11 @@ public class Recipe extends UseCase {
         }
     }
 
-    private void sendResponse(UseCase.Response r, List<FailReasons> failReasons) {
+    private void sendResponse(UseCaseBase.Response r, List<FailReasons> failReasons) {
         if (failReasons.contains(CommonFailReason.NONE)) {
-            getUseCaseCallback().onUseCaseSuccess(r);
+            getUseCaseCallback().onSuccessResponse(r);
         } else {
-            getUseCaseCallback().onUseCaseError(r);
+            getUseCaseCallback().onErrorResponse(r);
         }
     }
 }

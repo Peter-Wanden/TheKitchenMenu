@@ -15,10 +15,10 @@ import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.m
 
 /**
  * A data structure for storing a use case's metadata state. Typically generated within a use case
- * as it processes a {@link BaseDomainMessageModel} and sent as a member in its respective
- * {@link UseCase.Response}.
+ * as it processes a {@link MessageModelDataId} and sent as a member in its respective
+ * {@link UseCaseBase.Response}.
  */
-public class UseCaseMetadata {
+public class UseCaseMetadataModel {
 
     @Nonnull
     private final ComponentState state;
@@ -29,11 +29,11 @@ public class UseCaseMetadata {
     private final long createDate;
     private final long lasUpdate;
 
-    private UseCaseMetadata(@Nonnull ComponentState state,
-                            @Nonnull List<FailReasons> failReasons,
-                            @Nonnull String createdBy,
-                            long createDate,
-                            long lasUpdate) {
+    private UseCaseMetadataModel(@Nonnull ComponentState state,
+                                 @Nonnull List<FailReasons> failReasons,
+                                 @Nonnull String createdBy,
+                                 long createDate,
+                                 long lasUpdate) {
         this.state = state;
         this.failReasons = failReasons;
         this.createdBy = createdBy;
@@ -68,7 +68,7 @@ public class UseCaseMetadata {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        UseCaseMetadata that = (UseCaseMetadata) o;
+        UseCaseMetadataModel that = (UseCaseMetadataModel) o;
         return createDate == that.createDate &&
                 lasUpdate == that.lasUpdate &&
                 state == that.state &&
@@ -140,8 +140,8 @@ public class UseCaseMetadata {
             return failReasons;
         }
 
-        public UseCaseMetadata build() {
-            return new UseCaseMetadata(
+        public UseCaseMetadataModel build() {
+            return new UseCaseMetadataModel(
                     state,
                     failReasons,
                     createdBy,

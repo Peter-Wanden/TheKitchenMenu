@@ -1,6 +1,5 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredientlist;
 
-import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
 import com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.datasource.IngredientEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.recipeingredient.datasource.RecipeIngredientEntity;
@@ -9,7 +8,7 @@ import com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter
 import com.example.peter.thekitchenmenu.data.repository.ingredient.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeIngredient;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipePortions;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 
 import org.junit.*;
@@ -55,15 +54,15 @@ public class RecipeIngredientListTest {
     }
 
     // region helper methods -----------------------------------------------------------------------
-    private UseCase.Callback<RecipeIngredientListResponse> responseCallback() {
-        return new UseCase.Callback<RecipeIngredientListResponse>() {
+    private UseCaseBase.Callback<RecipeIngredientListResponse> responseCallback() {
+        return new UseCaseBase.Callback<RecipeIngredientListResponse>() {
             @Override
-            public void onUseCaseSuccess(RecipeIngredientListResponse response) {
+            public void onSuccessResponse(RecipeIngredientListResponse response) {
 
             }
 
             @Override
-            public void onUseCaseError(RecipeIngredientListResponse response) {
+            public void onErrorResponse(RecipeIngredientListResponse response) {
 
             }
         };

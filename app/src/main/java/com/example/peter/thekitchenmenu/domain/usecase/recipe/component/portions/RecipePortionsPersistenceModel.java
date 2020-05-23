@@ -66,57 +66,57 @@ public final class RecipePortionsPersistenceModel
             extends DomainModelBuilder<Builder, RecipePortionsPersistenceModel> {
 
         public Builder() {
-            model = new RecipePortionsPersistenceModel();
+            domainModel = new RecipePortionsPersistenceModel();
         }
 
         public Builder getDefault() {
-            model.dataId = "";
-            model.domainId = "";
-            model.servings = 1;
-            model.sittings = 1;
-            model.createDate = 0L;
-            model.lastUpdate = 0L;
+            domainModel.dataId = "";
+            domainModel.domainId = "";
+            domainModel.servings = 1;
+            domainModel.sittings = 1;
+            domainModel.createDate = 0L;
+            domainModel.lastUpdate = 0L;
             return self();
         }
 
         public Builder basedOnModel(
                 @Nonnull RecipePortionsPersistenceModel m) {
-            model.dataId = m.getDataId();
-            model.domainId = m.getDomainId();
-            model.servings = m.getServings();
-            model.sittings = m.getSittings();
-            model.createDate = m.getCreateDate();
-            model.lastUpdate = m.getLastUpdate();
+            domainModel.dataId = m.getDataId();
+            domainModel.domainId = m.getDomainId();
+            domainModel.servings = m.getServings();
+            domainModel.sittings = m.getSittings();
+            domainModel.createDate = m.getCreateDate();
+            domainModel.lastUpdate = m.getLastUpdate();
             return self();
         }
 
         public Builder setDataId(@Nonnull String dataId) {
-            model.dataId = dataId;
+            domainModel.dataId = dataId;
             return self();
         }
 
         public Builder setDomainId(@Nonnull String domainId) {
-            model.domainId = domainId;
+            domainModel.domainId = domainId;
             return self();
         }
 
         public Builder setServings(int servings) {
-            model.servings = servings;
+            domainModel.servings = servings;
             return self();
         }
 
         public Builder setSittings(int sittings) {
-            model.sittings = sittings;
+            domainModel.sittings = sittings;
             return self();
         }
 
         public Builder setCreateDate(long createDate) {
-            model.createDate = createDate;
+            domainModel.createDate = createDate;
             return self();
         }
 
         public Builder setLastUpdate(long lastUpdate) {
-            model.lastUpdate = lastUpdate;
+            domainModel.lastUpdate = lastUpdate;
             return self();
         }
 

@@ -7,8 +7,8 @@ import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.model.FailReasons;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadataModel;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
@@ -21,7 +21,7 @@ import javax.annotation.Nonnull;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentState;
 
-public class RecipePortions extends UseCase
+public class RecipePortions extends UseCaseBase
         implements DomainDataAccess.GetDomainModelCallback<RecipePortionsPersistenceModel> {
 
     private static final String TAG = "tkm-" + RecipePortions.class.getSimpleName() + ": ";
@@ -214,8 +214,8 @@ public class RecipePortions extends UseCase
         sendResponse(builder.build());
     }
 
-    private UseCaseMetadata getMetadata(RecipePortionsPersistenceModel m) {
-        return new UseCaseMetadata.Builder().
+    private UseCaseMetadataModel getMetadata(RecipePortionsPersistenceModel m) {
+        return new UseCaseMetadataModel.Builder().
                 setState(getComponentState()).
                 setFailReasons(new ArrayList<>(failReasons)).
                 setCreatedBy(Constants.getUserId()).
@@ -277,9 +277,9 @@ public class RecipePortions extends UseCase
     private void sendResponse(RecipePortionsResponse r) {
         System.out.println(TAG + "Response No:" + accessCount + " - " + r);
         if (r.getMetadata().getFailReasons().contains(CommonFailReason.NONE)) {
-            getUseCaseCallback().onUseCaseSuccess(r);
+            getUseCaseCallback().onSuccessResponse(r);
         } else {
-            getUseCaseCallback().onUseCaseError(r);
+            getUseCaseCallback().onErrorResponse(r);
         }
     }
 

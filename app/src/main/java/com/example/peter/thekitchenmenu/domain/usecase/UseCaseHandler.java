@@ -1,9 +1,33 @@
 package com.example.peter.thekitchenmenu.domain.usecase;
 
 /**
- * Runs {@link UseCase}s using a {@link UseCaseScheduler}.
+ * Runs {@link UseCaseBase}s using a {@link UseCaseScheduler}.
  */
 public class UseCaseHandler {
+
+    private static final class UiCallbackWrapper<RESPONSE extends UseCaseBase.Response>
+            implements
+            UseCaseBase.Callback<RESPONSE> {
+
+        private final UseCaseBase.Callback<RESPONSE> callback;
+        private final UseCaseHandler handler;
+
+        public UiCallbackWrapper(UseCaseBase.Callback<RESPONSE> callback,
+                                 UseCaseHandler handler) {
+            this.callback = callback;
+            this.handler = handler;
+        }
+
+        @Override
+        public void onSuccessResponse(RESPONSE response) {
+            handler.notifyResponse(response, callback);
+        }
+
+        @Override
+        public void onErrorResponse(RESPONSE response) {
+            handler.notifyError(response, callback);
+        }
+    }
 
     private static UseCaseHandler INSTANCE;
     private final UseCaseScheduler useCaseScheduler;
@@ -19,10 +43,10 @@ public class UseCaseHandler {
         return INSTANCE;
     }
 
-    public <T extends UseCase.Request, R extends UseCase.Response> void execute(
-            final UseCase useCase,
-            T request,
-            UseCase.Callback<R> callback) {
+    public <REQUEST extends UseCaseBase.Request, RESPONSE extends UseCaseBase.Response> void executeAsync(
+            final UseCaseBase useCase,
+            REQUEST request,
+            UseCaseBase.Callback<RESPONSE> callback) {
 
         useCase.setRequest(request);
         useCase.setUseCaseCallback(new UseCaseHandler.UiCallbackWrapper(callback, this));
@@ -30,37 +54,15 @@ public class UseCaseHandler {
         useCaseScheduler.execute(useCase::run);
     }
 
-    public <V extends UseCase.Response> void notifyResponse(final V response,
-                        final UseCase.Callback<V> callback) {
-        useCaseScheduler.notifyResponse(response, callback);
+    public <RESPONSE extends UseCaseBase.Response> void notifyResponse(
+            final RESPONSE response,
+            final UseCaseBase.Callback<RESPONSE> callback) {
+        useCaseScheduler.onSuccessResponse(response, callback);
     }
 
-    private <V extends UseCase.Response>
-    void notifyError(final V response,
-                     final UseCase.Callback<V> callback) {
-        useCaseScheduler.onError(response, callback);
-    }
-
-    private static final class UiCallbackWrapper<V extends UseCase.Response>
-            implements UseCase.Callback<V> {
-
-        private final UseCase.Callback<V> callback;
-        private final UseCaseHandler handler;
-
-        public UiCallbackWrapper(UseCase.Callback<V> callback,
-                                 UseCaseHandler handler) {
-            this.callback = callback;
-            this.handler = handler;
-        }
-
-        @Override
-        public void onUseCaseSuccess(V response) {
-            handler.notifyResponse(response, callback);
-        }
-
-        @Override
-        public void onUseCaseError(V response) {
-            handler.notifyError(response, callback);
-        }
+    private <RESPONSE extends UseCaseBase.Response> void notifyError(
+            final RESPONSE response,
+            final UseCaseBase.Callback<RESPONSE> callback) {
+        useCaseScheduler.onErrorResponse(response, callback);
     }
 }

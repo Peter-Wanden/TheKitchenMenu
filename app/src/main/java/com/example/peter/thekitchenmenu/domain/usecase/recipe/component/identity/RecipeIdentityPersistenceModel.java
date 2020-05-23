@@ -5,7 +5,6 @@ import com.example.peter.thekitchenmenu.domain.usecase.BasePersistence;
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 public final class RecipeIdentityPersistenceModel
         extends BasePersistence {
@@ -70,56 +69,56 @@ public final class RecipeIdentityPersistenceModel
             extends DomainModelBuilder<Builder, RecipeIdentityPersistenceModel> {
 
         public Builder() {
-            model = new RecipeIdentityPersistenceModel();
+            domainModel = new RecipeIdentityPersistenceModel();
         }
 
         public Builder getDefault() {
-            model.dataId = "";
-            model.domainId = "";
-            model.title = "";
-            model.description = "";
-            model.createDate = 0L;
-            model.lastUpdate = 0L;
+            domainModel.dataId = "";
+            domainModel.domainId = "";
+            domainModel.title = "";
+            domainModel.description = "";
+            domainModel.createDate = 0L;
+            domainModel.lastUpdate = 0L;
             return self();
         }
 
         public Builder basedOnModel(@Nonnull RecipeIdentityPersistenceModel m) {
-            model.dataId = m.getDataId();
-            model.domainId = m.getDomainId();
-            model.title = m.getTitle();
-            model.description = m.getDescription();
-            model.createDate = m.getCreateDate();
-            model.lastUpdate = m.getLastUpdate();
+            domainModel.dataId = m.getDataId();
+            domainModel.domainId = m.getDomainId();
+            domainModel.title = m.getTitle();
+            domainModel.description = m.getDescription();
+            domainModel.createDate = m.getCreateDate();
+            domainModel.lastUpdate = m.getLastUpdate();
             return self();
         }
 
         public Builder setDataId(String dataId) {
-            model.dataId = dataId;
+            domainModel.dataId = dataId;
             return self();
         }
 
         public Builder setDomainId(String domainId) {
-            model.domainId = domainId;
+            domainModel.domainId = domainId;
             return self();
         }
 
         public Builder setTitle(String title) {
-            model.title = title;
+            domainModel.title = title;
             return self();
         }
 
         public Builder setDescription(String description) {
-            model.description = description;
+            domainModel.description = description;
             return self();
         }
 
         public Builder setCreateDate(long createDate) {
-            model.createDate = createDate;
+            domainModel.createDate = createDate;
             return self();
         }
 
         public Builder setLastUpdate(long lastUpdate) {
-            model.lastUpdate = lastUpdate;
+            domainModel.lastUpdate = lastUpdate;
             return self();
         }
 

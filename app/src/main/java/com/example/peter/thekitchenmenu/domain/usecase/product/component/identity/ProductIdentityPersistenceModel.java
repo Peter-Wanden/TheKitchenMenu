@@ -75,53 +75,53 @@ public class ProductIdentityPersistenceModel
             extends DomainModelBuilder<Builder, ProductIdentityPersistenceModel>  {
 
         public Builder() {
-            model = new ProductIdentityPersistenceModel();
+            domainModel = new ProductIdentityPersistenceModel();
         }
 
         @Override
         public Builder getDefault() {
-            model.dataId = "";
-            model.domainId = "";
-            model.name = "";
-            model.description = "";
-            model.category = ProductIdentity.Category.NON_FOOD;
-            model.createDate = 0L;
-            model.lastUpdate = 0L;
+            domainModel.dataId = "";
+            domainModel.domainId = "";
+            domainModel.name = "";
+            domainModel.description = "";
+            domainModel.category = ProductIdentity.Category.NON_FOOD;
+            domainModel.createDate = 0L;
+            domainModel.lastUpdate = 0L;
             return this;
         }
 
         public Builder setDataId(String dataId) {
-            model.dataId = dataId;
+            domainModel.dataId = dataId;
             return self();
         }
 
         public Builder setDomainId(String domainId) {
-            model.domainId = domainId;
+            domainModel.domainId = domainId;
             return self();
         }
 
         public Builder setName(String name) {
-            model.name = name;
+            domainModel.name = name;
             return self();
         }
 
         public Builder setDescription(String description) {
-            model.description = description;
+            domainModel.description = description;
             return self();
         }
 
         public Builder setCategory(ProductIdentity.Category category) {
-            model.category = category;
+            domainModel.category = category;
             return self();
         }
 
         public Builder setCreateDate(long createDate) {
-            model.createDate = createDate;
+            domainModel.createDate = createDate;
             return self();
         }
 
         public Builder setLastUpdate(long lastUpdate) {
-            model.lastUpdate = lastUpdate;
+            domainModel.lastUpdate = lastUpdate;
             return self();
         }
 

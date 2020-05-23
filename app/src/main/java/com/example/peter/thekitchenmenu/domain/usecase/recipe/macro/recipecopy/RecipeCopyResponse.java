@@ -1,11 +1,11 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipecopy;
 
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
 
 import javax.annotation.Nonnull;
 
-public final class RecipeCopyResponse implements UseCase.Response {
+public final class RecipeCopyResponse implements UseCaseBase.Response {
 
     @Nonnull
     private final Recipe recipeMacro;

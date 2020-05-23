@@ -1,11 +1,11 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipecopy;
 
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
 
 import javax.annotation.Nonnull;
 
 
-public final class RecipeCopyRequest implements UseCase.Request {
+public final class RecipeCopyRequest implements UseCaseBase.Request {
     @Nonnull
     private final String sourceId;
 

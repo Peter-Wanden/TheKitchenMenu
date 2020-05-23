@@ -1,17 +1,17 @@
 package com.example.peter.thekitchenmenu.domain.usecase.ingredient;
 
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainModel;
-import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainMessageModel;
+import com.example.peter.thekitchenmenu.domain.usecase.MessageModelDataId;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
 public final class IngredientRequest
-        extends BaseDomainMessageModel<IngredientRequest.Model>
-        implements UseCase.Request {
+        extends MessageModelDataId<IngredientRequest.Model>
+        implements UseCaseBase.Request {
 
     @Nonnull
     @Override
@@ -26,7 +26,7 @@ public final class IngredientRequest
     private IngredientRequest() {}
 
     public static class Builder
-            extends UseCaseMessageBuilderModel<Builder, IngredientRequest, Model> {
+            extends MessageModelDataIdBuilder<Builder, IngredientRequest, Model> {
 
         public Builder() {
             message = new IngredientRequest();
@@ -90,28 +90,28 @@ public final class IngredientRequest
         public static class Builder extends DomainModelBuilder<Builder, Model> {
 
             public Builder() {
-                model = new Model();
+                domainModel = new Model();
             }
 
             public Builder getDefault() {
-                model.name = "";
-                model.description = "";
-                model.conversionFactor = UnitOfMeasureConstants.DEFAULT_CONVERSION_FACTOR;
+                domainModel.name = "";
+                domainModel.description = "";
+                domainModel.conversionFactor = UnitOfMeasureConstants.DEFAULT_CONVERSION_FACTOR;
                 return self();
             }
 
             public Builder setName(String name) {
-                model.name = name;
+                domainModel.name = name;
                 return self();
             }
 
             public Builder setDescription(String description) {
-                model.description = description;
+                domainModel.description = description;
                 return self();
             }
 
             public Builder setConversionFactor(double conversionFactor) {
-                model.conversionFactor = conversionFactor;
+                domainModel.conversionFactor = conversionFactor;
                 return self();
             }
 

@@ -1,8 +1,8 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe;
 
-import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainMessageModel;
+import com.example.peter.thekitchenmenu.domain.usecase.MessageModelDataId;
 import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainModel;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata;
 
 import java.util.HashMap;
@@ -12,8 +12,8 @@ import javax.annotation.Nonnull;
 
 
 public final class RecipeResponse
-        extends BaseDomainMessageModel<RecipeResponse.Model>
-        implements UseCase.Response {
+        extends MessageModelDataId<RecipeResponse.Model>
+        implements UseCaseBase.Response {
 
     @Nonnull
     @Override
@@ -29,7 +29,7 @@ public final class RecipeResponse
     }
 
     public static class Builder
-            extends UseCaseMessageBuilderModel<Builder, RecipeResponse, Model> {
+            extends MessageModelDataIdBuilder<Builder, RecipeResponse, Model> {
 
         public Builder() {
             message = new RecipeResponse();
@@ -51,12 +51,12 @@ public final class RecipeResponse
 
     public static final class Model extends BaseDomainModel {
 
-        private HashMap<RecipeMetadata.ComponentName, UseCase.Response> componentResponses;
+        private HashMap<RecipeMetadata.ComponentName, UseCaseBase.Response> componentResponses;
 
         public Model() {
         }
 
-        public HashMap<RecipeMetadata.ComponentName, UseCase.Response> getComponentResponses() {
+        public HashMap<RecipeMetadata.ComponentName, UseCaseBase.Response> getComponentResponses() {
             return componentResponses;
         }
 
@@ -71,7 +71,7 @@ public final class RecipeResponse
                 extends DomainModelBuilder<Builder, Model> {
 
             public Builder() {
-                model = new Model();
+                domainModel = new Model();
             }
 
             public Builder getDefault() {
@@ -79,12 +79,12 @@ public final class RecipeResponse
             }
 
             public Builder setComponentResponses(
-                    HashMap<RecipeMetadata.ComponentName, UseCase.Response> componentResponses) {
-                model.componentResponses = componentResponses;
+                    HashMap<RecipeMetadata.ComponentName, UseCaseBase.Response> componentResponses) {
+                domainModel.componentResponses = componentResponses;
                 return self();
             }
 
-            private static HashMap<RecipeMetadata.ComponentName, UseCase.Response>
+            private static HashMap<RecipeMetadata.ComponentName, UseCaseBase.Response>
             getDefaultComponentResponses() {
                 return new LinkedHashMap<>();
             }
