@@ -1,8 +1,24 @@
 package com.example.peter.thekitchenmenu.domain.usecase;
 
+import java.util.Objects;
+
 public abstract class BaseDomainMessageModel<DM extends BaseDomainModel>
         extends
         BaseDomainMessage {
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof BaseDomainMessageModel)) return false;
+        if (!super.equals(o)) return false;
+        BaseDomainMessageModel<?> that = (BaseDomainMessageModel<?>) o;
+        return Objects.equals(model, that.model);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), model);
+    }
 
     protected DM model;
 

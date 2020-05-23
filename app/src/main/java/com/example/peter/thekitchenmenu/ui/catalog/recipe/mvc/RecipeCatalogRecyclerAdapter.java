@@ -10,6 +10,7 @@ import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.RecipeUseCaseCallback;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.RecipeRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.RecipeResponse;
@@ -51,7 +52,6 @@ public class RecipeCatalogRecyclerAdapter
     private List<Recipe> recipeList;
     private List<Recipe> recipeListFull;
 
-
     RecipeCatalogRecyclerAdapter(RecipeListItemUserActions listener,
                                  ViewFactory viewFactory) {
         this.handler = UseCaseHandler.getInstance();
@@ -77,20 +77,7 @@ public class RecipeCatalogRecyclerAdapter
 
     @Override
     public void onBindViewHolder(@Nonnull ViewHolder holder, int position) {
-        final Recipe recipe = recipeList.get(position);
-
-        RecipeRequest request = new RecipeRequest.Builder().getDefault().build();
-        handler.execute(recipe, request, new UseCase.Callback<RecipeResponse>() {
-            @Override
-            public void onUseCaseSuccess(RecipeResponse response) {
-                holder.viewMvc.bindRecipe(response);
-            }
-
-            @Override
-            public void onUseCaseError(RecipeResponse response) {
-                holder.viewMvc.bindRecipe(response);
-            }
-        });
+        holder.viewMvc.bindRecipe(recipeList.get(position));
     }
 
     @Override

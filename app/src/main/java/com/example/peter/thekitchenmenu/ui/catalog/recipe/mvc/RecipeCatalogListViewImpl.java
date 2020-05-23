@@ -32,7 +32,6 @@ public class RecipeCatalogListViewImpl
                 parent,
                 false)
         );
-
         setupRecyclerView(viewFactory);
     }
 

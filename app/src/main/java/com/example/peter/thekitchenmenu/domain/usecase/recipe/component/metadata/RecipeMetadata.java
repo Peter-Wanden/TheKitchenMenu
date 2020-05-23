@@ -7,6 +7,7 @@ import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.model.FailReasons;
+import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainMessage;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
@@ -135,7 +136,7 @@ public class RecipeMetadata
     private final List<FailReasons> failReasons;
 
     private String dataId = "";
-    private String recipeId = "";
+    private String recipeDomainId = "";
 
     private RecipeMetadataPersistenceModel persistenceModel;
 
@@ -165,19 +166,50 @@ public class RecipeMetadata
         RecipeMetadataRequest r = (RecipeMetadataRequest) request;
         System.out.println(TAG + "Request No:" + accessCount + " - " + r);
 
-        if (isNewRequest(r)) {
+        if (requestHasNoDomainId()) {
+            if (useCaseHasNoDomainId()) {
+                sendEmptyResponse();
+            } else {
+                resendLastResponse();
+            }
+        } else if (useCaseHasNoDomainId()) {
             dataId = r.getDataId();
-            recipeId = r.getDomainId();
-            loadData(recipeId);
-        } else {
+            recipeDomainId = r.getDomainId();
+            loadData(recipeDomainId);
+
+        } else if (domainIdsAreEqual()){
             failReasons.clear();
             componentStates = r.getModel().getComponentStates();
             processChanges();
+
+        } else {
+            loadData(r.getDomainId());
         }
     }
 
+    private boolean requestHasNoDomainId() {
+        return ((BaseDomainMessage)getRequest()).getDomainId().equals("");
+    }
+
+    private boolean useCaseHasNoDomainId() {
+        return recipeDomainId.equals("");
+    }
+
+    private boolean domainIdsAreEqual() {
+        return ((BaseDomainMessage)getRequest()).getDomainId().equals(recipeDomainId);
+    }
+
     private boolean isNewRequest(RecipeMetadataRequest r) {
-        return !r.getDomainId().equals(recipeId);
+        return !r.getDomainId().equals(recipeDomainId);
+    }
+
+    private void sendEmptyResponse() {
+        RecipeMetadataResponse response = new RecipeMetadataResponse.Builder().getDefault().build();
+        getUseCaseCallback().onUseCaseError(response);
+    }
+
+    private void resendLastResponse() {
+        buildResponse();
     }
 
     private void loadData(String recipeDomainId) {
@@ -208,7 +240,7 @@ public class RecipeMetadata
         return new RecipeMetadataPersistenceModel.Builder().
                 getDefault().
                 setDataId(dataId).
-                setDomainId(recipeId).
+                setDomainId(recipeDomainId).
                 setCreateDate(currentTime).
                 setLastUpdate(currentTime).
                 build();
@@ -301,7 +333,7 @@ public class RecipeMetadata
 
     private void buildResponse() {
         RecipeMetadataResponse.Builder builder = new RecipeMetadataResponse.Builder();
-        builder.setDomainId(recipeId);
+        builder.setDomainId(recipeDomainId);
 
         if (isChanged()) {
             RecipeMetadataPersistenceModel m = updatePersistenceModel();
@@ -341,7 +373,7 @@ public class RecipeMetadata
         dataId = idProvider.getUId();
         return new RecipeMetadataPersistenceModel.Builder().
                 setDataId(dataId).
-                setDomainId(recipeId).
+                setDomainId(recipeDomainId).
                 setParentDomainId(r.getModel().getParentDomainId()).
                 setRecipeState(recipeState).
                 setComponentStates(componentStates).

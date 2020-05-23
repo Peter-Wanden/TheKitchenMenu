@@ -87,6 +87,14 @@ public class RecipeTest {
     }
 
     @Test
+    public void recipeRequest_noId_emptyRecipeReturned() {
+        RecipeRequest request = new RecipeRequest.Builder().getDefault().build();
+        handler.execute(SUT, request, new RecipeCallbackClient());
+
+
+    }
+
+    @Test
     public void recipeRequestNewId_invokerIssuesCommandToAllReceivers() {
         // Arrange
         RecipeRequest request = new RecipeRequest.Builder().

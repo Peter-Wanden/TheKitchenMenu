@@ -1,5 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecase;
 
+import java.util.Objects;
+
 /**
  * Base class for all request and response messages which operate on domain data.
  * The data id represents an instance of state encapsulated in a domain data model.
@@ -21,6 +23,20 @@ public abstract class BaseDomainMessage
 
     public String getDomainId() {
         return domainId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof BaseDomainMessage)) return false;
+        BaseDomainMessage that = (BaseDomainMessage) o;
+        return Objects.equals(dataId, that.dataId) &&
+                Objects.equals(domainId, that.domainId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(dataId, domainId);
     }
 
     public static abstract class UseCaseMessageBuilder<

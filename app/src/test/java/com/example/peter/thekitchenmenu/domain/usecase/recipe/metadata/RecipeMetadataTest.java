@@ -33,6 +33,7 @@ import java.util.Set;
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.FailReason;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
@@ -88,8 +89,28 @@ public class RecipeMetadataTest {
         );
     }
 
-    // This test is large because it tests the initial request on which all other tests depend,
-    // therefore an assertion is performed on every data element.
+    @Test
+    public void requestNoDomainId_useCaseNoDomainId_emptyStateReturned() {
+        // Arrange
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().getDefault().build();
+        // Act
+        handler.execute(SUT, request, new MetadataCallbackClient());
+        // Assert
+        RecipeMetadataResponse expectedResponse = new RecipeMetadataResponse.Builder().
+                getDefault().
+                build();
+        RecipeMetadataResponse actualResponse = onErrorResponse;
+        System.out.println(TAG + "expectedResponse=" + expectedResponse);
+        System.out.println(TAG + "  actualResponse=" + actualResponse);
+
+        // Why has assert equals adding a space at the end of expected response!
+        assertEquals(
+                expectedResponse,
+                actualResponse);
+    }
+
+    // This test is large because it tests the initial request on which the remainder of tests
+    // depend, therefore an assertion is performed on every data element.
     @Test
     public void testNewInitialRequest() {
         // Arrange
@@ -576,12 +597,39 @@ public class RecipeMetadataTest {
                 setDomainId(recipeId).
                 build();
         // Act
-        handler.execute(SUT, r, new MetadataCallbackClient()
-        );
+        handler.execute(SUT, r, new MetadataCallbackClient());
+
         // Assert
         verify(repoMock).getActiveByDomainId(eq(recipeId), repoMetadataCallback.capture());
         repoMetadataCallback.getValue().onModelLoaded(modelUnderTest);
 
+        UseCaseMetadata metadata = onSuccessResponse.getMetadata();
+
+        ComponentState expectedComponentState = ComponentState.VALID_UNCHANGED;
+        ComponentState actualComponentState = metadata.getState();
+        assertEquals(
+                expectedComponentState,
+                actualComponentState
+        );
+
+        FailReasons[] expectedFailReasons = new FailReasons[]{CommonFailReason.NONE};
+        FailReasons[] actualFailReasons = metadata.getFailReasons().toArray(new FailReasons[0]);
+        assertArrayEquals(
+                expectedFailReasons,
+                actualFailReasons
+        );
+    }
+
+    @Test
+    public void requestNoDomainId_useCaseHasDomainId_currentStateReturned() {
+        // Arrange
+        // Load data from existing recipe
+        validUnchanged_persistenceCalled_stateVALID_UNCHANGED();
+        // Request current state returned by sending empty request
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().getDefault().build();
+        // Act
+        handler.execute(SUT, request, new MetadataCallbackClient());
+        // Assert
         UseCaseMetadata metadata = onSuccessResponse.getMetadata();
 
         ComponentState expectedComponentState = ComponentState.VALID_UNCHANGED;

@@ -1,5 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata;
 
+import androidx.annotation.Nullable;
+
 import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainMessageModelMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainModel;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;

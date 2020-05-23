@@ -6,9 +6,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.peter.thekitchenmenu.R;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDurationResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentName;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.RecipeUseCaseCallback;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.RecipeRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.RecipeResponse;
 import com.example.peter.thekitchenmenu.ui.common.views.BaseObservableViewMvc;
 
@@ -18,6 +22,7 @@ public class RecipeListItemViewImpl
         implements
         RecipeListItemView {
 
+    private UseCaseHandler handler;
     private RecipeResponse recipeResponse;
     private TextView title;
     private TextView description;
@@ -29,6 +34,7 @@ public class RecipeListItemViewImpl
     private ImageView removeFromFavorites;
 
     public RecipeListItemViewImpl(LayoutInflater inflater, ViewGroup parent) {
+        handler = UseCaseHandler.getInstance();
         setRootView(inflater.inflate(
                 R.layout.recipe_list_item,
                 parent,
@@ -66,27 +72,28 @@ public class RecipeListItemViewImpl
     }
 
     @Override
-    public void bindRecipe(RecipeResponse recipeResponse) {
-        this.recipeResponse = recipeResponse;
+    public void bindRecipe(Recipe recipe) {
+        RecipeRequest request = new RecipeRequest.Builder().getDefault().build();
+        handler.execute(recipe, request, new RecipeUseCaseCallback<RecipeResponse>() {
+            @Override
+            protected void processResponse(RecipeResponse recipeResponse) {
+                RecipeListItemViewImpl.this.recipeResponse = recipeResponse;
+            }
+        });
 
         RecipeIdentityResponse identity = (RecipeIdentityResponse) recipeResponse.
                 getModel().
                 getComponentResponses().
                 get(ComponentName.IDENTITY);
-        title.setText(identity.getModel().getTitle()
-        );
-        description.setText(identity.getModel().getDescription()
-        );
+
+        title.setText(identity.getModel().getTitle());
+        description.setText(identity.getModel().getDescription());
 
         RecipeDurationResponse duration = (RecipeDurationResponse) recipeResponse.
-                getModel().
-                getComponentResponses().
-                get(ComponentName.DURATION);
-        prepTime.setText(duration.getModel().getTotalPrepTime()
-        );
-        cookTime.setText(duration.getModel().getTotalCookTime()
-        );
-        totalTime.setText(duration.getModel().getTotalCookTime()
-        );
+                getModel().getComponentResponses().get(ComponentName.DURATION);
+
+        prepTime.setText(duration.getModel().getTotalPrepTime());
+        cookTime.setText(duration.getModel().getTotalCookTime());
+        totalTime.setText(duration.getModel().getTotalCookTime());
     }
 }
