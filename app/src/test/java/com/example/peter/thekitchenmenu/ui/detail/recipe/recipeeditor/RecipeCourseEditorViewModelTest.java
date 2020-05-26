@@ -162,7 +162,6 @@ public class RecipeCourseEditorViewModelTest {
                 repoIdentityMock,
                 idProviderMock,
                 timeProviderMock,
-                handler,
                 textValidator
         );
 

@@ -46,8 +46,8 @@ public class RecipeCatalogRecyclerAdapter
     private final ViewFactory viewFactory;
     private RecipeListItemUserActions listener;
 
-    private List<Recipe> recipeList;
-    private List<Recipe> recipeListFull;
+    private List<Recipe> recipeList = new ArrayList<>();
+    private List<Recipe> recipeListFull = new ArrayList<>();
 
     RecipeCatalogRecyclerAdapter(RecipeListItemUserActions listener,
                                  ViewFactory viewFactory) {

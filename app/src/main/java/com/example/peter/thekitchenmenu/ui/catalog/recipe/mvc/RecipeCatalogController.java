@@ -12,15 +12,15 @@ public class RecipeCatalogController
         this.navigator = navigator;
     }
 
-    public void bindView(RecipeCatalogView view) {
+    void bindView(RecipeCatalogView view) {
         this.view = view;
     }
 
-    public void onStart() {
+    void onStart() {
         view.registerListener(this);
     }
 
-    public void onStop() {
+    void onStop() {
         view.unregisterListener(this);
     }
 

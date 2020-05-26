@@ -22,8 +22,7 @@ public class RecipeCatalogFragment
         return new RecipeCatalogFragment();
     }
 
-    UseCaseHandler handler;
-    RecipeCatalogListController controller;
+    private RecipeCatalogListController controller;
 
     @Nullable
     @Override
@@ -35,8 +34,7 @@ public class RecipeCatalogFragment
                 getViewFactory().
                 getRecipeCatalogListView(parent);
 
-        controller = getCompositionRoot().
-                getRecipeCatalogListController();
+        controller = getCompositionRoot().getRecipeCatalogListController();
         controller.bindView(view);
 
         view.registerListener(controller);

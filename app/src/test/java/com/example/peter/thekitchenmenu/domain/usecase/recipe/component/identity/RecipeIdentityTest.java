@@ -83,7 +83,6 @@ public class RecipeIdentityTest {
                 repoIdentityMock,
                 idProvider,
                 timeProviderMock,
-                handler,
                 textValidator);
     }
 

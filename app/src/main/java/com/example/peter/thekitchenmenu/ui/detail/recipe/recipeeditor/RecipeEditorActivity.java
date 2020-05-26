@@ -5,34 +5,45 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.FrameLayout;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.databinding.RecipeEditorActivityBinding;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseFactory;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.RecipeRequest;
 import com.example.peter.thekitchenmenu.ui.UnsavedChangesDialogFragment;
 import com.example.peter.thekitchenmenu.ui.ViewModelFactoryRecipe;
+import com.example.peter.thekitchenmenu.ui.common.ScreensNavigator;
+import com.example.peter.thekitchenmenu.ui.common.controllers.BackPressedDispatcher;
+import com.example.peter.thekitchenmenu.ui.common.controllers.BackPressedListener;
+import com.example.peter.thekitchenmenu.ui.common.controllers.BaseActivity;
+import com.example.peter.thekitchenmenu.ui.common.fragmentFrameHelper.FragmentFrameWrapper;
+import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.mvc.RecipeEditorParentViewImpl;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredientlist.RecipeIngredientListActivity;
 import com.example.peter.thekitchenmenu.ui.imageeditor.ImageEditorFragment;
 import com.example.peter.thekitchenmenu.utils.ActivityUtils;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.annotation.Nonnull;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe.CREATE_NEW_RECIPE;
 
 public class RecipeEditorActivity
-        extends AppCompatActivity
-        implements AddEditRecipeNavigator {
+        extends
+        BaseActivity
+        implements
+        AddEditRecipeNavigator,
+        BackPressedDispatcher,
+        FragmentFrameWrapper {
 
     private static final String TAG = "tkm-" + RecipeEditorActivity.class.getSimpleName() + ": ";
 
@@ -41,28 +52,22 @@ public class RecipeEditorActivity
     public static final int RESULT_ADD_EDIT_RECIPE_OK = RESULT_FIRST_USER + 1;
     public static final int RESULT_ADD_EDIT_RECIPE_CANCELLED = RESULT_FIRST_USER + 2;
 
-    private RecipeEditorActivityBinding binding;
-    private RecipeEditorViewModel recipeEditorViewModel;
+    private final Set<BackPressedListener> backPressedListeners = new HashSet<>();
 
-    private Recipe recipeMacro;
+    private RecipeEditorParentViewImpl view;
+    private ScreensNavigator screensNavigator;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        screensNavigator = getCompositionRoot().getScreensNavigator();
+        view = getCompositionRoot().getViewFactory().getRecipeEditorParentView(null);
+        setContentView(view.getRootView());
 
-        initialiseBindings();
-        setupActionBar();
-        setupViewModels();
-        setupFragments();
-    }
-
-    private void initialiseBindings() {
-        binding = DataBindingUtil.setContentView(this, R.layout.recipe_editor_activity);
-        binding.setLifecycleOwner(this);
     }
 
     private void setupActionBar() {
-        setSupportActionBar(binding.recipeEditorToolbar);
+//        setSupportActionBar(binding.recipeEditorToolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar == null) {
             return;
@@ -79,16 +84,16 @@ public class RecipeEditorActivity
     }
 
     private void setupViewModels() {
-        recipeMacro = UseCaseFactory.getInstance(getApplication()).getRecipeUseCase();
+//        recipeMacro = UseCaseFactory.getInstance(getApplication()).getRecipeUseCase();
 
-        recipeEditorViewModel = createRecipeEditorViewModel(this, recipeMacro);
-        recipeEditorViewModel.setNavigator(this);
-        binding.setViewModel(recipeEditorViewModel);
+//        recipeEditorViewModel = createRecipeEditorViewModel(this, recipeMacro);
+//        recipeEditorViewModel.setNavigator(this);
+//        binding.setViewModel(recipeEditorViewModel);
 
-        createIdentityViewModel(this, recipeMacro);
-        createCourseViewModel(this, recipeMacro);
-        createDurationViewModel(this, recipeMacro);
-        createPortionsViewModel(this, recipeMacro);
+//        createIdentityViewModel(this, recipeMacro);
+//        createCourseViewModel(this, recipeMacro);
+//        createDurationViewModel(this, recipeMacro);
+//        createPortionsViewModel(this, recipeMacro);
     }
 
     static RecipeEditorViewModel createRecipeEditorViewModel(FragmentActivity activity,
@@ -248,15 +253,15 @@ public class RecipeEditorActivity
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        menu.findItem(R.id.menu_recipe_editor_action_review).setVisible(
-                recipeEditorViewModel.isShowReviewButton());
+//        menu.findItem(R.id.menu_recipe_editor_action_review).setVisible(
+//                recipeEditorViewModel.isShowReviewButton());
         return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(@Nonnull MenuItem item) {
         if (item.getItemId() == R.id.menu_recipe_editor_action_review) {
-            recipeEditorViewModel.reviewButtonPressed();
+//            recipeEditorViewModel.reviewButtonPressed();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -301,7 +306,7 @@ public class RecipeEditorActivity
 
     @Override
     public void onBackPressed() {
-        recipeEditorViewModel.upOrBackPressed();
+//        recipeEditorViewModel.upOrBackPressed();
     }
 
     @Override
@@ -322,19 +327,49 @@ public class RecipeEditorActivity
 
     @Override
     public void cancelEditing() {
-        setResult(RESULT_ADD_EDIT_RECIPE_CANCELLED);
-        finish();
+        boolean isBackPressedConsumedByAnyListener = false;
+        for (BackPressedListener listener : backPressedListeners) {
+            if (listener.onBackPressed()) {
+                isBackPressedConsumedByAnyListener = true;
+            }
+        }
+        if (isBackPressedConsumedByAnyListener) {
+            setResult(RESULT_ADD_EDIT_RECIPE_CANCELLED);
+            finish();
+        }
+    }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        view.registerListener(this);
     }
 
     @Override
-    protected void onDestroy() {
-        recipeEditorViewModel.onActivityDestroyed();
-        super.onDestroy();
+    protected void onStop() {
+        super.onStop();
+        view.unregisterListener(this);
+    }
+
+    @Override
+    public void registerListener(BackPressedListener listener) {
+        backPressedListeners.add(listener);
+    }
+
+    @Override
+    public void unregisterListener(BackPressedListener listener) {
+        backPressedListeners.remove(listener);
+    }
+
+    @Override
+    public FrameLayout getFragmentFrame() {
+        return view.getFragmentFrame();
     }
 
     /*
     Static methods for starting this activity
-     */
+    */
     // Create new recipe
     public static void launch(Context context) {
         Intent intent = new Intent(context, RecipeEditorActivity.class);
@@ -345,5 +380,6 @@ public class RecipeEditorActivity
     public static void launch(Context context, String recipeDomainId) {
         Intent intent = new Intent(context, RecipeEditorActivity.class);
         intent.putExtra(EXTRA_RECIPE_DOMAIN_ID, recipeDomainId);
+        context.startActivity(intent);
     }
 }

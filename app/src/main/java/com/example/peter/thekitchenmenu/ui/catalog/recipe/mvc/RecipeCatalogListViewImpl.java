@@ -1,7 +1,9 @@
 package com.example.peter.thekitchenmenu.ui.catalog.recipe.mvc;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,7 +24,8 @@ public class RecipeCatalogListViewImpl
         implements
         RecipeCatalogListView {
 
-    private RecipeCatalogRecyclerAdapter adapter;
+    private final RecipeCatalogRecyclerAdapter adapter;
+    private final ProgressBar progressBar;
 
     public RecipeCatalogListViewImpl(LayoutInflater inflater,
                                      @Nullable ViewGroup parent,
@@ -32,14 +35,17 @@ public class RecipeCatalogListViewImpl
                 parent,
                 false)
         );
-        setupRecyclerView(viewFactory);
+        progressBar = findViewById(R.id.recipe_catalog_all_fragment_progress_bar);
+
+        adapter = new RecipeCatalogRecyclerAdapter(this, viewFactory);
+
+        setupRecyclerView();
     }
 
-    private void setupRecyclerView(ViewFactory viewFactory) {
+    private void setupRecyclerView() {
         RecyclerView recyclerView = findViewById(R.id.recipe_catalog_all_fragment_recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setHasFixedSize(true);
-        adapter = new RecipeCatalogRecyclerAdapter(this, viewFactory);
         recyclerView.setAdapter(adapter);
     }
 
@@ -61,5 +67,15 @@ public class RecipeCatalogListViewImpl
     @Override
     public void bindRecipes(List<Recipe> recipes) {
         adapter.bindRecipes(recipes);
+    }
+
+    @Override
+    public void showProgressBar() {
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideProgressBar() {
+        progressBar.setVisibility(View.GONE);
     }
 }

@@ -2,11 +2,11 @@ package com.example.peter.thekitchenmenu.ui.common.views;
 
 /**
  * Interface from which all observable views inherit.
- * @param <ListenerType> the listener interface specific to the view
+ * @param <LISTENER_TYPE> the listener interface specific to the view
  */
-public interface ObservableViewMvc<ListenerType> extends ViewMvc {
+public interface ObservableViewMvc<LISTENER_TYPE> extends ViewMvc {
 
-    void registerListener(ListenerType listener);
+    void registerListener(LISTENER_TYPE listener);
 
-    void unregisterListener(ListenerType listener);
+    void unregisterListener(LISTENER_TYPE listener);
 }

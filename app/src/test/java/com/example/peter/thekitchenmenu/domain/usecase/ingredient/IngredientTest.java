@@ -90,7 +90,6 @@ public class IngredientTest {
                 idProviderMock,
                 timeProviderMock,
                 duplicateCheckerMock,
-                handler,
                 textValidator
         );
     }

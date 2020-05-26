@@ -117,8 +117,10 @@ public class Recipe extends UseCaseBase {
             dataId = r.getDataId();
             recipeDomainId = r.getDomainId();
             startComponents();
+            System.out.println(TAG + "startComponents");
         } else {
             processRequest(request);
+            System.out.println(TAG + "processRequest");
         }
     }
 
@@ -151,6 +153,10 @@ public class Recipe extends UseCaseBase {
         componentResponses.clear();
         componentStates.clear();
 
+        // send a MessageModelDataId request to all classes
+        // MessageModelDataIdRequest request = new MessageModelDataIdRequest.getDefault.build
+        // recipeComponents.forEach((component) () -> execute.(request, MessageModelClientListener))
+        // in use case: if request instance of MessageModelDataIdRequest, load or return data
         startRecipeMetadataComponent();
         startIdentityComponent();
         startCourseComponent();

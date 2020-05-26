@@ -12,4 +12,8 @@ public interface RecipeCatalogListView
         RecipeListItemView.RecipeListItemUserActions {
 
     void bindRecipes(List<Recipe> recipes);
+
+    void showProgressBar();
+
+    void hideProgressBar();
 }

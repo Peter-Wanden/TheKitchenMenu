@@ -10,6 +10,8 @@ import com.example.peter.thekitchenmenu.domain.usecase.UseCaseFactory;
 import com.example.peter.thekitchenmenu.ui.catalog.recipe.mvc.RecipeCatalogController;
 import com.example.peter.thekitchenmenu.ui.catalog.recipe.mvc.RecipeCatalogListController;
 import com.example.peter.thekitchenmenu.ui.common.ScreensNavigator;
+import com.example.peter.thekitchenmenu.ui.common.dialogs.DialogsEventBus;
+import com.example.peter.thekitchenmenu.ui.common.dialogs.DialogsManager;
 import com.example.peter.thekitchenmenu.ui.common.views.ViewFactory;
 
 public class ControllerCompositionRoot {
@@ -46,7 +48,7 @@ public class ControllerCompositionRoot {
         return UseCaseFactory.getInstance(getActivity().getApplication());
     }
 
-    private ScreensNavigator getScreensNavigator() {
+    public ScreensNavigator getScreensNavigator() {
         return new ScreensNavigator(getActivity(), getFragmentManager());
     }
 
@@ -60,5 +62,13 @@ public class ControllerCompositionRoot {
                 getUseCaseFactory().getRecipeListUseCase(),
                 getScreensNavigator()
         );
+    }
+
+    public DialogsManager getDialogsManager() {
+        return new DialogsManager(getContext(), getFragmentManager());
+    }
+
+    public DialogsEventBus getDialogsEventBus() {
+        return compositionRoot.getDialogsEventBus();
     }
 }

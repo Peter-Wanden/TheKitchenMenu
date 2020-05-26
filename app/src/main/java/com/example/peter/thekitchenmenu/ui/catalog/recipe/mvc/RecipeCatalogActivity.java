@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.ui.catalog.recipe;
+package com.example.peter.thekitchenmenu.ui.catalog.recipe.mvc;
 
 import android.os.Bundle;
 
@@ -7,9 +7,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.ui.catalog.CatalogFragmentPageAdapter;
-import com.example.peter.thekitchenmenu.ui.catalog.recipe.mvc.RecipeCatalogController;
-import com.example.peter.thekitchenmenu.ui.catalog.recipe.mvc.RecipeCatalogFragment;
-import com.example.peter.thekitchenmenu.ui.catalog.recipe.mvc.RecipeCatalogView;
+import com.example.peter.thekitchenmenu.ui.catalog.recipe.RecipeCatalogFavoritesFragment;
 import com.example.peter.thekitchenmenu.ui.common.controllers.BaseActivity;
 import com.google.android.material.tabs.TabLayout;
 

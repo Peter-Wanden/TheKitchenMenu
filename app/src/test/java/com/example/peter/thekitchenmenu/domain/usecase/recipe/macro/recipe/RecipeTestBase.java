@@ -101,7 +101,6 @@ public class RecipeTestBase {
                 repoIdentityMock,
                 idProviderMock,
                 timeProviderMock,
-                handler,
                 textValidator
         );
         RecipeCourse course = new RecipeCourse(

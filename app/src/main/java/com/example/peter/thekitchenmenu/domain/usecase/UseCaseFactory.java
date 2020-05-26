@@ -160,7 +160,6 @@ public class UseCaseFactory {
                 new UniqueIdProvider(),
                 new TimeProvider(),
                 new IngredientDuplicateChecker(ingredientRepository),
-                getUseCaseHandler(),
                 getTextValidatorUseCase()
         );
     }
@@ -207,7 +206,6 @@ public class UseCaseFactory {
                 recipeIdentityRepository,
                 new UniqueIdProvider(),
                 new TimeProvider(),
-                getUseCaseHandler(),
                 getTextValidatorUseCase());
     }
 

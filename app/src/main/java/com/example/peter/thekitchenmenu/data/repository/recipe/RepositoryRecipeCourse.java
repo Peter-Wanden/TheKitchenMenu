@@ -15,6 +15,8 @@ public class RepositoryRecipeCourse
         extends Repository<RecipeCoursePersistenceModel>
         implements DomainDataAccessRecipeCourse {
 
+    public static RepositoryRecipeCourse INSTANCE = null;
+
     private RepositoryRecipeCourse(@Nonnull DomainDataAccessRecipeCourse remoteDataSource,
                                    @Nonnull DomainDataAccessRecipeCourse localDataSource) {
         this.remoteDomainDataAccess = remoteDataSource;
@@ -26,7 +28,7 @@ public class RepositoryRecipeCourse
         if (INSTANCE == null) {
             INSTANCE = new RepositoryRecipeCourse(remoteDataSource, localDataSource);
         }
-        return (RepositoryRecipeCourse) INSTANCE;
+        return INSTANCE;
     }
 
     @Override

@@ -8,7 +8,6 @@ import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeI
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.model.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadataModel;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidatorModel;
@@ -73,8 +72,6 @@ public class RecipeIdentity
     @Nonnull
     private final TimeProvider timeProvider;
     @Nonnull
-    private final UseCaseHandler handler;
-    @Nonnull
     private final TextValidator textValidator;
     @Nonnull
     private final List<FailReasons> failReasons;
@@ -91,12 +88,10 @@ public class RecipeIdentity
     public RecipeIdentity(@Nonnull RepositoryRecipeIdentity repository,
                           @Nonnull UniqueIdProvider idProvider,
                           @Nonnull TimeProvider timeProvider,
-                          @Nonnull UseCaseHandler handler,
                           @Nonnull TextValidator textValidator) {
         this.repository = repository;
         this.idProvider = idProvider;
         this.timeProvider = timeProvider;
-        this.handler = handler;
         this.textValidator = textValidator;
 
         requestModel = new RecipeIdentityRequest.Model.Builder().getDefault().build();
@@ -175,22 +170,18 @@ public class RecipeIdentity
                 TITLE_TEXT_TYPE,
                 new TextValidatorModel(getTitle())
         );
-        handler.executeAsync(
-                textValidator,
-                request,
-                new UseCaseBase.Callback<TextValidatorResponse>() {
-                    @Override
-                    public void onSuccessResponse(TextValidatorResponse response) {
-                        validateDescription();
-                    }
+        textValidator.execute(request, new UseCaseBase.Callback<TextValidatorResponse>() {
+            @Override
+            public void onSuccessResponse(TextValidatorResponse response) {
+                validateDescription();
+            }
 
-                    @Override
-                    public void onErrorResponse(TextValidatorResponse response) {
-                        addTitleFailReasonFromTextValidator(response.getFailReason());
-                        validateDescription();
-                    }
-                }
-        );
+            @Override
+            public void onErrorResponse(TextValidatorResponse response) {
+                addTitleFailReasonFromTextValidator(response.getFailReason());
+                validateDescription();
+            }
+        });
     }
 
     private String getTitle() {
@@ -211,23 +202,19 @@ public class RecipeIdentity
                 DESCRIPTION_TEXT_TYPE,
                 new TextValidatorModel(getDescription())
         );
-        handler.executeAsync(
-                textValidator,
-                request,
-                new UseCaseBase.Callback<TextValidatorResponse>() {
-                    @Override
-                    public void onSuccessResponse(TextValidatorResponse response) {
-                        if (failReasons.isEmpty()) {
-                            failReasons.add(CommonFailReason.NONE);
-                        }
-                    }
-
-                    @Override
-                    public void onErrorResponse(TextValidatorResponse response) {
-                        addDescriptionFailReasons(response.getFailReason());
-                    }
+        textValidator.execute(request, new UseCaseBase.Callback<TextValidatorResponse>() {
+            @Override
+            public void onSuccessResponse(TextValidatorResponse response) {
+                if (failReasons.isEmpty()) {
+                    failReasons.add(CommonFailReason.NONE);
                 }
-        );
+            }
+
+            @Override
+            public void onErrorResponse(TextValidatorResponse response) {
+                addDescriptionFailReasons(response.getFailReason());
+            }
+        });
     }
 
     private String getDescription() {
@@ -321,8 +308,9 @@ public class RecipeIdentity
 
     private void sendResponse(RecipeIdentityResponse r) {
         System.out.println(TAG + "Response No:" + accessCount + " - " + r);
+        List<FailReasons> failReasons = r.getMetadata().getFailReasons();
 
-        if (r.getMetadata().getFailReasons().contains(CommonFailReason.NONE)) {
+        if (failReasons.contains(CommonFailReason.NONE)) {
             getUseCaseCallback().onSuccessResponse(r);
         } else {
             getUseCaseCallback().onErrorResponse(r);

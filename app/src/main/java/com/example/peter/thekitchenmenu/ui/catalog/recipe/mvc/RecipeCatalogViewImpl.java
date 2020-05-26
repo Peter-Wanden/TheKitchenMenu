@@ -25,29 +25,23 @@ public class RecipeCatalogViewImpl
     public RecipeCatalogViewImpl(LayoutInflater inflater,
                                  @Nullable ViewGroup parent,
                                  ViewFactory viewFactory) {
-        setRootView(inflater.inflate(
-                R.layout.recipe_catalog_activity,
-                parent,
-                false)
-        );
+        setRootView(inflater.inflate(R.layout.recipe_catalog_activity, parent, false));
 
         setupFab();
 
-        toolbar = findViewById(R.id.recipe_catalog_activity_toolbar);
+        toolbar = findViewById(R.id.toolbar);
         toolbarView = viewFactory.getToolbarView(parent);
         setUpToolbar();
     }
 
     private void setupFab() {
         FloatingActionButton fab = findViewById(R.id.recipe_catalog_activity_fab);
-        fab.setOnClickListener(v -> getListeners().
-                forEach((RecipeNavigator::onAddRecipeClicked)));
+        fab.setOnClickListener(v -> getListeners().forEach(RecipeNavigator::onAddRecipeClicked));
     }
 
     private void setUpToolbar() {
         toolbarView.setTitle(getString(R.string.activity_title_recipe_catalog));
         toolbar.addView(toolbarView.getRootView());
-
         toolbarView.enableUpButtonAndListen(() -> getListeners().
                 forEach(RecipeNavigator::onNavigateUpClicked)
         );

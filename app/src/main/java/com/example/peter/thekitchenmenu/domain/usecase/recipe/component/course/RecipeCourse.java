@@ -94,10 +94,6 @@ public class RecipeCourse
         RecipeCourseRequest r = (RecipeCourseRequest) request;
         System.out.println(TAG + "Request No:" + accessCount + " - " + r);
 
-        if (r.getDomainId() == null) {
-            throw new IllegalArgumentException("domain id cannot be null!");
-        }
-
         if (isNewRequest(r)) {
             dataId = r.getDataId();
             recipeDomainId = r.getDomainId();

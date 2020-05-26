@@ -136,7 +136,7 @@
         </activity>
 
         <activity
-            android:name=".ui.catalog.recipe.RecipeCatalogActivity"
+            android:name=".ui.catalog.recipe.mvc.RecipeCatalogActivity"
             android:label="@string/title_recipe_catalog"
             >
         </activity>

@@ -14,7 +14,7 @@ public class RecipeCatalogListController
         RecipeListItemView.RecipeListItemUserActions {
 
     private enum ScreenState {
-        IDLE, LOADING, LOADING_ERROR, RECIPES_SHOWN
+        IDLE, LOADING_DATA, LOADING_ERROR, DATA_DISPLAYED
     }
 
     private final UseCaseHandler handler;
@@ -47,6 +47,9 @@ public class RecipeCatalogListController
     }
 
     private void loadRecipes() {
+        screenState = ScreenState.LOADING_DATA;
+        view.showProgressBar();
+
         RecipeListRequest.Model model = new RecipeListRequest.Model.Builder().
                 getDefault().
                 setFilter(RecipeList.RecipeListFilter.ALL_RECIPES).
@@ -62,13 +65,15 @@ public class RecipeCatalogListController
 
     @Override
     public void onSuccessResponse(RecipeListResponse response) {
-        screenState = ScreenState.RECIPES_SHOWN;
+        screenState = ScreenState.DATA_DISPLAYED;
+        view.hideProgressBar();
         view.bindRecipes(response.getModel().getRecipes());
     }
 
     @Override
     public void onErrorResponse(RecipeListResponse response) {
         screenState = ScreenState.LOADING_ERROR;
+        view.hideProgressBar();
 
     }
 

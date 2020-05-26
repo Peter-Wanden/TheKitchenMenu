@@ -14,22 +14,13 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         />
 
-    <ProgressBar
-        android:id="@+id/recipe_catalog_activity_progress_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_anchor="@id/recipe_catalog_activity_viewPager"
-        app:layout_anchorGravity="center_horizontal|center_vertical"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        />
-
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/recipe_catalog_activity_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/fab_margin"
         android:src="@drawable/ic_add"
         android:tint="@color/white"
+        android:layout_margin="@dimen/fab_margin"
         app:backgroundTint="@color/textColorHighlight"
         app:fabSize="normal"
         app:layout_anchor="@id/recipe_catalog_activity_viewPager"
@@ -41,12 +32,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/recipe_catalog_activity_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:layout_scrollFlags="scroll|enterAlways|snap"
-            />
+        <include layout="@layout/element_toolbar"/>
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/recipe_catalog_activity_tabLayout"
@@ -55,3 +41,4 @@
             />
     </com.google.android.material.appbar.AppBarLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
+

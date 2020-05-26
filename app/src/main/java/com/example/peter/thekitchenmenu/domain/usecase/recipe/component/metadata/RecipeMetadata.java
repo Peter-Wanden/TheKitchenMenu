@@ -7,13 +7,9 @@ import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.model.FailReasons;
-import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainModel;
-import com.example.peter.thekitchenmenu.domain.usecase.MessageModelBase;
 import com.example.peter.thekitchenmenu.domain.usecase.MessageModelDataId;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseFramework;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadataModel;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityRequest;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
@@ -177,17 +173,22 @@ public class RecipeMetadata
                 resendLastResponse();
             }
         } else if (useCaseHasNoDomainId()) {
-            dataId = r.getDataId();
-            recipeDomainId = r.getDomainId();
+            extractIds();
             loadData(recipeDomainId);
 
         } else if (domainIdsAreEqual()){
             setupUseCase();
-            processChanges();
+            processDomainModelChanges();
 
         } else {
             loadData(r.getDomainId());
         }
+    }
+
+    private void extractIds() {
+        MessageModelDataId r = (MessageModelDataId) getRequest();
+        dataId = r.getDataId();
+        recipeDomainId = r.getDomainId();
     }
 
     private boolean requestHasNoDomainId() {
@@ -227,14 +228,15 @@ public class RecipeMetadata
         componentStates = model.getComponentStates();
         failReasons.addAll(model.getFailReasons());
         dataId = model.getDataId();
-        processChanges();
+        recipeDomainId = model.getDomainId();
+        processDomainModelChanges();
     }
 
     @Override
     public void onModelUnavailable() {
         persistenceModel = createNewPersistenceModel();
         failReasons.add(CommonFailReason.DATA_UNAVAILABLE);
-        processChanges();
+        processDomainModelChanges();
     }
 
     private RecipeMetadataPersistenceModel createNewPersistenceModel() {
@@ -250,7 +252,7 @@ public class RecipeMetadata
                 build();
     }
 
-    private void processChanges() {
+    private void processDomainModelChanges() {
         setState();
         buildResponse();
     }
