@@ -200,7 +200,7 @@ public class RecipeIdentityEditorViewModelTest {
 
         // Used for listening to all recipe data as it changes
         RecipeMacroResponseListener macroResponseListener = new RecipeMacroResponseListener();
-        recipeMacro.registerRecipeCallback(macroResponseListener);
+        recipeMacro.registerRecipeListener(macroResponseListener);
 
         // An external request that starts/loads the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
@@ -742,13 +742,13 @@ public class RecipeIdentityEditorViewModelTest {
         private RecipeMetadataResponse response;
 
         @Override
-        public void onSuccessResponse(RecipeMetadataResponse response) {
+        public void onUseCaseSuccess(RecipeMetadataResponse response) {
             System.out.println(RecipeIdentityEditorViewModelTest.TAG + TAG + "onSuccess:" + response);
             this.response = response;
         }
 
         @Override
-        public void onErrorResponse(RecipeMetadataResponse response) {
+        public void onUseCaseError(RecipeMetadataResponse response) {
             System.out.println(RecipeIdentityEditorViewModelTest.TAG + TAG + "onError:" + response);
             this.response = response;
         }
@@ -774,13 +774,13 @@ public class RecipeIdentityEditorViewModelTest {
         RecipeResponse response;
 
         @Override
-        public void onSuccessResponse(RecipeResponse response) {
+        public void onUseCaseSuccess(RecipeResponse response) {
             System.out.println(RecipeIdentityEditorViewModelTest.TAG + TAG + "onSuccess:");
             this.response = response;
         }
 
         @Override
-        public void onErrorResponse(RecipeResponse response) {
+        public void onUseCaseError(RecipeResponse response) {
             System.out.println(RecipeIdentityEditorViewModelTest.TAG + TAG + "onError:");
             this.response = response;
         }

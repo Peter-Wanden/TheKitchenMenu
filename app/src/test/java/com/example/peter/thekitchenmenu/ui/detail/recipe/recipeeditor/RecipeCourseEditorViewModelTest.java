@@ -663,7 +663,7 @@ public class RecipeCourseEditorViewModelTest {
         RecipeMacroResponseCallback macroCallback = new RecipeMacroResponseCallback();
 
         // Act
-        recipeMacro.registerRecipeCallback(macroCallback);
+        recipeMacro.registerRecipeListener(macroCallback);
         handler.executeAsync(recipeMacro, request, new RecipeResponseCallback());
 
         // Assert
@@ -697,7 +697,7 @@ public class RecipeCourseEditorViewModelTest {
         RecipeMacroResponseCallback macroCallback = new RecipeMacroResponseCallback();
 
         // Act
-        recipeMacro.registerRecipeCallback(macroCallback);
+        recipeMacro.registerRecipeListener(macroCallback);
         handler.executeAsync(recipeMacro, request, new RecipeResponseCallback());
 
         // Assert
@@ -727,7 +727,7 @@ public class RecipeCourseEditorViewModelTest {
         RecipeMacroResponseCallback macroCallback = new RecipeMacroResponseCallback();
 
         // Act
-        recipeMacro.registerRecipeCallback(macroCallback);
+        recipeMacro.registerRecipeListener(macroCallback);
         handler.executeAsync(recipeMacro, request, new RecipeResponseCallback());
 
         // Assert
@@ -768,7 +768,7 @@ public class RecipeCourseEditorViewModelTest {
         RecipeMacroResponseCallback macroCallback = new RecipeMacroResponseCallback();
 
         // Act
-        recipeMacro.registerRecipeCallback(macroCallback);
+        recipeMacro.registerRecipeListener(macroCallback);
         handler.executeAsync(recipeMacro, request, new RecipeResponseCallback());
 
         // Assert
@@ -857,13 +857,13 @@ public class RecipeCourseEditorViewModelTest {
         private RecipeMetadataResponse response;
 
         @Override
-        public void onSuccessResponse(RecipeMetadataResponse response) {
+        public void onUseCaseSuccess(RecipeMetadataResponse response) {
             System.out.println(RecipeCourseEditorViewModelTest.TAG + TAG + "onSuccess:" + response);
             this.response = response;
         }
 
         @Override
-        public void onErrorResponse(RecipeMetadataResponse response) {
+        public void onUseCaseError(RecipeMetadataResponse response) {
             System.out.println(RecipeCourseEditorViewModelTest.TAG + TAG + "onError:" + response);
             this.response = response;
         }
@@ -886,12 +886,12 @@ public class RecipeCourseEditorViewModelTest {
         RecipeResponse response;
 
         @Override
-        public void onSuccessResponse(RecipeResponse response) {
+        public void onUseCaseSuccess(RecipeResponse response) {
             this.response = response;
         }
 
         @Override
-        public void onErrorResponse(RecipeResponse response) {
+        public void onUseCaseError(RecipeResponse response) {
             this.response = response;
         }
 

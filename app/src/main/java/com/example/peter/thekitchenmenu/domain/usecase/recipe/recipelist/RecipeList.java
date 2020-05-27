@@ -110,7 +110,7 @@ public class RecipeList
 
     @Override
     public void onModelsUnavailable() {
-        getUseCaseCallback().onErrorResponse(new RecipeListResponse.Builder().getDefault().build());
+        getUseCaseCallback().onUseCaseError(new RecipeListResponse.Builder().getDefault().build());
     }
 
     private void buildResponse() {
@@ -124,9 +124,9 @@ public class RecipeList
                 build();
 
         if (recipes.size() > 0) {
-            getUseCaseCallback().onSuccessResponse(response);
+            getUseCaseCallback().onUseCaseSuccess(response);
         } else {
-            getUseCaseCallback().onErrorResponse(response);
+            getUseCaseCallback().onUseCaseError(response);
         }
     }
 }

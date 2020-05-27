@@ -476,7 +476,7 @@ public class RecipeIdentityTest {
         // Assert
         RecipeIdentityResponse response = callbackClient.onSuccessResponse;
         UseCaseMetadataModel metadata = response.getMetadata();
-        RecipeIdentityResponse.Model model = response.getModel();
+        RecipeIdentityResponse.DomainModel domainModel = response.getModel();
 
         String expectedDataId = modelUnderTest.getDataId();
         String actualDataId = response.getDataId();
@@ -508,14 +508,14 @@ public class RecipeIdentityTest {
 
         // Assert domain data
         String expectedTitle = modelUnderTest.getTitle();
-        String actualTitle = model.getTitle();
+        String actualTitle = domainModel.getTitle();
         assertEquals(
                 expectedTitle,
                 actualTitle
         );
 
         String expectedDescription = modelUnderTest.getDescription();
-        String actualDescription = model.getDescription();
+        String actualDescription = domainModel.getDescription();
         assertEquals(
                 expectedDescription,
                 actualDescription
@@ -818,13 +818,13 @@ public class RecipeIdentityTest {
         private RecipeIdentityResponse onErrorResponse;
 
         @Override
-        public void onSuccessResponse(RecipeIdentityResponse r) {
+        public void onUseCaseSuccess(RecipeIdentityResponse r) {
             System.out.println(TAG + "onSuccess: " + r);
             onSuccessResponse = r;
         }
 
         @Override
-        public void onErrorResponse(RecipeIdentityResponse r) {
+        public void onUseCaseError(RecipeIdentityResponse r) {
             System.out.println(TAG + "onError: " + r);
             onErrorResponse = r;
         }

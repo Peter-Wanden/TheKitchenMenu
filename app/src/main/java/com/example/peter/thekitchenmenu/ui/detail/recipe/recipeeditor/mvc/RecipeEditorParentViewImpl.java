@@ -26,7 +26,9 @@ public class RecipeEditorParentViewImpl
                                       @Nullable ViewGroup parent,
                                       ViewFactory viewFactory) {
 
-        setRootView(inflater.inflate(R.layout.recipe_editor_activity, parent, false));
+        setRootView(inflater.inflate(
+                R.layout.recipe_editor_activity, parent, false)
+        );
 
         toolbar = findViewById(R.id.toolbar);
         toolbarView = viewFactory.getToolbarView(toolbar);

@@ -194,7 +194,7 @@ public class RecipeTest {
 
         RecipeCallbackClient passedInCallback = new RecipeCallbackClient();
         RecipeCallbackClient registeredCallback = new RecipeCallbackClient();
-        SUT.registerRecipeCallback(registeredCallback);
+        SUT.registerRecipeListener(registeredCallback);
 
         // Act
         handler.executeAsync(SUT, request, passedInCallback);
@@ -235,7 +235,7 @@ public class RecipeTest {
 
         // Registered callback listening for changes to identity data only
         RecipeIdentityCallbackClient registeredIdentityCallback = new RecipeIdentityCallbackClient();
-        SUT.registerComponentCallback(
+        SUT.registerComponentListener(
                 new Pair<>(ComponentName.IDENTITY, registeredIdentityCallback)
         );
 
@@ -293,7 +293,7 @@ public class RecipeTest {
 
         // Register RecipeCallback to get access to all recipe responses
         RecipeCallbackClient macroCallback = new RecipeCallbackClient();
-        SUT.registerRecipeCallback(macroCallback);
+        SUT.registerRecipeListener(macroCallback);
         // Act
         handler.executeAsync(SUT, request, callback);
 
@@ -618,7 +618,7 @@ public class RecipeTest {
         //
         SUT.registerMetadataListener(metadataListener1);
         SUT.registerMetadataListener(metadataListener2);
-        SUT.unregisterStateListener(metadataListener2);
+        SUT.unregisterMetadataListener(metadataListener2);
 
         // Act
         handler.executeAsync(SUT, initialRequest, recipeCallback);
@@ -719,9 +719,9 @@ public class RecipeTest {
         RecipeIdentityCallbackClient registeredIdentityCallback = new RecipeIdentityCallbackClient();
 
         // Register callbacks
-        SUT.registerRecipeCallback(registeredRecipeCallback);
+        SUT.registerRecipeListener(registeredRecipeCallback);
         SUT.registerMetadataListener(registeredMetadataCallback);
-        SUT.registerComponentCallback(new Pair<>(ComponentName.IDENTITY, registeredIdentityCallback)
+        SUT.registerComponentListener(new Pair<>(ComponentName.IDENTITY, registeredIdentityCallback)
         );
 
         // Act
@@ -863,7 +863,7 @@ public class RecipeTest {
         private RecipePortionsResponse portionsOnError;
 
         @Override
-        public void onSuccessResponse(RecipeResponse response) {
+        public void onUseCaseSuccess(RecipeResponse response) {
             if (response != null) {
                 System.out.println(TAG + "recipeMacroResponseOnSuccess: " + response);
                 recipeResponseOnSuccess = response;
@@ -891,7 +891,7 @@ public class RecipeTest {
         }
 
         @Override
-        public void onErrorResponse(RecipeResponse response) {
+        public void onUseCaseError(RecipeResponse response) {
             if (response != null) {
                 System.out.println(TAG + "recipeMacroResponseOnError: " + response);
                 recipeResponseOnError = response;
@@ -1007,13 +1007,13 @@ public class RecipeTest {
         private RecipeIdentityResponse response;
 
         @Override
-        public void onSuccessResponse(RecipeIdentityResponse response) {
+        public void onUseCaseSuccess(RecipeIdentityResponse response) {
             System.out.println(TAG + response);
             this.response = response;
         }
 
         @Override
-        public void onErrorResponse(RecipeIdentityResponse response) {
+        public void onUseCaseError(RecipeIdentityResponse response) {
             System.out.println(TAG + response);
             this.response = response;
         }
@@ -1039,13 +1039,13 @@ public class RecipeTest {
         private RecipeDurationResponse response;
 
         @Override
-        public void onSuccessResponse(RecipeDurationResponse response) {
+        public void onUseCaseSuccess(RecipeDurationResponse response) {
             System.out.println(TAG + "onSuccess:" + response);
             this.response = response;
         }
 
         @Override
-        public void onErrorResponse(RecipeDurationResponse response) {
+        public void onUseCaseError(RecipeDurationResponse response) {
             System.out.println(TAG + "onError:" + response);
             this.response = response;
         }
@@ -1070,13 +1070,13 @@ public class RecipeTest {
         private RecipeCourseResponse response;
 
         @Override
-        public void onSuccessResponse(RecipeCourseResponse response) {
+        public void onUseCaseSuccess(RecipeCourseResponse response) {
             System.out.println(TAG + response);
             this.response = response;
         }
 
         @Override
-        public void onErrorResponse(RecipeCourseResponse response) {
+        public void onUseCaseError(RecipeCourseResponse response) {
             System.out.println(TAG + response);
             this.response = response;
         }
@@ -1101,13 +1101,13 @@ public class RecipeTest {
         private RecipePortionsResponse response;
 
         @Override
-        public void onSuccessResponse(RecipePortionsResponse response) {
+        public void onUseCaseSuccess(RecipePortionsResponse response) {
             System.out.println(TAG + "onSuccess:" + response);
             this.response = response;
         }
 
         @Override
-        public void onErrorResponse(RecipePortionsResponse response) {
+        public void onUseCaseError(RecipePortionsResponse response) {
             System.out.println(TAG + "onError:" + response);
             this.response = response;
         }

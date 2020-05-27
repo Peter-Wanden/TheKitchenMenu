@@ -13,6 +13,7 @@ import com.example.peter.thekitchenmenu.ui.common.dialogs.promptdialog.PromptVie
 import com.example.peter.thekitchenmenu.ui.common.dialogs.promptdialog.PromptViewImpl;
 import com.example.peter.thekitchenmenu.ui.common.toolbar.ToolbarView;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.mvc.RecipeEditorParentViewImpl;
+import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.mvc.identity.RecipeIdentityEditorViewImpl;
 
 import javax.annotation.Nullable;
 
@@ -40,11 +41,15 @@ public class ViewFactory {
         return new ToolbarView(inflater, parent);
     }
 
+    public PromptView getPromptView(@Nullable ViewGroup parent) {
+        return new PromptViewImpl(inflater, parent);
+    }
+
     public RecipeEditorParentViewImpl getRecipeEditorParentView(@Nullable ViewGroup parent) {
         return new RecipeEditorParentViewImpl(inflater, parent, this);
     }
 
-    public PromptView getPromptView(@Nullable ViewGroup parent) {
-        return new PromptViewImpl(inflater, parent);
+    public RecipeIdentityEditorViewImpl getRecipeIdentityEditorView(@Nullable ViewGroup parent) {
+        return new RecipeIdentityEditorViewImpl(inflater, parent);
     }
 }

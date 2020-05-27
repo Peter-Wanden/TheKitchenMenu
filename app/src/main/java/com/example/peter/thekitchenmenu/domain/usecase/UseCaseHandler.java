@@ -19,12 +19,12 @@ public class UseCaseHandler {
         }
 
         @Override
-        public void onSuccessResponse(RESPONSE response) {
+        public void onUseCaseSuccess(RESPONSE response) {
             handler.notifyResponse(response, callback);
         }
 
         @Override
-        public void onErrorResponse(RESPONSE response) {
+        public void onUseCaseError(RESPONSE response) {
             handler.notifyError(response, callback);
         }
     }

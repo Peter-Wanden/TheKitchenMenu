@@ -64,14 +64,14 @@ public class RecipeCatalogListController
     }
 
     @Override
-    public void onSuccessResponse(RecipeListResponse response) {
+    public void onUseCaseSuccess(RecipeListResponse response) {
         screenState = ScreenState.DATA_DISPLAYED;
         view.hideProgressBar();
         view.bindRecipes(response.getModel().getRecipes());
     }
 
     @Override
-    public void onErrorResponse(RecipeListResponse response) {
+    public void onUseCaseError(RecipeListResponse response) {
         screenState = ScreenState.LOADING_ERROR;
         view.hideProgressBar();
 

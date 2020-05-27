@@ -4,7 +4,6 @@ import androidx.core.util.Pair;
 
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.model.FailReasons;
-import com.example.peter.thekitchenmenu.domain.usecase.MessageModelBase;
 import com.example.peter.thekitchenmenu.domain.usecase.MessageModelDataId;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
@@ -362,38 +361,38 @@ public class Recipe extends UseCaseBase {
             listener.onRecipeMetadataChanged(response);
         }
 
-        notifyRecipeCallbacks();
+        notifyRecipeListeners();
     }
 
     private boolean isMetadataChanged(RecipeMetadataResponse response) {
         return !recipeMetadataResponse.equals(response);
     }
 
-    public void unregisterStateListener(RecipeMetadataListener listener) {
+    public void unregisterMetadataListener(RecipeMetadataListener listener) {
         metaDataListeners.remove(listener);
     }
 
-    public void registerRecipeCallback(UseCaseBase.Callback<RecipeResponse> callback) {
-        recipeResponseListeners.add(callback);
+    public void registerRecipeListener(UseCaseBase.Callback<RecipeResponse> listener) {
+        recipeResponseListeners.add(listener);
     }
 
-    private void notifyRecipeCallbacks() {
+    private void notifyRecipeListeners() {
         RecipeResponse response = getRecipeResponse();
 
         if (isRecipeResponseChanged(response)) {
             for (UseCaseBase.Callback<RecipeResponse> callback : recipeResponseListeners) {
                 if (isValid()) {
-                    callback.onSuccessResponse(response);
+                    callback.onUseCaseSuccess(response);
                 } else {
-                    callback.onErrorResponse(response);
+                    callback.onUseCaseError(response);
                 }
             }
         }
-        notifyComponentCallbacks();
+        notifyComponentListeners();
     }
 
-    private void unregisterRecipeCallback(UseCaseBase.Callback<RecipeResponse> callback) {
-        recipeResponseListeners.remove(callback);
+    private void unregisterRecipeListeners(UseCaseBase.Callback<RecipeResponse> listener) {
+        recipeResponseListeners.remove(listener);
     }
 
     private RecipeResponse getRecipeResponse() {
@@ -419,14 +418,14 @@ public class Recipe extends UseCaseBase {
         return recipeMetadataResponse.getMetadata().getFailReasons().contains(CommonFailReason.NONE);
     }
 
-    public void registerComponentCallback(Pair<
+    public void registerComponentListener(Pair<
             ComponentName,
             UseCaseBase.Callback<? extends UseCaseBase.Response>> callbackPair) {
         componentListeners.add(callbackPair);
     }
 
     @SuppressWarnings("unchecked")
-    private void notifyComponentCallbacks() {
+    private void notifyComponentListeners() {
         for (Pair<
                 ComponentName,
                 UseCaseBase.Callback<? extends UseCaseBase.Response>>
@@ -442,9 +441,9 @@ public class Recipe extends UseCaseBase {
                         (UseCaseBase.Callback<RecipeIdentityResponse>) callbackPair.second;
 
                 if (response.getMetadata().getFailReasons().contains(CommonFailReason.NONE)) {
-                    callback.onSuccessResponse(response);
+                    callback.onUseCaseSuccess(response);
                 } else {
-                    callback.onErrorResponse(response);
+                    callback.onUseCaseError(response);
                 }
 
             } else if (COURSE.equals(componentName)) {
@@ -455,9 +454,9 @@ public class Recipe extends UseCaseBase {
                         (UseCaseBase.Callback<RecipeCourseResponse>) callbackPair.second;
 
                 if (response.getMetadata().getFailReasons().contains(CommonFailReason.NONE)) {
-                    callback.onSuccessResponse(response);
+                    callback.onUseCaseSuccess(response);
                 } else {
-                    callback.onErrorResponse(response);
+                    callback.onUseCaseError(response);
                 }
 
             } else if (DURATION.equals(componentName)) {
@@ -468,9 +467,9 @@ public class Recipe extends UseCaseBase {
                         (UseCaseBase.Callback<RecipeDurationResponse>) callbackPair.second;
 
                 if (response.getMetadata().getFailReasons().contains(CommonFailReason.NONE)) {
-                    callback.onSuccessResponse(response);
+                    callback.onUseCaseSuccess(response);
                 } else {
-                    callback.onErrorResponse(response);
+                    callback.onUseCaseError(response);
                 }
 
             } else if (PORTIONS.equals(componentName)) {
@@ -481,16 +480,16 @@ public class Recipe extends UseCaseBase {
                         (UseCaseBase.Callback<RecipePortionsResponse>) callbackPair.second;
 
                 if (response.getMetadata().getFailReasons().contains(CommonFailReason.NONE)) {
-                    callback.onSuccessResponse(response);
+                    callback.onUseCaseSuccess(response);
                 } else {
-                    callback.onErrorResponse(response);
+                    callback.onUseCaseError(response);
                 }
             }
         }
         notifyRequestOriginator();
     }
 
-    private void unregisterComponentCallback(Pair<ComponentName, UseCaseBase.Callback
+    public void unregisterComponentListener(Pair<ComponentName, UseCaseBase.Callback
             <? extends UseCaseBase.Response>> callback) {
         componentListeners.remove(callback);
     }
@@ -574,9 +573,9 @@ public class Recipe extends UseCaseBase {
 
     private void sendResponse(UseCaseBase.Response r, List<FailReasons> failReasons) {
         if (failReasons.contains(CommonFailReason.NONE)) {
-            getUseCaseCallback().onSuccessResponse(r);
+            getUseCaseCallback().onUseCaseSuccess(r);
         } else {
-            getUseCaseCallback().onErrorResponse(r);
+            getUseCaseCallback().onUseCaseError(r);
         }
     }
 }

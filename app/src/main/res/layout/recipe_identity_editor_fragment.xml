@@ -1,24 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    >
-    <data>
-        <import type="android.view.View" />
-        <variable
-            name="viewModel"
-            type="com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeIdentityEditorViewModel">
-        </variable>
-    </data>
-
 <androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+
     android:id="@+id/recipe_identity_editor_constraint_parent"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:animateLayoutChanges="true"
-    >
+    android:animateLayoutChanges="true">
 
     <ImageView
         android:id="@+id/recipe_identity_editor_identity_box"
@@ -28,8 +18,7 @@
         app:layout_constraintBottom_toBottomOf="@id/editable_recipe_description"
         app:layout_constraintEnd_toEndOf="@id/editable_recipe_title"
         app:layout_constraintStart_toStartOf="@id/editable_recipe_title"
-        app:layout_constraintTop_toTopOf="@id/recipe_editor_title_label"
-        />
+        app:layout_constraintTop_toTopOf="@id/recipe_editor_title_label" />
 
     <TextView
         android:id="@+id/recipe_editor_title_label"
@@ -38,10 +27,9 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:padding="4dp"
-        android:text="@string/recipe_title_label"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        />
+        tools:text="@string/recipe_title_label"/>
 
     <EditText
         android:id="@+id/editable_recipe_title"
@@ -52,25 +40,21 @@
         android:layout_marginEnd="8dp"
         android:paddingStart="8dp"
         android:paddingEnd="8dp"
-        android:text="@={viewModel.title}"
-        app:editTextErrorSetter="@{viewModel.titleErrorMessage}"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/recipe_editor_title_label"
-        tools:text="Perfect pancakes recipe"
-        />
+        tools:text="Perfect pancakes recipe" />
 
     <TextView
         android:id="@+id/recipe_description_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/darkGrey"
         android:layout_marginStart="8dp"
         android:padding="4dp"
-        android:text="@string/recipe_description_label"
+        android:textColor="@color/darkGrey"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/editable_recipe_title"
-        />
+        tools:text="@string/recipe_description_label"/>
 
     <EditText
         android:id="@+id/editable_recipe_description"
@@ -82,12 +66,8 @@
         android:layout_marginBottom="8dp"
         android:paddingStart="8dp"
         android:paddingEnd="8dp"
-        android:text="@={viewModel.description}"
-        app:editTextErrorSetter="@{viewModel.descriptionErrorMessage}"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/recipe_description_label"
-        tools:text="An easy pancake batter recipe with tips on how to make the best pancakes every time with sweet or savoury toppings"
-        />
+        tools:text="An easy pancake batter recipe with tips on how to make the best pancakes every time with sweet or savoury toppings" />
 </androidx.constraintlayout.widget.ConstraintLayout>
-</layout>

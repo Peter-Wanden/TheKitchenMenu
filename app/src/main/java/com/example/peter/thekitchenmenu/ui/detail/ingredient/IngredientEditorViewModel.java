@@ -114,12 +114,12 @@ public class IngredientEditorViewModel extends ViewModel {
                 request,
                 new UseCaseBase.Callback<TextValidatorResponse>() {
                     @Override
-                    public void onSuccessResponse(TextValidatorResponse response) {
+                    public void onUseCaseSuccess(TextValidatorResponse response) {
                         processNameTextValidationResponse(response);
                     }
 
                     @Override
-                    public void onErrorResponse(TextValidatorResponse response) {
+                    public void onUseCaseError(TextValidatorResponse response) {
                         processNameTextValidationResponse(response);
                     }
                 });
@@ -169,12 +169,12 @@ public class IngredientEditorViewModel extends ViewModel {
                 request,
                 new UseCaseBase.Callback<TextValidatorResponse>() {
                     @Override
-                    public void onSuccessResponse(TextValidatorResponse response) {
+                    public void onUseCaseSuccess(TextValidatorResponse response) {
                         processDescriptionTextValidationResponse(response);
                     }
 
                     @Override
-                    public void onErrorResponse(TextValidatorResponse response) {
+                    public void onUseCaseError(TextValidatorResponse response) {
                         processDescriptionTextValidationResponse(response);
                     }
                 });
@@ -207,12 +207,12 @@ public class IngredientEditorViewModel extends ViewModel {
 
         handler.executeAsync(ingredient, request, new UseCaseBase.Callback<IngredientResponse>() {
             @Override
-            public void onSuccessResponse(IngredientResponse response) {
+            public void onUseCaseSuccess(IngredientResponse response) {
                 processUseCaseIngredientResponse(response);
             }
 
             @Override
-            public void onErrorResponse(IngredientResponse response) {
+            public void onUseCaseError(IngredientResponse response) {
                 processUseCaseIngredientResponse(response);
             }
         });

@@ -10,7 +10,7 @@ import java.util.Objects;
 import javax.annotation.Nonnull;
 
 public final class RecipeIdentityResponse
-        extends MessageModelDataIdMetadata<RecipeIdentityResponse.Model>
+        extends MessageModelDataIdMetadata<RecipeIdentityResponse.DomainModel>
         implements UseCaseBase.Response {
 
     @Nonnull
@@ -27,7 +27,7 @@ public final class RecipeIdentityResponse
     private RecipeIdentityResponse() {}
 
     public static class Builder extends MessageModelDataIdMetadataBuilder
-            <Builder, RecipeIdentityResponse, Model> {
+            <Builder, RecipeIdentityResponse, DomainModel> {
 
         public Builder() {
             message = new RecipeIdentityResponse();
@@ -36,7 +36,7 @@ public final class RecipeIdentityResponse
         public Builder getDefault() {
             message.dataId = "";
             message.domainId = "";
-            message.model = new Model.Builder().getDefault().build();
+            message.model = new DomainModel.Builder().getDefault().build();
             message.metadata = new UseCaseMetadataModel.Builder().getDefault().build();
             return self();
         }
@@ -47,11 +47,11 @@ public final class RecipeIdentityResponse
         }
     }
 
-    public static final class Model extends BaseDomainModel {
+    public static final class DomainModel extends BaseDomainModel {
         private String title;
         private String description;
 
-        private Model() {}
+        private DomainModel() {}
 
         @Nonnull
         public String getTitle() {
@@ -67,9 +67,9 @@ public final class RecipeIdentityResponse
         public boolean equals(Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
-            Model model = (Model) o;
-            return title.equals(model.title) &&
-                    description.equals(model.description);
+            DomainModel domainModel = (DomainModel) o;
+            return title.equals(domainModel.title) &&
+                    description.equals(domainModel.description);
         }
 
         @Override
@@ -86,10 +86,10 @@ public final class RecipeIdentityResponse
                     '}';
         }
 
-        public static class Builder extends DomainModelBuilder<Builder, Model> {
+        public static class Builder extends DomainModelBuilder<Builder, DomainModel> {
 
             public Builder() {
-                domainModel = new Model();
+                domainModel = new DomainModel();
             }
 
             public Builder getDefault() {

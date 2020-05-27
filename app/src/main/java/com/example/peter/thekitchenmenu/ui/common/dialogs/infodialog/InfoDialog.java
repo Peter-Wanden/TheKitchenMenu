@@ -28,9 +28,9 @@ public class InfoDialog
         return infoDialog;
     }
 
-    private TextView mTxtTitle;
-    private TextView mTxtMessage;
-    private AppCompatButton mBtnPositive;
+    private TextView titleTextView;
+    private TextView messageTextView;
+    private AppCompatButton positiveButton;
 
     @NonNull
     @Override
@@ -42,20 +42,15 @@ public class InfoDialog
         Dialog dialog = new Dialog(requireContext());
         dialog.setContentView(R.layout.dialog_info);
 
-        mTxtTitle = dialog.findViewById(R.id.txt_title);
-        mTxtMessage = dialog.findViewById(R.id.txt_message);
-        mBtnPositive = dialog.findViewById(R.id.btn_positive);
+        titleTextView = dialog.findViewById(R.id.txt_title);
+        messageTextView = dialog.findViewById(R.id.txt_message);
+        positiveButton = dialog.findViewById(R.id.btn_positive);
 
-        mTxtTitle.setText(getArguments().getString(ARG_TITLE));
-        mTxtMessage.setText(getArguments().getString(ARG_MESSAGE));
-        mBtnPositive.setText(getArguments().getString(ARG_BUTTON_CAPTION));
+        titleTextView.setText(getArguments().getString(ARG_TITLE));
+        messageTextView.setText(getArguments().getString(ARG_MESSAGE));
+        positiveButton.setText(getArguments().getString(ARG_BUTTON_CAPTION));
 
-        mBtnPositive.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onButtonClicked();
-            }
-        });
+        positiveButton.setOnClickListener(v -> onButtonClicked());
 
         return dialog;
     }

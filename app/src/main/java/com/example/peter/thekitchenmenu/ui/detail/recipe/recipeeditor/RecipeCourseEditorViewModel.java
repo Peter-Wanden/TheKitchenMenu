@@ -41,7 +41,7 @@ public class RecipeCourseEditorViewModel extends ObservableViewModel {
 
         response = new RecipeCourseResponse.Builder().getDefault().build();
 
-        recipeMacro.registerComponentCallback(new Pair<>(RecipeMetadata.ComponentName.COURSE,
+        recipeMacro.registerComponentListener(new Pair<>(RecipeMetadata.ComponentName.COURSE,
                 new CourseCallbackListener())
         );
     }
@@ -52,7 +52,7 @@ public class RecipeCourseEditorViewModel extends ObservableViewModel {
      */
     private class CourseCallbackListener implements UseCaseBase.Callback<RecipeCourseResponse> {
         @Override
-        public void onSuccessResponse(RecipeCourseResponse response) {
+        public void onUseCaseSuccess(RecipeCourseResponse response) {
             isDataLoading.set(false);
             if (isStateChanged(response)) {
                 System.out.println(TAG + "onSuccess:" + response);
@@ -62,12 +62,12 @@ public class RecipeCourseEditorViewModel extends ObservableViewModel {
         }
 
         @Override
-        public void onErrorResponse(RecipeCourseResponse response) {
+        public void onUseCaseError(RecipeCourseResponse response) {
             isDataLoading.set(false);
             if (isStateChanged(response)) {
                 System.out.println(TAG + "onError:" + response);
                 RecipeCourseEditorViewModel.this.response = response;
-                this.onErrorResponse(response);
+                this.onUseCaseError(response);
             }
         }
     }

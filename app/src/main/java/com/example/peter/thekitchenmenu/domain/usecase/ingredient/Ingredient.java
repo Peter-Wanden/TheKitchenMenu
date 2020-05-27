@@ -198,12 +198,12 @@ public class Ingredient
         );
         textValidator.execute(request, new UseCaseBase.Callback<TextValidatorResponse>() {
             @Override
-            public void onSuccessResponse(TextValidatorResponse response) {
+            public void onUseCaseSuccess(TextValidatorResponse response) {
                 validateDescription();
             }
 
             @Override
-            public void onErrorResponse(TextValidatorResponse response) {
+            public void onUseCaseError(TextValidatorResponse response) {
                 addNameFailReason(response.getFailReason());
                 validateDescription();
             }
@@ -230,7 +230,7 @@ public class Ingredient
         );
         textValidator.execute(request, new UseCaseBase.Callback<TextValidatorResponse>() {
             @Override
-            public void onSuccessResponse(TextValidatorResponse response) {
+            public void onUseCaseSuccess(TextValidatorResponse response) {
                 if (failReasons.isEmpty()) {
                     failReasons.add(CommonFailReason.NONE);
                 }
@@ -238,7 +238,7 @@ public class Ingredient
             }
 
             @Override
-            public void onErrorResponse(TextValidatorResponse response) {
+            public void onUseCaseError(TextValidatorResponse response) {
                 addDescriptionFailReason(response.getFailReason());
                 buildResponse();
             }
@@ -345,9 +345,9 @@ public class Ingredient
     private void sendResponse(IngredientResponse response) {
         System.out.println(TAG + response);
         if (failReasons.contains(CommonFailReason.NONE)) {
-            getUseCaseCallback().onSuccessResponse(response);
+            getUseCaseCallback().onUseCaseSuccess(response);
         } else {
-            getUseCaseCallback().onErrorResponse(response);
+            getUseCaseCallback().onUseCaseError(response);
         }
     }
 }

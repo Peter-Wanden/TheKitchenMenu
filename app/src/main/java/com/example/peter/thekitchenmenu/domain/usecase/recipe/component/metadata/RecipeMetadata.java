@@ -210,7 +210,7 @@ public class RecipeMetadata
 
     private void sendEmptyResponse() {
         RecipeMetadataResponse response = new RecipeMetadataResponse.Builder().getDefault().build();
-        getUseCaseCallback().onErrorResponse(response);
+        getUseCaseCallback().onUseCaseError(response);
     }
 
     private void resendLastResponse() {
@@ -393,9 +393,9 @@ public class RecipeMetadata
     private void sendResponse(RecipeMetadataResponse r) {
         System.out.println(TAG + "Response No:" + accessCount + " - " + r);
         if (isValid()) {
-            getUseCaseCallback().onSuccessResponse(r);
+            getUseCaseCallback().onUseCaseSuccess(r);
         } else {
-            getUseCaseCallback().onErrorResponse(r);
+            getUseCaseCallback().onUseCaseError(r);
         }
     }
 

@@ -139,7 +139,7 @@ public class RecipeIngredientList extends UseCaseBase {
             }
             RecipeIngredientListResponse response = new RecipeIngredientListResponse(listItemModels);
             System.out.println(TAG + response);
-            getUseCaseCallback().onSuccessResponse(response);
+            getUseCaseCallback().onUseCaseSuccess(response);
         }
     }
 

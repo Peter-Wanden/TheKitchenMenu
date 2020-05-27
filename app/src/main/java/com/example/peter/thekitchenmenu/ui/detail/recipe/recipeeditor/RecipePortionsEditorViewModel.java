@@ -57,7 +57,7 @@ public class RecipePortionsEditorViewModel extends ObservableViewModel {
         response = new RecipePortionsResponse.Builder().getDefault().build();
 
         callback = new PortionsCallbackListener();
-        recipeMacro.registerComponentCallback(new Pair<>(
+        recipeMacro.registerComponentListener(new Pair<>(
                 RecipeMetadata.ComponentName.PORTIONS,
                 callback)
         );
@@ -69,22 +69,22 @@ public class RecipePortionsEditorViewModel extends ObservableViewModel {
      */
     private class PortionsCallbackListener implements UseCaseBase.Callback<RecipePortionsResponse> {
         @Override
-        public void onSuccessResponse(RecipePortionsResponse response) {
+        public void onUseCaseSuccess(RecipePortionsResponse response) {
             isDataLoading.set(false);
             if (isStateChanged(response)) {
                 System.out.println(TAG + "onSuccess:" + response);
                 RecipePortionsEditorViewModel.this.response = response;
-                onSuccessResponse(response);
+                onUseCaseSuccess(response);
             }
         }
 
         @Override
-        public void onErrorResponse(RecipePortionsResponse response) {
+        public void onUseCaseError(RecipePortionsResponse response) {
             isDataLoading.set(false);
             if (isStateChanged(response)) {
                 System.out.println(TAG + "onError:" + response);
                 RecipePortionsEditorViewModel.this.response = response;
-                this.onErrorResponse(response);
+                this.onUseCaseError(response);
             }
         }
     }

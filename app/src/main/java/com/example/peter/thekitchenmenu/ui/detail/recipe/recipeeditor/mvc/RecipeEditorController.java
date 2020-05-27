@@ -13,4 +13,13 @@ public class RecipeEditorController {
     private final Recipe recipe;
 
 
+    public RecipeEditorController(ScreensNavigator screensNavigator,
+                                  DialogsManager dialogsManager,
+                                  DialogsEventBus dialogsEventBus,
+                                  Recipe recipe) {
+        this.screensNavigator = screensNavigator;
+        this.dialogsManager = dialogsManager;
+        this.dialogsEventBus = dialogsEventBus;
+        this.recipe = recipe;
+    }
 }

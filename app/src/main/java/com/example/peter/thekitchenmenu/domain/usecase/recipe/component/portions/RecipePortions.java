@@ -277,9 +277,9 @@ public class RecipePortions extends UseCaseBase
     private void sendResponse(RecipePortionsResponse r) {
         System.out.println(TAG + "Response No:" + accessCount + " - " + r);
         if (r.getMetadata().getFailReasons().contains(CommonFailReason.NONE)) {
-            getUseCaseCallback().onSuccessResponse(r);
+            getUseCaseCallback().onUseCaseSuccess(r);
         } else {
-            getUseCaseCallback().onErrorResponse(r);
+            getUseCaseCallback().onUseCaseError(r);
         }
     }
 

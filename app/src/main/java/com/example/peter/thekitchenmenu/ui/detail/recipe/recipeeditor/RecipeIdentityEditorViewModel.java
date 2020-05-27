@@ -24,7 +24,9 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-public class RecipeIdentityEditorViewModel extends ObservableViewModel {
+public class RecipeIdentityEditorViewModel
+        extends
+        ObservableViewModel {
 
     private static final String TAG = "tkm-" + RecipeIdentityEditorViewModel.class.getSimpleName() +
             ": ";
@@ -34,7 +36,7 @@ public class RecipeIdentityEditorViewModel extends ObservableViewModel {
     @Nonnull
     private final UseCaseHandler handler;
     @Nonnull
-    private Recipe recipeMacro;
+    private Recipe recipe;
 
     public final ObservableField<String> titleErrorMessage = new ObservableField<>();
     public final ObservableField<String> descriptionErrorMessage = new ObservableField<>();
@@ -46,15 +48,15 @@ public class RecipeIdentityEditorViewModel extends ObservableViewModel {
     private boolean isUpdatingUi;
 
     public RecipeIdentityEditorViewModel(@Nonnull UseCaseHandler handler,
-                                         @Nonnull Recipe recipeMacro,
+                                         @Nonnull Recipe recipe,
                                          @Nonnull Resources resources) {
         this.handler = handler;
-        this.recipeMacro = recipeMacro;
+        this.recipe = recipe;
         this.resources = resources;
 
         response = new RecipeIdentityResponse.Builder().getDefault().build();
 
-        recipeMacro.registerComponentCallback(new Pair<>(
+        recipe.registerComponentListener(new Pair<>(
                 RecipeMetadata.ComponentName.IDENTITY,
                 new IdentityCallbackListener())
         );
@@ -66,22 +68,21 @@ public class RecipeIdentityEditorViewModel extends ObservableViewModel {
      */
     private class IdentityCallbackListener implements UseCaseBase.Callback<RecipeIdentityResponse> {
         @Override
-        public void onSuccessResponse(RecipeIdentityResponse response) {
+        public void onUseCaseSuccess(RecipeIdentityResponse response) {
             isDataLoading.set(false);
             if (isStateChanged(response)) {
                 System.out.println(TAG + "onSuccess:" + response);
                 RecipeIdentityEditorViewModel.this.response = response;
-                onSuccessResponse(response);
+                processUseCaseSuccessResponse();
             }
         }
 
         @Override
-        public void onErrorResponse(RecipeIdentityResponse response) {
+        public void onUseCaseError(RecipeIdentityResponse response) {
             isDataLoading.set(false);
             if (isStateChanged(response)) {
-                System.out.println(TAG + "onError:" + response);
                 RecipeIdentityEditorViewModel.this.response = response;
-                onErrorResponse(response);
+                processUseCaseErrorResponse();
             }
         }
     }
@@ -102,7 +103,7 @@ public class RecipeIdentityEditorViewModel extends ObservableViewModel {
                     setDomainId(response.getDomainId()).
                     setModel(model).
                     build();
-            handler.executeAsync(recipeMacro, request, new IdentityCallbackListener());
+            handler.executeAsync(recipe, request, new IdentityCallbackListener());
         }
     }
 
@@ -129,7 +130,7 @@ public class RecipeIdentityEditorViewModel extends ObservableViewModel {
 
             System.out.println(TAG + response);
 
-            handler.executeAsync(recipeMacro, request, new IdentityCallbackListener());
+            handler.executeAsync(recipe, request, new IdentityCallbackListener());
         }
     }
 
@@ -141,7 +142,7 @@ public class RecipeIdentityEditorViewModel extends ObservableViewModel {
         return !this.response.equals(response);
     }
 
-    private void onUseCaseSuccess() {
+    private void processUseCaseSuccessResponse() {
         clearErrors();
         updateObservables();
     }
@@ -151,7 +152,7 @@ public class RecipeIdentityEditorViewModel extends ObservableViewModel {
         descriptionErrorMessage.set(null);
     }
 
-    private void onUseCaseError() {
+    private void processUseCaseErrorResponse() {
         System.out.println(TAG + "onUseCaseError: failReasons=" +
                 response.getMetadata().getFailReasons());
 

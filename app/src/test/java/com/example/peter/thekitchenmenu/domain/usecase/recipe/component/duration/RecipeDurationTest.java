@@ -770,12 +770,12 @@ public class RecipeDurationTest {
 
         return new UseCaseBase.Callback<RecipeDurationResponse>() {
             @Override
-            public void onSuccessResponse(RecipeDurationResponse response) {
+            public void onUseCaseSuccess(RecipeDurationResponse response) {
                 durationOnSuccessResponse = response;
             }
 
             @Override
-            public void onErrorResponse(RecipeDurationResponse response) {
+            public void onUseCaseError(RecipeDurationResponse response) {
                 durationOnErrorResponse = response;
             }
         };

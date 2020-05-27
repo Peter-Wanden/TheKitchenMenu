@@ -934,13 +934,13 @@ public class RecipeCopyTest {
         private RecipeCopyResponse response;
 
         @Override
-        public void onSuccessResponse(RecipeCopyResponse response) {
+        public void onUseCaseSuccess(RecipeCopyResponse response) {
             System.out.println(RecipeCopyTest.TAG + TAG + "onSuccess:" + response);
             this.response = response;
         }
 
         @Override
-        public void onErrorResponse(RecipeCopyResponse response) {
+        public void onUseCaseError(RecipeCopyResponse response) {
             System.out.println(RecipeCopyTest.TAG + TAG + "onError:" + response);
             this.response = response;
         }

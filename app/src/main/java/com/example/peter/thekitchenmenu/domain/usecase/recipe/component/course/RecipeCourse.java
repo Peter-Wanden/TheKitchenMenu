@@ -235,9 +235,9 @@ public class RecipeCourse
 
     private void sendResponse(RecipeCourseResponse response) {
         if (isValid()) {
-            getUseCaseCallback().onSuccessResponse(response);
+            getUseCaseCallback().onUseCaseSuccess(response);
         } else {
-            getUseCaseCallback().onErrorResponse(response);
+            getUseCaseCallback().onUseCaseError(response);
         }
     }
 

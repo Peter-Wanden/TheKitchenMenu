@@ -172,12 +172,12 @@ public class RecipeIdentity
         );
         textValidator.execute(request, new UseCaseBase.Callback<TextValidatorResponse>() {
             @Override
-            public void onSuccessResponse(TextValidatorResponse response) {
+            public void onUseCaseSuccess(TextValidatorResponse response) {
                 validateDescription();
             }
 
             @Override
-            public void onErrorResponse(TextValidatorResponse response) {
+            public void onUseCaseError(TextValidatorResponse response) {
                 addTitleFailReasonFromTextValidator(response.getFailReason());
                 validateDescription();
             }
@@ -204,14 +204,14 @@ public class RecipeIdentity
         );
         textValidator.execute(request, new UseCaseBase.Callback<TextValidatorResponse>() {
             @Override
-            public void onSuccessResponse(TextValidatorResponse response) {
+            public void onUseCaseSuccess(TextValidatorResponse response) {
                 if (failReasons.isEmpty()) {
                     failReasons.add(CommonFailReason.NONE);
                 }
             }
 
             @Override
-            public void onErrorResponse(TextValidatorResponse response) {
+            public void onUseCaseError(TextValidatorResponse response) {
                 addDescriptionFailReasons(response.getFailReason());
             }
         });
@@ -294,8 +294,8 @@ public class RecipeIdentity
                 build();
     }
 
-    private RecipeIdentityResponse.Model getResponseModel() {
-        return new RecipeIdentityResponse.Model.Builder().
+    private RecipeIdentityResponse.DomainModel getResponseModel() {
+        return new RecipeIdentityResponse.DomainModel.Builder().
                 setTitle(isNewRequest ?
                         persistenceModel.getTitle() :
                         requestModel.getTitle()).
@@ -311,9 +311,9 @@ public class RecipeIdentity
         List<FailReasons> failReasons = r.getMetadata().getFailReasons();
 
         if (failReasons.contains(CommonFailReason.NONE)) {
-            getUseCaseCallback().onSuccessResponse(r);
+            getUseCaseCallback().onUseCaseSuccess(r);
         } else {
-            getUseCaseCallback().onErrorResponse(r);
+            getUseCaseCallback().onUseCaseError(r);
         }
     }
 

@@ -57,12 +57,12 @@ public class RecipeIngredientListTest {
     private UseCaseBase.Callback<RecipeIngredientListResponse> responseCallback() {
         return new UseCaseBase.Callback<RecipeIngredientListResponse>() {
             @Override
-            public void onSuccessResponse(RecipeIngredientListResponse response) {
+            public void onUseCaseSuccess(RecipeIngredientListResponse response) {
 
             }
 
             @Override
-            public void onErrorResponse(RecipeIngredientListResponse response) {
+            public void onUseCaseError(RecipeIngredientListResponse response) {
 
             }
         };

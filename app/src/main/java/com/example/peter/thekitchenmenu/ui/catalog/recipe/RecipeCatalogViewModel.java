@@ -71,13 +71,13 @@ public class RecipeCatalogViewModel extends ViewModel {
     private UseCaseBase.Callback<RecipeListResponse> getCallback() {
         return new UseCaseBase.Callback<RecipeListResponse>() {
             @Override
-            public void onSuccessResponse(RecipeListResponse response) {
+            public void onUseCaseSuccess(RecipeListResponse response) {
                 dataLoading.set(false);
 //                recipeList.setValue(response.getRecipeListItemModels());
             }
 
             @Override
-            public void onErrorResponse(RecipeListResponse response) {
+            public void onUseCaseError(RecipeListResponse response) {
                 dataLoading.set(false);
 //                dataLoadingFailed(response.getResultStatus());
 

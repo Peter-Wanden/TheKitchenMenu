@@ -15,9 +15,9 @@ public abstract class UseCaseBase {
     }
 
     public interface Callback<RESPONSE> {
-        void onSuccessResponse(RESPONSE response);
+        void onUseCaseSuccess(RESPONSE response);
 
-        void onErrorResponse(RESPONSE response);
+        void onUseCaseError(RESPONSE response);
     }
 
     private UseCaseBase.Request request;

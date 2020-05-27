@@ -42,7 +42,7 @@ public class UseCaseThreadPoolScheduler
             final RESPONSE response,
             final UseCaseBase.Callback<RESPONSE> callback) {
 
-        handler.post(() -> callback.onSuccessResponse(response));
+        handler.post(() -> callback.onUseCaseSuccess(response));
     }
 
     @Override
@@ -50,6 +50,6 @@ public class UseCaseThreadPoolScheduler
             final RESPONSE response,
             final UseCaseBase.Callback<RESPONSE> callback) {
 
-        handler.post(() -> callback.onErrorResponse(response));
+        handler.post(() -> callback.onUseCaseError(response));
     }
 }

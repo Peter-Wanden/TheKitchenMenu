@@ -231,7 +231,7 @@ public class RecipeIngredient extends UseCaseBase {
                 UnitOfMeasureConstants.DEFAULT_MEASUREMENT_MODEL,
                 status);
         System.out.println(TAG + response);
-        getUseCaseCallback().onErrorResponse(response);
+        getUseCaseCallback().onUseCaseError(response);
     }
 
     private void setupUnitOfMeasure() {
@@ -350,7 +350,7 @@ public class RecipeIngredient extends UseCaseBase {
         saveIfValid();
         RecipeIngredientResponse response = getResponse();
         System.out.println(TAG + response);
-        getUseCaseCallback().onSuccessResponse(response);
+        getUseCaseCallback().onUseCaseSuccess(response);
     }
 
     private RecipeIngredientResponse getResponse() {

@@ -63,7 +63,7 @@ public class RecipeIngredientListViewModel extends ViewModel {
                 new RecipeIngredientListRequest(recipeId),
                 new UseCaseBase.Callback<RecipeIngredientListResponse>() {
                     @Override
-                    public void onSuccessResponse(RecipeIngredientListResponse response) {
+                    public void onUseCaseSuccess(RecipeIngredientListResponse response) {
                         if (response.getListItemModels().size() > 0) {
                             hasIngredients.set(true);
                             recipeIngredientsModels.clear();
@@ -74,7 +74,7 @@ public class RecipeIngredientListViewModel extends ViewModel {
                     }
 
                     @Override
-                    public void onErrorResponse(RecipeIngredientListResponse response) {
+                    public void onUseCaseError(RecipeIngredientListResponse response) {
                         hasIngredients.set(false);
                     }
                 });

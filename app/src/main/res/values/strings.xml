@@ -204,7 +204,7 @@
     <string name="activity_detail_product_error_incomplete_fields">Please ensure you have completed
         all fields.</string>
 
-    <!-- RecipeEditorActivity -->
+    <!-- Recipe editor -->
     <string name="recipe_description_label">Description</string>
     <string name="recipe_course">Course</string>
     <string name="recipe_select_all_that_apply">(tick all that apply)</string>
@@ -217,7 +217,7 @@
     <string name="recipe_hours_label">Hours</string>
     <string name="recipe_minutes_label">Minutes</string>
 
-    <!-- RecipeIdentity input error messages -->
+    <!-- Recipe identity input error messages -->
     <string name="input_error_recipe_prep_time_too_long">Prep time needs to be under 100 hours</string>
     <string name="input_error_recipe_cook_time_too_long">Cook time needs to be under 100 hours</string>
 
@@ -262,6 +262,11 @@
     <string name="delete_file_error">Error deleting file - please try again.</string>
     <string name="label_added_by_me">Added by me</string>
     <string name="intent_gallery_picker_title">Complete action using</string>
+
+    <string name="error_dialog_data_unavailable_title">Data Unavailable</string>
+    <string name="error_dialog_data_unavailable_message">Cannot access data. Are you connected to the internet?</string>
+    <string name="error_dialog_data_unavailable_positive_button_caption">Try again</string>
+    <string name="error_dialog_data_unavailable_negative_button_caption">Cancel</string>
 
     <!-- Widget specific -->
     <string name="app_widget_empty_view">Press the add button to add a product</string>

@@ -937,7 +937,7 @@ public class RecipeDurationEditorViewModelTest {
 
         durationListener = new DurationResponseListener();
         macroListener = new RecipeMacroResponseListener();
-        recipeMacro.registerRecipeCallback(macroListener);
+        recipeMacro.registerRecipeListener(macroListener);
 
         // Act
         handler.executeAsync(recipeMacro, request, durationListener);
@@ -1035,14 +1035,14 @@ public class RecipeDurationEditorViewModelTest {
         RecipeResponse response;
 
         @Override
-        public void onSuccessResponse(RecipeResponse response) {
+        public void onUseCaseSuccess(RecipeResponse response) {
             System.out.println(RecipeDurationEditorViewModelTest.TAG + TAG + "onSuccess:");
             this.response = response;
 
         }
 
         @Override
-        public void onErrorResponse(RecipeResponse response) {
+        public void onUseCaseError(RecipeResponse response) {
             System.out.println(RecipeDurationEditorViewModelTest.TAG + TAG + "onError:");
             this.response = response;
         }
@@ -1069,7 +1069,7 @@ public class RecipeDurationEditorViewModelTest {
         private RecipeDurationResponse onErrorResponse;
 
         @Override
-        public void onSuccessResponse(RecipeDurationResponse response) {
+        public void onUseCaseSuccess(RecipeDurationResponse response) {
             System.out.println(RecipeDurationEditorViewModelTest.TAG + TAG + "onSuccess:" + response);
             onSuccessResponse = response;
             metadata = response.getMetadata();
@@ -1077,7 +1077,7 @@ public class RecipeDurationEditorViewModelTest {
         }
 
         @Override
-        public void onErrorResponse(RecipeDurationResponse response) {
+        public void onUseCaseError(RecipeDurationResponse response) {
             System.out.println(RecipeDurationEditorViewModelTest.TAG + TAG + "onError:" + response);
             onErrorResponse = response;
             metadata = response.getMetadata();

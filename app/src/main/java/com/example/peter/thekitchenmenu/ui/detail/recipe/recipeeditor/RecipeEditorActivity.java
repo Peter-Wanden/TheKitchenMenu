@@ -10,22 +10,18 @@ import android.widget.FrameLayout;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseFactory;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.RecipeRequest;
 import com.example.peter.thekitchenmenu.ui.UnsavedChangesDialogFragment;
-import com.example.peter.thekitchenmenu.ui.ViewModelFactoryRecipe;
 import com.example.peter.thekitchenmenu.ui.common.ScreensNavigator;
 import com.example.peter.thekitchenmenu.ui.common.controllers.BackPressedDispatcher;
 import com.example.peter.thekitchenmenu.ui.common.controllers.BackPressedListener;
 import com.example.peter.thekitchenmenu.ui.common.controllers.BaseActivity;
 import com.example.peter.thekitchenmenu.ui.common.fragmentFrameHelper.FragmentFrameWrapper;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.mvc.RecipeEditorParentViewImpl;
+import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.mvc.identity.RecipeIdentityFragment;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredientlist.RecipeIngredientListActivity;
 import com.example.peter.thekitchenmenu.ui.imageeditor.ImageEditorFragment;
 import com.example.peter.thekitchenmenu.utils.ActivityUtils;
@@ -63,7 +59,6 @@ public class RecipeEditorActivity
         screensNavigator = getCompositionRoot().getScreensNavigator();
         view = getCompositionRoot().getViewFactory().getRecipeEditorParentView(null);
         setContentView(view.getRootView());
-
     }
 
     private void setupActionBar() {
@@ -81,50 +76,6 @@ public class RecipeEditorActivity
         } else {
             actionBar.setTitle(R.string.activity_title_add_new_recipe);
         }
-    }
-
-    private void setupViewModels() {
-//        recipeMacro = UseCaseFactory.getInstance(getApplication()).getRecipeUseCase();
-
-//        recipeEditorViewModel = createRecipeEditorViewModel(this, recipeMacro);
-//        recipeEditorViewModel.setNavigator(this);
-//        binding.setViewModel(recipeEditorViewModel);
-
-//        createIdentityViewModel(this, recipeMacro);
-//        createCourseViewModel(this, recipeMacro);
-//        createDurationViewModel(this, recipeMacro);
-//        createPortionsViewModel(this, recipeMacro);
-    }
-
-    static RecipeEditorViewModel createRecipeEditorViewModel(FragmentActivity activity,
-                                                             Recipe recipeMacro) {
-        ViewModelFactoryRecipe factory = ViewModelFactoryRecipe.getInstance(
-                activity.getApplication(), recipeMacro);
-        return new ViewModelProvider(activity, factory).get(RecipeEditorViewModel.class);
-    }
-
-    static void createIdentityViewModel(FragmentActivity activity, Recipe recipeMacro) {
-        ViewModelFactoryRecipe factory = ViewModelFactoryRecipe.getInstance(
-                activity.getApplication(), recipeMacro);
-        new ViewModelProvider(activity, factory).get(RecipeIdentityEditorViewModel.class);
-    }
-
-    static void createCourseViewModel(FragmentActivity activity, Recipe recipeMacro) {
-        ViewModelFactoryRecipe factory = ViewModelFactoryRecipe.getInstance(
-                activity.getApplication(), recipeMacro);
-        new ViewModelProvider(activity, factory).get(RecipeCourseEditorViewModel.class);
-    }
-
-    static void createDurationViewModel(FragmentActivity activity, Recipe recipeMacro) {
-        ViewModelFactoryRecipe factory = ViewModelFactoryRecipe.getInstance(
-                activity.getApplication(), recipeMacro);
-        new ViewModelProvider(activity, factory).get(RecipeDurationEditorViewModel.class);
-    }
-
-    static void createPortionsViewModel(FragmentActivity activity, Recipe recipeMacro) {
-        ViewModelFactoryRecipe factory = ViewModelFactoryRecipe.getInstance(
-                activity.getApplication(), recipeMacro);
-        new ViewModelProvider(activity, factory).get(RecipePortionsEditorViewModel.class);
     }
 
     private void setupFragments() {

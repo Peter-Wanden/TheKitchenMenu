@@ -53,14 +53,14 @@ public class RecipeDurationEditorViewModel extends ObservableViewModel {
 
         response = new RecipeDurationResponse.Builder().getDefault().build();
 
-        recipeMacro.registerComponentCallback(new Pair<>(
+        recipeMacro.registerComponentListener(new Pair<>(
                 RecipeMetadata.ComponentName.DURATION,
                 new DurationCallbackListener()));
     }
 
     private class DurationCallbackListener implements UseCaseBase.Callback<RecipeDurationResponse> {
         @Override
-        public void onSuccessResponse(RecipeDurationResponse response) {
+        public void onUseCaseSuccess(RecipeDurationResponse response) {
             isDataLoading.set(false);
             if (isStateChanged(response)) {
                 System.out.println(TAG + "onSuccess:" + response);
@@ -70,7 +70,7 @@ public class RecipeDurationEditorViewModel extends ObservableViewModel {
         }
 
         @Override
-        public void onErrorResponse(RecipeDurationResponse response) {
+        public void onUseCaseError(RecipeDurationResponse response) {
             isDataLoading.set(false);
             if (isStateChanged(response)) {
                 RecipeDurationEditorViewModel.this.response = response;

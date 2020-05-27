@@ -90,7 +90,7 @@ public class ConversionFactorStatus extends UseCaseBase
                 Result.DISABLED
         );
         System.out.println(TAG + "response" + response);
-        getUseCaseCallback().onSuccessResponse(response);
+        getUseCaseCallback().onUseCaseSuccess(response);
     }
 
     private void loadIngredient(String ingredientId) {
@@ -113,7 +113,7 @@ public class ConversionFactorStatus extends UseCaseBase
                         Result.DATA_UNAVAILABLE
         );
         System.out.println(TAG + "response" + response);
-        getUseCaseCallback().onErrorResponse(response);
+        getUseCaseCallback().onUseCaseError(response);
     }
 
     private void checkEditableStatus() {
@@ -133,7 +133,7 @@ public class ConversionFactorStatus extends UseCaseBase
                 Result.ENABLED_UNEDITABLE
         );
         System.out.println(TAG + "response" + response);
-        getUseCaseCallback().onSuccessResponse(response);
+        getUseCaseCallback().onUseCaseSuccess(response);
     }
 
     private void isConversionFactorPreviouslySet() {
@@ -153,7 +153,7 @@ public class ConversionFactorStatus extends UseCaseBase
                 Result.ENABLED_EDITABLE_SET
         );
         System.out.println(TAG + "response" + response);
-        getUseCaseCallback().onSuccessResponse(response);
+        getUseCaseCallback().onUseCaseSuccess(response);
     }
 
     private void returnResultEnabledEditableUnSet() {
@@ -161,6 +161,6 @@ public class ConversionFactorStatus extends UseCaseBase
                 Result.ENABLED_EDITABLE_UNSET
         );
         System.out.println(TAG + "response" + response);
-        getUseCaseCallback().onSuccessResponse(response);
+        getUseCaseCallback().onUseCaseSuccess(response);
     }
 }

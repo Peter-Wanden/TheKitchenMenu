@@ -117,13 +117,13 @@ public class RecipeListTest {
                 getSimpleName() + ": ";
 
         @Override
-        public void onSuccessResponse(RecipeListResponse response) {
+        public void onUseCaseSuccess(RecipeListResponse response) {
             System.out.println(TAG + "onSuccess: " + response);
             onSuccessResponse = response;
         }
 
         @Override
-        public void onErrorResponse(RecipeListResponse response) {
+        public void onUseCaseError(RecipeListResponse response) {
             System.out.println(TAG + "onError: " + response);
             onErrorResponse = response;
         }

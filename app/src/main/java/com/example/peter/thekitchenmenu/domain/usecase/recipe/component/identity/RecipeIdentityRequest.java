@@ -104,9 +104,9 @@ public final class RecipeIdentityRequest
                 return self();
             }
 
-            public Builder basedOnResponseModel(RecipeIdentityResponse.Model model) {
-                this.domainModel.title = model.getTitle();
-                this.domainModel.description = model.getDescription();
+            public Builder basedOnResponseModel(RecipeIdentityResponse.DomainModel domainModel) {
+                this.domainModel.title = domainModel.getTitle();
+                this.domainModel.description = domainModel.getDescription();
                 return self();
             }
 

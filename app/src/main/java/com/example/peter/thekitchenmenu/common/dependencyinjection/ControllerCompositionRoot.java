@@ -13,6 +13,8 @@ import com.example.peter.thekitchenmenu.ui.common.ScreensNavigator;
 import com.example.peter.thekitchenmenu.ui.common.dialogs.DialogsEventBus;
 import com.example.peter.thekitchenmenu.ui.common.dialogs.DialogsManager;
 import com.example.peter.thekitchenmenu.ui.common.views.ViewFactory;
+import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.mvc.RecipeEditorController;
+import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.mvc.identity.RecipeIdentityEditorController;
 
 public class ControllerCompositionRoot {
 
@@ -64,6 +66,19 @@ public class ControllerCompositionRoot {
         );
     }
 
+    public RecipeEditorController getRecipeEditorController() {
+        return new RecipeEditorController(
+                getScreensNavigator(),
+                getDialogsManager(),
+                getDialogsEventBus(),
+                getUseCaseFactory().getRecipeUseCase()
+        );
+    }
+
+    public RecipeIdentityEditorController getRecipeIdentityEditorController() {
+        return new RecipeIdentityEditorController(getUseCaseFactory().getUseCaseHandler());
+    }
+
     public DialogsManager getDialogsManager() {
         return new DialogsManager(getContext(), getFragmentManager());
     }
@@ -71,4 +86,5 @@ public class ControllerCompositionRoot {
     public DialogsEventBus getDialogsEventBus() {
         return compositionRoot.getDialogsEventBus();
     }
+
 }
