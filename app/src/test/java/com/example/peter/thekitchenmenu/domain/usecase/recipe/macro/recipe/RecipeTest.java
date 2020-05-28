@@ -463,7 +463,7 @@ public class RecipeTest {
         // Identity Request 2, 'existing request', update title
         String validTitle = modelUnderTest.getTitle();
 
-        RecipeIdentityRequest.Model validTitleModel = new RecipeIdentityRequest.Model.Builder().
+        RecipeIdentityRequest.DomainModel validTitleModel = new RecipeIdentityRequest.DomainModel.Builder().
                 basedOnResponseModel(callbackClient.response.getModel()).
                 setTitle(validTitle).
                 build();
@@ -477,7 +477,7 @@ public class RecipeTest {
 
         // Identity Request 3, existing request, update description
         String validDescription = modelUnderTest.getDescription();
-        RecipeIdentityRequest.Model validTitleDescriptionModel = new RecipeIdentityRequest.Model.
+        RecipeIdentityRequest.DomainModel validTitleDescriptionModel = new RecipeIdentityRequest.DomainModel.
                 Builder().basedOnResponseModel(callbackClient.response.getModel()).
                 setDescription(validDescription).
                 build();

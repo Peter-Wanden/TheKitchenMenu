@@ -123,7 +123,7 @@ public class RecipeIdentityTest {
 
         simulateNewInitialisationRequest(modelUnderTest);
 
-        RecipeIdentityRequest.Model model = new RecipeIdentityRequest.Model.Builder().
+        RecipeIdentityRequest.DomainModel model = new RecipeIdentityRequest.DomainModel.Builder().
                 setTitle(modelUnderTest.getTitle()).
                 setDescription(modelUnderTest.getDescription()).
                 build();
@@ -157,7 +157,7 @@ public class RecipeIdentityTest {
 
         simulateNewInitialisationRequest(modelUnderTest);
 
-        RecipeIdentityRequest.Model model = new RecipeIdentityRequest.Model.Builder().
+        RecipeIdentityRequest.DomainModel model = new RecipeIdentityRequest.DomainModel.Builder().
                 setTitle(modelUnderTest.getTitle()).
                 setDescription(modelUnderTest.getDescription()).
                 build();
@@ -195,7 +195,7 @@ public class RecipeIdentityTest {
 
         simulateNewInitialisationRequest(modelUnderTest);
 
-        RecipeIdentityRequest.Model model = new RecipeIdentityRequest.Model.Builder().
+        RecipeIdentityRequest.DomainModel model = new RecipeIdentityRequest.DomainModel.Builder().
                 setTitle(modelUnderTest.getTitle()).
                 setDescription(modelUnderTest.getDescription()).
                 build();
@@ -236,7 +236,7 @@ public class RecipeIdentityTest {
 
         simulateNewInitialisationRequest(modelUnderTest);
 
-        RecipeIdentityRequest.Model model = new RecipeIdentityRequest.Model.Builder().
+        RecipeIdentityRequest.DomainModel model = new RecipeIdentityRequest.DomainModel.Builder().
                 setTitle(modelUnderTest.getTitle()).
                 setDescription(modelUnderTest.getDescription()).
                 build();
@@ -276,7 +276,7 @@ public class RecipeIdentityTest {
 
         simulateNewInitialisationRequest(modelUnderTest);
 
-        RecipeIdentityRequest.Model model = new RecipeIdentityRequest.Model.Builder().
+        RecipeIdentityRequest.DomainModel model = new RecipeIdentityRequest.DomainModel.Builder().
                 setTitle(modelUnderTest.getTitle()).
                 setDescription(modelUnderTest.getDescription()).
                 build();
@@ -304,7 +304,7 @@ public class RecipeIdentityTest {
 
         simulateNewInitialisationRequest(modelUnderTest);
 
-        RecipeIdentityRequest.Model model = new RecipeIdentityRequest.Model.Builder().
+        RecipeIdentityRequest.DomainModel model = new RecipeIdentityRequest.DomainModel.Builder().
                 setTitle(modelUnderTest.getTitle()).
                 setDescription(modelUnderTest.getDescription()).
                 build();
@@ -348,7 +348,7 @@ public class RecipeIdentityTest {
 
         simulateNewInitialisationRequest(modelUnderTest);
 
-        RecipeIdentityRequest.Model model = new RecipeIdentityRequest.Model.Builder().
+        RecipeIdentityRequest.DomainModel model = new RecipeIdentityRequest.DomainModel.Builder().
                 setTitle(modelUnderTest.getTitle()).
                 setDescription(modelUnderTest.getDescription()).
                 build();
@@ -390,7 +390,7 @@ public class RecipeIdentityTest {
         simulateNewInitialisationRequest(modelUnderTest);
 
         // Request 2: Valid new title request
-        RecipeIdentityRequest.Model titleModel = new RecipeIdentityRequest.Model.Builder().
+        RecipeIdentityRequest.DomainModel titleModel = new RecipeIdentityRequest.DomainModel.Builder().
                 getDefault().
                 setTitle(modelUnderTest.getTitle()).
                 build();
@@ -407,7 +407,7 @@ public class RecipeIdentityTest {
         handler.executeAsync(SUT, titleRequest, callbackClient);
 
         // Request 3: valid new description request, copy previous values from last response
-        RecipeIdentityRequest.Model descriptionModel = new RecipeIdentityRequest.Model.Builder().
+        RecipeIdentityRequest.DomainModel descriptionModel = new RecipeIdentityRequest.DomainModel.Builder().
                 basedOnResponseModel(callbackClient.onSuccessResponse.getModel()).
                 setDescription(modelUnderTest.getDescription()).
                 build();

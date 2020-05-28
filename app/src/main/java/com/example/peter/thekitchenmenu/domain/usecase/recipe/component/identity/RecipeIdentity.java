@@ -80,7 +80,7 @@ public class RecipeIdentity
     private String recipeId = "";
     private boolean isNewRequest;
 
-    private RecipeIdentityRequest.Model requestModel;
+    private RecipeIdentityRequest.DomainModel requestModel;
     private RecipeIdentityPersistenceModel persistenceModel;
 
     private int accessCount; // For testing
@@ -94,7 +94,7 @@ public class RecipeIdentity
         this.timeProvider = timeProvider;
         this.textValidator = textValidator;
 
-        requestModel = new RecipeIdentityRequest.Model.Builder().getDefault().build();
+        requestModel = new RecipeIdentityRequest.DomainModel.Builder().getDefault().build();
         failReasons = new ArrayList<>();
     }
 

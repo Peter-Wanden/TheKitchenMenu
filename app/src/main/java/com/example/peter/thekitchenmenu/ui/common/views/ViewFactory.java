@@ -12,7 +12,7 @@ import com.example.peter.thekitchenmenu.ui.catalog.recipe.mvc.recipelistitem.Rec
 import com.example.peter.thekitchenmenu.ui.common.dialogs.promptdialog.PromptView;
 import com.example.peter.thekitchenmenu.ui.common.dialogs.promptdialog.PromptViewImpl;
 import com.example.peter.thekitchenmenu.ui.common.toolbar.ToolbarView;
-import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.mvc.RecipeEditorParentViewImpl;
+import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.mvc.RecipeEditorViewImpl;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.mvc.identity.RecipeIdentityEditorViewImpl;
 
 import javax.annotation.Nullable;
@@ -45,8 +45,8 @@ public class ViewFactory {
         return new PromptViewImpl(inflater, parent);
     }
 
-    public RecipeEditorParentViewImpl getRecipeEditorParentView(@Nullable ViewGroup parent) {
-        return new RecipeEditorParentViewImpl(inflater, parent, this);
+    public RecipeEditorViewImpl getRecipeEditorParentView(@Nullable ViewGroup parent) {
+        return new RecipeEditorViewImpl(inflater, parent, this);
     }
 
     public RecipeIdentityEditorViewImpl getRecipeIdentityEditorView(@Nullable ViewGroup parent) {

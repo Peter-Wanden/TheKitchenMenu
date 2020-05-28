@@ -2,7 +2,6 @@ package com.example.peter.thekitchenmenu.ui.common.dialogs.infodialog;
 
 import android.app.Dialog;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -11,6 +10,9 @@ import androidx.appcompat.widget.AppCompatButton;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.ui.common.dialogs.BaseDialog;
 
+/**
+ * A dialog with a single button
+ */
 public class InfoDialog
         extends BaseDialog {
 
@@ -36,7 +38,7 @@ public class InfoDialog
     @Override
     public final Dialog onCreateDialog(Bundle savedInstanceState) {
         if (getArguments() == null) {
-            throw new IllegalStateException("arguments mustn't be null");
+            throw new IllegalStateException("arguments must not be null");
         }
 
         Dialog dialog = new Dialog(requireContext());

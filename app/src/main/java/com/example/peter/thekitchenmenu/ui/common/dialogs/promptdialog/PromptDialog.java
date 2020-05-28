@@ -9,6 +9,9 @@ import com.example.peter.thekitchenmenu.ui.common.dialogs.DialogsEventBus;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+/**
+ * A two button dialog that allows the user to choose between two options
+ */
 public class PromptDialog
         extends
         BaseDialog

@@ -12,12 +12,19 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentName;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RecipeIdentityEditorController
         implements
         RecipeIdentityEditorView.Listener,
         UseCaseBase.Callback<RecipeIdentityResponse> {
+
+    // Allows for different instances of the same use case macro, with the same domain data,
+    // to communicate that a component of the use case has changed
+    public interface UseCaseComponentChangedListener {
+        void componentChanged(String domainId);
+    }
 
     private static final String TAG = "tkm-" + RecipeIdentityEditorController.class.
             getSimpleName() + ": ";
@@ -27,20 +34,32 @@ public class RecipeIdentityEditorController
     private boolean isDataLoading;
 
     private UseCaseHandler handler;
+    private String recipeDomainId = "";
     private Recipe recipe;
     private RecipeIdentityResponse response;
 
-    public RecipeIdentityEditorController(UseCaseHandler handler) {
+    private List<UseCaseComponentChangedListener> componentChangedListeners = new ArrayList<>();
+
+    public RecipeIdentityEditorController(UseCaseHandler handler, Recipe recipe) {
         this.handler = handler;
+        this.recipe = recipe;
         response = new RecipeIdentityResponse.Builder().getDefault().build();
     }
 
-    public void bindView(RecipeIdentityEditorView view) {
+    void bindView(RecipeIdentityEditorView view) {
         this.view = view;
     }
 
-    public void setRecipe(Recipe recipe) {
-        this.recipe = recipe;
+    public void setRecipeDomainId(String recipeDomainId) {
+        this.recipeDomainId = recipeDomainId;
+    }
+
+    public void registerUseCaseComponentChangedListener(UseCaseComponentChangedListener listener) {
+        componentChangedListeners.add(listener);
+    }
+
+    public void unregisterUseCaseComponentChangedListener(UseCaseComponentChangedListener listener){
+        componentChangedListeners.remove(listener);
     }
 
     void onStart() {
@@ -51,7 +70,11 @@ public class RecipeIdentityEditorController
 
     private void loadData() {
         isDataLoading = true;
-        RecipeIdentityRequest request = new RecipeIdentityRequest.Builder().getDefault().build();
+
+        RecipeIdentityRequest request = new RecipeIdentityRequest.Builder().
+                getDefault().
+                setDomainId(recipeDomainId).
+                build();
         handler.executeAsync(recipe, request, this);
     }
 
@@ -62,12 +85,30 @@ public class RecipeIdentityEditorController
 
     @Override
     public void identityViewOnTitleChanged(String title) {
-
+        RecipeIdentityRequest request = new RecipeIdentityRequest.Builder().
+                basedOnResponse(response).
+                setModel(
+                        new RecipeIdentityRequest.DomainModel.
+                                Builder().
+                                basedOnResponseModel(response.getModel()).
+                                setTitle(title).
+                                build()).
+                build();
+        handler.executeAsync(recipe, request, this);
     }
 
     @Override
     public void identityViewOnDescriptionChanged(String description) {
-
+        RecipeIdentityRequest request = new RecipeIdentityRequest.Builder().
+                basedOnResponse(response).
+                setModel(
+                        new RecipeIdentityRequest.DomainModel.
+                                Builder().
+                                basedOnResponseModel(response.getModel()).
+                                setDescription(description).
+                                build()).
+                build();
+        handler.executeAsync(recipe, request, this);
     }
 
     @Override
@@ -75,7 +116,12 @@ public class RecipeIdentityEditorController
         if (isStateChanged(response)) {
             RecipeIdentityEditorController.this.response = response;
             processUseCaseSuccessResponse();
+            notifyUseCaseComponentChangedListeners();
         }
+    }
+
+    private void notifyUseCaseComponentChangedListeners() {
+        componentChangedListeners.forEach(listener -> listener.componentChanged(recipeDomainId));
     }
 
     private void processUseCaseSuccessResponse() {
@@ -102,6 +148,7 @@ public class RecipeIdentityEditorController
         if (isStateChanged(response)) {
             RecipeIdentityEditorController.this.response = response;
             processUseCaseErrorResponse(response);
+            notifyUseCaseComponentChangedListeners();
         }
     }
 

@@ -71,12 +71,15 @@ public class ControllerCompositionRoot {
                 getScreensNavigator(),
                 getDialogsManager(),
                 getDialogsEventBus(),
+                getUseCaseFactory().getUseCaseHandler(),
                 getUseCaseFactory().getRecipeUseCase()
         );
     }
 
     public RecipeIdentityEditorController getRecipeIdentityEditorController() {
-        return new RecipeIdentityEditorController(getUseCaseFactory().getUseCaseHandler());
+        return new RecipeIdentityEditorController(
+                getUseCaseFactory().getUseCaseHandler(),
+                getUseCaseFactory().getRecipeUseCase());
     }
 
     public DialogsManager getDialogsManager() {

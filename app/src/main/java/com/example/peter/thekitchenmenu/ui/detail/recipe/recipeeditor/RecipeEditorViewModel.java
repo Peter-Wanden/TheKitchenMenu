@@ -7,12 +7,14 @@ import androidx.databinding.ObservableField;
 import androidx.lifecycle.ViewModel;
 
 import com.example.peter.thekitchenmenu.R;
+import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentState;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.RecipeRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.RecipeResponse;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
@@ -21,7 +23,9 @@ import javax.annotation.Nonnull;
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe.CREATE_NEW_RECIPE;
 
 
-public class RecipeEditorViewModel extends ViewModel {
+public class RecipeEditorViewModel
+        extends
+        ViewModel {
 
     private static final String TAG = "tkm-" + RecipeEditorViewModel.class.getSimpleName() + ":";
 
@@ -32,7 +36,7 @@ public class RecipeEditorViewModel extends ViewModel {
     @Nonnull
     private final UseCaseHandler handler;
     @Nonnull
-    private Recipe recipeMacro;
+    private Recipe recipe;
     @Nonnull
     private UniqueIdProvider idProvider;
 
@@ -43,23 +47,23 @@ public class RecipeEditorViewModel extends ViewModel {
     private boolean isNewRecipe;
     private boolean showReviewButton;
 
-    private RecipeResponseListener recipeResponseListener;
+    private RecipeResponseListener recipeResponseCallback;
     private RecipeResponse recipeResponse;
     private RecipeMetadataResponse metadataResponse;
 
     public RecipeEditorViewModel(@Nonnull UseCaseHandler handler,
-                                 @Nonnull Recipe recipeMacro,
+                                 @Nonnull Recipe recipe,
                                  @Nonnull UniqueIdProvider idProvider,
                                  @Nonnull Resources resources) {
         this.handler = handler;
-        this.recipeMacro = recipeMacro;
+        this.recipe = recipe;
         this.idProvider = idProvider;
         this.resources = resources;
 
         metadataResponse = new RecipeMetadataResponse.Builder().getDefault().build();
-        recipeResponseListener = new RecipeResponseListener();
+        recipeResponseCallback = new RecipeResponseListener();
 
-        recipeMacro.registerRecipeListener(recipeResponseListener);
+        recipe.registerRecipeListener(recipeResponseCallback);
     }
 
     void setNavigator(AddEditRecipeNavigator navigator) {
@@ -80,7 +84,7 @@ public class RecipeEditorViewModel extends ViewModel {
             isNewRecipe = false;
             request.setDataId(recipeId);
         }
-        handler.executeAsync(recipeMacro, request.build(), recipeResponseListener);
+        handler.executeAsync(recipe, request.build(), recipeResponseCallback);
     }
 
     /**
@@ -118,16 +122,16 @@ public class RecipeEditorViewModel extends ViewModel {
     }
 
     private void onUseCaseSuccess() {
-//        if (isEditorCreator()) {
-//            if (isCloned) {
-//                isCloned = false;
-//                setupForClonedRecipe();
-//            } else {
-//                setupForExistingRecipe();
-//            }
-//        } else {
-//            cloneRecipe();
-//        }
+        if (isEditorCreator()) {
+            if (isCloned) {
+                isCloned = false;
+                setupForClonedRecipe();
+            } else {
+                setupForExistingRecipe();
+            }
+        } else {
+            cloneRecipe();
+        }
     }
 
     private void onUseCaseError() {
@@ -137,15 +141,15 @@ public class RecipeEditorViewModel extends ViewModel {
     }
 
     private boolean isEditorCreator() {
-//        return Constants.getUserId().equals(recipeResponse.getCreatedBy());
+        return Constants.getUserId().equals(recipeResponse.getCreatedBy());
         return false;
     }
 
     private void cloneRecipe() {
-//        RecipeRequest request = new RecipeRequest.Builder().
-//                setId(recipeResponse.getId()).
-//                setCloneToId(idProvider.getUId()).build();
-//        handler.execute(recipeMacro, request, recipeResponseListener);
+        RecipeRequest request = new RecipeRequest.Builder().
+                setDomainId(recipeResponse.getDomainId()).
+                setCloneToId(idProvider.getUId()).build();
+        handler.executeAsync(recipe, request, recipeResponseListener);
     }
 
     private void setupForNewRecipe() {

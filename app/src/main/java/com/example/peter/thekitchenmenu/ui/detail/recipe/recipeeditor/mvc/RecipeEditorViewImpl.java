@@ -10,21 +10,23 @@ import com.example.peter.thekitchenmenu.ui.common.toolbar.ToolbarView;
 import com.example.peter.thekitchenmenu.ui.common.views.BaseObservableViewMvc;
 import com.example.peter.thekitchenmenu.ui.common.views.ViewFactory;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.AddEditRecipeNavigator;
+import com.google.android.material.button.MaterialButton;
 
 import javax.annotation.Nullable;
 
-public class RecipeEditorParentViewImpl
+public class RecipeEditorViewImpl
         extends
         BaseObservableViewMvc<AddEditRecipeNavigator>
         implements
-        RecipeEditorParentView {
+        RecipeEditorView {
 
     private final ToolbarView toolbarView;
     private final Toolbar toolbar;
+    private final MaterialButton ingredientsButton;
 
-    public RecipeEditorParentViewImpl(LayoutInflater inflater,
-                                      @Nullable ViewGroup parent,
-                                      ViewFactory viewFactory) {
+    public RecipeEditorViewImpl(LayoutInflater inflater,
+                                @Nullable ViewGroup parent,
+                                ViewFactory viewFactory) {
 
         setRootView(inflater.inflate(
                 R.layout.recipe_editor_activity, parent, false)
@@ -33,6 +35,8 @@ public class RecipeEditorParentViewImpl
         toolbar = findViewById(R.id.toolbar);
         toolbarView = viewFactory.getToolbarView(toolbar);
         setupToolbar();
+
+        ingredientsButton = findViewById(R.id.recipe_editor_add_ingredients_button);
     }
 
     private void setupToolbar() {
@@ -42,5 +46,20 @@ public class RecipeEditorParentViewImpl
         toolbar.addView(toolbarView.getRootView());
         toolbarView.enableUpButtonAndListen(() -> getListeners().
                 forEach(AddEditRecipeNavigator::cancelEditing));
+    }
+
+    @Override
+    public Toolbar getToolbar() {
+        return toolbar;
+    }
+
+    @Override
+    public void setTitle(int titleResourceId) {
+        toolbar.setTitle(titleResourceId);
+    }
+
+    @Override
+    public void setIngredientsButtonText(int stringResourceId) {
+        ingredientsButton.setText(getContext().getString(stringResourceId));
     }
 }

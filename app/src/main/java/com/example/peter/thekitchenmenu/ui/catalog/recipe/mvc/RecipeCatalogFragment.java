@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
 
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.ui.common.controllers.BaseFragment;
 
 import javax.annotation.Nonnull;
@@ -15,8 +14,6 @@ import javax.annotation.Nonnull;
 public class RecipeCatalogFragment
         extends
         BaseFragment {
-
-    private static final String TAG = "tkm-" + RecipeCatalogFragment.class.getSimpleName() + " ";
 
     public static RecipeCatalogFragment newInstance() {
         return new RecipeCatalogFragment();

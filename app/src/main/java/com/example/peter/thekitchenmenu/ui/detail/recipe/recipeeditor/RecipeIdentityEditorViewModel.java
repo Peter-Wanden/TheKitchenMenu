@@ -94,7 +94,7 @@ public class RecipeIdentityEditorViewModel
 
     public void setTitle(String title) {
         if (isTitleChanged(title)) {
-            RecipeIdentityRequest.Model model = new RecipeIdentityRequest.Model.Builder().
+            RecipeIdentityRequest.DomainModel model = new RecipeIdentityRequest.DomainModel.Builder().
                     basedOnResponseModel(response.getModel()).
                     setTitle(title).
                     build();
@@ -118,7 +118,7 @@ public class RecipeIdentityEditorViewModel
 
     public void setDescription(String description) {
         if (isDescriptionChanged(description)) {
-            RecipeIdentityRequest.Model model = new RecipeIdentityRequest.Model.Builder().
+            RecipeIdentityRequest.DomainModel model = new RecipeIdentityRequest.DomainModel.Builder().
                     basedOnResponseModel(response.getModel()).
                     setDescription(description).
                     build();
