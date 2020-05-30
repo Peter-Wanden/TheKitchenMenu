@@ -1,14 +1,13 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe;
 
-import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainModel;
-import com.example.peter.thekitchenmenu.domain.usecase.MessageModelDataId;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
-import com.example.peter.thekitchenmenu.domain.usecase.MessageModelBase;
+import com.example.peter.thekitchenmenu.domain.model.BaseDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataId;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 
 import javax.annotation.Nonnull;
 
 public final class RecipeRequest
-        extends MessageModelDataId<RecipeRequest.Model>
+        extends UseCaseMessageModelDataId<RecipeRequest.Model>
         implements UseCaseBase.Request {
 
     @Nonnull

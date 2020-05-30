@@ -5,10 +5,10 @@ import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess.GetDoma
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.data.repository.recipe.metadata.TestDataRecipeMetadata;
 import com.example.peter.thekitchenmenu.data.repository.recipe.portions.TestDataRecipePortions;
-import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
-import com.example.peter.thekitchenmenu.domain.model.FailReasons;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
+import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.CommonFailReason;
+import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentState;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
@@ -85,7 +85,7 @@ public class RecipePortionsTest {
         // Assert
         assertEquals(
                 ComponentState.INVALID_UNCHANGED,
-                portionsOnErrorResponse.getMetadata().getState()
+                portionsOnErrorResponse.getMetadata().getComponentState()
         );
         failReasons = portionsOnErrorResponse.getMetadata().getFailReasons();
         assertEquals(
@@ -103,7 +103,7 @@ public class RecipePortionsTest {
         // Assert
         assertEquals(
                 ComponentState.INVALID_UNCHANGED,
-                portionsOnErrorResponse.getMetadata().getState()
+                portionsOnErrorResponse.getMetadata().getComponentState()
         );
     }
 
@@ -123,14 +123,14 @@ public class RecipePortionsTest {
 
         RecipePortionsRequest request = new RecipePortionsRequest.Builder().
                 basedOnResponse(portionsOnErrorResponse).
-                setModel(model).
+                setDomainModel(model).
                 build();
 
         handler.executeAsync(SUT, request, callbackClient);
         // Assert
         assertEquals(
                 ComponentState.INVALID_CHANGED,
-                portionsOnErrorResponse.getMetadata().getState()
+                portionsOnErrorResponse.getMetadata().getComponentState()
         );
         assertEquals(
                 expectedNoOfFailReasons,
@@ -157,7 +157,7 @@ public class RecipePortionsTest {
 
         RecipePortionsRequest request = new RecipePortionsRequest.Builder().
                 basedOnResponse(portionsOnErrorResponse).
-                setModel(model).
+                setDomainModel(model).
                 build();
 
         handler.executeAsync(SUT, request, callbackClient);
@@ -171,7 +171,7 @@ public class RecipePortionsTest {
         );
         assertEquals(
                 ComponentState.INVALID_CHANGED,
-                portionsOnErrorResponse.getMetadata().getState()
+                portionsOnErrorResponse.getMetadata().getComponentState()
         );
     }
 
@@ -192,14 +192,14 @@ public class RecipePortionsTest {
 
         RecipePortionsRequest request = new RecipePortionsRequest.Builder().
                 basedOnResponse(portionsOnErrorResponse).
-                setModel(model).
+                setDomainModel(model).
                 build();
 
         handler.executeAsync(SUT, request, callbackClient);
         // Assert
         assertEquals(
                 ComponentState.INVALID_CHANGED,
-                portionsOnErrorResponse.getMetadata().getState()
+                portionsOnErrorResponse.getMetadata().getComponentState()
         );
         failReasons = portionsOnErrorResponse.getMetadata().getFailReasons();
         assertEquals(
@@ -225,7 +225,7 @@ public class RecipePortionsTest {
 
         RecipePortionsRequest request = new RecipePortionsRequest.Builder().
                 basedOnResponse(portionsOnErrorResponse).
-                setModel(model).
+                setDomainModel(model).
                 build();
 
         // Required for save of new valid model
@@ -238,7 +238,7 @@ public class RecipePortionsTest {
         // Assert
         assertEquals(
                 ComponentState.VALID_CHANGED,
-                portionsOnSuccessResponse.getMetadata().getState()
+                portionsOnSuccessResponse.getMetadata().getComponentState()
         );
 
         failReasons = portionsOnSuccessResponse.getMetadata().getFailReasons();
@@ -265,7 +265,7 @@ public class RecipePortionsTest {
 
         RecipePortionsRequest request = new RecipePortionsRequest.Builder().
                 basedOnResponse(portionsOnErrorResponse).
-                setModel(model).
+                setDomainModel(model).
                 build();
 
         // Required for save of new valid model
@@ -329,7 +329,7 @@ public class RecipePortionsTest {
         // Assert
         assertEquals(
                 ComponentState.VALID_UNCHANGED,
-                portionsOnSuccessResponse.getMetadata().getState()
+                portionsOnSuccessResponse.getMetadata().getComponentState()
         );
         failReasons = portionsOnSuccessResponse.getMetadata().getFailReasons();
         assertEquals(
@@ -354,7 +354,7 @@ public class RecipePortionsTest {
                 build();
         RecipePortionsRequest invalidRequest = new RecipePortionsRequest.Builder().
                 basedOnResponse(portionsOnSuccessResponse).
-                setModel(invalidModel).
+                setDomainModel(invalidModel).
                 build();
         // Act
         handler.executeAsync(SUT, invalidRequest, callbackClient);
@@ -385,7 +385,7 @@ public class RecipePortionsTest {
                 build();
         RecipePortionsRequest validRequest = new RecipePortionsRequest.Builder().
                 basedOnResponse(portionsOnSuccessResponse).
-                setModel(model).
+                setDomainModel(model).
                 build();
         // Act
         handler.executeAsync(SUT, validRequest, callbackClient);
@@ -409,7 +409,7 @@ public class RecipePortionsTest {
                 build();
         RecipePortionsRequest request = new RecipePortionsRequest.Builder().
                 basedOnResponse(portionsOnSuccessResponse).
-                setModel(model).
+                setDomainModel(model).
                 build();
 
         // Act
@@ -447,7 +447,7 @@ public class RecipePortionsTest {
                 build();
         RecipePortionsRequest request = new RecipePortionsRequest.Builder().
                 basedOnResponse(portionsOnSuccessResponse).
-                setModel(model).
+                setDomainModel(model).
                 build();
 
         // Act

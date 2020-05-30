@@ -5,11 +5,11 @@ import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess.GetDomainModelCallback;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeMetadata;
 import com.example.peter.thekitchenmenu.data.repository.recipe.metadata.TestDataRecipeMetadata;
-import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
-import com.example.peter.thekitchenmenu.domain.model.FailReasons;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadataModel;
+import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.CommonFailReason;
+import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseHandler;
+import com.example.peter.thekitchenmenu.domain.model.UseCaseMetadataModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentName;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentState;
@@ -142,7 +142,7 @@ public class RecipeMetadataTest {
         UseCaseMetadataModel metadata = response.getMetadata();
 
         ComponentState expectedRecipeState = modelUnderTest.getRecipeState();
-        ComponentState actualRecipeState = metadata.getState();
+        ComponentState actualRecipeState = metadata.getComponentState();
         assertEquals(
                 expectedRecipeState,
                 actualRecipeState
@@ -215,7 +215,7 @@ public class RecipeMetadataTest {
 
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 basedOnResponse(onErrorResponse).
-                setModel(model).
+                setDomainModel(model).
                 build();
 
         // Act
@@ -223,7 +223,7 @@ public class RecipeMetadataTest {
         // Assert
         assertEquals(
                 ComponentState.INVALID_UNCHANGED,
-                onErrorResponse.getMetadata().getState()
+                onErrorResponse.getMetadata().getComponentState()
         );
         assertTrue(onErrorResponse.getMetadata().
                 getFailReasons().
@@ -247,7 +247,7 @@ public class RecipeMetadataTest {
 
         RecipeMetadataRequest r = new RecipeMetadataRequest.Builder().
                 basedOnResponse(onErrorResponse).
-                setModel(model).
+                setDomainModel(model).
                 build();
 
         // Act
@@ -257,7 +257,7 @@ public class RecipeMetadataTest {
         UseCaseMetadataModel metadata = onErrorResponse.getMetadata();
 
         ComponentState expectedComponentState = ComponentState.INVALID_UNCHANGED;
-        ComponentState actualComponentState = metadata.getState();
+        ComponentState actualComponentState = metadata.getComponentState();
         assertEquals(
                 expectedComponentState,
                 actualComponentState
@@ -287,7 +287,7 @@ public class RecipeMetadataTest {
 
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 basedOnResponse(onErrorResponse).
-                setModel(model).
+                setDomainModel(model).
                 build();
 
         // Act
@@ -297,7 +297,7 @@ public class RecipeMetadataTest {
         UseCaseMetadataModel metadata = onErrorResponse.getMetadata();
 
         ComponentState expectedComponentState = ComponentState.INVALID_CHANGED;
-        ComponentState actualComponentState = metadata.getState();
+        ComponentState actualComponentState = metadata.getComponentState();
         assertEquals(
                 expectedComponentState,
                 actualComponentState
@@ -327,7 +327,7 @@ public class RecipeMetadataTest {
 
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 basedOnResponse(onErrorResponse).
-                setModel(model).
+                setDomainModel(model).
                 build();
 
         // Act
@@ -338,7 +338,7 @@ public class RecipeMetadataTest {
         UseCaseMetadataModel metadata = onSuccessResponse.getMetadata();
 
         ComponentState expectedRecipeState = ComponentState.VALID_UNCHANGED;
-        ComponentState actualRecipeState = metadata.getState();
+        ComponentState actualRecipeState = metadata.getComponentState();
         assertEquals(
                 expectedRecipeState,
                 actualRecipeState
@@ -364,7 +364,7 @@ public class RecipeMetadataTest {
         // Assert
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 basedOnResponse(onErrorResponse).
-                setModel(
+                setDomainModel(
                         new RecipeMetadataRequest.Model.Builder().
                                 basedOnResponseModel(onErrorResponse.getModel()).
                                 setComponentStates(componentStatesUnderTest).build()).
@@ -377,7 +377,7 @@ public class RecipeMetadataTest {
         UseCaseMetadataModel metadata = onErrorResponse.getMetadata();
 
         ComponentState expectedComponentState = ComponentState.INVALID_UNCHANGED;
-        ComponentState actualComponentState = metadata.getState();
+        ComponentState actualComponentState = metadata.getComponentState();
         assertEquals(
                 expectedComponentState,
                 actualComponentState
@@ -407,7 +407,7 @@ public class RecipeMetadataTest {
 
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 basedOnResponse(onErrorResponse).
-                setModel(model).
+                setDomainModel(model).
                 build();
 
         // Act
@@ -417,7 +417,7 @@ public class RecipeMetadataTest {
         UseCaseMetadataModel metadata = onSuccessResponse.getMetadata();
 
         ComponentState expectedComponentState = ComponentState.VALID_CHANGED;
-        ComponentState actualComponentState = metadata.getState();
+        ComponentState actualComponentState = metadata.getComponentState();
         assertEquals(
                 expectedComponentState,
                 actualComponentState
@@ -443,7 +443,7 @@ public class RecipeMetadataTest {
 
         RecipeMetadataRequest secondRequest = new RecipeMetadataRequest.Builder().
                 basedOnResponse(onErrorResponse).
-                setModel(
+                setDomainModel(
                         new RecipeMetadataRequest.Model.Builder().
                                 basedOnResponseModel(onErrorResponse.getModel()).
                                 setComponentStates(componentStatesUnderTest).
@@ -458,7 +458,7 @@ public class RecipeMetadataTest {
 
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 basedOnResponse(onErrorResponse).
-                setModel(
+                setDomainModel(
                         new RecipeMetadataRequest.Model.Builder().
                                 basedOnResponseModel(onErrorResponse.getModel()).
                                 setComponentStates(componentStatesUnderTest).
@@ -473,7 +473,7 @@ public class RecipeMetadataTest {
         UseCaseMetadataModel metadata = onErrorResponse.getMetadata();
 
         ComponentState expectedComponentState = ComponentState.INVALID_CHANGED;
-        ComponentState actualComponentState = metadata.getState();
+        ComponentState actualComponentState = metadata.getComponentState();
         assertEquals(
                 expectedComponentState,
                 actualComponentState
@@ -500,7 +500,7 @@ public class RecipeMetadataTest {
         UseCaseMetadataModel metadata = onErrorResponse.getMetadata();
 
         ComponentState expectedComponentState = ComponentState.INVALID_UNCHANGED;
-        ComponentState actualComponentState = metadata.getState();
+        ComponentState actualComponentState = metadata.getComponentState();
         assertEquals(
                 expectedComponentState,
                 actualComponentState
@@ -536,7 +536,7 @@ public class RecipeMetadataTest {
         UseCaseMetadataModel metadata = onErrorResponse.getMetadata();
 
         ComponentState expectedComponentState = ComponentState.INVALID_UNCHANGED;
-        ComponentState actualComponentState = metadata.getState();
+        ComponentState actualComponentState = metadata.getComponentState();
         assertEquals(
                 expectedComponentState,
                 actualComponentState
@@ -570,7 +570,7 @@ public class RecipeMetadataTest {
         UseCaseMetadataModel metadata = onErrorResponse.getMetadata();
 
         ComponentState expectedComponentState = ComponentState.INVALID_CHANGED;
-        ComponentState actualComponentState = metadata.getState();
+        ComponentState actualComponentState = metadata.getComponentState();
         assertEquals(
                 expectedComponentState,
                 actualComponentState
@@ -604,7 +604,7 @@ public class RecipeMetadataTest {
         UseCaseMetadataModel metadata = onSuccessResponse.getMetadata();
 
         ComponentState expectedComponentState = ComponentState.VALID_UNCHANGED;
-        ComponentState actualComponentState = metadata.getState();
+        ComponentState actualComponentState = metadata.getComponentState();
         assertEquals(
                 expectedComponentState,
                 actualComponentState
@@ -631,7 +631,7 @@ public class RecipeMetadataTest {
         UseCaseMetadataModel metadata = onSuccessResponse.getMetadata();
 
         ComponentState expectedComponentState = ComponentState.VALID_UNCHANGED;
-        ComponentState actualComponentState = metadata.getState();
+        ComponentState actualComponentState = metadata.getComponentState();
         assertEquals(
                 expectedComponentState,
                 actualComponentState
@@ -665,7 +665,7 @@ public class RecipeMetadataTest {
         UseCaseMetadataModel metadata = onSuccessResponse.getMetadata();
 
         ComponentState expectedComponentState = ComponentState.VALID_CHANGED;
-        ComponentState actualComponentState = metadata.getState();
+        ComponentState actualComponentState = metadata.getComponentState();
         assertEquals(
                 expectedComponentState,
                 actualComponentState
@@ -700,7 +700,7 @@ public class RecipeMetadataTest {
         UseCaseMetadataModel metadata = onErrorResponse.getMetadata();
 
         ComponentState expectedModelUnderTestOneState = ComponentState.INVALID_UNCHANGED;
-        ComponentState actualModelUnderTestOneState = metadata.getState();
+        ComponentState actualModelUnderTestOneState = metadata.getComponentState();
         assertEquals(
                 expectedModelUnderTestOneState,
                 actualModelUnderTestOneState
@@ -711,7 +711,7 @@ public class RecipeMetadataTest {
 
         RecipeMetadataRequest requestTwo = new RecipeMetadataRequest.Builder().
                 basedOnResponse(onErrorResponse).
-                setModel(
+                setDomainModel(
                         new RecipeMetadataRequest.Model.Builder().
                                 basedOnResponseModel(onErrorResponse.getModel()).
                                 setComponentStates(modelUnderTestTwo.getComponentStates()).
@@ -736,7 +736,7 @@ public class RecipeMetadataTest {
 
         RecipeMetadataRequest requestThree = new RecipeMetadataRequest.Builder().
                 basedOnResponse(onErrorResponse).
-                setModel(
+                setDomainModel(
                         new RecipeMetadataRequest.Model.Builder().
                                 basedOnResponseModel(onErrorResponse.getModel()).
                                 setComponentStates(testModelThree.getComponentStates()).

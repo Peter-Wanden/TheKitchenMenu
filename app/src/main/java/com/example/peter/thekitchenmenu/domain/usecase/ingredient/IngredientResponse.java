@@ -1,17 +1,17 @@
 package com.example.peter.thekitchenmenu.domain.usecase.ingredient;
 
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
-import com.example.peter.thekitchenmenu.domain.usecase.MessageModelDataIdMetadata;
-import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainModel;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadataModel;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
+import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataIdMetadata;
+import com.example.peter.thekitchenmenu.domain.model.BaseDomainModel;
+import com.example.peter.thekitchenmenu.domain.model.UseCaseMetadataModel;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
 public final class IngredientResponse
-        extends MessageModelDataIdMetadata<IngredientResponse.Model>
+        extends UseCaseMessageModelDataIdMetadata<IngredientResponse.Model>
         implements UseCaseBase.Response {
 
     @Nonnull

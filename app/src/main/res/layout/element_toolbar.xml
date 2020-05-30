@@ -7,4 +7,5 @@
     android:layout_width="match_parent"
     android:layout_height="54dp"
     android:minHeight="54dp"
+    android:background="@color/primaryColor"
     app:layout_scrollFlags="scroll|enterAlways|snap"/>

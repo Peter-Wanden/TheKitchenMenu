@@ -2,11 +2,8 @@ package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.mvc.ident
 
 import androidx.core.util.Pair;
 
-import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
-import com.example.peter.thekitchenmenu.domain.model.FailReasons;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentity;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentName;
@@ -21,7 +18,8 @@ public class RecipeIdentityEditorController
         UseCaseBase.Callback<RecipeIdentityResponse> {
 
     // Allows for different instances of the same use case macro, with the same domain data,
-    // to communicate that a component of the use case has changed
+    // to communicate that a component of the use macro case has changed so the listener can update
+    // its data.
     public interface UseCaseComponentChangedListener {
         void componentChanged(String domainId);
     }
@@ -30,7 +28,6 @@ public class RecipeIdentityEditorController
             getSimpleName() + ": ";
 
     private RecipeIdentityEditorView view;
-    private boolean isUpdatingUi;
     private boolean isDataLoading;
 
     private UseCaseHandler handler;
@@ -87,7 +84,7 @@ public class RecipeIdentityEditorController
     public void identityViewOnTitleChanged(String title) {
         RecipeIdentityRequest request = new RecipeIdentityRequest.Builder().
                 basedOnResponse(response).
-                setModel(
+                setDomainModel(
                         new RecipeIdentityRequest.DomainModel.
                                 Builder().
                                 basedOnResponseModel(response.getModel()).
@@ -101,7 +98,7 @@ public class RecipeIdentityEditorController
     public void identityViewOnDescriptionChanged(String description) {
         RecipeIdentityRequest request = new RecipeIdentityRequest.Builder().
                 basedOnResponse(response).
-                setModel(
+                setDomainModel(
                         new RecipeIdentityRequest.DomainModel.
                                 Builder().
                                 basedOnResponseModel(response.getModel()).
@@ -115,7 +112,7 @@ public class RecipeIdentityEditorController
     public void onUseCaseSuccess(RecipeIdentityResponse response) {
         if (isStateChanged(response)) {
             RecipeIdentityEditorController.this.response = response;
-            processUseCaseSuccessResponse();
+            view.updateViewWithOnSuccessResponse(response);
             notifyUseCaseComponentChangedListeners();
         }
     }
@@ -124,48 +121,13 @@ public class RecipeIdentityEditorController
         componentChangedListeners.forEach(listener -> listener.componentChanged(recipeDomainId));
     }
 
-    private void processUseCaseSuccessResponse() {
-        clearErrors();
-        updateView();
-    }
-
-    private void clearErrors() {
-        view.displayTitleTooShortErrorMessage();
-        view.displayDescriptionTooLongErrorMessage();
-    }
-
-    private void updateView() {
-        RecipeIdentityResponse.DomainModel domainModel = response.getModel();
-        isUpdatingUi = true;
-        view.setTitle(domainModel.getTitle());
-        view.setDescription(domainModel.getDescription());
-        isUpdatingUi = false;
-    }
-
     @Override
     public void onUseCaseError(RecipeIdentityResponse response) {
         isDataLoading = false;
         if (isStateChanged(response)) {
             RecipeIdentityEditorController.this.response = response;
-            processUseCaseErrorResponse(response);
+            view.updateViewWithOnErrorResponse(response);
             notifyUseCaseComponentChangedListeners();
-        }
-    }
-
-    private void processUseCaseErrorResponse(RecipeIdentityResponse response) {
-        List<FailReasons> failReasons = response.getMetadata().getFailReasons();
-
-        if (failReasons.contains(CommonFailReason.DATA_UNAVAILABLE)) {
-            view.showDataLoadingError();
-        }
-        if (failReasons.contains(RecipeIdentity.FailReason.TITLE_TOO_SHORT)) {
-            view.displayTitleTooShortErrorMessage();
-        }
-        if (failReasons.contains(RecipeIdentity.FailReason.TITLE_TOO_LONG)) {
-            view.displayTitleTooLongErrorMessage();
-        }
-        if (failReasons.contains(RecipeIdentity.FailReason.DESCRIPTION_TOO_LONG)) {
-            view.displayDescriptionTooLongErrorMessage();
         }
     }
 

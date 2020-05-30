@@ -5,11 +5,11 @@ import android.annotation.SuppressLint;
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeMetadata;
-import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
-import com.example.peter.thekitchenmenu.domain.model.FailReasons;
-import com.example.peter.thekitchenmenu.domain.usecase.MessageModelDataId;
+import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.CommonFailReason;
+import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
+import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataId;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseFramework;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadataModel;
+import com.example.peter.thekitchenmenu.domain.model.UseCaseMetadataModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
@@ -163,7 +163,7 @@ public class RecipeMetadata
     @Override
     protected <REQUEST extends Request> void execute(REQUEST request) {
         accessCount++;
-        MessageModelDataId r = (MessageModelDataId) request;
+        UseCaseMessageModelDataId r = (UseCaseMessageModelDataId) request;
         System.out.println(TAG + "Request No:" + accessCount + " - " + r);
 
         if (requestHasNoDomainId()) {
@@ -185,14 +185,14 @@ public class RecipeMetadata
         }
     }
 
-    private void extractIds() {
-        MessageModelDataId r = (MessageModelDataId) getRequest();
-        dataId = r.getDataId();
-        recipeDomainId = r.getDomainId();
+    private boolean requestHasNoDomainId() {
+        return ((UseCaseMessageModelDataId)getRequest()).getDomainId().equals("");
     }
 
-    private boolean requestHasNoDomainId() {
-        return ((MessageModelDataId)getRequest()).getDomainId().equals("");
+    private void extractIds() {
+        UseCaseMessageModelDataId r = (UseCaseMessageModelDataId) getRequest();
+        dataId = r.getDataId();
+        recipeDomainId = r.getDomainId();
     }
 
     private boolean useCaseHasNoDomainId() {
@@ -200,7 +200,7 @@ public class RecipeMetadata
     }
 
     private boolean domainIdsAreEqual() {
-        return ((MessageModelDataId)getRequest()).getDomainId().equals(recipeDomainId);
+        return ((UseCaseMessageModelDataId)getRequest()).getDomainId().equals(recipeDomainId);
     }
 
     private void setupUseCase() {
@@ -351,7 +351,7 @@ public class RecipeMetadata
             builder.setMetadata(getMetadata(persistenceModel));
         }
 
-        builder.setModel(getResponseModel());
+        builder.setDomainModel(getResponseModel());
         builder.setDataId(dataId);
 
         sendResponse(builder.build());

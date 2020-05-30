@@ -2,9 +2,9 @@ package com.example.peter.thekitchenmenu.domain.usecase.textvalidation;
 
 import com.example.peter.thekitchenmenu.commonmocks.StringMaker;
 import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
-import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
+import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.CommonFailReason;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseHandler;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 
 import org.junit.*;
 import org.mockito.*;

@@ -4,9 +4,9 @@ import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess.GetAllDomainModelsCallback;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeMetadata;
 import com.example.peter.thekitchenmenu.data.repository.recipe.metadata.TestDataRecipeMetadata;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseFactory;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
+import com.example.peter.thekitchenmenu.domain.usecase.factory.UseCaseFactory;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataPersistenceModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
 
@@ -81,7 +81,7 @@ public class RecipeListTest {
         // A list request to return all recipes
         RecipeListRequest request = new RecipeListRequest.Builder().
                 getDefault().
-                setModel(new RecipeListRequest.Model.Builder().
+                setDomainModel(new RecipeListRequest.Model.Builder().
                         getDefault().
                         setFilter(RecipeList.RecipeListFilter.ALL_RECIPES).
                         build()).

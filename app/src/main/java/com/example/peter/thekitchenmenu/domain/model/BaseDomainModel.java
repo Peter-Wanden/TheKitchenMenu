@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.domain.usecase;
+package com.example.peter.thekitchenmenu.domain.model;
 
 /**
  * Base class for a domain data model.

@@ -1,8 +1,6 @@
-package com.example.peter.thekitchenmenu.domain.usecase;
+package com.example.peter.thekitchenmenu.domain.model;
 
-import com.example.peter.thekitchenmenu.domain.model.DomainPersistenceModel;
-
-public abstract class BasePersistence
+public abstract class BaseDomainModelPersistence
         extends BaseDomainModel
         implements DomainPersistenceModel {
 

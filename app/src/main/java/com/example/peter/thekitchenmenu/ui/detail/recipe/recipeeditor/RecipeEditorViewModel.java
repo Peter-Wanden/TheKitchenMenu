@@ -7,14 +7,12 @@ import androidx.databinding.ObservableField;
 import androidx.lifecycle.ViewModel;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.app.Constants;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentState;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.RecipeRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.RecipeResponse;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
@@ -122,16 +120,16 @@ public class RecipeEditorViewModel
     }
 
     private void onUseCaseSuccess() {
-        if (isEditorCreator()) {
-            if (isCloned) {
-                isCloned = false;
-                setupForClonedRecipe();
-            } else {
-                setupForExistingRecipe();
-            }
-        } else {
-            cloneRecipe();
-        }
+//        if (isEditorCreator()) {
+//            if (isCloned) {
+//                isCloned = false;
+//                setupForClonedRecipe();
+//            } else {
+//                setupForExistingRecipe();
+//            }
+//        } else {
+//            cloneRecipe();
+//        }
     }
 
     private void onUseCaseError() {
@@ -141,15 +139,15 @@ public class RecipeEditorViewModel
     }
 
     private boolean isEditorCreator() {
-        return Constants.getUserId().equals(recipeResponse.getCreatedBy());
+//        return Constants.getUserId().equals(recipeResponse.getCreatedBy());
         return false;
     }
 
     private void cloneRecipe() {
-        RecipeRequest request = new RecipeRequest.Builder().
-                setDomainId(recipeResponse.getDomainId()).
-                setCloneToId(idProvider.getUId()).build();
-        handler.executeAsync(recipe, request, recipeResponseListener);
+//        RecipeRequest request = new RecipeRequest.Builder().
+//                setDomainId(recipeResponse.getDomainId()).
+//                setCloneToId(idProvider.getUId()).build();
+//        handler.executeAsync(recipe, request, recipeResponseListener);
     }
 
     private void setupForNewRecipe() {
@@ -171,7 +169,6 @@ public class RecipeEditorViewModel
 
     private void setIngredientsButton() {
         if (isNewRecipe) {
-            // Todo - isNewRecipe, change to ifNoIngredients when ingredient component added
             ingredientsButtonTextObservable.set(resources.getString(R.string.add_ingredients));
 
         } else {
@@ -180,13 +177,12 @@ public class RecipeEditorViewModel
     }
 
     private void updateButtonVisibility() {
-
-        if (metadataResponse.getMetadata().getState() == ComponentState.VALID_CHANGED) {
+        if (metadataResponse.getMetadata().getComponentState() == ComponentState.VALID_CHANGED) {
             showIngredientsButtonObservable.set(true);
             showReviewButton = true;
             navigator.refreshOptionsMenu();
 
-        } else if (metadataResponse.getMetadata().getState() == ComponentState.VALID_UNCHANGED) {
+        } else if (metadataResponse.getMetadata().getComponentState() == ComponentState.VALID_UNCHANGED) {
             showIngredientsButtonObservable.set(true);
             showReviewButton = false;
             navigator.refreshOptionsMenu();
@@ -207,7 +203,7 @@ public class RecipeEditorViewModel
     }
 
     void upOrBackPressed() {
-        if (metadataResponse.getMetadata().getState() == ComponentState.INVALID_CHANGED) {
+        if (metadataResponse.getMetadata().getComponentState() == ComponentState.INVALID_CHANGED) {
             navigator.showUnsavedChangedDialog();
         } else {
             navigator.cancelEditing();

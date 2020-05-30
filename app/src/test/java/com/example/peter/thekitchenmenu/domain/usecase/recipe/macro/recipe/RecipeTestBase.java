@@ -8,7 +8,7 @@ import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeD
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeIdentity;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeMetadata;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipePortions;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCoursePersistenceModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDuration;

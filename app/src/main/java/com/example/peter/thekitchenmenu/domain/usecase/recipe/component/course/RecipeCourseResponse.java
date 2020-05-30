@@ -1,9 +1,9 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course;
 
-import com.example.peter.thekitchenmenu.domain.usecase.MessageModelDataIdMetadata;
-import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainModel;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadataModel;
+import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataIdMetadata;
+import com.example.peter.thekitchenmenu.domain.model.BaseDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
+import com.example.peter.thekitchenmenu.domain.model.UseCaseMetadataModel;
 
 import java.util.HashMap;
 import java.util.Objects;
@@ -11,7 +11,7 @@ import java.util.Objects;
 import javax.annotation.Nonnull;
 
 public final class RecipeCourseResponse
-        extends MessageModelDataIdMetadata<RecipeCourseResponse.Model>
+        extends UseCaseMessageModelDataIdMetadata<RecipeCourseResponse.Model>
         implements UseCaseBase.Response {
 
     @Nonnull

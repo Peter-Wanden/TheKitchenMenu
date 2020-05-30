@@ -9,7 +9,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.peter.thekitchenmenu.R;
+import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.CommonFailReason;
+import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentity;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityResponse;
 import com.example.peter.thekitchenmenu.ui.common.views.BaseObservableViewMvc;
+
+import java.util.List;
 
 import javax.annotation.Nullable;
 
@@ -25,6 +31,9 @@ public class RecipeIdentityEditorViewImpl
 
     private final TextView descriptionLabelTextView;
     private final EditText descriptionEditText;
+
+    private boolean isUpdatingUi;
+    private boolean isDataLoadingError;
 
     public RecipeIdentityEditorViewImpl(LayoutInflater inflater,
                                         @Nullable ViewGroup parent) {
@@ -63,9 +72,12 @@ public class RecipeIdentityEditorViewImpl
 
             @Override
             public void afterTextChanged(Editable s) {
-                String title = s.toString();
-                if (!title.isEmpty()) {
-                    getListeners().forEach(listener -> listener.identityViewOnTitleChanged(title));
+                if (!isUpdatingUi) {
+                    String title = s.toString();
+                    if (!title.isEmpty()) {
+                        getListeners().forEach(listener ->
+                                listener.identityViewOnTitleChanged(title));
+                    }
                 }
             }
         });
@@ -83,62 +95,74 @@ public class RecipeIdentityEditorViewImpl
 
             @Override
             public void afterTextChanged(Editable s) {
-                String description = s.toString();
-                if (!description.isEmpty()) {
-                    getListeners().forEach(listener -> listener.identityViewOnDescriptionChanged(description));
+                if (!isUpdatingUi) {
+                    String description = s.toString();
+                    if (!description.isEmpty()) {
+                        getListeners().forEach(listener ->
+                                listener.identityViewOnDescriptionChanged(description));
+                    }
                 }
             }
         });
     }
 
     @Override
-    public void setTitleLabelResourceId(int titleLabelResourceId) {
-        titleLabelTextView.setText(getString(titleLabelResourceId));
+    public void updateViewWithOnSuccessResponse(RecipeIdentityResponse response) {
+        isUpdatingUi = true;
+
+        titleEditText.setError(null);
+        descriptionEditText.setError(null);
+
+        RecipeIdentityResponse.DomainModel domainModel = response.getModel();
+        titleEditText.setText(domainModel.getTitle());
+        descriptionEditText.setText(domainModel.getDescription());
+
+        isUpdatingUi = false;
     }
 
     @Override
-    public void setTitle(String title) {
-        titleEditText.setText(title);
-    }
+    public void updateViewWithOnErrorResponse(RecipeIdentityResponse response) {
+        isUpdatingUi = true;
 
-    @Override
-    public void displayTitleTooShortErrorMessage() {
-        titleEditText.setError((resources.getString(
-                R.string.input_error_text_too_short,
-                String.valueOf(resources.getInteger(
-                        R.integer.input_validation_short_text_min_length)),
-                String.valueOf(resources.getInteger(
-                        R.integer.input_validation_short_text_max_length)))));
-    }
+        List<FailReasons> failReasons = response.getMetadata().getFailReasons();
 
-    @Override
-    public void displayTitleTooLongErrorMessage() {
-        titleEditText.setText(resources.getString(
-                R.string.input_error_text_too_long,
-                String.valueOf(resources.getInteger(
-                        R.integer.input_validation_short_text_min_length)),
-                String.valueOf(resources.getInteger(
-                        R.integer.input_validation_short_text_max_length))));
-    }
+        if (failReasons.contains(CommonFailReason.DATA_UNAVAILABLE)) {
+            isDataLoadingError = true;
+        }
 
-    @Override
-    public void setDescriptionLabel(int descriptionLabelResourceId) {
-        descriptionLabelTextView.setText(getString(descriptionLabelResourceId));
-    }
+        if (failReasons.contains(RecipeIdentity.FailReason.TITLE_TOO_SHORT)) {
+            titleEditText.setError(
+                    resources.getString(
+                            R.string.input_error_text_too_short,
+                            String.valueOf(resources.getInteger(
+                                    R.integer.input_validation_short_text_min_length)),
+                            String.valueOf(resources.getInteger(
+                                    R.integer.input_validation_short_text_max_length))));
+        }
 
-    @Override
-    public void setDescription(String description) {
-        descriptionEditText.setText(description);
-    }
+        if (failReasons.contains(RecipeIdentity.FailReason.TITLE_TOO_LONG)) {
+            titleEditText.setError(
+                    resources.getString(R.string.input_error_text_too_long,
+                            String.valueOf(resources.getInteger(
+                                    R.integer.input_validation_short_text_min_length)),
+                            String.valueOf(resources.getInteger(
+                                    R.integer.input_validation_short_text_max_length))));
+        }
 
-    @Override
-    public void displayDescriptionTooLongErrorMessage() {
-        descriptionEditText.setError(resources.getString(
-                R.string.input_error_text_too_long,
-                String.valueOf(resources.getInteger(
-                        R.integer.input_validation_long_text_min_length)),
-                String.valueOf(resources.getInteger(
-                        R.integer.input_validation_long_text_max_length))));
+        if (failReasons.contains(RecipeIdentity.FailReason.DESCRIPTION_TOO_LONG)) {
+            descriptionEditText.setError(
+                    resources.getString(R.string.input_error_text_too_long,
+                            String.valueOf(resources.getInteger(
+                                    R.integer.input_validation_long_text_min_length)),
+                            String.valueOf(resources.getInteger(
+                                    R.integer.input_validation_long_text_max_length))));
+        }
+
+        RecipeIdentityResponse.DomainModel domainModel = response.getModel();
+        titleEditText.setText(domainModel.getTitle());
+        descriptionEditText.setText(domainModel.getDescription());
+
+        isUpdatingUi = false;
     }
 
     @Override

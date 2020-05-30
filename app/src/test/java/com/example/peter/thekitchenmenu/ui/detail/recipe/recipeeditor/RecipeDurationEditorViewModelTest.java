@@ -18,10 +18,10 @@ import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.iden
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.parent.RecipeMetadataParentEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.datasource.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.datasource.TestDataRecipePortionsEntity;
-import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadataModel;
+import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.CommonFailReason;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseHandler;
+import com.example.peter.thekitchenmenu.domain.model.UseCaseMetadataModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDuration;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDurationRequest;
@@ -225,7 +225,7 @@ public class RecipeDurationEditorViewModelTest {
         givenNewEmptyRecipe(recipeId);
 
         // Assert metadata response
-        assertEquals(RecipeMetadata.ComponentState.INVALID_UNCHANGED, metadata.getState());
+        assertEquals(RecipeMetadata.ComponentState.INVALID_UNCHANGED, metadata.getComponentState());
         assertTrue(metadata.getFailReasons().contains(CommonFailReason.DATA_UNAVAILABLE));
         assertEquals(dateReturnedIfNoData, metadata.getCreateDate());
         assertEquals(dateReturnedIfNoData, metadata.getLasUpdate());
@@ -930,7 +930,7 @@ public class RecipeDurationEditorViewModelTest {
         // An external request that loads the recipe. This can ba any request type.
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
                 setDataId(recipeId).
-                setModel(new RecipeDurationRequest.Model.Builder().
+                setDomainModel(new RecipeDurationRequest.Model.Builder().
                         getDefault().
                         build()).
                 build();

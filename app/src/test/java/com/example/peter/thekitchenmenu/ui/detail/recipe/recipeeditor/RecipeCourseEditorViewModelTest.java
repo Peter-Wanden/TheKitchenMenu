@@ -19,9 +19,9 @@ import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.iden
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.parent.RecipeMetadataParentEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.datasource.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.datasource.TestDataRecipePortionsEntity;
-import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
+import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.CommonFailReason;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCoursePersistenceModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourseResponse;
@@ -677,7 +677,7 @@ public class RecipeCourseEditorViewModelTest {
                 get(RecipeMetadata.ComponentName.COURSE);
 
         RecipeMetadata.ComponentState expectedState = RecipeMetadata.ComponentState.INVALID_UNCHANGED;
-        RecipeMetadata.ComponentState actualState = r.getMetadata().getState();
+        RecipeMetadata.ComponentState actualState = r.getMetadata().getComponentState();
 
         assertEquals(expectedState, actualState);
 
@@ -711,7 +711,7 @@ public class RecipeCourseEditorViewModelTest {
                 get(RecipeMetadata.ComponentName.COURSE);
 
         RecipeMetadata.ComponentState expectedState = RecipeMetadata.ComponentState.VALID_UNCHANGED;
-        RecipeMetadata.ComponentState actualState = r.getMetadata().getState();
+        RecipeMetadata.ComponentState actualState = r.getMetadata().getComponentState();
 
         assertEquals(expectedState, actualState);
     }
@@ -752,7 +752,7 @@ public class RecipeCourseEditorViewModelTest {
                 get(RecipeMetadata.ComponentName.COURSE);
 
         RecipeMetadata.ComponentState expectedState = RecipeMetadata.ComponentState.INVALID_CHANGED;
-        RecipeMetadata.ComponentState actualState = r.getMetadata().getState();
+        RecipeMetadata.ComponentState actualState = r.getMetadata().getComponentState();
 
         assertEquals(expectedState, actualState);
     }
@@ -792,7 +792,7 @@ public class RecipeCourseEditorViewModelTest {
                 get(RecipeMetadata.ComponentName.COURSE);
 
         RecipeMetadata.ComponentState expectedState = RecipeMetadata.ComponentState.VALID_CHANGED;
-        RecipeMetadata.ComponentState actualState = r.getMetadata().getState();
+        RecipeMetadata.ComponentState actualState = r.getMetadata().getComponentState();
 
         assertEquals(expectedState, actualState);
     }

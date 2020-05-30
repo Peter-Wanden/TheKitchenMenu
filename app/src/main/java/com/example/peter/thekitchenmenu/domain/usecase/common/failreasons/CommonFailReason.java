@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.domain.model;
+package com.example.peter.thekitchenmenu.domain.usecase.common.failreasons;
 
 import android.annotation.SuppressLint;
 

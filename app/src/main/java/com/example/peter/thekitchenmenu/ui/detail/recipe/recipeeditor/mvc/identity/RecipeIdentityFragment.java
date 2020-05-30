@@ -18,6 +18,8 @@ public class RecipeIdentityFragment
         extends
         BaseFragment {
 
+    private static final String TAG = "tkm-" + RecipeIdentityFragment.class.getSimpleName() + ": ";
+
     private static final String RECIPE_DOMAIN_ID = "RECIPE_DOMAIN_ID";
 
     public static RecipeIdentityFragment newInstance(String recipeDomainId) {
@@ -39,8 +41,7 @@ public class RecipeIdentityFragment
         RecipeIdentityEditorViewImpl view = getCompositionRoot().
                 getViewFactory().
                 getRecipeIdentityEditorView(parent);
-
-        controller = getCompositionRoot().getRecipeIdentityEditorController();
+        
         controller.bindView(view);
         controller.setRecipeDomainId(getRecipeDomainId());
 
@@ -69,7 +70,11 @@ public class RecipeIdentityFragment
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         // Ensures the host activity implements component changed callback
+        controller = getCompositionRoot().getRecipeIdentityEditorController();
+
         try {
+            System.out.println(TAG + "isControllerNULL" + controller);
+
             controller.registerUseCaseComponentChangedListener(
                     (UseCaseComponentChangedListener) context);
         } catch (ClassCastException e) {

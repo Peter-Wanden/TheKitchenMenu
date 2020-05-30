@@ -1,16 +1,16 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration;
 
 
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
-import com.example.peter.thekitchenmenu.domain.usecase.MessageModelDataId;
-import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
+import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataId;
+import com.example.peter.thekitchenmenu.domain.model.BaseDomainModel;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
 public final class RecipeDurationRequest
-        extends MessageModelDataId<RecipeDurationRequest.Model>
+        extends UseCaseMessageModelDataId<RecipeDurationRequest.Model>
         implements UseCaseBase.Request {
 
     @Override

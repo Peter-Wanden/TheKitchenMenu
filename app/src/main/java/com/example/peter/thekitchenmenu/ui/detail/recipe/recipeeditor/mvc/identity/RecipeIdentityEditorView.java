@@ -1,5 +1,6 @@
 package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.mvc.identity;
 
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityResponse;
 import com.example.peter.thekitchenmenu.ui.common.views.ObservableViewMvc;
 
 public interface RecipeIdentityEditorView
@@ -13,19 +14,9 @@ public interface RecipeIdentityEditorView
         void identityViewOnDescriptionChanged(String description);
     }
 
-    void setTitleLabelResourceId(int titleLabelResourceId);
+    void updateViewWithOnSuccessResponse(RecipeIdentityResponse response);
 
-    void setTitle(String title);
-
-    void displayTitleTooShortErrorMessage();
-
-    void displayTitleTooLongErrorMessage();
-
-    void setDescriptionLabel(int descriptionLabelResourceId);
-
-    void setDescription(String description);
-
-    void displayDescriptionTooLongErrorMessage();
+    void updateViewWithOnErrorResponse(RecipeIdentityResponse response);
 
     void showDataLoadingError();
 

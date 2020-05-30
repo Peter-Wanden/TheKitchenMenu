@@ -1,11 +1,14 @@
-package com.example.peter.thekitchenmenu.domain.usecase;
+package com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage;
+
+import com.example.peter.thekitchenmenu.domain.model.BaseDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 
 import java.util.Objects;
 
 /**
  * Base class for all request and response messages which operate on domain data.
  */
-public abstract class MessageModelBase<DOMAIN_MODEL extends BaseDomainModel>
+public abstract class UseCaseMessageModelBase<DOMAIN_MODEL extends BaseDomainModel>
         implements
         UseCaseBase.Message {
 
@@ -18,8 +21,8 @@ public abstract class MessageModelBase<DOMAIN_MODEL extends BaseDomainModel>
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof MessageModelBase)) return false;
-        MessageModelBase<?> that = (MessageModelBase<?>) o;
+        if (!(o instanceof UseCaseMessageModelBase)) return false;
+        UseCaseMessageModelBase<?> that = (UseCaseMessageModelBase<?>) o;
         return Objects.equals(model, that.model);
     }
 
@@ -30,12 +33,12 @@ public abstract class MessageModelBase<DOMAIN_MODEL extends BaseDomainModel>
 
     public static abstract class MessageModelBuilder
             <SELF extends MessageModelBuilder<SELF, MESSAGE, DOMAIN_MODEL>,
-                    MESSAGE extends MessageModelBase<DOMAIN_MODEL>,
+                    MESSAGE extends UseCaseMessageModelBase<DOMAIN_MODEL>,
                     DOMAIN_MODEL extends BaseDomainModel> {
 
         protected MESSAGE message;
 
-        public SELF setModel(DOMAIN_MODEL model) {
+        public SELF setDomainModel(DOMAIN_MODEL model) {
             message.model = model;
             return self();
         }

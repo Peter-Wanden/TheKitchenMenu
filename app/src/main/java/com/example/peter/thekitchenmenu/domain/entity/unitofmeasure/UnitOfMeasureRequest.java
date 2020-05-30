@@ -1,6 +1,6 @@
 package com.example.peter.thekitchenmenu.domain.entity.unitofmeasure;
 
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModel;
 
 import java.util.Objects;

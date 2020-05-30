@@ -7,10 +7,10 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
-import com.example.peter.thekitchenmenu.domain.model.FailReasons;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
+import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.CommonFailReason;
+import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.ingredient.Ingredient;
 import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientResponse;
@@ -131,7 +131,7 @@ public class IngredientEditorViewModel extends ViewModel {
             IngredientRequest request = new IngredientRequest.Builder().
                     setDataId(ingredientResponse.getDataId()).
                     setDomainId(ingredientResponse.getDomainId()).
-                    setModel(new IngredientRequest.Model.Builder().
+                    setDomainModel(new IngredientRequest.Model.Builder().
                             setName(response.getModel().getText()).
                             setDescription(ingredientResponse.getModel().getDescription()).
                             setConversionFactor(ingredientResponse.getModel().getConversionFactor()).
@@ -187,7 +187,7 @@ public class IngredientEditorViewModel extends ViewModel {
             IngredientRequest request = new IngredientRequest.Builder().
                     setDataId(ingredientResponse.getDataId()).
                     setDomainId(ingredientResponse.getDomainId()).
-                    setModel(new IngredientRequest.Model.Builder().
+                    setDomainModel(new IngredientRequest.Model.Builder().
                             setName(ingredientResponse.getModel().getName()).
                             setDescription(response.getModel().getText()).
                             setConversionFactor(ingredientResponse.getModel().getConversionFactor()).
@@ -223,7 +223,7 @@ public class IngredientEditorViewModel extends ViewModel {
         ingredientResponse = response;
 
         List<FailReasons> failReasons = response.getMetadata().getFailReasons();
-        RecipeMetadata.ComponentState state = response.getMetadata().getState();
+        RecipeMetadata.ComponentState state = response.getMetadata().getComponentState();
 
         if (failReasons.contains(CommonFailReason.DATA_UNAVAILABLE)) {
             dataLoadingError.setValue(true);

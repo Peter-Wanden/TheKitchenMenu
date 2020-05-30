@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.domain.usecase;
+package com.example.peter.thekitchenmenu.domain.usecase.common;
 
 import android.os.Handler;
 

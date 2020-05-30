@@ -1,9 +1,9 @@
 package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.mvc;
 
-import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseHandler;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentName;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentState;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.RecipeRequest;
@@ -11,24 +11,15 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recip
 import com.example.peter.thekitchenmenu.ui.common.ScreensNavigator;
 import com.example.peter.thekitchenmenu.ui.common.dialogs.DialogsEventBus;
 import com.example.peter.thekitchenmenu.ui.common.dialogs.DialogsManager;
-import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.AddEditRecipeNavigator;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class RecipeEditorController
         implements
-        AddEditRecipeNavigator,
-        UseCaseBase.Callback<RecipeResponse> {
-
-    public interface RecipeEditorControllerListener {
-        void refreshOptionsMenu();
-    }
+        UseCaseBase.Callback<RecipeResponse>,
+        RecipeEditorView.ListenerViewInput {
 
     private final ScreensNavigator screensNavigator;
     private final DialogsManager dialogsManager;
     private final DialogsEventBus dialogsEventBus;
-    private List<RecipeEditorControllerListener> controllerListeners = new ArrayList<>();
 
     private RecipeEditorView view;
 
@@ -37,7 +28,6 @@ public class RecipeEditorController
     private boolean isNewRecipe;
 
     private final Recipe recipe;
-    private RecipeResponse recipeResponse;
     private RecipeMetadataResponse metadataResponse;
 
     public RecipeEditorController(ScreensNavigator screensNavigator,
@@ -51,7 +41,6 @@ public class RecipeEditorController
         this.handler = handler;
 
         this.recipe = recipe;
-        recipeResponse = new RecipeResponse.Builder().getDefault().build();
         metadataResponse = new RecipeMetadataResponse.Builder().getDefault().build();
     }
 
@@ -79,17 +68,7 @@ public class RecipeEditorController
         this.recipeDomainId = recipeDomainId;
 
         if (Recipe.CREATE_NEW_RECIPE.equals(recipeDomainId)) {
-            isNewRecipe = true;
-            view.setTitle(R.string.activity_title_add_new_recipe);
-            setIngredientsButton();
-        }
-    }
-
-    private void setIngredientsButton() {
-        if (isNewRecipe) {
-            view.setIngredientsButtonText(R.string.add_ingredients);
-        } else {
-            view.setIngredientsButtonText(R.string.edit_ingredients);
+            view.isNewRecipe(isNewRecipe = true);
         }
     }
 
@@ -103,102 +82,36 @@ public class RecipeEditorController
 
     @Override
     public void onUseCaseSuccess(RecipeResponse response) {
-        isNewRecipe = false;
-
-        recipeResponse = response;
         metadataResponse = (RecipeMetadataResponse) response.getModel().getComponentResponses().
-                get(RecipeMetadata.ComponentName.RECIPE_METADATA);
+                get(ComponentName.RECIPE_METADATA);
+        ComponentState recipeComponentState = metadataResponse.getMetadata().getComponentState();
 
-        setActivityTitle(R.string.activity_title_edit_recipe);
-        setIngredientsButton();
-        updateButtonVisibility();
-    }
-
-    private void updateButtonVisibility() {
-        RecipeMetadata.ComponentState recipeState = metadataResponse.getMetadata().getState();
-        if (RecipeMetadata.ComponentState.VALID_CHANGED == recipeState ||
-                RecipeMetadata.ComponentState.VALID_UNCHANGED == recipeState) {
-            view.showIngredientButton();
-            view.showReviewButton();
-            view.refreshOptionsMenu();
-
-        } else {
-            hideButtons();
-        }
+        view.isNewRecipe(isNewRecipe = false);
+        view.setRecipeState(recipeComponentState);
     }
 
     @Override
     public void onUseCaseError(RecipeResponse response) {
-        this.recipeResponse = response;
-        if (isNewRecipe) {
-            setupForNewRecipe();
-        }
-    }
+        metadataResponse = (RecipeMetadataResponse) response.getModel().getComponentResponses().
+                get(ComponentName.RECIPE_METADATA);
+        ComponentState recipeComponentState = metadataResponse.getMetadata().getComponentState();
 
-    private void setupForNewRecipe() {
-        setActivityTitle(R.string.activity_title_add_new_recipe);
-        setIngredientsButton();
+        view.isNewRecipe(isNewRecipe);
+        view.setRecipeState(recipeComponentState);
     }
 
     public void componentChanged(String domainId) {
-        // todo, refresh data
+        RecipeRequest request = new RecipeRequest.Builder().getDefault().build();
+        handler.executeAsync(recipe, request, this);
     }
 
     @Override
-    public void reviewNewRecipe(String recipeId) {
-
-    }
-
-    @Override
-    public void reviewEditedRecipe(String recipeId) {
+    public void onReviewButtonClicked() {
 
     }
 
     @Override
-    public void reviewClonedRecipe(String recipeId) {
+    public void onNavigateUp() {
 
-    }
-
-    @Override
-    public void addIngredients(String recipeId) {
-
-    }
-
-    @Override
-    public void editIngredients(String recipeId) {
-
-    }
-
-    @Override
-    public void reviewIngredients(String recipeId) {
-
-    }
-
-    @Override
-    public void cancelEditing() {
-
-    }
-
-    @Override
-    public void refreshOptionsMenu() {
-        controllerListeners.forEach(RecipeEditorControllerListener::refreshOptionsMenu);
-    }
-
-    @Override
-    public void setActivityTitle(int activityTitleResourceId) {
-        view.setTitle(activityTitleResourceId);
-    }
-
-    @Override
-    public void showUnsavedChangedDialog() {
-
-    }
-
-    public void registerControllerListener(RecipeEditorControllerListener listener) {
-        controllerListeners.add(listener);
-    }
-
-    public void unregisterControllerListener(RecipeEditorControllerListener listener) {
-        controllerListeners.remove(listener);
     }
 }

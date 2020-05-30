@@ -5,10 +5,11 @@ import android.annotation.SuppressLint;
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeIdentity;
-import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
-import com.example.peter.thekitchenmenu.domain.model.FailReasons;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadataModel;
+import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.CommonFailReason;
+import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
+import com.example.peter.thekitchenmenu.domain.model.UseCaseMetadataModel;
+import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataId;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidatorModel;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidatorRequest;
@@ -77,7 +78,7 @@ public class RecipeIdentity
     private final List<FailReasons> failReasons;
 
     private String dataId = "";
-    private String recipeId = "";
+    private String recipeDomainId = "";
     private boolean isNewRequest;
 
     private RecipeIdentityRequest.DomainModel requestModel;
@@ -105,18 +106,61 @@ public class RecipeIdentity
         requestModel = r.getModel();
         System.out.println(TAG + "Request No:" + accessCount + " - " + r);
 
-        if (isNewRequest(r)) {
-            dataId = r.getDataId();
-            recipeId = r.getDomainId();
-            loadData(recipeId);
+        if (requestIsEmpty()) {
+            if (isUseCaseEmpty()) {
+                isNewRequest = true;
+                sendEmptyResponse();
+            } else {
+                isNewRequest = false;
+                respondWithCurrentData();
+            }
+        } else if (isUseCaseEmpty()) {
+            isNewRequest = true;
+            extractIds();
+            loadData(recipeDomainId);
+
+        } else if (isRequestToUpdateData()){
+            isNewRequest = false;
+            setupUseCase();
+            processDomainModelChanges();
+
         } else {
-            setupComponent();
-            processChanges();
+            isNewRequest = true;
+            loadData(r.getDomainId());
         }
     }
 
-    private boolean isNewRequest(RecipeIdentityRequest r) {
-        return isNewRequest = !r.getDomainId().equals(recipeId);
+    private boolean requestIsEmpty() {
+        return ((UseCaseMessageModelDataId)getRequest()).getDomainId().equals("");
+    }
+
+    private boolean isUseCaseEmpty() {
+        return recipeDomainId.equals("");
+    }
+
+    private void sendEmptyResponse() {
+        RecipeIdentityResponse response = new RecipeIdentityResponse.Builder().getDefault().build();
+        getUseCaseCallback().onUseCaseError(response);
+    }
+
+    private void respondWithCurrentData() {
+        buildResponse();
+    }
+
+    private void extractIds() {
+        System.out.println(TAG + "extractIds");
+        UseCaseMessageModelDataId r = (UseCaseMessageModelDataId) getRequest();
+        dataId = r.getDataId();
+        recipeDomainId = r.getDomainId();
+    }
+
+    private boolean isRequestToUpdateData() {
+        return ((UseCaseMessageModelDataId)getRequest()).getDomainId().equals(recipeDomainId);
+    }
+
+    private void setupUseCase() {
+        failReasons.clear();
+        isNewRequest = false;
     }
 
     private void loadData(String recipeId) {
@@ -124,10 +168,17 @@ public class RecipeIdentity
     }
 
     @Override
-    public void onModelLoaded(RecipeIdentityPersistenceModel model) {
-        persistenceModel = model;
-        dataId = model.getDataId();
-        processChanges();
+    public void onModelLoaded(RecipeIdentityPersistenceModel persistenceModel) {
+        System.out.println(TAG + "onModelLoaded: " + persistenceModel);
+
+        this.persistenceModel = persistenceModel;
+        dataId = persistenceModel.getDataId();
+        processDomainModelChanges();
+    }
+
+    private void processDomainModelChanges() {
+        validateData();
+        buildResponse();
     }
 
     @Override
@@ -145,20 +196,10 @@ public class RecipeIdentity
         return new RecipeIdentityPersistenceModel.Builder().
                 getDefault().
                 setDataId(dataId).
-                setDomainId(recipeId).
+                setDomainId(recipeDomainId).
                 setCreateDate(currentTime).
                 setLastUpdate(currentTime).
                 build();
-    }
-
-    private void setupComponent() {
-        failReasons.clear();
-        isNewRequest = false;
-    }
-
-    private void processChanges() {
-        validateData();
-        buildResponse();
     }
 
     private void validateData() {
@@ -232,7 +273,7 @@ public class RecipeIdentity
 
     private void buildResponse() {
         RecipeIdentityResponse.Builder builder = new RecipeIdentityResponse.Builder();
-        builder.setDomainId(recipeId);
+        builder.setDomainId(recipeDomainId);
 
         if (ComponentState.VALID_CHANGED == getComponentState()) {
             RecipeIdentityPersistenceModel m = updatePersistenceModel();
@@ -244,7 +285,7 @@ public class RecipeIdentity
             builder.setMetadata(getMetadata(persistenceModel));
         }
 
-        builder.setModel(getResponseModel());
+        builder.setDomainModel(getResponseModel());
         builder.setDataId(dataId);
 
         sendResponse(builder.build());
@@ -271,6 +312,7 @@ public class RecipeIdentity
     }
 
     private boolean isChanged() {
+        System.out.println(TAG + "persistenceModel: " + persistenceModel + " requestModel: " + requestModel);
         return !isNewRequest && (isTitleChanged() || isDescriptionChanged());
     }
 

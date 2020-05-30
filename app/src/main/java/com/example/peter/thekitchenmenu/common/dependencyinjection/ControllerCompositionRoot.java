@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseFactory;
+import com.example.peter.thekitchenmenu.domain.usecase.factory.UseCaseFactory;
 import com.example.peter.thekitchenmenu.ui.catalog.recipe.mvc.RecipeCatalogController;
 import com.example.peter.thekitchenmenu.ui.catalog.recipe.mvc.RecipeCatalogListController;
 import com.example.peter.thekitchenmenu.ui.common.ScreensNavigator;

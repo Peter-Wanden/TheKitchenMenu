@@ -9,8 +9,8 @@ import androidx.databinding.ObservableField;
 
 import com.example.peter.thekitchenmenu.BR;
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDuration;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDurationRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDurationResponse;
@@ -139,7 +139,7 @@ public class RecipeDurationEditorViewModel extends ObservableViewModel {
                         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
                                 setDataId(response.getDataId()).
                                 setDomainId(response.getDomainId()).
-                                setModel(model).
+                                setDomainModel(model).
                                 build();
                         handler.executeAsync(recipeMacro, request, new DurationCallbackListener());
                     }
@@ -174,7 +174,7 @@ public class RecipeDurationEditorViewModel extends ObservableViewModel {
                         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
                                 setDataId(response.getDataId()).
                                 setDomainId(response.getDomainId()).
-                                setModel(model).
+                                setDomainModel(model).
                                 build();
                         handler.executeAsync(recipeMacro, request, new DurationCallbackListener());
                     }
@@ -209,7 +209,7 @@ public class RecipeDurationEditorViewModel extends ObservableViewModel {
                         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
                                 setDataId(response.getDataId()).
                                 setDomainId(response.getDomainId()).
-                                setModel(model).
+                                setDomainModel(model).
                                 build();
                         handler.executeAsync(recipeMacro, request, new DurationCallbackListener());
                     }
@@ -244,7 +244,7 @@ public class RecipeDurationEditorViewModel extends ObservableViewModel {
                         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
                                 setDataId(response.getDataId()).
                                 setDomainId(response.getDomainId()).
-                                setModel(model).
+                                setDomainModel(model).
                                 build();
                         handler.executeAsync(recipeMacro, request, new DurationCallbackListener());
                     }

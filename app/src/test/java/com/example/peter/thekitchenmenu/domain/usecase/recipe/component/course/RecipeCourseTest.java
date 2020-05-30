@@ -5,9 +5,9 @@ import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess.GetAllD
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeCourse;
 import com.example.peter.thekitchenmenu.data.repository.recipe.course.TestDataRecipeCourse;
 import com.example.peter.thekitchenmenu.data.repository.recipe.metadata.TestDataRecipeMetadata;
-import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
+import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.CommonFailReason;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataPersistenceModel;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
@@ -93,7 +93,7 @@ public class RecipeCourseTest {
 
         assertEquals(
                 ComponentState.INVALID_UNCHANGED,
-                onErrorResponse.getMetadata().getState()
+                onErrorResponse.getMetadata().getComponentState()
         );
         assertTrue(
                 onErrorResponse.
@@ -139,7 +139,7 @@ public class RecipeCourseTest {
         // Arrange - deactivate courses request
         RecipeCourseRequest deactivateRequest = new RecipeCourseRequest.Builder().
                 basedOnResponse(onSuccessResponse).
-                setModel(
+                setDomainModel(
                         new RecipeCourseRequest.Model.Builder().
                                 setCourseList(
                                         new ArrayList<>()). // Empty list deactivates all courses
@@ -164,7 +164,7 @@ public class RecipeCourseTest {
 
         // Assert state
         ComponentState expectedState = ComponentState.INVALID_CHANGED;
-        ComponentState actualState = onErrorResponse.getMetadata().getState();
+        ComponentState actualState = onErrorResponse.getMetadata().getComponentState();
         assertEquals(
                 expectedState,
                 actualState
@@ -208,7 +208,7 @@ public class RecipeCourseTest {
         int numberOfAddedCourses = expectedModels.size();
         RecipeCourseRequest addCoursesRequest = new RecipeCourseRequest.Builder().
                 basedOnResponse(onErrorResponse).
-                setModel(new RecipeCourseRequest.Model.Builder().
+                setDomainModel(new RecipeCourseRequest.Model.Builder().
                         setCourseList(
                                 Arrays.asList(
                                         expectedModels.get(0).getCourse(),
@@ -238,7 +238,7 @@ public class RecipeCourseTest {
         // Assert state
         assertEquals(
                 ComponentState.VALID_CHANGED,
-                onSuccessResponse.getMetadata().getState()
+                onSuccessResponse.getMetadata().getComponentState()
         );
     }
 
@@ -280,7 +280,7 @@ public class RecipeCourseTest {
 
         assertEquals(expectedNumberOfModels, actualNumberOfModels);
         // No data has been modified, just returned
-        assertEquals(ComponentState.VALID_UNCHANGED, onSuccessResponse.getMetadata().getState());
+        assertEquals(ComponentState.VALID_UNCHANGED, onSuccessResponse.getMetadata().getComponentState());
         assertTrue(onSuccessResponse.getMetadata().getFailReasons().
                 contains(CommonFailReason.NONE));
     }
@@ -317,7 +317,7 @@ public class RecipeCourseTest {
         // Assert expected sate after courses removed
         assertEquals(ComponentState.INVALID_CHANGED, onErrorResponse.
                 getMetadata().
-                getState());
+                getComponentState());
         assertTrue(onErrorResponse.
                 getMetadata().
                 getFailReasons().
@@ -381,7 +381,7 @@ public class RecipeCourseTest {
         // Assert component state
         assertEquals(
                 ComponentState.INVALID_UNCHANGED,
-                onErrorResponse.getMetadata().getState()
+                onErrorResponse.getMetadata().getComponentState()
         );
         // Assert course list
         assertEquals(

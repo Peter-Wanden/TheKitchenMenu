@@ -1,10 +1,12 @@
-package com.example.peter.thekitchenmenu.domain.usecase;
+package com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage;
+
+import com.example.peter.thekitchenmenu.domain.model.BaseDomainModel;
 
 import java.util.Objects;
 
-public abstract class MessageModelDataId<DOMAIN_MODEL extends BaseDomainModel>
+public abstract class UseCaseMessageModelDataId<DOMAIN_MODEL extends BaseDomainModel>
         extends
-        MessageModelBase<DOMAIN_MODEL> {
+        UseCaseMessageModelBase<DOMAIN_MODEL> {
 
     // The id for an instance of state of domain data as stored in the data layer.
     protected String dataId;
@@ -22,9 +24,9 @@ public abstract class MessageModelDataId<DOMAIN_MODEL extends BaseDomainModel>
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof MessageModelDataId)) return false;
+        if (!(o instanceof UseCaseMessageModelDataId)) return false;
         if (!super.equals(o)) return false;
-        MessageModelDataId<?> that = (MessageModelDataId<?>) o;
+        UseCaseMessageModelDataId<?> that = (UseCaseMessageModelDataId<?>) o;
         return Objects.equals(dataId, that.dataId) &&
                 Objects.equals(domainId, that.domainId);
     }
@@ -36,9 +38,9 @@ public abstract class MessageModelDataId<DOMAIN_MODEL extends BaseDomainModel>
 
     public static abstract class MessageModelDataIdBuilder
             <SELF extends MessageModelDataIdBuilder<SELF, MESSAGE, DOMAIN_MODEL>,
-                    MESSAGE extends MessageModelDataId<DOMAIN_MODEL>,
+                    MESSAGE extends UseCaseMessageModelDataId<DOMAIN_MODEL>,
                     DOMAIN_MODEL extends BaseDomainModel>
-            extends MessageModelBase.MessageModelBuilder<SELF, MESSAGE, DOMAIN_MODEL> {
+            extends UseCaseMessageModelBase.MessageModelBuilder<SELF, MESSAGE, DOMAIN_MODEL> {
 
         public SELF setDataId(String dataId) {
             message.dataId = dataId;

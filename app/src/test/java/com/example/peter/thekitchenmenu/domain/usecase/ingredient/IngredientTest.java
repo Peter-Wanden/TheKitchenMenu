@@ -4,11 +4,11 @@ import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess.GetDomainModelCallback;
 import com.example.peter.thekitchenmenu.data.repository.ingredient.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.data.repository.ingredient.TestDataIngredient;
-import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
-import com.example.peter.thekitchenmenu.domain.model.FailReasons;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadataModel;
+import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.CommonFailReason;
+import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseHandler;
+import com.example.peter.thekitchenmenu.domain.model.UseCaseMetadataModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentState;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
@@ -103,7 +103,7 @@ public class IngredientTest {
         // Assert
         assertEquals(
                 RecipeMetadata.ComponentState.INVALID_UNCHANGED,
-                callbackClient.onErrorResponse.getMetadata().getState()
+                callbackClient.onErrorResponse.getMetadata().getComponentState()
         );
 
         assertTrue(
@@ -131,7 +131,7 @@ public class IngredientTest {
         IngredientRequest request = new IngredientRequest.Builder().
                 setDataId(callbackClient.onErrorResponse.getDataId()).
                 setDomainId(callbackClient.onErrorResponse.getDomainId()).
-                setModel(model).
+                setDomainModel(model).
                 build();
         // Act
         handler.executeAsync(SUT, request, callbackClient);
@@ -140,7 +140,7 @@ public class IngredientTest {
 
         assertEquals(
                 ComponentState.INVALID_CHANGED,
-                callbackClient.onErrorResponse.getMetadata().getState()
+                callbackClient.onErrorResponse.getMetadata().getComponentState()
         );
     }
 
@@ -163,7 +163,7 @@ public class IngredientTest {
         IngredientRequest request = new IngredientRequest.Builder().
                 setDataId(callbackClient.onErrorResponse.getDataId()).
                 setDomainId(callbackClient.onErrorResponse.getDomainId()).
-                setModel(model).
+                setDomainModel(model).
                 build();
         // Act
         handler.executeAsync(SUT, request, callbackClient);
@@ -200,7 +200,7 @@ public class IngredientTest {
         IngredientRequest request = new IngredientRequest.Builder().
                 setDataId(callbackClient.onErrorResponse.getDataId()).
                 setDomainId(callbackClient.onErrorResponse.getDomainId()).
-                setModel(model).
+                setDomainModel(model).
                 build();
         // Act
         handler.executeAsync(SUT, request, callbackClient);
@@ -209,7 +209,7 @@ public class IngredientTest {
 
         assertEquals(
                 ComponentState.INVALID_CHANGED,
-                callbackClient.onErrorResponse.getMetadata().getState()
+                callbackClient.onErrorResponse.getMetadata().getComponentState()
         );
 
         List<FailReasons> failReasons = callbackClient.onErrorResponse.
@@ -241,7 +241,7 @@ public class IngredientTest {
         IngredientRequest request = new IngredientRequest.Builder().
                 setDataId(modelUnderTest.getDataId()).
                 setDomainId(modelUnderTest.getDomainId()).
-                setModel(model).
+                setDomainModel(model).
                 build();
 
         // Act
@@ -269,7 +269,7 @@ public class IngredientTest {
         IngredientRequest request = new IngredientRequest.Builder().
                 setDataId(modelUnderTest.getDataId()).
                 setDomainId(modelUnderTest.getDomainId()).
-                setModel(model).
+                setDomainModel(model).
                 build();
 
         //
@@ -291,7 +291,7 @@ public class IngredientTest {
         assertTrue(failReasons.contains(CommonFailReason.NONE));
         assertEquals(
                 ComponentState.VALID_CHANGED,
-                callbackClient.onSuccessResponse.getMetadata().getState()
+                callbackClient.onSuccessResponse.getMetadata().getComponentState()
         );
     }
 
@@ -312,7 +312,7 @@ public class IngredientTest {
         IngredientRequest request = new IngredientRequest.Builder().
                 setDataId(modelUnderTest.getDataId()).
                 setDomainId(modelUnderTest.getDomainId()).
-                setModel(model).
+                setDomainModel(model).
                 build();
 
         when(idProviderMock.getUId()).thenReturn(modelUnderTest.getDataId());
@@ -344,7 +344,7 @@ public class IngredientTest {
         IngredientRequest titleRequest = new IngredientRequest.Builder().
                 setDataId(modelUnderTest.getDataId()).
                 setDomainId(modelUnderTest.getDomainId()).
-                setModel(nameModel).
+                setDomainModel(nameModel).
                 build();
 
         // new persistence model created, requires new data id and date stamp
@@ -367,7 +367,7 @@ public class IngredientTest {
         IngredientRequest descRequest = new IngredientRequest.Builder().
                 setDataId(callbackClient.onSuccessResponse.getDataId()).
                 setDomainId(callbackClient.onSuccessResponse.getDomainId()).
-                setModel(descModel).
+                setDomainModel(descModel).
                 build();
 
         // second persistence model created, new data Id and timestamp required
@@ -406,7 +406,7 @@ public class IngredientTest {
         UseCaseMetadataModel metadata = callbackClient.onSuccessResponse.getMetadata();
         assertEquals(
                 ComponentState.VALID_UNCHANGED,
-                metadata.getState()
+                metadata.getComponentState()
         );
         assertTrue(metadata.getFailReasons().contains(CommonFailReason.NONE)
         );
@@ -450,7 +450,7 @@ public class IngredientTest {
         // Assert
         assertEquals(
                 ComponentState.INVALID_UNCHANGED,
-                callbackClient.onErrorResponse.getMetadata().getState()
+                callbackClient.onErrorResponse.getMetadata().getComponentState()
         );
     }
 
@@ -480,7 +480,7 @@ public class IngredientTest {
         // Assert
         assertEquals(
                 ComponentState.INVALID_UNCHANGED,
-                callbackClient.onErrorResponse.getMetadata().getState()
+                callbackClient.onErrorResponse.getMetadata().getComponentState()
         );
         assertTrue(
                 callbackClient.onErrorResponse.getMetadata().getFailReasons().
@@ -498,7 +498,7 @@ public class IngredientTest {
         // Assert
         assertEquals(
                 ComponentState.INVALID_UNCHANGED,
-                callbackClient.onErrorResponse.getMetadata().getState()
+                callbackClient.onErrorResponse.getMetadata().getComponentState()
         );
         assertTrue(
                 callbackClient.onErrorResponse.getMetadata().getFailReasons().
@@ -517,7 +517,7 @@ public class IngredientTest {
         // Assert
         assertEquals(
                 ComponentState.INVALID_UNCHANGED,
-                callbackClient.onErrorResponse.getMetadata().getState()
+                callbackClient.onErrorResponse.getMetadata().getComponentState()
         );
 
         List<FailReasons> failReasons = callbackClient.onErrorResponse.
@@ -542,7 +542,7 @@ public class IngredientTest {
         // Assert
         assertEquals(
                 ComponentState.VALID_UNCHANGED,
-                callbackClient.onSuccessResponse.getMetadata().getState()
+                callbackClient.onSuccessResponse.getMetadata().getComponentState()
         );
         assertTrue(
                 callbackClient.onSuccessResponse.getMetadata().getFailReasons().

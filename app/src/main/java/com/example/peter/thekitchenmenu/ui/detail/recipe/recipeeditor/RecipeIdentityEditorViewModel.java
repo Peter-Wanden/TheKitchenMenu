@@ -9,10 +9,10 @@ import androidx.databinding.ObservableField;
 
 import com.example.peter.thekitchenmenu.BR;
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
-import com.example.peter.thekitchenmenu.domain.model.FailReasons;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
+import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.CommonFailReason;
+import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentity;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityResponse;
@@ -101,7 +101,7 @@ public class RecipeIdentityEditorViewModel
             RecipeIdentityRequest request = new RecipeIdentityRequest.Builder().
                     setDataId(response.getDataId()).
                     setDomainId(response.getDomainId()).
-                    setModel(model).
+                    setDomainModel(model).
                     build();
             handler.executeAsync(recipe, request, new IdentityCallbackListener());
         }
@@ -125,7 +125,7 @@ public class RecipeIdentityEditorViewModel
             RecipeIdentityRequest request = new RecipeIdentityRequest.Builder().
                     setDataId(response.getDataId()).
                     setDomainId(response.getDomainId()).
-                    setModel(model).
+                    setDomainModel(model).
                     build();
 
             System.out.println(TAG + response);
@@ -150,6 +150,13 @@ public class RecipeIdentityEditorViewModel
     private void clearErrors() {
         titleErrorMessage.set(null);
         descriptionErrorMessage.set(null);
+    }
+
+    private void updateObservables() {
+        isUpdatingUi = true;
+        notifyPropertyChanged(BR.title);
+        notifyPropertyChanged(BR.description);
+        isUpdatingUi = false;
     }
 
     private void processUseCaseErrorResponse() {
@@ -185,12 +192,5 @@ public class RecipeIdentityEditorViewModel
                             String.valueOf(resources.getInteger(
                                     R.integer.input_validation_long_text_max_length))));
         }
-    }
-
-    private void updateObservables() {
-        isUpdatingUi = true;
-        notifyPropertyChanged(BR.title);
-        notifyPropertyChanged(BR.description);
-        isUpdatingUi = false;
     }
 }

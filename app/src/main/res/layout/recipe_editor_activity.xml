@@ -5,18 +5,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:fitsSystemWindows="true">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/recipe_editor_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fitsSystemWindows="true" />
-    </com.google.android.material.appbar.AppBarLayout>
+    <include layout="@layout/element_toolbar"/>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/recipe_editor_coordinatorLayout"
@@ -35,27 +27,27 @@
                 <FrameLayout
                     android:id="@+id/recipe_editor_image_editor_content_frame"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
 
                 <FrameLayout
                     android:id="@+id/recipe_editor_recipe_identity_content_frame"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
 
                 <FrameLayout
                     android:id="@+id/recipe_editor_course_selector_content_frame"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
 
                 <FrameLayout
                     android:id="@+id/recipe_duration_content_frame"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
 
                 <FrameLayout
                     android:id="@+id/recipe_portions_content_frame"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/recipe_editor_add_ingredients_button"
@@ -67,7 +59,7 @@
                 <FrameLayout
                     android:id="@+id/recipe_editor_information_content_frame"
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"/>
+                    android:layout_height="200dp" />
             </LinearLayout>
         </ScrollView>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -9,10 +9,10 @@ import androidx.databinding.ObservableField;
 
 import com.example.peter.thekitchenmenu.BR;
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
-import com.example.peter.thekitchenmenu.domain.model.FailReasons;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
+import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.CommonFailReason;
+import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortionsRequest;
@@ -150,7 +150,7 @@ public class RecipePortionsEditorViewModel extends ObservableViewModel {
                     RecipePortionsRequest request = new RecipePortionsRequest.Builder().
                             setDataId(response.getDataId()).
                             setDomainId(response.getDomainId()).
-                            setModel(model).
+                            setDomainModel(model).
                             build();
                     handler.executeAsync(recipeMacro, request, callback);
                 }
@@ -199,7 +199,7 @@ public class RecipePortionsEditorViewModel extends ObservableViewModel {
                     RecipePortionsRequest request = new RecipePortionsRequest.Builder().
                             setDataId(response.getDataId()).
                             setDomainId(response.getDomainId()).
-                            setModel(model).
+                            setDomainModel(model).
                             build();
                     handler.executeAsync(recipeMacro, request, callback);
                 }

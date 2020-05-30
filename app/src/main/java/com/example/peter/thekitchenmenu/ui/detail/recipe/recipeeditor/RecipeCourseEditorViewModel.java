@@ -4,8 +4,8 @@ import androidx.core.util.Pair;
 import androidx.databinding.Bindable;
 import androidx.databinding.ObservableBoolean;
 
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourseRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourseResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata;
@@ -191,7 +191,7 @@ public class RecipeCourseEditorViewModel extends ObservableViewModel {
                 getDefault().
                 setDataId(response.getDataId()).
                 setDomainId(response.getDomainId()).
-                setModel(new RecipeCourseRequest.Model.Builder().
+                setDomainModel(new RecipeCourseRequest.Model.Builder().
                         setCourseList(courseList).
                         build()).
                 build();

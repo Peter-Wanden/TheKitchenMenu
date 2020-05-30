@@ -1,9 +1,11 @@
-package com.example.peter.thekitchenmenu.domain.usecase;
+package com.example.peter.thekitchenmenu.domain.model;
 
 
 import com.example.peter.thekitchenmenu.app.Constants;
-import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
-import com.example.peter.thekitchenmenu.domain.model.FailReasons;
+import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.CommonFailReason;
+import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
+import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataId;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +17,7 @@ import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.m
 
 /**
  * A data structure for storing a use case's metadata state. Typically generated within a use case
- * as it processes a {@link MessageModelDataId} and sent as a member in its respective
+ * as it processes a {@link UseCaseMessageModelDataId} and sent as a member in its respective
  * {@link UseCaseBase.Response}.
  */
 public class UseCaseMetadataModel {
@@ -42,7 +44,7 @@ public class UseCaseMetadataModel {
     }
 
     @Nonnull
-    public ComponentState getState() {
+    public ComponentState getComponentState() {
         return state;
     }
 

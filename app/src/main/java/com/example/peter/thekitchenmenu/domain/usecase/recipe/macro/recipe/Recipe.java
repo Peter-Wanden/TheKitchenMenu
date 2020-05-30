@@ -2,11 +2,11 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe;
 
 import androidx.core.util.Pair;
 
-import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
-import com.example.peter.thekitchenmenu.domain.model.FailReasons;
-import com.example.peter.thekitchenmenu.domain.usecase.MessageModelDataId;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
+import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.CommonFailReason;
+import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
+import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataId;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourseRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourseResponse;
@@ -110,7 +110,7 @@ public class Recipe extends UseCaseBase {
 
         extractRequestOriginator(request);
         // Downcast to BaseDomainMessage to get access to data and domain Id's
-        MessageModelDataId r = (MessageModelDataId) request;
+        UseCaseMessageModelDataId r = (UseCaseMessageModelDataId) request;
 
         if (isNewRequest(r.getDomainId()) || RECIPE == requestOriginator) {
             dataId = r.getDataId();
@@ -221,7 +221,7 @@ public class Recipe extends UseCaseBase {
     private class IdentityCallback extends RecipeUseCaseCallback<RecipeIdentityResponse> {
         @Override
         protected void processResponse(RecipeIdentityResponse response) {
-            addComponentState(IDENTITY, response.getMetadata().getState());
+            addComponentState(IDENTITY, response.getMetadata().getComponentState());
             addComponentResponse(IDENTITY, response);
             checkComponentsUpdated();
         }
@@ -245,7 +245,7 @@ public class Recipe extends UseCaseBase {
     private class CourseCallback extends RecipeUseCaseCallback<RecipeCourseResponse> {
         @Override
         protected void processResponse(RecipeCourseResponse response) {
-            addComponentState(COURSE, response.getMetadata().getState()
+            addComponentState(COURSE, response.getMetadata().getComponentState()
             );
             addComponentResponse(COURSE, response);
             checkComponentsUpdated();
@@ -271,7 +271,7 @@ public class Recipe extends UseCaseBase {
     private class DurationCallback extends RecipeUseCaseCallback<RecipeDurationResponse> {
         @Override
         protected void processResponse(RecipeDurationResponse response) {
-            addComponentState(DURATION, response.getMetadata().getState());
+            addComponentState(DURATION, response.getMetadata().getComponentState());
             addComponentResponse(DURATION, response);
             checkComponentsUpdated();
         }
@@ -296,7 +296,7 @@ public class Recipe extends UseCaseBase {
     private class PortionsCallback extends RecipeUseCaseCallback<RecipePortionsResponse> {
         @Override
         protected void processResponse(RecipePortionsResponse response) {
-            addComponentState(PORTIONS, response.getMetadata().getState()
+            addComponentState(PORTIONS, response.getMetadata().getComponentState()
             );
             addComponentResponse(PORTIONS, response);
 
@@ -330,7 +330,7 @@ public class Recipe extends UseCaseBase {
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 setDataId(recipeMetadataResponse.getDataId()).
                 setDomainId(recipeDomainId).
-                setModel(
+                setDomainModel(
                         new RecipeMetadataRequest.Model.Builder().
                                 setParentId(recipeMetadataResponse.getModel().getParentDomainId()).
                                 setComponentStates(componentStates).
@@ -399,7 +399,7 @@ public class Recipe extends UseCaseBase {
         return new RecipeResponse.Builder().
                 setDataId(dataId).
                 setDomainId(recipeDomainId).
-                setModel(getRecipeResponseModel()).
+                setDomainModel(getRecipeResponseModel()).
                 build();
     }
 
@@ -505,7 +505,7 @@ public class Recipe extends UseCaseBase {
                         getDefault().
                         setDataId(dataId).
                         setDomainId(recipeDomainId).
-                        setModel(
+                        setDomainModel(
                                 new RecipeResponse.Model.Builder().
                                         setComponentResponses(componentResponses).
                                         build()).

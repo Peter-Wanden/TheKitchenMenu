@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.ui.catalog.recipe.mvc;
 
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipelist.RecipeList;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipelist.RecipeListRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipelist.RecipeListResponse;
@@ -57,7 +57,7 @@ public class RecipeCatalogListController
 
         RecipeListRequest request = new RecipeListRequest.Builder().
                 getDefault().
-                setModel(model).
+                setDomainModel(model).
                 build();
 
         handler.executeAsync(useCase, request, this);

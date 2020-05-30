@@ -1,8 +1,8 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata;
 
-import com.example.peter.thekitchenmenu.domain.usecase.MessageModelDataId;
-import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainModel;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
+import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataId;
+import com.example.peter.thekitchenmenu.domain.model.BaseDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 
 import java.util.HashMap;
 import java.util.Objects;
@@ -13,7 +13,7 @@ import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.m
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentState;
 
 public final class RecipeMetadataRequest
-        extends MessageModelDataId<RecipeMetadataRequest.Model>
+        extends UseCaseMessageModelDataId<RecipeMetadataRequest.Model>
         implements UseCaseBase.Request {
 
     @Nonnull

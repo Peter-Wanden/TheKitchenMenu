@@ -1,13 +1,13 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course;
 
-import com.example.peter.thekitchenmenu.domain.usecase.BasePersistence;
+import com.example.peter.thekitchenmenu.domain.model.BaseDomainModelPersistence;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
 public final class RecipeCoursePersistenceModel
-        extends BasePersistence {
+        extends BaseDomainModelPersistence {
 
     private RecipeCourse.Course course;
     private boolean isActive;

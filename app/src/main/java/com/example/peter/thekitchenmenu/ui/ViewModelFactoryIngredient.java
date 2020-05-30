@@ -8,8 +8,8 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.peter.thekitchenmenu.data.repository.DatabaseInjection;
 import com.example.peter.thekitchenmenu.data.repository.ingredient.RepositoryIngredient;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseFactory;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
+import com.example.peter.thekitchenmenu.domain.usecase.factory.UseCaseFactory;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseHandler;
 import com.example.peter.thekitchenmenu.ui.detail.ingredient.IngredientEditorViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.ingredient.IngredientViewerViewModel;
 

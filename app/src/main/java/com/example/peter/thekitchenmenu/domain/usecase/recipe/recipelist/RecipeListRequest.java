@@ -1,8 +1,8 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipelist;
 
-import com.example.peter.thekitchenmenu.domain.usecase.MessageModelDataId;
-import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainModel;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
+import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataId;
+import com.example.peter.thekitchenmenu.domain.model.BaseDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 
 import java.util.Objects;
 
@@ -12,7 +12,7 @@ import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipelist.
 
 public class RecipeListRequest
         extends
-        MessageModelDataId<RecipeListRequest.Model>
+        UseCaseMessageModelDataId<RecipeListRequest.Model>
         implements
         UseCaseBase.Request {
 

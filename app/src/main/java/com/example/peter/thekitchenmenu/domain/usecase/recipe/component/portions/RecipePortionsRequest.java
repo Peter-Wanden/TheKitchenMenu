@@ -1,13 +1,13 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions;
 
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
-import com.example.peter.thekitchenmenu.domain.usecase.MessageModelDataId;
-import com.example.peter.thekitchenmenu.domain.usecase.BaseDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
+import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataId;
+import com.example.peter.thekitchenmenu.domain.model.BaseDomainModel;
 
 import java.util.Objects;
 
 public final class RecipePortionsRequest
-        extends MessageModelDataId<RecipePortionsRequest.Model>
+        extends UseCaseMessageModelDataId<RecipePortionsRequest.Model>
         implements UseCaseBase.Request {
 
     @Override

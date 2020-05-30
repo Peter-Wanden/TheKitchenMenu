@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.domain.usecase;
+package com.example.peter.thekitchenmenu.domain.usecase.common;
 
 /**
  * Runs {@link UseCaseBase}s using a {@link UseCaseScheduler}.

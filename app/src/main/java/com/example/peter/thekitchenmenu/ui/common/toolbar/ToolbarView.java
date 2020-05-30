@@ -29,12 +29,12 @@ public class ToolbarView extends BaseViewMvc {
     public ToolbarView(LayoutInflater inflater, ViewGroup parent) {
         setRootView(inflater.inflate(R.layout.layout_toolbar, parent, false));
 
-        title = findViewById(R.id.txt_toolbar_title);
+        title = findViewById(R.id.toolbar_title);
 
-        hamburgerButton = findViewById(R.id.btn_hamburger);
+        hamburgerButton = findViewById(R.id.button_hamburger);
         hamburgerButton.setOnClickListener(view -> mHamburgerClickListener.onHamburgerClicked());
 
-        backButton = findViewById(R.id.btn_back);
+        backButton = findViewById(R.id.backButton);
         backButton.setOnClickListener(view -> mNavigateUpClickListener.onNavigateUpClicked());
     }
 

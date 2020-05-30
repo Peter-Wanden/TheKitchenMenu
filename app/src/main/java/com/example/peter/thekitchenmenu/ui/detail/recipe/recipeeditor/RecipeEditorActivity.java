@@ -8,23 +8,18 @@ import android.view.MenuItem;
 import android.widget.FrameLayout;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.RecipeRequest;
-import com.example.peter.thekitchenmenu.ui.UnsavedChangesDialogFragment;
 import com.example.peter.thekitchenmenu.ui.common.ScreensNavigator;
 import com.example.peter.thekitchenmenu.ui.common.controllers.BackPressedDispatcher;
 import com.example.peter.thekitchenmenu.ui.common.controllers.BackPressedListener;
 import com.example.peter.thekitchenmenu.ui.common.controllers.BaseActivity;
 import com.example.peter.thekitchenmenu.ui.common.fragmentFrameHelper.FragmentFrameWrapper;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.mvc.RecipeEditorController;
+import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.mvc.RecipeEditorView;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.mvc.RecipeEditorViewImpl;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.mvc.identity.RecipeIdentityEditorController.UseCaseComponentChangedListener;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.mvc.identity.RecipeIdentityFragment;
-import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredientlist.RecipeIngredientListActivity;
 import com.example.peter.thekitchenmenu.ui.imageeditor.ImageEditorFragment;
 import com.example.peter.thekitchenmenu.utils.ActivityUtils;
 
@@ -33,16 +28,14 @@ import java.util.Set;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe.CREATE_NEW_RECIPE;
-import static com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.mvc.RecipeEditorController.*;
-
 public class RecipeEditorActivity
         extends
         BaseActivity
         implements
         BackPressedDispatcher,
         FragmentFrameWrapper,
-        UseCaseComponentChangedListener, RecipeEditorControllerListener {
+        UseCaseComponentChangedListener,
+        RecipeEditorView.ListenerViewActions {
 
     private static final String TAG = "tkm-" + RecipeEditorActivity.class.getSimpleName() + ": ";
 
@@ -75,27 +68,10 @@ public class RecipeEditorActivity
         controller.setRecipeDomainId(recipeDomainId);
         controller.start();
 
-        setupActionBar();
+        setupToolBar();
         setupFragments();
 
         setContentView(view.getRootView());
-    }
-
-    private void setupActionBar() {
-        setSupportActionBar(view.getToolbar());
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar == null) {
-            return;
-        }
-
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setDisplayShowHomeEnabled(true);
-
-        if (recipeDomainId.isEmpty()) {
-            actionBar.setTitle(R.string.activity_title_add_new_recipe);
-        } else {
-            actionBar.setTitle(R.string.activity_title_edit_recipe);
-        }
     }
 
     private void setupFragments() {
@@ -195,50 +171,42 @@ public class RecipeEditorActivity
         invalidateOptionsMenu();
     }
 
+    private void setupToolBar() {
+        setSupportActionBar(view.getToolbar());
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_recipe_editor, menu);
+        view.setOptionsMenu(menu);
+        getMenuInflater().inflate(view.getMenuResourceId(), view.getOptionsMenu());
         return true;
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        menu.findItem(R.id.menu_recipe_editor_action_review).setVisible(
-                recipeEditorViewModel.isShowReviewButton());
+        view.onPrepareOptionsMenu(menu);
         return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(@Nonnull MenuItem item) {
-        if (item.getItemId() == R.id.menu_recipe_editor_action_review) {
-            recipeEditorViewModel.reviewButtonPressed();
+        if (view.isReviewButtonPressed(item)) {
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
     @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return true;
-    }
-
-    @Override
-    public void onBackPressed() {
-        recipeEditorViewModel.upOrBackPressed();
-    }
-
-    @Override
     protected void onStart() {
         super.onStart();
-        controller.registerControllerListener(this);
+        view.registerListenerViewActions(this);
         controller.onStart();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        controller.unregisterControllerListener(this);
+        view.unregisterListenerViewActions(this);
         controller.onStop();
     }
 
@@ -254,7 +222,7 @@ public class RecipeEditorActivity
 
     @Override
     public FrameLayout getFragmentFrame() {
-        return view.getFragmentFrame();
+        return view.getIdentityContentFrame();
     }
 
     /*

@@ -1,9 +1,9 @@
-package com.example.peter.thekitchenmenu.domain.usecase;
+package com.example.peter.thekitchenmenu.domain.usecase.common;
 
 public abstract class UseCaseBase {
 
     // Base for request response messages
-    interface Message {
+    public interface Message {
     }
 
     // Data passed to a request

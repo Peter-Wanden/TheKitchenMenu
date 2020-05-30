@@ -4,8 +4,8 @@ import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.componentstate.RecipeComponentStateEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.failreason.RecipeFailReasonEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.parent.RecipeMetadataParentEntity;
-import com.example.peter.thekitchenmenu.domain.model.FailReasons;
-import com.example.peter.thekitchenmenu.domain.usecase.BasePersistence;
+import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
+import com.example.peter.thekitchenmenu.domain.model.BaseDomainModelPersistence;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,7 +19,7 @@ import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.m
  * Represented in primitive form by {@link RecipeMetadataParentEntity},
  * {@link RecipeComponentStateEntity} & {@link RecipeFailReasonEntity}
  */
-public final class RecipeMetadataPersistenceModel extends BasePersistence {
+public final class RecipeMetadataPersistenceModel extends BaseDomainModelPersistence {
 
     private String parentDomainId;
     private ComponentState recipeState;

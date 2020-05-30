@@ -1,10 +1,13 @@
-package com.example.peter.thekitchenmenu.domain.usecase;
+package com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage;
+
+import com.example.peter.thekitchenmenu.domain.model.UseCaseMetadataModel;
+import com.example.peter.thekitchenmenu.domain.model.BaseDomainModel;
 
 import java.util.Objects;
 
-public abstract class MessageModelDataIdMetadata<DOMAIN_MODEL extends BaseDomainModel>
+public abstract class UseCaseMessageModelDataIdMetadata<DOMAIN_MODEL extends BaseDomainModel>
         extends
-        MessageModelDataId<DOMAIN_MODEL> {
+        UseCaseMessageModelDataId<DOMAIN_MODEL> {
 
     protected UseCaseMetadataModel metadata;
 
@@ -15,9 +18,9 @@ public abstract class MessageModelDataIdMetadata<DOMAIN_MODEL extends BaseDomain
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof MessageModelDataIdMetadata)) return false;
+        if (!(o instanceof UseCaseMessageModelDataIdMetadata)) return false;
         if (!super.equals(o)) return false;
-        MessageModelDataIdMetadata<?> that = (MessageModelDataIdMetadata<?>) o;
+        UseCaseMessageModelDataIdMetadata<?> that = (UseCaseMessageModelDataIdMetadata<?>) o;
         return Objects.equals(metadata, that.metadata);
     }
 
@@ -28,9 +31,9 @@ public abstract class MessageModelDataIdMetadata<DOMAIN_MODEL extends BaseDomain
 
     public static abstract class MessageModelDataIdMetadataBuilder
             <SELF extends MessageModelDataIdMetadataBuilder<SELF, MESSAGE, DATA_MODEL>,
-                    MESSAGE extends MessageModelDataIdMetadata<DATA_MODEL>,
+                    MESSAGE extends UseCaseMessageModelDataIdMetadata<DATA_MODEL>,
                     DATA_MODEL extends BaseDomainModel>
-            extends MessageModelDataId.MessageModelDataIdBuilder<SELF, MESSAGE, DATA_MODEL> {
+            extends UseCaseMessageModelDataId.MessageModelDataIdBuilder<SELF, MESSAGE, DATA_MODEL> {
 
         public SELF setMetadata(UseCaseMetadataModel metadata) {
             message.metadata = metadata;

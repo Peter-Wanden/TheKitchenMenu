@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecase.textvalidation;
 
 
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseBase;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 
 import java.util.Objects;
 
