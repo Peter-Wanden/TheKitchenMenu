@@ -33,7 +33,7 @@ public abstract class UseCaseMessageModelDataIdMetadata<DOMAIN_MODEL extends Bas
             <SELF extends MessageModelDataIdMetadataBuilder<SELF, MESSAGE, DATA_MODEL>,
                     MESSAGE extends UseCaseMessageModelDataIdMetadata<DATA_MODEL>,
                     DATA_MODEL extends BaseDomainModel>
-            extends UseCaseMessageModelDataId.MessageModelDataIdBuilder<SELF, MESSAGE, DATA_MODEL> {
+            extends UseCaseMessageModelDataIdBuilder<SELF, MESSAGE, DATA_MODEL> {
 
         public SELF setMetadata(UseCaseMetadataModel metadata) {
             message.metadata = metadata;

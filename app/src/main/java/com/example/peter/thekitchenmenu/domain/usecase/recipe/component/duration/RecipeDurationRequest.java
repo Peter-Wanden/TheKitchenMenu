@@ -25,7 +25,7 @@ public final class RecipeDurationRequest
     private RecipeDurationRequest() {}
 
     public static class Builder
-            extends MessageModelDataIdBuilder<Builder, RecipeDurationRequest, Model> {
+            extends UseCaseMessageModelDataIdBuilder<Builder, RecipeDurationRequest, Model> {
 
         public Builder() {
             message = new RecipeDurationRequest();

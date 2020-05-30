@@ -26,7 +26,7 @@ public final class IngredientRequest
     private IngredientRequest() {}
 
     public static class Builder
-            extends MessageModelDataIdBuilder<Builder, IngredientRequest, Model> {
+            extends UseCaseMessageModelDataIdBuilder<Builder, IngredientRequest, Model> {
 
         public Builder() {
             message = new IngredientRequest();

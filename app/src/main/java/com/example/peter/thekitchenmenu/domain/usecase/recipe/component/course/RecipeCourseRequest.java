@@ -29,7 +29,7 @@ public final class RecipeCourseRequest
     }
 
     public static class Builder
-            extends MessageModelDataIdBuilder<Builder, RecipeCourseRequest, Model> {
+            extends UseCaseMessageModelDataIdBuilder<Builder, RecipeCourseRequest, Model> {
 
         public Builder() {
             message = new RecipeCourseRequest();

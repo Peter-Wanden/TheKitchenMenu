@@ -107,14 +107,14 @@ public class RecipeIdentity
         System.out.println(TAG + "Request No:" + accessCount + " - " + r);
 
         if (requestIsEmpty()) {
-            if (isUseCaseEmpty()) {
+            if (useCaseIsEmpty()) {
                 isNewRequest = true;
                 sendEmptyResponse();
             } else {
                 isNewRequest = false;
                 respondWithCurrentData();
             }
-        } else if (isUseCaseEmpty()) {
+        } else if (useCaseIsEmpty()) {
             isNewRequest = true;
             extractIds();
             loadData(recipeDomainId);
@@ -134,7 +134,7 @@ public class RecipeIdentity
         return ((UseCaseMessageModelDataId)getRequest()).getDomainId().equals("");
     }
 
-    private boolean isUseCaseEmpty() {
+    private boolean useCaseIsEmpty() {
         return recipeDomainId.equals("");
     }
 
@@ -155,6 +155,11 @@ public class RecipeIdentity
     }
 
     private boolean isRequestToUpdateData() {
+        // todo - request to modify data:
+        //  - data id's match
+        //  - domain is's match
+        //  - domain model is different
+
         return ((UseCaseMessageModelDataId)getRequest()).getDomainId().equals(recipeDomainId);
     }
 

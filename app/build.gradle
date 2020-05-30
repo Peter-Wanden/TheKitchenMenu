@@ -65,7 +65,7 @@ dependencies {
     implementation "androidx.appcompat:appcompat:$androidxAppcompat"
     implementation "androidx.recyclerview:recyclerview:$androidxRecyclerView"
     implementation "androidx.cardview:cardview:$androidxCardView"
-    implementation "androidx.exifinterface:exifinterface:$androidxExifInterface"
+    implementation "androidx.exifinterface:exifinterface:1.2.0"
     implementation "androidx.legacy:legacy-support-v4:$androidxLegacySupport"
     implementation "androidx.browser:browser:$androidxBrowser"
     implementation "com.google.android.material:material:$androidMaterial"

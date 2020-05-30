@@ -26,7 +26,7 @@ public final class RecipeIdentityRequest
 
     public static class Builder
             extends
-            MessageModelDataIdBuilder<Builder, RecipeIdentityRequest, DomainModel> {
+            UseCaseMessageModelDataIdBuilder<Builder, RecipeIdentityRequest, DomainModel> {
 
         public Builder() {
             message = new RecipeIdentityRequest();
@@ -55,7 +55,10 @@ public final class RecipeIdentityRequest
         }
     }
 
-    public static final class DomainModel extends BaseDomainModel {
+    public static final class DomainModel
+            extends
+            BaseDomainModel {
+
         private String title;
         private String description;
 

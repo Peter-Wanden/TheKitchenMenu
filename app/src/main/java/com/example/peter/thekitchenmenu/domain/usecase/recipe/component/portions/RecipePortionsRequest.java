@@ -22,7 +22,7 @@ public final class RecipePortionsRequest
     private RecipePortionsRequest() {}
 
     public static class Builder
-            extends MessageModelDataIdBuilder<Builder, RecipePortionsRequest, Model> {
+            extends UseCaseMessageModelDataIdBuilder<Builder, RecipePortionsRequest, Model> {
 
         public Builder() {
             message = new RecipePortionsRequest();

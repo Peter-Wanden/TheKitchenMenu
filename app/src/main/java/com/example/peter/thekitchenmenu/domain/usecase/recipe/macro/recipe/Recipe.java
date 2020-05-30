@@ -391,7 +391,7 @@ public class Recipe extends UseCaseBase {
         notifyComponentListeners();
     }
 
-    private void unregisterRecipeListeners(UseCaseBase.Callback<RecipeResponse> listener) {
+    private void unregisterRecipeListener(UseCaseBase.Callback<RecipeResponse> listener) {
         recipeResponseListeners.remove(listener);
     }
 

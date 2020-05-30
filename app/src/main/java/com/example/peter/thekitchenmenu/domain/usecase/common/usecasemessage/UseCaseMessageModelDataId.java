@@ -36,8 +36,8 @@ public abstract class UseCaseMessageModelDataId<DOMAIN_MODEL extends BaseDomainM
         return Objects.hash(super.hashCode(), dataId, domainId);
     }
 
-    public static abstract class MessageModelDataIdBuilder
-            <SELF extends MessageModelDataIdBuilder<SELF, MESSAGE, DOMAIN_MODEL>,
+    public static abstract class UseCaseMessageModelDataIdBuilder
+            <SELF extends UseCaseMessageModelDataIdBuilder<SELF, MESSAGE, DOMAIN_MODEL>,
                     MESSAGE extends UseCaseMessageModelDataId<DOMAIN_MODEL>,
                     DOMAIN_MODEL extends BaseDomainModel>
             extends UseCaseMessageModelBase.MessageModelBuilder<SELF, MESSAGE, DOMAIN_MODEL> {

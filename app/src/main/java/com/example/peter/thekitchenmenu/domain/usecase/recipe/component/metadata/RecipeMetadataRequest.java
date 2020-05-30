@@ -30,7 +30,7 @@ public final class RecipeMetadataRequest
     }
 
     public static class Builder
-            extends MessageModelDataIdBuilder<Builder, RecipeMetadataRequest, Model> {
+            extends UseCaseMessageModelDataIdBuilder<Builder, RecipeMetadataRequest, Model> {
 
         public Builder() {
             message = new RecipeMetadataRequest();
