@@ -205,7 +205,7 @@ public class RecipeMetadata
 
     private void setupUseCase() {
         failReasons.clear();
-        componentStates = ((RecipeMetadataRequest)getRequest()).getModel().getComponentStates();
+        componentStates = ((RecipeMetadataRequest)getRequest()).getDomainModel().getComponentStates();
     }
 
     private void sendEmptyResponse() {
@@ -380,7 +380,7 @@ public class RecipeMetadata
         return new RecipeMetadataPersistenceModel.Builder().
                 setDataId(dataId).
                 setDomainId(recipeDomainId).
-                setParentDomainId(r.getModel().getParentDomainId()).
+                setParentDomainId(r.getDomainModel().getParentDomainId()).
                 setRecipeState(recipeState).
                 setComponentStates(componentStates).
                 setFailReasons(failReasons).

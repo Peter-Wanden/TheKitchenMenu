@@ -108,7 +108,7 @@ public class Ingredient
     @Override
     protected <Q extends Request> void execute(Q request) {
         IngredientRequest r = (IngredientRequest) request;
-        requestModel = r.getModel();
+        requestModel = r.getDomainModel();
         System.out.println(TAG + r);
 
         if (isNewRequest(r)) {

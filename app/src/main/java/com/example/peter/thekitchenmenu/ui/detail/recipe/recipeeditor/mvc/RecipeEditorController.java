@@ -82,7 +82,7 @@ public class RecipeEditorController
 
     @Override
     public void onUseCaseSuccess(RecipeResponse response) {
-        metadataResponse = (RecipeMetadataResponse) response.getModel().getComponentResponses().
+        metadataResponse = (RecipeMetadataResponse) response.getDomainModel().getComponentResponses().
                 get(ComponentName.RECIPE_METADATA);
         ComponentState recipeComponentState = metadataResponse.getMetadata().getComponentState();
 
@@ -92,7 +92,7 @@ public class RecipeEditorController
 
     @Override
     public void onUseCaseError(RecipeResponse response) {
-        metadataResponse = (RecipeMetadataResponse) response.getModel().getComponentResponses().
+        metadataResponse = (RecipeMetadataResponse) response.getDomainModel().getComponentResponses().
                 get(ComponentName.RECIPE_METADATA);
         ComponentState recipeComponentState = metadataResponse.getMetadata().getComponentState();
 

@@ -108,13 +108,13 @@ public class RecipeCatalogRecyclerAdapter
                     handler.executeAsync(recipe, request, new UseCaseBase.Callback<RecipeIdentityResponse>() {
                         @Override
                         public void onUseCaseSuccess(RecipeIdentityResponse response) {
-                            title = response.getModel().getTitle();
+                            title = response.getDomainModel().getTitle();
                             addRecipe(recipe);
                         }
 
                         @Override
                         public void onUseCaseError(RecipeIdentityResponse response) {
-                            title = response.getModel().getTitle();
+                            title = response.getDomainModel().getTitle();
                             addRecipe(recipe);
                         }
                     });

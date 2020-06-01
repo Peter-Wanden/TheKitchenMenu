@@ -67,7 +67,7 @@ public class RecipeCatalogListController
     public void onUseCaseSuccess(RecipeListResponse response) {
         screenState = ScreenState.DATA_DISPLAYED;
         view.hideProgressBar();
-        view.bindRecipes(response.getModel().getRecipes());
+        view.bindRecipes(response.getDomainModel().getRecipes());
     }
 
     @Override

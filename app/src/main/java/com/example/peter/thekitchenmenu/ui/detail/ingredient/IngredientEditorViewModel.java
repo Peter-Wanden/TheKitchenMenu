@@ -93,7 +93,7 @@ public class IngredientEditorViewModel extends ViewModel {
     }
 
     public String getName() {
-        return ingredientResponse == null ? "" : ingredientResponse.getModel().getName();
+        return ingredientResponse == null ? "" : ingredientResponse.getDomainModel().getName();
     }
 
     public void setName(String name) {
@@ -133,8 +133,8 @@ public class IngredientEditorViewModel extends ViewModel {
                     setDomainId(ingredientResponse.getDomainId()).
                     setDomainModel(new IngredientRequest.Model.Builder().
                             setName(response.getModel().getText()).
-                            setDescription(ingredientResponse.getModel().getDescription()).
-                            setConversionFactor(ingredientResponse.getModel().getConversionFactor()).
+                            setDescription(ingredientResponse.getDomainModel().getDescription()).
+                            setConversionFactor(ingredientResponse.getDomainModel().getConversionFactor()).
                             build()).
                     build();
 
@@ -147,7 +147,7 @@ public class IngredientEditorViewModel extends ViewModel {
     }
 
     public String getDescription() {
-        return ingredientResponse == null ? "" : ingredientResponse.getModel().getDescription();
+        return ingredientResponse == null ? "" : ingredientResponse.getDomainModel().getDescription();
     }
 
     public void setDescription(String description) {
@@ -188,9 +188,9 @@ public class IngredientEditorViewModel extends ViewModel {
                     setDataId(ingredientResponse.getDataId()).
                     setDomainId(ingredientResponse.getDomainId()).
                     setDomainModel(new IngredientRequest.Model.Builder().
-                            setName(ingredientResponse.getModel().getName()).
+                            setName(ingredientResponse.getDomainModel().getName()).
                             setDescription(response.getModel().getText()).
-                            setConversionFactor(ingredientResponse.getModel().getConversionFactor()).
+                            setConversionFactor(ingredientResponse.getDomainModel().getConversionFactor()).
                             build()).
                     build();
 
@@ -264,8 +264,8 @@ public class IngredientEditorViewModel extends ViewModel {
     private void updateObservables() {
         if (isChanged) {
             updatingUi = true;
-            setName(ingredientResponse.getModel().getName());
-            setDescription(ingredientResponse.getModel().getName());
+            setName(ingredientResponse.getDomainModel().getName());
+            setDescription(ingredientResponse.getDomainModel().getName());
             updatingUi = false;
         }
         updateUseButtonVisibility();

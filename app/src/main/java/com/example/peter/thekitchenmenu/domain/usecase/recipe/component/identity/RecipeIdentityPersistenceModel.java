@@ -82,7 +82,7 @@ public final class RecipeIdentityPersistenceModel
             return self();
         }
 
-        public Builder basedOnModel(@Nonnull RecipeIdentityPersistenceModel m) {
+        public Builder basedOnPersistenceModel(@Nonnull RecipeIdentityPersistenceModel m) {
             domainModel.dataId = m.getDataId();
             domainModel.domainId = m.getDomainId();
             domainModel.title = m.getTitle();

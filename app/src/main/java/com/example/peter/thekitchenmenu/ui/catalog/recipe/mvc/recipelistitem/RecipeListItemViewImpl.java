@@ -82,18 +82,18 @@ public class RecipeListItemViewImpl
         });
 
         RecipeIdentityResponse identity = (RecipeIdentityResponse) recipeResponse.
-                getModel().
+                getDomainModel().
                 getComponentResponses().
                 get(ComponentName.IDENTITY);
 
-        title.setText(identity.getModel().getTitle());
-        description.setText(identity.getModel().getDescription());
+        title.setText(identity.getDomainModel().getTitle());
+        description.setText(identity.getDomainModel().getDescription());
 
         RecipeDurationResponse duration = (RecipeDurationResponse) recipeResponse.
-                getModel().getComponentResponses().get(ComponentName.DURATION);
+                getDomainModel().getComponentResponses().get(ComponentName.DURATION);
 
-        prepTime.setText(duration.getModel().getTotalPrepTime());
-        cookTime.setText(duration.getModel().getTotalCookTime());
-        totalTime.setText(duration.getModel().getTotalCookTime());
+        prepTime.setText(duration.getDomainModel().getTotalPrepTime());
+        cookTime.setText(duration.getDomainModel().getTotalCookTime());
+        totalTime.setText(duration.getDomainModel().getTotalCookTime());
     }
 }

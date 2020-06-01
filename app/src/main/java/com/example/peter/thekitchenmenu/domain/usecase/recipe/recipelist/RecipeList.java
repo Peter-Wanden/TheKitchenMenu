@@ -61,7 +61,7 @@ public class RecipeList
     protected <Q extends Request> void execute(Q request) {
         accessCount ++;
         RecipeListRequest r = (RecipeListRequest) request;
-        requestModel = r.getModel();
+        requestModel = r.getDomainModel();
         System.out.println(TAG + "Request No: " + accessCount + " - " + r);
 
         if (isNewRequest()) {

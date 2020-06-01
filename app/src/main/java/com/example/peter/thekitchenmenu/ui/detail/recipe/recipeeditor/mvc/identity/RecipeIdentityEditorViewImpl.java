@@ -113,7 +113,7 @@ public class RecipeIdentityEditorViewImpl
         titleEditText.setError(null);
         descriptionEditText.setError(null);
 
-        RecipeIdentityResponse.DomainModel domainModel = response.getModel();
+        RecipeIdentityResponse.DomainModel domainModel = response.getDomainModel();
         titleEditText.setText(domainModel.getTitle());
         descriptionEditText.setText(domainModel.getDescription());
 
@@ -158,7 +158,7 @@ public class RecipeIdentityEditorViewImpl
                                     R.integer.input_validation_long_text_max_length))));
         }
 
-        RecipeIdentityResponse.DomainModel domainModel = response.getModel();
+        RecipeIdentityResponse.DomainModel domainModel = response.getDomainModel();
         titleEditText.setText(domainModel.getTitle());
         descriptionEditText.setText(domainModel.getDescription());
 

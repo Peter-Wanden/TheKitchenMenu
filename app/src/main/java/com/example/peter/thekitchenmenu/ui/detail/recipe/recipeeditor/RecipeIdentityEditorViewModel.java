@@ -89,13 +89,13 @@ public class RecipeIdentityEditorViewModel
 
     @Bindable
     public String getTitle() {
-        return response == null ? "" : response.getModel().getTitle();
+        return response == null ? "" : response.getDomainModel().getTitle();
     }
 
     public void setTitle(String title) {
         if (isTitleChanged(title)) {
             RecipeIdentityRequest.DomainModel model = new RecipeIdentityRequest.DomainModel.Builder().
-                    basedOnResponseModel(response.getModel()).
+                    basedOnResponseModel(response.getDomainModel()).
                     setTitle(title).
                     build();
             RecipeIdentityRequest request = new RecipeIdentityRequest.Builder().
@@ -108,18 +108,18 @@ public class RecipeIdentityEditorViewModel
     }
 
     private boolean isTitleChanged(String title) {
-        return !isUpdatingUi && !response.getModel().getTitle().equals(title.trim());
+        return !isUpdatingUi && !response.getDomainModel().getTitle().equals(title.trim());
     }
 
     @Bindable
     public String getDescription() {
-        return response == null ? "" : response.getModel().getDescription();
+        return response == null ? "" : response.getDomainModel().getDescription();
     }
 
     public void setDescription(String description) {
         if (isDescriptionChanged(description)) {
             RecipeIdentityRequest.DomainModel model = new RecipeIdentityRequest.DomainModel.Builder().
-                    basedOnResponseModel(response.getModel()).
+                    basedOnResponseModel(response.getDomainModel()).
                     setDescription(description).
                     build();
             RecipeIdentityRequest request = new RecipeIdentityRequest.Builder().
@@ -135,7 +135,7 @@ public class RecipeIdentityEditorViewModel
     }
 
     private boolean isDescriptionChanged(String description) {
-        return !isUpdatingUi && !response.getModel().getDescription().equals(description.trim());
+        return !isUpdatingUi && !response.getDomainModel().getDescription().equals(description.trim());
     }
 
     private boolean isStateChanged(RecipeIdentityResponse response) {

@@ -87,7 +87,7 @@ public class RecipeIdentityEditorController
                 setDomainModel(
                         new RecipeIdentityRequest.DomainModel.
                                 Builder().
-                                basedOnResponseModel(response.getModel()).
+                                basedOnResponseModel(response.getDomainModel()).
                                 setTitle(title).
                                 build()).
                 build();
@@ -101,7 +101,7 @@ public class RecipeIdentityEditorController
                 setDomainModel(
                         new RecipeIdentityRequest.DomainModel.
                                 Builder().
-                                basedOnResponseModel(response.getModel()).
+                                basedOnResponseModel(response.getDomainModel()).
                                 setDescription(description).
                                 build()).
                 build();

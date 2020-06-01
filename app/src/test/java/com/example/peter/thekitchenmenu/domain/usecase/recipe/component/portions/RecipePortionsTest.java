@@ -300,11 +300,11 @@ public class RecipePortionsTest {
         );
         assertEquals(
                 modelUnderTest.getServings(),
-                portionsOnSuccessResponse.getModel().getServings()
+                portionsOnSuccessResponse.getDomainModel().getServings()
         );
         assertEquals(
                 modelUnderTest.getSittings(),
-                portionsOnSuccessResponse.getModel().getSittings()
+                portionsOnSuccessResponse.getDomainModel().getSittings()
         );
         assertEquals(
                 modelUnderTest.getCreateDate(),
@@ -349,7 +349,7 @@ public class RecipePortionsTest {
 
         // Arrange second request with invalid servings
         RecipePortionsRequest.Model invalidModel = new RecipePortionsRequest.Model.Builder().
-                basedResponseModel(portionsOnSuccessResponse.getModel()).
+                basedResponseModel(portionsOnSuccessResponse.getDomainModel()).
                 setServings(MAX_SERVINGS + 1).
                 build();
         RecipePortionsRequest invalidRequest = new RecipePortionsRequest.Builder().
@@ -380,7 +380,7 @@ public class RecipePortionsTest {
 
         // Arrange updated model
         RecipePortionsRequest.Model model = new RecipePortionsRequest.Model.Builder().
-                basedResponseModel(portionsOnSuccessResponse.getModel()).
+                basedResponseModel(portionsOnSuccessResponse.getDomainModel()).
                 setServings(modelUnderTest.getServings()).
                 build();
         RecipePortionsRequest validRequest = new RecipePortionsRequest.Builder().
@@ -404,7 +404,7 @@ public class RecipePortionsTest {
 
         // Arrange update request
         RecipePortionsRequest.Model model = new RecipePortionsRequest.Model.Builder().
-                basedResponseModel(portionsOnSuccessResponse.getModel()).
+                basedResponseModel(portionsOnSuccessResponse.getDomainModel()).
                 setSittings(MAX_SITTINGS + 1).
                 build();
         RecipePortionsRequest request = new RecipePortionsRequest.Builder().
@@ -442,7 +442,7 @@ public class RecipePortionsTest {
 
         // Arrange update request
         RecipePortionsRequest.Model model = new RecipePortionsRequest.Model.Builder().
-                basedResponseModel(portionsOnSuccessResponse.getModel()).
+                basedResponseModel(portionsOnSuccessResponse.getDomainModel()).
                 setSittings(MAX_SITTINGS).
                 build();
         RecipePortionsRequest request = new RecipePortionsRequest.Builder().

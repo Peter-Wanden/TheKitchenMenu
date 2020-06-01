@@ -78,7 +78,7 @@ public class RecipeCourseEditorViewModel extends ObservableViewModel {
 
     private void setRecipeCoursesToObservables() {
         courseList.clear();
-        courseList.addAll(response.getModel().getCourseList().keySet());
+        courseList.addAll(response.getDomainModel().getCourseList().keySet());
 
         isUpdatingUi = true;
         notifyChange();

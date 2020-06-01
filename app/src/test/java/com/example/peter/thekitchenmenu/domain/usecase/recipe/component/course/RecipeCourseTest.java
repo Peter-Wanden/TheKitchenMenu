@@ -103,7 +103,7 @@ public class RecipeCourseTest {
         );
         assertEquals(
                 expectedCourseListSize,
-                onErrorResponse.getModel().getCourseList().size()
+                onErrorResponse.getDomainModel().getCourseList().size()
         );
     }
 
@@ -274,7 +274,7 @@ public class RecipeCourseTest {
         int expectedNumberOfModels = TestDataRecipeCourse.
                 getAllExistingActiveByDomainId(domainId).size();
         int actualNumberOfModels = onSuccessResponse.
-                getModel().
+                getDomainModel().
                 getCourseList().
                 size();
 
@@ -302,7 +302,7 @@ public class RecipeCourseTest {
         int expectedNoOfCourses = TestDataRecipeCourse.
                 getAllExistingActiveByDomainId(domainId).size();
         int actualNoOfCourses = onSuccessResponse.
-                getModel().
+                getDomainModel().
                 getCourseList().
                 size();
         assertEquals(expectedNoOfCourses, actualNoOfCourses);
@@ -323,7 +323,7 @@ public class RecipeCourseTest {
                 getFailReasons().
                 contains(CommonFailReason.DATA_UNAVAILABLE));
         assertTrue(onErrorResponse.
-                getModel().
+                getDomainModel().
                 getCourseList().
                 isEmpty());
     }
@@ -386,7 +386,7 @@ public class RecipeCourseTest {
         // Assert course list
         assertEquals(
                 NO_COURSES,
-                onErrorResponse.getModel().getCourseList().size());
+                onErrorResponse.getDomainModel().getCourseList().size());
     }
     // endregion helper methods --------------------------------------------------------------------
 

@@ -15,11 +15,15 @@ import static org.junit.Assert.*;
 
 public class UseCaseElementRequestFilteringTest {
     // region constants ----------------------------------------------------------------------------
-    private static final String TAG = "tkm-" + UseCaseElementRequestFilteringTest.class.
-            getSimpleName() + ": ";
+//    private static final String TAG = "tkm-" + UseCaseElementRequestFilteringTest.class.
+//            getSimpleName() + ": ";
+
     private static final String DATA_ID = "DATA_ID";
-    private static final String DOMAIN_ID = "DOMAIN_ID";
     private static final String DIFFERENT_DATA_ID = "DIFFERENT_DATA_ID";
+    private static final String DOMAIN_ID = "DOMAIN_ID";
+    private static final String DIFFERENT_DOMAIN_ID = "DIFFERENT_DOMAIN_ID";
+    private static final String COMPARISON_STRING = "COMPARISON_STRING";
+    private static final String DIFFERENT_COMPARISON_STRING = "DIFFERENT_COMPARISON_STRING";
     // endregion constants -------------------------------------------------------------------------
 
     // region helper fields ------------------------------------------------------------------------
@@ -36,6 +40,10 @@ public class UseCaseElementRequestFilteringTest {
     @Test
     public void testSendingInNullValues() {
         // todo
+    }
+
+    private UseCaseElementInheritor givenUseCase() {
+        return new UseCaseElementInheritor();
     }
 
     @Test
@@ -131,7 +139,7 @@ public class UseCaseElementRequestFilteringTest {
     public void requestHasDomainId_useCaseHasEqualDomainId_processDomainModelChanges() {
         // Arrange
         // Requires two requests, one to populate use case domain Id, the second for testing
-        // equality if Id's
+        // equality of Id's
         UseCaseElementRequest request = new UseCaseElementRequest.Builder().
                 getDefault().setDataId(DATA_ID).
                 setDomainId(DOMAIN_ID).
@@ -144,8 +152,95 @@ public class UseCaseElementRequestFilteringTest {
         assertTrue(SUT.isProcessingDomainModelChanges);
     }
 
-    private UseCaseElementInheritor givenUseCase() {
-        return new UseCaseElementInheritor();
+    @Test
+    public void requestHasDomainId_useCaseHasUnequalDomainId_loadDataByDomainId() {
+        // Arrange
+        // Requires two requests. One to populate the domainId, the second to send a different
+        // domain Id
+        UseCaseElementRequest request = new UseCaseElementRequest.Builder().
+                getDefault().
+                setDataId(DATA_ID).
+                setDomainId(DOMAIN_ID).
+                build();
+
+        UseCaseElementRequest differentDomainIdRequest = new UseCaseElementRequest.Builder().
+                getDefault().
+                setDataId(DATA_ID).
+                setDomainId(DIFFERENT_DOMAIN_ID).
+                build();
+
+        // Act
+        SUT.execute(request, new DummyUseCaseCallback());
+        SUT.execute(differentDomainIdRequest, new DummyUseCaseCallback());
+
+        // Assert
+        assertTrue(SUT.isLoadingDataByDomainId);
+    }
+
+    @Test
+    public void requestAndUseCaseHaveEqualDataId_requestHasDomainIdOmittedUseCaseHasDomainId_processDomainModelChanges() {
+        // Arrange
+        UseCaseElementRequest request = new UseCaseElementRequest.Builder().
+                getDefault().
+                setDataId(DATA_ID).
+                setDomainId(DOMAIN_ID).
+                build();
+
+        UseCaseElementRequest requestWithDomainIdOmitted = new UseCaseElementRequest.Builder().
+                getDefault().
+                setDataId(DATA_ID).
+                build();
+
+        // Act
+        SUT.execute(request, new DummyUseCaseCallback());
+        SUT.execute(requestWithDomainIdOmitted, new DummyUseCaseCallback());
+
+        // Assert
+        assertTrue(SUT.isProcessingDomainModelChanges);
+    }
+
+    @Test
+    public void requestAndUseCaseHaveEqualDataId_requestHasDomainIdOmittedUseCaseHasNoDomainId_loadDataByDataId() {
+        // Arrange
+        UseCaseElementRequest request = new UseCaseElementRequest.Builder().
+                getDefault().
+                setDataId(DATA_ID).
+                build();
+
+        UseCaseElementRequest requestWithDomainIdOmitted = new UseCaseElementRequest.Builder().
+                getDefault().
+                setDataId(DATA_ID).
+                build();
+
+        // Act
+        SUT.execute(request, new DummyUseCaseCallback());
+        SUT.execute(requestWithDomainIdOmitted, new DummyUseCaseCallback());
+
+        // Assert
+        assertTrue(SUT.isLoadingDataByDataId);
+    }
+
+    @Test
+    public void requestAndUseCaseDataIdAreEqual_requestAndUseCaseDomainIdsAreEqual_processDomainModelChanges() {
+        // Arrange
+        // With this test, no data has changed, so resend existing state
+        UseCaseElementRequest request = new UseCaseElementRequest.Builder().
+                getDefault().
+                setDataId(DATA_ID).
+                setDomainId(DOMAIN_ID).
+                setDomainModel(
+                        new UseCaseElementRequest.DomainModel.Builder().
+                                getDefault().
+                                setComparisonString(COMPARISON_STRING).
+                                build()).
+                build();
+
+        // Act
+        SUT.execute(request, new DummyUseCaseCallback());
+        SUT.execute(request, new DummyUseCaseCallback());
+
+        // Assert
+        assertTrue(SUT.isProcessingDomainModelChanges);
     }
 
     // region helper methods -----------------------------------------------------------------------
@@ -164,52 +259,47 @@ public class UseCaseElementRequestFilteringTest {
         private boolean isBuildingResponse;
 
         public UseCaseElementInheritor() {
-            useCaseDomainModel = new BaseDomainModel(){};
+            useCaseDomainModel = new BaseDomainModel() {
+            };
         }
 
         @Override
         protected void loadDataByDataId() {
-            System.out.println(UseCaseElementRequestFilteringTest.TAG + TAG +
-                    "loadingDataByDataId");
+            System.out.println(TAG + "loadingDataByDataId");
             isLoadingDataByDataId = true;
         }
 
         @Override
         protected void loadDataByDomainId() {
-            System.out.println(UseCaseElementRequestFilteringTest.TAG + TAG +
-                    "loading data by domain Id");
+            System.out.println(TAG + "loading data by domain Id");
             isLoadingDataByDomainId = true;
         }
 
         @Override
-        protected void processDomainModelChanges() {
-            System.out.println(UseCaseElementRequestFilteringTest.TAG + TAG +
-                    "processing domain model changes");
+        protected void processDomainModel() {
+            System.out.println(TAG + "processing domain model changes");
             isProcessingDomainModelChanges = true;
+            isDomainModelChanged();
+        }
 
-            System.out.println(TAG + "use case domain Id and request domain Id are equal");
-            if (useCaseDomainModel.equals(requestDomainModel)) {
-                System.out.println(TAG + "use case domain model and request domain model are equal");
-                buildResponse();
-            } else {
-                System.out.println(TAG + "use case domain model and request domain model are " +
-                        "different");
-                processDomainModelChanges();
-            }
+        @Override
+        protected boolean isDomainModelChanged() {
+            System.out.println(TAG + "requestDomainModel=" + requestDomainModel +
+                    " useCaseDomainModel=" + useCaseDomainModel);
+            return false;
         }
 
         @Override
         protected void buildResponse() {
-            System.out.println(UseCaseElementRequestFilteringTest.TAG + TAG +
-                    "building response");
+            System.out.println(TAG + "building response");
             isBuildingResponse = true;
         }
     }
-    
+
     // Helper request class
-    private static class UseCaseElementRequest 
-            extends 
-            UseCaseMessageModelDataId<UseCaseElementRequest.DomainModel> 
+    public static class UseCaseElementRequest
+            extends
+            UseCaseMessageModelDataId<UseCaseElementRequest.DomainModel>
             implements UseCaseBase.Request {
 
         @Nonnull
@@ -222,10 +312,11 @@ public class UseCaseElementRequestFilteringTest {
                     '}';
         }
 
-        private UseCaseElementRequest() {}
-        
-        public static class Builder 
-                extends 
+        private UseCaseElementRequest() {
+        }
+
+        public static class Builder
+                extends
                 UseCaseMessageModelDataIdBuilder<Builder, UseCaseElementRequest, DomainModel> {
 
             public Builder() {
@@ -245,11 +336,11 @@ public class UseCaseElementRequestFilteringTest {
                 return this;
             }
         }
-        
-        private static class DomainModel 
-                extends 
+
+        private static class DomainModel
+                extends
                 BaseDomainModel {
-                        
+
             // For comparison purposes
             private String comparisonString;
 
@@ -274,20 +365,20 @@ public class UseCaseElementRequestFilteringTest {
                         '}';
             }
 
-            private static class Builder 
-                    extends 
+            private static class Builder
+                    extends
                     DomainModelBuilder<Builder, UseCaseElementRequest.DomainModel> {
-                
+
                 public Builder() {
                     domainModel = new DomainModel();
                 }
-                
+
                 @Override
                 public Builder getDefault() {
                     domainModel.comparisonString = "";
                     return self();
                 }
-                
+
                 public Builder setComparisonString(String comparisonString) {
                     domainModel.comparisonString = comparisonString;
                     return self();
@@ -298,18 +389,18 @@ public class UseCaseElementRequestFilteringTest {
                     return this;
                 }
             }
-        }        
+        }
     }
 
-    // We will not be receiving a response, but we need a callback, so create a Dummy callback class.
-    private static class DummyUseCaseCallback implements UseCaseBase.Callback {
+    // We will not be receiving a response, but we need a callback so create a Dummy callback class.
+    private static class DummyUseCaseCallback implements UseCaseBase.Callback<UseCaseBase.Response> {
         @Override
-        public void onUseCaseSuccess(Object o) {
+        public void onUseCaseSuccess(UseCaseBase.Response response) {
 
         }
 
         @Override
-        public void onUseCaseError(Object o) {
+        public void onUseCaseError(UseCaseBase.Response response) {
 
         }
     }

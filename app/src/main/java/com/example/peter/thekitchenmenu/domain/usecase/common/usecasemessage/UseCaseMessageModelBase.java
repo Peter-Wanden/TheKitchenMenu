@@ -14,7 +14,7 @@ public abstract class UseCaseMessageModelBase<DOMAIN_MODEL extends BaseDomainMod
 
     protected DOMAIN_MODEL model;
 
-    public DOMAIN_MODEL getModel() {
+    public DOMAIN_MODEL getDomainModel() {
         return model;
     }
 

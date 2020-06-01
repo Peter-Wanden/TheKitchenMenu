@@ -119,7 +119,7 @@ public class RecipeDurationEditorViewModel extends ObservableViewModel {
 
     @Bindable
     public String getPrepHoursInView() {
-        return response == null ? "" : String.valueOf(response.getModel().getPrepHours());
+        return response == null ? "" : String.valueOf(response.getDomainModel().getPrepHours());
     }
 
     public void setPrepHoursInView(String prepHoursInView) {
@@ -133,7 +133,7 @@ public class RecipeDurationEditorViewModel extends ObservableViewModel {
                     else {
                         RecipeDurationRequest.Model model = new RecipeDurationRequest.Model.
                                 Builder().
-                                basedOnResponseModel(response.getModel()).
+                                basedOnResponseModel(response.getDomainModel()).
                                 setPrepHours(prepHoursParsed).
                                 build();
                         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
@@ -149,12 +149,12 @@ public class RecipeDurationEditorViewModel extends ObservableViewModel {
     }
 
     private boolean isPrepHoursInViewChanged(String prepHoursInView) {
-        return !String.valueOf(response.getModel().getPrepHours()).equals(prepHoursInView);
+        return !String.valueOf(response.getDomainModel().getPrepHours()).equals(prepHoursInView);
     }
 
     @Bindable
     public String getPrepMinutesInView() {
-        return response == null ? "" : String.valueOf(response.getModel().getPrepMinutes());
+        return response == null ? "" : String.valueOf(response.getDomainModel().getPrepMinutes());
     }
 
     public void setPrepMinutesInView(String prepMinutesInView) {
@@ -168,7 +168,7 @@ public class RecipeDurationEditorViewModel extends ObservableViewModel {
                     else {
                         RecipeDurationRequest.Model model = new RecipeDurationRequest.Model.
                                 Builder().
-                                basedOnResponseModel(response.getModel()).
+                                basedOnResponseModel(response.getDomainModel()).
                                 setPrepMinutes(prepMinutesParsed).
                                 build();
                         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
@@ -184,12 +184,12 @@ public class RecipeDurationEditorViewModel extends ObservableViewModel {
     }
 
     private boolean isPrepMinutesInViewChanged(String prepMinutesInView) {
-        return !String.valueOf(response.getModel().getPrepMinutes()).equals(prepMinutesInView);
+        return !String.valueOf(response.getDomainModel().getPrepMinutes()).equals(prepMinutesInView);
     }
 
     @Bindable
     public String getCookHoursInView() {
-        return response == null ? "" : String.valueOf(response.getModel().getCookHours());
+        return response == null ? "" : String.valueOf(response.getDomainModel().getCookHours());
     }
 
     public void setCookHoursInView(String cookHoursInView) {
@@ -203,7 +203,7 @@ public class RecipeDurationEditorViewModel extends ObservableViewModel {
                     else {
                         RecipeDurationRequest.Model model = new RecipeDurationRequest.Model.
                                 Builder().
-                                basedOnResponseModel(response.getModel()).
+                                basedOnResponseModel(response.getDomainModel()).
                                 setCookHours(cookHoursParsed).
                                 build();
                         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
@@ -219,12 +219,12 @@ public class RecipeDurationEditorViewModel extends ObservableViewModel {
     }
 
     private boolean isCookHoursInViewChanged(String cookHoursInView) {
-        return !String.valueOf(response.getModel().getCookHours()).equals(cookHoursInView);
+        return !String.valueOf(response.getDomainModel().getCookHours()).equals(cookHoursInView);
     }
 
     @Bindable
     public String getCookMinutesInView() {
-        return response == null ? "" : String.valueOf(response.getModel().getCookMinutes());
+        return response == null ? "" : String.valueOf(response.getDomainModel().getCookMinutes());
     }
 
     public void setCookMinutesInView(String cookMinutesInView) {
@@ -238,7 +238,7 @@ public class RecipeDurationEditorViewModel extends ObservableViewModel {
                     else {
                         RecipeDurationRequest.Model model = new RecipeDurationRequest.Model.
                                 Builder().
-                                basedOnResponseModel(response.getModel()).
+                                basedOnResponseModel(response.getDomainModel()).
                                 setCookMinutes(cookMinutesParsed).
                                 build();
                         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
@@ -254,7 +254,7 @@ public class RecipeDurationEditorViewModel extends ObservableViewModel {
     }
 
     private boolean isCookMinutesInViewChanged(String cookMinutesInView) {
-        return !String.valueOf(response.getModel().getCookMinutes()).equals(cookMinutesInView);
+        return !String.valueOf(response.getDomainModel().getCookMinutes()).equals(cookMinutesInView);
     }
 
     private int parseIntegerFromString(String integerToParse) {

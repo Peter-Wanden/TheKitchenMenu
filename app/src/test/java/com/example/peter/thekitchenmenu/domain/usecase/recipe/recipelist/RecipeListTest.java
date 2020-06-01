@@ -97,7 +97,7 @@ public class RecipeListTest {
         listHelper.requestRecipeComponentsLoadData();
 
         RecipeListResponse response = onSuccessResponse;
-        RecipeListResponse.Model model = response.getModel();
+        RecipeListResponse.Model model = response.getDomainModel();
 
         assertEquals(
                 expectedNoOfRecipes,

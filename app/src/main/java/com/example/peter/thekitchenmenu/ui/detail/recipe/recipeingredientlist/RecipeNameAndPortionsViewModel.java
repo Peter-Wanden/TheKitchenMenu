@@ -49,7 +49,7 @@ public class RecipeNameAndPortionsViewModel extends ViewModel {
 
             @Override
             public void onUseCaseSuccess(RecipeIdentityResponse response) {
-                setIdentityToView(response.getModel());
+                setIdentityToView(response.getDomainModel());
             }
 
             @Override
@@ -76,7 +76,7 @@ public class RecipeNameAndPortionsViewModel extends ViewModel {
 
             @Override
             public void onUseCaseSuccess(RecipePortionsResponse response) {
-                setPortionsToView(response.getModel());
+                setPortionsToView(response.getDomainModel());
             }
 
             @Override

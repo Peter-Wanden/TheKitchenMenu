@@ -68,12 +68,14 @@ public class RecipeCourse
     private UniqueIdProvider idProvider;
     @Nonnull
     private TimeProvider timeProvider;
+
     private long createDate;
     private long lastUpdate;
     private boolean isChanged;
 
     private String dataId = "";
     private String recipeDomainId = "";
+
     private final HashMap<Course, RecipeCoursePersistenceModel> activeCourseList =
             new LinkedHashMap<>();
     private final List<Course> updatedCourseList = new ArrayList<>();
@@ -112,7 +114,7 @@ public class RecipeCourse
         isChanged = false;
         updatedCourseList.clear();
         updatedCourseList.addAll(((RecipeCourseRequest) getRequest()).
-                getModel().
+                getDomainModel().
                 getCourseList());
     }
 

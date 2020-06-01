@@ -5,6 +5,8 @@ package com.example.peter.thekitchenmenu.domain.model;
  */
 public abstract class BaseDomainModel {
 
+
+
     /**
      * Base class for an {@link DomainModelBuilder}
      * Always override self() in extending classes to return 'this'.

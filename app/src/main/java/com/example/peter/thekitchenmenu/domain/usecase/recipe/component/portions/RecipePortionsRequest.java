@@ -39,8 +39,8 @@ public final class RecipePortionsRequest
         public Builder basedOnResponse(RecipePortionsResponse r) {
             message.dataId = r.getDataId();
             message.domainId = r.getDomainId();
-            message.model.servings = r.getModel().getServings();
-            message.model.sittings = r.getModel().getSittings();
+            message.model.servings = r.getDomainModel().getServings();
+            message.model.sittings = r.getDomainModel().getSittings();
             return self();
         }
 

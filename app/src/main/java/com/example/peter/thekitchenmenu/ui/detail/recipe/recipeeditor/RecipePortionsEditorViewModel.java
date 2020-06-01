@@ -132,7 +132,7 @@ public class RecipePortionsEditorViewModel extends ObservableViewModel {
 
     @Bindable
     public String getServingsInView() {
-        return response == null ? "" : String.valueOf(response.getModel().getServings());
+        return response == null ? "" : String.valueOf(response.getDomainModel().getServings());
     }
 
     public void setServingsInView(String servingsInView) {
@@ -144,7 +144,7 @@ public class RecipePortionsEditorViewModel extends ObservableViewModel {
                     servingsErrorMessage.set(numberFormatExceptionErrorMessage());
                 else {
                     RecipePortionsRequest.Model model = new RecipePortionsRequest.Model.Builder().
-                            basedResponseModel(response.getModel()).
+                            basedResponseModel(response.getDomainModel()).
                             setServings(servingsParsed).
                             build();
                     RecipePortionsRequest request = new RecipePortionsRequest.Builder().
@@ -159,7 +159,7 @@ public class RecipePortionsEditorViewModel extends ObservableViewModel {
     }
 
     private boolean isServingsInViewChanged(String servingsInView) {
-        return !isUpdatingUi && !String.valueOf(response.getModel().getServings()).
+        return !isUpdatingUi && !String.valueOf(response.getDomainModel().getServings()).
                 equals(servingsInView);
     }
 
@@ -181,7 +181,7 @@ public class RecipePortionsEditorViewModel extends ObservableViewModel {
 
     @Bindable
     public String getSittingsInView() {
-        return String.valueOf(response.getModel().getSittings());
+        return String.valueOf(response.getDomainModel().getSittings());
     }
 
     public void setSittingsInView(String sittingsInView) {
@@ -193,7 +193,7 @@ public class RecipePortionsEditorViewModel extends ObservableViewModel {
                     sittingsErrorMessage.set(numberFormatExceptionErrorMessage());
                 else {
                     RecipePortionsRequest.Model model = new RecipePortionsRequest.Model.Builder().
-                            basedResponseModel(response.getModel()).
+                            basedResponseModel(response.getDomainModel()).
                             setSittings(sittingsParsed).
                             build();
                     RecipePortionsRequest request = new RecipePortionsRequest.Builder().
@@ -208,13 +208,13 @@ public class RecipePortionsEditorViewModel extends ObservableViewModel {
     }
 
     private boolean isSittingsInViewChanged(String sittingsInView) {
-        return !isUpdatingUi && !String.valueOf(response.getModel().getSittings()).
+        return !isUpdatingUi && !String.valueOf(response.getDomainModel().getSittings()).
                 equals(sittingsInView);
     }
 
     @Bindable
     public String getPortionsInView() {
-        return String.valueOf(response.getModel().getPortions());
+        return String.valueOf(response.getDomainModel().getPortions());
     }
 
     private int parseIntegerFromString(String integerToParse) {

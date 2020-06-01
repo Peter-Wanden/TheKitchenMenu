@@ -129,7 +129,7 @@ public class RecipeCopy extends UseCaseBase {
 
     private void copyIdentity() {
         RecipeIdentityResponse response = (RecipeIdentityResponse) sourceData.
-                getModel().
+                getDomainModel().
                 getComponentResponses().
                 get(RecipeMetadata.ComponentName.IDENTITY);
 
@@ -153,7 +153,7 @@ public class RecipeCopy extends UseCaseBase {
 
     private void copyCourse() {
         RecipeCourseResponse response = (RecipeCourseResponse) sourceData.
-                getModel().
+                getDomainModel().
                 getComponentResponses().
                 get(RecipeMetadata.ComponentName.COURSE);
 
@@ -176,7 +176,7 @@ public class RecipeCopy extends UseCaseBase {
 
     private void copyDuration() {
         RecipeDurationResponse response = (RecipeDurationResponse) sourceData.
-                getModel().
+                getDomainModel().
                 getComponentResponses().
                 get(RecipeMetadata.ComponentName.DURATION);
 
@@ -199,7 +199,7 @@ public class RecipeCopy extends UseCaseBase {
 
     private void copyPortions() {
         RecipePortionsResponse response = (RecipePortionsResponse) sourceData.
-                getModel().
+                getDomainModel().
                 getComponentResponses().get(RecipeMetadata.ComponentName.PORTIONS);
 
         RecipePortionsRequest request = new RecipePortionsRequest.Builder().

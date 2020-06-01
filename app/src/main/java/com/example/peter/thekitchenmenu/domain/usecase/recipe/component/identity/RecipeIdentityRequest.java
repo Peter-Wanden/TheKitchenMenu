@@ -44,7 +44,7 @@ public final class RecipeIdentityRequest
             message.dataId = response.getDataId();
             message.domainId = response.getDomainId();
             message.model = new DomainModel.Builder().
-                    basedOnResponseModel(response.getModel()).
+                    basedOnResponseModel(response.getDomainModel()).
                     build();
             return self();
         }

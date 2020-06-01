@@ -672,7 +672,7 @@ public class RecipeCourseEditorViewModelTest {
 
         RecipeCourseResponse r = (RecipeCourseResponse) macroCallback.
                 getResponse().
-                getModel().
+                getDomainModel().
                 getComponentResponses().
                 get(RecipeMetadata.ComponentName.COURSE);
 
@@ -706,7 +706,7 @@ public class RecipeCourseEditorViewModelTest {
 
         RecipeCourseResponse r = (RecipeCourseResponse) macroCallback.
                 getResponse().
-                getModel().
+                getDomainModel().
                 getComponentResponses().
                 get(RecipeMetadata.ComponentName.COURSE);
 
@@ -747,7 +747,7 @@ public class RecipeCourseEditorViewModelTest {
         // Assert
         RecipeCourseResponse r = (RecipeCourseResponse) macroCallback.
                 getResponse().
-                getModel().
+                getDomainModel().
                 getComponentResponses().
                 get(RecipeMetadata.ComponentName.COURSE);
 
@@ -787,7 +787,7 @@ public class RecipeCourseEditorViewModelTest {
         // Assert
         RecipeCourseResponse r = (RecipeCourseResponse) macroCallback.
                 getResponse().
-                getModel().
+                getDomainModel().
                 getComponentResponses().
                 get(RecipeMetadata.ComponentName.COURSE);
 

@@ -296,7 +296,7 @@ public class RecipeIdentityEditorViewModelTest {
         RecipeMetadata.ComponentState expectedState = RecipeMetadata.ComponentState.INVALID_CHANGED;
         RecipeMetadata.ComponentState actualState = recipeStateListener.
                 getResponse().
-                getModel().
+                getDomainModel().
                 getComponentStates().
                 get(RecipeMetadata.ComponentName.IDENTITY);
         assertEquals(expectedState, actualState);
@@ -385,7 +385,7 @@ public class RecipeIdentityEditorViewModelTest {
         RecipeMetadata.ComponentState expectedState = RecipeMetadata.ComponentState.VALID_CHANGED;
         RecipeMetadata.ComponentState actualState = recipeStateListener.
                 getResponse().
-                getModel().
+                getDomainModel().
                 getComponentStates().
                 get(RecipeMetadata.ComponentName.IDENTITY);
         assertEquals(expectedState, actualState);
@@ -477,7 +477,7 @@ public class RecipeIdentityEditorViewModelTest {
         RecipeMetadata.ComponentState expectedState = RecipeMetadata.ComponentState.INVALID_CHANGED;
         RecipeMetadata.ComponentState actualState = recipeStateListener.
                 getResponse().
-                getModel().
+                getDomainModel().
                 getComponentStates().
                 get(RecipeMetadata.ComponentName.IDENTITY);
         assertEquals(expectedState, actualState);
@@ -554,7 +554,7 @@ public class RecipeIdentityEditorViewModelTest {
         RecipeMetadata.ComponentState expectedState = RecipeMetadata.ComponentState.VALID_CHANGED;
         RecipeMetadata.ComponentState actualState = recipeStateListener.
                 getResponse().
-                getModel().
+                getDomainModel().
                 getComponentStates().
                 get(RecipeMetadata.ComponentName.IDENTITY);
         assertEquals(expectedState, actualState);
@@ -610,7 +610,7 @@ public class RecipeIdentityEditorViewModelTest {
         RecipeMetadata.ComponentState expectedState = RecipeMetadata.ComponentState.VALID_UNCHANGED;
         RecipeMetadata.ComponentState actualState = recipeStateListener.
                 getResponse().
-                getModel().
+                getDomainModel().
                 getComponentStates().
                 get(RecipeMetadata.ComponentName.IDENTITY);
         assertEquals(expectedState, actualState);

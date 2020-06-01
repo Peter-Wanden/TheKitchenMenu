@@ -278,8 +278,7 @@ public class RecipeIdentityTest {
                 build();
 
         RecipeIdentityRequest request = new RecipeIdentityRequest.Builder().
-                setDataId(callbackClient.onErrorResponse.getDataId()).
-                setDomainId(callbackClient.onErrorResponse.getDomainId()).
+                basedOnResponse(callbackClient.onErrorResponse).
                 setDomainModel(model).
                 build();
 
@@ -404,7 +403,7 @@ public class RecipeIdentityTest {
 
         // Request 3: valid new description request, copy previous values from last response
         RecipeIdentityRequest.DomainModel descriptionModel = new RecipeIdentityRequest.DomainModel.Builder().
-                basedOnResponseModel(callbackClient.onSuccessResponse.getModel()).
+                basedOnResponseModel(callbackClient.onSuccessResponse.getDomainModel()).
                 setDescription(modelUnderTest.getDescription()).
                 build();
         RecipeIdentityRequest descriptionRequest = new RecipeIdentityRequest.Builder().
@@ -472,7 +471,7 @@ public class RecipeIdentityTest {
         // Assert
         RecipeIdentityResponse response = callbackClient.onSuccessResponse;
         UseCaseMetadataModel metadata = response.getMetadata();
-        RecipeIdentityResponse.DomainModel domainModel = response.getModel();
+        RecipeIdentityResponse.DomainModel domainModel = response.getDomainModel();
 
         String expectedDataId = modelUnderTest.getDataId();
         String actualDataId = response.getDataId();

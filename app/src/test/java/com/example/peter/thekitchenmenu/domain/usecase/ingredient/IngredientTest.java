@@ -361,7 +361,7 @@ public class IngredientTest {
         // Request 3: add valid description
         IngredientRequest.Model descModel = new IngredientRequest.Model.Builder().
                 getDefault().
-                setName(callbackClient.onSuccessResponse.getModel().getName()).
+                setName(callbackClient.onSuccessResponse.getDomainModel().getName()).
                 setDescription(modelUnderTest.getDescription()).
                 build();
         IngredientRequest descRequest = new IngredientRequest.Builder().
@@ -424,7 +424,7 @@ public class IngredientTest {
         );
 
         // Assert domain data Model
-        IngredientResponse.Model model = callbackClient.onSuccessResponse.getModel();
+        IngredientResponse.Model model = callbackClient.onSuccessResponse.getDomainModel();
         assertEquals(
                 modelUnderTest.getName(),
                 model.getName()

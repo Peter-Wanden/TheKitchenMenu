@@ -5,11 +5,11 @@ import android.annotation.SuppressLint;
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeIdentity;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseElement;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.model.UseCaseMetadataModel;
-import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataId;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidatorModel;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidatorRequest;
@@ -28,8 +28,10 @@ import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.m
 import static com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator.TextType;
 
 public class RecipeIdentity
-        extends UseCaseBase
-        implements DomainDataAccess.GetDomainModelCallback<RecipeIdentityPersistenceModel> {
+        extends
+        UseCaseElement<RecipeIdentityRequest.DomainModel>
+        implements
+        DomainDataAccess.GetDomainModelCallback<RecipeIdentityPersistenceModel> {
 
     private static final String TAG = "tkm-" + RecipeIdentity.class.getSimpleName() + ": ";
 
@@ -77,14 +79,7 @@ public class RecipeIdentity
     @Nonnull
     private final List<FailReasons> failReasons;
 
-    private String dataId = "";
-    private String recipeDomainId = "";
-    private boolean isNewRequest;
-
-    private RecipeIdentityRequest.DomainModel requestModel;
     private RecipeIdentityPersistenceModel persistenceModel;
-
-    private int accessCount; // For testing
 
     public RecipeIdentity(@Nonnull RepositoryRecipeIdentity repository,
                           @Nonnull UniqueIdProvider idProvider,
@@ -95,81 +90,19 @@ public class RecipeIdentity
         this.timeProvider = timeProvider;
         this.textValidator = textValidator;
 
-        requestModel = new RecipeIdentityRequest.DomainModel.Builder().getDefault().build();
+        requestDomainModel = new RecipeIdentityRequest.DomainModel.Builder().getDefault().build();
         failReasons = new ArrayList<>();
     }
 
     @Override
-    protected <Q extends Request> void execute(Q request) {
-        accessCount++;
-        RecipeIdentityRequest r = (RecipeIdentityRequest) request;
-        requestModel = r.getModel();
-        System.out.println(TAG + "Request No:" + accessCount + " - " + r);
-
-        if (requestIsEmpty()) {
-            if (useCaseIsEmpty()) {
-                isNewRequest = true;
-                sendEmptyResponse();
-            } else {
-                isNewRequest = false;
-                respondWithCurrentData();
-            }
-        } else if (useCaseIsEmpty()) {
-            isNewRequest = true;
-            extractIds();
-            loadData(recipeDomainId);
-
-        } else if (isRequestToUpdateData()){
-            isNewRequest = false;
-            setupUseCase();
-            processDomainModelChanges();
-
-        } else {
-            isNewRequest = true;
-            loadData(r.getDomainId());
-        }
+    protected void loadDataByDataId() {
+        repository.getByDataId(useCaseDataId, this);
     }
 
-    private boolean requestIsEmpty() {
-        return ((UseCaseMessageModelDataId)getRequest()).getDomainId().equals("");
-    }
-
-    private boolean useCaseIsEmpty() {
-        return recipeDomainId.equals("");
-    }
-
-    private void sendEmptyResponse() {
-        RecipeIdentityResponse response = new RecipeIdentityResponse.Builder().getDefault().build();
-        getUseCaseCallback().onUseCaseError(response);
-    }
-
-    private void respondWithCurrentData() {
-        buildResponse();
-    }
-
-    private void extractIds() {
-        System.out.println(TAG + "extractIds");
-        UseCaseMessageModelDataId r = (UseCaseMessageModelDataId) getRequest();
-        dataId = r.getDataId();
-        recipeDomainId = r.getDomainId();
-    }
-
-    private boolean isRequestToUpdateData() {
-        // todo - request to modify data:
-        //  - data id's match
-        //  - domain is's match
-        //  - domain model is different
-
-        return ((UseCaseMessageModelDataId)getRequest()).getDomainId().equals(recipeDomainId);
-    }
-
-    private void setupUseCase() {
-        failReasons.clear();
-        isNewRequest = false;
-    }
-
-    private void loadData(String recipeId) {
-        repository.getActiveByDomainId(recipeId, this);
+    @Override
+    protected void loadDataByDomainId() {
+        System.out.println(TAG + "loadDataByDomainId called" + useCaseDomainId);
+        repository.getActiveByDomainId(useCaseDomainId, this);
     }
 
     @Override
@@ -177,13 +110,9 @@ public class RecipeIdentity
         System.out.println(TAG + "onModelLoaded: " + persistenceModel);
 
         this.persistenceModel = persistenceModel;
-        dataId = persistenceModel.getDataId();
-        processDomainModelChanges();
-    }
+        useCaseDataId = persistenceModel.getDataId();
 
-    private void processDomainModelChanges() {
-        validateData();
-        buildResponse();
+        processDomainModel();
     }
 
     @Override
@@ -196,18 +125,25 @@ public class RecipeIdentity
 
     private RecipeIdentityPersistenceModel createNewPersistenceModel() {
         long currentTime = timeProvider.getCurrentTimeInMills();
-        dataId = idProvider.getUId();
+        useCaseDataId = idProvider.getUId();
 
         return new RecipeIdentityPersistenceModel.Builder().
                 getDefault().
-                setDataId(dataId).
-                setDomainId(recipeDomainId).
+                setDataId(useCaseDataId).
+                setDomainId(useCaseDomainId).
                 setCreateDate(currentTime).
                 setLastUpdate(currentTime).
                 build();
     }
 
-    private void validateData() {
+    @Override
+    protected void processDomainModel() {
+        failReasons.clear();
+        validateDomainData();
+        buildResponse();
+    }
+
+    private void validateDomainData() {
         validateTitle();
     }
 
@@ -231,7 +167,7 @@ public class RecipeIdentity
     }
 
     private String getTitle() {
-        return isNewRequest ? persistenceModel.getTitle() : requestModel.getTitle();
+        return isNewRequest ? persistenceModel.getTitle() : requestDomainModel.getTitle();
     }
 
     private void addTitleFailReasonFromTextValidator(FailReasons failReason) {
@@ -258,16 +194,16 @@ public class RecipeIdentity
 
             @Override
             public void onUseCaseError(TextValidatorResponse response) {
-                addDescriptionFailReasons(response.getFailReason());
+                addDescriptionFailReasonsFromTextValidator(response.getFailReason());
             }
         });
     }
 
     private String getDescription() {
-        return isNewRequest ? persistenceModel.getDescription() : requestModel.getDescription();
+        return isNewRequest ? persistenceModel.getDescription() : requestDomainModel.getDescription();
     }
 
-    private void addDescriptionFailReasons(FailReasons failReason) {
+    private void addDescriptionFailReasonsFromTextValidator(FailReasons failReason) {
         if (failReason == TextValidator.FailReason.TOO_SHORT) {
             failReasons.add(FailReason.DESCRIPTION_TOO_SHORT);
 
@@ -276,9 +212,11 @@ public class RecipeIdentity
         }
     }
 
-    private void buildResponse() {
+    @Override
+    protected void buildResponse() {
+        System.out.println(TAG + "buildResponse called");
         RecipeIdentityResponse.Builder builder = new RecipeIdentityResponse.Builder();
-        builder.setDomainId(recipeDomainId);
+        builder.setDomainId(useCaseDomainId);
 
         if (ComponentState.VALID_CHANGED == getComponentState()) {
             RecipeIdentityPersistenceModel m = updatePersistenceModel();
@@ -290,8 +228,8 @@ public class RecipeIdentity
             builder.setMetadata(getMetadata(persistenceModel));
         }
 
-        builder.setDomainModel(getResponseModel());
-        builder.setDataId(dataId);
+        builder.setDomainModel(getResponseDomainModel());
+        builder.setDataId(useCaseDataId);
 
         sendResponse(builder.build());
     }
@@ -311,45 +249,45 @@ public class RecipeIdentity
 
         return isValid
                 ?
-                (isChanged() ? ComponentState.VALID_CHANGED : ComponentState.VALID_UNCHANGED)
+                (isDomainModelChanged() ? ComponentState.VALID_CHANGED : ComponentState.VALID_UNCHANGED)
                 :
-                (isChanged() ? ComponentState.INVALID_CHANGED : ComponentState.INVALID_UNCHANGED);
+                (isDomainModelChanged() ? ComponentState.INVALID_CHANGED : ComponentState.INVALID_UNCHANGED);
     }
 
-    private boolean isChanged() {
-        System.out.println(TAG + "persistenceModel: " + persistenceModel + " requestModel: " + requestModel);
+    @Override
+    protected boolean isDomainModelChanged() {
         return !isNewRequest && (isTitleChanged() || isDescriptionChanged());
     }
 
     private boolean isTitleChanged() {
         return !persistenceModel.getTitle().toLowerCase().
-                equals(requestModel.getTitle().toLowerCase().trim());
+                equals(requestDomainModel.getTitle().toLowerCase().trim());
     }
 
     private boolean isDescriptionChanged() {
         return !persistenceModel.getDescription().toLowerCase().trim().
-                equals(requestModel.getDescription().toLowerCase().trim());
+                equals(requestDomainModel.getDescription().toLowerCase().trim());
     }
 
     private RecipeIdentityPersistenceModel updatePersistenceModel() {
         return new RecipeIdentityPersistenceModel.Builder().
-                basedOnModel(persistenceModel).
+                basedOnPersistenceModel(persistenceModel).
                 setDataId(idProvider.getUId()).
-                setTitle(requestModel.getTitle()).
-                setDescription(requestModel.getDescription()).
+                setTitle(requestDomainModel.getTitle()).
+                setDescription(requestDomainModel.getDescription()).
                 setLastUpdate(timeProvider.getCurrentTimeInMills()).
                 build();
     }
 
-    private RecipeIdentityResponse.DomainModel getResponseModel() {
+    private RecipeIdentityResponse.DomainModel getResponseDomainModel() {
         return new RecipeIdentityResponse.DomainModel.Builder().
                 setTitle(isNewRequest ?
                         persistenceModel.getTitle() :
-                        requestModel.getTitle()).
+                        requestDomainModel.getTitle()).
 
                 setDescription(isNewRequest ?
                         persistenceModel.getDescription() :
-                        requestModel.getDescription()).
+                        requestDomainModel.getDescription()).
                 build();
     }
 

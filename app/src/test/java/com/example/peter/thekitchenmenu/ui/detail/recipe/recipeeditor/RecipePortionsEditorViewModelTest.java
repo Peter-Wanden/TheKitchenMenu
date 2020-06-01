@@ -231,7 +231,7 @@ public class RecipePortionsEditorViewModelTest {
         RecipeMetadata.ComponentState expectedState = RecipeMetadata.ComponentState.VALID_UNCHANGED;
         RecipeMetadata.ComponentState actualState = recipeStateListener.
                 getResponse().
-                getModel().
+                getDomainModel().
                 getComponentStates().
                 get(RecipeMetadata.ComponentName.PORTIONS);
         assertEquals(expectedState, actualState);
@@ -291,7 +291,7 @@ public class RecipePortionsEditorViewModelTest {
         RecipeMetadata.ComponentState expectedState = RecipeMetadata.ComponentState.INVALID_CHANGED;
         RecipeMetadata.ComponentState actualState = recipeStateListener.
                 getResponse().
-                getModel().
+                getDomainModel().
                 getComponentStates().
                 get(RecipeMetadata.ComponentName.PORTIONS);
         assertEquals(expectedState, actualState);
@@ -322,7 +322,7 @@ public class RecipePortionsEditorViewModelTest {
         RecipeMetadata.ComponentState expectedState = RecipeMetadata.ComponentState.INVALID_CHANGED;
         RecipeMetadata.ComponentState actualState = recipeStateListener.
                 getResponse().
-                getModel().
+                getDomainModel().
                 getComponentStates().
                 get(RecipeMetadata.ComponentName.PORTIONS);
         assertEquals(expectedState, actualState);
@@ -353,7 +353,7 @@ public class RecipePortionsEditorViewModelTest {
         RecipeMetadata.ComponentState expectedState = RecipeMetadata.ComponentState.INVALID_CHANGED;
         RecipeMetadata.ComponentState actualState = recipeStateListener.
                 getResponse().
-                getModel().
+                getDomainModel().
                 getComponentStates().
                 get(RecipeMetadata.ComponentName.PORTIONS);
         assertEquals(expectedState, actualState);
@@ -409,7 +409,7 @@ public class RecipePortionsEditorViewModelTest {
         RecipeMetadata.ComponentState expectedState = RecipeMetadata.ComponentState.VALID_CHANGED;
         RecipeMetadata.ComponentState actualState = recipeStateListener.
                 getResponse().
-                getModel().
+                getDomainModel().
                 getComponentStates().
                 get(RecipeMetadata.ComponentName.PORTIONS);
         assertEquals(expectedState, actualState);
@@ -504,7 +504,7 @@ public class RecipePortionsEditorViewModelTest {
         RecipeMetadata.ComponentState expectedState = RecipeMetadata.ComponentState.VALID_UNCHANGED;
         RecipeMetadata.ComponentState actualState = recipeStateListener.
                 getResponse().
-                getModel().
+                getDomainModel().
                 getComponentStates().
                 get(RecipeMetadata.ComponentName.PORTIONS);
         assertEquals(expectedState, actualState);

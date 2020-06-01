@@ -47,8 +47,8 @@ public final class RecipeMetadataRequest
         public Builder basedOnResponse(RecipeMetadataResponse r) {
             message.dataId = r.getDataId();
             message.domainId = r.getDomainId();
-            message.model.parentDomainId = r.getModel().getParentDomainId();
-            message.model.componentStates = r.getModel().getComponentStates();
+            message.model.parentDomainId = r.getDomainModel().getParentDomainId();
+            message.model.componentStates = r.getDomainModel().getComponentStates();
             return self();
         }
 

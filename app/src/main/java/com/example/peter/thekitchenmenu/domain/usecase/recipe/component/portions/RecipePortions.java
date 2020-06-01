@@ -99,7 +99,7 @@ public class RecipePortions extends UseCaseBase
     protected <Q extends Request> void execute(Q request) {
         accessCount ++;
         RecipePortionsRequest r = (RecipePortionsRequest) request;
-        requestModel = r.getModel();
+        requestModel = r.getDomainModel();
 
         System.out.println(TAG + "Request No:" + accessCount + " - " + r);
 

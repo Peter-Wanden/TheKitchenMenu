@@ -42,7 +42,7 @@ public final class RecipeDurationRequest
             message.dataId = response.getDataId();
             message.domainId = response.getDomainId();
             message.model = new Model.Builder().
-                    basedOnResponseModel(response.getModel()).
+                    basedOnResponseModel(response.getDomainModel()).
                     build();
             return self();
         }
