@@ -101,18 +101,7 @@ public class RecipeIdentity
 
     @Override
     protected void loadDataByDomainId() {
-        System.out.println(TAG + "loadDataByDomainId called" + useCaseDomainId);
         repository.getActiveByDomainId(useCaseDomainId, this);
-    }
-
-    @Override
-    public void onModelLoaded(RecipeIdentityPersistenceModel persistenceModel) {
-        System.out.println(TAG + "onModelLoaded: " + persistenceModel);
-
-        this.persistenceModel = persistenceModel;
-        useCaseDataId = persistenceModel.getDataId();
-
-        processDomainModel();
     }
 
     @Override
@@ -137,10 +126,21 @@ public class RecipeIdentity
     }
 
     @Override
+    public void onModelLoaded(RecipeIdentityPersistenceModel persistenceModel) {
+        this.persistenceModel = persistenceModel;
+        useCaseDataId = persistenceModel.getDataId();
+        processDomainModel();
+    }
+
+    @Override
     protected void processDomainModel() {
-        failReasons.clear();
+        setupUseCase();
         validateDomainData();
         buildResponse();
+    }
+
+    private void setupUseCase() {
+        failReasons.clear();
     }
 
     private void validateDomainData() {
@@ -214,7 +214,6 @@ public class RecipeIdentity
 
     @Override
     protected void buildResponse() {
-        System.out.println(TAG + "buildResponse called");
         RecipeIdentityResponse.Builder builder = new RecipeIdentityResponse.Builder();
         builder.setDomainId(useCaseDomainId);
 
@@ -249,9 +248,13 @@ public class RecipeIdentity
 
         return isValid
                 ?
-                (isDomainModelChanged() ? ComponentState.VALID_CHANGED : ComponentState.VALID_UNCHANGED)
+                (isDomainModelChanged() ?
+                        ComponentState.VALID_CHANGED :
+                        ComponentState.VALID_UNCHANGED)
                 :
-                (isDomainModelChanged() ? ComponentState.INVALID_CHANGED : ComponentState.INVALID_UNCHANGED);
+                (isDomainModelChanged() ?
+                        ComponentState.INVALID_CHANGED :
+                        ComponentState.INVALID_UNCHANGED);
     }
 
     @Override

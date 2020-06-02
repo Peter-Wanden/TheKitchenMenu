@@ -10,7 +10,7 @@ import java.util.Objects;
 import javax.annotation.Nonnull;
 
 public final class RecipeDurationRequest
-        extends UseCaseMessageModelDataId<RecipeDurationRequest.Model>
+        extends UseCaseMessageModelDataId<RecipeDurationRequest.DomainModel>
         implements UseCaseBase.Request {
 
     @Override
@@ -25,7 +25,7 @@ public final class RecipeDurationRequest
     private RecipeDurationRequest() {}
 
     public static class Builder
-            extends UseCaseMessageModelDataIdBuilder<Builder, RecipeDurationRequest, Model> {
+            extends UseCaseMessageModelDataIdBuilder<Builder, RecipeDurationRequest, DomainModel> {
 
         public Builder() {
             message = new RecipeDurationRequest();
@@ -34,14 +34,14 @@ public final class RecipeDurationRequest
         public Builder getDefault() {
             message.dataId = "";
             message.domainId = "";
-            message.model = new Model.Builder().getDefault().build();
+            message.model = new DomainModel.Builder().getDefault().build();
             return self();
         }
 
         public Builder basedOnResponse(RecipeDurationResponse response) {
             message.dataId = response.getDataId();
             message.domainId = response.getDomainId();
-            message.model = new Model.Builder().
+            message.model = new DomainModel.Builder().
                     basedOnResponseModel(response.getDomainModel()).
                     build();
             return self();
@@ -53,13 +53,13 @@ public final class RecipeDurationRequest
         }
     }
 
-    public static final class Model extends BaseDomainModel {
+    public static final class DomainModel extends BaseDomainModel {
         private int prepHours;
         private int prepMinutes;
         private int cookHours;
         private int cookMinutes;
 
-        private Model() {}
+        private DomainModel() {}
 
         public int getPrepHours() {
             return prepHours;
@@ -81,11 +81,11 @@ public final class RecipeDurationRequest
         public boolean equals(Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
-            Model model = (Model) o;
-            return prepHours == model.prepHours &&
-                    prepMinutes == model.prepMinutes &&
-                    cookHours == model.cookHours &&
-                    cookMinutes == model.cookMinutes;
+            DomainModel domainModel = (DomainModel) o;
+            return prepHours == domainModel.prepHours &&
+                    prepMinutes == domainModel.prepMinutes &&
+                    cookHours == domainModel.cookHours &&
+                    cookMinutes == domainModel.cookMinutes;
         }
 
         @Override
@@ -104,10 +104,10 @@ public final class RecipeDurationRequest
                     '}';
         }
 
-        public static class Builder extends DomainModelBuilder<Builder, Model> {
+        public static class Builder extends DomainModelBuilder<Builder, DomainModel> {
 
             public Builder() {
-                domainModel = new Model();
+                domainModel = new DomainModel();
             }
 
             public Builder getDefault() {
@@ -118,7 +118,7 @@ public final class RecipeDurationRequest
                 return self();
             }
 
-            public Builder basedOnResponseModel(RecipeDurationResponse.Model m) {
+            public Builder basedOnResponseModel(RecipeDurationResponse.DomainModel m) {
                 domainModel.prepHours = m.getPrepHours();
                 domainModel.prepMinutes = m.getPrepMinutes();
                 domainModel.cookHours = m.getCookHours();

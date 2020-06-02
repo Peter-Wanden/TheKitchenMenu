@@ -562,7 +562,7 @@ public class RecipeTest {
         RecipeCourseRequest addCourseRequest = new RecipeCourseRequest.Builder().
                 basedOnResponse(callback.response).
                 setDomainModel(
-                        new RecipeCourseRequest.Model.Builder().
+                        new RecipeCourseRequest.DomainModel.Builder().
                                 setCourseList(
                                         Collections.singletonList(RecipeCourse.Course.COURSE_ZERO)).
                                 build()).

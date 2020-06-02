@@ -131,7 +131,7 @@ public class RecipeDurationEditorViewModel extends ObservableViewModel {
                     if (prepHoursParsed == MEASUREMENT_ERROR)
                         prepTimeErrorMessage.set(numberFormatExceptionErrorMessage());
                     else {
-                        RecipeDurationRequest.Model model = new RecipeDurationRequest.Model.
+                        RecipeDurationRequest.DomainModel domainModel = new RecipeDurationRequest.DomainModel.
                                 Builder().
                                 basedOnResponseModel(response.getDomainModel()).
                                 setPrepHours(prepHoursParsed).
@@ -139,7 +139,7 @@ public class RecipeDurationEditorViewModel extends ObservableViewModel {
                         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
                                 setDataId(response.getDataId()).
                                 setDomainId(response.getDomainId()).
-                                setDomainModel(model).
+                                setDomainModel(domainModel).
                                 build();
                         handler.executeAsync(recipeMacro, request, new DurationCallbackListener());
                     }
@@ -166,7 +166,7 @@ public class RecipeDurationEditorViewModel extends ObservableViewModel {
                     if (prepMinutesParsed == MEASUREMENT_ERROR)
                         prepTimeErrorMessage.set(numberFormatExceptionErrorMessage());
                     else {
-                        RecipeDurationRequest.Model model = new RecipeDurationRequest.Model.
+                        RecipeDurationRequest.DomainModel domainModel = new RecipeDurationRequest.DomainModel.
                                 Builder().
                                 basedOnResponseModel(response.getDomainModel()).
                                 setPrepMinutes(prepMinutesParsed).
@@ -174,7 +174,7 @@ public class RecipeDurationEditorViewModel extends ObservableViewModel {
                         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
                                 setDataId(response.getDataId()).
                                 setDomainId(response.getDomainId()).
-                                setDomainModel(model).
+                                setDomainModel(domainModel).
                                 build();
                         handler.executeAsync(recipeMacro, request, new DurationCallbackListener());
                     }
@@ -201,7 +201,7 @@ public class RecipeDurationEditorViewModel extends ObservableViewModel {
                     if (cookHoursParsed == MEASUREMENT_ERROR)
                         cookTimeErrorMessage.set(numberFormatExceptionErrorMessage());
                     else {
-                        RecipeDurationRequest.Model model = new RecipeDurationRequest.Model.
+                        RecipeDurationRequest.DomainModel domainModel = new RecipeDurationRequest.DomainModel.
                                 Builder().
                                 basedOnResponseModel(response.getDomainModel()).
                                 setCookHours(cookHoursParsed).
@@ -209,7 +209,7 @@ public class RecipeDurationEditorViewModel extends ObservableViewModel {
                         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
                                 setDataId(response.getDataId()).
                                 setDomainId(response.getDomainId()).
-                                setDomainModel(model).
+                                setDomainModel(domainModel).
                                 build();
                         handler.executeAsync(recipeMacro, request, new DurationCallbackListener());
                     }
@@ -236,7 +236,7 @@ public class RecipeDurationEditorViewModel extends ObservableViewModel {
                     if (cookMinutesParsed == MEASUREMENT_ERROR)
                         cookTimeErrorMessage.set(numberFormatExceptionErrorMessage());
                     else {
-                        RecipeDurationRequest.Model model = new RecipeDurationRequest.Model.
+                        RecipeDurationRequest.DomainModel domainModel = new RecipeDurationRequest.DomainModel.
                                 Builder().
                                 basedOnResponseModel(response.getDomainModel()).
                                 setCookMinutes(cookMinutesParsed).
@@ -244,7 +244,7 @@ public class RecipeDurationEditorViewModel extends ObservableViewModel {
                         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
                                 setDataId(response.getDataId()).
                                 setDomainId(response.getDomainId()).
-                                setDomainModel(model).
+                                setDomainModel(domainModel).
                                 build();
                         handler.executeAsync(recipeMacro, request, new DurationCallbackListener());
                     }

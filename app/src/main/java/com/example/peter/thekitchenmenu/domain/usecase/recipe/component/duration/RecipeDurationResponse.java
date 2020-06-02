@@ -10,7 +10,7 @@ import java.util.Objects;
 import javax.annotation.Nonnull;
 
 public final class RecipeDurationResponse
-        extends UseCaseMessageModelDataIdMetadata<RecipeDurationResponse.Model>
+        extends UseCaseMessageModelDataIdMetadata<RecipeDurationResponse.DomainModel>
         implements UseCaseBase.Response {
 
     @Nonnull
@@ -27,7 +27,7 @@ public final class RecipeDurationResponse
     private RecipeDurationResponse() {}
 
     public static class Builder
-            extends MessageModelDataIdMetadataBuilder<Builder, RecipeDurationResponse, Model> {
+            extends MessageModelDataIdMetadataBuilder<Builder, RecipeDurationResponse, DomainModel> {
 
         public Builder() {
             message = new RecipeDurationResponse();
@@ -37,7 +37,7 @@ public final class RecipeDurationResponse
             message.dataId = "";
             message.domainId = "";
             message.metadata = new UseCaseMetadataModel.Builder().getDefault().build();
-            message.model = new Model.Builder().getDefault().build();
+            message.model = new DomainModel.Builder().getDefault().build();
             return self();
         }
 
@@ -47,7 +47,7 @@ public final class RecipeDurationResponse
         }
     }
 
-    public static final class Model extends BaseDomainModel {
+    public static final class DomainModel extends BaseDomainModel {
 
         private int prepHours;
         private int prepMinutes;
@@ -59,7 +59,7 @@ public final class RecipeDurationResponse
         private long createDate;
         private long lastUpdate;
 
-        private Model(){}
+        private DomainModel(){}
 
         public int getPrepHours() {
             return prepHours;
@@ -101,16 +101,16 @@ public final class RecipeDurationResponse
         public boolean equals(Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
-            Model model = (Model) o;
-            return prepHours == model.prepHours &&
-                    prepMinutes == model.prepMinutes &&
-                    totalPrepTime == model.totalPrepTime &&
-                    cookHours == model.cookHours &&
-                    cookMinutes == model.cookMinutes &&
-                    totalCookTime == model.totalCookTime &&
-                    totalTime == model.totalTime &&
-                    createDate == model.createDate &&
-                    lastUpdate == model.lastUpdate;
+            DomainModel domainModel = (DomainModel) o;
+            return prepHours == domainModel.prepHours &&
+                    prepMinutes == domainModel.prepMinutes &&
+                    totalPrepTime == domainModel.totalPrepTime &&
+                    cookHours == domainModel.cookHours &&
+                    cookMinutes == domainModel.cookMinutes &&
+                    totalCookTime == domainModel.totalCookTime &&
+                    totalTime == domainModel.totalTime &&
+                    createDate == domainModel.createDate &&
+                    lastUpdate == domainModel.lastUpdate;
         }
 
         @Override
@@ -135,10 +135,10 @@ public final class RecipeDurationResponse
                     '}';
         }
 
-        public static class Builder extends DomainModelBuilder<Builder, Model> {
+        public static class Builder extends DomainModelBuilder<Builder, DomainModel> {
 
             public Builder() {
-                domainModel = new Model();
+                domainModel = new DomainModel();
             }
 
             public Builder getDefault() {

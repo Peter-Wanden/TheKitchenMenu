@@ -191,7 +191,7 @@ public class RecipeCourseEditorViewModel extends ObservableViewModel {
                 getDefault().
                 setDataId(response.getDataId()).
                 setDomainId(response.getDomainId()).
-                setDomainModel(new RecipeCourseRequest.Model.Builder().
+                setDomainModel(new RecipeCourseRequest.DomainModel.Builder().
                         setCourseList(courseList).
                         build()).
                 build();

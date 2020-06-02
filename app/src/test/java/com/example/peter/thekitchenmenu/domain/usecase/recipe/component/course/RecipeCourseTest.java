@@ -140,7 +140,7 @@ public class RecipeCourseTest {
         RecipeCourseRequest deactivateRequest = new RecipeCourseRequest.Builder().
                 basedOnResponse(onSuccessResponse).
                 setDomainModel(
-                        new RecipeCourseRequest.Model.Builder().
+                        new RecipeCourseRequest.DomainModel.Builder().
                                 setCourseList(
                                         new ArrayList<>()). // Empty list deactivates all courses
                                 build()).
@@ -208,7 +208,7 @@ public class RecipeCourseTest {
         int numberOfAddedCourses = expectedModels.size();
         RecipeCourseRequest addCoursesRequest = new RecipeCourseRequest.Builder().
                 basedOnResponse(onErrorResponse).
-                setDomainModel(new RecipeCourseRequest.Model.Builder().
+                setDomainModel(new RecipeCourseRequest.DomainModel.Builder().
                         setCourseList(
                                 Arrays.asList(
                                         expectedModels.get(0).getCourse(),

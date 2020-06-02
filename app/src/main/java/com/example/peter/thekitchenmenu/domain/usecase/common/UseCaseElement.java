@@ -31,8 +31,8 @@ public abstract class UseCaseElement<
 
         System.out.println(TAG + "requestNo=" + accessCount + " " + request);
 
-        requestDataId = r.getDataId();
-        requestDomainId = r.getDomainId();
+        requestDataId = r.getDataId() == null ? NO_ID : r.getDataId();
+        requestDomainId = r.getDomainId() == null ? NO_ID : r.getDomainId();
         requestDomainModel = (REQUEST_DOMAIN_MODEL) r.getDomainModel();
 
         if (requestHasDataId()) { // data id has priority over domain id
@@ -45,6 +45,7 @@ public abstract class UseCaseElement<
                 loadDataByDataId();
             }
         } else if (requestHasDomainId()) {
+            useCaseDataId = NO_ID;
             processDomainId();
         } else {
             // request with no data or domain id indicates requester is requesting current state

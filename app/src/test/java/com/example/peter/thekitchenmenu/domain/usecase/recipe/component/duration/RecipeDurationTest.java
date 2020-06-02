@@ -3,10 +3,13 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duratio
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess.GetDomainModelCallback;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeDuration;
 import com.example.peter.thekitchenmenu.data.repository.recipe.duration.TestDataRecipeDuration;
+import com.example.peter.thekitchenmenu.domain.model.UseCaseMetadataModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDuration.FailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentState;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
@@ -17,9 +20,7 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.List;
-
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDuration.FailReason;
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
@@ -29,29 +30,11 @@ import static org.mockito.Mockito.when;
 
 public class RecipeDurationTest {
 
-    private static final String TAG = "tag-" + RecipeDurationTest.class.getSimpleName() + ": ";
+//    private static final String TAG = "tag-" + RecipeDurationTest.class.getSimpleName() + ": ";
 
     // region constants ----------------------------------------------------------------------------
     public static int MAX_PREP_TIME = TestDataRecipeDuration.MAX_PREP_TIME;
     public static int MAX_COOK_TIME = TestDataRecipeDuration.MAX_COOK_TIME;
-
-    private static final RecipeDurationPersistenceModel VALID_NEW_EMPTY =
-            TestDataRecipeDuration.getValidNew();
-    private static final String VALID_NEW_EMPTY_DOMAIN_ID = VALID_NEW_EMPTY.getDomainId();
-
-    private static final RecipeDurationPersistenceModel VALID_NEW_PREP_TIME_VALID =
-            TestDataRecipeDuration.getValidNewPrepTimeValid();
-    private static final RecipeDurationPersistenceModel VALID_NEW_COOK_TIME_VALID =
-            TestDataRecipeDuration.getValidNewCookTimeValid();
-
-    private static final RecipeDurationPersistenceModel VALID_EXISTING_COMPLETE =
-            TestDataRecipeDuration.getValidExistingComplete();
-    private static final String VALID_EXISTING_COMPLETE_DOMAIN_ID =
-            VALID_EXISTING_COMPLETE.getDomainId();
-
-    private static final RecipeDurationPersistenceModel INVALID_EXISTING_COMPLETE =
-            TestDataRecipeDuration.getInvalidExistingComplete();
-
     // endregion constants -------------------------------------------------------------------------
 
     // region helper fields ------------------------------------------------------------------------
@@ -66,7 +49,6 @@ public class RecipeDurationTest {
 
     private RecipeDurationResponse durationOnSuccessResponse;
     private RecipeDurationResponse durationOnErrorResponse;
-    private int expectedNoOfFailReasons;
     // endregion helper fields ---------------------------------------------------------------------
 
     private RecipeDuration SUT;
@@ -88,33 +70,56 @@ public class RecipeDurationTest {
 
     @Test
     public void newRequest_componentStateINVALID_UNCHANGED() {
-        // Arrange / Act
-        simulateNewInitialisationRequest();
+        // Arrange
+        // This is the initial request for most tests, so check all return values
+        RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.getValidNew();
+
+        // Act
+        simulateInitialisationRequestReturnModelUnavailable(modelUnderTest);
+
         // Assert
+        RecipeDurationResponse response = durationOnErrorResponse;
+
         assertEquals(
-                RecipeMetadata.ComponentState.INVALID_UNCHANGED,
-                durationOnErrorResponse.getMetadata().getComponentState()
+                modelUnderTest.getDataId(),
+                response.getDataId()
         );
-        assertTrue(
-                durationOnErrorResponse.
-                        getMetadata().
-                        getFailReasons().
-                        contains(CommonFailReason.DATA_UNAVAILABLE)
+        assertEquals(
+                modelUnderTest.getDomainId(),
+                response.getDomainId()
+        );
+
+        UseCaseMetadataModel metadata = durationOnErrorResponse.getMetadata();
+
+        ComponentState expectedState = ComponentState.INVALID_UNCHANGED;
+        ComponentState actualComponentState = metadata.getComponentState();
+        assertEquals(
+                expectedState,
+                actualComponentState
+        );
+
+        FailReasons[] expectedFailReasons = new FailReasons[]{CommonFailReason.DATA_UNAVAILABLE};
+        FailReasons[] actualFailReasons = metadata.getFailReasons().toArray(new FailReasons[0]);
+        assertArrayEquals(
+                expectedFailReasons,
+                actualFailReasons
         );
     }
 
     @Test
     public void newRequest_invalidPrepHours_invalidValueNotSaved() {
         // Arrange
-        simulateNewInitialisationRequest();
+        RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.getValidNew();
+        simulateInitialisationRequestReturnModelUnavailable(modelUnderTest);
 
-        RecipeDurationRequest.Model invalidRequestModel = new RecipeDurationRequest.Model.Builder().
-                basedOnResponseModel(durationOnErrorResponse.getDomainModel()).
-                setPrepHours(MAX_PREP_TIME / 60 + 1).
-                build();
+        RecipeDurationRequest.DomainModel invalidModel =
+                new RecipeDurationRequest.DomainModel.Builder().
+                        basedOnResponseModel(durationOnErrorResponse.getDomainModel()).
+                        setPrepHours(MAX_PREP_TIME / 60 + 1).
+                        build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
-                setDomainId(VALID_NEW_EMPTY_DOMAIN_ID).
-                setDomainModel(invalidRequestModel).
+                basedOnResponse(durationOnErrorResponse).
+                setDomainModel(invalidModel).
                 build();
 
         // Act
@@ -126,15 +131,18 @@ public class RecipeDurationTest {
     @Test
     public void newRequest_invalidPrepHours_resultINVALID_CHANGED() {
         // Arrange
-        simulateNewInitialisationRequest();
+        RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
+                getInvalidNewPrepTimeInvalid();
+        simulateInitialisationRequestReturnModelUnavailable(modelUnderTest);
 
-        RecipeDurationRequest.Model invalidModel = new RecipeDurationRequest.Model.Builder().
+        RecipeDurationRequest.DomainModel invalidDomainModel = new RecipeDurationRequest.
+                DomainModel.Builder().
                 basedOnResponseModel(durationOnErrorResponse.getDomainModel()).
                 setPrepHours(MAX_PREP_TIME / 60 + 1).
                 build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
-                setDomainId(VALID_NEW_EMPTY_DOMAIN_ID).
-                setDomainModel(invalidModel).
+                basedOnResponse(durationOnErrorResponse).
+                setDomainModel(invalidDomainModel).
                 build();
         // Act
         SUT.execute(request, new DurationCallbackClient());
@@ -148,52 +156,55 @@ public class RecipeDurationTest {
     @Test
     public void newRequest_invalidPrepHours_FaiReasonINVALID_PREP_TIME() {
         // Arrange
-        simulateNewInitialisationRequest();
-        expectedNoOfFailReasons = 1;
+        RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
+                getInvalidNewPrepTimeInvalid();
+        simulateInitialisationRequestReturnModelUnavailable(modelUnderTest);
 
-        RecipeDurationRequest.Model invalidModel = new RecipeDurationRequest.Model.Builder().
+        RecipeDurationRequest.DomainModel invalidDomainModel = new RecipeDurationRequest.
+                DomainModel.Builder().
                 basedOnResponseModel(durationOnErrorResponse.getDomainModel()).
                 setPrepHours(MAX_PREP_TIME / 60 + 1).
                 build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
-                setDomainId(VALID_NEW_EMPTY_DOMAIN_ID).
-                setDomainModel(invalidModel).
+                basedOnResponse(durationOnErrorResponse).
+                setDomainModel(invalidDomainModel).
                 build();
         // Act
         SUT.execute(request, new DurationCallbackClient());
         // Assert
-        assertEquals(
-                expectedNoOfFailReasons,
-                durationOnErrorResponse.
-                        getMetadata().
-                        getFailReasons().
-                        size()
+
+        RecipeDurationResponse response = durationOnErrorResponse;
+        UseCaseMetadataModel metadata = response.getMetadata();
+
+        FailReasons[] expectedFailReasons = new FailReasons[]{FailReason.INVALID_PREP_TIME};
+        FailReasons[] actualFailReasons = metadata.getFailReasons().toArray(new FailReasons[0]);
+        assertArrayEquals(
+                expectedFailReasons,
+                actualFailReasons
         );
-        assertTrue(
-                durationOnErrorResponse.
-                        getMetadata().
-                        getFailReasons().
-                        contains(RecipeDuration.FailReason.INVALID_PREP_TIME));
     }
 
     @Test
     public void newRequest_validPrepHours_resultVALID_CHANGED() {
         // Arrange
-        simulateNewInitialisationRequest();
+        RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
+                getValidNew();
+        simulateInitialisationRequestReturnModelUnavailable(modelUnderTest);
 
-        RecipeDurationRequest.Model validModel = new RecipeDurationRequest.Model.Builder().
+        RecipeDurationRequest.DomainModel validDomainModel = new RecipeDurationRequest.DomainModel.
+                Builder().
                 basedOnResponseModel(durationOnErrorResponse.getDomainModel()).
-                setPrepHours(VALID_NEW_PREP_TIME_VALID.getPrepTime() / 60).
+                setPrepHours(MAX_PREP_TIME / 60).
                 build();
         RecipeDurationRequest validRequest = new RecipeDurationRequest.Builder().
-                setDomainId(VALID_NEW_EMPTY_DOMAIN_ID).
-                setDomainModel(validModel).
+                basedOnResponse(durationOnErrorResponse).
+                setDomainModel(validDomainModel).
                 build();
         // Act
         SUT.execute(validRequest, new DurationCallbackClient());
         // Assert
         assertEquals(
-                RecipeMetadata.ComponentState.VALID_CHANGED,
+                ComponentState.VALID_CHANGED,
                 durationOnSuccessResponse.getMetadata().getComponentState()
         );
     }
@@ -201,15 +212,17 @@ public class RecipeDurationTest {
     @Test
     public void newRequest_validPrepHours_failReasonNONE() {
         // Arrange
-        simulateNewInitialisationRequest();
+        RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
+                getValidNew();
+        simulateInitialisationRequestReturnModelUnavailable(modelUnderTest);
 
-        RecipeDurationRequest.Model validModel = new RecipeDurationRequest.Model.Builder().
+        RecipeDurationRequest.DomainModel validDomainModel = new RecipeDurationRequest.DomainModel.Builder().
                 basedOnResponseModel(durationOnErrorResponse.getDomainModel()).
-                setPrepHours(VALID_NEW_PREP_TIME_VALID.getPrepTime() / 60).
+                setPrepHours(MAX_PREP_TIME / 60).
                 build();
         RecipeDurationRequest validRequest = new RecipeDurationRequest.Builder().
-                setDomainId(VALID_NEW_EMPTY_DOMAIN_ID).
-                setDomainModel(validModel).
+                basedOnResponse(durationOnErrorResponse).
+                setDomainModel(validDomainModel).
                 build();
         // Act
         SUT.execute(validRequest, new DurationCallbackClient());
@@ -224,38 +237,43 @@ public class RecipeDurationTest {
     @Test
     public void newRequest_validPrepHours_prepHoursSaved() {
         // Arrange
-        whenTimeProviderCalledReturn(VALID_NEW_PREP_TIME_VALID.getCreateDate());
-        when(idProviderMock.getUId()).thenReturn(VALID_NEW_PREP_TIME_VALID.getDataId());
+        RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
+                getValidNewPrepTimeValid();
+        simulateInitialisationRequestReturnModelUnavailable(modelUnderTest);
 
-        simulateNewInitialisationRequest();
+        whenTimeProviderCalledReturn(modelUnderTest.getLastUpdate());
+        when(idProviderMock.getUId()).thenReturn(modelUnderTest.getDataId());
 
-        RecipeDurationRequest.Model validModel = new RecipeDurationRequest.Model.Builder().
+        RecipeDurationRequest.DomainModel validDomainModel = new RecipeDurationRequest.DomainModel.Builder().
                 basedOnResponseModel(durationOnErrorResponse.getDomainModel()).
-                setPrepHours(VALID_NEW_PREP_TIME_VALID.getPrepTime() / 60).
+                setPrepHours(MAX_PREP_TIME / 60).
                 build();
         RecipeDurationRequest validRequest = new RecipeDurationRequest.Builder().
-                setDomainId(VALID_NEW_EMPTY_DOMAIN_ID).
-                setDomainModel(validModel).
+                basedOnResponse(durationOnErrorResponse).
+                setDomainModel(validDomainModel).
                 build();
 
         // Act
         SUT.execute(validRequest, new DurationCallbackClient());
         // Assert
-        verify(repoMock).save(eq(VALID_NEW_PREP_TIME_VALID));
+        verify(repoMock).save(eq(modelUnderTest));
     }
 
     @Test
     public void newRequest_invalidPrepMinutes_invalidValueNotSaved() {
         // Arrange
-        simulateNewInitialisationRequest();
+        RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
+                getValidNewPrepTimeValid();
+        simulateInitialisationRequestReturnModelUnavailable(modelUnderTest);
 
-        RecipeDurationRequest.Model invalidModel = new RecipeDurationRequest.Model.Builder().
+        RecipeDurationRequest.DomainModel invalidDomainModel = new RecipeDurationRequest.
+                DomainModel.Builder().
                 basedOnResponseModel(durationOnErrorResponse.getDomainModel()).
                 setPrepMinutes(MAX_PREP_TIME + 1).
                 build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
-                setDomainId(VALID_NEW_EMPTY_DOMAIN_ID).
-                setDomainModel(invalidModel).
+                basedOnResponse(durationOnErrorResponse).
+                setDomainModel(invalidDomainModel).
                 build();
         // Act
         SUT.execute(request, new DurationCallbackClient());
@@ -266,15 +284,18 @@ public class RecipeDurationTest {
     @Test
     public void newRequest_invalidPrepMinutes_resultINVALID_CHANGED() {
         // Arrange
-        simulateNewInitialisationRequest();
+        RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
+                getValidNewPrepTimeValid();
+        simulateInitialisationRequestReturnModelUnavailable(modelUnderTest);
 
-        RecipeDurationRequest.Model invalidModel = new RecipeDurationRequest.Model.Builder().
+        RecipeDurationRequest.DomainModel invalidDomainModel = new RecipeDurationRequest.
+                DomainModel.Builder().
                 basedOnResponseModel(durationOnErrorResponse.getDomainModel()).
                 setPrepMinutes(MAX_PREP_TIME + 1).
                 build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
-                setDomainId(VALID_NEW_EMPTY_DOMAIN_ID).
-                setDomainModel(invalidModel).
+                basedOnResponse(durationOnErrorResponse).
+                setDomainModel(invalidDomainModel).
                 build();
         // Act
         SUT.execute(request, new DurationCallbackClient());
@@ -288,42 +309,53 @@ public class RecipeDurationTest {
     @Test
     public void newRequest_invalidPrepMinutes_FaiReasonINVALID_PREP_TIME() {
         // Arrange
-        simulateNewInitialisationRequest();
-        expectedNoOfFailReasons = 1;
-        RecipeDurationRequest.Model invalidModel = new RecipeDurationRequest.Model.Builder().
+        RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
+                getValidNewPrepTimeValid();
+        simulateInitialisationRequestReturnModelUnavailable(modelUnderTest);
+
+        RecipeDurationRequest.DomainModel invalidDomainModel = new RecipeDurationRequest.
+                DomainModel.Builder().
                 basedOnResponseModel(durationOnErrorResponse.getDomainModel()).
                 setPrepMinutes(MAX_PREP_TIME + 1).
                 build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
-                setDomainId(VALID_NEW_EMPTY_DOMAIN_ID).
-                setDomainModel(invalidModel).
+                basedOnResponse(durationOnErrorResponse).
+                setDomainModel(invalidDomainModel).
                 build();
         // Act
         SUT.execute(request, new DurationCallbackClient());
         // Assert
-        assertEquals(expectedNoOfFailReasons, durationOnErrorResponse.getMetadata().getFailReasons().size());
-        assertTrue(durationOnErrorResponse.getMetadata().getFailReasons().
-                contains(FailReason.INVALID_PREP_TIME));
+        UseCaseMetadataModel metadata = durationOnErrorResponse.getMetadata();
+
+        FailReasons[] expectedFailReasons = new FailReasons[]{FailReason.INVALID_PREP_TIME};
+        FailReasons[] actualFailReasons = metadata.getFailReasons().toArray(new FailReasons[0]);
+        assertArrayEquals(
+                expectedFailReasons,
+                actualFailReasons
+        );
     }
 
     @Test
     public void newRequest_validPrepMinutes_resultVALID_CHANGED() {
         // Arrange
-        simulateNewInitialisationRequest();
+        RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
+                getValidNewPrepTimeValid();
+        simulateInitialisationRequestReturnModelUnavailable(modelUnderTest);
 
-        RecipeDurationRequest.Model validModel = new RecipeDurationRequest.Model.Builder().
+        RecipeDurationRequest.DomainModel validDomainModel = new RecipeDurationRequest.
+                DomainModel.Builder().
                 basedOnResponseModel(durationOnErrorResponse.getDomainModel()).
-                setPrepMinutes(VALID_NEW_PREP_TIME_VALID.getPrepTime()).
+                setPrepMinutes(MAX_PREP_TIME).
                 build();
         RecipeDurationRequest validRequest = new RecipeDurationRequest.Builder().
-                setDomainId(VALID_NEW_EMPTY_DOMAIN_ID).
-                setDomainModel(validModel).
+                basedOnResponse(durationOnErrorResponse).
+                setDomainModel(validDomainModel).
                 build();
         // Act
         SUT.execute(validRequest, new DurationCallbackClient());
         // Assert
         assertEquals(
-                RecipeMetadata.ComponentState.VALID_CHANGED,
+                ComponentState.VALID_CHANGED,
                 durationOnSuccessResponse.getMetadata().getComponentState()
         );
     }
@@ -331,60 +363,72 @@ public class RecipeDurationTest {
     @Test
     public void newRequest_validPrepMinutes_failReasonNONE() {
         // Arrange
-        simulateNewInitialisationRequest();
-        expectedNoOfFailReasons = 1;
+        RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
+                getValidNewPrepTimeValid();
+        simulateInitialisationRequestReturnModelUnavailable(modelUnderTest);
 
-        RecipeDurationRequest.Model validModel = new RecipeDurationRequest.Model.Builder().
+        RecipeDurationRequest.DomainModel validDomainModel = new RecipeDurationRequest.
+                DomainModel.Builder().
                 basedOnResponseModel(durationOnErrorResponse.getDomainModel()).
-                setPrepMinutes(VALID_NEW_PREP_TIME_VALID.getPrepTime()).
+                setPrepMinutes(MAX_PREP_TIME).
                 build();
         RecipeDurationRequest validRequest = new RecipeDurationRequest.Builder().
-                setDomainId(VALID_NEW_EMPTY_DOMAIN_ID).
-                setDomainModel(validModel).
+                basedOnResponse(durationOnErrorResponse).
+                setDomainModel(validDomainModel).
                 build();
         // Act
         SUT.execute(validRequest, new DurationCallbackClient());
         // Assert
-        List<FailReasons> failReasons = durationOnSuccessResponse.getMetadata().getFailReasons();
-        assertEquals(
-                expectedNoOfFailReasons,
-                failReasons.size()
+        UseCaseMetadataModel metadata = durationOnSuccessResponse.getMetadata();
+
+        FailReasons[] expectedFailReasons = new FailReasons[]{CommonFailReason.NONE};
+        FailReasons[] actualFailReasons = metadata.getFailReasons().toArray(new FailReasons[0]);
+        assertArrayEquals(
+                expectedFailReasons,
+                actualFailReasons
         );
-        assertTrue(failReasons.contains(CommonFailReason.NONE));
     }
 
     @Test
     public void newRequest_validPrepMinutes_prepMinutesSaved() {
-        simulateNewInitialisationRequest();
-        when(idProviderMock.getUId()).thenReturn(VALID_NEW_PREP_TIME_VALID.getDataId());
-        whenTimeProviderCalledReturn(VALID_NEW_PREP_TIME_VALID.getCreateDate());
 
-        RecipeDurationRequest.Model validModel = new RecipeDurationRequest.Model.Builder().
+        RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
+                getValidNewPrepTimeValid();
+        simulateInitialisationRequestReturnModelUnavailable(modelUnderTest);
+
+        when(idProviderMock.getUId()).thenReturn(modelUnderTest.getDataId());
+        whenTimeProviderCalledReturn(modelUnderTest.getLastUpdate());
+
+        RecipeDurationRequest.DomainModel validDomainModel = new RecipeDurationRequest.
+                DomainModel.Builder().
                 basedOnResponseModel(durationOnErrorResponse.getDomainModel()).
-                setPrepMinutes(VALID_NEW_PREP_TIME_VALID.getPrepTime()).
+                setPrepMinutes(MAX_PREP_TIME).
                 build();
         RecipeDurationRequest validRequest = new RecipeDurationRequest.Builder().
-                setDomainId(VALID_NEW_EMPTY_DOMAIN_ID).
-                setDomainModel(validModel).
+                basedOnResponse(durationOnErrorResponse).
+                setDomainModel(validDomainModel).
                 build();
         // Act
         SUT.execute(validRequest, new DurationCallbackClient());
         // Assert
-        verify(repoMock).save(eq(VALID_NEW_PREP_TIME_VALID));
+        verify(repoMock).save(eq(modelUnderTest));
     }
 
     @Test
     public void newRequest_invalidCookHours_invalidValueNotSaved() {
         // Arrange
-        simulateNewInitialisationRequest();
+        RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
+                getValidNewPrepTimeValid();
+        simulateInitialisationRequestReturnModelUnavailable(modelUnderTest);
 
-        RecipeDurationRequest.Model invalidModel = new RecipeDurationRequest.Model.Builder().
+        RecipeDurationRequest.DomainModel invalidDomainModel = new RecipeDurationRequest.
+                DomainModel.Builder().
                 basedOnResponseModel(durationOnErrorResponse.getDomainModel()).
                 setCookHours(MAX_COOK_TIME / 60 + 1).
                 build();
         RecipeDurationRequest invalidRequest = new RecipeDurationRequest.Builder().
-                setDomainId(VALID_NEW_EMPTY_DOMAIN_ID).
-                setDomainModel(invalidModel).
+                basedOnResponse(durationOnErrorResponse).
+                setDomainModel(invalidDomainModel).
                 build();
         // Act
         SUT.execute(invalidRequest, new DurationCallbackClient());
@@ -395,15 +439,18 @@ public class RecipeDurationTest {
     @Test
     public void newRequest_invalidCookHours_resultINVALID_CHANGED() {
         // Arrange
-        simulateNewInitialisationRequest();
+        RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
+                getValidNewPrepTimeValid();
+        simulateInitialisationRequestReturnModelUnavailable(modelUnderTest);
 
-        RecipeDurationRequest.Model invalidModel = new RecipeDurationRequest.Model.Builder().
+        RecipeDurationRequest.DomainModel invalidDomainModel = new RecipeDurationRequest.
+                DomainModel.Builder().
                 basedOnResponseModel(durationOnErrorResponse.getDomainModel()).
                 setCookHours(MAX_COOK_TIME / 60 + 1).
                 build();
         RecipeDurationRequest invalidRequest = new RecipeDurationRequest.Builder().
-                setDomainId(VALID_NEW_EMPTY_DOMAIN_ID).
-                setDomainModel(invalidModel).
+                basedOnResponse(durationOnErrorResponse).
+                setDomainModel(invalidDomainModel).
                 build();
         // Act
         SUT.execute(invalidRequest, new DurationCallbackClient());
@@ -417,61 +464,71 @@ public class RecipeDurationTest {
     @Test
     public void newRequest_invalidCookHours_failReasonINVALID_COOK_TIME() {
         // Arrange
-        simulateNewInitialisationRequest();
-        expectedNoOfFailReasons = 1;
+        RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
+                getValidNewPrepTimeValid();
+        simulateInitialisationRequestReturnModelUnavailable(modelUnderTest);
 
-        RecipeDurationRequest.Model invalidModel = new RecipeDurationRequest.Model.Builder().
+        RecipeDurationRequest.DomainModel invalidDomainModel = new RecipeDurationRequest.
+                DomainModel.Builder().
                 basedOnResponseModel(durationOnErrorResponse.getDomainModel()).
                 setCookHours(MAX_COOK_TIME / 60 + 1).
                 build();
         RecipeDurationRequest invalidRequest = new RecipeDurationRequest.Builder().
-                setDomainId(VALID_NEW_EMPTY_DOMAIN_ID).
-                setDomainModel(invalidModel).
+                basedOnResponse(durationOnErrorResponse).
+                setDomainModel(invalidDomainModel).
                 build();
         // Act
         SUT.execute(invalidRequest, new DurationCallbackClient());
         // Assert
-        List<FailReasons> failReasons = durationOnErrorResponse.getMetadata().getFailReasons();
-        assertEquals(
-                expectedNoOfFailReasons,
-                failReasons.size()
+        UseCaseMetadataModel metadata = durationOnErrorResponse.getMetadata();
+
+        FailReasons[] expectedFailReasons = new FailReasons[]{FailReason.INVALID_COOK_TIME};
+        FailReasons[] actualFailReasons = metadata.getFailReasons().toArray(new FailReasons[0]);
+        assertArrayEquals(
+                actualFailReasons,
+                expectedFailReasons
         );
-        assertTrue(failReasons.contains(FailReason.INVALID_COOK_TIME));
     }
 
     @Test
     public void newRequest_validCookHours_validValueSaved() {
         // Arrange
-        whenTimeProviderCalledReturn(VALID_NEW_COOK_TIME_VALID.getCreateDate());
-        when(idProviderMock.getUId()).thenReturn(VALID_NEW_COOK_TIME_VALID.getDataId());
+        RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
+                getValidNewCookTimeValid();
+        simulateInitialisationRequestReturnModelUnavailable(modelUnderTest);
 
-        simulateNewInitialisationRequest();
+        whenTimeProviderCalledReturn(modelUnderTest.getLastUpdate());
+        when(idProviderMock.getUId()).thenReturn(modelUnderTest.getDataId());
 
-        RecipeDurationRequest.Model validModel = new RecipeDurationRequest.Model.Builder().
+        RecipeDurationRequest.DomainModel validDomainModel = new RecipeDurationRequest.
+                DomainModel.Builder().
                 basedOnResponseModel(durationOnErrorResponse.getDomainModel()).
-                setCookHours(VALID_NEW_COOK_TIME_VALID.getCookTime() / 60).
+                setCookHours(MAX_COOK_TIME / 60).
                 build();
         RecipeDurationRequest validRequest = new RecipeDurationRequest.Builder().
-                setDomainId(VALID_NEW_EMPTY_DOMAIN_ID).
-                setDomainModel(validModel).
+                basedOnResponse(durationOnErrorResponse).
+                setDomainModel(validDomainModel).
                 build();
         // Act
         SUT.execute(validRequest, new DurationCallbackClient());
         // Assert
-        verify(repoMock).save(eq(VALID_NEW_COOK_TIME_VALID));
+        verify(repoMock).save(eq(modelUnderTest));
     }
 
     @Test
     public void newRequest_validCookHours_resultVALID_CHANGED() {
-        simulateNewInitialisationRequest();
+        RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
+                getValidNewCookTimeValid();
+        simulateInitialisationRequestReturnModelUnavailable(modelUnderTest);
 
-        RecipeDurationRequest.Model validModel = new RecipeDurationRequest.Model.Builder().
+        RecipeDurationRequest.DomainModel validDomainModel = new RecipeDurationRequest.
+                DomainModel.Builder().
                 basedOnResponseModel(durationOnErrorResponse.getDomainModel()).
-                setCookHours(VALID_NEW_COOK_TIME_VALID.getCookTime() / 60).
+                setCookHours(modelUnderTest.getCookTime() / 60).
                 build();
         RecipeDurationRequest validRequest = new RecipeDurationRequest.Builder().
-                setDomainId(VALID_NEW_EMPTY_DOMAIN_ID).
-                setDomainModel(validModel).
+                basedOnResponse(durationOnErrorResponse).
+                setDomainModel(validDomainModel).
                 build();
         // Act
         SUT.execute(validRequest, new DurationCallbackClient());
@@ -484,40 +541,47 @@ public class RecipeDurationTest {
 
     @Test
     public void newRequest_validCookHours_failReasonNONE() {
-        expectedNoOfFailReasons = 1;
-        simulateNewInitialisationRequest();
+        RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
+                getValidNewCookTimeValid();
+        simulateInitialisationRequestReturnModelUnavailable(modelUnderTest);
 
-        RecipeDurationRequest.Model validModel = new RecipeDurationRequest.Model.Builder().
+        RecipeDurationRequest.DomainModel validDomainModel = new RecipeDurationRequest.
+                DomainModel.Builder().
                 basedOnResponseModel(durationOnErrorResponse.getDomainModel()).
-                setCookHours(VALID_NEW_COOK_TIME_VALID.getCookTime() / 60).
+                setCookHours(modelUnderTest.getCookTime() / 60).
                 build();
         RecipeDurationRequest validRequest = new RecipeDurationRequest.Builder().
-                setDomainId(VALID_NEW_EMPTY_DOMAIN_ID).
-                setDomainModel(validModel).
+                basedOnResponse(durationOnErrorResponse).
+                setDomainModel(validDomainModel).
                 build();
         // Act
         SUT.execute(validRequest, new DurationCallbackClient());
         // Assert
-        List<FailReasons> failReasons = durationOnSuccessResponse.getMetadata().getFailReasons();
-        assertEquals(
-                expectedNoOfFailReasons,
-                failReasons.size()
+        UseCaseMetadataModel metadata = durationOnSuccessResponse.getMetadata();
+
+        FailReasons[] expectedFailReasons = new FailReasons[]{CommonFailReason.NONE};
+        FailReasons[] actualFailReasons = metadata.getFailReasons().toArray(new FailReasons[0]);
+        assertArrayEquals(
+                expectedFailReasons,
+                actualFailReasons
         );
-        assertTrue(failReasons.contains(CommonFailReason.NONE));
     }
 
     @Test
     public void newRequest_invalidCookMinutes_invalidValueNotSaved() {
         // Arrange
-        simulateNewInitialisationRequest();
+        RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
+                getInvalidNewCookTimeInvalid();
+        simulateInitialisationRequestReturnModelUnavailable(modelUnderTest);
 
-        RecipeDurationRequest.Model invalidModel = new RecipeDurationRequest.Model.Builder().
+        RecipeDurationRequest.DomainModel invalidDomainModel = new RecipeDurationRequest.
+                DomainModel.Builder().
                 basedOnResponseModel(durationOnErrorResponse.getDomainModel()).
                 setCookMinutes(MAX_COOK_TIME + 1).
                 build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
-                setDomainId(VALID_NEW_EMPTY_DOMAIN_ID).
-                setDomainModel(invalidModel).
+                basedOnResponse(durationOnErrorResponse).
+                setDomainModel(invalidDomainModel).
                 build();
         // Act
         SUT.execute(request, new DurationCallbackClient());
@@ -528,15 +592,18 @@ public class RecipeDurationTest {
     @Test
     public void newRequest_invalidCookMinutes_resultINVALID_CHANGED() {
         // Arrange
-        simulateNewInitialisationRequest();
+        RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
+                getInvalidNewCookTimeInvalid();
+        simulateInitialisationRequestReturnModelUnavailable(modelUnderTest);
 
-        RecipeDurationRequest.Model invalidModel = new RecipeDurationRequest.Model.Builder().
+        RecipeDurationRequest.DomainModel invalidDomainModel = new RecipeDurationRequest.
+                DomainModel.Builder().
                 basedOnResponseModel(durationOnErrorResponse.getDomainModel()).
                 setCookMinutes(MAX_COOK_TIME + 1).
                 build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
-                setDomainId(VALID_NEW_EMPTY_DOMAIN_ID).
-                setDomainModel(invalidModel).
+                basedOnResponse(durationOnErrorResponse).
+                setDomainModel(invalidDomainModel).
                 build();
         // Act
         SUT.execute(request, new DurationCallbackClient());
@@ -549,27 +616,29 @@ public class RecipeDurationTest {
     @Test
     public void newRequest_invalidCookMinutes_failReasonINVALID_COOK_TIME() {
         // Arrange
-        expectedNoOfFailReasons = 1;
-        simulateNewInitialisationRequest();
+        RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
+                getInvalidNewCookTimeInvalid();
+        simulateInitialisationRequestReturnModelUnavailable(modelUnderTest);
 
-        RecipeDurationRequest.Model invalidModel = new RecipeDurationRequest.Model.Builder().
+        RecipeDurationRequest.DomainModel invalidDomainModel = new RecipeDurationRequest.DomainModel.Builder().
                 basedOnResponseModel(durationOnErrorResponse.getDomainModel()).
                 setCookMinutes(MAX_COOK_TIME + 1).
                 build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
-                setDomainId(VALID_NEW_EMPTY_DOMAIN_ID).
-                setDomainModel(invalidModel).
+                basedOnResponse(durationOnErrorResponse).
+                setDomainModel(invalidDomainModel).
                 build();
         // Act
         SUT.execute(request, new DurationCallbackClient());
         // Assert
-        List<FailReasons> failReasons = durationOnErrorResponse.getMetadata().getFailReasons();
+        UseCaseMetadataModel metadata = durationOnErrorResponse.getMetadata();
 
-        assertEquals(
-                expectedNoOfFailReasons,
-                failReasons.size()
+        FailReasons[] expectedFailReasons = new FailReasons[]{FailReason.INVALID_COOK_TIME};
+        FailReasons[] actualFailReasons = metadata.getFailReasons().toArray(new FailReasons[0]);
+        assertArrayEquals(
+                expectedFailReasons,
+                actualFailReasons
         );
-        assertTrue(failReasons.contains(FailReason.INVALID_COOK_TIME));
     }
 
     @Test
@@ -577,19 +646,19 @@ public class RecipeDurationTest {
         // Arrange
         RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
                 getValidNewCookTimeValid();
+        simulateInitialisationRequestReturnModelUnavailable(modelUnderTest);
 
-        whenTimeProviderCalledReturn(modelUnderTest.getCreateDate());
+        whenTimeProviderCalledReturn(modelUnderTest.getLastUpdate());
         whenIdProviderThenReturn(modelUnderTest.getDataId());
 
-        simulateNewInitialisationRequest();
-
-        RecipeDurationRequest.Model model = new RecipeDurationRequest.Model.Builder().
+        RecipeDurationRequest.DomainModel domainModel = new RecipeDurationRequest.
+                DomainModel.Builder().
                 basedOnResponseModel(durationOnErrorResponse.getDomainModel()).
                 setCookMinutes(MAX_COOK_TIME)
                 .build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
                 basedOnResponse(durationOnErrorResponse).
-                setDomainModel(model).
+                setDomainModel(domainModel).
                 build();
         // Act
         SUT.execute(request, new DurationCallbackClient());
@@ -600,18 +669,21 @@ public class RecipeDurationTest {
     @Test
     public void newRequest_validCookMinutes_stateVALID_CHANGED() {
         // Arrange
-        whenTimeProviderCalledReturn(VALID_NEW_COOK_TIME_VALID.getCreateDate());
-        when(idProviderMock.getUId()).thenReturn(VALID_NEW_COOK_TIME_VALID.getDataId());
+        RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
+                getValidNewCookTimeValid();
+        simulateInitialisationRequestReturnModelUnavailable(modelUnderTest);
 
-        simulateNewInitialisationRequest();
+        whenTimeProviderCalledReturn(modelUnderTest.getCreateDate());
+        when(idProviderMock.getUId()).thenReturn(modelUnderTest.getDataId());
 
-        RecipeDurationRequest.Model model = new RecipeDurationRequest.Model.Builder().
+        RecipeDurationRequest.DomainModel domainModel = new RecipeDurationRequest.
+                DomainModel.Builder().
                 basedOnResponseModel(durationOnErrorResponse.getDomainModel()).
                 setCookMinutes(MAX_COOK_TIME)
                 .build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
-                setDomainId(VALID_NEW_EMPTY_DOMAIN_ID).
-                setDomainModel(model).
+                basedOnResponse(durationOnErrorResponse).
+                setDomainModel(domainModel).
                 build();
         // Act
         SUT.execute(request, new DurationCallbackClient());
@@ -625,75 +697,85 @@ public class RecipeDurationTest {
     @Test
     public void newRequest_validCookMinutes_failReasonNONE() {
         // Arrange
-        whenTimeProviderCalledReturn(VALID_NEW_COOK_TIME_VALID.getCreateDate());
-        when(idProviderMock.getUId()).thenReturn(VALID_NEW_COOK_TIME_VALID.getDataId());
-        expectedNoOfFailReasons = 1;
+        RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
+                getValidNewCookTimeValid();
+        simulateInitialisationRequestReturnModelUnavailable(modelUnderTest);
 
-        simulateNewInitialisationRequest();
+        whenTimeProviderCalledReturn(modelUnderTest.getCreateDate());
+        when(idProviderMock.getUId()).thenReturn(modelUnderTest.getDataId());
 
-        RecipeDurationRequest.Model model = new RecipeDurationRequest.Model.Builder().
+        RecipeDurationRequest.DomainModel domainModel = new RecipeDurationRequest.
+                DomainModel.Builder().
                 basedOnResponseModel(durationOnErrorResponse.getDomainModel()).
                 setCookMinutes(MAX_COOK_TIME)
                 .build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
-                setDomainId(VALID_NEW_EMPTY_DOMAIN_ID).
-                setDomainModel(model).
+                basedOnResponse(durationOnErrorResponse).
+                setDomainModel(domainModel).
                 build();
         // Act
         SUT.execute(request, new DurationCallbackClient());
         // Assert
-        List<FailReasons> failReasons = durationOnSuccessResponse.getMetadata().getFailReasons();
-        assertEquals(
-                expectedNoOfFailReasons,
-                failReasons.size()
+        UseCaseMetadataModel metadata = durationOnSuccessResponse.getMetadata();
+
+        FailReasons[] expectedFailReasons = new FailReasons[]{CommonFailReason.NONE};
+        FailReasons[] actualFailReasons = metadata.getFailReasons().toArray(new FailReasons[0]);
+        assertArrayEquals(
+                expectedFailReasons,
+                actualFailReasons
         );
-        assertTrue(failReasons.contains(CommonFailReason.NONE));
     }
 
     @Test
     public void newRequest_invalidPrepAndInvalidCookTime_failReasonsINVALID_PREP_TIME_INVALID_COOK_TIME() {
         // Arrange
-        expectedNoOfFailReasons = 2;
-        simulateNewInitialisationRequest();
+        RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
+                getInvalidExistingComplete();
+        simulateInitialisationRequestReturnModelUnavailable(modelUnderTest);
 
-        RecipeDurationRequest.Model model = new RecipeDurationRequest.Model.Builder().
+        RecipeDurationRequest.DomainModel domainModel = new RecipeDurationRequest.
+                DomainModel.Builder().
                 basedOnResponseModel(durationOnErrorResponse.getDomainModel()).
                 setPrepHours(MAX_PREP_TIME / 60).
                 setPrepMinutes(1).
                 setCookHours(MAX_COOK_TIME / 60).
-                setCookMinutes(1)
-                .build();
+                setCookMinutes(1).
+                build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
-                setDomainId(VALID_NEW_EMPTY_DOMAIN_ID).
-                setDomainModel(model).
+                basedOnResponse(durationOnErrorResponse).
+                setDomainModel(domainModel).
                 build();
         // Act
         SUT.execute(request, new DurationCallbackClient());
         // Assert
+        UseCaseMetadataModel metadata = durationOnErrorResponse.getMetadata();
+
         assertEquals(
-                RecipeMetadata.ComponentState.INVALID_CHANGED,
-                durationOnErrorResponse.getMetadata().getComponentState()
+                ComponentState.INVALID_CHANGED,
+                metadata.getComponentState()
         );
 
-        List<FailReasons> failReasons = durationOnErrorResponse.getMetadata().getFailReasons();
-        assertEquals(
-                expectedNoOfFailReasons,
-                failReasons.size()
+        FailReasons[] expectedFailReasons = new FailReasons[]
+                {FailReason.INVALID_PREP_TIME, FailReason.INVALID_COOK_TIME};
+        FailReasons[] actualFailReasons = metadata.getFailReasons().toArray(new FailReasons[0]);
+        assertArrayEquals(
+                expectedFailReasons,
+                actualFailReasons
         );
-        assertTrue(failReasons.contains(FailReason.INVALID_PREP_TIME));
-        assertTrue(failReasons.contains(FailReason.INVALID_COOK_TIME));
     }
 
     @Test
     public void newRequest_validPrepTimeValidCookTime_failReasonsNONE() {
         // Arrange
-        whenTimeProviderCalledReturn(VALID_NEW_COOK_TIME_VALID.getCreateDate());
-        when(idProviderMock.getUId()).thenReturn(VALID_NEW_COOK_TIME_VALID.getDataId());
-        expectedNoOfFailReasons = 1;
+        RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
+                getValidNewComplete();
+        simulateInitialisationRequestReturnModelUnavailable(modelUnderTest);
 
-        simulateNewInitialisationRequest();
+        whenTimeProviderCalledReturn(modelUnderTest.getCreateDate());
+        when(idProviderMock.getUId()).thenReturn(modelUnderTest.getDataId());
 
-        RecipeDurationRequest.Model model = new RecipeDurationRequest.Model.Builder().
+        RecipeDurationRequest.DomainModel domainModel = new RecipeDurationRequest.DomainModel.
+                Builder().
                 basedOnResponseModel(durationOnErrorResponse.getDomainModel()).
                 setPrepHours(MAX_PREP_TIME / 60 - 1).
                 setPrepMinutes(59).
@@ -701,18 +783,21 @@ public class RecipeDurationTest {
                 setCookMinutes(59)
                 .build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
-                setDomainId(VALID_NEW_EMPTY_DOMAIN_ID).
-                setDomainModel(model).
+                basedOnResponse(durationOnErrorResponse).
+                setDomainModel(domainModel).
                 build();
         // Act
         SUT.execute(request, new DurationCallbackClient());
         // Assert
-        List<FailReasons> failReasons = durationOnSuccessResponse.getMetadata().getFailReasons();
-        assertEquals(
-                expectedNoOfFailReasons,
-                failReasons.size()
+        UseCaseMetadataModel metadata = durationOnSuccessResponse.getMetadata();
+
+        FailReasons[] expectedFailReasons = new FailReasons[]{CommonFailReason.NONE};
+        FailReasons[] actualFailReasons = metadata.getFailReasons().toArray(new FailReasons[0]);
+
+        assertArrayEquals(
+                expectedFailReasons,
+                actualFailReasons
         );
-        assertTrue(failReasons.contains(CommonFailReason.NONE));
     }
 
     @Test
@@ -744,16 +829,19 @@ public class RecipeDurationTest {
     @Test
     public void existingRequest_invalidPrepAndCookTime_statusINVALID_UNCHANGED() {
         // Arrange
+        RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
+                getInvalidExistingComplete();
+
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
                 getDefault().
-                setDomainId(INVALID_EXISTING_COMPLETE.getDomainId()).
+                setDomainId(modelUnderTest.getDomainId()).
                 build();
         // Act
         SUT.execute(request, new DurationCallbackClient());
         // Assert
-        verify(repoMock).getActiveByDomainId(eq(INVALID_EXISTING_COMPLETE.getDomainId()),
+        verify(repoMock).getActiveByDomainId(eq(modelUnderTest.getDomainId()),
                 repoCallback.capture());
-        repoCallback.getValue().onModelLoaded(INVALID_EXISTING_COMPLETE);
+        repoCallback.getValue().onModelLoaded(modelUnderTest);
 
         assertEquals(
                 RecipeMetadata.ComponentState.INVALID_UNCHANGED,
@@ -782,34 +870,40 @@ public class RecipeDurationTest {
         when(idProviderMock.getUId()).thenReturn(dataId);
     }
 
-    private void simulateNewInitialisationRequest() {
-        // Arrange
-        RecipeDurationRequest request = new RecipeDurationRequest.Builder().
+    private void simulateInitialisationRequestReturnModelUnavailable(
+            RecipeDurationPersistenceModel modelUnderTest) {
+        String domainId = modelUnderTest.getDomainId();
+        String dataId = modelUnderTest.getDataId();
+
+        RecipeDurationRequest initialisationRequest = new RecipeDurationRequest.Builder().
                 getDefault().
-                setDomainId(RecipeDurationTest.VALID_NEW_EMPTY_DOMAIN_ID).
+                setDomainId(domainId).
                 build();
 
-        SUT.execute(request, new DurationCallbackClient());
-        simulateModelUnavailableReturnedFromRepo();
-    }
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(modelUnderTest.getCreateDate());
+        when(idProviderMock.getUId()).thenReturn(dataId);
 
-    private void simulateModelUnavailableReturnedFromRepo() {
-        verify(repoMock).getActiveByDomainId(eq(RecipeDurationTest.VALID_NEW_EMPTY_DOMAIN_ID),
-                repoCallback.capture());
+        // Act
+        SUT.execute(initialisationRequest, new DurationCallbackClient());
+
+        verify(repoMock).getActiveByDomainId(eq(domainId), repoCallback.capture());
         repoCallback.getValue().onModelUnavailable();
     }
 
     private void sendInitialiseRequestForValidExistingModel() {
         // Arrange
+        RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
+                getValidExistingComplete();
+
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
                 getDefault().
-                setDomainId(VALID_EXISTING_COMPLETE_DOMAIN_ID).
+                setDomainId(modelUnderTest.getDomainId()).
                 build();
         // Act
         SUT.execute(request, new DurationCallbackClient());
-        verify(repoMock).getActiveByDomainId(eq(VALID_EXISTING_COMPLETE_DOMAIN_ID),
+        verify(repoMock).getActiveByDomainId(eq(modelUnderTest.getDomainId()),
                 repoCallback.capture());
-        repoCallback.getValue().onModelLoaded(VALID_EXISTING_COMPLETE);
+        repoCallback.getValue().onModelLoaded(modelUnderTest);
     }
     // endregion helper methods --------------------------------------------------------------------
 

@@ -117,7 +117,7 @@ public class RecipeDurationEditorViewModelTest {
     private RecipeMacroResponseListener macroListener;
     private DurationResponseListener durationListener;
     private UseCaseMetadataModel metadata;
-    private RecipeDurationResponse.Model model;
+    private RecipeDurationResponse.DomainModel domainModel;
 
     // endregion helper fields ---------------------------------------------------------------------
 
@@ -231,9 +231,9 @@ public class RecipeDurationEditorViewModelTest {
         assertEquals(dateReturnedIfNoData, metadata.getLasUpdate());
 
         // Assert model response
-        assertEquals(timeReturnedForEmptyModel, model.getTotalPrepTime());
-        assertEquals(timeReturnedForEmptyModel, model.getTotalPrepTime());
-        assertEquals(timeReturnedForEmptyModel, model.getTotalTime());
+        assertEquals(timeReturnedForEmptyModel, domainModel.getTotalPrepTime());
+        assertEquals(timeReturnedForEmptyModel, domainModel.getTotalPrepTime());
+        assertEquals(timeReturnedForEmptyModel, domainModel.getTotalTime());
 
         // Assert state listener response
         RecipeMetadata.ComponentState actualState = recipeStateListener.getResponse().
@@ -930,7 +930,7 @@ public class RecipeDurationEditorViewModelTest {
         // An external request that loads the recipe. This can ba any request type.
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
                 setDataId(recipeId).
-                setDomainModel(new RecipeDurationRequest.Model.Builder().
+                setDomainModel(new RecipeDurationRequest.DomainModel.Builder().
                         getDefault().
                         build()).
                 build();
@@ -1073,7 +1073,7 @@ public class RecipeDurationEditorViewModelTest {
             System.out.println(RecipeDurationEditorViewModelTest.TAG + TAG + "onSuccess:" + response);
             onSuccessResponse = response;
             metadata = response.getMetadata();
-            model = response.getDomainModel();
+            domainModel = response.getDomainModel();
         }
 
         @Override
@@ -1081,7 +1081,7 @@ public class RecipeDurationEditorViewModelTest {
             System.out.println(RecipeDurationEditorViewModelTest.TAG + TAG + "onError:" + response);
             onErrorResponse = response;
             metadata = response.getMetadata();
-            model = response.getDomainModel();
+            domainModel = response.getDomainModel();
         }
     }
 

@@ -5,9 +5,9 @@ import android.annotation.SuppressLint;
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeCourse;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseElement;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
-import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.model.UseCaseMetadataModel;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentState;
 
 public class RecipeCourse
-        extends UseCaseBase
+        extends UseCaseElement<RecipeCourseRequest.DomainModel>
         implements DomainDataAccess.GetAllDomainModelsCallback<RecipeCoursePersistenceModel> {
 
     private static final String TAG = "tkm-" + RecipeCourse.class.getSimpleName() + ": ";
@@ -73,14 +73,9 @@ public class RecipeCourse
     private long lastUpdate;
     private boolean isChanged;
 
-    private String dataId = "";
-    private String recipeDomainId = "";
-
     private final HashMap<Course, RecipeCoursePersistenceModel> activeCourseList =
             new LinkedHashMap<>();
     private final List<Course> updatedCourseList = new ArrayList<>();
-
-    private int accessCount;
 
     public RecipeCourse(@Nonnull RepositoryRecipeCourse repository,
                         @Nonnull UniqueIdProvider idProvider,
@@ -91,23 +86,13 @@ public class RecipeCourse
     }
 
     @Override
-    protected <Q extends Request> void execute(Q request) {
-        accessCount++;
-        RecipeCourseRequest r = (RecipeCourseRequest) request;
-        System.out.println(TAG + "Request No:" + accessCount + " - " + r);
-
-        if (isNewRequest(r)) {
-            dataId = r.getDataId();
-            recipeDomainId = r.getDomainId();
-            loadData(recipeDomainId);
-        } else {
-            setupUseCase();
-            processRequest();
-        }
+    protected void loadDataByDataId() {
+        // only uses domain id's
     }
 
-    private boolean isNewRequest(RecipeCourseRequest r) {
-        return !r.getDomainId().equals(recipeDomainId);
+    @Override
+    protected void loadDataByDomainId() {
+        repository.getAllActiveByDomainId(useCaseDomainId, this);
     }
 
     private void setupUseCase() {
@@ -116,10 +101,6 @@ public class RecipeCourse
         updatedCourseList.addAll(((RecipeCourseRequest) getRequest()).
                 getDomainModel().
                 getCourseList());
-    }
-
-    private void loadData(String recipeId) {
-        repository.getAllActiveByDomainId(recipeId, this);
     }
 
     @Override
@@ -148,7 +129,9 @@ public class RecipeCourse
         buildResponse();
     }
 
-    private void processRequest() {
+    @Override
+    protected void processDomainModel() {
+        setupUseCase();
         processCourseAdditions();
         processCourseSubtractions();
         buildResponse();
@@ -181,7 +164,7 @@ public class RecipeCourse
         lastUpdate = timeProvider.getCurrentTimeInMills();
         return new RecipeCoursePersistenceModel.Builder().
                 setDataId(idProvider.getUId()).
-                setDomainId(recipeDomainId).
+                setDomainId(useCaseDomainId).
                 setCourse(course).
                 setIsActive(true).
                 setCreateDate(lastUpdate).
@@ -190,14 +173,14 @@ public class RecipeCourse
     }
 
     private void processCourseSubtractions() {
-        Iterator<RecipeCoursePersistenceModel> i = activeCourseList.values().iterator();
-        while (i.hasNext()) {
-            RecipeCoursePersistenceModel m = i.next();
+        Iterator<RecipeCoursePersistenceModel> iterator = activeCourseList.values().iterator();
+        while (iterator.hasNext()) {
+            RecipeCoursePersistenceModel m = iterator.next();
 
             if (isCourseRemoved(m.getCourse())) {
                 isChanged = true;
                 updateRepository(m);
-                i.remove();
+                iterator.remove();
             }
         }
     }
@@ -222,10 +205,11 @@ public class RecipeCourse
                 build();
     }
 
-    private void buildResponse() {
+    @Override
+    protected void buildResponse() {
         RecipeCourseResponse r = new RecipeCourseResponse.Builder().
-                setDataId(dataId).
-                setDomainId(recipeDomainId).
+                setDataId("").
+                setDomainId(useCaseDomainId).
                 setMetadata(getMetadata()).
                 setDomainModel(getResponseModel()).
                 build();
@@ -262,15 +246,23 @@ public class RecipeCourse
     private ComponentState getComponentState() {
         if (!isValid()) createDate = 0L;
 
-        return isValid()
-                ?
-                (isChanged ? ComponentState.VALID_CHANGED : ComponentState.VALID_UNCHANGED)
+        return isValid() ?
+                (isDomainModelChanged() ?
+                        ComponentState.VALID_CHANGED :
+                        ComponentState.VALID_UNCHANGED)
                 :
-                (isChanged ? ComponentState.INVALID_CHANGED : ComponentState.INVALID_UNCHANGED);
+                (isDomainModelChanged() ?
+                        ComponentState.INVALID_CHANGED :
+                        ComponentState.INVALID_UNCHANGED);
     }
 
     private boolean isValid() {
         return activeCourseList.size() >= MINIMUM_COURSE_LIST_SIZE;
+    }
+
+    @Override
+    protected boolean isDomainModelChanged() {
+        return isChanged;
     }
 
     private List<FailReasons> getFailReasons() {

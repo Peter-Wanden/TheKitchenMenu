@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseElement;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataId;
@@ -30,7 +31,7 @@ import javax.annotation.Nonnull;
  * Always use as part of a {@link Recipe} macro component
  */
 public class RecipeMetadata
-        extends UseCaseFramework
+        extends UseCaseElement<RecipeMetadataRequest.Model>
         implements DomainDataAccess.GetDomainModelCallback<RecipeMetadataPersistenceModel> {
 
     private static final String TAG = "tkm-" + RecipeMetadata.class.getSimpleName() + ": ";

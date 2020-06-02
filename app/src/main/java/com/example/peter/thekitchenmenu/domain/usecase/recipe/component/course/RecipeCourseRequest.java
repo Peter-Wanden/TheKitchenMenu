@@ -13,7 +13,7 @@ import javax.annotation.Nonnull;
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse.*;
 
 public final class RecipeCourseRequest
-        extends UseCaseMessageModelDataId<RecipeCourseRequest.Model>
+        extends UseCaseMessageModelDataId<RecipeCourseRequest.DomainModel>
         implements UseCaseBase.Request {
 
     @Override
@@ -29,7 +29,7 @@ public final class RecipeCourseRequest
     }
 
     public static class Builder
-            extends UseCaseMessageModelDataIdBuilder<Builder, RecipeCourseRequest, Model> {
+            extends UseCaseMessageModelDataIdBuilder<Builder, RecipeCourseRequest, DomainModel> {
 
         public Builder() {
             message = new RecipeCourseRequest();
@@ -39,14 +39,14 @@ public final class RecipeCourseRequest
         public Builder getDefault() {
             message.dataId = "";
             message.domainId = "";
-            message.model = new Model.Builder().getDefault().build();
+            message.model = new DomainModel.Builder().getDefault().build();
             return self();
         }
 
         public Builder basedOnResponse(RecipeCourseResponse response) {
             message.dataId = response.getDataId();
             message.domainId = response.getDomainId();
-            message.model = new Model.Builder().
+            message.model = new DomainModel.Builder().
                     basedOnResponseModel(response.getDomainModel()).
                     build();
             return self();
@@ -58,11 +58,11 @@ public final class RecipeCourseRequest
         }
     }
 
-    public static final class Model extends BaseDomainModel {
+    public static final class DomainModel extends BaseDomainModel {
 
         private List<Course> courseList;
 
-        private Model() {
+        private DomainModel() {
         }
 
         public List<Course> getCourseList() {
@@ -73,8 +73,8 @@ public final class RecipeCourseRequest
         public boolean equals(Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
-            Model model = (Model) o;
-            return courseList.equals(model.courseList);
+            DomainModel domainModel = (DomainModel) o;
+            return courseList.equals(domainModel.courseList);
         }
 
         @Override
@@ -90,10 +90,10 @@ public final class RecipeCourseRequest
                     '}';
         }
 
-        public static class Builder extends DomainModelBuilder<Builder, Model> {
+        public static class Builder extends DomainModelBuilder<Builder, DomainModel> {
 
             public Builder() {
-                domainModel = new Model();
+                domainModel = new DomainModel();
             }
 
             public Builder getDefault() {
