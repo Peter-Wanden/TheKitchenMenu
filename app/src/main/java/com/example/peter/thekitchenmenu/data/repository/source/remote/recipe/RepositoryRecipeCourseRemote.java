@@ -21,7 +21,7 @@ public class RepositoryRecipeCourseRemote
     public void getByDataId(
             @Nonnull String dataId,
             @Nonnull GetDomainModelCallback<RecipeCoursePersistenceModel> callback) {
-        callback.onModelUnavailable();
+        callback.dataSourceOnDomainModelUnavailable();
     }
 
     @Override
@@ -42,7 +42,7 @@ public class RepositoryRecipeCourseRemote
     public void getActiveByDomainId(
             @Nonnull String domainId,
             @Nonnull GetDomainModelCallback<RecipeCoursePersistenceModel> callback) {
-        callback.onModelUnavailable();
+        callback.dataSourceOnDomainModelUnavailable();
     }
 
     @Override

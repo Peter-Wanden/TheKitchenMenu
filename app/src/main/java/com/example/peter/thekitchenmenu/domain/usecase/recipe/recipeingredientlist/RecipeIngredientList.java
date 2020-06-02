@@ -57,14 +57,14 @@ public class RecipeIngredientList extends UseCaseBase {
                 recipeId,
                 new DomainDataAccess.GetDomainModelCallback<RecipePortionsPersistenceModel>() {
                     @Override
-                    public void onModelLoaded(RecipePortionsPersistenceModel model) {
+                    public void dataSourceOnDomainModelLoaded(RecipePortionsPersistenceModel model) {
                         RecipeIngredientList.this.portions =
                                 model.getServings() * model.getSittings();
                         getRecipeIngredientQuantities();
                     }
 
                     @Override
-                    public void onModelUnavailable() {
+                    public void dataSourceOnDomainModelUnavailable() {
 
                     }
                 }
@@ -105,13 +105,13 @@ public class RecipeIngredientList extends UseCaseBase {
                 ingredientId,
                 new DomainDataAccess.GetDomainModelCallback<IngredientPersistenceModel>() {
                     @Override
-                    public void onModelLoaded(IngredientPersistenceModel model) {
+                    public void dataSourceOnDomainModelLoaded(IngredientPersistenceModel model) {
                         ingredients.put(model.getDataId(), model);
                         createResponseModels();
                     }
 
                     @Override
-                    public void onModelUnavailable() {
+                    public void dataSourceOnDomainModelUnavailable() {
 
                     }
                 }

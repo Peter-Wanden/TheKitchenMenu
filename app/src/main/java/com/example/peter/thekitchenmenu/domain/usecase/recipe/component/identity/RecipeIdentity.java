@@ -105,11 +105,10 @@ public class RecipeIdentity
     }
 
     @Override
-    public void onModelUnavailable() {
+    public void dataSourceOnDomainModelUnavailable() {
         persistenceModel = createNewPersistenceModel();
         failReasons.add(CommonFailReason.DATA_UNAVAILABLE);
-
-        buildResponse();
+        processUseCaseDomainData();
     }
 
     private RecipeIdentityPersistenceModel createNewPersistenceModel() {
@@ -126,14 +125,19 @@ public class RecipeIdentity
     }
 
     @Override
-    public void onModelLoaded(RecipeIdentityPersistenceModel persistenceModel) {
+    public void dataSourceOnDomainModelLoaded(RecipeIdentityPersistenceModel persistenceModel) {
         this.persistenceModel = persistenceModel;
         useCaseDataId = persistenceModel.getDataId();
-        processDomainModel();
+        processUseCaseDomainData();
     }
 
     @Override
-    protected void processDomainModel() {
+    protected void processRequestDomainData() {
+
+    }
+
+    @Override
+    protected void processUseCaseDomainData() {
         setupUseCase();
         validateDomainData();
         buildResponse();
@@ -212,7 +216,6 @@ public class RecipeIdentity
         }
     }
 
-    @Override
     protected void buildResponse() {
         RecipeIdentityResponse.Builder builder = new RecipeIdentityResponse.Builder();
         builder.setDomainId(useCaseDomainId);
@@ -248,17 +251,17 @@ public class RecipeIdentity
 
         return isValid
                 ?
-                (isDomainModelChanged() ?
+                (isDomainDataChanged() ?
                         ComponentState.VALID_CHANGED :
                         ComponentState.VALID_UNCHANGED)
                 :
-                (isDomainModelChanged() ?
+                (isDomainDataChanged() ?
                         ComponentState.INVALID_CHANGED :
                         ComponentState.INVALID_UNCHANGED);
     }
 
     @Override
-    protected boolean isDomainModelChanged() {
+    protected boolean isDomainDataChanged() {
         return !isNewRequest && (isTitleChanged() || isDescriptionChanged());
     }
 
@@ -273,9 +276,10 @@ public class RecipeIdentity
     }
 
     private RecipeIdentityPersistenceModel updatePersistenceModel() {
+        useCaseDataId = idProvider.getUId();
         return new RecipeIdentityPersistenceModel.Builder().
                 basedOnPersistenceModel(persistenceModel).
-                setDataId(idProvider.getUId()).
+                setDataId(useCaseDataId).
                 setTitle(requestDomainModel.getTitle()).
                 setDescription(requestDomainModel.getDescription()).
                 setLastUpdate(timeProvider.getCurrentTimeInMills()).

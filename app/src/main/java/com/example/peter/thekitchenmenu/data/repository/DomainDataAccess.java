@@ -24,9 +24,9 @@ public interface DomainDataAccess<T extends DomainPersistenceModel> {
 
     interface GetDomainModelCallback<T extends DomainPersistenceModel> {
 
-        void onModelLoaded(T model);
+        void dataSourceOnDomainModelLoaded(T model);
 
-        void onModelUnavailable();
+        void dataSourceOnDomainModelUnavailable();
     }
 
     void getByDataId(@Nonnull String dataId, @Nonnull GetDomainModelCallback<T> callback);

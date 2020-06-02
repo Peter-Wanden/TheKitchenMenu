@@ -130,7 +130,12 @@ public class RecipeCourse
     }
 
     @Override
-    protected void processDomainModel() {
+    protected void processRequestDomainData() {
+
+    }
+
+    @Override
+    protected void processUseCaseDomainData() {
         setupUseCase();
         processCourseAdditions();
         processCourseSubtractions();
@@ -205,7 +210,6 @@ public class RecipeCourse
                 build();
     }
 
-    @Override
     protected void buildResponse() {
         RecipeCourseResponse r = new RecipeCourseResponse.Builder().
                 setDataId("").
@@ -247,11 +251,11 @@ public class RecipeCourse
         if (!isValid()) createDate = 0L;
 
         return isValid() ?
-                (isDomainModelChanged() ?
+                (isDomainDataChanged() ?
                         ComponentState.VALID_CHANGED :
                         ComponentState.VALID_UNCHANGED)
                 :
-                (isDomainModelChanged() ?
+                (isDomainDataChanged() ?
                         ComponentState.INVALID_CHANGED :
                         ComponentState.INVALID_UNCHANGED);
     }
@@ -261,7 +265,7 @@ public class RecipeCourse
     }
 
     @Override
-    protected boolean isDomainModelChanged() {
+    protected boolean isDomainDataChanged() {
         return isChanged;
     }
 

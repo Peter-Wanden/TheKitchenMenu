@@ -32,12 +32,12 @@ public class RecipeIngredientLocalGetAdapter {
                 new GetPrimitiveCallback<RecipeIngredientEntity>() {
                     @Override
                     public void onEntityLoaded(RecipeIngredientEntity entity) {
-                        callback.onModelLoaded(converter.convertToModel(entity));
+                        callback.dataSourceOnDomainModelLoaded(converter.convertToModel(entity));
                     }
 
                     @Override
                     public void onDataUnavailable() {
-                        callback.onModelUnavailable();
+                        callback.dataSourceOnDomainModelUnavailable();
                     }
                 }
         );
@@ -70,12 +70,12 @@ public class RecipeIngredientLocalGetAdapter {
                 new GetAllDomainModelsCallback<RecipeIngredientPersistenceModel>() {
                     @Override
                     public void onAllLoaded(List<RecipeIngredientPersistenceModel> models) {
-                        callback.onModelLoaded(filterForActiveModel(models));
+                        callback.dataSourceOnDomainModelLoaded(filterForActiveModel(models));
                     }
 
                     @Override
                     public void onModelsUnavailable() {
-                        callback.onModelUnavailable();
+                        callback.dataSourceOnDomainModelUnavailable();
                     }
                 }
         );

@@ -148,13 +148,13 @@ public class DurationLocalGetAdapterTest {
         private boolean onModelUnavailable;
 
         @Override
-        public void onModelLoaded(RecipeDurationPersistenceModel m) {
+        public void dataSourceOnDomainModelLoaded(RecipeDurationPersistenceModel m) {
             System.out.println(TAG + "onSuccess: " + m);
             model = m;
         }
 
         @Override
-        public void onModelUnavailable() {
+        public void dataSourceOnDomainModelUnavailable() {
             onModelUnavailable = true;
             System.out.println(TAG + "onModelUnavailable");
         }

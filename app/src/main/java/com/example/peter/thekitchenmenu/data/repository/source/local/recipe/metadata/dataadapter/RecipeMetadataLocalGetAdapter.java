@@ -87,7 +87,7 @@ public class RecipeMetadataLocalGetAdapter {
 
                     @Override
                     public void onDataUnavailable() {
-                        getModelCallback.onModelUnavailable();
+                        getModelCallback.dataSourceOnDomainModelUnavailable();
                     }
                 }
         );
@@ -112,7 +112,7 @@ public class RecipeMetadataLocalGetAdapter {
 
                     @Override
                     public void onDataUnavailable() {
-                        getModelCallback.onModelUnavailable();
+                        getModelCallback.dataSourceOnDomainModelUnavailable();
                     }
                 }
         );
@@ -133,7 +133,7 @@ public class RecipeMetadataLocalGetAdapter {
         }
 
         if (activeDataId.isEmpty()) {
-            getModelCallback.onModelUnavailable();
+            getModelCallback.dataSourceOnDomainModelUnavailable();
         } else {
             addParentEntityToModelBuilder(parentEntity);
             getFailReasonsFromParentDataId(activeDataId);
@@ -228,7 +228,7 @@ public class RecipeMetadataLocalGetAdapter {
 
     private void createModel() {
         if (isModelComplete()) {
-            getModelCallback.onModelLoaded(modelBuilder.build());
+            getModelCallback.dataSourceOnDomainModelLoaded(modelBuilder.build());
         }
     }
 
@@ -281,14 +281,14 @@ public class RecipeMetadataLocalGetAdapter {
                     domainId,
                     new GetDomainModelCallback<RecipeMetadataPersistenceModel>() {
                         @Override
-                        public void onModelLoaded(RecipeMetadataPersistenceModel model) {
+                        public void dataSourceOnDomainModelLoaded(RecipeMetadataPersistenceModel model) {
                             domainModels.add(model);
                             domainModelsProcessed++;
                             returnAllDomainModels();
                         }
 
                         @Override
-                        public void onModelUnavailable() {
+                        public void dataSourceOnDomainModelUnavailable() {
                             returnAllDomainModels();
                         }
                     }

@@ -68,13 +68,13 @@ public class RepositoryRecipeCourseLocal
                 dataId,
                 new GetDomainModelCallback<RecipeCoursePersistenceModel>() {
                     @Override
-                    public void onModelLoaded(RecipeCoursePersistenceModel model) {
-                        callback.onModelLoaded(model);
+                    public void dataSourceOnDomainModelLoaded(RecipeCoursePersistenceModel model) {
+                        callback.dataSourceOnDomainModelLoaded(model);
                     }
 
                     @Override
-                    public void onModelUnavailable() {
-                        callback.onModelUnavailable();
+                    public void dataSourceOnDomainModelUnavailable() {
+                        callback.dataSourceOnDomainModelUnavailable();
                     }
                 }
         );
@@ -147,7 +147,7 @@ public class RepositoryRecipeCourseLocal
             @Nonnull String domainId,
             @Nonnull GetDomainModelCallback<RecipeCoursePersistenceModel> callback) {
         // TODO - implement? or move to?
-        callback.onModelUnavailable();
+        callback.dataSourceOnDomainModelUnavailable();
     }
 
     @Override

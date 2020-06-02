@@ -130,7 +130,7 @@ public class Ingredient
     }
 
     @Override
-    public void onModelLoaded(IngredientPersistenceModel model) {
+    public void dataSourceOnDomainModelLoaded(IngredientPersistenceModel model) {
         persistenceModel = model;
         dataId = model.getDataId();
         ingredientId = model.getDomainId();
@@ -144,7 +144,7 @@ public class Ingredient
     }
 
     @Override
-    public void onModelUnavailable() {
+    public void dataSourceOnDomainModelUnavailable() {
         persistenceModel = createNewPersistenceModel();
         failReasons.add(CommonFailReason.DATA_UNAVAILABLE);
 

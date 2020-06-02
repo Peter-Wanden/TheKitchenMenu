@@ -4,14 +4,18 @@ import com.example.peter.thekitchenmenu.domain.model.BaseDomainModel;
 
 import java.util.Objects;
 
+import javax.annotation.Nonnull;
+
 public abstract class UseCaseMessageModelDataId<DOMAIN_MODEL extends BaseDomainModel>
         extends
         UseCaseMessageModelBase<DOMAIN_MODEL> {
 
+    public static final String NO_ID = "";
+
     // The id for an instance of state of domain data as stored in the data layer.
-    protected String dataId;
+    protected String dataId = NO_ID;
     // The id of the domain model, eg. recipeId, productId, ingredientId etc.
-    protected String domainId;
+    protected String domainId = NO_ID;
 
     public String getDataId() {
         return dataId;

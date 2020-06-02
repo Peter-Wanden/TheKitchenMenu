@@ -3,14 +3,13 @@ package com.example.peter.thekitchenmenu.domain.usecase.common;
 import com.example.peter.thekitchenmenu.domain.model.BaseDomainModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataId;
 
-public abstract class UseCaseElement<
-        REQUEST_DOMAIN_MODEL extends BaseDomainModel>
+import static com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataId.NO_ID;
+
+public abstract class UseCaseElement<REQUEST_DOMAIN_MODEL extends BaseDomainModel>
         extends
         UseCaseBase {
 
     private static final String TAG = "tkm-" + "UseCaseElement" + ": ";
-
-    private static final String NO_ID = "";
 
     protected String useCaseDataId = NO_ID;
     protected String useCaseDomainId = NO_ID;
@@ -29,70 +28,33 @@ public abstract class UseCaseElement<
         UseCaseMessageModelDataId<REQUEST_DOMAIN_MODEL> r =
                 (UseCaseMessageModelDataId<REQUEST_DOMAIN_MODEL>) request;
 
-        System.out.println(TAG + "requestNo=" + accessCount + " " + request);
+        System.out.println(TAG + "Request No:" + accessCount + " " + request);
 
         requestDataId = r.getDataId() == null ? NO_ID : r.getDataId();
         requestDomainId = r.getDomainId() == null ? NO_ID : r.getDomainId();
         requestDomainModel = (REQUEST_DOMAIN_MODEL) r.getDomainModel();
 
-        if (requestHasDataId()) { // data id has priority over domain id
-            if (useCaseDataId.equals(requestDataId)) {
-                processDomainId();
-            } else {
-                useCaseDataId = requestDataId;
-                useCaseDomainId = requestDomainId;
-                isNewRequest = true;
-                loadDataByDataId();
-            }
-        } else if (requestHasDomainId()) {
-            useCaseDataId = NO_ID;
-            processDomainId();
+        if (NO_ID.equals(requestDataId) && NO_ID.equals(requestDomainId)) {
+            processUseCaseDomainData();
+        } else if (!NO_ID.equals(requestDataId) && !requestDataId.equals(useCaseDataId)) {
+            useCaseDataId = requestDataId;
+            useCaseDomainId = requestDomainId;
+            loadDataByDataId();
+        } else if (!NO_ID.equals(requestDomainId) && !requestDomainId.equals(useCaseDomainId)) {
+            useCaseDomainId = requestDomainId;
+            loadDataByDomainId();
         } else {
-            // request with no data or domain id indicates requester is requesting current state
-            buildResponse();
+            processRequestDomainData();
         }
-    }
-
-    private void processDomainId() {
-        if (requestHasDomainId()) {
-            if (useCaseDomainId.equals(requestDomainId)) {
-                isNewRequest = false;
-                processDomainModel();
-            } else {
-                this.useCaseDomainId = requestDomainId;
-                isNewRequest = true;
-                loadDataByDomainId();
-            }
-        } else {
-            if (useCaseHasDomainId()) {
-                isNewRequest = false;
-                processDomainModel();
-            } else {
-                isNewRequest = true;
-                loadDataByDataId();
-            }
-        }
-    }
-
-    private boolean requestHasDataId() {
-        return !NO_ID.equals(requestDataId);
-    }
-
-    private boolean requestHasDomainId() {
-        return !NO_ID.equals(requestDomainId);
-    }
-
-    private boolean useCaseHasDomainId() {
-        return !NO_ID.equals(useCaseDomainId);
     }
 
     protected abstract void loadDataByDataId();
 
     protected abstract void loadDataByDomainId();
 
-    protected abstract void processDomainModel();
+    protected abstract void processUseCaseDomainData();
 
-    protected abstract boolean isDomainModelChanged();
+    protected abstract void processRequestDomainData();
 
-    protected abstract void buildResponse();
+    protected abstract boolean isDomainDataChanged();
 }

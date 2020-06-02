@@ -212,14 +212,14 @@ public class RecipeIngredient extends UseCaseBase {
                 recipeId,
                 new GetDomainModelCallback<RecipePortionsPersistenceModel>() {
                     @Override
-                    public void onModelLoaded(RecipePortionsPersistenceModel model) {
+                    public void dataSourceOnDomainModelLoaded(RecipePortionsPersistenceModel model) {
                         numberOfPortions = model.getServings() *
                                 model.getSittings();
                         setupUnitOfMeasure();
                     }
 
                     @Override
-                    public void onModelUnavailable() {
+                    public void dataSourceOnDomainModelUnavailable() {
                         returnDataUnAvailable(Result.PORTIONS_DATA_UNAVAILABLE);
                     }
                 }

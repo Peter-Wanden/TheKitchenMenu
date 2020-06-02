@@ -80,13 +80,13 @@ public class RepositoryRecipeMetadataLocal
                 dataId,
                 new GetDomainModelCallback<RecipeMetadataPersistenceModel>() {
                     @Override
-                    public void onModelLoaded(@Nonnull RecipeMetadataPersistenceModel model) {
-                        callback.onModelLoaded(model);
+                    public void dataSourceOnDomainModelLoaded(@Nonnull RecipeMetadataPersistenceModel model) {
+                        callback.dataSourceOnDomainModelLoaded(model);
                     }
 
                     @Override
-                    public void onModelUnavailable() {
-                        callback.onModelUnavailable();
+                    public void dataSourceOnDomainModelUnavailable() {
+                        callback.dataSourceOnDomainModelUnavailable();
                     }
                 }
         );
@@ -100,13 +100,13 @@ public class RepositoryRecipeMetadataLocal
                 domainId,
                 new GetDomainModelCallback<RecipeMetadataPersistenceModel>() {
                     @Override
-                    public void onModelLoaded(RecipeMetadataPersistenceModel model) {
-                        callback.onModelLoaded(model);
+                    public void dataSourceOnDomainModelLoaded(RecipeMetadataPersistenceModel model) {
+                        callback.dataSourceOnDomainModelLoaded(model);
                     }
 
                     @Override
-                    public void onModelUnavailable() {
-                        callback.onModelUnavailable();
+                    public void dataSourceOnDomainModelUnavailable() {
+                        callback.dataSourceOnDomainModelUnavailable();
                     }
                 }
         );

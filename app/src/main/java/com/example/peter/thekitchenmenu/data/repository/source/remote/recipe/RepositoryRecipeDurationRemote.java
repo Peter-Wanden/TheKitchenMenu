@@ -27,14 +27,14 @@ public class RepositoryRecipeDurationRemote
     public void getByDataId(
             @Nonnull String dataId,
             @Nonnull GetDomainModelCallback<RecipeDurationPersistenceModel> callback) {
-        callback.onModelUnavailable();
+        callback.dataSourceOnDomainModelUnavailable();
     }
 
     @Override
     public void getActiveByDomainId(
             @Nonnull String domainId,
             @Nonnull GetDomainModelCallback<RecipeDurationPersistenceModel> callback) {
-        callback.onModelUnavailable();
+        callback.dataSourceOnDomainModelUnavailable();
     }
 
     @Override

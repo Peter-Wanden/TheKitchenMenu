@@ -168,13 +168,13 @@ public class CourseLocalGetAdapterTest {
         private boolean isModelUnavailable;
 
         @Override
-        public void onModelLoaded(RecipeCoursePersistenceModel m) {
+        public void dataSourceOnDomainModelLoaded(RecipeCoursePersistenceModel m) {
             System.out.println(TAG + m);
             model = m;
         }
 
         @Override
-        public void onModelUnavailable() {
+        public void dataSourceOnDomainModelUnavailable() {
             isModelUnavailable = true;
             System.out.println(TAG + "isModelUnavailable=" + isModelUnavailable);
         }

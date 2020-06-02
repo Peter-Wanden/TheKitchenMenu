@@ -13,6 +13,7 @@ import com.example.peter.thekitchenmenu.domain.model.UseCaseMetadataModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentName;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentState;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.FailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataPersistenceModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataResponse;
@@ -30,7 +31,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.FailReason;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -91,27 +91,43 @@ public class RecipeMetadataTest {
     @Test
     public void requestNoDomainId_useCaseNoDomainId_emptyStateReturned() {
         // Arrange
+        // This is an empty request being fired at an empty use case to test default values don't
+        // break anything
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().getDefault().build();
+
+        // Expected default component states
+        componentStatesUnderTest = TestDataRecipeMetadata.getInvalidUnchangedComponentStates();
+        // Expected default fail reasons
+        FailReasons[] expectedFailReasons = new FailReasons[]{FailReason.MISSING_COMPONENTS};
+
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(0L);
+        when(idProviderMock.getUId()).thenReturn("");
+
         // Act
-        SUT.execute(request, new MetadataCallbackClient()); // NON THREADED
+        SUT.execute(request, new MetadataCallbackClient()); // NON THREADED EXECUTION METHOD
 
         // Assert
-        RecipeMetadataResponse expectedResponse = new RecipeMetadataResponse.Builder().
-                getDefault().
-                build();
-        RecipeMetadataResponse actualResponse = onErrorResponse;
-
+        HashMap<ComponentName, ComponentState> actualComponentStates = onErrorResponse.
+                getDomainModel().getComponentStates();
         assertEquals(
-                expectedResponse,
-                actualResponse
+                componentStatesUnderTest,
+                actualComponentStates
+        );
+
+        UseCaseMetadataModel metadata = onErrorResponse.getMetadata();
+        FailReasons[] actualFailReasons = metadata.getFailReasons().toArray(new FailReasons[0]);
+        assertArrayEquals(
+                expectedFailReasons,
+                actualFailReasons
         );
     }
 
-    // This test is large because it tests the initial request on which the remainder of tests
-    // depend, therefore an assertion is performed on every data element.
     @Test
     public void testNewInitialRequest() {
         // Arrange
+        // This test is large as it tests the initial request on which most other tests
+        // depend, therefore an assertion is performed on every data element.
+
         RecipeMetadataPersistenceModel modelUnderTest = TestDataRecipeMetadata.getDataUnavailable();
         // Expected default component states
         componentStatesUnderTest = TestDataRecipeMetadata.getInvalidUnchangedComponentStates();
@@ -151,7 +167,7 @@ public class RecipeMetadataTest {
         // Assert fail reasons
         FailReasons[] expectedFailReasons = new FailReasons[]{
                 CommonFailReason.DATA_UNAVAILABLE,
-                RecipeMetadata.FailReason.MISSING_COMPONENTS};
+                FailReason.MISSING_COMPONENTS};
         FailReasons[] actualFailReasons = metadata.getFailReasons().toArray(new FailReasons[0]);
         assertArrayEquals(
                 expectedFailReasons,
@@ -531,7 +547,7 @@ public class RecipeMetadataTest {
 
         // Assert
         verify(repoMock).getActiveByDomainId(eq(recipeId), repoMetadataCallback.capture());
-        repoMetadataCallback.getValue().onModelLoaded(modelUnderTest);
+        repoMetadataCallback.getValue().dataSourceOnDomainModelLoaded(modelUnderTest);
 
         UseCaseMetadataModel metadata = onErrorResponse.getMetadata();
 
@@ -565,7 +581,7 @@ public class RecipeMetadataTest {
         );
         // Assert
         verify(repoMock).getActiveByDomainId(eq(recipeId), repoMetadataCallback.capture());
-        repoMetadataCallback.getValue().onModelLoaded(modelUnderTest);
+        repoMetadataCallback.getValue().dataSourceOnDomainModelLoaded(modelUnderTest);
 
         UseCaseMetadataModel metadata = onErrorResponse.getMetadata();
 
@@ -599,7 +615,7 @@ public class RecipeMetadataTest {
 
         // Assert
         verify(repoMock).getActiveByDomainId(eq(recipeId), repoMetadataCallback.capture());
-        repoMetadataCallback.getValue().onModelLoaded(modelUnderTest);
+        repoMetadataCallback.getValue().dataSourceOnDomainModelLoaded(modelUnderTest);
 
         UseCaseMetadataModel metadata = onSuccessResponse.getMetadata();
 
@@ -660,7 +676,7 @@ public class RecipeMetadataTest {
         );
         // Assert
         verify(repoMock).getActiveByDomainId(eq(recipeId), repoMetadataCallback.capture());
-        repoMetadataCallback.getValue().onModelLoaded(modelUnderTest);
+        repoMetadataCallback.getValue().dataSourceOnDomainModelLoaded(modelUnderTest);
 
         UseCaseMetadataModel metadata = onSuccessResponse.getMetadata();
 
@@ -695,7 +711,7 @@ public class RecipeMetadataTest {
 
         // Assert
         verify(repoMock).getActiveByDomainId(eq(recipeId), repoMetadataCallback.capture());
-        repoMetadataCallback.getValue().onModelLoaded(modelUnderTestOne);
+        repoMetadataCallback.getValue().dataSourceOnDomainModelLoaded(modelUnderTestOne);
 
         UseCaseMetadataModel metadata = onErrorResponse.getMetadata();
 
@@ -761,26 +777,27 @@ public class RecipeMetadataTest {
 
     // region helper methods -----------------------------------------------------------------------
     private void givenNewIdAsInitialRequest(String domainId) {
-        // Arrange/execute initial request
-        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(TestDataRecipeMetadata.
-                getDataUnavailable().getCreateDate());
+        // Arrange
+        RecipeMetadataPersistenceModel modelUnderTest = TestDataRecipeMetadata.
+                getDataUnavailable();
 
-        when(idProviderMock.getUId()).thenReturn(TestDataRecipeMetadata.
-                getDataUnavailable().getDataId());
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(modelUnderTest.getCreateDate());
+        when(idProviderMock.getUId()).thenReturn(modelUnderTest.getDataId());
 
         RecipeMetadataRequest initialRequest = new RecipeMetadataRequest.Builder().
                 getDefault().
                 setDomainId(domainId).
                 build();
 
-        handler.executeAsync(SUT, initialRequest, new MetadataCallbackClient());
+        // Act
+        SUT.execute(initialRequest, new MetadataCallbackClient());
 
         whenRepoCalledReturnDataUnavailable(domainId);
     }
 
     private void whenRepoCalledReturnDataUnavailable(String domainId) {
         verify(repoMock).getActiveByDomainId(eq(domainId), repoMetadataCallback.capture());
-        repoMetadataCallback.getValue().onModelUnavailable();
+        repoMetadataCallback.getValue().dataSourceOnDomainModelUnavailable();
     }
     // endregion helper methods --------------------------------------------------------------------
 

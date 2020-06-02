@@ -38,8 +38,8 @@ public final class RecipeMetadataRequest
         }
 
         public Builder getDefault() {
-            message.dataId = "";
-            message.domainId = "";
+            message.dataId = NO_ID;
+            message.domainId = NO_ID;
             message.model = new Model.Builder().getDefault().build();
             return self();
         }

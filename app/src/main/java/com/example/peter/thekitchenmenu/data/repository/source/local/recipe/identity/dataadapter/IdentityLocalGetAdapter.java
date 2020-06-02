@@ -35,12 +35,12 @@ public class IdentityLocalGetAdapter {
                 new GetPrimitiveCallback<RecipeIdentityEntity>() {
                     @Override
                     public void onEntityLoaded(RecipeIdentityEntity entity) {
-                        callback.onModelLoaded(converter.convertToModel(entity));
+                        callback.dataSourceOnDomainModelLoaded(converter.convertToModel(entity));
                     }
 
                     @Override
                     public void onDataUnavailable() {
-                        callback.onModelUnavailable();
+                        callback.dataSourceOnDomainModelUnavailable();
                     }
                 }
         );
@@ -73,12 +73,12 @@ public class IdentityLocalGetAdapter {
                 new GetAllDomainModelsCallback<RecipeIdentityPersistenceModel>() {
                     @Override
                     public void onAllLoaded(List<RecipeIdentityPersistenceModel> models) {
-                        callback.onModelLoaded(filterForActiveModel(models));
+                        callback.dataSourceOnDomainModelLoaded(filterForActiveModel(models));
                     }
 
                     @Override
                     public void onModelsUnavailable() {
-                        callback.onModelUnavailable();
+                        callback.dataSourceOnDomainModelUnavailable();
                     }
                 }
         );

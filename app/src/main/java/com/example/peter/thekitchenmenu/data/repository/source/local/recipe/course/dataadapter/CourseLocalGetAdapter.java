@@ -34,12 +34,12 @@ public class CourseLocalGetAdapter {
                 new GetPrimitiveCallback<RecipeCourseEntity>() {
                     @Override
                     public void onEntityLoaded(RecipeCourseEntity entity) {
-                        callback.onModelLoaded(converter.convertToModel(entity));
+                        callback.dataSourceOnDomainModelLoaded(converter.convertToModel(entity));
                     }
 
                     @Override
                     public void onDataUnavailable() {
-                        callback.onModelUnavailable();
+                        callback.dataSourceOnDomainModelUnavailable();
                     }
                 }
         );

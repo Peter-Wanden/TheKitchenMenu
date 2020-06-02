@@ -2,10 +2,10 @@ package com.example.peter.thekitchenmenu.domain.model;
 
 
 import com.example.peter.thekitchenmenu.app.Constants;
-import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataId;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -138,7 +138,7 @@ public class UseCaseMetadataModel {
 
         private static List<FailReasons> getDefaultFailReasons() {
             List<FailReasons> failReasons = new ArrayList<>();
-            failReasons.add(CommonFailReason.DATA_UNAVAILABLE);
+            failReasons.add(RecipeMetadata.FailReason.MISSING_COMPONENTS);
             return failReasons;
         }
 

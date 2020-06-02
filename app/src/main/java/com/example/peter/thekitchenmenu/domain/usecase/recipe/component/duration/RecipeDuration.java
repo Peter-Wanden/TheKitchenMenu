@@ -96,17 +96,22 @@ public class RecipeDuration
     }
 
     @Override
-    public void onModelLoaded(RecipeDurationPersistenceModel persistenceModel) {
+    public void dataSourceOnDomainModelLoaded(RecipeDurationPersistenceModel persistenceModel) {
         this.persistenceModel = persistenceModel;
         useCaseDataId = persistenceModel.getDataId();
-        processDomainModel();
+        processUseCaseDomainData();
     }
 
     @Override
-    protected void processDomainModel() {
+    protected void processUseCaseDomainData() {
         setupUseCase();
         validateDomainData();
         buildResponse();
+    }
+
+    @Override
+    protected void processRequestDomainData() {
+
     }
 
     private void setupUseCase() {
@@ -114,7 +119,7 @@ public class RecipeDuration
     }
 
     @Override
-    public void onModelUnavailable() {
+    public void dataSourceOnDomainModelUnavailable() {
         persistenceModel = createNewPersistenceModel();
         failReasons.add(CommonFailReason.DATA_UNAVAILABLE);
         buildResponse();
@@ -165,7 +170,6 @@ public class RecipeDuration
         return hours * 60 + minutes;
     }
 
-    @Override
     protected void buildResponse() {
         RecipeDurationResponse.Builder builder = new RecipeDurationResponse.Builder();
         builder.setDomainId(useCaseDomainId);
@@ -200,17 +204,17 @@ public class RecipeDuration
         boolean isValid = failReasons.contains(CommonFailReason.NONE);
 
         return isValid ?
-                (isDomainModelChanged() ?
+                (isDomainDataChanged() ?
                         ComponentState.VALID_CHANGED :
                         ComponentState.VALID_UNCHANGED)
                 :
-                (isDomainModelChanged() ?
+                (isDomainDataChanged() ?
                         ComponentState.INVALID_CHANGED :
                         ComponentState.INVALID_UNCHANGED);
     }
 
     @Override
-    protected boolean isDomainModelChanged() {
+    protected boolean isDomainDataChanged() {
         return !isNewRequest && (isPrepTimeChanged() || isCookTimeChanged());
     }
 

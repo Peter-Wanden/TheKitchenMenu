@@ -218,13 +218,13 @@ public class IdentityLocalGetAdapterTest {
         private boolean isModelUnavailable;
 
         @Override
-        public void onModelLoaded(RecipeIdentityPersistenceModel m) {
+        public void dataSourceOnDomainModelLoaded(RecipeIdentityPersistenceModel m) {
             System.out.println(TAG + model);
             model = m;
         }
 
         @Override
-        public void onModelUnavailable() {
+        public void dataSourceOnDomainModelUnavailable() {
             isModelUnavailable = true;
             System.out.println(TAG + "isModelUnavailable=" + isModelUnavailable);
         }

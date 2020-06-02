@@ -103,7 +103,9 @@ public class RecipeIdentityTest {
         );
 
         // Assert failReasons
-        FailReasons[] expectedFailReasons = new FailReasons[]{CommonFailReason.DATA_UNAVAILABLE};
+        FailReasons[] expectedFailReasons = new FailReasons[]{
+                CommonFailReason.DATA_UNAVAILABLE,
+                FailReason.TITLE_TOO_SHORT};
         FailReasons[] actualFailReasons = metadata.getFailReasons().toArray(new FailReasons[0]);
         assertArrayEquals(
                 expectedFailReasons,
@@ -782,7 +784,7 @@ public class RecipeIdentityTest {
                 eq(modelUnderTest.getDomainId()),
                 repoCallback.capture()
         );
-        repoCallback.getValue().onModelUnavailable();
+        repoCallback.getValue().dataSourceOnDomainModelUnavailable();
     }
 
     private void simulateExistingInitialisationRequest(
@@ -799,7 +801,7 @@ public class RecipeIdentityTest {
                 eq(modelUnderTest.getDomainId()),
                 repoCallback.capture()
         );
-        repoCallback.getValue().onModelLoaded(modelUnderTest);
+        repoCallback.getValue().dataSourceOnDomainModelLoaded(modelUnderTest);
     }
     // endregion helper methods --------------------------------------------------------------------
 

@@ -34,12 +34,12 @@ public class DurationLocalGetAdapter {
                 new GetPrimitiveCallback<RecipeDurationEntity>() {
                     @Override
                     public void onEntityLoaded(RecipeDurationEntity entity) {
-                        callback.onModelLoaded(converter.convertToModel(entity));
+                        callback.dataSourceOnDomainModelLoaded(converter.convertToModel(entity));
                     }
 
                     @Override
                     public void onDataUnavailable() {
-                        callback.onModelUnavailable();
+                        callback.dataSourceOnDomainModelUnavailable();
                     }
                 }
         );
@@ -72,12 +72,12 @@ public class DurationLocalGetAdapter {
                 new GetAllDomainModelsCallback<RecipeDurationPersistenceModel>() {
                     @Override
                     public void onAllLoaded(List<RecipeDurationPersistenceModel> models) {
-                        callback.onModelLoaded(filterForActiveModel(models));
+                        callback.dataSourceOnDomainModelLoaded(filterForActiveModel(models));
                     }
 
                     @Override
                     public void onModelsUnavailable() {
-                        callback.onModelUnavailable();
+                        callback.dataSourceOnDomainModelUnavailable();
                     }
                 }
         );

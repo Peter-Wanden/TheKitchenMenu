@@ -211,13 +211,13 @@ public class RecipeMetadataLocalGetAdapterTest {
         private boolean onModelUnavailable;
 
         @Override
-        public void onModelLoaded(RecipeMetadataPersistenceModel model) {
+        public void dataSourceOnDomainModelLoaded(RecipeMetadataPersistenceModel model) {
             System.out.println(TAG + model);
             this.domainModel = model;
         }
 
         @Override
-        public void onModelUnavailable() {
+        public void dataSourceOnDomainModelUnavailable() {
             System.out.println(TAG + "onModelUnavailable");
             onModelUnavailable = true;
         }

@@ -766,13 +766,13 @@ public class RecipeTest {
     private void verifyRepoRecipeMetadataCalledAndReturnDataUnavailable(String recipeId) {
         verify(recipeTestBase.repoMetadataMock).getActiveByDomainId(eq(recipeId),
                 recipeTestBase.repoMetadataCallback.capture());
-        recipeTestBase.repoMetadataCallback.getValue().onModelUnavailable();
+        recipeTestBase.repoMetadataCallback.getValue().dataSourceOnDomainModelUnavailable();
     }
 
     private void verifyRepoIdentityCalledAndReturnDataUnavailable(String recipeId) {
         verify(recipeTestBase.repoIdentityMock).getActiveByDomainId(eq(recipeId),
                 recipeTestBase.repoIdentityCallback.capture());
-        recipeTestBase.repoIdentityCallback.getValue().onModelUnavailable();
+        recipeTestBase.repoIdentityCallback.getValue().dataSourceOnDomainModelUnavailable();
     }
 
     private void verifyRepoCoursesCalledAndReturnDataUnavailable(String recipeId) {
@@ -784,24 +784,24 @@ public class RecipeTest {
     private void verifyRepoDurationCalledAndReturnDataUnavailable(String recipeId) {
         verify(recipeTestBase.repoDurationMock).getActiveByDomainId(eq(recipeId),
                 recipeTestBase.repoDurationCallback.capture());
-        recipeTestBase.repoDurationCallback.getValue().onModelUnavailable();
+        recipeTestBase.repoDurationCallback.getValue().dataSourceOnDomainModelUnavailable();
     }
 
     private void verifyRepoPortionsCalledAndReturnDataUnavailable(String recipeId) {
         verify(recipeTestBase.repoPortionsMock).getActiveByDomainId(eq(recipeId),
                 recipeTestBase.repoPortionsCallback.capture());
-        recipeTestBase.repoPortionsCallback.getValue().onModelUnavailable();
+        recipeTestBase.repoPortionsCallback.getValue().dataSourceOnDomainModelUnavailable();
     }
 
     private void verifyAllReposCalledAndReturnValidExisting(String recipeId) {
         verify(recipeTestBase.repoMetadataMock).getActiveByDomainId(eq(recipeId),
                 recipeTestBase.repoMetadataCallback.capture());
-        recipeTestBase.repoMetadataCallback.getValue().onModelLoaded(TestDataRecipeMetadata.
+        recipeTestBase.repoMetadataCallback.getValue().dataSourceOnDomainModelLoaded(TestDataRecipeMetadata.
                 getActiveByDomainId(recipeId)
         );
         verify(recipeTestBase.repoIdentityMock).getActiveByDomainId(eq(recipeId),
                 recipeTestBase.repoIdentityCallback.capture());
-        recipeTestBase.repoIdentityCallback.getValue().onModelLoaded(TestDataRecipeIdentity.
+        recipeTestBase.repoIdentityCallback.getValue().dataSourceOnDomainModelLoaded(TestDataRecipeIdentity.
                 getActiveByDomainId(recipeId)
         );
         verify(recipeTestBase.repoCourseMock).getAllActiveByDomainId(eq(recipeId),
@@ -811,12 +811,12 @@ public class RecipeTest {
         );
         verify(recipeTestBase.repoDurationMock).getActiveByDomainId(eq(recipeId),
                 recipeTestBase.repoDurationCallback.capture());
-        recipeTestBase.repoDurationCallback.getValue().onModelLoaded(TestDataRecipeDuration.
+        recipeTestBase.repoDurationCallback.getValue().dataSourceOnDomainModelLoaded(TestDataRecipeDuration.
                 getActiveByDomainId(recipeId)
         );
         verify(recipeTestBase.repoPortionsMock).getActiveByDomainId(eq(recipeId),
                 recipeTestBase.repoPortionsCallback.capture());
-        recipeTestBase.repoPortionsCallback.getValue().onModelLoaded(TestDataRecipePortions.
+        recipeTestBase.repoPortionsCallback.getValue().dataSourceOnDomainModelLoaded(TestDataRecipePortions.
                 getActiveByDomainId(recipeId)
         );
     }

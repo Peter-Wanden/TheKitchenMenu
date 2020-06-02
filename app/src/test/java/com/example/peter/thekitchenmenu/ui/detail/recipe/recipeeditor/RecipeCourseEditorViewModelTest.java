@@ -800,7 +800,7 @@ public class RecipeCourseEditorViewModelTest {
     // region helper methods -----------------------------------------------------------------------
     private void verifyRepoMetadataCalledAndReturnValidUnchanged(String recipeId) {
         verify(repoMetadataMock).getActiveByDomainId((eq(recipeId)), repoMetadataCallback.capture());
-        repoMetadataCallback.getValue().onModelLoaded(TestDataRecipeMetadata.getValidUnchanged());
+        repoMetadataCallback.getValue().dataSourceOnDomainModelLoaded(TestDataRecipeMetadata.getValidUnchanged());
     }
 
     private void verifyRepoCourseCalledAndReturnCoursesMatchingId(String recipeId) {
