@@ -158,12 +158,12 @@ public class RecipeMetadata
     }
 
     @Override
-    protected void loadDataByDataId() {
+    protected void loadDomainModelByDataId() {
         repository.getByDataId(useCaseDataId, this);
     }
 
     @Override
-    protected void loadDataByDomainId() {
+    protected void loadDomainModelByDomainId() {
         repository.getActiveByDomainId(useCaseDomainId, this);
     }
 
@@ -171,7 +171,7 @@ public class RecipeMetadata
     public void dataSourceOnDomainModelUnavailable() {
         persistenceModel = createNewPersistenceModel();
         failReasons.add(CommonFailReason.DATA_UNAVAILABLE);
-        processUseCaseDomainData();
+        reprocessCurrentDomainModel();
     }
 
     private RecipeMetadataPersistenceModel createNewPersistenceModel() {
@@ -197,18 +197,18 @@ public class RecipeMetadata
         failReasons.addAll(persistenceModel.getFailReasons());
         useCaseDataId = persistenceModel.getDataId();
 
-        processUseCaseDomainData();
+        reprocessCurrentDomainModel();
     }
 
     @Override
-    protected void processUseCaseDomainData() {
+    protected void reprocessCurrentDomainModel() {
 //        setupUseCase();
         setState();
         buildResponse();
     }
 
     @Override
-    protected void processRequestDomainData() {
+    protected void processRequestDomainModel() {
 
     }
 
@@ -218,11 +218,11 @@ public class RecipeMetadata
     }
 
     private void setState() {
-        if (!isValid() && !isDomainDataChanged()) {
+        if (!isValid() && !isDomainModelChanged()) {
             recipeState = ComponentState.INVALID_UNCHANGED;
-        } else if (!isValid() && isDomainDataChanged()) {
+        } else if (!isValid() && isDomainModelChanged()) {
             recipeState = ComponentState.INVALID_CHANGED;
-        } else if (isValid() && !isDomainDataChanged()) {
+        } else if (isValid() && !isDomainModelChanged()) {
             recipeState = ComponentState.VALID_UNCHANGED;
         } else {
             addFailReasonNone();
@@ -249,8 +249,7 @@ public class RecipeMetadata
         return isValid;
     }
 
-    @Override
-    protected boolean isDomainDataChanged() {
+    protected boolean isDomainModelChanged() {
         boolean isChanged = false;
         for (ComponentState state : componentStates.values()) {
             if (ComponentState.INVALID_CHANGED == state || ComponentState.VALID_CHANGED == state) {
@@ -308,7 +307,7 @@ public class RecipeMetadata
         RecipeMetadataResponse.Builder builder = new RecipeMetadataResponse.Builder();
         builder.setDomainId(useCaseDomainId);
 
-        if (isDomainDataChanged()) {
+        if (isDomainModelChanged()) {
             RecipeMetadataPersistenceModel m = updatePersistenceModel();
             builder.setMetadata(getMetadata(m));
             persistenceModel = m;

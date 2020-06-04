@@ -1,13 +1,13 @@
 package com.example.peter.thekitchenmenu.domain.usecase.product.component.identity;
 
-import com.example.peter.thekitchenmenu.domain.model.BaseDomainModelPersistence;
+import com.example.peter.thekitchenmenu.domain.model.BaseDomainPersistenceModel;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
 public class ProductIdentityPersistenceModel
-        extends BaseDomainModelPersistence {
+        extends BaseDomainPersistenceModel {
 
     private String name;
     private String description;

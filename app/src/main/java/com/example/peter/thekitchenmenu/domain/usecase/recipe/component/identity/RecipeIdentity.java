@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
@@ -34,6 +35,44 @@ public class RecipeIdentity
         DomainDataAccess.GetDomainModelCallback<RecipeIdentityPersistenceModel> {
 
     private static final String TAG = "tkm-" + RecipeIdentity.class.getSimpleName() + ": ";
+
+    private static final class DomainModel {
+        @Nonnull
+        private String title = "";
+        @Nonnull
+        private String description = "";
+
+        public DomainModel() {
+        }
+
+        public DomainModel(@Nonnull String title, @Nonnull String description) {
+            this.title = title;
+            this.description = description;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof DomainModel)) return false;
+            DomainModel that = (DomainModel) o;
+            return title.equals(that.title) &&
+                    description.equals(that.description);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(title, description);
+        }
+
+        @Nonnull
+        @Override
+        public String toString() {
+            return "DomainModel{" +
+                    "title='" + title + '\'' +
+                    ", description='" + description + '\'' +
+                    '}';
+        }
+    }
 
     public enum FailReason implements FailReasons {
         TITLE_TOO_SHORT(300),
@@ -76,10 +115,15 @@ public class RecipeIdentity
     private final TimeProvider timeProvider;
     @Nonnull
     private final TextValidator textValidator;
-    @Nonnull
-    private final List<FailReasons> failReasons;
+
+    private DomainModel currentDomainModel;
+    private DomainModel newDomainModel;
 
     private RecipeIdentityPersistenceModel persistenceModel;
+
+    private boolean isChanged;
+    private boolean isTitleValidationComplete;
+    private boolean isDescriptionValidationComplete;
 
     public RecipeIdentity(@Nonnull RepositoryRecipeIdentity repository,
                           @Nonnull UniqueIdProvider idProvider,
@@ -90,88 +134,114 @@ public class RecipeIdentity
         this.timeProvider = timeProvider;
         this.textValidator = textValidator;
 
+        currentDomainModel = new DomainModel();
+        newDomainModel = new DomainModel();
+
         requestDomainModel = new RecipeIdentityRequest.DomainModel.Builder().getDefault().build();
-        failReasons = new ArrayList<>();
     }
 
     @Override
-    protected void loadDataByDataId() {
+    protected void loadDomainModelByDataId() {
         repository.getByDataId(useCaseDataId, this);
     }
 
     @Override
-    protected void loadDataByDomainId() {
+    protected void loadDomainModelByDomainId() {
         repository.getActiveByDomainId(useCaseDomainId, this);
     }
 
     @Override
     public void dataSourceOnDomainModelUnavailable() {
-        persistenceModel = createNewPersistenceModel();
-        failReasons.add(CommonFailReason.DATA_UNAVAILABLE);
-        processUseCaseDomainData();
-    }
-
-    private RecipeIdentityPersistenceModel createNewPersistenceModel() {
-        long currentTime = timeProvider.getCurrentTimeInMills();
-        useCaseDataId = idProvider.getUId();
-
-        return new RecipeIdentityPersistenceModel.Builder().
-                getDefault().
-                setDataId(useCaseDataId).
-                setDomainId(useCaseDomainId).
-                setCreateDate(currentTime).
-                setLastUpdate(currentTime).
-                build();
+        isDomainDataUnavailable = true;
+        newDomainModel = new DomainModel();
+        reprocessCurrentDomainModel();
     }
 
     @Override
     public void dataSourceOnDomainModelLoaded(RecipeIdentityPersistenceModel persistenceModel) {
+        isDomainDataUnavailable = false;
         this.persistenceModel = persistenceModel;
         useCaseDataId = persistenceModel.getDataId();
-        processUseCaseDomainData();
+        useCaseDomainId = persistenceModel.getDomainId();
+        newDomainModel = getNewDomainModelFromPersistenceModel(persistenceModel);
+        currentDomainModel = newDomainModel;
+        processNewDomainModel();
+    }
+
+    private DomainModel getNewDomainModelFromPersistenceModel(
+            RecipeIdentityPersistenceModel persistenceModel) {
+        return new DomainModel(persistenceModel.getTitle(), persistenceModel.getDescription());
     }
 
     @Override
-    protected void processRequestDomainData() {
+    protected void processRequestDomainModel() {
+        newDomainModel = getNewDomainModelFromRequestData();
+        processNewDomainModel();
+    }
 
+    private DomainModel getNewDomainModelFromRequestData() {
+        RecipeIdentityRequest.DomainModel requestModel = ((RecipeIdentityRequest) getRequest()).
+                getDomainModel();
+        return new DomainModel(requestModel.getTitle(), requestModel.getDescription());
+    }
+
+    private void processNewDomainModel() {
+        System.out.println(TAG + "processDomainData:");
+        isChanged = !currentDomainModel.equals(newDomainModel);
+
+        if (!isChanged) {
+            newDomainModel = currentDomainModel;
+        }
+        validateNewDomainModelElements();
     }
 
     @Override
-    protected void processUseCaseDomainData() {
-        setupUseCase();
-        validateDomainData();
-        buildResponse();
+    protected void reprocessCurrentDomainModel() {
+        System.out.println(
+                TAG + "reprocessCurrentDomainData called"
+        );
+        newDomainModel = currentDomainModel;
+        processNewDomainModel();
     }
 
-    private void setupUseCase() {
-        failReasons.clear();
-    }
+    private void validateNewDomainModelElements() {
+        System.out.println(
+                TAG + "validateDomainDataElements: new domain model=" + newDomainModel
+        );
+        setupDomainModelProcessing();
 
-    private void validateDomainData() {
         validateTitle();
+        validateDescription();
+    }
+
+    private void setupDomainModelProcessing() {
+        failReasons.clear();
+        isTitleValidationComplete = false;
+        isDescriptionValidationComplete = false;
     }
 
     private void validateTitle() {
         TextValidatorRequest request = new TextValidatorRequest(
                 TITLE_TEXT_TYPE,
-                new TextValidatorModel(getTitle())
+                new TextValidatorModel(newDomainModel.title)
         );
         textValidator.execute(request, new UseCaseBase.Callback<TextValidatorResponse>() {
             @Override
             public void onUseCaseSuccess(TextValidatorResponse response) {
-                validateDescription();
+                processResults();
             }
 
             @Override
             public void onUseCaseError(TextValidatorResponse response) {
                 addTitleFailReasonFromTextValidator(response.getFailReason());
-                validateDescription();
+                processResults();
+            }
+
+            private void processResults() {
+                isTitleValidationComplete = true;
+                processDomainModelValidationResults();
             }
         });
-    }
-
-    private String getTitle() {
-        return isNewRequest ? persistenceModel.getTitle() : requestDomainModel.getTitle();
     }
 
     private void addTitleFailReasonFromTextValidator(FailReasons failReason) {
@@ -186,25 +256,25 @@ public class RecipeIdentity
     private void validateDescription() {
         TextValidatorRequest request = new TextValidatorRequest(
                 DESCRIPTION_TEXT_TYPE,
-                new TextValidatorModel(getDescription())
+                new TextValidatorModel(newDomainModel.description)
         );
         textValidator.execute(request, new UseCaseBase.Callback<TextValidatorResponse>() {
             @Override
             public void onUseCaseSuccess(TextValidatorResponse response) {
-                if (failReasons.isEmpty()) {
-                    failReasons.add(CommonFailReason.NONE);
-                }
+                processResults();
             }
 
             @Override
             public void onUseCaseError(TextValidatorResponse response) {
                 addDescriptionFailReasonsFromTextValidator(response.getFailReason());
+                processResults();
+            }
+
+            private void processResults() {
+                isDescriptionValidationComplete = true;
+                processDomainModelValidationResults();
             }
         });
-    }
-
-    private String getDescription() {
-        return isNewRequest ? persistenceModel.getDescription() : requestDomainModel.getDescription();
     }
 
     private void addDescriptionFailReasonsFromTextValidator(FailReasons failReason) {
@@ -216,100 +286,79 @@ public class RecipeIdentity
         }
     }
 
-    protected void buildResponse() {
-        RecipeIdentityResponse.Builder builder = new RecipeIdentityResponse.Builder();
-        builder.setDomainId(useCaseDomainId);
-
-        if (ComponentState.VALID_CHANGED == getComponentState()) {
-            RecipeIdentityPersistenceModel m = updatePersistenceModel();
-            builder.setMetadata(getMetadata(m));
-            persistenceModel = m;
-            save();
-
-        } else {
-            builder.setMetadata(getMetadata(persistenceModel));
+    private void processDomainModelValidationResults() {
+        if (isTitleValidationComplete && isDescriptionValidationComplete) {
+            if (failReasons.isEmpty()) {
+                failReasons.add(CommonFailReason.NONE);
+            }
+            if (isDomainModelValid() && isChanged) {
+                save();
+            }
+            buildResponse();
         }
+    }
 
-        builder.setDomainModel(getResponseDomainModel());
-        builder.setDataId(useCaseDataId);
+    protected void buildResponse() {
+        RecipeIdentityResponse.Builder builder = new RecipeIdentityResponse.Builder().
+                setDataId(useCaseDataId).
+                setDomainId(useCaseDomainId).
+                setMetadata(getMetadata()).
+                setDomainModel(getResponseDomainModel());
 
         sendResponse(builder.build());
     }
 
-    private UseCaseMetadataModel getMetadata(RecipeIdentityPersistenceModel m) {
+    protected UseCaseMetadataModel getMetadata() {
         return new UseCaseMetadataModel.Builder().
                 setState(getComponentState()).
-                setFailReasons(new ArrayList<>(failReasons)).
+                setFailReasons(new ArrayList<>(getFailReasons())).
                 setCreatedBy(Constants.getUserId()).
-                setCreateDate(m.getCreateDate()).
-                setLasUpdate(m.getLastUpdate()).
-                build();
-    }
-
-    private ComponentState getComponentState() {
-        boolean isValid = failReasons.contains(CommonFailReason.NONE);
-
-        return isValid
-                ?
-                (isDomainDataChanged() ?
-                        ComponentState.VALID_CHANGED :
-                        ComponentState.VALID_UNCHANGED)
-                :
-                (isDomainDataChanged() ?
-                        ComponentState.INVALID_CHANGED :
-                        ComponentState.INVALID_UNCHANGED);
-    }
-
-    @Override
-    protected boolean isDomainDataChanged() {
-        return !isNewRequest && (isTitleChanged() || isDescriptionChanged());
-    }
-
-    private boolean isTitleChanged() {
-        return !persistenceModel.getTitle().toLowerCase().
-                equals(requestDomainModel.getTitle().toLowerCase().trim());
-    }
-
-    private boolean isDescriptionChanged() {
-        return !persistenceModel.getDescription().toLowerCase().trim().
-                equals(requestDomainModel.getDescription().toLowerCase().trim());
-    }
-
-    private RecipeIdentityPersistenceModel updatePersistenceModel() {
-        useCaseDataId = idProvider.getUId();
-        return new RecipeIdentityPersistenceModel.Builder().
-                basedOnPersistenceModel(persistenceModel).
-                setDataId(useCaseDataId).
-                setTitle(requestDomainModel.getTitle()).
-                setDescription(requestDomainModel.getDescription()).
-                setLastUpdate(timeProvider.getCurrentTimeInMills()).
+                setCreateDate(persistenceModel == null ? 0L : persistenceModel.getCreateDate()).
+                setLasUpdate(persistenceModel == null ? 0L : persistenceModel.getLastUpdate()).
                 build();
     }
 
     private RecipeIdentityResponse.DomainModel getResponseDomainModel() {
+        currentDomainModel = newDomainModel;
         return new RecipeIdentityResponse.DomainModel.Builder().
-                setTitle(isNewRequest ?
-                        persistenceModel.getTitle() :
-                        requestDomainModel.getTitle()).
-
-                setDescription(isNewRequest ?
-                        persistenceModel.getDescription() :
-                        requestDomainModel.getDescription()).
+                setTitle(currentDomainModel.title).
+                setDescription(currentDomainModel.description).
                 build();
     }
 
-    private void sendResponse(RecipeIdentityResponse r) {
-        System.out.println(TAG + "Response No:" + accessCount + " - " + r);
-        List<FailReasons> failReasons = r.getMetadata().getFailReasons();
+    private void save() {
+        currentDomainModel = newDomainModel;
+        boolean hasExistingPersistenceModel = persistenceModel != null;
 
-        if (failReasons.contains(CommonFailReason.NONE)) {
-            getUseCaseCallback().onUseCaseSuccess(r);
-        } else {
-            getUseCaseCallback().onUseCaseError(r);
+        if (hasExistingPersistenceModel) {
+            archiveExistingPersistenceModel();
         }
+        saveNewPersistenceModel();
     }
 
-    private void save() {
+    private void saveNewPersistenceModel() {
+        useCaseDataId = idProvider.getUId();
+        long currentTime = timeProvider.getCurrentTimeInMills();
+        persistenceModel = new RecipeIdentityPersistenceModel.Builder().
+                setDataId(useCaseDataId).
+                setDomainId(useCaseDomainId).
+                setTitle(currentDomainModel.title).
+                setDescription(currentDomainModel.description).
+                setCreateDate(currentTime).
+                setLastUpdate(currentTime).
+                build();
+
+        repository.save(persistenceModel);
+        isDomainDataUnavailable = false;
+    }
+
+    private void archiveExistingPersistenceModel() {
+        long currentTime = timeProvider.getCurrentTimeInMills();
+        RecipeIdentityPersistenceModel persistenceModel = new RecipeIdentityPersistenceModel.
+                Builder().
+                basedOnPersistenceModel(this.persistenceModel).
+                setLastUpdate(currentTime).
+                build();
         repository.save(persistenceModel);
     }
 }

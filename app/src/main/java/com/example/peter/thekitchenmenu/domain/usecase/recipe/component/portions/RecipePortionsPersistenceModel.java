@@ -1,13 +1,13 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions;
 
-import com.example.peter.thekitchenmenu.domain.model.BaseDomainModelPersistence;
+import com.example.peter.thekitchenmenu.domain.model.BaseDomainPersistenceModel;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
 public final class RecipePortionsPersistenceModel
-        extends BaseDomainModelPersistence {
+        extends BaseDomainPersistenceModel {
 
     private int servings;
     private int sittings;

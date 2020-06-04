@@ -68,6 +68,7 @@ public class RecipeDuration
     private final List<FailReasons> failReasons;
 
     private RecipeDurationPersistenceModel persistenceModel;
+    private boolean isNewRequest;
 
     public RecipeDuration(@Nonnull RepositoryRecipeDuration repository,
                           @Nonnull TimeProvider timeProvider,
@@ -86,12 +87,12 @@ public class RecipeDuration
     }
 
     @Override
-    protected void loadDataByDataId() {
+    protected void loadDomainModelByDataId() {
         repository.getByDataId(useCaseDataId, this);
     }
 
     @Override
-    protected void loadDataByDomainId() {
+    protected void loadDomainModelByDomainId() {
         repository.getActiveByDomainId(useCaseDomainId, this);
     }
 
@@ -99,18 +100,18 @@ public class RecipeDuration
     public void dataSourceOnDomainModelLoaded(RecipeDurationPersistenceModel persistenceModel) {
         this.persistenceModel = persistenceModel;
         useCaseDataId = persistenceModel.getDataId();
-        processUseCaseDomainData();
+        reprocessCurrentDomainModel();
     }
 
     @Override
-    protected void processUseCaseDomainData() {
+    protected void reprocessCurrentDomainModel() {
         setupUseCase();
         validateDomainData();
         buildResponse();
     }
 
     @Override
-    protected void processRequestDomainData() {
+    protected void processRequestDomainModel() {
 
     }
 
@@ -200,21 +201,7 @@ public class RecipeDuration
                 build();
     }
 
-    private ComponentState getComponentState() {
-        boolean isValid = failReasons.contains(CommonFailReason.NONE);
-
-        return isValid ?
-                (isDomainDataChanged() ?
-                        ComponentState.VALID_CHANGED :
-                        ComponentState.VALID_UNCHANGED)
-                :
-                (isDomainDataChanged() ?
-                        ComponentState.INVALID_CHANGED :
-                        ComponentState.INVALID_UNCHANGED);
-    }
-
-    @Override
-    protected boolean isDomainDataChanged() {
+    protected boolean isDomainModelChanged() {
         return !isNewRequest && (isPrepTimeChanged() || isCookTimeChanged());
     }
 

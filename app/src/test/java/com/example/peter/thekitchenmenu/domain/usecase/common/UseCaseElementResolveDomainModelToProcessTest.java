@@ -13,7 +13,7 @@ import javax.annotation.Nonnull;
 
 import static org.junit.Assert.*;
 
-public class UseCaseElementRequestFilteringTest {
+public class UseCaseElementResolveDomainModelToProcessTest {
     // region constants ----------------------------------------------------------------------------
     private static final String DATA_ID = "DATA_ID";
     private static final String DIFFERENT_DATA_ID = "DIFFERENT_DATA_ID";
@@ -44,18 +44,19 @@ public class UseCaseElementRequestFilteringTest {
     // region empty use case tests -----------------------------------------------------------------
     // An empty use case is one that is yet to receive its first request
     @Test
-    public void emptyUseCase_noDataIdNoDomainId_processUseCaseData() {
+    public void emptyUseCase_noDataIdNoDomainId_isReprocessCurrentDomainModel() {
         // Arrange
-        // A default 'empty' request returns the current state of the use case for all use cases
+        // A default 'empty' request returns the current state of the use case. Works for all use
+        // cases
         UseCaseElementRequest request = new UseCaseElementRequest.Builder().getDefault().build();
         // Act
         SUT.execute(request, new DummyUseCaseCallback());
         // Assert
-        assertTrue(SUT.isProcessingUseCaseData);
+        assertTrue(SUT.isReprocessCurrentDomainModel);
     }
 
     @Test
-    public void emptyUseCase_noDataIdHasDomainId_loadDataByDomainId() {
+    public void emptyUseCase_noDataIdHasDomainId_isLoadDomainModelByDomainId() {
         // Arrange
         UseCaseElementRequest request = new UseCaseElementRequest.Builder().
                 getDefault().
@@ -64,11 +65,11 @@ public class UseCaseElementRequestFilteringTest {
         // Act
         SUT.execute(request, new DummyUseCaseCallback());
         // Assert
-        assertTrue(SUT.isLoadingDataByDomainId);
+       assertTrue(SUT.isLoadDomainModelByDomainId);
     }
 
     @Test
-    public void emptyUseCase_hasDataIdNoDomainId_loadDataByDataId() {
+    public void emptyUseCase_hasDataIdNoDomainId_isLoadDomainModelByDataId() {
         // Arrange
         UseCaseElementRequest request = new UseCaseElementRequest.Builder().
                 getDefault().
@@ -77,11 +78,11 @@ public class UseCaseElementRequestFilteringTest {
         // Act
         SUT.execute(request, new DummyUseCaseCallback());
         // Assert
-        assertTrue(SUT.isLoadingDataByDataId);
+        assertTrue(SUT.isLoadDomainModelByDataId);
     }
 
     @Test
-    public void emptyUseCase_hasDataIdHasDomainId_loadDataByDataId() {
+    public void emptyUseCase_hasDataIdHasDomainId_isLoadDomainModelByDataId() {
         // Arrange
         UseCaseElementRequest request = new UseCaseElementRequest.Builder().
                 getDefault().
@@ -90,28 +91,27 @@ public class UseCaseElementRequestFilteringTest {
         // Act
         SUT.execute(request, new DummyUseCaseCallback());
         // Assert
-        assertTrue(SUT.isLoadingDataByDataId);
+        assertTrue(SUT.isLoadDomainModelByDataId);
     }
     // endregion empty use case tests --------------------------------------------------------------
 
     // region loaded use case tests ----------------------------------------------------------------
-
     @Test
-    public void loadedUseCase_noDataIdNoDomainId_processUseCaseData() {
+    public void loadedUseCase_noDataIdNoDomainId_isReprocessCurrentDomainModel() {
         // Arrange
-        emptyUseCase_hasDataIdHasDomainId_loadDataByDataId();
+        emptyUseCase_hasDataIdHasDomainId_isLoadDomainModelByDataId();
 
         UseCaseElementRequest request = new UseCaseElementRequest.Builder().getDefault().build();
         // Act
         SUT.execute(request, new DummyUseCaseCallback());
         // Assert
-        assertTrue(SUT.isProcessingUseCaseData);
+        assertTrue(SUT.isReprocessCurrentDomainModel);
     }
 
     @Test
-    public void loadedUseCase_noDataIdHasDomainIdEqualToUseCaseId_processRequestDomainModel() {
+    public void loadedUseCase_noDataIdHasDomainIdEqualToUseCaseId_isProcessRequestDomainModel() {
         // Arrange
-        emptyUseCase_hasDataIdHasDomainId_loadDataByDataId();
+        emptyUseCase_hasDataIdHasDomainId_isLoadDomainModelByDataId();
 
         UseCaseElementRequest request = new UseCaseElementRequest.Builder().
                 getDefault().
@@ -120,13 +120,13 @@ public class UseCaseElementRequestFilteringTest {
         // Act
         SUT.execute(request, new DummyUseCaseCallback());
         // Assert
-        assertTrue(SUT.isProcessingRequestDomainData);
+        assertTrue(SUT.isProcessRequestDomainModel);
     }
 
     @Test
-    public void loadedUseCase_noDataIdHasDomainIdNotEqualToUseCaseId_loadDataByDomainId() {
+    public void loadedUseCase_noDataIdHasDomainIdNotEqualToUseCaseId_isLoadDomainModelByDomainId() {
         // Arrange
-        emptyUseCase_hasDataIdHasDomainId_loadDataByDataId();
+        emptyUseCase_hasDataIdHasDomainId_isLoadDomainModelByDataId();
 
         UseCaseElementRequest request = new UseCaseElementRequest.Builder().
                 getDefault().
@@ -135,13 +135,13 @@ public class UseCaseElementRequestFilteringTest {
         // Act
         SUT.execute(request, new DummyUseCaseCallback());
         // Assert
-        assertTrue(SUT.isLoadingDataByDomainId);
+        assertTrue(SUT.isLoadDomainModelByDomainId);
     }
 
     @Test
-    public void loadedUseCase_hasDataIdEqualToUseCaseDataIdNoDomainId_processRequestDomainModel() {
+    public void loadedUseCase_hasDataIdEqualToUseCaseDataIdNoDomainId_isProcessRequestDomainModel() {
         // Arrange
-        emptyUseCase_hasDataIdHasDomainId_loadDataByDataId();
+        emptyUseCase_hasDataIdHasDomainId_isLoadDomainModelByDataId();
 
         UseCaseElementRequest request = new UseCaseElementRequest.Builder().
                 getDefault().
@@ -150,13 +150,13 @@ public class UseCaseElementRequestFilteringTest {
         // Act
         SUT.execute(request, new DummyUseCaseCallback());
         // Assert
-        assertTrue(SUT.isProcessingRequestDomainData);
+        assertTrue(SUT.isProcessRequestDomainModel);
     }
 
     @Test
-    public void loadedUseCase_hasDataIdNotEqualToUseCaseDataIdNoDomainId_loadDataByDataId() {
+    public void loadedUseCase_hasDataIdNotEqualToUseCaseDataIdNoDomainId_isLoadDomainModelByDataId() {
         // Arrange
-        emptyUseCase_hasDataIdHasDomainId_loadDataByDataId();
+        emptyUseCase_hasDataIdHasDomainId_isLoadDomainModelByDataId();
 
         UseCaseElementRequest request = new UseCaseElementRequest.Builder().
                 getDefault().
@@ -165,13 +165,13 @@ public class UseCaseElementRequestFilteringTest {
         // Act
         SUT.execute(request, new DummyUseCaseCallback());
         // Assert
-        assertTrue(SUT.isLoadingDataByDataId);
+        assertTrue(SUT.isLoadDomainModelByDataId);
     }
 
     @Test
-    public void loadedUseCase_hasDataIdEqualToUseCaseDataIdHasDomainIdEqualToUseCaseDomainId_processRequestDomainModel() {
+    public void loadedUseCase_hasDataIdEqualToUseCaseDataIdHasDomainIdEqualToUseCaseDomainId_UseCaseDomainDataSourceREQUEST() {
         // Arrange
-        emptyUseCase_hasDataIdHasDomainId_loadDataByDataId();
+        emptyUseCase_hasDataIdHasDomainId_isLoadDomainModelByDataId();
 
         UseCaseElementRequest request = new UseCaseElementRequest.Builder().
                 getDefault().
@@ -181,13 +181,13 @@ public class UseCaseElementRequestFilteringTest {
         // Act
         SUT.execute(request, new DummyUseCaseCallback());
         // Assert
-        assertTrue(SUT.isProcessingRequestDomainData);
+        assertTrue(SUT.isProcessRequestDomainModel);
     }
 
     @Test
-    public void loadedUseCase_hasDataIdNotEqualToUseCaseDataIdHasDomainIdEqualToUseCaseDomainId_loadDataByDataId() {
+    public void loadedUseCase_hasDataIdNotEqualToUseCaseDataIdHasDomainIdEqualToUseCaseDomainId_isLoadDomainModelByDataId() {
         // Arrange
-        emptyUseCase_hasDataIdHasDomainId_loadDataByDataId();
+        emptyUseCase_hasDataIdHasDomainId_isLoadDomainModelByDataId();
 
         UseCaseElementRequest request = new UseCaseElementRequest.Builder().
                 getDefault().
@@ -197,7 +197,7 @@ public class UseCaseElementRequestFilteringTest {
         // Act
         SUT.execute(request, new DummyUseCaseCallback());
         // Assert
-        assertTrue(SUT.isLoadingDataByDataId);
+        assertTrue(SUT.isLoadDomainModelByDataId);
     }
     // endregion loaded use case tests -------------------------------------------------------------
 
@@ -206,17 +206,17 @@ public class UseCaseElementRequestFilteringTest {
 
     // region helper classes -----------------------------------------------------------------------
     // Helper class to assist in testing abstract UseCaseElement
-    private static class UseCaseElementInheritor
+    public static class UseCaseElementInheritor
             extends
             UseCaseElement<UseCaseElementRequest.DomainModel> {
 
         private static final String TAG = "tkm-" + UseCaseElementInheritor.class.
                 getSimpleName() + ": ";
 
-        private boolean isLoadingDataByDataId;
-        private boolean isLoadingDataByDomainId;
-        private boolean isProcessingUseCaseData;
-        private boolean isProcessingRequestDomainData;
+        private boolean isLoadDomainModelByDataId;
+        private boolean isLoadDomainModelByDomainId;
+        private boolean isReprocessCurrentDomainModel;
+        private boolean isProcessRequestDomainModel;
 
         public UseCaseElementInheritor() {
             useCaseDomainModel = new UseCaseElementRequest.DomainModel() {
@@ -224,35 +224,27 @@ public class UseCaseElementRequestFilteringTest {
         }
 
         @Override
-        protected void loadDataByDataId() {
+        protected void loadDomainModelByDataId() {
+            isLoadDomainModelByDataId = true;
             System.out.println(TAG + "loading data by dataId");
-            isLoadingDataByDataId = true;
         }
 
         @Override
-        protected void loadDataByDomainId() {
+        protected void loadDomainModelByDomainId() {
+            isLoadDomainModelByDomainId = true;
             System.out.println(TAG + "loading data by domain Id");
-            isLoadingDataByDomainId = true;
         }
 
         @Override
-        protected void processUseCaseDomainData() {
+        protected void reprocessCurrentDomainModel() {
+            isReprocessCurrentDomainModel = true;
             System.out.println(TAG + "processing use case data");
-            isProcessingUseCaseData = true;
-            isDomainDataChanged();
         }
 
         @Override
-        protected void processRequestDomainData() {
+        protected void processRequestDomainModel() {
+            isProcessRequestDomainModel = true;
             System.out.println(TAG + "processing request domain model");
-            isProcessingRequestDomainData = true;
-        }
-
-        @Override
-        protected boolean isDomainDataChanged() {
-            System.out.println(TAG + "requestDomainModel=" + requestDomainModel +
-                    " useCaseDomainModel=" + useCaseDomainModel);
-            return false;
         }
     }
 

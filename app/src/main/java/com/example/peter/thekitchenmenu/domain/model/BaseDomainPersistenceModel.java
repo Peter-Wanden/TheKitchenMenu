@@ -1,6 +1,6 @@
 package com.example.peter.thekitchenmenu.domain.model;
 
-public abstract class BaseDomainModelPersistence
+public abstract class BaseDomainPersistenceModel
         extends BaseDomainModel
         implements DomainPersistenceModel {
 

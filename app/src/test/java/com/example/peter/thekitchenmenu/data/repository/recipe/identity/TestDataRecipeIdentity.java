@@ -101,8 +101,8 @@ public class TestDataRecipeIdentity {
                 setDataId("dataId-recipeIdentity=id5").
                 setDomainId(NEW_RECIPE_DOMAIN_ID).
                 setTitle(getValidNewComplete().getTitle()).
-                setCreateDate(10L).
-                setLastUpdate(60L).
+                setCreateDate(10L). // new saved models have the same create and last update dates
+                setLastUpdate(10L).
                 build();
     }
 
@@ -121,7 +121,7 @@ public class TestDataRecipeIdentity {
                 setDomainId(NEW_RECIPE_DOMAIN_ID).
                 setTitle(validTitle).
                 setDescription(validDescription).
-                setCreateDate(10L).
+                setCreateDate(70L).
                 setLastUpdate(70L).
                 build();
     }

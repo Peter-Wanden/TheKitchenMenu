@@ -28,6 +28,7 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -89,7 +90,6 @@ public class RecipeIdentityTest {
                 getInvalidNewEmpty();
         // Act
         simulateNewInitialisationRequest(modelUnderTest);
-
         // Assert - get elements to assert
         RecipeIdentityResponse response = callbackClient.onErrorResponse;
         UseCaseMetadataModel metadata = response.getMetadata();
@@ -104,8 +104,9 @@ public class RecipeIdentityTest {
 
         // Assert failReasons
         FailReasons[] expectedFailReasons = new FailReasons[]{
-                CommonFailReason.DATA_UNAVAILABLE,
-                FailReason.TITLE_TOO_SHORT};
+                FailReason.TITLE_TOO_SHORT,
+                CommonFailReason.DATA_UNAVAILABLE
+        };
         FailReasons[] actualFailReasons = metadata.getFailReasons().toArray(new FailReasons[0]);
         assertArrayEquals(
                 expectedFailReasons,
@@ -120,13 +121,12 @@ public class RecipeIdentityTest {
                 getInvalidNewTitleTooLongDescriptionTooLong();
 
         simulateNewInitialisationRequest(modelUnderTest);
+        RecipeIdentityResponse initialisationResponse = callbackClient.onErrorResponse;
 
         RecipeIdentityRequest.DomainModel model = new RecipeIdentityRequest.DomainModel.Builder().
                 setTitle(modelUnderTest.getTitle()).
                 setDescription(modelUnderTest.getDescription()).
                 build();
-
-        RecipeIdentityResponse initialisationResponse = callbackClient.onErrorResponse;
         RecipeIdentityRequest request = new RecipeIdentityRequest.Builder().
                 basedOnResponse(initialisationResponse).
                 setDomainModel(model).
@@ -153,14 +153,13 @@ public class RecipeIdentityTest {
         RecipeIdentityPersistenceModel modelUnderTest = TestDataRecipeIdentity.
                 getInvalidNewTitleTooLongDescriptionTooLong();
 
-        simulateNewInitialisationRequest(modelUnderTest);
+        simulateNewInitialisationRequest(modelUnderTest); // first request
+        RecipeIdentityResponse initialisationResponse = callbackClient.onErrorResponse;
 
         RecipeIdentityRequest.DomainModel model = new RecipeIdentityRequest.DomainModel.Builder().
                 setTitle(modelUnderTest.getTitle()).
                 setDescription(modelUnderTest.getDescription()).
                 build();
-
-        RecipeIdentityResponse initialisationResponse = callbackClient.onErrorResponse;
         RecipeIdentityRequest request = new RecipeIdentityRequest.Builder().
                 basedOnResponse(initialisationResponse).
                 setDomainModel(model).
@@ -176,7 +175,8 @@ public class RecipeIdentityTest {
         // Assert fail reasons
         FailReasons[] expectedFailReasons = new FailReasons[]{
                 FailReason.TITLE_TOO_LONG,
-                FailReason.DESCRIPTION_TOO_LONG
+                FailReason.DESCRIPTION_TOO_LONG,
+                CommonFailReason.DATA_UNAVAILABLE // Data has never been in a valid state to save
         };
         FailReasons[] actualFailReasons = metadata.getFailReasons().toArray(new FailReasons[0]);
         assertArrayEquals(
@@ -192,15 +192,14 @@ public class RecipeIdentityTest {
                 getInvalidNewTitleTooShortDescriptionValid();
 
         simulateNewInitialisationRequest(modelUnderTest);
+        RecipeIdentityResponse initialisationResponse = callbackClient.onErrorResponse;
 
         RecipeIdentityRequest.DomainModel model = new RecipeIdentityRequest.DomainModel.Builder().
                 setTitle(modelUnderTest.getTitle()).
                 setDescription(modelUnderTest.getDescription()).
                 build();
-
         RecipeIdentityRequest request = new RecipeIdentityRequest.Builder().
-                setDataId(callbackClient.onErrorResponse.getDataId()).
-                setDomainId(callbackClient.onErrorResponse.getDomainId()).
+                basedOnResponse(initialisationResponse).
                 setDomainModel(model).
                 build();
 
@@ -218,7 +217,10 @@ public class RecipeIdentityTest {
                 actualComponentState
         );
 
-        FailReasons[] expectedFailReasons = new FailReasons[]{FailReason.TITLE_TOO_SHORT};
+        FailReasons[] expectedFailReasons = new FailReasons[]{
+                FailReason.TITLE_TOO_SHORT,
+                CommonFailReason.DATA_UNAVAILABLE
+        };
         FailReasons[] actualFailReasons = metadata.getFailReasons().toArray(new FailReasons[0]);
         assertArrayEquals(
                 expectedFailReasons,
@@ -258,7 +260,10 @@ public class RecipeIdentityTest {
                 actualComponentState
         );
 
-        FailReasons[] expectedFailReasons = new FailReasons[]{FailReason.TITLE_TOO_SHORT};
+        FailReasons[] expectedFailReasons = new FailReasons[]{
+                FailReason.TITLE_TOO_SHORT,
+                CommonFailReason.DATA_UNAVAILABLE
+        };
         FailReasons[] actualFailReasons = metadata.getFailReasons().toArray(new FailReasons[0]);
         assertArrayEquals(
                 expectedFailReasons,
@@ -273,19 +278,19 @@ public class RecipeIdentityTest {
                 getValidNewTitleValid();
 
         simulateNewInitialisationRequest(modelUnderTest);
+        RecipeIdentityResponse initialisationResponse = callbackClient.onErrorResponse;
 
         RecipeIdentityRequest.DomainModel model = new RecipeIdentityRequest.DomainModel.Builder().
                 setTitle(modelUnderTest.getTitle()).
                 setDescription(modelUnderTest.getDescription()).
                 build();
-
         RecipeIdentityRequest request = new RecipeIdentityRequest.Builder().
-                basedOnResponse(callbackClient.onErrorResponse).
+                basedOnResponse(initialisationResponse).
                 setDomainModel(model).
                 build();
 
         // title updated, new persistence model created
-        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(modelUnderTest.getLastUpdate());
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(modelUnderTest.getCreateDate());
         when(idProvider.getUId()).thenReturn(modelUnderTest.getDataId());
         // Act
         SUT.execute(request, callbackClient);
@@ -300,21 +305,21 @@ public class RecipeIdentityTest {
                 getValidNewTitleValid();
 
         simulateNewInitialisationRequest(modelUnderTest);
+        RecipeIdentityResponse initialisationResponse = callbackClient.onErrorResponse;
 
         RecipeIdentityRequest.DomainModel model = new RecipeIdentityRequest.DomainModel.Builder().
                 setTitle(modelUnderTest.getTitle()).
                 setDescription(modelUnderTest.getDescription()).
                 build();
-
         RecipeIdentityRequest request = new RecipeIdentityRequest.Builder().
-                setDataId(callbackClient.onErrorResponse.getDataId()).
-                setDomainId(callbackClient.onErrorResponse.getDomainId()).
+                basedOnResponse(initialisationResponse).
                 setDomainModel(model).
                 build();
 
         // new persistence model created, requires date stamp and new data id
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(modelUnderTest.getLastUpdate());
         when(idProvider.getUId()).thenReturn(modelUnderTest.getDataId());
+
         // Act
         SUT.execute(request, callbackClient);
 
@@ -341,24 +346,24 @@ public class RecipeIdentityTest {
     public void newRequest_titleValidDescriptionValid_valuesPersisted() {
         // Arrange
         RecipeIdentityPersistenceModel modelUnderTest = TestDataRecipeIdentity.
-                getValidNewComplete();
+                getValidNewTitleValid();
 
         simulateNewInitialisationRequest(modelUnderTest);
+        RecipeIdentityResponse initialisationResponse = callbackClient.onErrorResponse;
 
         RecipeIdentityRequest.DomainModel model = new RecipeIdentityRequest.DomainModel.Builder().
                 setTitle(modelUnderTest.getTitle()).
                 setDescription(modelUnderTest.getDescription()).
                 build();
-
         RecipeIdentityRequest request = new RecipeIdentityRequest.Builder().
-                setDataId(callbackClient.onErrorResponse.getDataId()).
-                setDomainId(callbackClient.onErrorResponse.getDomainId()).
+                basedOnResponse(initialisationResponse).
                 setDomainModel(model).
                 build();
 
         // new persistence model created, requires date stamp and new data id
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(modelUnderTest.getLastUpdate());
         when(idProvider.getUId()).thenReturn(modelUnderTest.getDataId());
+
         // Act
         SUT.execute(request, callbackClient);
 
@@ -377,40 +382,43 @@ public class RecipeIdentityTest {
     }
 
     @Test
-    public void newRequest_titleValid_then_descriptionValid_stateVALID_CHANGED() {
+    public void newRequest_titleValidThenDescriptionValid_stateVALID_CHANGED() {
         // Arrange
         RecipeIdentityPersistenceModel modelUnderTest = TestDataRecipeIdentity.
                 getValidNewComplete();
-        expectedNoOfFailReasons = 1;
 
         // Request 1: initialisation request
         simulateNewInitialisationRequest(modelUnderTest);
+        RecipeIdentityResponse initialisationResponse = callbackClient.onErrorResponse;
 
         // Request 2: Valid new title request
-        RecipeIdentityRequest.DomainModel titleModel = new RecipeIdentityRequest.DomainModel.Builder().
+        RecipeIdentityRequest.DomainModel titleModel = new RecipeIdentityRequest.DomainModel.
+                Builder().
                 getDefault().
                 setTitle(modelUnderTest.getTitle()).
                 build();
         RecipeIdentityRequest titleRequest = new RecipeIdentityRequest.Builder().
-                setDataId(callbackClient.onErrorResponse.getDataId()).
-                setDomainId(callbackClient.onErrorResponse.getDomainId()).
+                basedOnResponse(initialisationResponse).
                 setDomainModel(titleModel).
                 build();
 
         // new persistence model created, requires date stamp and new data id
-        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(modelUnderTest.getLastUpdate());
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(modelUnderTest.getCreateDate());
         when(idProvider.getUId()).thenReturn(modelUnderTest.getDataId());
+
         // Act
         SUT.execute(titleRequest, callbackClient);
 
-        // Request 3: valid new description request, copy previous values from last response
+        // Request 3: valid new description request, copy values we are not going to change from
+        // last response, only add those we are going to change
+        RecipeIdentityResponse titleResponse = callbackClient.onSuccessResponse;
+
         RecipeIdentityRequest.DomainModel descriptionModel = new RecipeIdentityRequest.DomainModel.Builder().
-                basedOnResponseModel(callbackClient.onSuccessResponse.getDomainModel()).
+                basedOnResponseModel(titleResponse.getDomainModel()).
                 setDescription(modelUnderTest.getDescription()).
                 build();
         RecipeIdentityRequest descriptionRequest = new RecipeIdentityRequest.Builder().
-                setDataId(callbackClient.onSuccessResponse.getDataId()).
-                setDomainId(callbackClient.onSuccessResponse.getDomainId()).
+                basedOnResponse(titleResponse).
                 setDomainModel(descriptionModel).
                 build();
 
@@ -420,11 +428,24 @@ public class RecipeIdentityTest {
         // Act
         SUT.execute(descriptionRequest, callbackClient);
 
-        // Assert second save equal to test model
-        verify(repoIdentityMock).save(eq(modelUnderTest));
+        // Assert
+        // There are 3 saves. Once for a valid title, second save to archive first save, third save
+        // to save the valid description
+        int expectedNumberOfSaves = 3;
 
-        RecipeIdentityResponse response = callbackClient.onSuccessResponse;
-        UseCaseMetadataModel metadata = response.getMetadata();
+        // Assert data saved
+        ArgumentCaptor<RecipeIdentityPersistenceModel> ac = ArgumentCaptor.
+                forClass(RecipeIdentityPersistenceModel.class);
+        verify(repoIdentityMock, times(expectedNumberOfSaves)).save(ac.capture());
+
+        RecipeIdentityPersistenceModel lastSavedDomainModel = ac.getValue();
+        assertEquals(
+                modelUnderTest,
+                lastSavedDomainModel
+        );
+
+        RecipeIdentityResponse descriptionResponse = callbackClient.onSuccessResponse;
+        UseCaseMetadataModel metadata = descriptionResponse.getMetadata();
 
         // Assert state
         ComponentState expectedComponentState = ComponentState.VALID_CHANGED;
@@ -457,8 +478,8 @@ public class RecipeIdentityTest {
         ComponentState expectedComponentState = ComponentState.VALID_UNCHANGED;
         ComponentState actualComponentState = metadata.getComponentState();
         assertEquals(
-                actualComponentState,
-                expectedComponentState
+                expectedComponentState,
+                actualComponentState
         );
     }
 
@@ -601,18 +622,19 @@ public class RecipeIdentityTest {
         // Arrange
         RecipeIdentityPersistenceModel modelUnderTest = TestDataRecipeIdentity.
                 getInvalidExistingTitleValidDescriptionTooLong();
-        expectedNoOfFailReasons = 1;
+
         // Act
         simulateExistingInitialisationRequest(modelUnderTest);
         // Assert
-        List<FailReasons> failReasons = callbackClient.onErrorResponse.
-                getMetadata().
-                getFailReasons();
-        assertEquals(
-                expectedNoOfFailReasons,
-                failReasons.size()
+        UseCaseMetadataModel metadata = callbackClient.onErrorResponse.getMetadata();
+
+        FailReasons[] expectedFailReasons = new FailReasons[]{FailReason.DESCRIPTION_TOO_LONG};
+        FailReasons[] actualFailReasons = metadata.getFailReasons().toArray(new FailReasons[0]);
+
+        assertArrayEquals(
+                expectedFailReasons,
+                actualFailReasons
         );
-        assertTrue(failReasons.contains(RecipeIdentity.FailReason.DESCRIPTION_TOO_LONG));
     }
 
     @Test
@@ -763,14 +785,11 @@ public class RecipeIdentityTest {
     // region helper methods -----------------------------------------------------------------------
     private void simulateNewInitialisationRequest(
             RecipeIdentityPersistenceModel modelUnderTest) {
+
         // Arrange - data id requested when creating a new persistence model
-        when(idProvider.getUId()).thenReturn(TestDataRecipeIdentity.
-                getInvalidNewEmpty().
-                getDataId());
+        when(idProvider.getUId()).thenReturn(modelUnderTest.getDataId());
         // create date and last update requested when creating a new persistence model
-        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(TestDataRecipeIdentity.
-                getInvalidNewEmpty().
-                getCreateDate());
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(modelUnderTest.getCreateDate());
 
         RecipeIdentityRequest initialisationRequest = new RecipeIdentityRequest.Builder().
                 getDefault().

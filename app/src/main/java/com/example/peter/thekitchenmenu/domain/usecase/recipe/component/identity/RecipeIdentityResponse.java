@@ -47,7 +47,9 @@ public final class RecipeIdentityResponse
         }
     }
 
-    public static final class DomainModel extends BaseDomainModel {
+    public static final class DomainModel
+            extends
+            BaseDomainModel {
         private String title;
         private String description;
 

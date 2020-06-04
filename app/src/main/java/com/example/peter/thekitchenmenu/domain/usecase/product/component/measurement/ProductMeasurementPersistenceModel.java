@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecase.product.component.measurement;
 
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;
-import com.example.peter.thekitchenmenu.domain.model.BaseDomainModelPersistence;
+import com.example.peter.thekitchenmenu.domain.model.BaseDomainPersistenceModel;
 import com.example.peter.thekitchenmenu.domain.usecase.product.component.measurement.ProductMeasurement.ShelfLife;
 
 import java.util.Objects;
@@ -11,7 +11,7 @@ import javax.annotation.Nonnull;
 import static com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants.*;
 
 public class ProductMeasurementPersistenceModel
-        extends BaseDomainModelPersistence {
+        extends BaseDomainPersistenceModel {
 
     private String productId;
     private int numberOfItems;

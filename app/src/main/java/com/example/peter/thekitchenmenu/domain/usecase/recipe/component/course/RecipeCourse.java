@@ -86,12 +86,12 @@ public class RecipeCourse
     }
 
     @Override
-    protected void loadDataByDataId() {
+    protected void loadDomainModelByDataId() {
         // only uses domain id's
     }
 
     @Override
-    protected void loadDataByDomainId() {
+    protected void loadDomainModelByDomainId() {
         repository.getAllActiveByDomainId(useCaseDomainId, this);
     }
 
@@ -130,12 +130,12 @@ public class RecipeCourse
     }
 
     @Override
-    protected void processRequestDomainData() {
+    protected void processRequestDomainModel() {
 
     }
 
     @Override
-    protected void processUseCaseDomainData() {
+    protected void reprocessCurrentDomainModel() {
         setupUseCase();
         processCourseAdditions();
         processCourseSubtractions();
@@ -247,36 +247,11 @@ public class RecipeCourse
                 build();
     }
 
-    private ComponentState getComponentState() {
-        if (!isValid()) createDate = 0L;
-
-        return isValid() ?
-                (isDomainDataChanged() ?
-                        ComponentState.VALID_CHANGED :
-                        ComponentState.VALID_UNCHANGED)
-                :
-                (isDomainDataChanged() ?
-                        ComponentState.INVALID_CHANGED :
-                        ComponentState.INVALID_UNCHANGED);
-    }
-
     private boolean isValid() {
         return activeCourseList.size() >= MINIMUM_COURSE_LIST_SIZE;
     }
 
-    @Override
-    protected boolean isDomainDataChanged() {
+    protected boolean isDomainModelChanged() {
         return isChanged;
-    }
-
-    private List<FailReasons> getFailReasons() {
-        List<FailReasons> failReasons = new ArrayList<>();
-        if (isValid()) {
-            failReasons.add(CommonFailReason.NONE);
-        } else {
-            failReasons.add(CommonFailReason.DATA_UNAVAILABLE);
-
-        }
-        return failReasons;
     }
 }
