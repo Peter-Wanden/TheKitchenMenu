@@ -55,13 +55,13 @@ public class RepositoryIngredientLocal
                 dataId,
                 new GetDomainModelCallback<IngredientPersistenceModel>() {
                     @Override
-                    public void dataSourceOnDomainModelLoaded(IngredientPersistenceModel model) {
-                        callback.dataSourceOnDomainModelLoaded(model);
+                    public void onDomainModelLoaded(IngredientPersistenceModel model) {
+                        callback.onDomainModelLoaded(model);
                     }
 
                     @Override
-                    public void dataSourceOnDomainModelUnavailable() {
-                        callback.dataSourceOnDomainModelUnavailable();
+                    public void onDomainModelUnavailable() {
+                        callback.onDomainModelUnavailable();
                     }
                 }
         );
@@ -75,13 +75,13 @@ public class RepositoryIngredientLocal
                 domainId,
                 new GetDomainModelCallback<IngredientPersistenceModel>() {
                     @Override
-                    public void dataSourceOnDomainModelLoaded(IngredientPersistenceModel model) {
-                        callback.dataSourceOnDomainModelLoaded(model);
+                    public void onDomainModelLoaded(IngredientPersistenceModel model) {
+                        callback.onDomainModelLoaded(model);
                     }
 
                     @Override
-                    public void dataSourceOnDomainModelUnavailable() {
-                        callback.dataSourceOnDomainModelUnavailable();
+                    public void onDomainModelUnavailable() {
+                        callback.onDomainModelUnavailable();
                     }
                 }
         );
@@ -92,13 +92,13 @@ public class RepositoryIngredientLocal
         getAdapter.getAll(
                 new GetAllDomainModelsCallback<IngredientPersistenceModel>() {
                     @Override
-                    public void onAllLoaded(List<IngredientPersistenceModel> models) {
-                        callback.onAllLoaded(models);
+                    public void onAllDomainModelsLoaded(List<IngredientPersistenceModel> models) {
+                        callback.onAllDomainModelsLoaded(models);
                     }
 
                     @Override
-                    public void onModelsUnavailable() {
-                        callback.onModelsUnavailable();
+                    public void onDomainModelsUnavailable() {
+                        callback.onDomainModelsUnavailable();
                     }
                 }
         );

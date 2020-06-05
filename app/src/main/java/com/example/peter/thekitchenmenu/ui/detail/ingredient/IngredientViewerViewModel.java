@@ -30,12 +30,12 @@ public class IngredientViewerViewModel
     }
 
     @Override
-    public void dataSourceOnDomainModelLoaded(IngredientPersistenceModel model) {
+    public void onDomainModelLoaded(IngredientPersistenceModel model) {
         setIngredientToDisplay(model);
     }
 
     @Override
-    public void dataSourceOnDomainModelUnavailable() {
+    public void onDomainModelUnavailable() {
 
     }
 

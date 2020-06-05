@@ -841,7 +841,7 @@ public class RecipeDurationTest {
         // Assert
         verify(repoMock).getActiveByDomainId(eq(modelUnderTest.getDomainId()),
                 repoCallback.capture());
-        repoCallback.getValue().dataSourceOnDomainModelLoaded(modelUnderTest);
+        repoCallback.getValue().onDomainModelLoaded(modelUnderTest);
 
         assertEquals(
                 RecipeMetadata.ComponentState.INVALID_UNCHANGED,
@@ -887,7 +887,7 @@ public class RecipeDurationTest {
         SUT.execute(initialisationRequest, new DurationCallbackClient());
 
         verify(repoMock).getActiveByDomainId(eq(domainId), repoCallback.capture());
-        repoCallback.getValue().dataSourceOnDomainModelUnavailable();
+        repoCallback.getValue().onDomainModelUnavailable();
     }
 
     private void sendInitialiseRequestForValidExistingModel() {
@@ -903,7 +903,7 @@ public class RecipeDurationTest {
         SUT.execute(request, new DurationCallbackClient());
         verify(repoMock).getActiveByDomainId(eq(modelUnderTest.getDomainId()),
                 repoCallback.capture());
-        repoCallback.getValue().dataSourceOnDomainModelLoaded(modelUnderTest);
+        repoCallback.getValue().onDomainModelLoaded(modelUnderTest);
     }
     // endregion helper methods --------------------------------------------------------------------
 

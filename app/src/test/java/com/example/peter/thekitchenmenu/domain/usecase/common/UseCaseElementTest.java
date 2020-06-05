@@ -1,6 +1,8 @@
 package com.example.peter.thekitchenmenu.domain.usecase.common;
 
 import com.example.peter.thekitchenmenu.domain.model.BaseDomainModel;
+import com.example.peter.thekitchenmenu.domain.model.BaseDomainPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.model.UseCaseDomainModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataId;
 
 import org.junit.Before;
@@ -13,7 +15,7 @@ import javax.annotation.Nonnull;
 
 import static org.junit.Assert.*;
 
-public class UseCaseElementResolveDomainModelToProcessTest {
+public class UseCaseElementTest {
     // region constants ----------------------------------------------------------------------------
     private static final String DATA_ID = "DATA_ID";
     private static final String DIFFERENT_DATA_ID = "DIFFERENT_DATA_ID";
@@ -208,10 +210,14 @@ public class UseCaseElementResolveDomainModelToProcessTest {
     // Helper class to assist in testing abstract UseCaseElement
     public static class UseCaseElementInheritor
             extends
-            UseCaseElement<UseCaseElementRequest.DomainModel> {
+            UseCaseElement<TestPersistenceModel, UseCaseElementInheritor.DomainModel> {
 
         private static final String TAG = "tkm-" + UseCaseElementInheritor.class.
                 getSimpleName() + ": ";
+
+        static final class DomainModel implements UseCaseDomainModel {
+            String comparisonString;
+        }
 
         private boolean isLoadDomainModelByDataId;
         private boolean isLoadDomainModelByDomainId;
@@ -219,8 +225,6 @@ public class UseCaseElementResolveDomainModelToProcessTest {
         private boolean isProcessRequestDomainModel;
 
         public UseCaseElementInheritor() {
-            useCaseDomainModel = new UseCaseElementRequest.DomainModel() {
-            };
         }
 
         @Override
@@ -246,12 +250,13 @@ public class UseCaseElementResolveDomainModelToProcessTest {
             isProcessRequestDomainModel = true;
             System.out.println(TAG + "processing request domain model");
         }
+
     }
 
     // Helper request class
     public static class UseCaseElementRequest
             extends
-            UseCaseMessageModelDataId<UseCaseElementRequest.DomainModel>
+            UseCaseMessageModelDataId<UseCaseElementRequest.RequestDomainModel>
             implements UseCaseBase.Request {
 
         private UseCaseElementRequest() {
@@ -269,7 +274,8 @@ public class UseCaseElementResolveDomainModelToProcessTest {
 
         public static class Builder
                 extends
-                UseCaseMessageModelDataIdBuilder<Builder, UseCaseElementRequest, DomainModel> {
+                UseCaseMessageModelDataIdBuilder
+                        <Builder, UseCaseElementRequest, RequestDomainModel> {
 
             public Builder() {
                 message = new UseCaseElementRequest();
@@ -279,7 +285,7 @@ public class UseCaseElementResolveDomainModelToProcessTest {
             public Builder getDefault() {
                 message.dataId = "";
                 message.domainId = "";
-                message.model = new DomainModel.Builder().getDefault().build();
+                message.model = new RequestDomainModel.Builder().getDefault().build();
                 return self();
             }
 
@@ -289,7 +295,7 @@ public class UseCaseElementResolveDomainModelToProcessTest {
             }
         }
 
-        private static class DomainModel
+        private static class RequestDomainModel
                 extends
                 BaseDomainModel {
 
@@ -300,7 +306,7 @@ public class UseCaseElementResolveDomainModelToProcessTest {
             public boolean equals(Object o) {
                 if (this == o) return true;
                 if (o == null || getClass() != o.getClass()) return false;
-                DomainModel that = (DomainModel) o;
+                RequestDomainModel that = (RequestDomainModel) o;
                 return Objects.equals(comparisonString, that.comparisonString);
             }
 
@@ -319,10 +325,10 @@ public class UseCaseElementResolveDomainModelToProcessTest {
 
             private static class Builder
                     extends
-                    DomainModelBuilder<Builder, UseCaseElementRequest.DomainModel> {
+                    DomainModelBuilder<Builder, RequestDomainModel> {
 
                 public Builder() {
-                    domainModel = new DomainModel();
+                    domainModel = new RequestDomainModel();
                 }
 
                 @Override
@@ -345,7 +351,9 @@ public class UseCaseElementResolveDomainModelToProcessTest {
     }
 
     // We will not be receiving a response, but we need a callback so create a Dummy callback class.
-    private static class DummyUseCaseCallback implements UseCaseBase.Callback<UseCaseBase.Response> {
+    private static class DummyUseCaseCallback
+            implements
+            UseCaseBase.Callback<UseCaseBase.Response> {
         @Override
         public void onUseCaseSuccess(UseCaseBase.Response response) {
 
@@ -355,6 +363,11 @@ public class UseCaseElementResolveDomainModelToProcessTest {
         public void onUseCaseError(UseCaseBase.Response response) {
 
         }
+    }
+
+    private static class TestPersistenceModel
+            extends
+            BaseDomainPersistenceModel {
     }
     // endregion helper classes --------------------------------------------------------------------
 }

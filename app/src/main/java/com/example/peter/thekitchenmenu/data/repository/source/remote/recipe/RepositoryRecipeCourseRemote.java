@@ -21,42 +21,42 @@ public class RepositoryRecipeCourseRemote
     public void getByDataId(
             @Nonnull String dataId,
             @Nonnull GetDomainModelCallback<RecipeCoursePersistenceModel> callback) {
-        callback.dataSourceOnDomainModelUnavailable();
+        callback.onDomainModelUnavailable();
     }
 
     @Override
     public void getAllByDomainId(
             @Nonnull String recipeId,
             @Nonnull GetAllDomainModelsCallback<RecipeCoursePersistenceModel> callback) {
-        callback.onModelsUnavailable();
+        callback.onDomainModelsUnavailable();
     }
 
     @Override
     public void getAllByCourse(
             @Nonnull RecipeCourse.Course c,
             @Nonnull GetAllDomainModelsCallback<RecipeCoursePersistenceModel> callback) {
-        callback.onModelsUnavailable();
+        callback.onDomainModelsUnavailable();
     }
 
     @Override
     public void getActiveByDomainId(
             @Nonnull String domainId,
             @Nonnull GetDomainModelCallback<RecipeCoursePersistenceModel> callback) {
-        callback.dataSourceOnDomainModelUnavailable();
+        callback.onDomainModelUnavailable();
     }
 
     @Override
     public void getAllActiveByDomainId(
             @Nonnull String domainId,
             @Nonnull GetAllDomainModelsCallback<RecipeCoursePersistenceModel> callback) {
-        callback.onModelsUnavailable();
+        callback.onDomainModelsUnavailable();
 
     }
 
     @Override
     public void getAll(
             @Nonnull GetAllDomainModelsCallback<RecipeCoursePersistenceModel> callback) {
-        callback.onModelsUnavailable();
+        callback.onDomainModelsUnavailable();
     }
 
     @Override

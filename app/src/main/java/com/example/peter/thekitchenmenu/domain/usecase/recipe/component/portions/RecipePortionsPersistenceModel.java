@@ -11,8 +11,6 @@ public final class RecipePortionsPersistenceModel
 
     private int servings;
     private int sittings;
-    private long createDate;
-    private long lastUpdate;
 
     private RecipePortionsPersistenceModel() {}
 
@@ -24,46 +22,31 @@ public final class RecipePortionsPersistenceModel
         return sittings;
     }
 
-    public long getCreateDate() {
-        return createDate;
-    }
-
-    public long getLastUpdate() {
-        return lastUpdate;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof RecipePortionsPersistenceModel)) return false;
+        if (!super.equals(o)) return false;
         RecipePortionsPersistenceModel that = (RecipePortionsPersistenceModel) o;
-        return dataId.equals(that.dataId) &&
-                domainId.equals(that.domainId) &&
-                servings == that.servings &&
-                sittings == that.sittings &&
-                createDate == that.createDate &&
-                lastUpdate == that.lastUpdate;
+        return servings == that.servings &&
+                sittings == that.sittings;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(dataId, domainId, servings, sittings, createDate, lastUpdate);
+        return Objects.hash(super.hashCode(), servings, sittings);
     }
 
     @Override
     public String toString() {
         return "RecipePortionsPersistenceModel{" +
-                "dataId='" + dataId + '\'' +
-                ", domainId='" + domainId + '\'' +
-                ", servings=" + servings +
+                "servings=" + servings +
                 ", sittings=" + sittings +
-                ", createDate=" + createDate +
-                ", lastUpdate=" + lastUpdate +
                 '}';
     }
 
     public static class Builder
-            extends DomainModelBuilder<Builder, RecipePortionsPersistenceModel> {
+            extends PersistenceModelBuilder<Builder, RecipePortionsPersistenceModel> {
 
         public Builder() {
             domainModel = new RecipePortionsPersistenceModel();
@@ -79,24 +62,13 @@ public final class RecipePortionsPersistenceModel
             return self();
         }
 
-        public Builder basedOnModel(
-                @Nonnull RecipePortionsPersistenceModel m) {
+        public Builder basedOnModel(@Nonnull RecipePortionsPersistenceModel m) {
             domainModel.dataId = m.getDataId();
             domainModel.domainId = m.getDomainId();
             domainModel.servings = m.getServings();
             domainModel.sittings = m.getSittings();
             domainModel.createDate = m.getCreateDate();
             domainModel.lastUpdate = m.getLastUpdate();
-            return self();
-        }
-
-        public Builder setDataId(@Nonnull String dataId) {
-            domainModel.dataId = dataId;
-            return self();
-        }
-
-        public Builder setDomainId(@Nonnull String domainId) {
-            domainModel.domainId = domainId;
             return self();
         }
 
@@ -107,16 +79,6 @@ public final class RecipePortionsPersistenceModel
 
         public Builder setSittings(int sittings) {
             domainModel.sittings = sittings;
-            return self();
-        }
-
-        public Builder setCreateDate(long createDate) {
-            domainModel.createDate = createDate;
-            return self();
-        }
-
-        public Builder setLastUpdate(long lastUpdate) {
-            domainModel.lastUpdate = lastUpdate;
             return self();
         }
 

@@ -108,7 +108,7 @@ public class UseCaseMetadataModel {
                     setFailReasons(getDefaultFailReasons()).
                     setCreatedBy(Constants.getUserId()).
                     setCreateDate(0L).
-                    setLasUpdate(0L);
+                    setLastUpdate(0L);
         }
 
         public Builder setState(ComponentState state) {
@@ -131,7 +131,7 @@ public class UseCaseMetadataModel {
             return this;
         }
 
-        public Builder setLasUpdate(long lasUpdate) {
+        public Builder setLastUpdate(long lasUpdate) {
             this.lasUpdate = lasUpdate;
             return this;
         }

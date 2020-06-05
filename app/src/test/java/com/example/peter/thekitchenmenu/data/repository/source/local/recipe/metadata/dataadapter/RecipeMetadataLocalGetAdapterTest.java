@@ -211,13 +211,13 @@ public class RecipeMetadataLocalGetAdapterTest {
         private boolean onModelUnavailable;
 
         @Override
-        public void dataSourceOnDomainModelLoaded(RecipeMetadataPersistenceModel model) {
+        public void onDomainModelLoaded(RecipeMetadataPersistenceModel model) {
             System.out.println(TAG + model);
             this.domainModel = model;
         }
 
         @Override
-        public void dataSourceOnDomainModelUnavailable() {
+        public void onDomainModelUnavailable() {
             System.out.println(TAG + "onModelUnavailable");
             onModelUnavailable = true;
         }
@@ -232,13 +232,13 @@ public class RecipeMetadataLocalGetAdapterTest {
         private List<RecipeMetadataPersistenceModel> models = new ArrayList<>();
 
         @Override
-        public void onAllLoaded(List<RecipeMetadataPersistenceModel> models) {
+        public void onAllDomainModelsLoaded(List<RecipeMetadataPersistenceModel> models) {
             System.out.println(TAG + models);
             this.models = models;
         }
 
         @Override
-        public void onModelsUnavailable() {
+        public void onDomainModelsUnavailable() {
             System.out.println(TAG + "onModelsUnavailable");
         }
     }

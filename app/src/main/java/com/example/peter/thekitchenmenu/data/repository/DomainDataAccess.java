@@ -17,16 +17,16 @@ public interface DomainDataAccess<T extends DomainPersistenceModel> {
 
     interface GetAllDomainModelsCallback<E extends DomainPersistenceModel> {
 
-        void onAllLoaded(List<E> models);
+        void onAllDomainModelsLoaded(List<E> models);
 
-        void onModelsUnavailable();
+        void onDomainModelsUnavailable();
     }
 
     interface GetDomainModelCallback<T extends DomainPersistenceModel> {
 
-        void dataSourceOnDomainModelLoaded(T model);
+        void onDomainModelLoaded(T model);
 
-        void dataSourceOnDomainModelUnavailable();
+        void onDomainModelUnavailable();
     }
 
     void getByDataId(@Nonnull String dataId, @Nonnull GetDomainModelCallback<T> callback);

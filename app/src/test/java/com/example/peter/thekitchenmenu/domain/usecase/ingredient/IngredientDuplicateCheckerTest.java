@@ -117,7 +117,7 @@ public class IngredientDuplicateCheckerTest {
     // region helper methods -----------------------------------------------------------------------
     private void simulateGetAllFromDatabase() {
         verify(repoMock).getAll(getRepoCallbackCaptor.capture());
-        getRepoCallbackCaptor.getValue().onAllLoaded(TestDataIngredient.getAll());
+        getRepoCallbackCaptor.getValue().onAllDomainModelsLoaded(TestDataIngredient.getAll());
     }
     // endregion helper methods --------------------------------------------------------------------
 

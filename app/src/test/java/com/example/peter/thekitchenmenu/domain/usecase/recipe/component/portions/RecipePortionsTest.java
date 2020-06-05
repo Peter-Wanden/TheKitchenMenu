@@ -477,7 +477,7 @@ public class RecipePortionsTest {
                 eq(TestDataRecipeMetadata.getDataUnavailable().getDomainId()),
                 repoPortionsCallback.capture()
         );
-        repoPortionsCallback.getValue().dataSourceOnDomainModelUnavailable();
+        repoPortionsCallback.getValue().onDomainModelUnavailable();
     }
 
     private void simulateExistingInitialisationRequest(
@@ -496,7 +496,7 @@ public class RecipePortionsTest {
                 eq(modelUnderTest.getDomainId()),
                 repoPortionsCallback.capture()
         );
-        repoPortionsCallback.getValue().dataSourceOnDomainModelLoaded(modelUnderTest);
+        repoPortionsCallback.getValue().onDomainModelLoaded(modelUnderTest);
     }
 
     private void whenIdProviderReturn(String id) {

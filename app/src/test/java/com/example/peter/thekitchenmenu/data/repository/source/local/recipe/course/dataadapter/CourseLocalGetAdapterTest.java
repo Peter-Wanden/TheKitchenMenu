@@ -18,6 +18,7 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -99,8 +100,8 @@ public class CourseLocalGetAdapterTest {
     public void getAllActiveByDomainId_activeModelsReturned() {
         // Arrange
         String domainId = TestDataRecipeCourse.EXISTING_RECIPE_ID;
-        List<RecipeCoursePersistenceModel> modelsUnderTest = TestDataRecipeCourse.
-                getAllExistingActiveByDomainId(domainId);
+        List<RecipeCoursePersistenceModel> modelsUnderTest = new ArrayList<>(TestDataRecipeCourse.
+                getAllExistingActiveByDomainId(domainId));
         getAllCallbackClient = new GetAllDomainModelsCallbackClient();
         // Act
         SUT.getAllActiveByDomainId(domainId, getAllCallbackClient);
@@ -120,8 +121,8 @@ public class CourseLocalGetAdapterTest {
     public void getAllByCourse_allModelsFromCourseReturned() {
         // Arrange
         Course course = Course.COURSE_ZERO;
-        List<RecipeCoursePersistenceModel> modelsUnderTest = TestDataRecipeCourse.
-                getAllByCourse(course);
+        List<RecipeCoursePersistenceModel> modelsUnderTest = new ArrayList<>(
+                TestDataRecipeCourse.getAllByCourse(course));
         getAllCallbackClient = new GetAllDomainModelsCallbackClient();
         // Act
         SUT.getAllByCourse(course, getAllCallbackClient);
@@ -140,7 +141,8 @@ public class CourseLocalGetAdapterTest {
     @Test
     public void getAll() {
         // Arrange
-        List<RecipeCoursePersistenceModel> modelsUnderTest = TestDataRecipeCourse.getAll();
+        List<RecipeCoursePersistenceModel> modelsUnderTest = new ArrayList<>(
+                TestDataRecipeCourse.getAll());
         getAllCallbackClient = new GetAllDomainModelsCallbackClient();
         // Act
         SUT.getAll(getAllCallbackClient);
@@ -168,13 +170,13 @@ public class CourseLocalGetAdapterTest {
         private boolean isModelUnavailable;
 
         @Override
-        public void dataSourceOnDomainModelLoaded(RecipeCoursePersistenceModel m) {
+        public void onDomainModelLoaded(RecipeCoursePersistenceModel m) {
             System.out.println(TAG + m);
             model = m;
         }
 
         @Override
-        public void dataSourceOnDomainModelUnavailable() {
+        public void onDomainModelUnavailable() {
             isModelUnavailable = true;
             System.out.println(TAG + "isModelUnavailable=" + isModelUnavailable);
         }
@@ -189,13 +191,13 @@ public class CourseLocalGetAdapterTest {
         private boolean isModelsUnavailable;
 
         @Override
-        public void onAllLoaded(List<RecipeCoursePersistenceModel> m) {
+        public void onAllDomainModelsLoaded(List<RecipeCoursePersistenceModel> m) {
             System.out.println(TAG + m);
             models = m;
         }
 
         @Override
-        public void onModelsUnavailable() {
+        public void onDomainModelsUnavailable() {
             System.out.println(TAG + "isModelsUnavailable=" + isModelsUnavailable);
             System.out.println(TAG + isModelsUnavailable);
         }

@@ -122,14 +122,14 @@ public class RecipePortions extends UseCaseBase
     }
 
     @Override
-    public void dataSourceOnDomainModelLoaded(RecipePortionsPersistenceModel model) {
+    public void onDomainModelLoaded(RecipePortionsPersistenceModel model) {
         persistenceModel = model;
         dataId = model.getDataId();
         processChanges();
     }
 
     @Override
-    public void dataSourceOnDomainModelUnavailable() {
+    public void onDomainModelUnavailable() {
         persistenceModel = createNewPersistenceModel();
         failReasons.add(CommonFailReason.DATA_UNAVAILABLE);
         processChanges();
@@ -220,7 +220,7 @@ public class RecipePortions extends UseCaseBase
                 setFailReasons(new ArrayList<>(failReasons)).
                 setCreatedBy(Constants.getUserId()).
                 setCreateDate(m.getCreateDate()).
-                setLasUpdate(m.getLastUpdate()).
+                setLastUpdate(m.getLastUpdate()).
                 build();
     }
 

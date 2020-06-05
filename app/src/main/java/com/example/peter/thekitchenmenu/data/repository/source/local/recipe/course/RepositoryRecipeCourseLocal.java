@@ -68,13 +68,13 @@ public class RepositoryRecipeCourseLocal
                 dataId,
                 new GetDomainModelCallback<RecipeCoursePersistenceModel>() {
                     @Override
-                    public void dataSourceOnDomainModelLoaded(RecipeCoursePersistenceModel model) {
-                        callback.dataSourceOnDomainModelLoaded(model);
+                    public void onDomainModelLoaded(RecipeCoursePersistenceModel model) {
+                        callback.onDomainModelLoaded(model);
                     }
 
                     @Override
-                    public void dataSourceOnDomainModelUnavailable() {
-                        callback.dataSourceOnDomainModelUnavailable();
+                    public void onDomainModelUnavailable() {
+                        callback.onDomainModelUnavailable();
                     }
                 }
         );
@@ -88,13 +88,13 @@ public class RepositoryRecipeCourseLocal
                 domainId,
                 new GetAllDomainModelsCallback<RecipeCoursePersistenceModel>() {
                     @Override
-                    public void onAllLoaded(List<RecipeCoursePersistenceModel> models) {
-                        callback.onAllLoaded(models);
+                    public void onAllDomainModelsLoaded(List<RecipeCoursePersistenceModel> models) {
+                        callback.onAllDomainModelsLoaded(models);
                     }
 
                     @Override
-                    public void onModelsUnavailable() {
-                        callback.onModelsUnavailable();
+                    public void onDomainModelsUnavailable() {
+                        callback.onDomainModelsUnavailable();
                     }
                 }
         );
@@ -108,13 +108,13 @@ public class RepositoryRecipeCourseLocal
                 c,
                 new GetAllDomainModelsCallback<RecipeCoursePersistenceModel>() {
                     @Override
-                    public void onAllLoaded(List<RecipeCoursePersistenceModel> models) {
-                        callback.onAllLoaded(models);
+                    public void onAllDomainModelsLoaded(List<RecipeCoursePersistenceModel> models) {
+                        callback.onAllDomainModelsLoaded(models);
                     }
 
                     @Override
-                    public void onModelsUnavailable() {
-                        callback.onModelsUnavailable();
+                    public void onDomainModelsUnavailable() {
+                        callback.onDomainModelsUnavailable();
                     }
                 }
         );
@@ -125,13 +125,13 @@ public class RepositoryRecipeCourseLocal
         getAdapter.getAll(
                 new GetAllDomainModelsCallback<RecipeCoursePersistenceModel>() {
                     @Override
-                    public void onAllLoaded(List<RecipeCoursePersistenceModel> models) {
-                        callback.onAllLoaded(models);
+                    public void onAllDomainModelsLoaded(List<RecipeCoursePersistenceModel> models) {
+                        callback.onAllDomainModelsLoaded(models);
                     }
 
                     @Override
-                    public void onModelsUnavailable() {
-                        callback.onModelsUnavailable();
+                    public void onDomainModelsUnavailable() {
+                        callback.onDomainModelsUnavailable();
                     }
                 }
         );
@@ -147,7 +147,7 @@ public class RepositoryRecipeCourseLocal
             @Nonnull String domainId,
             @Nonnull GetDomainModelCallback<RecipeCoursePersistenceModel> callback) {
         // TODO - implement? or move to?
-        callback.dataSourceOnDomainModelUnavailable();
+        callback.onDomainModelUnavailable();
     }
 
     @Override
@@ -158,13 +158,13 @@ public class RepositoryRecipeCourseLocal
                 domainId,
                 new GetAllDomainModelsCallback<RecipeCoursePersistenceModel>() {
                     @Override
-                    public void onAllLoaded(List<RecipeCoursePersistenceModel> models) {
-                        callback.onAllLoaded(filterForActive(models));
+                    public void onAllDomainModelsLoaded(List<RecipeCoursePersistenceModel> models) {
+                        callback.onAllDomainModelsLoaded(filterForActive(models));
                     }
 
                     @Override
-                    public void onModelsUnavailable() {
-                        callback.onModelsUnavailable();
+                    public void onDomainModelsUnavailable() {
+                        callback.onDomainModelsUnavailable();
                     }
                 }
         );

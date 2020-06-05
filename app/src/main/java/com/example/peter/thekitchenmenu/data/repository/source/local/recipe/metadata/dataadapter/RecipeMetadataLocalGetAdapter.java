@@ -87,7 +87,7 @@ public class RecipeMetadataLocalGetAdapter {
 
                     @Override
                     public void onDataUnavailable() {
-                        getModelCallback.dataSourceOnDomainModelUnavailable();
+                        getModelCallback.onDomainModelUnavailable();
                     }
                 }
         );
@@ -112,7 +112,7 @@ public class RecipeMetadataLocalGetAdapter {
 
                     @Override
                     public void onDataUnavailable() {
-                        getModelCallback.dataSourceOnDomainModelUnavailable();
+                        getModelCallback.onDomainModelUnavailable();
                     }
                 }
         );
@@ -133,7 +133,7 @@ public class RecipeMetadataLocalGetAdapter {
         }
 
         if (activeDataId.isEmpty()) {
-            getModelCallback.dataSourceOnDomainModelUnavailable();
+            getModelCallback.onDomainModelUnavailable();
         } else {
             addParentEntityToModelBuilder(parentEntity);
             getFailReasonsFromParentDataId(activeDataId);
@@ -228,7 +228,7 @@ public class RecipeMetadataLocalGetAdapter {
 
     private void createModel() {
         if (isModelComplete()) {
-            getModelCallback.dataSourceOnDomainModelLoaded(modelBuilder.build());
+            getModelCallback.onDomainModelLoaded(modelBuilder.build());
         }
     }
 
@@ -248,7 +248,7 @@ public class RecipeMetadataLocalGetAdapter {
                     @Override
                     public void onAllLoaded(List<RecipeMetadataParentEntity> entities) {
                         if (entities == null || entities.isEmpty()) {
-                            getAllCallback.onModelsUnavailable();
+                            getAllCallback.onDomainModelsUnavailable();
                         } else {
                             createUniqueDomainIdList(entities);
                         }
@@ -256,7 +256,7 @@ public class RecipeMetadataLocalGetAdapter {
 
                     @Override
                     public void onDataUnavailable() {
-                        getAllCallback.onModelsUnavailable();
+                        getAllCallback.onDomainModelsUnavailable();
                     }
                 }
         );
@@ -281,14 +281,14 @@ public class RecipeMetadataLocalGetAdapter {
                     domainId,
                     new GetDomainModelCallback<RecipeMetadataPersistenceModel>() {
                         @Override
-                        public void dataSourceOnDomainModelLoaded(RecipeMetadataPersistenceModel model) {
+                        public void onDomainModelLoaded(RecipeMetadataPersistenceModel model) {
                             domainModels.add(model);
                             domainModelsProcessed++;
                             returnAllDomainModels();
                         }
 
                         @Override
-                        public void dataSourceOnDomainModelUnavailable() {
+                        public void onDomainModelUnavailable() {
                             returnAllDomainModels();
                         }
                     }
@@ -298,7 +298,7 @@ public class RecipeMetadataLocalGetAdapter {
     
     private void returnAllDomainModels() {
         if (domainModelsProcessed == uniqueDomainIdListSize) {
-            getAllCallback.onAllLoaded(domainModels);
+            getAllCallback.onAllDomainModelsLoaded(domainModels);
         }
     }
 }

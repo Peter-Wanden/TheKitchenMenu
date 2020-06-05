@@ -8,7 +8,7 @@ import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.ingredient.Ingredient.CREATE_NEW_INGREDIENT;
+import static com.example.peter.thekitchenmenu.domain.usecase.ingredient.Ingredient.NO_ID;
 
 public final class IngredientPersistenceModel
         extends BaseDomainPersistenceModel {
@@ -17,10 +17,9 @@ public final class IngredientPersistenceModel
     private String description;
     private double conversionFactor;
     private String createdBy;
-    private long createDate;
-    private long lastUpdate;
 
-    private IngredientPersistenceModel() {}
+    private IngredientPersistenceModel() {
+    }
 
     public String getName() {
         return name;
@@ -38,24 +37,13 @@ public final class IngredientPersistenceModel
         return createdBy;
     }
 
-    public long getCreateDate() {
-        return createDate;
-    }
-
-    public long getLastUpdate() {
-        return lastUpdate;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof IngredientPersistenceModel)) return false;
+        if (!super.equals(o)) return false;
         IngredientPersistenceModel that = (IngredientPersistenceModel) o;
-        return dataId.equals(that.dataId) &&
-                domainId.equals(that.domainId) &&
-                Double.compare(that.conversionFactor, conversionFactor) == 0 &&
-                createDate == that.createDate &&
-                lastUpdate == that.lastUpdate &&
+        return Double.compare(that.conversionFactor, conversionFactor) == 0 &&
                 Objects.equals(name, that.name) &&
                 Objects.equals(description, that.description) &&
                 Objects.equals(createdBy, that.createdBy);
@@ -63,27 +51,23 @@ public final class IngredientPersistenceModel
 
     @Override
     public int hashCode() {
-        return Objects.hash(dataId, domainId, name, description, conversionFactor, createdBy,
-                createDate, lastUpdate);
+        return Objects.hash(super.hashCode(), name, description, conversionFactor, createdBy);
     }
 
     @Nonnull
     @Override
     public String toString() {
         return "IngredientPersistenceModel{" +
-                "dataId='" + dataId + '\'' +
-                ", domainId='" + domainId + '\'' +
-                ", name='" + name + '\'' +
+                "name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", conversionFactor=" + conversionFactor +
                 ", createdBy='" + createdBy + '\'' +
-                ", createDate=" + createDate +
-                ", lastUpdate=" + lastUpdate +
                 '}';
     }
 
     public static class Builder
-            extends DomainModelBuilder<Builder, IngredientPersistenceModel> {
+            extends
+            PersistenceModelBuilder<Builder, IngredientPersistenceModel> {
 
         public Builder() {
             domainModel = new IngredientPersistenceModel();
@@ -92,7 +76,7 @@ public final class IngredientPersistenceModel
         @Override
         public Builder getDefault() {
             domainModel.dataId = "";
-            domainModel.domainId = CREATE_NEW_INGREDIENT;;
+            domainModel.domainId = NO_ID;
             domainModel.name = "";
             domainModel.description = "";
             domainModel.conversionFactor = UnitOfMeasureConstants.DEFAULT_CONVERSION_FACTOR;
@@ -114,16 +98,6 @@ public final class IngredientPersistenceModel
             return self();
         }
 
-        public Builder setDataId(String dataId) {
-            domainModel.dataId = dataId;
-            return self();
-        }
-
-        public Builder setDomainId(String domainId) {
-            domainModel.domainId = domainId;
-            return self();
-        }
-
         public Builder setName(String name) {
             domainModel.name = name;
             return self();
@@ -141,16 +115,6 @@ public final class IngredientPersistenceModel
 
         public Builder setCreatedBy(String createdBy) {
             domainModel.createdBy = createdBy;
-            return self();
-        }
-
-        public Builder setCreateDate(long createDate) {
-            domainModel.createDate = createDate;
-            return self();
-        }
-
-        public Builder setLastUpdate(long lastUpdate) {
-            domainModel.lastUpdate = lastUpdate;
             return self();
         }
 

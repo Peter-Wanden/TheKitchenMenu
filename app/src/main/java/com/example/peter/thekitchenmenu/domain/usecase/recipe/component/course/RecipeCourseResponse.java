@@ -4,8 +4,10 @@ import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.Use
 import com.example.peter.thekitchenmenu.domain.model.BaseDomainModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.model.UseCaseMetadataModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse.Course;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
@@ -50,21 +52,21 @@ public final class RecipeCourseResponse
 
     public static final class Model extends BaseDomainModel {
 
-        private HashMap<RecipeCourse.Course, RecipeCoursePersistenceModel> courseList;
+        private List<Course> courseList;
 
         private Model(){}
 
         @Nonnull
-        public HashMap<RecipeCourse.Course, RecipeCoursePersistenceModel> getCourseList() {
+        public List<Course> getCourseList() {
             return courseList;
         }
 
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
+            if (!(o instanceof Model)) return false;
             Model model = (Model) o;
-            return courseList.equals(model.courseList);
+            return Objects.equals(courseList, model.courseList);
         }
 
         @Override
@@ -72,7 +74,6 @@ public final class RecipeCourseResponse
             return Objects.hash(courseList);
         }
 
-        @Nonnull
         @Override
         public String toString() {
             return "Model{" +
@@ -87,12 +88,11 @@ public final class RecipeCourseResponse
             }
 
             public Builder getDefault() {
-                domainModel.courseList = new HashMap<>();
+                domainModel.courseList = new ArrayList<>();
                 return self();
             }
 
-            public Builder setCourseList(
-                    HashMap<RecipeCourse.Course, RecipeCoursePersistenceModel> courseList) {
+            public Builder setCourseList(List<Course> courseList) {
                 domainModel.courseList = courseList;
                 return self();
             }

@@ -37,42 +37,42 @@ public class RepositoryRecipeIngredient
         List<RecipeIngredientPersistenceModel> cachedEntities = getFromCachedByRecipeDomainId(recipeId);
 
         if (cachedEntities != null && !cachedEntities.isEmpty()) {
-            callback.onAllLoaded(cachedEntities);
+            callback.onAllDomainModelsLoaded(cachedEntities);
             return;
         }
         ((DomainDataAccessRecipeIngredient) localDomainDataAccess).getAllByRecipeId(
                 recipeId,
                 new GetAllDomainModelsCallback<RecipeIngredientPersistenceModel>() {
                     @Override
-                    public void onAllLoaded(List<RecipeIngredientPersistenceModel> models) {
+                    public void onAllDomainModelsLoaded(List<RecipeIngredientPersistenceModel> models) {
                         if (cache == null)
                             cache = new LinkedHashMap<>();
 
                         for (RecipeIngredientPersistenceModel m : models)
                             cache.put(m.getDataId(), m);
 
-                        callback.onAllLoaded(models);
+                        callback.onAllDomainModelsLoaded(models);
                     }
 
                     @Override
-                    public void onModelsUnavailable() {
+                    public void onDomainModelsUnavailable() {
                         ((DomainDataAccessRecipeIngredient) remoteDomainDataAccess).getAllByRecipeId(
                                 recipeId,
                                 new GetAllDomainModelsCallback<RecipeIngredientPersistenceModel>() {
                                     @Override
-                                    public void onAllLoaded(List<RecipeIngredientPersistenceModel> models) {
+                                    public void onAllDomainModelsLoaded(List<RecipeIngredientPersistenceModel> models) {
                                         if (cache == null)
                                             cache = new LinkedHashMap<>();
 
                                         for (RecipeIngredientPersistenceModel m : models)
                                             cache.put(m.getDataId(), m);
 
-                                        callback.onAllLoaded(models);
+                                        callback.onAllDomainModelsLoaded(models);
                                     }
 
                                     @Override
-                                    public void onModelsUnavailable() {
-                                        callback.onModelsUnavailable();
+                                    public void onDomainModelsUnavailable() {
+                                        callback.onDomainModelsUnavailable();
                                     }
                                 });
                     }
@@ -87,42 +87,42 @@ public class RepositoryRecipeIngredient
         List<RecipeIngredientPersistenceModel> cache = getFromCacheByProductDataId(productId);
 
         if (cache == null || !cache.isEmpty()) {
-            callback.onAllLoaded(cache);
+            callback.onAllDomainModelsLoaded(cache);
             return;
         }
         ((DomainDataAccessRecipeIngredient) localDomainDataAccess).getAllByProductId(
                 productId,
                 new GetAllDomainModelsCallback<RecipeIngredientPersistenceModel>() {
                     @Override
-                    public void onAllLoaded(List<RecipeIngredientPersistenceModel> models) {
+                    public void onAllDomainModelsLoaded(List<RecipeIngredientPersistenceModel> models) {
                         if (RepositoryRecipeIngredient.this.cache == null)
                             RepositoryRecipeIngredient.this.cache = new LinkedHashMap<>();
 
                         for (RecipeIngredientPersistenceModel m : models)
                             RepositoryRecipeIngredient.this.cache.put(m.getDataId(), m);
 
-                        callback.onAllLoaded(models);
+                        callback.onAllDomainModelsLoaded(models);
                     }
 
                     @Override
-                    public void onModelsUnavailable() {
+                    public void onDomainModelsUnavailable() {
                         ((DomainDataAccessRecipeIngredient) remoteDomainDataAccess).getAllByProductId(
                                 productId,
                                 new GetAllDomainModelsCallback<RecipeIngredientPersistenceModel>() {
                                     @Override
-                                    public void onAllLoaded(List<RecipeIngredientPersistenceModel> models) {
+                                    public void onAllDomainModelsLoaded(List<RecipeIngredientPersistenceModel> models) {
                                         if (RepositoryRecipeIngredient.this.cache == null)
                                             RepositoryRecipeIngredient.this.cache = new LinkedHashMap<>();
 
                                         for (RecipeIngredientPersistenceModel m : models)
                                             RepositoryRecipeIngredient.this.cache.put(m.getDataId(), m);
 
-                                        callback.onAllLoaded(models);
+                                        callback.onAllDomainModelsLoaded(models);
                                     }
 
                                     @Override
-                                    public void onModelsUnavailable() {
-                                        callback.onModelsUnavailable();
+                                    public void onDomainModelsUnavailable() {
+                                        callback.onDomainModelsUnavailable();
                                     }
                                 });
                     }
@@ -136,41 +136,41 @@ public class RepositoryRecipeIngredient
 
         List<RecipeIngredientPersistenceModel> cache = getFromCacheByIngredientId(ingredientId);
         if (cache != null || !cache.isEmpty()) {
-            callback.onAllLoaded(cache);
+            callback.onAllDomainModelsLoaded(cache);
             return;
         }
         ((DomainDataAccessRecipeIngredient) localDomainDataAccess).getAllByIngredientId(
                 ingredientId,
                 new GetAllDomainModelsCallback<RecipeIngredientPersistenceModel>() {
                     @Override
-                    public void onAllLoaded(List<RecipeIngredientPersistenceModel> models) {
+                    public void onAllDomainModelsLoaded(List<RecipeIngredientPersistenceModel> models) {
                         if (RepositoryRecipeIngredient.this.cache == null)
                             RepositoryRecipeIngredient.this.cache = new LinkedHashMap<>();
 
                         for (RecipeIngredientPersistenceModel m : models)
                             RepositoryRecipeIngredient.this.cache.put(m.getDataId(), m);
-                        callback.onAllLoaded(models);
+                        callback.onAllDomainModelsLoaded(models);
                     }
 
                     @Override
-                    public void onModelsUnavailable() {
+                    public void onDomainModelsUnavailable() {
                         ((DomainDataAccessRecipeIngredient) remoteDomainDataAccess).getAllByIngredientId(
                                 ingredientId,
                                 new GetAllDomainModelsCallback<RecipeIngredientPersistenceModel>() {
                                     @Override
-                                    public void onAllLoaded(List<RecipeIngredientPersistenceModel> models) {
+                                    public void onAllDomainModelsLoaded(List<RecipeIngredientPersistenceModel> models) {
                                         if (RepositoryRecipeIngredient.this.cache == null)
                                             RepositoryRecipeIngredient.this.cache = new LinkedHashMap<>();
 
                                         for (RecipeIngredientPersistenceModel m : models)
                                             RepositoryRecipeIngredient.this.cache.put(m.getDataId(), m);
 
-                                        callback.onAllLoaded(models);
+                                        callback.onAllDomainModelsLoaded(models);
                                     }
 
                                     @Override
-                                    public void onModelsUnavailable() {
-                                        callback.onModelsUnavailable();
+                                    public void onDomainModelsUnavailable() {
+                                        callback.onDomainModelsUnavailable();
                                     }
                                 });
                     }

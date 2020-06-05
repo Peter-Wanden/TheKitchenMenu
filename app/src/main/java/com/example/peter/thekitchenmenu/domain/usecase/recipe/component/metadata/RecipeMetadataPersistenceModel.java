@@ -26,47 +26,8 @@ public final class RecipeMetadataPersistenceModel extends BaseDomainPersistenceM
     private HashMap<ComponentName, ComponentState> componentStates;
     private List<FailReasons> failReasons;
     private String createdBy;
-    private long createDate;
-    private long lastUpdate;
 
     private RecipeMetadataPersistenceModel(){}
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        RecipeMetadataPersistenceModel that = (RecipeMetadataPersistenceModel) o;
-        return Objects.equals(dataId, that.dataId) &&
-                Objects.equals(domainId, that.domainId) &&
-                Objects.equals(parentDomainId, that.parentDomainId) &&
-                recipeState == that.recipeState &&
-                Objects.equals(componentStates, that.componentStates) &&
-                Objects.equals(failReasons, that.failReasons) &&
-                Objects.equals(createdBy, that.createdBy) &&
-                createDate == that.createDate &&
-                lastUpdate == that.lastUpdate;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(dataId, domainId, parentDomainId, recipeState, componentStates,
-                failReasons, createdBy, createDate, lastUpdate);
-    }
-
-    @Override
-    public String toString() {
-        return "RecipeMetadataPersistenceModel{" +
-                "dataId='" + dataId + '\'' +
-                ", domainId='" + domainId + '\'' +
-                ", parentDomainId='" + parentDomainId + '\'' +
-                ", recipeState=" + recipeState +
-                ", componentStates=" + componentStates +
-                ", failReasons=" + failReasons +
-                ", createdBy='" + createdBy + '\'' +
-                ", createDate=" + createDate +
-                ", lastUpdate=" + lastUpdate +
-                '}';
-    }
 
     public String getParentDomainId() {
         return parentDomainId;
@@ -88,18 +49,9 @@ public final class RecipeMetadataPersistenceModel extends BaseDomainPersistenceM
         return createdBy;
     }
 
-    public long getCreateDate() {
-        return createDate;
-    }
-
-    public long getLastUpdate() {
-        return lastUpdate;
-    }
-
-
-    public static class Builder extends DomainModelBuilder<
-            Builder,
-            RecipeMetadataPersistenceModel> {
+    public static class Builder
+            extends
+            PersistenceModelBuilder<Builder, RecipeMetadataPersistenceModel> {
 
         public Builder() {
             domainModel = new RecipeMetadataPersistenceModel();
@@ -116,16 +68,6 @@ public final class RecipeMetadataPersistenceModel extends BaseDomainPersistenceM
             domainModel.createdBy = Constants.getUserId();
             domainModel.createDate = 0L;
             domainModel.lastUpdate = 0L;
-            return self();
-        }
-
-        public Builder setDataId(String dataId) {
-            domainModel.dataId = dataId;
-            return self();
-        }
-
-        public Builder setDomainId(String domainId) {
-            domainModel.domainId = domainId;
             return self();
         }
 
@@ -151,16 +93,6 @@ public final class RecipeMetadataPersistenceModel extends BaseDomainPersistenceM
 
         public Builder setCreatedBy(String createdBy) {
             domainModel.createdBy = createdBy;
-            return self();
-        }
-
-        public Builder setCreateDate(long createDate) {
-            domainModel.createDate = createDate;
-            return self();
-        }
-
-        public Builder setLastUpdate(long lastUpdate) {
-            domainModel.lastUpdate = lastUpdate;
             return self();
         }
 

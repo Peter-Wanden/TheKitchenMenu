@@ -57,14 +57,14 @@ public class RecipeIngredientList extends UseCaseBase {
                 recipeId,
                 new DomainDataAccess.GetDomainModelCallback<RecipePortionsPersistenceModel>() {
                     @Override
-                    public void dataSourceOnDomainModelLoaded(RecipePortionsPersistenceModel model) {
+                    public void onDomainModelLoaded(RecipePortionsPersistenceModel model) {
                         RecipeIngredientList.this.portions =
                                 model.getServings() * model.getSittings();
                         getRecipeIngredientQuantities();
                     }
 
                     @Override
-                    public void dataSourceOnDomainModelUnavailable() {
+                    public void onDomainModelUnavailable() {
 
                     }
                 }
@@ -78,7 +78,7 @@ public class RecipeIngredientList extends UseCaseBase {
                 recipeId,
                 new DomainDataAccess.GetAllDomainModelsCallback<RecipeIngredientPersistenceModel>() {
                     @Override
-                    public void onAllLoaded(List<RecipeIngredientPersistenceModel> models) {
+                    public void onAllDomainModelsLoaded(List<RecipeIngredientPersistenceModel> models) {
                         for (RecipeIngredientPersistenceModel m : models) {
                             recipeIngredientQuantities.put(m.getIngredientDomainId(), m);
                         }
@@ -86,7 +86,7 @@ public class RecipeIngredientList extends UseCaseBase {
                     }
 
                     @Override
-                    public void onModelsUnavailable() {
+                    public void onDomainModelsUnavailable() {
 
                     }
                 }
@@ -105,13 +105,13 @@ public class RecipeIngredientList extends UseCaseBase {
                 ingredientId,
                 new DomainDataAccess.GetDomainModelCallback<IngredientPersistenceModel>() {
                     @Override
-                    public void dataSourceOnDomainModelLoaded(IngredientPersistenceModel model) {
+                    public void onDomainModelLoaded(IngredientPersistenceModel model) {
                         ingredients.put(model.getDataId(), model);
                         createResponseModels();
                     }
 
                     @Override
-                    public void dataSourceOnDomainModelUnavailable() {
+                    public void onDomainModelUnavailable() {
 
                     }
                 }

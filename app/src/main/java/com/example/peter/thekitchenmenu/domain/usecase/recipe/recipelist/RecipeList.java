@@ -84,7 +84,7 @@ public class RecipeList
     }
 
     @Override
-    public void onAllLoaded(List<RecipeMetadataPersistenceModel> metadataModels) {
+    public void onAllDomainModelsLoaded(List<RecipeMetadataPersistenceModel> metadataModels) {
         System.out.println(TAG + "onAllLoadedCalled");
 
         for (RecipeMetadataPersistenceModel metadataModel : metadataModels) {
@@ -109,7 +109,7 @@ public class RecipeList
     }
 
     @Override
-    public void onModelsUnavailable() {
+    public void onDomainModelsUnavailable() {
         getUseCaseCallback().onUseCaseError(new RecipeListResponse.Builder().getDefault().build());
     }
 

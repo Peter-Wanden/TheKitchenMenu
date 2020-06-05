@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeMetadata;
+import com.example.peter.thekitchenmenu.domain.model.UseCaseDomainModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseElement;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
@@ -30,7 +31,7 @@ import javax.annotation.Nonnull;
  */
 public class RecipeMetadata
         extends
-        UseCaseElement<RecipeMetadataRequest.Model>
+        UseCaseElement<RecipeMetadataPersistenceModel, RecipeMetadata.DomainModel>
         implements
         DomainDataAccess.GetDomainModelCallback<RecipeMetadataPersistenceModel> {
 
@@ -125,6 +126,10 @@ public class RecipeMetadata
         }
     }
 
+    static class DomainModel implements UseCaseDomainModel {
+
+    }
+
     @Nonnull
     private final RepositoryRecipeMetadata repository;
     @Nonnull
@@ -135,8 +140,6 @@ public class RecipeMetadata
     private final Set<ComponentName> requiredComponents;
     @Nonnull
     private final List<FailReasons> failReasons;
-
-    private RecipeMetadataPersistenceModel persistenceModel;
 
     private ComponentState recipeState;
     private HashMap<ComponentName, ComponentState> componentStates;
@@ -168,7 +171,7 @@ public class RecipeMetadata
     }
 
     @Override
-    public void dataSourceOnDomainModelUnavailable() {
+    public void onDomainModelUnavailable() {
         persistenceModel = createNewPersistenceModel();
         failReasons.add(CommonFailReason.DATA_UNAVAILABLE);
         reprocessCurrentDomainModel();
@@ -188,7 +191,7 @@ public class RecipeMetadata
     }
 
     @Override
-    public void dataSourceOnDomainModelLoaded(RecipeMetadataPersistenceModel persistenceModel) {
+    public void onDomainModelLoaded(RecipeMetadataPersistenceModel persistenceModel) {
         this.persistenceModel = persistenceModel;
         useCaseDataId = persistenceModel.getDataId();
         useCaseDomainId = persistenceModel.getDomainId();
@@ -329,7 +332,7 @@ public class RecipeMetadata
                 setFailReasons(new ArrayList<>(failReasons)).
                 setCreatedBy(Constants.getUserId()).
                 setCreateDate(m.getCreateDate()).
-                setLasUpdate(m.getLastUpdate()).
+                setLastUpdate(m.getLastUpdate()).
                 build();
     }
 

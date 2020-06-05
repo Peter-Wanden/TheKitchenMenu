@@ -4,17 +4,19 @@ import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataId;
 import com.example.peter.thekitchenmenu.domain.model.BaseDomainModel;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
-import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse.*;
 
 public final class RecipeCourseRequest
-        extends UseCaseMessageModelDataId<RecipeCourseRequest.DomainModel>
-        implements UseCaseBase.Request {
+        extends
+        UseCaseMessageModelDataId<RecipeCourseRequest.DomainModel>
+        implements
+        UseCaseBase.Request {
 
     @Override
     public String toString() {
@@ -29,7 +31,8 @@ public final class RecipeCourseRequest
     }
 
     public static class Builder
-            extends UseCaseMessageModelDataIdBuilder<Builder, RecipeCourseRequest, DomainModel> {
+            extends
+            UseCaseMessageModelDataIdBuilder<Builder, RecipeCourseRequest, DomainModel> {
 
         public Builder() {
             message = new RecipeCourseRequest();
@@ -60,21 +63,21 @@ public final class RecipeCourseRequest
 
     public static final class DomainModel extends BaseDomainModel {
 
-        private List<Course> courseList;
+        private Set<Course> courseList;
 
         private DomainModel() {
         }
 
-        public List<Course> getCourseList() {
+        public Set<Course> getCourseList() {
             return courseList;
         }
 
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            DomainModel domainModel = (DomainModel) o;
-            return courseList.equals(domainModel.courseList);
+            if (!(o instanceof DomainModel)) return false;
+            DomainModel that = (DomainModel) o;
+            return Objects.equals(courseList, that.courseList);
         }
 
         @Override
@@ -82,10 +85,10 @@ public final class RecipeCourseRequest
             return Objects.hash(courseList);
         }
 
-        @Nonnull
+        @Nullable
         @Override
         public String toString() {
-            return "Model{" +
+            return "DomainModel{" +
                     "courseList=" + courseList +
                     '}';
         }
@@ -97,16 +100,16 @@ public final class RecipeCourseRequest
             }
 
             public Builder getDefault() {
-                domainModel.courseList = new ArrayList<>();
+                domainModel.courseList = new HashSet<>();
                 return self();
             }
 
             public Builder basedOnResponseModel(RecipeCourseResponse.Model m) {
-                domainModel.courseList = new ArrayList<>(m.getCourseList().keySet());
+                domainModel.courseList = new HashSet<>(m.getCourseList());
                 return self();
             }
 
-            public Builder setCourseList(List<Course> courseList) {
+            public Builder setCourseList(Set<Course> courseList) {
                 domainModel.courseList = courseList;
                 return self();
             }

@@ -2,14 +2,13 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identit
 
 import android.annotation.SuppressLint;
 
-import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeIdentity;
+import com.example.peter.thekitchenmenu.domain.model.UseCaseDomainModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseElement;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
-import com.example.peter.thekitchenmenu.domain.model.UseCaseMetadataModel;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidatorModel;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidatorRequest;
@@ -17,26 +16,23 @@ import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValida
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentState;
 import static com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator.TextType;
 
 public class RecipeIdentity
         extends
-        UseCaseElement<RecipeIdentityRequest.DomainModel>
+        UseCaseElement<RecipeIdentityPersistenceModel, RecipeIdentity.DomainModel>
         implements
         DomainDataAccess.GetDomainModelCallback<RecipeIdentityPersistenceModel> {
 
     private static final String TAG = "tkm-" + RecipeIdentity.class.getSimpleName() + ": ";
 
-    private static final class DomainModel {
+    protected static final class DomainModel implements UseCaseDomainModel {
         @Nonnull
         private String title = "";
         @Nonnull
@@ -116,12 +112,6 @@ public class RecipeIdentity
     @Nonnull
     private final TextValidator textValidator;
 
-    private DomainModel currentDomainModel;
-    private DomainModel newDomainModel;
-
-    private RecipeIdentityPersistenceModel persistenceModel;
-
-    private boolean isChanged;
     private boolean isTitleValidationComplete;
     private boolean isDescriptionValidationComplete;
 
@@ -134,10 +124,8 @@ public class RecipeIdentity
         this.timeProvider = timeProvider;
         this.textValidator = textValidator;
 
-        currentDomainModel = new DomainModel();
-        newDomainModel = new DomainModel();
-
-        requestDomainModel = new RecipeIdentityRequest.DomainModel.Builder().getDefault().build();
+        activeDomainModel = new DomainModel();
+        updatedDomainModel = new DomainModel();
     }
 
     @Override
@@ -151,20 +139,20 @@ public class RecipeIdentity
     }
 
     @Override
-    public void dataSourceOnDomainModelUnavailable() {
+    public void onDomainModelUnavailable() {
         isDomainDataUnavailable = true;
-        newDomainModel = new DomainModel();
+        updatedDomainModel = new DomainModel();
         reprocessCurrentDomainModel();
     }
 
     @Override
-    public void dataSourceOnDomainModelLoaded(RecipeIdentityPersistenceModel persistenceModel) {
+    public void onDomainModelLoaded(RecipeIdentityPersistenceModel persistenceModel) {
         isDomainDataUnavailable = false;
         this.persistenceModel = persistenceModel;
         useCaseDataId = persistenceModel.getDataId();
         useCaseDomainId = persistenceModel.getDomainId();
-        newDomainModel = getNewDomainModelFromPersistenceModel(persistenceModel);
-        currentDomainModel = newDomainModel;
+        updatedDomainModel = getNewDomainModelFromPersistenceModel(persistenceModel);
+        activeDomainModel = updatedDomainModel;
         processNewDomainModel();
     }
 
@@ -175,7 +163,7 @@ public class RecipeIdentity
 
     @Override
     protected void processRequestDomainModel() {
-        newDomainModel = getNewDomainModelFromRequestData();
+        updatedDomainModel = getNewDomainModelFromRequestData();
         processNewDomainModel();
     }
 
@@ -186,13 +174,13 @@ public class RecipeIdentity
     }
 
     private void processNewDomainModel() {
-        System.out.println(TAG + "processDomainData:");
-        isChanged = !currentDomainModel.equals(newDomainModel);
+        isChanged = !activeDomainModel.equals(updatedDomainModel);
+        System.out.println(TAG + "processNewDomainModel: isChanged=" + isChanged);
 
         if (!isChanged) {
-            newDomainModel = currentDomainModel;
+            updatedDomainModel = activeDomainModel;
         }
-        validateNewDomainModelElements();
+        validateUpdatedDomainModelElements();
     }
 
     @Override
@@ -200,13 +188,13 @@ public class RecipeIdentity
         System.out.println(
                 TAG + "reprocessCurrentDomainData called"
         );
-        newDomainModel = currentDomainModel;
+        updatedDomainModel = activeDomainModel;
         processNewDomainModel();
     }
 
-    private void validateNewDomainModelElements() {
+    private void validateUpdatedDomainModelElements() {
         System.out.println(
-                TAG + "validateDomainDataElements: new domain model=" + newDomainModel
+                TAG + "validateDomainDataElements: new domain model=" + updatedDomainModel
         );
         setupDomainModelProcessing();
 
@@ -223,7 +211,7 @@ public class RecipeIdentity
     private void validateTitle() {
         TextValidatorRequest request = new TextValidatorRequest(
                 TITLE_TEXT_TYPE,
-                new TextValidatorModel(newDomainModel.title)
+                new TextValidatorModel(updatedDomainModel.title)
         );
         textValidator.execute(request, new UseCaseBase.Callback<TextValidatorResponse>() {
             @Override
@@ -256,7 +244,7 @@ public class RecipeIdentity
     private void validateDescription() {
         TextValidatorRequest request = new TextValidatorRequest(
                 DESCRIPTION_TEXT_TYPE,
-                new TextValidatorModel(newDomainModel.description)
+                new TextValidatorModel(updatedDomainModel.description)
         );
         textValidator.execute(request, new UseCaseBase.Callback<TextValidatorResponse>() {
             @Override
@@ -308,26 +296,16 @@ public class RecipeIdentity
         sendResponse(builder.build());
     }
 
-    protected UseCaseMetadataModel getMetadata() {
-        return new UseCaseMetadataModel.Builder().
-                setState(getComponentState()).
-                setFailReasons(new ArrayList<>(getFailReasons())).
-                setCreatedBy(Constants.getUserId()).
-                setCreateDate(persistenceModel == null ? 0L : persistenceModel.getCreateDate()).
-                setLasUpdate(persistenceModel == null ? 0L : persistenceModel.getLastUpdate()).
-                build();
-    }
-
     private RecipeIdentityResponse.DomainModel getResponseDomainModel() {
-        currentDomainModel = newDomainModel;
+        activeDomainModel = updatedDomainModel;
         return new RecipeIdentityResponse.DomainModel.Builder().
-                setTitle(currentDomainModel.title).
-                setDescription(currentDomainModel.description).
+                setTitle(activeDomainModel.title).
+                setDescription(activeDomainModel.description).
                 build();
     }
 
     private void save() {
-        currentDomainModel = newDomainModel;
+        activeDomainModel = updatedDomainModel;
         boolean hasExistingPersistenceModel = persistenceModel != null;
 
         if (hasExistingPersistenceModel) {
@@ -342,8 +320,8 @@ public class RecipeIdentity
         persistenceModel = new RecipeIdentityPersistenceModel.Builder().
                 setDataId(useCaseDataId).
                 setDomainId(useCaseDomainId).
-                setTitle(currentDomainModel.title).
-                setDescription(currentDomainModel.description).
+                setTitle(activeDomainModel.title).
+                setDescription(activeDomainModel.description).
                 setCreateDate(currentTime).
                 setLastUpdate(currentTime).
                 build();

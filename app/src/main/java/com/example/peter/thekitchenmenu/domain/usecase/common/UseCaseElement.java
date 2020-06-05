@@ -1,6 +1,9 @@
 package com.example.peter.thekitchenmenu.domain.usecase.common;
 
-import com.example.peter.thekitchenmenu.domain.model.BaseDomainModel;
+import com.example.peter.thekitchenmenu.app.Constants;
+import com.example.peter.thekitchenmenu.domain.model.BaseDomainPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.model.UseCaseDomainModel;
+import com.example.peter.thekitchenmenu.domain.model.UseCaseMetadataModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataId;
@@ -14,7 +17,8 @@ import java.util.List;
 import static com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataId.NO_ID;
 
 public abstract class UseCaseElement
-        <REQUEST_DOMAIN_MODEL extends BaseDomainModel, PERSISTENCE_MODEL extends >
+        <PERSISTENCE_MODEL extends BaseDomainPersistenceModel,
+                USE_CASE_DOMAIN_MODEL extends UseCaseDomainModel>
         extends
         UseCaseBase {
 
@@ -23,8 +27,10 @@ public abstract class UseCaseElement
     protected String useCaseDataId = NO_ID;
     protected String useCaseDomainId = NO_ID;
 
-    protected REQUEST_DOMAIN_MODEL useCaseDomainModel;
-    protected REQUEST_DOMAIN_MODEL requestDomainModel;
+    protected PERSISTENCE_MODEL persistenceModel;
+
+    protected USE_CASE_DOMAIN_MODEL activeDomainModel;
+    protected USE_CASE_DOMAIN_MODEL updatedDomainModel;
 
     protected List<FailReasons> failReasons = new ArrayList<>();
 
@@ -35,14 +41,13 @@ public abstract class UseCaseElement
     @Override
     protected <REQUEST extends Request> void execute(REQUEST request) {
         accessCount++;
-        UseCaseMessageModelDataId<REQUEST_DOMAIN_MODEL> r =
-                (UseCaseMessageModelDataId<REQUEST_DOMAIN_MODEL>) request;
+        UseCaseMessageModelDataId r =
+                (UseCaseMessageModelDataId) request;
 
         System.out.println(TAG + "Request No:" + accessCount + " " + request);
 
         String requestDataId = r.getDataId() == null ? NO_ID : r.getDataId();
         String requestDomainId = r.getDomainId() == null ? NO_ID : r.getDomainId();
-        requestDomainModel = (REQUEST_DOMAIN_MODEL) r.getDomainModel();
 
         boolean requestHasDataId = !NO_ID.equals(requestDataId);
         boolean requestHasDomainId = !NO_ID.equals(requestDomainId);
@@ -88,16 +93,24 @@ public abstract class UseCaseElement
     protected boolean isDomainModelValid() {
         FailReasons[] noFailReasons = new FailReasons[]{CommonFailReason.NONE};
         FailReasons[] currentFailReasons = failReasons.toArray(new FailReasons[0]);
-
         return Arrays.equals(
                 noFailReasons,
                 currentFailReasons
         );
     }
 
+    protected UseCaseMetadataModel getMetadata() {
+        return new UseCaseMetadataModel.Builder().
+                setFailReasons(new ArrayList<>(getFailReasons())).
+                setState(getComponentState()).
+                setCreatedBy(Constants.getUserId()).
+                setCreateDate(persistenceModel == null ? 0L : persistenceModel.getCreateDate()).
+                setLastUpdate(persistenceModel == null ? 0L : persistenceModel.getLastUpdate()).
+                build();
+    }
+
     protected RecipeMetadata.ComponentState getComponentState() {
-        return isDomainModelValid()
-                ?
+        return isDomainModelValid() ?
                 (isChanged ?
                         RecipeMetadata.ComponentState.VALID_CHANGED :
                         RecipeMetadata.ComponentState.VALID_UNCHANGED)

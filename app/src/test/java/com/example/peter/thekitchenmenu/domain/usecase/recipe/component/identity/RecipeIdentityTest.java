@@ -803,7 +803,7 @@ public class RecipeIdentityTest {
                 eq(modelUnderTest.getDomainId()),
                 repoCallback.capture()
         );
-        repoCallback.getValue().dataSourceOnDomainModelUnavailable();
+        repoCallback.getValue().onDomainModelUnavailable();
     }
 
     private void simulateExistingInitialisationRequest(
@@ -820,7 +820,7 @@ public class RecipeIdentityTest {
                 eq(modelUnderTest.getDomainId()),
                 repoCallback.capture()
         );
-        repoCallback.getValue().dataSourceOnDomainModelLoaded(modelUnderTest);
+        repoCallback.getValue().onDomainModelLoaded(modelUnderTest);
     }
     // endregion helper methods --------------------------------------------------------------------
 

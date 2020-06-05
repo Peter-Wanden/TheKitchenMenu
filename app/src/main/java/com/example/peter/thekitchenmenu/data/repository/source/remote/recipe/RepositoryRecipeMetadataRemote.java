@@ -19,7 +19,7 @@ public class RepositoryRecipeMetadataRemote
     @Override
     public void getAll(
             @Nonnull GetAllDomainModelsCallback<RecipeMetadataPersistenceModel> callback) {
-        callback.onModelsUnavailable();
+        callback.onDomainModelsUnavailable();
 
     }
 
@@ -27,14 +27,14 @@ public class RepositoryRecipeMetadataRemote
     public void getByDataId(
             @Nonnull String dataId,
             @Nonnull GetDomainModelCallback<RecipeMetadataPersistenceModel> callback) {
-        callback.dataSourceOnDomainModelUnavailable();
+        callback.onDomainModelUnavailable();
     }
 
     @Override
     public void getActiveByDomainId(
             @Nonnull String domainId,
             @Nonnull GetDomainModelCallback<RecipeMetadataPersistenceModel> callback) {
-        callback.dataSourceOnDomainModelUnavailable();
+        callback.onDomainModelUnavailable();
     }
 
     @Override

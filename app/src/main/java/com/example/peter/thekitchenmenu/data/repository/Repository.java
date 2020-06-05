@@ -27,7 +27,7 @@ public abstract class Repository<T extends DomainPersistenceModel>
     public void getAll(@Nonnull GetAllDomainModelsCallback<T> callback) {
 
         if (cache != null && cacheIsDirty) {
-            callback.onAllLoaded(new ArrayList<>(cache.values()));
+            callback.onAllDomainModelsLoaded(new ArrayList<>(cache.values()));
             return;
         }
         if (cacheIsDirty) {
@@ -35,13 +35,13 @@ public abstract class Repository<T extends DomainPersistenceModel>
         } else {
             localDomainDataAccess.getAll(new GetAllDomainModelsCallback<T>() {
                 @Override
-                public void onAllLoaded(List<T> models) {
+                public void onAllDomainModelsLoaded(List<T> models) {
                     refreshCache(models);
-                    callback.onAllLoaded(new ArrayList<>(cache.values()));
+                    callback.onAllDomainModelsLoaded(new ArrayList<>(cache.values()));
                 }
 
                 @Override
-                public void onModelsUnavailable() {
+                public void onDomainModelsUnavailable() {
                     getItemsFromRemoteDataSource(callback);
                 }
             });
@@ -55,38 +55,38 @@ public abstract class Repository<T extends DomainPersistenceModel>
         T cachedModel = getFromCacheModelWithDataId(dataId);
 
         if (cachedModel != null) {
-            callback.dataSourceOnDomainModelLoaded(cachedModel);
+            callback.onDomainModelLoaded(cachedModel);
             return;
         }
         localDomainDataAccess.getByDataId(dataId, new GetDomainModelCallback<T>() {
             @Override
-            public void dataSourceOnDomainModelLoaded(T model) {
+            public void onDomainModelLoaded(T model) {
                 if (cache == null) {
                     cache = new LinkedHashMap<>();
                 }
                 cache.put(model.getDataId(), model);
-                callback.dataSourceOnDomainModelLoaded(model);
+                callback.onDomainModelLoaded(model);
             }
 
             @Override
-            public void dataSourceOnDomainModelUnavailable() {
+            public void onDomainModelUnavailable() {
                 remoteDomainDataAccess.getByDataId(dataId, new GetDomainModelCallback<T>() {
                     @Override
-                    public void dataSourceOnDomainModelLoaded(T model) {
+                    public void onDomainModelLoaded(T model) {
                         if (model == null) {
-                            callback.dataSourceOnDomainModelUnavailable();
+                            callback.onDomainModelUnavailable();
                             return;
                         }
                         if (cache == null) {
                             cache = new LinkedHashMap<>();
                         }
                         cache.put(model.getDataId(), model);
-                        callback.dataSourceOnDomainModelLoaded(model);
+                        callback.onDomainModelLoaded(model);
                     }
 
                     @Override
-                    public void dataSourceOnDomainModelUnavailable() {
-                        callback.dataSourceOnDomainModelUnavailable();
+                    public void onDomainModelUnavailable() {
+                        callback.onDomainModelUnavailable();
                     }
                 });
             }
@@ -108,40 +108,40 @@ public abstract class Repository<T extends DomainPersistenceModel>
         T cachedModel = getFromCacheModelWithDomainId(domainId);
 
         if (cachedModel != null) {
-            callback.dataSourceOnDomainModelLoaded(cachedModel);
+            callback.onDomainModelLoaded(cachedModel);
             return;
         }
         localDomainDataAccess.getActiveByDomainId(domainId, new GetDomainModelCallback<T>() {
             @Override
-            public void dataSourceOnDomainModelLoaded(T model) {
+            public void onDomainModelLoaded(T model) {
                 if (cache == null) {
                     cache = new LinkedHashMap<>();
                 }
                 cache.put(model.getDataId(), model);
-                callback.dataSourceOnDomainModelLoaded(model);
+                callback.onDomainModelLoaded(model);
             }
 
             @Override
-            public void dataSourceOnDomainModelUnavailable() {
+            public void onDomainModelUnavailable() {
                 remoteDomainDataAccess.getActiveByDomainId(
                         domainId,
                         new GetDomainModelCallback<T>() {
                     @Override
-                    public void dataSourceOnDomainModelLoaded(T model) {
+                    public void onDomainModelLoaded(T model) {
                         if (model == null) {
-                            callback.dataSourceOnDomainModelUnavailable();
+                            callback.onDomainModelUnavailable();
                             return;
                         }
                         if (cache == null) {
                             cache = new LinkedHashMap<>();
                         }
                         cache.put(model.getDataId(), model);
-                        callback.dataSourceOnDomainModelLoaded(model);
+                        callback.onDomainModelLoaded(model);
                     }
 
                     @Override
-                    public void dataSourceOnDomainModelUnavailable() {
-                        callback.dataSourceOnDomainModelUnavailable();
+                    public void onDomainModelUnavailable() {
+                        callback.onDomainModelUnavailable();
                     }
                 });
             }
@@ -213,15 +213,15 @@ public abstract class Repository<T extends DomainPersistenceModel>
     private void getItemsFromRemoteDataSource(@Nonnull final GetAllDomainModelsCallback<T> callback) {
         remoteDomainDataAccess.getAll(new GetAllDomainModelsCallback<T>() {
             @Override
-            public void onAllLoaded(List<T> models) {
+            public void onAllDomainModelsLoaded(List<T> models) {
                 refreshCache(models);
                 refreshLocalDataSource(models);
-                callback.onAllLoaded(new ArrayList<>(cache.values()));
+                callback.onAllDomainModelsLoaded(new ArrayList<>(cache.values()));
             }
 
             @Override
-            public void onModelsUnavailable() {
-                callback.onModelsUnavailable();
+            public void onDomainModelsUnavailable() {
+                callback.onDomainModelsUnavailable();
             }
         });
     }

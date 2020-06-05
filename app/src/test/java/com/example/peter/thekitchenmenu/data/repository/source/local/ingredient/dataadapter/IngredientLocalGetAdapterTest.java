@@ -213,13 +213,13 @@ public class IngredientLocalGetAdapterTest {
         private boolean isModelUnavailable;
 
         @Override
-        public void dataSourceOnDomainModelLoaded(IngredientPersistenceModel m) {
+        public void onDomainModelLoaded(IngredientPersistenceModel m) {
             System.out.println(TAG + m);
             model = m;
         }
 
         @Override
-        public void dataSourceOnDomainModelUnavailable() {
+        public void onDomainModelUnavailable() {
             isModelUnavailable = true;
             System.out.println(TAG + "isModelUnavailable=" + isModelUnavailable);
         }
@@ -235,13 +235,13 @@ public class IngredientLocalGetAdapterTest {
         private boolean isModelsUnavailable;
 
         @Override
-        public void onAllLoaded(List<IngredientPersistenceModel> m) {
+        public void onAllDomainModelsLoaded(List<IngredientPersistenceModel> m) {
             System.out.println(TAG + m);
             models = m;
         }
 
         @Override
-        public void onModelsUnavailable() {
+        public void onDomainModelsUnavailable() {
             isModelsUnavailable = true;
             System.out.println(TAG + "isModelsUnavailable=" + isModelsUnavailable);
         }

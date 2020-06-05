@@ -547,7 +547,7 @@ public class RecipeMetadataTest {
 
         // Assert
         verify(repoMock).getActiveByDomainId(eq(recipeId), repoMetadataCallback.capture());
-        repoMetadataCallback.getValue().dataSourceOnDomainModelLoaded(modelUnderTest);
+        repoMetadataCallback.getValue().onDomainModelLoaded(modelUnderTest);
 
         UseCaseMetadataModel metadata = onErrorResponse.getMetadata();
 
@@ -581,7 +581,7 @@ public class RecipeMetadataTest {
         );
         // Assert
         verify(repoMock).getActiveByDomainId(eq(recipeId), repoMetadataCallback.capture());
-        repoMetadataCallback.getValue().dataSourceOnDomainModelLoaded(modelUnderTest);
+        repoMetadataCallback.getValue().onDomainModelLoaded(modelUnderTest);
 
         UseCaseMetadataModel metadata = onErrorResponse.getMetadata();
 
@@ -615,7 +615,7 @@ public class RecipeMetadataTest {
 
         // Assert
         verify(repoMock).getActiveByDomainId(eq(recipeId), repoMetadataCallback.capture());
-        repoMetadataCallback.getValue().dataSourceOnDomainModelLoaded(modelUnderTest);
+        repoMetadataCallback.getValue().onDomainModelLoaded(modelUnderTest);
 
         UseCaseMetadataModel metadata = onSuccessResponse.getMetadata();
 
@@ -676,7 +676,7 @@ public class RecipeMetadataTest {
         );
         // Assert
         verify(repoMock).getActiveByDomainId(eq(recipeId), repoMetadataCallback.capture());
-        repoMetadataCallback.getValue().dataSourceOnDomainModelLoaded(modelUnderTest);
+        repoMetadataCallback.getValue().onDomainModelLoaded(modelUnderTest);
 
         UseCaseMetadataModel metadata = onSuccessResponse.getMetadata();
 
@@ -711,7 +711,7 @@ public class RecipeMetadataTest {
 
         // Assert
         verify(repoMock).getActiveByDomainId(eq(recipeId), repoMetadataCallback.capture());
-        repoMetadataCallback.getValue().dataSourceOnDomainModelLoaded(modelUnderTestOne);
+        repoMetadataCallback.getValue().onDomainModelLoaded(modelUnderTestOne);
 
         UseCaseMetadataModel metadata = onErrorResponse.getMetadata();
 
@@ -797,7 +797,7 @@ public class RecipeMetadataTest {
 
     private void whenRepoCalledReturnDataUnavailable(String domainId) {
         verify(repoMock).getActiveByDomainId(eq(domainId), repoMetadataCallback.capture());
-        repoMetadataCallback.getValue().dataSourceOnDomainModelUnavailable();
+        repoMetadataCallback.getValue().onDomainModelUnavailable();
     }
     // endregion helper methods --------------------------------------------------------------------
 

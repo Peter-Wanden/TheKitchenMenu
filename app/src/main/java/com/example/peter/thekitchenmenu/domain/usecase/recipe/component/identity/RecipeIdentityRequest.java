@@ -9,8 +9,10 @@ import java.util.Objects;
 import javax.annotation.Nonnull;
 
 public final class RecipeIdentityRequest
-        extends UseCaseMessageModelDataId<RecipeIdentityRequest.DomainModel>
-        implements UseCaseBase.Request {
+        extends
+        UseCaseMessageModelDataId<RecipeIdentityRequest.DomainModel>
+        implements
+        UseCaseBase.Request {
 
     @Nonnull
     @Override

@@ -60,13 +60,13 @@ public class RepositoryRecipeMetadataLocal
         getAdapter.getAllActive(
                 new GetAllDomainModelsCallback<RecipeMetadataPersistenceModel>() {
                     @Override
-                    public void onAllLoaded(List<RecipeMetadataPersistenceModel> models) {
-                        callback.onAllLoaded(models);
+                    public void onAllDomainModelsLoaded(List<RecipeMetadataPersistenceModel> models) {
+                        callback.onAllDomainModelsLoaded(models);
                     }
 
                     @Override
-                    public void onModelsUnavailable() {
-                        callback.onModelsUnavailable();
+                    public void onDomainModelsUnavailable() {
+                        callback.onDomainModelsUnavailable();
                     }
                 }
         );
@@ -80,13 +80,13 @@ public class RepositoryRecipeMetadataLocal
                 dataId,
                 new GetDomainModelCallback<RecipeMetadataPersistenceModel>() {
                     @Override
-                    public void dataSourceOnDomainModelLoaded(@Nonnull RecipeMetadataPersistenceModel model) {
-                        callback.dataSourceOnDomainModelLoaded(model);
+                    public void onDomainModelLoaded(@Nonnull RecipeMetadataPersistenceModel model) {
+                        callback.onDomainModelLoaded(model);
                     }
 
                     @Override
-                    public void dataSourceOnDomainModelUnavailable() {
-                        callback.dataSourceOnDomainModelUnavailable();
+                    public void onDomainModelUnavailable() {
+                        callback.onDomainModelUnavailable();
                     }
                 }
         );
@@ -100,13 +100,13 @@ public class RepositoryRecipeMetadataLocal
                 domainId,
                 new GetDomainModelCallback<RecipeMetadataPersistenceModel>() {
                     @Override
-                    public void dataSourceOnDomainModelLoaded(RecipeMetadataPersistenceModel model) {
-                        callback.dataSourceOnDomainModelLoaded(model);
+                    public void onDomainModelLoaded(RecipeMetadataPersistenceModel model) {
+                        callback.onDomainModelLoaded(model);
                     }
 
                     @Override
-                    public void dataSourceOnDomainModelUnavailable() {
-                        callback.dataSourceOnDomainModelUnavailable();
+                    public void onDomainModelUnavailable() {
+                        callback.onDomainModelUnavailable();
                     }
                 }
         );

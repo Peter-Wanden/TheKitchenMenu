@@ -38,30 +38,30 @@ public class RepositoryRecipePortions
         List<RecipePortionsPersistenceModel> models = getModelsFromCache(domainId);
 
         if (!models.isEmpty()) {
-            callback.onAllLoaded(models);
+            callback.onAllDomainModelsLoaded(models);
             return;
         }
         ((DomainDataAccessRecipePortions) localDomainDataAccess).getAllByDomainId(
                 domainId,
                 new GetAllDomainModelsCallback<RecipePortionsPersistenceModel>() {
                     @Override
-                    public void onAllLoaded(List<RecipePortionsPersistenceModel> models) {
+                    public void onAllDomainModelsLoaded(List<RecipePortionsPersistenceModel> models) {
                         if (cache == null) {
                             cache = new LinkedHashMap<>();
                         }
                         for (RecipePortionsPersistenceModel m : models) {
                             cache.put(m.getDataId(), m);
                         }
-                        callback.onAllLoaded(models);
+                        callback.onAllDomainModelsLoaded(models);
                     }
 
                     @Override
-                    public void onModelsUnavailable() {
+                    public void onDomainModelsUnavailable() {
                         ((DomainDataAccessRecipePortions)remoteDomainDataAccess).getAllByDomainId(
                                 domainId,
                                 new GetAllDomainModelsCallback<RecipePortionsPersistenceModel>() {
                                     @Override
-                                    public void onAllLoaded(
+                                    public void onAllDomainModelsLoaded(
                                             List<RecipePortionsPersistenceModel> models) {
                                         if (cache == null) {
                                             cache = new LinkedHashMap<>();
@@ -69,12 +69,12 @@ public class RepositoryRecipePortions
                                         for (RecipePortionsPersistenceModel m : models) {
                                             cache.put(m.getDataId(), m);
                                         }
-                                        callback.onAllLoaded(models);
+                                        callback.onAllDomainModelsLoaded(models);
                                     }
 
                                     @Override
-                                    public void onModelsUnavailable() {
-                                        callback.onModelsUnavailable();
+                                    public void onDomainModelsUnavailable() {
+                                        callback.onDomainModelsUnavailable();
                                     }
                                 }
                         );

@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess.GetDomainModelCallback;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeDuration;
+import com.example.peter.thekitchenmenu.domain.model.UseCaseDomainModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseElement;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
@@ -22,7 +23,7 @@ import javax.annotation.Nonnull;
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentState;
 
 public class RecipeDuration
-        extends UseCaseElement<RecipeDurationRequest.DomainModel>
+        extends UseCaseElement<RecipeDurationPersistenceModel, RecipeDuration.DomainModel>
         implements GetDomainModelCallback<RecipeDurationPersistenceModel> {
 
     private static final String TAG = "tkm-" + RecipeDuration.class.getSimpleName() + ": ";
@@ -55,6 +56,10 @@ public class RecipeDuration
         }
     }
 
+    static class DomainModel implements UseCaseDomainModel {
+
+    }
+
     private final int MAX_PREP_TIME;
     private final int MAX_COOK_TIME;
 
@@ -67,7 +72,8 @@ public class RecipeDuration
     @Nonnull
     private final List<FailReasons> failReasons;
 
-    private RecipeDurationPersistenceModel persistenceModel;
+    private RecipeDurationRequest.DomainModel requestDomainModel;
+
     private boolean isNewRequest;
 
     public RecipeDuration(@Nonnull RepositoryRecipeDuration repository,
@@ -97,7 +103,7 @@ public class RecipeDuration
     }
 
     @Override
-    public void dataSourceOnDomainModelLoaded(RecipeDurationPersistenceModel persistenceModel) {
+    public void onDomainModelLoaded(RecipeDurationPersistenceModel persistenceModel) {
         this.persistenceModel = persistenceModel;
         useCaseDataId = persistenceModel.getDataId();
         reprocessCurrentDomainModel();
@@ -120,7 +126,7 @@ public class RecipeDuration
     }
 
     @Override
-    public void dataSourceOnDomainModelUnavailable() {
+    public void onDomainModelUnavailable() {
         persistenceModel = createNewPersistenceModel();
         failReasons.add(CommonFailReason.DATA_UNAVAILABLE);
         buildResponse();
@@ -197,7 +203,7 @@ public class RecipeDuration
                 setFailReasons(new ArrayList<>(failReasons)).
                 setCreatedBy(Constants.getUserId()).
                 setCreateDate(m.getCreateDate()).
-                setLasUpdate(m.getLastUpdate()).
+                setLastUpdate(m.getLastUpdate()).
                 build();
     }
 

@@ -37,7 +37,7 @@ public class IngredientDuplicateChecker
     }
 
     @Override
-    public void onAllLoaded(List<IngredientPersistenceModel> ingredients) {
+    public void onAllDomainModelsLoaded(List<IngredientPersistenceModel> ingredients) {
         if (!ingredients.isEmpty()) {
             createExistingIngredientList(ingredients);
             checkForDuplicates();
@@ -84,7 +84,7 @@ public class IngredientDuplicateChecker
     }
 
     @Override
-    public void onModelsUnavailable() {
+    public void onDomainModelsUnavailable() {
         notifyCallback(NO_DUPLICATE_FOUND);
     }
 }

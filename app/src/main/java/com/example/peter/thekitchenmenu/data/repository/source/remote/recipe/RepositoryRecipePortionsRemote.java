@@ -20,27 +20,27 @@ public class RepositoryRecipePortionsRemote
     public void getByDataId(
             @Nonnull String dataId,
             @Nonnull GetDomainModelCallback<RecipePortionsPersistenceModel> callback) {
-        callback.dataSourceOnDomainModelUnavailable();
+        callback.onDomainModelUnavailable();
     }
 
     @Override
     public void getAllByDomainId(
             @Nonnull String domainId,
             @Nonnull GetAllDomainModelsCallback<RecipePortionsPersistenceModel> callback) {
-        callback.onModelsUnavailable();
+        callback.onDomainModelsUnavailable();
     }
 
     @Override
     public void getActiveByDomainId(
             @Nonnull String domainId,
             @Nonnull GetDomainModelCallback<RecipePortionsPersistenceModel> callback) {
-        callback.dataSourceOnDomainModelUnavailable();
+        callback.onDomainModelUnavailable();
     }
 
     @Override
     public void getAll(
             @Nonnull GetAllDomainModelsCallback<RecipePortionsPersistenceModel> callback) {
-        callback.onModelsUnavailable();
+        callback.onDomainModelsUnavailable();
     }
 
     @Override

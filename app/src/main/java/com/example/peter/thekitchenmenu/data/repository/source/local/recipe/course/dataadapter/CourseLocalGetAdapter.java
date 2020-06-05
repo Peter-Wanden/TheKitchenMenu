@@ -34,12 +34,12 @@ public class CourseLocalGetAdapter {
                 new GetPrimitiveCallback<RecipeCourseEntity>() {
                     @Override
                     public void onEntityLoaded(RecipeCourseEntity entity) {
-                        callback.dataSourceOnDomainModelLoaded(converter.convertToModel(entity));
+                        callback.onDomainModelLoaded(converter.convertToModel(entity));
                     }
 
                     @Override
                     public void onDataUnavailable() {
-                        callback.dataSourceOnDomainModelUnavailable();
+                        callback.onDomainModelUnavailable();
                     }
                 }
         );
@@ -53,12 +53,12 @@ public class CourseLocalGetAdapter {
                 new GetAllPrimitiveCallback<RecipeCourseEntity>() {
                     @Override
                     public void onAllLoaded(List<RecipeCourseEntity> entities) {
-                        callback.onAllLoaded(converter.convertToModels(entities));
+                        callback.onAllDomainModelsLoaded(converter.convertToModels(entities));
                     }
 
                     @Override
                     public void onDataUnavailable() {
-                        callback.onModelsUnavailable();
+                        callback.onDomainModelsUnavailable();
                     }
                 }
         );
@@ -72,12 +72,12 @@ public class CourseLocalGetAdapter {
                 new GetAllPrimitiveCallback<RecipeCourseEntity>() {
                     @Override
                     public void onAllLoaded(List<RecipeCourseEntity> entities) {
-                        callback.onAllLoaded(converter.convertToModels(entities));
+                        callback.onAllDomainModelsLoaded(converter.convertToModels(entities));
                     }
 
                     @Override
                     public void onDataUnavailable() {
-                        callback.onModelsUnavailable();
+                        callback.onDomainModelsUnavailable();
                     }
                 }
         );
@@ -91,12 +91,12 @@ public class CourseLocalGetAdapter {
                 new GetAllPrimitiveCallback<RecipeCourseEntity>() {
                     @Override
                     public void onAllLoaded(List<RecipeCourseEntity> entities) {
-                        callback.onAllLoaded(filterForActive(entities));
+                        callback.onAllDomainModelsLoaded(filterForActive(entities));
                     }
 
                     @Override
                     public void onDataUnavailable() {
-                        callback.onModelsUnavailable();
+                        callback.onDomainModelsUnavailable();
                     }
                 }
         );
@@ -118,12 +118,12 @@ public class CourseLocalGetAdapter {
                 new GetAllPrimitiveCallback<RecipeCourseEntity>() {
                     @Override
                     public void onAllLoaded(List<RecipeCourseEntity> entities) {
-                        callback.onAllLoaded(converter.convertToModels(entities));
+                        callback.onAllDomainModelsLoaded(converter.convertToModels(entities));
                     }
 
                     @Override
                     public void onDataUnavailable() {
-                        callback.onModelsUnavailable();
+                        callback.onDomainModelsUnavailable();
                     }
                 }
         );

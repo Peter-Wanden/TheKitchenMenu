@@ -22,7 +22,7 @@ public class RepositoryRecipeIngredientRemote
     public void getActiveByDomainId(
             @Nonnull String domainId,
             @Nonnull GetDomainModelCallback<RecipeIngredientPersistenceModel> callback) {
-        callback.dataSourceOnDomainModelUnavailable();
+        callback.onDomainModelUnavailable();
     }
 
     @Override
@@ -34,34 +34,34 @@ public class RepositoryRecipeIngredientRemote
     public void getAllByRecipeId(
             @Nonnull String recipeId,
             @Nonnull GetAllDomainModelsCallback<RecipeIngredientPersistenceModel> callback) {
-        callback.onModelsUnavailable();
+        callback.onDomainModelsUnavailable();
     }
 
     @Override
     public void getAllByProductId(
             @Nonnull String productId,
             @Nonnull GetAllDomainModelsCallback<RecipeIngredientPersistenceModel> callback) {
-        callback.onModelsUnavailable();
+        callback.onDomainModelsUnavailable();
     }
 
     @Override
     public void getAllByIngredientId(
             @Nonnull String ingredientId,
             @Nonnull GetAllDomainModelsCallback<RecipeIngredientPersistenceModel> callback) {
-        callback.onModelsUnavailable();
+        callback.onDomainModelsUnavailable();
     }
 
     @Override
     public void getAll(
             @Nonnull GetAllDomainModelsCallback<RecipeIngredientPersistenceModel> callback) {
-        callback.onModelsUnavailable();
+        callback.onDomainModelsUnavailable();
     }
 
     @Override
     public void getByDataId(
             @Nonnull String dataId,
             @Nonnull GetDomainModelCallback<RecipeIngredientPersistenceModel> callback) {
-        callback.dataSourceOnDomainModelUnavailable();
+        callback.onDomainModelUnavailable();
     }
 
     @Override

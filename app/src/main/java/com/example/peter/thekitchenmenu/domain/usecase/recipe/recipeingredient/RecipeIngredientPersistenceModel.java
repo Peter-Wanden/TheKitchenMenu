@@ -1,9 +1,9 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredient;
 
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModel;
-import com.example.peter.thekitchenmenu.domain.model.BaseDomainModelPersistence;
+import com.example.peter.thekitchenmenu.domain.model.BaseDomainPersistenceModel;
 
-public class RecipeIngredientPersistenceModel extends BaseDomainModelPersistence {
+public class RecipeIngredientPersistenceModel extends BaseDomainPersistenceModel {
 
     private String dataId;
     private String recipeIngredientId;

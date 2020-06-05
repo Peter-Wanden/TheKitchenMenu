@@ -65,7 +65,7 @@ public class Ingredient
         }
     }
 
-    static final String CREATE_NEW_INGREDIENT = "";
+    static final String NO_ID = "";
     private static final TextType NAME_TEXT_TYPE = TextType.SHORT_TEXT;
     private static final TextType DESCRIPTION_TEXT_TYPE = TextType.LONG_TEXT;
 
@@ -130,7 +130,7 @@ public class Ingredient
     }
 
     @Override
-    public void dataSourceOnDomainModelLoaded(IngredientPersistenceModel model) {
+    public void onDomainModelLoaded(IngredientPersistenceModel model) {
         persistenceModel = model;
         dataId = model.getDataId();
         ingredientId = model.getDomainId();
@@ -144,7 +144,7 @@ public class Ingredient
     }
 
     @Override
-    public void dataSourceOnDomainModelUnavailable() {
+    public void onDomainModelUnavailable() {
         persistenceModel = createNewPersistenceModel();
         failReasons.add(CommonFailReason.DATA_UNAVAILABLE);
 
@@ -281,7 +281,7 @@ public class Ingredient
                 setFailReasons(new ArrayList<>(failReasons)).
                 setCreatedBy(Constants.getUserId()).
                 setCreateDate(m.getCreateDate()).
-                setLasUpdate(m.getLastUpdate()).
+                setLastUpdate(m.getLastUpdate()).
                 build();
     }
 

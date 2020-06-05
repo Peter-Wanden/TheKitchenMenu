@@ -6,7 +6,9 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.R
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class TestDataRecipeCourse {
 
@@ -41,9 +43,11 @@ public class TestDataRecipeCourse {
     }
 
     // State of recipe course data after new courses added
-    public static List<RecipeCoursePersistenceModel> getNewActiveCourses() {
-        return Arrays.asList(getNewActiveRecipeCourseZero(), getNewActiveRecipeCourseOne()
-        );
+    public static Set<RecipeCoursePersistenceModel> getNewActiveCourses() {
+        Set<RecipeCoursePersistenceModel> models = new HashSet<>();
+        models.add(getNewActiveRecipeCourseZero());
+        models.add(getNewActiveRecipeCourseOne());
+        return models;
     }
 
     // First course updated to deactivated
@@ -71,11 +75,11 @@ public class TestDataRecipeCourse {
     }
 
     // State of data after courses removed
-    public static List<RecipeCoursePersistenceModel> getNewDeactivatedRecipeCourses() {
-        return new ArrayList<>(Arrays.asList(
-                getNewDeactivatedRecipeCourseZero(),
-                getNewDeactivatedRecipeCourseOne())
-        );
+    public static Set<RecipeCoursePersistenceModel> getNewDeactivatedRecipeCourses() {
+        Set<RecipeCoursePersistenceModel> models = new HashSet<>();
+        models.add(getNewDeactivatedRecipeCourseZero());
+        models.add(getNewDeactivatedRecipeCourseOne());
+        return models;
     }
 
     public static RecipeCoursePersistenceModel getExistingActiveRecipeCourseZero() {
@@ -166,22 +170,22 @@ public class TestDataRecipeCourse {
                 build();
     }
 
-    public static List<RecipeCoursePersistenceModel> getAllExistingActiveRecipeCourses() {
-        return Arrays.asList(
-                getExistingActiveRecipeCourseZero(),
-                getExistingActiveRecipeCourseOne(),
-                getExistingActiveRecipeCourseTwo(),
-                getExistingActiveRecipeCourseThree(),
-                getExistingActiveRecipeCourseFour(),
-                getExistingActiveRecipeCourseFive(),
-                getExistingActiveRecipeCourseSix(),
-                getExistingActiveRecipeCourseSeven()
-        );
+    public static Set<RecipeCoursePersistenceModel> getAllExistingActiveRecipeCourses() {
+        Set<RecipeCoursePersistenceModel> models = new HashSet<>();
+        models.add(getExistingActiveRecipeCourseZero());
+        models.add(getExistingActiveRecipeCourseOne());
+        models.add(getExistingActiveRecipeCourseTwo());
+        models.add(getExistingActiveRecipeCourseThree());
+        models.add(getExistingActiveRecipeCourseFour());
+        models.add(getExistingActiveRecipeCourseFive());
+        models.add(getExistingActiveRecipeCourseSix());
+        models.add(getExistingActiveRecipeCourseSeven());
+        return models;
     }
 
-    public static List<RecipeCoursePersistenceModel> getAllExistingActiveEvenRecipeCourses() {
-        List<RecipeCoursePersistenceModel> evenModels = new ArrayList<>();
-        for (RecipeCoursePersistenceModel model : evenModels) {
+    public static Set<RecipeCoursePersistenceModel> getAllExistingActiveEvenRecipeCourses() {
+        Set<RecipeCoursePersistenceModel> evenModels = new HashSet<>();
+        for (RecipeCoursePersistenceModel model : getAllExistingActiveRecipeCourses()) {
             if (model.getCourse().getCourseNo() % 2 == 0) {
                 evenModels.add(model);
             }
@@ -190,11 +194,11 @@ public class TestDataRecipeCourse {
     }
 
     //TODO - "idFromAnotherUser" ??
-    public static List<RecipeCoursePersistenceModel> getAllExistingActiveByDomainId(String domainId) {
+    public static Set<RecipeCoursePersistenceModel> getAllExistingActiveByDomainId(String domainId) {
         if (domainId.equals("idFromAnotherUser")) {
             return getAllRecipeCourseCopies();
         } else {
-            List<RecipeCoursePersistenceModel> models = new ArrayList<>();
+            Set<RecipeCoursePersistenceModel> models = new HashSet<>();
             for (RecipeCoursePersistenceModel m : getAllExistingActiveRecipeCourses()) {
                 if (domainId.equals(m.getDomainId())) {
                     models.add(m);
@@ -259,18 +263,18 @@ public class TestDataRecipeCourse {
                 build();
     }
 
-    public static List<RecipeCoursePersistenceModel> getAllRecipeCourseCopies() {
-        return Arrays.asList(
-                getCopiedRecipeCourseZero(),
-                getCopiedRecipeCourseOne(),
-                getCopiedRecipeCourseTwo(),
-                getCopiedRecipeCourseFour(),
-                getCopiedRecipeCourseSix()
-        );
+    public static Set<RecipeCoursePersistenceModel> getAllRecipeCourseCopies() {
+        Set<RecipeCoursePersistenceModel> models = new HashSet<>();
+        models.add(getCopiedRecipeCourseZero());
+        models.add(getCopiedRecipeCourseOne());
+        models.add(getCopiedRecipeCourseTwo());
+        models.add(getCopiedRecipeCourseFour());
+        models.add(getCopiedRecipeCourseSix());
+        return models;
     }
 
-    public static List<RecipeCoursePersistenceModel> getAllByCourse(RecipeCourse.Course c) {
-        List<RecipeCoursePersistenceModel> models = new ArrayList<>();
+    public static Set<RecipeCoursePersistenceModel> getAllByCourse(RecipeCourse.Course c) {
+        Set<RecipeCoursePersistenceModel> models = new HashSet<>();
         for (RecipeCoursePersistenceModel m : getAll()) {
             if (c == m.getCourse()) {
                 models.add(m);
@@ -279,25 +283,25 @@ public class TestDataRecipeCourse {
         return models;
     }
 
-    public static List<RecipeCoursePersistenceModel> getAll() {
-        return Arrays.asList(
-                getNewActiveRecipeCourseZero(),
-                getNewActiveRecipeCourseOne(),
-                getNewDeactivatedRecipeCourseZero(),
-                getNewDeactivatedRecipeCourseOne(),
-                getExistingActiveRecipeCourseZero(),
-                getExistingActiveRecipeCourseOne(),
-                getExistingActiveRecipeCourseTwo(),
-                getExistingActiveRecipeCourseThree(),
-                getExistingActiveRecipeCourseFour(),
-                getExistingActiveRecipeCourseFive(),
-                getExistingActiveRecipeCourseSix(),
-                getExistingActiveRecipeCourseSeven(),
-                getCopiedRecipeCourseZero(),
-                getCopiedRecipeCourseOne(),
-                getCopiedRecipeCourseTwo(),
-                getCopiedRecipeCourseFour(),
-                getCopiedRecipeCourseSix()
-        );
+    public static Set<RecipeCoursePersistenceModel> getAll() {
+        Set<RecipeCoursePersistenceModel> models = new HashSet<>();
+        models.add(getNewActiveRecipeCourseZero());
+        models.add(getNewActiveRecipeCourseOne());
+        models.add(getNewDeactivatedRecipeCourseZero());
+        models.add(getNewDeactivatedRecipeCourseOne());
+        models.add(getExistingActiveRecipeCourseZero());
+        models.add(getExistingActiveRecipeCourseOne());
+        models.add(getExistingActiveRecipeCourseTwo());
+        models.add(getExistingActiveRecipeCourseThree());
+        models.add(getExistingActiveRecipeCourseFour());
+        models.add(getExistingActiveRecipeCourseFive());
+        models.add(getExistingActiveRecipeCourseSix());
+        models.add(getExistingActiveRecipeCourseSeven());
+        models.add(getCopiedRecipeCourseZero());
+        models.add(getCopiedRecipeCourseOne());
+        models.add(getCopiedRecipeCourseTwo());
+        models.add(getCopiedRecipeCourseFour());
+        models.add(getCopiedRecipeCourseSix());
+        return models;
     }
 }

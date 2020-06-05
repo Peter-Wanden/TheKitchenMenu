@@ -98,13 +98,13 @@ public class ConversionFactorStatus extends UseCaseBase
     }
 
     @Override
-    public void dataSourceOnDomainModelLoaded(IngredientPersistenceModel model) {
+    public void onDomainModelLoaded(IngredientPersistenceModel model) {
         persistenceModel = model;
         checkEditableStatus();
     }
 
     @Override
-    public void dataSourceOnDomainModelUnavailable() {
+    public void onDomainModelUnavailable() {
         returnDataNotAvailable();
     }
 

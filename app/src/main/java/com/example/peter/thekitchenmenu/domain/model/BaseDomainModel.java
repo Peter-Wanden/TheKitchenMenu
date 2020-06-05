@@ -3,9 +3,7 @@ package com.example.peter.thekitchenmenu.domain.model;
 /**
  * Base class for a domain data model.
  */
-public abstract class BaseDomainModel {
-
-
+public abstract class BaseDomainModel implements UseCaseDomainModel {
 
     /**
      * Base class for an {@link DomainModelBuilder}

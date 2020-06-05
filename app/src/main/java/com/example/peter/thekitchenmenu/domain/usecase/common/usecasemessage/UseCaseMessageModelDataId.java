@@ -1,6 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage;
 
 import com.example.peter.thekitchenmenu.domain.model.BaseDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityRequest;
 
 import java.util.Objects;
 

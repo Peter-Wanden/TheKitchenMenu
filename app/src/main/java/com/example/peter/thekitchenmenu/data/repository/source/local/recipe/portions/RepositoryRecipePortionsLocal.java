@@ -56,13 +56,13 @@ public class RepositoryRecipePortionsLocal
                 dataId,
                 new GetDomainModelCallback<RecipePortionsPersistenceModel>() {
                     @Override
-                    public void dataSourceOnDomainModelLoaded(RecipePortionsPersistenceModel model) {
-                        callback.dataSourceOnDomainModelLoaded(model);
+                    public void onDomainModelLoaded(RecipePortionsPersistenceModel model) {
+                        callback.onDomainModelLoaded(model);
                     }
 
                     @Override
-                    public void dataSourceOnDomainModelUnavailable() {
-                        callback.dataSourceOnDomainModelUnavailable();
+                    public void onDomainModelUnavailable() {
+                        callback.onDomainModelUnavailable();
                     }
                 }
         );
@@ -76,13 +76,13 @@ public class RepositoryRecipePortionsLocal
                 domainId,
                 new GetAllDomainModelsCallback<RecipePortionsPersistenceModel>() {
                     @Override
-                    public void onAllLoaded(List<RecipePortionsPersistenceModel> models) {
-                        callback.onAllLoaded(models);
+                    public void onAllDomainModelsLoaded(List<RecipePortionsPersistenceModel> models) {
+                        callback.onAllDomainModelsLoaded(models);
                     }
 
                     @Override
-                    public void onModelsUnavailable() {
-                        callback.onModelsUnavailable();
+                    public void onDomainModelsUnavailable() {
+                        callback.onDomainModelsUnavailable();
                     }
                 });
     }
@@ -94,13 +94,13 @@ public class RepositoryRecipePortionsLocal
         getAdapter.getActiveByDomainId(
                 domainId, new GetDomainModelCallback<RecipePortionsPersistenceModel>() {
                     @Override
-                    public void dataSourceOnDomainModelLoaded(RecipePortionsPersistenceModel model) {
-                        callback.dataSourceOnDomainModelLoaded(model);
+                    public void onDomainModelLoaded(RecipePortionsPersistenceModel model) {
+                        callback.onDomainModelLoaded(model);
                     }
 
                     @Override
-                    public void dataSourceOnDomainModelUnavailable() {
-                        callback.dataSourceOnDomainModelUnavailable();
+                    public void onDomainModelUnavailable() {
+                        callback.onDomainModelUnavailable();
                     }
                 });
     }
@@ -111,13 +111,13 @@ public class RepositoryRecipePortionsLocal
         getAdapter.getAll(
                 new GetAllDomainModelsCallback<RecipePortionsPersistenceModel>() {
                     @Override
-                    public void onAllLoaded(List<RecipePortionsPersistenceModel> models) {
-                        callback.onAllLoaded(models);
+                    public void onAllDomainModelsLoaded(List<RecipePortionsPersistenceModel> models) {
+                        callback.onAllDomainModelsLoaded(models);
                     }
 
                     @Override
-                    public void onModelsUnavailable() {
-                        callback.onModelsUnavailable();
+                    public void onDomainModelsUnavailable() {
+                        callback.onDomainModelsUnavailable();
                     }
                 }
         );

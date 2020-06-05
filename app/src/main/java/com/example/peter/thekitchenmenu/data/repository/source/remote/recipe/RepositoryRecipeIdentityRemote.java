@@ -20,21 +20,21 @@ public class RepositoryRecipeIdentityRemote
     @Override
     public void getAll(
             @Nonnull GetAllDomainModelsCallback<RecipeIdentityPersistenceModel> callback) {
-        callback.onModelsUnavailable();
+        callback.onDomainModelsUnavailable();
     }
 
     @Override
     public void getByDataId(
             @Nonnull String dataId,
             @Nonnull GetDomainModelCallback<RecipeIdentityPersistenceModel> callback) {
-        callback.dataSourceOnDomainModelUnavailable();
+        callback.onDomainModelUnavailable();
     }
 
     @Override
     public void getActiveByDomainId(
             @Nonnull String domainId,
             @Nonnull GetDomainModelCallback<RecipeIdentityPersistenceModel> callback) {
-        callback.dataSourceOnDomainModelUnavailable();
+        callback.onDomainModelUnavailable();
     }
 
     @Override

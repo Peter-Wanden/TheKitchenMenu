@@ -5,9 +5,12 @@ import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess.GetAllD
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeCourse;
 import com.example.peter.thekitchenmenu.data.repository.recipe.course.TestDataRecipeCourse;
 import com.example.peter.thekitchenmenu.data.repository.recipe.metadata.TestDataRecipeMetadata;
+import com.example.peter.thekitchenmenu.domain.model.UseCaseMetadataModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseHandler;
+import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse.Course;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataPersistenceModel;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
@@ -20,11 +23,13 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse.MINIMUM_COURSE_LIST_SIZE;
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentState;
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
@@ -39,7 +44,6 @@ public class RecipeCourseTest {
     // region constants ----------------------------------------------------------------------------
     private static final RecipeMetadataPersistenceModel RECIPE_METADATA_VALID_UNCHANGED =
             TestDataRecipeMetadata.getValidUnchanged();
-    private static final int NO_COURSES = 0;
     // endregion constants -------------------------------------------------------------------------
 
     // region helper fields ------------------------------------------------------------------------
@@ -80,31 +84,30 @@ public class RecipeCourseTest {
     @Test
     public void newRequest_domainIdWithNoCourses_emptyListReturned_INVALID_UNCHANGED() {
         // Arrange
-        int expectedCourseListSize = MINIMUM_COURSE_LIST_SIZE - 1;
         RecipeCourseRequest request = new RecipeCourseRequest.Builder().
                 getDefault().
                 setDomainId("idNotInTestData").
                 build();
 
         // Act
-        handler.executeAsync(SUT, request, getCallback());
+        SUT.execute(request, new CourseCallbackClient());
         // Assert
         verifyRepoCalledAndReturnMatchingCourses(request.getDomainId());
+        UseCaseMetadataModel metadata = onErrorResponse.getMetadata();
 
         assertEquals(
                 ComponentState.INVALID_UNCHANGED,
-                onErrorResponse.getMetadata().getComponentState()
+                metadata.getComponentState()
         );
-        assertTrue(
-                onErrorResponse.
-                        getMetadata().
-                        getFailReasons().
-                        contains(CommonFailReason.DATA_UNAVAILABLE)
+
+        FailReasons[] expectedFailReasons = new FailReasons[]{CommonFailReason.DATA_UNAVAILABLE};
+        FailReasons[] actualFailReasons = metadata.getFailReasons().toArray(new FailReasons[0]);
+        assertArrayEquals(
+                expectedFailReasons,
+                actualFailReasons
         );
-        assertEquals(
-                expectedCourseListSize,
-                onErrorResponse.getDomainModel().getCourseList().size()
-        );
+        // Assert course list is empty
+        assertEquals(0, onErrorResponse.getDomainModel().getCourseList().size());
     }
 
     @Test
@@ -114,11 +117,11 @@ public class RecipeCourseTest {
 
         int noOfCoursesToDeactivate = 2;
 
-        List<RecipeCoursePersistenceModel> newActiveModels = TestDataRecipeCourse.
-                getNewActiveCourses();
+        List<RecipeCoursePersistenceModel> newActiveModels = new ArrayList<>(TestDataRecipeCourse.
+                getNewActiveCourses());
 
-        List<RecipeCoursePersistenceModel> expectedDeactivatedModels = TestDataRecipeCourse.
-                getNewDeactivatedRecipeCourses();
+        List<RecipeCoursePersistenceModel> expectedDeactivatedModels = new ArrayList<>(
+                TestDataRecipeCourse.getNewDeactivatedRecipeCourses());
         // Completes the updated timestamp
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(expectedDeactivatedModels.
                 get(0).
@@ -131,10 +134,10 @@ public class RecipeCourseTest {
                 build();
 
         // Act
-        handler.executeAsync(SUT, initialisationRequest, getCallback());
+        SUT.execute(initialisationRequest, new CourseCallbackClient());
         // Assert
         verify(repoCourseMock).getAllActiveByDomainId(eq(domainId), repoCourseCallback.capture());
-        repoCourseCallback.getValue().onAllLoaded(newActiveModels);
+        repoCourseCallback.getValue().onAllDomainModelsLoaded(newActiveModels);
 
         // Arrange - deactivate courses request
         RecipeCourseRequest deactivateRequest = new RecipeCourseRequest.Builder().
@@ -142,17 +145,16 @@ public class RecipeCourseTest {
                 setDomainModel(
                         new RecipeCourseRequest.DomainModel.Builder().
                                 setCourseList(
-                                        new ArrayList<>()). // Empty list deactivates all courses
+                                        new HashSet<>()). // Empty list deactivates all courses
                                 build()).
                 build();
 
         // Act
-        handler.executeAsync(SUT, deactivateRequest, getCallback());
+        SUT.execute(deactivateRequest, new CourseCallbackClient());
 
         // Assert courses updated and deactivated
         verify(repoCourseMock, times(noOfCoursesToDeactivate)).update(
-                capturedPersistentModel.
-                        capture()
+                capturedPersistentModel.capture()
         );
         List<RecipeCoursePersistenceModel> actualDeactivatedModels = capturedPersistentModel.
                 getAllValues();
@@ -180,17 +182,23 @@ public class RecipeCourseTest {
     @Test
     public void newRequest_idWithNoCourses_thenAddCourses_VALID_CHANGED() {
         // Arrange
-        List<RecipeCoursePersistenceModel> expectedModels = TestDataRecipeCourse.
-                getNewActiveCourses();
+        List<RecipeCoursePersistenceModel> expectedModels = new ArrayList<>(TestDataRecipeCourse.
+                getNewActiveCourses());
 
-        String domainId = expectedModels.get(0).getDomainId();
-        long expectedDateTime = expectedModels.get(0).getCreateDate();
+        RecipeCoursePersistenceModel firstCourseToAddPersistenceModel = expectedModels.get(0);
+        RecipeCoursePersistenceModel secondCourseToAddPersistenceModel = expectedModels.get(1);
+        Set<Course> coursesToAdd = new HashSet<>();
+        coursesToAdd.add(firstCourseToAddPersistenceModel.getCourse());
+        coursesToAdd.add(secondCourseToAddPersistenceModel.getCourse());
+
+        String domainId = firstCourseToAddPersistenceModel.getDomainId();
+        long expectedDateTime = firstCourseToAddPersistenceModel.getCreateDate();
 
         whenTimeProviderReturnTime(expectedDateTime);
 
         when(idProviderMock.getUId()).thenReturn(
-                expectedModels.get(0).getDataId(),
-                expectedModels.get(1).getDataId());
+                firstCourseToAddPersistenceModel.getDataId(),
+                secondCourseToAddPersistenceModel.getDataId());
 
         RecipeCourseRequest initialisationRequest = new RecipeCourseRequest.Builder().
                 getDefault().
@@ -198,40 +206,35 @@ public class RecipeCourseTest {
                 build();
 
         // Act
-        handler.executeAsync(SUT, initialisationRequest, getCallback());
+        SUT.execute(initialisationRequest, new CourseCallbackClient());
 
         // Assert request for data
         verify(repoCourseMock).getAllActiveByDomainId(eq(domainId), repoCourseCallback.capture());
-        repoCourseCallback.getValue().onModelsUnavailable();
+        repoCourseCallback.getValue().onDomainModelsUnavailable();
 
         // Arrange - add new courses request
         int numberOfAddedCourses = expectedModels.size();
+
         RecipeCourseRequest addCoursesRequest = new RecipeCourseRequest.Builder().
                 basedOnResponse(onErrorResponse).
-                setDomainModel(new RecipeCourseRequest.DomainModel.Builder().
-                        setCourseList(
-                                Arrays.asList(
-                                        expectedModels.get(0).getCourse(),
-                                        expectedModels.get(1).getCourse()
-                                )
-                        ).
-                        build()
+                setDomainModel(
+                        new RecipeCourseRequest.DomainModel.Builder().
+                                setCourseList(coursesToAdd).
+                                build()
                 ).
                 build();
 
         // Act
-        handler.executeAsync(SUT, addCoursesRequest, getCallback());
+        SUT.execute(addCoursesRequest, new CourseCallbackClient());
         // Assert
         verify(repoCourseMock, times(numberOfAddedCourses)).save(capturedPersistentModel.capture());
 
         // Assert models saved are equal in content to expected models
-        List<RecipeCoursePersistenceModel> expectedCoursePersistentModels =
-                TestDataRecipeCourse.getNewActiveCourses();
         List<RecipeCoursePersistenceModel> actualCoursePersistentModels =
                 capturedPersistentModel.getAllValues();
 
         assertEquals(
-                expectedCoursePersistentModels,
+                expectedModels,
                 actualCoursePersistentModels
         );
 
@@ -252,7 +255,7 @@ public class RecipeCourseTest {
                 setDomainId(domainId).
                 build();
         // Act
-        handler.executeAsync(SUT, initialisationRequest, getCallback());
+        handler.executeAsync(SUT, initialisationRequest, new CourseCallbackClient());
         // Assert
         verify(repoCourseMock).getAllActiveByDomainId(eq(domainId), repoCourseCallback.capture());
     }
@@ -267,7 +270,7 @@ public class RecipeCourseTest {
                 setDomainId(domainId).
                 build();
         // Act
-        handler.executeAsync(SUT, initialisationRequest, getCallback());
+        handler.executeAsync(SUT, initialisationRequest, new CourseCallbackClient());
         // Assert
         verifyRepoCalledAndReturnMatchingCourses(domainId);
 
@@ -295,7 +298,7 @@ public class RecipeCourseTest {
                 setDomainId(domainId).
                 build();
         // Act
-        handler.executeAsync(SUT, initialisationRequest, getCallback());
+        handler.executeAsync(SUT, initialisationRequest, new CourseCallbackClient());
         // Assert
         verifyRepoCalledAndReturnMatchingCourses(domainId);
         // Assert - verify all courses returned
@@ -313,7 +316,7 @@ public class RecipeCourseTest {
                 setDomainId(domainId).
                 build();
         // Act
-        handler.executeAsync(SUT, requestWitNoCourses, getCallback());
+        handler.executeAsync(SUT, requestWitNoCourses, new CourseCallbackClient());
         // Assert expected sate after courses removed
         assertEquals(ComponentState.INVALID_CHANGED, onErrorResponse.
                 getMetadata().
@@ -329,67 +332,42 @@ public class RecipeCourseTest {
     }
 
     // region helper methods -----------------------------------------------------------------------
-    private UseCaseBase.Callback<RecipeCourseResponse> getCallback() {
-        return new UseCaseBase.Callback<RecipeCourseResponse>() {
-
-            private final String TAG = RecipeCourseTest.TAG + this.getClass().getSimpleName()
-                    + ": ";
-
-            @Override
-            public void onUseCaseSuccess(RecipeCourseResponse response) {
-                System.out.println(TAG + "onSuccess: " + response);
-                onSuccessResponse = response;
-            }
-
-            @Override
-            public void onUseCaseError(RecipeCourseResponse response) {
-                System.out.println(TAG + "onError: " + response);
-                onErrorResponse = response;
-            }
-        };
-    }
-
     private void verifyRepoCalledAndReturnMatchingCourses(String recipeId) {
         // Confirm repo called and capture the callback
         verify(repoCourseMock).getAllActiveByDomainId(eq(recipeId), repoCourseCallback.capture());
-        // Find the matching values in the test data and return the callback with results
-        List<RecipeCoursePersistenceModel> courses = TestDataRecipeCourse.
-                getAllExistingActiveByDomainId(recipeId);
+        // Find matching values in the test data and return  results
+        List<RecipeCoursePersistenceModel> courses = new ArrayList<>(TestDataRecipeCourse.
+                getAllExistingActiveByDomainId(recipeId));
+
         if (courses.size() > 0) {
             System.out.println(TAG + courses.size() + " courses returned from test data.");
-            repoCourseCallback.getValue().onAllLoaded(courses);
+            repoCourseCallback.getValue().onAllDomainModelsLoaded(courses);
         } else {
             System.out.println(TAG + "no courses were returned from test data.");
-            repoCourseCallback.getValue().onModelsUnavailable();
+            repoCourseCallback.getValue().onDomainModelsUnavailable();
         }
     }
 
     private void whenTimeProviderReturnTime(long time) {
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(time);
     }
-
-    private void sendInitialRequestForNewRecipeCourse(String domainId) {
-        // Arrange
-        RecipeCourseRequest initialRequest = new RecipeCourseRequest.Builder().getDefault().
-                setDomainId(domainId).
-                build();
-
-        // Act
-        handler.executeAsync(SUT, initialRequest, getCallback());
-        // Assert
-        verifyRepoCalledAndReturnMatchingCourses(initialRequest.getDomainId());
-        // Assert component state
-        assertEquals(
-                ComponentState.INVALID_UNCHANGED,
-                onErrorResponse.getMetadata().getComponentState()
-        );
-        // Assert course list
-        assertEquals(
-                NO_COURSES,
-                onErrorResponse.getDomainModel().getCourseList().size());
-    }
     // endregion helper methods --------------------------------------------------------------------
 
     // region helper classes -----------------------------------------------------------------------
+    private final class CourseCallbackClient
+            implements
+            UseCaseBase.Callback<RecipeCourseResponse> {
+        @Override
+        public void onUseCaseSuccess(RecipeCourseResponse response) {
+            System.out.println(TAG + "onSuccess: " + response);
+            onSuccessResponse = response;
+        }
+
+        @Override
+        public void onUseCaseError(RecipeCourseResponse response) {
+            System.out.println(TAG + "onError: " + response);
+            onErrorResponse = response;
+        }
+    }
     // endregion helper classes --------------------------------------------------------------------
 }

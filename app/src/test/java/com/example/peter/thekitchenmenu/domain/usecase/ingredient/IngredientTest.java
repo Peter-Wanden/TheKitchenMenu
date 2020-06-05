@@ -571,7 +571,7 @@ public class IngredientTest {
                 eq(modelUnderTest.getDomainId()),
                 repoCallbackCaptor.capture()
         );
-        repoCallbackCaptor.getValue().dataSourceOnDomainModelUnavailable();
+        repoCallbackCaptor.getValue().onDomainModelUnavailable();
     }
 
     private void simulateExistingInitialisationRequest(IngredientPersistenceModel modelUnderTest) {
@@ -586,7 +586,7 @@ public class IngredientTest {
         verify(repoMock).getActiveByDomainId(eq(modelUnderTest.getDomainId()),
                 repoCallbackCaptor.capture()
         );
-        repoCallbackCaptor.getValue().dataSourceOnDomainModelLoaded(modelUnderTest);
+        repoCallbackCaptor.getValue().onDomainModelLoaded(modelUnderTest);
     }
 
     private void assertNoDuplicateFound(IngredientPersistenceModel modelUnderTest) {

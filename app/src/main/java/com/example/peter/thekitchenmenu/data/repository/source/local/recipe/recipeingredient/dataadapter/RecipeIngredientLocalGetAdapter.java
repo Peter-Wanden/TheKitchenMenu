@@ -32,12 +32,12 @@ public class RecipeIngredientLocalGetAdapter {
                 new GetPrimitiveCallback<RecipeIngredientEntity>() {
                     @Override
                     public void onEntityLoaded(RecipeIngredientEntity entity) {
-                        callback.dataSourceOnDomainModelLoaded(converter.convertToModel(entity));
+                        callback.onDomainModelLoaded(converter.convertToModel(entity));
                     }
 
                     @Override
                     public void onDataUnavailable() {
-                        callback.dataSourceOnDomainModelUnavailable();
+                        callback.onDomainModelUnavailable();
                     }
                 }
         );
@@ -51,12 +51,12 @@ public class RecipeIngredientLocalGetAdapter {
                 new GetAllPrimitiveCallback<RecipeIngredientEntity>() {
                     @Override
                     public void onAllLoaded(List<RecipeIngredientEntity> entities) {
-                        callback.onAllLoaded(converter.convertToModels(entities));
+                        callback.onAllDomainModelsLoaded(converter.convertToModels(entities));
                     }
 
                     @Override
                     public void onDataUnavailable() {
-                        callback.onModelsUnavailable();
+                        callback.onDomainModelsUnavailable();
                     }
                 }
         );
@@ -69,13 +69,13 @@ public class RecipeIngredientLocalGetAdapter {
                 domainId,
                 new GetAllDomainModelsCallback<RecipeIngredientPersistenceModel>() {
                     @Override
-                    public void onAllLoaded(List<RecipeIngredientPersistenceModel> models) {
-                        callback.dataSourceOnDomainModelLoaded(filterForActiveModel(models));
+                    public void onAllDomainModelsLoaded(List<RecipeIngredientPersistenceModel> models) {
+                        callback.onDomainModelLoaded(filterForActiveModel(models));
                     }
 
                     @Override
-                    public void onModelsUnavailable() {
-                        callback.dataSourceOnDomainModelUnavailable();
+                    public void onDomainModelsUnavailable() {
+                        callback.onDomainModelUnavailable();
                     }
                 }
         );
@@ -104,12 +104,12 @@ public class RecipeIngredientLocalGetAdapter {
                 new GetAllPrimitiveCallback<RecipeIngredientEntity>() {
                     @Override
                     public void onAllLoaded(List<RecipeIngredientEntity> entities) {
-                        callback.onAllLoaded(converter.convertToModels(entities));
+                        callback.onAllDomainModelsLoaded(converter.convertToModels(entities));
                     }
 
                     @Override
                     public void onDataUnavailable() {
-                        callback.onModelsUnavailable();
+                        callback.onDomainModelsUnavailable();
                     }
                 }
         );
@@ -123,12 +123,12 @@ public class RecipeIngredientLocalGetAdapter {
                 new GetAllPrimitiveCallback<RecipeIngredientEntity>() {
                     @Override
                     public void onAllLoaded(List<RecipeIngredientEntity> entities) {
-                        callback.onAllLoaded(converter.convertToModels(entities));
+                        callback.onAllDomainModelsLoaded(converter.convertToModels(entities));
                     }
 
                     @Override
                     public void onDataUnavailable() {
-                        callback.onModelsUnavailable();
+                        callback.onDomainModelsUnavailable();
                     }
                 }
         );
@@ -142,12 +142,12 @@ public class RecipeIngredientLocalGetAdapter {
                 new GetAllPrimitiveCallback<RecipeIngredientEntity>() {
                     @Override
                     public void onAllLoaded(List<RecipeIngredientEntity> entities) {
-                        callback.onAllLoaded(converter.convertToModels(entities));
+                        callback.onAllDomainModelsLoaded(converter.convertToModels(entities));
                     }
 
                     @Override
                     public void onDataUnavailable() {
-                        callback.onModelsUnavailable();
+                        callback.onDomainModelsUnavailable();
                     }
                 }
         );
@@ -159,12 +159,12 @@ public class RecipeIngredientLocalGetAdapter {
                 new GetAllPrimitiveCallback<RecipeIngredientEntity>() {
                     @Override
                     public void onAllLoaded(List<RecipeIngredientEntity> entities) {
-                        callback.onAllLoaded(converter.convertToModels(entities));
+                        callback.onAllDomainModelsLoaded(converter.convertToModels(entities));
                     }
 
                     @Override
                     public void onDataUnavailable() {
-                        callback.onModelsUnavailable();
+                        callback.onDomainModelsUnavailable();
                     }
                 }
         );

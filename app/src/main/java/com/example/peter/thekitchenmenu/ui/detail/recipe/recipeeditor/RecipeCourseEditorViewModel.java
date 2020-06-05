@@ -13,7 +13,9 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recip
 import com.example.peter.thekitchenmenu.ui.ObservableViewModel;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Nonnull;
 
@@ -29,7 +31,7 @@ public class RecipeCourseEditorViewModel extends ObservableViewModel {
     @Nonnull
     private Recipe recipeMacro;
     private RecipeCourseResponse response;
-    private List<Course> courseList = new ArrayList<>();
+    private Set<Course> courseList = new HashSet<>();
 
     private boolean isUpdatingUi;
     private final ObservableBoolean isDataLoading = new ObservableBoolean(true);
@@ -78,7 +80,7 @@ public class RecipeCourseEditorViewModel extends ObservableViewModel {
 
     private void setRecipeCoursesToObservables() {
         courseList.clear();
-        courseList.addAll(response.getDomainModel().getCourseList().keySet());
+        courseList.addAll(response.getDomainModel().getCourseList());
 
         isUpdatingUi = true;
         notifyChange();

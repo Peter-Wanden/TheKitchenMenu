@@ -92,7 +92,7 @@ public class RecipeListTest {
 
         // Assert metadata models requested and return metadata model list
         verify(repoMetadataMock).getAll(repoMetadataGetAllCallback.capture());
-        repoMetadataGetAllCallback.getValue().onAllLoaded(metadataModels);
+        repoMetadataGetAllCallback.getValue().onAllDomainModelsLoaded(metadataModels);
         // Assert recipe components have loaded their data
         listHelper.requestRecipeComponentsLoadData();
 

@@ -9,4 +9,8 @@ public interface DomainPersistenceModel {
     String getDataId();
 
     String getDomainId();
+
+    long getCreateDate();
+
+    long getLastUpdate();
 }

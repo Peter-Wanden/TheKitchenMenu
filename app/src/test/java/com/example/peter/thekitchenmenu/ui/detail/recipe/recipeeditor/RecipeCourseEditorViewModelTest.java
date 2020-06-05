@@ -51,6 +51,7 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -800,24 +801,24 @@ public class RecipeCourseEditorViewModelTest {
     // region helper methods -----------------------------------------------------------------------
     private void verifyRepoMetadataCalledAndReturnValidUnchanged(String recipeId) {
         verify(repoMetadataMock).getActiveByDomainId((eq(recipeId)), repoMetadataCallback.capture());
-        repoMetadataCallback.getValue().dataSourceOnDomainModelLoaded(TestDataRecipeMetadata.getValidUnchanged());
+        repoMetadataCallback.getValue().onDomainModelLoaded(TestDataRecipeMetadata.getValidUnchanged());
     }
 
     private void verifyRepoCourseCalledAndReturnCoursesMatchingId(String recipeId) {
         verify(repoCourseMock).getAllByDomainId(eq(recipeId), repoCourseCallback.capture());
-        repoCourseCallback.getValue().onAllLoaded(TestDataRecipeCourse.
-                getAllExistingActiveByDomainId(recipeId));
+        repoCourseCallback.getValue().onAllDomainModelsLoaded(new ArrayList<>(TestDataRecipeCourse.
+                getAllExistingActiveByDomainId(recipeId)));
     }
 
     private void verifyRepoCourseCalledAndReturnEvenCoursesForId(String recipeId) {
         verify(repoCourseMock).getAllByDomainId(eq(recipeId), repoCourseCallback.capture());
-        repoCourseCallback.getValue().onAllLoaded(TestDataRecipeCourse.
-                getAllExistingActiveEvenRecipeCourses());
+        repoCourseCallback.getValue().onAllDomainModelsLoaded(new ArrayList<>(TestDataRecipeCourse.
+                getAllExistingActiveEvenRecipeCourses()));
     }
 
     private void verifyRepoCourseCalledAndReturnDataUnavailableForId(String recipeId) {
         verify(repoCourseMock).getAllByDomainId(eq(recipeId), repoCourseCallback.capture());
-        repoCourseCallback.getValue().onModelsUnavailable();
+        repoCourseCallback.getValue().onDomainModelsUnavailable();
     }
 
     private void verifyAllOtherComponentReposCalledAndReturnValidExisting(String recipeId) {
