@@ -8,7 +8,11 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata
 import javax.annotation.Nonnull;
 
 
-public class RepositoryRecipeMetadata extends Repository<RecipeMetadataPersistenceModel> {
+public class RepositoryRecipeMetadata
+        extends
+        Repository<RecipeMetadataPersistenceModel> {
+
+    protected static Repository<RecipeMetadataPersistenceModel> INSTANCE = null;
 
     private RepositoryRecipeMetadata(@Nonnull RepositoryRecipeMetadataRemote remoteDataAccess,
                                      @Nonnull RepositoryRecipeMetadataLocal localDataAccess) {

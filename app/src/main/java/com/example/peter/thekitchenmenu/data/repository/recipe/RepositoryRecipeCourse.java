@@ -3,7 +3,7 @@ package com.example.peter.thekitchenmenu.data.repository.recipe;
 
 import com.example.peter.thekitchenmenu.data.repository.Repository;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCoursePersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCoursePersistenceModelItem;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -12,15 +12,17 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 public class RepositoryRecipeCourse
-        extends Repository<RecipeCoursePersistenceModel>
-        implements DomainDataAccessRecipeCourse {
+        extends
+        Repository<RecipeCoursePersistenceModelItem>
+        implements
+        DomainDataAccessRecipeCourse {
 
-    public static RepositoryRecipeCourse INSTANCE = null;
+    protected static RepositoryRecipeCourse INSTANCE = null;
 
     private RepositoryRecipeCourse(@Nonnull DomainDataAccessRecipeCourse remoteDataSource,
                                    @Nonnull DomainDataAccessRecipeCourse localDataSource) {
-        this.remoteDomainDataAccess = remoteDataSource;
-        this.localDomainDataAccess = localDataSource;
+        remoteDomainDataAccess = remoteDataSource;
+        localDomainDataAccess = localDataSource;
     }
 
     public static RepositoryRecipeCourse getInstance(DomainDataAccessRecipeCourse remoteDataSource,
@@ -34,9 +36,9 @@ public class RepositoryRecipeCourse
     @Override
     public void getAllByCourse(
             @Nonnull RecipeCourse.Course c,
-            @Nonnull GetAllDomainModelsCallback<RecipeCoursePersistenceModel> callback) {
+            @Nonnull GetAllDomainModelsCallback<RecipeCoursePersistenceModelItem> callback) {
 
-        List<RecipeCoursePersistenceModel> models = checkCacheForCourse(c);
+        List<RecipeCoursePersistenceModelItem> models = checkCacheForCourse(c);
 
         if (models != null) {
             callback.onAllDomainModelsLoaded(models);
@@ -44,13 +46,14 @@ public class RepositoryRecipeCourse
         }
         ((DomainDataAccessRecipeCourse) localDomainDataAccess).getAllByCourse(
                 c,
-                new GetAllDomainModelsCallback<RecipeCoursePersistenceModel>() {
+                new GetAllDomainModelsCallback<RecipeCoursePersistenceModelItem>() {
                     @Override
-                    public void onAllDomainModelsLoaded(List<RecipeCoursePersistenceModel> models) {
+                    public void onAllDomainModelsLoaded(List<
+                            RecipeCoursePersistenceModelItem> models) {
                         if (cache == null) {
                             cache = new LinkedHashMap<>();
                         }
-                        for (RecipeCoursePersistenceModel model : models) {
+                        for (RecipeCoursePersistenceModelItem model : models) {
                             cache.put(model.getDataId(), model);
                         }
                         callback.onAllDomainModelsLoaded(models);
@@ -60,9 +63,10 @@ public class RepositoryRecipeCourse
                     public void onDomainModelsUnavailable() {
                         ((DomainDataAccessRecipeCourse) remoteDomainDataAccess).getAllByCourse(
                                 c,
-                                new GetAllDomainModelsCallback<RecipeCoursePersistenceModel>() {
+                                new GetAllDomainModelsCallback<RecipeCoursePersistenceModelItem>() {
                                     @Override
-                                    public void onAllDomainModelsLoaded(List<RecipeCoursePersistenceModel> models) {
+                                    public void onAllDomainModelsLoaded(
+                                            List<RecipeCoursePersistenceModelItem> models) {
                                         if (models == null) {
                                             onDomainModelsUnavailable();
                                             return;
@@ -70,7 +74,7 @@ public class RepositoryRecipeCourse
                                         if (cache == null) {
                                             cache = new LinkedHashMap<>();
                                         }
-                                        for (RecipeCoursePersistenceModel model : models) {
+                                        for (RecipeCoursePersistenceModelItem model : models) {
                                             cache.put(model.getDataId(), model);
                                         }
                                         callback.onAllDomainModelsLoaded(models);
@@ -87,12 +91,12 @@ public class RepositoryRecipeCourse
         );
     }
 
-    private List<RecipeCoursePersistenceModel> checkCacheForCourse(RecipeCourse.Course c) {
-        List<RecipeCoursePersistenceModel> models = new ArrayList<>();
+    private List<RecipeCoursePersistenceModelItem> checkCacheForCourse(RecipeCourse.Course c) {
+        List<RecipeCoursePersistenceModelItem> models = new ArrayList<>();
         if (cache == null || cache.isEmpty()) {
             return null;
         } else {
-            for (RecipeCoursePersistenceModel model : cache.values()) {
+            for (RecipeCoursePersistenceModelItem model : cache.values()) {
                 if (c == model.getCourse()) {
                     models.add(model);
                 }
@@ -104,9 +108,9 @@ public class RepositoryRecipeCourse
     @Override
     public void getAllByDomainId(
             @Nonnull String domainId,
-            @Nonnull GetAllDomainModelsCallback<RecipeCoursePersistenceModel> callback) {
+            @Nonnull GetAllDomainModelsCallback<RecipeCoursePersistenceModelItem> callback) {
 
-        List<RecipeCoursePersistenceModel> models = checkCacheForRecipeId(domainId);
+        List<RecipeCoursePersistenceModelItem> models = checkCacheForRecipeId(domainId);
 
         if (models != null) {
             callback.onAllDomainModelsLoaded(models);
@@ -114,13 +118,14 @@ public class RepositoryRecipeCourse
         }
         ((DomainDataAccessRecipeCourse) localDomainDataAccess).getAllByDomainId(
                 domainId,
-                new GetAllDomainModelsCallback<RecipeCoursePersistenceModel>() {
+                new GetAllDomainModelsCallback<RecipeCoursePersistenceModelItem>() {
                     @Override
-                    public void onAllDomainModelsLoaded(List<RecipeCoursePersistenceModel> models) {
+                    public void onAllDomainModelsLoaded(
+                            List<RecipeCoursePersistenceModelItem> models) {
                         if (cache == null) {
                             cache = new LinkedHashMap<>();
                         }
-                        for (RecipeCoursePersistenceModel model : models) {
+                        for (RecipeCoursePersistenceModelItem model : models) {
                             cache.put(model.getDataId(), model);
                         }
                         callback.onAllDomainModelsLoaded(models);
@@ -130,9 +135,10 @@ public class RepositoryRecipeCourse
                     public void onDomainModelsUnavailable() {
                         ((DomainDataAccessRecipeCourse) remoteDomainDataAccess).getAllByDomainId(
                                 domainId,
-                                new GetAllDomainModelsCallback<RecipeCoursePersistenceModel>() {
+                                new GetAllDomainModelsCallback<RecipeCoursePersistenceModelItem>() {
                                     @Override
-                                    public void onAllDomainModelsLoaded(List<RecipeCoursePersistenceModel> models) {
+                                    public void onAllDomainModelsLoaded(
+                                            List<RecipeCoursePersistenceModelItem> models) {
                                         if (models == null) {
                                             onDomainModelsUnavailable();
                                             return;
@@ -140,7 +146,7 @@ public class RepositoryRecipeCourse
                                         if (cache == null) {
                                             cache = new LinkedHashMap<>();
                                         }
-                                        for (RecipeCoursePersistenceModel model : models) {
+                                        for (RecipeCoursePersistenceModelItem model : models) {
                                             cache.put(model.getDataId(), model);
                                         }
                                         callback.onAllDomainModelsLoaded(models);
@@ -155,12 +161,12 @@ public class RepositoryRecipeCourse
                 });
     }
 
-    private List<RecipeCoursePersistenceModel> checkCacheForRecipeId(String recipeId) {
-        List<RecipeCoursePersistenceModel> models = new ArrayList<>();
+    private List<RecipeCoursePersistenceModelItem> checkCacheForRecipeId(String recipeId) {
+        List<RecipeCoursePersistenceModelItem> models = new ArrayList<>();
         if (cache == null || cache.isEmpty()) {
             return null;
         } else {
-            for (RecipeCoursePersistenceModel model : cache.values()) {
+            for (RecipeCoursePersistenceModelItem model : cache.values()) {
                 if (model.getDataId().equals(recipeId)) {
                     models.add(model);
                 }
@@ -172,32 +178,35 @@ public class RepositoryRecipeCourse
     @Override
     public void getAllActiveByDomainId(
             @Nonnull String domainId,
-            @Nonnull GetAllDomainModelsCallback<RecipeCoursePersistenceModel> callback) {
-        List<RecipeCoursePersistenceModel> activeModels = new ArrayList<>();
-        getAllByDomainId(domainId, new GetAllDomainModelsCallback<RecipeCoursePersistenceModel>() {
-            @Override
-            public void onAllDomainModelsLoaded(List<RecipeCoursePersistenceModel> models) {
-                for (RecipeCoursePersistenceModel m : models) {
-                    if (m.isActive()) {
-                        activeModels.add(m);
+            @Nonnull GetAllDomainModelsCallback<RecipeCoursePersistenceModelItem> callback) {
+        List<RecipeCoursePersistenceModelItem> activeModels = new ArrayList<>();
+        getAllByDomainId(
+                domainId,
+                new GetAllDomainModelsCallback<RecipeCoursePersistenceModelItem>() {
+                    @Override
+                    public void onAllDomainModelsLoaded(
+                            List<RecipeCoursePersistenceModelItem> models) {
+                        for (RecipeCoursePersistenceModelItem m : models) {
+                            if (m.isActive()) {
+                                activeModels.add(m);
+                            }
+                        }
+                        if (activeModels.isEmpty()) {
+                            callback.onDomainModelsUnavailable();
+                        } else {
+                            callback.onAllDomainModelsLoaded(activeModels);
+                        }
                     }
-                }
-                if (activeModels.isEmpty()) {
-                    callback.onDomainModelsUnavailable();
-                } else {
-                    callback.onAllDomainModelsLoaded(activeModels);
-                }
-            }
 
-            @Override
-            public void onDomainModelsUnavailable() {
-                callback.onDomainModelsUnavailable();
-            }
-        });
+                    @Override
+                    public void onDomainModelsUnavailable() {
+                        callback.onDomainModelsUnavailable();
+                    }
+                });
     }
 
     @Override
-    public void update(@Nonnull RecipeCoursePersistenceModel model) {
+    public void update(@Nonnull RecipeCoursePersistenceModelItem model) {
         ((DomainDataAccessRecipeCourse) remoteDomainDataAccess).update(model);
         ((DomainDataAccessRecipeCourse) localDomainDataAccess).update(model);
         cache.put(model.getDataId(), model);

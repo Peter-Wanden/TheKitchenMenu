@@ -7,7 +7,6 @@ import com.example.peter.thekitchenmenu.domain.model.UseCaseMetadataModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataId;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata;
 
 import java.util.ArrayList;
@@ -81,7 +80,7 @@ public abstract class UseCaseElement
 
     protected abstract void processRequestDomainModel();
 
-    protected void sendResponse(RecipeIdentityResponse response) {
+    protected void sendResponse(UseCaseBase.Response response) {
         System.out.println(TAG + "Response No:" + accessCount + " - " + response);
         if (isDomainModelValid()) {
             getUseCaseCallback().onUseCaseSuccess(response);

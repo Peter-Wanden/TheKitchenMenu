@@ -9,6 +9,8 @@ import javax.annotation.Nonnull;
 
 public class RepositoryProduct extends Repository<ProductIdentityPersistenceModel> {
 
+    protected static Repository<ProductIdentityPersistenceModel> INSTANCE = null;
+
 //    private RepositoryProduct(
 //            @Nonnull PrimitiveDataSource<ProductEntity> remoteDataSource,
 //            @Nonnull PrimitiveDataSource<ProductEntity> localDataSource) {

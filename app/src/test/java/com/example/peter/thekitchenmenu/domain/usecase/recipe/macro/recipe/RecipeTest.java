@@ -14,7 +14,7 @@ import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.model.UseCaseMetadataModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCoursePersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCoursePersistenceModelItem;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourseRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourseResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDurationRequest;
@@ -536,7 +536,7 @@ public class RecipeTest {
     @Test
     public void coursesRequestNewId_newCourseAdded_coursesStateVALID_CHANGED() {
         // Arrange
-        RecipeCoursePersistenceModel modelUnderTest = TestDataRecipeCourse.
+        RecipeCoursePersistenceModelItem modelUnderTest = TestDataRecipeCourse.
                 getExistingActiveRecipeCourseZero();
         String recipeId = modelUnderTest.getDomainId();
 

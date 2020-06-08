@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.dataadapter;
 
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.RecipeCourseLocalDataSource;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCoursePersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCoursePersistenceModelItem;
 
 import javax.annotation.Nonnull;
 
@@ -14,7 +14,7 @@ public class CourseLocalUpdateAdapter {
         this.courseLocalDataAccess = courseLocalDataAccess;
     }
 
-    public void update(RecipeCoursePersistenceModel m) {
+    public void update(RecipeCoursePersistenceModelItem m) {
         CourseModelConverterParent c = new CourseModelConverterParent();
         courseLocalDataAccess.update(c.convertToPrimitive(m));
     }

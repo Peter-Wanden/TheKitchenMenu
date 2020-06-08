@@ -6,7 +6,7 @@ import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.cour
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.dataadapter.CourseLocalUpdateAdapter;
 import com.example.peter.thekitchenmenu.data.repository.recipe.DomainDataAccessRecipeCourse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCoursePersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCoursePersistenceModelItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,12 +63,12 @@ public class RepositoryRecipeCourseLocal
     @Override
     public void getByDataId(
             @Nonnull String dataId,
-            @Nonnull GetDomainModelCallback<RecipeCoursePersistenceModel> callback) {
+            @Nonnull GetDomainModelCallback<RecipeCoursePersistenceModelItem> callback) {
         getAdapter.getByDataId(
                 dataId,
-                new GetDomainModelCallback<RecipeCoursePersistenceModel>() {
+                new GetDomainModelCallback<RecipeCoursePersistenceModelItem>() {
                     @Override
-                    public void onDomainModelLoaded(RecipeCoursePersistenceModel model) {
+                    public void onDomainModelLoaded(RecipeCoursePersistenceModelItem model) {
                         callback.onDomainModelLoaded(model);
                     }
 
@@ -83,12 +83,12 @@ public class RepositoryRecipeCourseLocal
     @Override
     public void getAllByDomainId(
             @Nonnull String domainId,
-            @Nonnull GetAllDomainModelsCallback<RecipeCoursePersistenceModel> callback) {
+            @Nonnull GetAllDomainModelsCallback<RecipeCoursePersistenceModelItem> callback) {
         getAdapter.getAllByDomainId(
                 domainId,
-                new GetAllDomainModelsCallback<RecipeCoursePersistenceModel>() {
+                new GetAllDomainModelsCallback<RecipeCoursePersistenceModelItem>() {
                     @Override
-                    public void onAllDomainModelsLoaded(List<RecipeCoursePersistenceModel> models) {
+                    public void onAllDomainModelsLoaded(List<RecipeCoursePersistenceModelItem> models) {
                         callback.onAllDomainModelsLoaded(models);
                     }
 
@@ -103,12 +103,12 @@ public class RepositoryRecipeCourseLocal
     @Override
     public void getAllByCourse(
             @Nonnull RecipeCourse.Course c,
-            @Nonnull GetAllDomainModelsCallback<RecipeCoursePersistenceModel> callback) {
+            @Nonnull GetAllDomainModelsCallback<RecipeCoursePersistenceModelItem> callback) {
         getAdapter.getAllByCourse(
                 c,
-                new GetAllDomainModelsCallback<RecipeCoursePersistenceModel>() {
+                new GetAllDomainModelsCallback<RecipeCoursePersistenceModelItem>() {
                     @Override
-                    public void onAllDomainModelsLoaded(List<RecipeCoursePersistenceModel> models) {
+                    public void onAllDomainModelsLoaded(List<RecipeCoursePersistenceModelItem> models) {
                         callback.onAllDomainModelsLoaded(models);
                     }
 
@@ -121,11 +121,11 @@ public class RepositoryRecipeCourseLocal
     }
 
     @Override
-    public void getAll(@Nonnull GetAllDomainModelsCallback<RecipeCoursePersistenceModel> callback) {
+    public void getAll(@Nonnull GetAllDomainModelsCallback<RecipeCoursePersistenceModelItem> callback) {
         getAdapter.getAll(
-                new GetAllDomainModelsCallback<RecipeCoursePersistenceModel>() {
+                new GetAllDomainModelsCallback<RecipeCoursePersistenceModelItem>() {
                     @Override
-                    public void onAllDomainModelsLoaded(List<RecipeCoursePersistenceModel> models) {
+                    public void onAllDomainModelsLoaded(List<RecipeCoursePersistenceModelItem> models) {
                         callback.onAllDomainModelsLoaded(models);
                     }
 
@@ -138,14 +138,14 @@ public class RepositoryRecipeCourseLocal
     }
 
     @Override
-    public void update(@Nonnull RecipeCoursePersistenceModel model) {
+    public void update(@Nonnull RecipeCoursePersistenceModelItem model) {
         updateAdapter.update(model);
     }
 
     @Override
     public void getActiveByDomainId(
             @Nonnull String domainId,
-            @Nonnull GetDomainModelCallback<RecipeCoursePersistenceModel> callback) {
+            @Nonnull GetDomainModelCallback<RecipeCoursePersistenceModelItem> callback) {
         // TODO - implement? or move to?
         callback.onDomainModelUnavailable();
     }
@@ -153,12 +153,12 @@ public class RepositoryRecipeCourseLocal
     @Override
     public void getAllActiveByDomainId(
             @Nonnull String domainId,
-            @Nonnull GetAllDomainModelsCallback<RecipeCoursePersistenceModel> callback) {
+            @Nonnull GetAllDomainModelsCallback<RecipeCoursePersistenceModelItem> callback) {
         getAdapter.getAllActiveByDomainId(
                 domainId,
-                new GetAllDomainModelsCallback<RecipeCoursePersistenceModel>() {
+                new GetAllDomainModelsCallback<RecipeCoursePersistenceModelItem>() {
                     @Override
-                    public void onAllDomainModelsLoaded(List<RecipeCoursePersistenceModel> models) {
+                    public void onAllDomainModelsLoaded(List<RecipeCoursePersistenceModelItem> models) {
                         callback.onAllDomainModelsLoaded(filterForActive(models));
                     }
 
@@ -170,13 +170,13 @@ public class RepositoryRecipeCourseLocal
         );
     }
 
-    private List<RecipeCoursePersistenceModel> filterForActive(
-            List<RecipeCoursePersistenceModel> models) {
+    private List<RecipeCoursePersistenceModelItem> filterForActive(
+            List<RecipeCoursePersistenceModelItem> models) {
             long lastUpdated = 0;
 
-            List<RecipeCoursePersistenceModel> activeModels = new ArrayList<>();
+            List<RecipeCoursePersistenceModelItem> activeModels = new ArrayList<>();
 
-            for (RecipeCoursePersistenceModel m : models) {
+            for (RecipeCoursePersistenceModelItem m : models) {
                 if (m.getLastUpdate() > lastUpdated) {
                     activeModels.add(m);
                 }
@@ -185,7 +185,7 @@ public class RepositoryRecipeCourseLocal
     }
 
     @Override
-    public void save(@Nonnull RecipeCoursePersistenceModel model) {
+    public void save(@Nonnull RecipeCoursePersistenceModelItem model) {
         saveAdapter.save(model);
     }
 

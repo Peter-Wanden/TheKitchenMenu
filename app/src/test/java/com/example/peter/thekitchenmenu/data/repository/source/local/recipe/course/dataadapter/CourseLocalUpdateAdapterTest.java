@@ -4,18 +4,13 @@ import com.example.peter.thekitchenmenu.data.repository.recipe.course.TestDataRe
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.RecipeCourseEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.RecipeCourseLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.TestDataRecipeCourseEntity;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCoursePersistenceModel;
-
-import static org.junit.Assert.*;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCoursePersistenceModelItem;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import static org.junit.Assert.*;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 
@@ -47,7 +42,7 @@ public class CourseLocalUpdateAdapterTest {
     @Test
     public void update() {
         // Arrange
-        RecipeCoursePersistenceModel modelUnderTest = TestDataRecipeCourse.
+        RecipeCoursePersistenceModelItem modelUnderTest = TestDataRecipeCourse.
                 getExistingActiveRecipeCourseZero();
         RecipeCourseEntity expectedModelSaved = TestDataRecipeCourseEntity.
                 getExistingActiveRecipeCourseZero();

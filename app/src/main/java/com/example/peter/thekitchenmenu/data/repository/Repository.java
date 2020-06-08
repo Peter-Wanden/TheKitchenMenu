@@ -16,7 +16,6 @@ import javax.annotation.Nonnull;
 public abstract class Repository<T extends DomainPersistenceModel>
         implements DomainDataAccess<T> {
 
-    protected static Repository INSTANCE = null;
     protected DomainDataAccess<T> remoteDomainDataAccess;
     protected DomainDataAccess<T> localDomainDataAccess;
     protected Map<String, T> cache;

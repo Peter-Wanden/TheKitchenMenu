@@ -7,7 +7,7 @@ import com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.RecipeCourseEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.RecipeCourseLocalDataSource;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse.Course;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCoursePersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCoursePersistenceModelItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +28,7 @@ public class CourseLocalGetAdapter {
 
     public void getByDataId(
             String dataId,
-            GetDomainModelCallback<RecipeCoursePersistenceModel> callback) {
+            GetDomainModelCallback<RecipeCoursePersistenceModelItem> callback) {
         courseLocalDataSource.getByDataId(
                 dataId,
                 new GetPrimitiveCallback<RecipeCourseEntity>() {
@@ -47,7 +47,7 @@ public class CourseLocalGetAdapter {
 
     public void getAllByDomainId(
             @Nonnull String domainId,
-            @Nonnull GetAllDomainModelsCallback<RecipeCoursePersistenceModel> callback) {
+            @Nonnull GetAllDomainModelsCallback<RecipeCoursePersistenceModelItem> callback) {
         courseLocalDataSource.getAllByDomainId(
                 domainId,
                 new GetAllPrimitiveCallback<RecipeCourseEntity>() {
@@ -66,7 +66,7 @@ public class CourseLocalGetAdapter {
 
     public void getAllByCourse(
             @Nonnull Course c,
-            @Nonnull GetAllDomainModelsCallback<RecipeCoursePersistenceModel> callback) {
+            @Nonnull GetAllDomainModelsCallback<RecipeCoursePersistenceModelItem> callback) {
         courseLocalDataSource.getAllByCourseNo(
                 c.getCourseNo(),
                 new GetAllPrimitiveCallback<RecipeCourseEntity>() {
@@ -85,7 +85,7 @@ public class CourseLocalGetAdapter {
 
     public void getAllActiveByDomainId(
             String domainId,
-            GetAllDomainModelsCallback<RecipeCoursePersistenceModel> callback) {
+            GetAllDomainModelsCallback<RecipeCoursePersistenceModelItem> callback) {
         courseLocalDataSource.getAllByDomainId(
                 domainId,
                 new GetAllPrimitiveCallback<RecipeCourseEntity>() {
@@ -102,8 +102,8 @@ public class CourseLocalGetAdapter {
         );
     }
 
-    private List<RecipeCoursePersistenceModel> filterForActive(List<RecipeCourseEntity> entities) {
-        List<RecipeCoursePersistenceModel> models = new ArrayList<>();
+    private List<RecipeCoursePersistenceModelItem> filterForActive(List<RecipeCourseEntity> entities) {
+        List<RecipeCoursePersistenceModelItem> models = new ArrayList<>();
         for (RecipeCourseEntity e : entities) {
             if (e.isActive()) {
                 models.add(converter.convertToModel(e));
@@ -113,7 +113,7 @@ public class CourseLocalGetAdapter {
     }
 
     public void getAll(
-            @Nonnull GetAllDomainModelsCallback<RecipeCoursePersistenceModel> callback) {
+            @Nonnull GetAllDomainModelsCallback<RecipeCoursePersistenceModelItem> callback) {
         courseLocalDataSource.getAll(
                 new GetAllPrimitiveCallback<RecipeCourseEntity>() {
                     @Override

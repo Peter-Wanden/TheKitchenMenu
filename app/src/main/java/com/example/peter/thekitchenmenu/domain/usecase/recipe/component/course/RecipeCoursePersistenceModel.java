@@ -1,27 +1,27 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course;
 
 import com.example.peter.thekitchenmenu.domain.model.BaseDomainPersistenceModel;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse.Course;
 
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import javax.annotation.Nonnull;
 
 public final class RecipeCoursePersistenceModel
-        extends BaseDomainPersistenceModel {
-
-    private Course course;
-    private boolean isActive;
-
-    private RecipeCoursePersistenceModel(){}
+        extends
+        BaseDomainPersistenceModel {
 
     @Nonnull
-    public Course getCourse() {
-        return course;
+    private Set<RecipeCoursePersistenceModelItem> persistenceModelItems;
+
+    private RecipeCoursePersistenceModel(){
+        persistenceModelItems = new HashSet<>();
     }
 
-    public boolean isActive() {
-        return isActive;
+    @Nonnull
+    public Set<RecipeCoursePersistenceModelItem> getPersistenceModelItems() {
+        return persistenceModelItems;
     }
 
     @Override
@@ -29,27 +29,30 @@ public final class RecipeCoursePersistenceModel
         if (this == o) return true;
         if (!(o instanceof RecipeCoursePersistenceModel)) return false;
         if (!super.equals(o)) return false;
-        RecipeCoursePersistenceModel that = (RecipeCoursePersistenceModel) o;
-        return isActive == that.isActive &&
-                course == that.course;
+        RecipeCoursePersistenceModel model = (RecipeCoursePersistenceModel) o;
+        return persistenceModelItems.equals(model.persistenceModelItems);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), course, isActive);
+        return Objects.hash(super.hashCode(), persistenceModelItems);
     }
 
     @Nonnull
     @Override
     public String toString() {
         return "RecipeCoursePersistenceModel{" +
-                "course=" + course +
-                ", isActive=" + isActive +
+                "persistenceModelItems=" + persistenceModelItems +
+                ", dataId='" + dataId + '\'' +
+                ", domainId='" + domainId + '\'' +
+                ", createDate=" + createDate +
+                ", lastUpdate=" + lastUpdate +
                 '}';
     }
 
     public static class Builder
-            extends PersistenceModelBuilder<Builder, RecipeCoursePersistenceModel> {
+            extends
+            PersistenceModelBuilder<Builder, RecipeCoursePersistenceModel> {
 
         public Builder() {
             domainModel = new RecipeCoursePersistenceModel();
@@ -59,36 +62,24 @@ public final class RecipeCoursePersistenceModel
         public Builder getDefault() {
             domainModel.dataId = "";
             domainModel.domainId = "";
-            domainModel.course = Course.COURSE_ZERO;
-            domainModel.isActive = false;
+            domainModel.persistenceModelItems = new HashSet<>();
             domainModel.createDate = 0L;
             domainModel.lastUpdate = 0L;
             return self();
         }
 
-        public Builder basedOnModel (RecipeCoursePersistenceModel m) {
-            domainModel.dataId = m.getDataId();
-            domainModel.domainId = m.getDomainId();
-            domainModel.course = m.getCourse();
-            domainModel.isActive = m.isActive();
-            domainModel.createDate = m.getCreateDate();
-            domainModel.lastUpdate = m.getLastUpdate();
+        public Builder baseOnModel(RecipeCoursePersistenceModel persistenceModel) {
+            domainModel.dataId = persistenceModel.getDataId();
+            domainModel.domainId = persistenceModel.getDomainId();
+            domainModel.persistenceModelItems = persistenceModel.getPersistenceModelItems();
+            domainModel.createDate = persistenceModel.getCreateDate();
+            domainModel.lastUpdate = persistenceModel.getLastUpdate();
             return self();
         }
 
-        public Builder setCourse(Course course) {
-            domainModel.course = course;
+        public Builder setPersistenceModelItems(Set<RecipeCoursePersistenceModelItem> items) {
+            domainModel.persistenceModelItems = items;
             return self();
-        }
-
-        public Builder setIsActive(boolean isActive) {
-            domainModel.isActive = isActive;
-            return self();
-        }
-
-        @Override
-        protected Builder self() {
-            return super.self();
         }
     }
 }

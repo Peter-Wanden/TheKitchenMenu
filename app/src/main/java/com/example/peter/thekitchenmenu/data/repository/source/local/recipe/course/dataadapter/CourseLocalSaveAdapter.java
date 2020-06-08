@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.dataadapter;
 
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.RecipeCourseLocalDataSource;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCoursePersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCoursePersistenceModelItem;
 
 import javax.annotation.Nonnull;
 
@@ -17,7 +17,7 @@ public class CourseLocalSaveAdapter {
         converter = new CourseModelConverterParent();
     }
 
-    public void save(RecipeCoursePersistenceModel model) {
+    public void save(RecipeCoursePersistenceModelItem model) {
         dataSource.save(converter.convertToPrimitive(model));
     }
 }

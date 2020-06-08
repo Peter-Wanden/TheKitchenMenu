@@ -3,6 +3,7 @@ package com.example.peter.thekitchenmenu.data.repository;
 import android.content.Context;
 
 import com.example.peter.thekitchenmenu.app.AppExecutors;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeCourses;
 import com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.RepositoryIngredientLocal;
 import com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.dataadapter.IngredientLocalDeleteAdapter;
 import com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.dataadapter.IngredientLocalGetAdapter;
@@ -166,7 +167,6 @@ public class DatabaseInjection {
 
     public static RepositoryRecipeCourse provideRecipeCourseDataSource(
             @Nonnull Context c) {
-
         return RepositoryRecipeCourse.getInstance(
                 RepositoryRecipeCourseRemote.getInstance(),
                 RepositoryRecipeCourseLocal.getInstance(
@@ -206,6 +206,17 @@ public class DatabaseInjection {
         return RecipeCourseLocalDataSource.getInstance(
                 new AppExecutors(),
                 database.recipeCourseEntityDao()
+        );
+    }
+
+    public static RepositoryRecipeCourses provideRecipeCoursesDataSource(
+            @Nonnull Context c) {
+
+        TKMDatabase database = TKMDatabase.getInstance(c, new AppExecutors());
+
+        return RepositoryRecipeCourses.getInstance(
+                new AppExecutors(),
+                database.recipeCoursesEntityDao()
         );
     }
 

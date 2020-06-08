@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.data.repository.source.remote.recipe;
 
 import com.example.peter.thekitchenmenu.data.repository.recipe.DomainDataAccessRecipeCourse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCoursePersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCoursePersistenceModelItem;
 
 import javax.annotation.Nonnull;
 
@@ -20,52 +20,52 @@ public class RepositoryRecipeCourseRemote
     @Override
     public void getByDataId(
             @Nonnull String dataId,
-            @Nonnull GetDomainModelCallback<RecipeCoursePersistenceModel> callback) {
+            @Nonnull GetDomainModelCallback<RecipeCoursePersistenceModelItem> callback) {
         callback.onDomainModelUnavailable();
     }
 
     @Override
     public void getAllByDomainId(
             @Nonnull String recipeId,
-            @Nonnull GetAllDomainModelsCallback<RecipeCoursePersistenceModel> callback) {
+            @Nonnull GetAllDomainModelsCallback<RecipeCoursePersistenceModelItem> callback) {
         callback.onDomainModelsUnavailable();
     }
 
     @Override
     public void getAllByCourse(
             @Nonnull RecipeCourse.Course c,
-            @Nonnull GetAllDomainModelsCallback<RecipeCoursePersistenceModel> callback) {
+            @Nonnull GetAllDomainModelsCallback<RecipeCoursePersistenceModelItem> callback) {
         callback.onDomainModelsUnavailable();
     }
 
     @Override
     public void getActiveByDomainId(
             @Nonnull String domainId,
-            @Nonnull GetDomainModelCallback<RecipeCoursePersistenceModel> callback) {
+            @Nonnull GetDomainModelCallback<RecipeCoursePersistenceModelItem> callback) {
         callback.onDomainModelUnavailable();
     }
 
     @Override
     public void getAllActiveByDomainId(
             @Nonnull String domainId,
-            @Nonnull GetAllDomainModelsCallback<RecipeCoursePersistenceModel> callback) {
+            @Nonnull GetAllDomainModelsCallback<RecipeCoursePersistenceModelItem> callback) {
         callback.onDomainModelsUnavailable();
 
     }
 
     @Override
     public void getAll(
-            @Nonnull GetAllDomainModelsCallback<RecipeCoursePersistenceModel> callback) {
+            @Nonnull GetAllDomainModelsCallback<RecipeCoursePersistenceModelItem> callback) {
         callback.onDomainModelsUnavailable();
     }
 
     @Override
-    public void save(@Nonnull RecipeCoursePersistenceModel model) {
+    public void save(@Nonnull RecipeCoursePersistenceModelItem model) {
 
     }
 
     @Override
-    public void update(@Nonnull RecipeCoursePersistenceModel model) {
+    public void update(@Nonnull RecipeCoursePersistenceModelItem model) {
 
     }
 
