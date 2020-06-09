@@ -8,12 +8,12 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 public interface DomainModelConverterParent<
-        P extends BaseDomainPersistenceModel,
-        E extends PrimitiveModel> {
+        PARENT extends BaseDomainPersistenceModel,
+        PRIMITIVE_ENTITY extends PrimitiveModel> {
 
-    P convertToModel(@Nonnull E e);
+    PARENT convertToModelItem(@Nonnull PRIMITIVE_ENTITY entity);
 
-    E convertToPrimitive(@Nonnull P m);
+    PRIMITIVE_ENTITY convertToPrimitive(@Nonnull PARENT parent);
 
-    List<P> convertToModels(@Nonnull List<E> es);
+    List<PARENT> convertToModels(@Nonnull List<PRIMITIVE_ENTITY> entities);
 }

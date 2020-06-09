@@ -75,10 +75,10 @@ public class RecipeListTestRecipeHelper {
                     TestDataRecipeIdentity.getActiveByDomainId(recipeDomainId));
 
             // RecipeCourse
-            verify(recipeTestBase.repoCourseMock).getAllActiveByDomainId(eq(recipeDomainId),
+            verify(recipeTestBase.repoCourseMock).getByDomainId(eq(recipeDomainId),
                     recipeTestBase.repoCourseCallback.capture());
-            recipeTestBase.repoCourseCallback.getValue().onAllDomainModelsLoaded(new ArrayList<>(
-                    TestDataRecipeCourse.getAllExistingActiveByDomainId(recipeDomainId)));
+            recipeTestBase.repoCourseCallback.getValue().onDomainModelLoaded(
+                    TestDataRecipeCourse.getActiveByDomainId(recipeDomainId));
 
             // RecipeDuration
             verify(recipeTestBase.repoDurationMock).getActiveByDomainId(eq(recipeDomainId),

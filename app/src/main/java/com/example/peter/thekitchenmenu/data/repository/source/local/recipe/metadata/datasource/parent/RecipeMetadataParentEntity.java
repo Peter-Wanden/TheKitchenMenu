@@ -13,7 +13,9 @@ import java.util.Objects;
 import javax.annotation.Nonnull;
 
 @Entity(tableName = RecipeMetadataParentEntity.TABLE_RECIPE)
-public final class RecipeMetadataParentEntity implements PrimitiveModel {
+public final class RecipeMetadataParentEntity
+        implements
+        PrimitiveModel {
 
     public static final String TABLE_RECIPE = "recipe";
     public static final String DATA_ID = "dataId";

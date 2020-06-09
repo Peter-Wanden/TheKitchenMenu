@@ -10,6 +10,7 @@ import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeM
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCoursePersistenceModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCoursePersistenceModelItem;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDuration;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDurationPersistenceModel;
@@ -48,7 +49,7 @@ public class RecipeTestBase {
     @Mock
     public RepositoryRecipeCourse repoCourseMock;
     @Captor
-    public ArgumentCaptor<GetAllDomainModelsCallback<RecipeCoursePersistenceModelItem>> repoCourseCallback;
+    public ArgumentCaptor<GetDomainModelCallback<RecipeCoursePersistenceModel>> repoCourseCallback;
     @Mock
     public RepositoryRecipeDuration repoDurationMock;
     @Captor

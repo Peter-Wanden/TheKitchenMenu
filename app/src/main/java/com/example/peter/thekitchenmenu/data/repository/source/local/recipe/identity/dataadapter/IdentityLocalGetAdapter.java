@@ -35,7 +35,7 @@ public class IdentityLocalGetAdapter {
                 new GetPrimitiveCallback<RecipeIdentityEntity>() {
                     @Override
                     public void onEntityLoaded(RecipeIdentityEntity entity) {
-                        callback.onDomainModelLoaded(converter.convertToModel(entity));
+                        callback.onDomainModelLoaded(converter.convertToModelItem(entity));
                     }
 
                     @Override

@@ -16,39 +16,39 @@ import javax.annotation.Nonnull;
 public class RecipeIngredientModelConverterParent
 implements DomainModelConverterParent<RecipeIngredientPersistenceModel, RecipeIngredientEntity> {
     @Override
-    public RecipeIngredientPersistenceModel convertToModel(
-            @Nonnull RecipeIngredientEntity e) {
+    public RecipeIngredientPersistenceModel convertToModelItem(
+            @Nonnull RecipeIngredientEntity entity) {
         return new RecipeIngredientPersistenceModel.Builder().
-                setDataId(e.getDataId()).
-                setRecipeIngredientId(e.getRecipeIngredientId()).
-                setRecipeDataId(e.getRecipeDataId()).
-                setRecipeDomainId(e.getRecipeDomainId()).
-                setIngredientDataId(e.getIngredientDataId()).
-                setIngredientDomainId(e.getIngredientDomainId()).
-                setProductDataId(e.getProductDataId()).
-                setMeasurementModel(getMeasurementModel(e)).
-                setCreatedBy(e.getCreatedBy()).
-                setCreateDate(e.getCreateDate()).
-                setLastUpdate(e.getLastUpdate()).
+                setDataId(entity.getDataId()).
+                setRecipeIngredientId(entity.getRecipeIngredientId()).
+                setRecipeDataId(entity.getRecipeDataId()).
+                setRecipeDomainId(entity.getRecipeDomainId()).
+                setIngredientDataId(entity.getIngredientDataId()).
+                setIngredientDomainId(entity.getIngredientDomainId()).
+                setProductDataId(entity.getProductDataId()).
+                setMeasurementModel(getMeasurementModel(entity)).
+                setCreatedBy(entity.getCreatedBy()).
+                setCreateDate(entity.getCreateDate()).
+                setLastUpdate(entity.getLastUpdate()).
                 build();
     }
 
     @Override
     public RecipeIngredientEntity convertToPrimitive(
-            @Nonnull RecipeIngredientPersistenceModel m) {
+            @Nonnull RecipeIngredientPersistenceModel parent) {
         return new RecipeIngredientEntity(
-                m.getDataId(),
-                m.getRecipeIngredientId(),
-                m.getRecipeDataId(),
-                m.getRecipeDomainId(),
-                m.getIngredientDataId(),
-                m.getIngredientDomainId(),
-                m.getProductDataId(),
-                m.getMeasurementModel().getItemBaseUnits(),
-                m.getMeasurementModel().getSubtype().asInt(),
-                m.getCreatedBy(),
-                m.getCreateDate(),
-                m.getLastUpdate()
+                parent.getDataId(),
+                parent.getRecipeIngredientId(),
+                parent.getRecipeDataId(),
+                parent.getRecipeDomainId(),
+                parent.getIngredientDataId(),
+                parent.getIngredientDomainId(),
+                parent.getProductDataId(),
+                parent.getMeasurementModel().getItemBaseUnits(),
+                parent.getMeasurementModel().getSubtype().asInt(),
+                parent.getCreatedBy(),
+                parent.getCreateDate(),
+                parent.getLastUpdate()
         );
     }
 
@@ -57,7 +57,7 @@ implements DomainModelConverterParent<RecipeIngredientPersistenceModel, RecipeIn
             @Nonnull List<RecipeIngredientEntity> entities) {
         List<RecipeIngredientPersistenceModel> models = new ArrayList<>();
         for (RecipeIngredientEntity e : entities) {
-            models.add(convertToModel(e));
+            models.add(convertToModelItem(e));
         }
         return models;
     }

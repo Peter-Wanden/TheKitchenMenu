@@ -13,32 +13,32 @@ public class IngredientLocalModelConverterParent
         implements DomainModelConverterParent<IngredientPersistenceModel, IngredientEntity> {
 
     @Override
-    public IngredientPersistenceModel convertToModel(
-            @Nonnull IngredientEntity e) {
+    public IngredientPersistenceModel convertToModelItem(
+            @Nonnull IngredientEntity entity) {
         return new IngredientPersistenceModel.Builder().
-                setDataId(e.getDataId()).
-                setDomainId(e.getDomainId()).
-                setName(e.getName()).
-                setDescription(e.getDescription()).
-                setConversionFactor(e.getConversionFactor()).
-                setCreatedBy(e.getCreatedBy()).
-                setCreateDate(e.getCreateDate()).
-                setLastUpdate(e.getLastUpdate()).
+                setDataId(entity.getDataId()).
+                setDomainId(entity.getDomainId()).
+                setName(entity.getName()).
+                setDescription(entity.getDescription()).
+                setConversionFactor(entity.getConversionFactor()).
+                setCreatedBy(entity.getCreatedBy()).
+                setCreateDate(entity.getCreateDate()).
+                setLastUpdate(entity.getLastUpdate()).
                 build();
     }
 
     @Override
     public IngredientEntity convertToPrimitive(
-            @Nonnull IngredientPersistenceModel m) {
+            @Nonnull IngredientPersistenceModel parent) {
         return new IngredientEntity(
-                m.getDataId(),
-                m.getDomainId(),
-                m.getName(),
-                m.getDescription(),
-                m.getConversionFactor(),
-                m.getCreatedBy(),
-                m.getCreateDate(),
-                m.getLastUpdate()
+                parent.getDataId(),
+                parent.getDomainId(),
+                parent.getName(),
+                parent.getDescription(),
+                parent.getConversionFactor(),
+                parent.getCreatedBy(),
+                parent.getCreateDate(),
+                parent.getLastUpdate()
         );
     }
 
@@ -47,7 +47,7 @@ public class IngredientLocalModelConverterParent
             @Nonnull List<IngredientEntity> entities) {
         List<IngredientPersistenceModel> models = new ArrayList<>();
         for (IngredientEntity e : entities) {
-            models.add(convertToModel(e));
+            models.add(convertToModelItem(e));
         }
         return models;
     }

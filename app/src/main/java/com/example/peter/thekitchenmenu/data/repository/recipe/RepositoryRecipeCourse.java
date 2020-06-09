@@ -1,19 +1,15 @@
 package com.example.peter.thekitchenmenu.data.repository.recipe;
 
-
 import com.example.peter.thekitchenmenu.data.repository.Repository;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCoursePersistenceModelItem;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCoursePersistenceModel;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 
 import javax.annotation.Nonnull;
 
 public class RepositoryRecipeCourse
         extends
-        Repository<RecipeCoursePersistenceModelItem>
+        Repository<RecipeCoursePersistenceModel>
         implements
         DomainDataAccessRecipeCourse {
 
@@ -34,181 +30,74 @@ public class RepositoryRecipeCourse
     }
 
     @Override
-    public void getAllByCourse(
-            @Nonnull RecipeCourse.Course c,
-            @Nonnull GetAllDomainModelsCallback<RecipeCoursePersistenceModelItem> callback) {
-
-        List<RecipeCoursePersistenceModelItem> models = checkCacheForCourse(c);
-
-        if (models != null) {
-            callback.onAllDomainModelsLoaded(models);
-            return;
-        }
-        ((DomainDataAccessRecipeCourse) localDomainDataAccess).getAllByCourse(
-                c,
-                new GetAllDomainModelsCallback<RecipeCoursePersistenceModelItem>() {
-                    @Override
-                    public void onAllDomainModelsLoaded(List<
-                            RecipeCoursePersistenceModelItem> models) {
-                        if (cache == null) {
-                            cache = new LinkedHashMap<>();
-                        }
-                        for (RecipeCoursePersistenceModelItem model : models) {
-                            cache.put(model.getDataId(), model);
-                        }
-                        callback.onAllDomainModelsLoaded(models);
-                    }
-
-                    @Override
-                    public void onDomainModelsUnavailable() {
-                        ((DomainDataAccessRecipeCourse) remoteDomainDataAccess).getAllByCourse(
-                                c,
-                                new GetAllDomainModelsCallback<RecipeCoursePersistenceModelItem>() {
-                                    @Override
-                                    public void onAllDomainModelsLoaded(
-                                            List<RecipeCoursePersistenceModelItem> models) {
-                                        if (models == null) {
-                                            onDomainModelsUnavailable();
-                                            return;
-                                        }
-                                        if (cache == null) {
-                                            cache = new LinkedHashMap<>();
-                                        }
-                                        for (RecipeCoursePersistenceModelItem model : models) {
-                                            cache.put(model.getDataId(), model);
-                                        }
-                                        callback.onAllDomainModelsLoaded(models);
-                                    }
-
-                                    @Override
-                                    public void onDomainModelsUnavailable() {
-                                        callback.onDomainModelsUnavailable();
-                                    }
-                                }
-                        );
-                    }
-                }
-        );
-    }
-
-    private List<RecipeCoursePersistenceModelItem> checkCacheForCourse(RecipeCourse.Course c) {
-        List<RecipeCoursePersistenceModelItem> models = new ArrayList<>();
-        if (cache == null || cache.isEmpty()) {
-            return null;
-        } else {
-            for (RecipeCoursePersistenceModelItem model : cache.values()) {
-                if (c == model.getCourse()) {
-                    models.add(model);
-                }
-            }
-            return models.isEmpty() ? null : models;
-        }
-    }
-
-    @Override
-    public void getAllByDomainId(
+    public void getByDomainId(
             @Nonnull String domainId,
-            @Nonnull GetAllDomainModelsCallback<RecipeCoursePersistenceModelItem> callback) {
+            @Nonnull GetDomainModelCallback<RecipeCoursePersistenceModel> callback) {
 
-        List<RecipeCoursePersistenceModelItem> models = checkCacheForRecipeId(domainId);
+        RecipeCoursePersistenceModel model = checkCacheForRecipeId(domainId);
 
-        if (models != null) {
-            callback.onAllDomainModelsLoaded(models);
+        if (model != null) {
+            callback.onDomainModelLoaded(model);
             return;
         }
-        ((DomainDataAccessRecipeCourse) localDomainDataAccess).getAllByDomainId(
+        ((DomainDataAccessRecipeCourse)localDomainDataAccess).getByDomainId(
                 domainId,
-                new GetAllDomainModelsCallback<RecipeCoursePersistenceModelItem>() {
+                new GetDomainModelCallback<RecipeCoursePersistenceModel>() {
                     @Override
-                    public void onAllDomainModelsLoaded(
-                            List<RecipeCoursePersistenceModelItem> models) {
+                    public void onDomainModelLoaded(RecipeCoursePersistenceModel model) {
                         if (cache == null) {
                             cache = new LinkedHashMap<>();
                         }
-                        for (RecipeCoursePersistenceModelItem model : models) {
-                            cache.put(model.getDataId(), model);
-                        }
-                        callback.onAllDomainModelsLoaded(models);
+                        cache.put(model.getDataId(), model);
+                        callback.onDomainModelLoaded(model);
                     }
 
                     @Override
-                    public void onDomainModelsUnavailable() {
-                        ((DomainDataAccessRecipeCourse) remoteDomainDataAccess).getAllByDomainId(
+                    public void onDomainModelUnavailable() {
+                        ((DomainDataAccessRecipeCourse) remoteDomainDataAccess).getByDomainId(
                                 domainId,
-                                new GetAllDomainModelsCallback<RecipeCoursePersistenceModelItem>() {
+                                new GetDomainModelCallback<RecipeCoursePersistenceModel>() {
                                     @Override
-                                    public void onAllDomainModelsLoaded(
-                                            List<RecipeCoursePersistenceModelItem> models) {
-                                        if (models == null) {
-                                            onDomainModelsUnavailable();
+                                    public void onDomainModelLoaded(
+                                            RecipeCoursePersistenceModel model) {
+                                        if (model == null) {
+                                            onDomainModelUnavailable();
                                             return;
                                         }
                                         if (cache == null) {
                                             cache = new LinkedHashMap<>();
                                         }
-                                        for (RecipeCoursePersistenceModelItem model : models) {
-                                            cache.put(model.getDataId(), model);
-                                        }
-                                        callback.onAllDomainModelsLoaded(models);
+                                        cache.put(model.getDataId(), model);
+                                        callback.onDomainModelLoaded(model);
                                     }
 
                                     @Override
-                                    public void onDomainModelsUnavailable() {
-                                        callback.onDomainModelsUnavailable();
+                                    public void onDomainModelUnavailable() {
+                                        callback.onDomainModelUnavailable();
                                     }
                                 });
                     }
                 });
     }
 
-    private List<RecipeCoursePersistenceModelItem> checkCacheForRecipeId(String recipeId) {
-        List<RecipeCoursePersistenceModelItem> models = new ArrayList<>();
+    private RecipeCoursePersistenceModel checkCacheForRecipeId(String recipeId) {
+        RecipeCoursePersistenceModel model = null;
         if (cache == null || cache.isEmpty()) {
             return null;
         } else {
-            for (RecipeCoursePersistenceModelItem model : cache.values()) {
-                if (model.getDataId().equals(recipeId)) {
-                    models.add(model);
+            for (RecipeCoursePersistenceModel m : cache.values()) {
+                if (m.getDataId().equals(recipeId)) {
+                    model = m;
                 }
             }
-            return models.isEmpty() ? null : models;
+            return model;
         }
     }
 
     @Override
-    public void getAllActiveByDomainId(
-            @Nonnull String domainId,
-            @Nonnull GetAllDomainModelsCallback<RecipeCoursePersistenceModelItem> callback) {
-        List<RecipeCoursePersistenceModelItem> activeModels = new ArrayList<>();
-        getAllByDomainId(
-                domainId,
-                new GetAllDomainModelsCallback<RecipeCoursePersistenceModelItem>() {
-                    @Override
-                    public void onAllDomainModelsLoaded(
-                            List<RecipeCoursePersistenceModelItem> models) {
-                        for (RecipeCoursePersistenceModelItem m : models) {
-                            if (m.isActive()) {
-                                activeModels.add(m);
-                            }
-                        }
-                        if (activeModels.isEmpty()) {
-                            callback.onDomainModelsUnavailable();
-                        } else {
-                            callback.onAllDomainModelsLoaded(activeModels);
-                        }
-                    }
-
-                    @Override
-                    public void onDomainModelsUnavailable() {
-                        callback.onDomainModelsUnavailable();
-                    }
-                });
-    }
-
-    @Override
-    public void update(@Nonnull RecipeCoursePersistenceModelItem model) {
-        ((DomainDataAccessRecipeCourse) remoteDomainDataAccess).update(model);
-        ((DomainDataAccessRecipeCourse) localDomainDataAccess).update(model);
+    public void update(@Nonnull RecipeCoursePersistenceModel model) {
+        ((DomainDataAccessRecipeCourse)remoteDomainDataAccess).update(model);
+        ((DomainDataAccessRecipeCourse)localDomainDataAccess).update(model);
         cache.put(model.getDataId(), model);
     }
 }

@@ -1,37 +1,38 @@
-package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.parent;
+package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.parent;
 
 import com.example.peter.thekitchenmenu.app.AppExecutors;
 import com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter.PrimitiveDataSourceParent;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.RecipeCourseLocalDataSource;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.parent.RecipeMetadataParentEntity;
 
 import java.util.List;
 
 import javax.annotation.Nonnull;
 
-public class RecipeMetadataParentLocalDataSource
-        implements
-        PrimitiveDataSourceParent<RecipeMetadataParentEntity> {
+public class RecipeCourseParentLocalDataSource
+        implements PrimitiveDataSourceParent<RecipeCourseParentEntity> {
 
-    private static volatile RecipeMetadataParentLocalDataSource INSTANCE;
+    private static volatile RecipeCourseParentLocalDataSource INSTANCE;
 
     @Nonnull
     private AppExecutors executors;
     @Nonnull
-    private RecipeMetadataParentEntityDao dao;
+    private RecipeCourseParentEntityDao dao;
 
-    private RecipeMetadataParentLocalDataSource(@Nonnull AppExecutors executors,
-                                                @Nonnull RecipeMetadataParentEntityDao dao) {
+    public RecipeCourseParentLocalDataSource(@Nonnull AppExecutors executors,
+                                             @Nonnull RecipeCourseParentEntityDao dao) {
         this.executors = executors;
         this.dao = dao;
     }
 
-    public static RecipeMetadataParentLocalDataSource getInstance(
+    public static RecipeCourseParentLocalDataSource getInstance(
             @Nonnull AppExecutors executors,
-            @Nonnull RecipeMetadataParentEntityDao dao) {
+            @Nonnull RecipeCourseParentEntityDao dao) {
 
         if (INSTANCE == null) {
-            synchronized (RecipeMetadataParentLocalDataSource.class) {
+            synchronized (RecipeCourseLocalDataSource.class) {
                 if (INSTANCE == null) {
-                    INSTANCE = new RecipeMetadataParentLocalDataSource(executors, dao);
+                    INSTANCE = new RecipeCourseParentLocalDataSource(executors, dao);
                 }
             }
         }
@@ -39,29 +40,32 @@ public class RecipeMetadataParentLocalDataSource
     }
 
     @Override
-    public void getAllByDomainId(@Nonnull String domainId,
-                                 @Nonnull GetAllPrimitiveCallback<RecipeMetadataParentEntity> callback) {
+    public void getAllByDomainId(
+            @Nonnull String domainId,
+            @Nonnull GetAllPrimitiveCallback<RecipeCourseParentEntity> callback) {
         Runnable r = () -> {
-            final List<RecipeMetadataParentEntity> entities = dao.getAllByDomainId(domainId);
+            final List<RecipeCourseParentEntity> entities = dao.getAllByDomainId(domainId);
             executors.mainThread().execute(() -> {
-                if (entities.isEmpty())
+                if (entities.isEmpty()) {
                     callback.onDataUnavailable();
-                else
+                } else {
                     callback.onAllLoaded(entities);
+                }
             });
         };
         executors.diskIO().execute(r);
     }
 
     @Override
-    public void getAll(@Nonnull GetAllPrimitiveCallback<RecipeMetadataParentEntity> callback) {
+    public void getAll(@Nonnull GetAllPrimitiveCallback<RecipeCourseParentEntity> callback) {
         Runnable r = () -> {
-            final List<RecipeMetadataParentEntity> entities = dao.getAll();
+            final List<RecipeCourseParentEntity> entities = dao.getAll();
             executors.mainThread().execute(() -> {
-                if (entities.isEmpty())
+                if (entities.isEmpty()) {
                     callback.onDataUnavailable();
-                else
+                } else {
                     callback.onAllLoaded(entities);
+                }
             });
         };
         executors.diskIO().execute(r);
@@ -69,9 +73,9 @@ public class RecipeMetadataParentLocalDataSource
 
     @Override
     public void getByDataId(@Nonnull String dataId,
-                            @Nonnull GetPrimitiveCallback<RecipeMetadataParentEntity> callback) {
+                            @Nonnull GetPrimitiveCallback<RecipeCourseParentEntity> callback) {
         Runnable r = () -> {
-            final RecipeMetadataParentEntity e = dao.getByDataId(dataId);
+            final RecipeCourseParentEntity e = dao.getByDataId(dataId);
             executors.mainThread().execute(() -> {
                 if (e != null)
                     callback.onEntityLoaded(e);
@@ -83,14 +87,14 @@ public class RecipeMetadataParentLocalDataSource
     }
 
     @Override
-    public void save(@Nonnull RecipeMetadataParentEntity e) {
+    public void save(@Nonnull RecipeCourseParentEntity e) {
         Runnable r = () -> dao.insert(e);
         executors.diskIO().execute(r);
     }
 
     @Override
     public void refreshData() {
-        // Not required because the {@link Repository} handles the logic of refreshing the
+        // Not required as the Repository handles the logic of refreshing the
         // data from all the available sources.
     }
 

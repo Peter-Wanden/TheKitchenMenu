@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course;
 
 import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess.GetDomainModelCallback;
-import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeCourses;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeCourse;
 import com.example.peter.thekitchenmenu.data.repository.recipe.course.TestDataRecipeCourse;
 import com.example.peter.thekitchenmenu.data.repository.recipe.metadata.TestDataRecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.model.UseCaseMetadataModel;
@@ -47,7 +47,7 @@ public class RecipeCourseTest {
 
     // region helper fields ------------------------------------------------------------------------
     @Mock
-    RepositoryRecipeCourses repoCourseMock;
+    RepositoryRecipeCourse repoCourseMock;
     @Captor
     ArgumentCaptor<GetDomainModelCallback<RecipeCoursePersistenceModel>> repoCourseCallback;
     @Mock

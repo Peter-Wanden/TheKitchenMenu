@@ -166,8 +166,9 @@ public abstract class Repository<T extends DomainPersistenceModel>
         remoteDomainDataAccess.save(model);
         localDomainDataAccess.save(model);
 
-        if (cache == null)
+        if (cache == null) {
             cache = new LinkedHashMap<>();
+        }
         cache.put(model.getDataId(), model);
     }
 
@@ -204,8 +205,9 @@ public abstract class Repository<T extends DomainPersistenceModel>
         remoteDomainDataAccess.deleteAll();
         localDomainDataAccess.deleteAll();
 
-        if (cache == null)
+        if (cache == null) {
             cache = new LinkedHashMap<>();
+        }
         cache.clear();
     }
 
@@ -226,13 +228,15 @@ public abstract class Repository<T extends DomainPersistenceModel>
     }
 
     private void refreshCache(List<T> models) {
-        if (cache == null)
+        if (cache == null) {
             cache = new LinkedHashMap<>();
+        }
 
         cache.clear();
 
-        for (T model : models)
+        for (T model : models) {
             cache.put(model.getDataId(), model);
+        }
 
         cacheIsDirty = false;
     }
@@ -240,7 +244,8 @@ public abstract class Repository<T extends DomainPersistenceModel>
     private void refreshLocalDataSource(List<T> models) {
         localDomainDataAccess.deleteAll();
 
-        for (T model : models)
+        for (T model : models) {
             localDomainDataAccess.save(model);
+        }
     }
 }

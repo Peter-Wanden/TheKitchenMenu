@@ -3,7 +3,7 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course;
 import android.annotation.SuppressLint;
 
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
-import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeCourses;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeCourse;
 import com.example.peter.thekitchenmenu.domain.model.UseCaseDomainModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseElement;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.CommonFailReason;
@@ -77,7 +77,7 @@ public class RecipeCourse
     }
 
     @Nonnull
-    private RepositoryRecipeCourses repository;
+    private RepositoryRecipeCourse repository;
     @Nonnull
     private UniqueIdProvider idProvider;
     @Nonnull
@@ -87,7 +87,7 @@ public class RecipeCourse
     private long createDate;
     private long lastUpdate;
 
-    public RecipeCourse(@Nonnull RepositoryRecipeCourses repository,
+    public RecipeCourse(@Nonnull RepositoryRecipeCourse repository,
                         @Nonnull UniqueIdProvider idProvider,
                         @Nonnull TimeProvider timeProvider) {
         this.repository = repository;
@@ -105,7 +105,7 @@ public class RecipeCourse
     @Override
     protected void loadDomainModelByDomainId() {
         System.out.println(TAG + "loadDomainModelByDomainId called");
-        repository.getActiveByDomainId(useCaseDomainId, this);
+        repository.getByDomainId(useCaseDomainId, this);
     }
 
     @Override
@@ -236,19 +236,6 @@ public class RecipeCourse
         save();
     }
 
-    private void save() {
-        persistenceModel = new RecipeCoursePersistenceModel.Builder().
-                getDefault().
-                baseOnModel(persistenceModel).
-                setPersistenceModelItems(persistenceModelItems).
-                setCreateDate(createDate).
-                setLastUpdate(lastUpdate).
-                build();
-
-        System.out.println(TAG + "save: saving persistence model=" + persistenceModel);
-        repository.save(persistenceModel);
-    }
-
     private RecipeCoursePersistenceModelItem createNewPersistenceModelItem(Course course) {
         System.out.println(TAG + "createNewPersistenceModel for: " + course);
         long currentTime = timeProvider.getCurrentTimeInMills();
@@ -315,7 +302,21 @@ public class RecipeCourse
                         build();
 
         persistenceModelItems.add(archivedPersistenceModelItem);
+
         save();
+    }
+
+    private void save() {
+        persistenceModel = new RecipeCoursePersistenceModel.Builder().
+                getDefault().
+                baseOnModel(persistenceModel).
+                setPersistenceModelItems(persistenceModelItems).
+                setCreateDate(createDate).
+                setLastUpdate(lastUpdate).
+                build();
+
+        System.out.println(TAG + "save: saving persistence model=" + persistenceModel);
+        repository.save(persistenceModel);
     }
 
     protected void buildResponse() {

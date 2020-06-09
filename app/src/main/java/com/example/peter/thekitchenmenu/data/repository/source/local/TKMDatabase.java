@@ -13,7 +13,7 @@ import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.meta
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.RecipeCourseEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.datasource.RecipeDurationEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.failreason.RecipeFailReasonDao;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.parent.RecipeMetadataParentDao;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.parent.RecipeMetadataParentEntityDao;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.parent.RecipeMetadataParentEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.datasource.RecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.recipeingredient.datasource.RecipeIngredientEntity;
@@ -62,7 +62,7 @@ public abstract class TKMDatabase extends RoomDatabase {
 
     public abstract ProductEntityDao productEntityDao();
     public abstract FavoriteProductEntityDao favoriteProductEntityDao();
-    public abstract RecipeMetadataParentDao recipeMetadataParentEntityDao();
+    public abstract RecipeMetadataParentEntityDao recipeMetadataParentEntityDao();
     public abstract RecipeCourseDao recipeCourseEntityDao();
     public abstract RecipeIdentityEntityDao recipeIdentityEntityDao();
     public abstract RecipeDurationDao recipeDurationEntityDao();

@@ -2,6 +2,7 @@ package com.example.peter.thekitchenmenu.data.repository.recipe.course;
 
 import com.example.peter.thekitchenmenu.data.repository.recipe.metadata.TestDataRecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCoursePersistenceModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCoursePersistenceModelItem;
 
 import java.util.HashSet;
@@ -203,6 +204,29 @@ public class TestDataRecipeCourse {
             }
             return models;
         }
+    }
+
+    public static RecipeCoursePersistenceModel getActiveByDomainId(String domainId) {
+        Set<RecipeCoursePersistenceModelItem> persistenceModelItems =
+                getAllExistingActiveByDomainId(domainId);
+
+        // The create date of the oldest active model
+        long createDate = persistenceModelItems.isEmpty() ? 0L : Long.MAX_VALUE;
+        // LastUpdate: If there are no current items; the last update of the most recently
+        // archived item, else 0L if there are current items.
+        long lastUpdate = 0L;
+
+        for (RecipeCoursePersistenceModelItem item : persistenceModelItems) {
+            createDate = Math.min(createDate, item.getCreateDate());
+            lastUpdate = Math.max(lastUpdate, item.getLastUpdate());
+        }
+
+        return new RecipeCoursePersistenceModel.Builder().getDefault().
+                setDomainId(domainId).
+                setPersistenceModelItems(persistenceModelItems).
+                setCreateDate(createDate).
+                setLastUpdate(lastUpdate).
+                build();
     }
 
     public static RecipeCoursePersistenceModelItem getCopiedRecipeCourseZero() {

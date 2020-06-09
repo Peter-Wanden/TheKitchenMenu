@@ -14,6 +14,7 @@ import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.model.UseCaseMetadataModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCoursePersistenceModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCoursePersistenceModelItem;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourseRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourseResponse;
@@ -37,12 +38,12 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import javax.annotation.Nonnull;
 
@@ -536,14 +537,23 @@ public class RecipeTest {
     @Test
     public void coursesRequestNewId_newCourseAdded_coursesStateVALID_CHANGED() {
         // Arrange
-        RecipeCoursePersistenceModelItem modelUnderTest = TestDataRecipeCourse.
+        RecipeCoursePersistenceModelItem modelItem = TestDataRecipeCourse.
                 getExistingActiveRecipeCourseZero();
-        String recipeId = modelUnderTest.getDomainId();
+        Set<RecipeCoursePersistenceModelItem> modelItems = new HashSet<>();
+        modelItems.add(modelItem);
 
-        whenTimeProviderReturnTime(modelUnderTest.getCreateDate()
-        );
-        when(recipeTestBase.getIdProviderMock().getUId()).thenReturn(modelUnderTest.getDataId()
-        );
+        String recipeId = modelItem.getDomainId();
+
+        RecipeCoursePersistenceModel persistenceModel = new RecipeCoursePersistenceModel.Builder().
+                getDefault().
+                setDomainId(modelItem.getDomainId()).
+                setCreateDate(modelItem.getCreateDate()).
+                setLastUpdate(modelItem.getLastUpdate()).
+                setPersistenceModelItems(modelItems).
+                build();
+
+        whenTimeProviderReturnTime(modelItem.getCreateDate());
+        when(recipeTestBase.getIdProviderMock().getUId()).thenReturn(modelItem.getDataId());
 
         CourseCallbackClient callback = new CourseCallbackClient();
         SUT.registerMetadataListener(metadataListener1);
@@ -575,8 +585,7 @@ public class RecipeTest {
         handler.executeAsync(SUT, addCourseRequest, callback);
 
         // Assert correct values saved
-        verify(recipeTestBase.repoCourseMock).save(eq(modelUnderTest)
-        );
+        verify(recipeTestBase.repoCourseMock).save(eq(persistenceModel));
 
         // Assert courses response
         RecipeCourseResponse response = callback.response;
@@ -760,7 +769,7 @@ public class RecipeTest {
     // region helper methods -----------------------------------------------------------------------
     private void verifyAllReposCalledAndReturnModelUnavailable(String recipeId) {
         verifyRepoIdentityCalledAndReturnDataUnavailable(recipeId);
-        verifyRepoCoursesCalledAndReturnDataUnavailable(recipeId);
+        verifyRepoCourseCalledAndReturnDataUnavailable(recipeId);
         verifyRepoDurationCalledAndReturnDataUnavailable(recipeId);
         verifyRepoPortionsCalledAndReturnDataUnavailable(recipeId);
         verifyRepoRecipeMetadataCalledAndReturnDataUnavailable(recipeId);
@@ -778,10 +787,10 @@ public class RecipeTest {
         recipeTestBase.repoIdentityCallback.getValue().onDomainModelUnavailable();
     }
 
-    private void verifyRepoCoursesCalledAndReturnDataUnavailable(String recipeId) {
-        verify(recipeTestBase.repoCourseMock).getAllActiveByDomainId(eq(recipeId),
+    private void verifyRepoCourseCalledAndReturnDataUnavailable(String recipeId) {
+        verify(recipeTestBase.repoCourseMock).getActiveByDomainId(eq(recipeId),
                 recipeTestBase.repoCourseCallback.capture());
-        recipeTestBase.repoCourseCallback.getValue().onDomainModelsUnavailable();
+        recipeTestBase.repoCourseCallback.getValue().onDomainModelUnavailable();
     }
 
     private void verifyRepoDurationCalledAndReturnDataUnavailable(String recipeId) {
@@ -796,31 +805,31 @@ public class RecipeTest {
         recipeTestBase.repoPortionsCallback.getValue().onDomainModelUnavailable();
     }
 
-    private void verifyAllReposCalledAndReturnValidExisting(String recipeId) {
-        verify(recipeTestBase.repoMetadataMock).getActiveByDomainId(eq(recipeId),
+    private void verifyAllReposCalledAndReturnValidExisting(String recipeDomainId) {
+        verify(recipeTestBase.repoMetadataMock).getActiveByDomainId(eq(recipeDomainId),
                 recipeTestBase.repoMetadataCallback.capture());
-        recipeTestBase.repoMetadataCallback.getValue().onDomainModelLoaded(TestDataRecipeMetadata.
-                getActiveByDomainId(recipeId)
+        recipeTestBase.repoMetadataCallback.getValue().onDomainModelLoaded(
+                TestDataRecipeMetadata.getActiveByDomainId(recipeDomainId)
         );
-        verify(recipeTestBase.repoIdentityMock).getActiveByDomainId(eq(recipeId),
+        verify(recipeTestBase.repoIdentityMock).getActiveByDomainId(eq(recipeDomainId),
                 recipeTestBase.repoIdentityCallback.capture());
-        recipeTestBase.repoIdentityCallback.getValue().onDomainModelLoaded(TestDataRecipeIdentity.
-                getActiveByDomainId(recipeId)
+        recipeTestBase.repoIdentityCallback.getValue().onDomainModelLoaded(
+                TestDataRecipeIdentity.getActiveByDomainId(recipeDomainId)
         );
-        verify(recipeTestBase.repoCourseMock).getAllActiveByDomainId(eq(recipeId),
+        verify(recipeTestBase.repoCourseMock).getActiveByDomainId(eq(recipeDomainId),
                 recipeTestBase.repoCourseCallback.capture());
-        recipeTestBase.repoCourseCallback.getValue().onAllDomainModelsLoaded(new ArrayList<>(
-                TestDataRecipeCourse.getAllExistingActiveByDomainId(recipeId)
-        ));
-        verify(recipeTestBase.repoDurationMock).getActiveByDomainId(eq(recipeId),
+        recipeTestBase.repoCourseCallback.getValue().onDomainModelLoaded(
+                TestDataRecipeCourse.getActiveByDomainId(recipeDomainId)
+        );
+        verify(recipeTestBase.repoDurationMock).getActiveByDomainId(eq(recipeDomainId),
                 recipeTestBase.repoDurationCallback.capture());
         recipeTestBase.repoDurationCallback.getValue().onDomainModelLoaded(TestDataRecipeDuration.
-                getActiveByDomainId(recipeId)
+                getActiveByDomainId(recipeDomainId)
         );
-        verify(recipeTestBase.repoPortionsMock).getActiveByDomainId(eq(recipeId),
+        verify(recipeTestBase.repoPortionsMock).getActiveByDomainId(eq(recipeDomainId),
                 recipeTestBase.repoPortionsCallback.capture());
         recipeTestBase.repoPortionsCallback.getValue().onDomainModelLoaded(TestDataRecipePortions.
-                getActiveByDomainId(recipeId)
+                getActiveByDomainId(recipeDomainId)
         );
     }
 

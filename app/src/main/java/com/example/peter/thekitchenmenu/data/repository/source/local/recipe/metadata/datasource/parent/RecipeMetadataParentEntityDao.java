@@ -13,7 +13,7 @@ import static com.example.peter.thekitchenmenu.data.repository.source.local.reci
 import static com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.parent.RecipeMetadataParentEntity.TABLE_RECIPE;
 
 @Dao
-public interface RecipeMetadataParentDao {
+public interface RecipeMetadataParentEntityDao {
 
     @Query("SELECT * FROM " + TABLE_RECIPE)
     List<RecipeMetadataParentEntity> getAll();
@@ -33,11 +33,11 @@ public interface RecipeMetadataParentDao {
     @Update
     void update(RecipeMetadataParentEntity e);
 
-    @Query("DELETE FROM " + TABLE_RECIPE + " WHERE " + DOMAIN_ID + " = :domainId")
-    void deleteAllByDomainId(String domainId);
-
     @Query("DELETE FROM " + TABLE_RECIPE + " WHERE " + DATA_ID + " = :dataId")
     void deleteByDataId(String dataId);
+
+    @Query("DELETE FROM " + TABLE_RECIPE + " WHERE " + DOMAIN_ID + " = :domainId")
+    void deleteAllByDomainId(String domainId);
 
     @Query("DELETE FROM " + TABLE_RECIPE)
     void deleteAll();

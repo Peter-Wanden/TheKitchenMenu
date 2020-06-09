@@ -34,7 +34,7 @@ public class DurationLocalGetAdapter {
                 new GetPrimitiveCallback<RecipeDurationEntity>() {
                     @Override
                     public void onEntityLoaded(RecipeDurationEntity entity) {
-                        callback.onDomainModelLoaded(converter.convertToModel(entity));
+                        callback.onDomainModelLoaded(converter.convertToModelItem(entity));
                     }
 
                     @Override

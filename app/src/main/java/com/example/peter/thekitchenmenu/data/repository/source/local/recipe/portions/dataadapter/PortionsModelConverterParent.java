@@ -14,37 +14,37 @@ public class PortionsModelConverterParent
         DomainModelConverterParent<RecipePortionsPersistenceModel, RecipePortionsEntity> {
 
     @Override
-    public RecipePortionsPersistenceModel convertToModel(
-            @Nonnull RecipePortionsEntity e) {
+    public RecipePortionsPersistenceModel convertToModelItem(
+            @Nonnull RecipePortionsEntity entity) {
         return new RecipePortionsPersistenceModel.Builder().
-                setDataId(e.getDataId()).
-                setDomainId(e.getDomainId()).
-                setServings(e.getServings()).
-                setSittings(e.getSittings()).
-                setCreateDate(e.getCreateDate()).
-                setLastUpdate(e.getLastUpdate()).
+                setDataId(entity.getDataId()).
+                setDomainId(entity.getDomainId()).
+                setServings(entity.getServings()).
+                setSittings(entity.getSittings()).
+                setCreateDate(entity.getCreateDate()).
+                setLastUpdate(entity.getLastUpdate()).
                 build();
     }
 
     @Override
     public RecipePortionsEntity convertToPrimitive(
-            @Nonnull RecipePortionsPersistenceModel m) {
+            @Nonnull RecipePortionsPersistenceModel parent) {
         return new RecipePortionsEntity(
-                m.getDataId(),
-                m.getDomainId(),
-                m.getServings(),
-                m.getSittings(),
-                m.getCreateDate(),
-                m.getLastUpdate()
+                parent.getDataId(),
+                parent.getDomainId(),
+                parent.getServings(),
+                parent.getSittings(),
+                parent.getCreateDate(),
+                parent.getLastUpdate()
         );
     }
 
     @Override
     public List<RecipePortionsPersistenceModel> convertToModels(
-            @Nonnull List<RecipePortionsEntity> es) {
+            @Nonnull List<RecipePortionsEntity> entities) {
         List<RecipePortionsPersistenceModel> models = new ArrayList<>();
-        for (RecipePortionsEntity e : es) {
-            models.add(convertToModel(e));
+        for (RecipePortionsEntity e : entities) {
+            models.add(convertToModelItem(e));
         }
         return models;
     }

@@ -32,7 +32,7 @@ public class RecipeIngredientLocalGetAdapter {
                 new GetPrimitiveCallback<RecipeIngredientEntity>() {
                     @Override
                     public void onEntityLoaded(RecipeIngredientEntity entity) {
-                        callback.onDomainModelLoaded(converter.convertToModel(entity));
+                        callback.onDomainModelLoaded(converter.convertToModelItem(entity));
                     }
 
                     @Override

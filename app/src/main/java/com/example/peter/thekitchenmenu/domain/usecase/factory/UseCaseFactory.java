@@ -7,7 +7,6 @@ import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.repository.DatabaseInjection;
 import com.example.peter.thekitchenmenu.data.repository.ingredient.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeCourse;
-import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeCourses;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeDuration;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeIdentity;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeIngredient;
@@ -47,7 +46,7 @@ public class UseCaseFactory {
     private final RepositoryIngredient ingredientRepository;
     private final RepositoryRecipeIdentity recipeIdentityRepository;
     private final RepositoryRecipeDuration recipeDurationRepository;
-    private final RepositoryRecipeCourses recipeCoursesRepository;
+    private final RepositoryRecipeCourse recipeCourseRepository;
 
     private UseCaseFactory(Application application,
                            RepositoryRecipeMetadata recipeMetadataRepository,
@@ -56,7 +55,7 @@ public class UseCaseFactory {
                            RepositoryIngredient ingredientRepository,
                            RepositoryRecipeIdentity recipeIdentityRepository,
                            RepositoryRecipeDuration recipeDurationRepository,
-                           RepositoryRecipeCourses recipeCoursesRepository) {
+                           RepositoryRecipeCourse recipeCourseRepository) {
 
         this.application = application;
         this.recipeMetadataRepository = recipeMetadataRepository;
@@ -65,7 +64,7 @@ public class UseCaseFactory {
         this.ingredientRepository = ingredientRepository;
         this.recipeIdentityRepository = recipeIdentityRepository;
         this.recipeDurationRepository = recipeDurationRepository;
-        this.recipeCoursesRepository = recipeCoursesRepository;
+        this.recipeCourseRepository = recipeCourseRepository;
     }
 
     public static UseCaseFactory getInstance(Application application) {
@@ -92,7 +91,7 @@ public class UseCaseFactory {
                             DatabaseInjection.provideRecipeDurationDataSource(
                                     application.getApplicationContext()
                             ),
-                            DatabaseInjection.provideRecipeCoursesDataSource(
+                            DatabaseInjection.provideRecipeCourseDataSource(
                                     application.getApplicationContext()
                             )
                     );
@@ -135,7 +134,7 @@ public class UseCaseFactory {
 
     public RecipeCourse getRecipeCourseUseCase() {
         return new RecipeCourse(
-                recipeCoursesRepository,
+                recipeCourseRepository,
                 new UniqueIdProvider(),
                 new TimeProvider()
         );

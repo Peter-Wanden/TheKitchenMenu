@@ -25,7 +25,7 @@ public class RepositoryRecipeCourseRemote
     }
 
     @Override
-    public void getAllByDomainId(
+    public void getByDomainId(
             @Nonnull String recipeId,
             @Nonnull GetAllDomainModelsCallback<RecipeCoursePersistenceModelItem> callback) {
         callback.onDomainModelsUnavailable();
