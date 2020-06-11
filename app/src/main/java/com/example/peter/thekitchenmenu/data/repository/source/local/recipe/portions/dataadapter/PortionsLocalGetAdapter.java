@@ -32,7 +32,7 @@ public class PortionsLocalGetAdapter {
                 new GetPrimitiveCallback<RecipePortionsEntity>() {
                     @Override
                     public void onEntityLoaded(RecipePortionsEntity entity) {
-                        callback.onDomainModelLoaded(converter.convertToModelItem(entity));
+                        callback.onDomainModelLoaded(converter.convertParentEntityToDomainModel(entity));
                     }
 
                     @Override
@@ -50,7 +50,7 @@ public class PortionsLocalGetAdapter {
                 domainId, new GetAllPrimitiveCallback<RecipePortionsEntity>() {
                     @Override
                     public void onAllLoaded(List<RecipePortionsEntity> entities) {
-                        callback.onAllDomainModelsLoaded(converter.convertToModels(entities));
+                        callback.onAllDomainModelsLoaded(converter.convertParentEntitiesToDomainModels(entities));
                     }
 
                     @Override
@@ -100,7 +100,7 @@ public class PortionsLocalGetAdapter {
                 new GetAllPrimitiveCallback<RecipePortionsEntity>() {
                     @Override
                     public void onAllLoaded(List<RecipePortionsEntity> entities) {
-                        callback.onAllDomainModelsLoaded(converter.convertToModels(entities));
+                        callback.onAllDomainModelsLoaded(converter.convertParentEntitiesToDomainModels(entities));
                     }
 
                     @Override

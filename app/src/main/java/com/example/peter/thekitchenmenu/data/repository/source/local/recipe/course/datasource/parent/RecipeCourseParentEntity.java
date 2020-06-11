@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import com.example.peter.thekitchenmenu.data.primitivemodel.PrimitiveModel;
+import com.example.peter.thekitchenmenu.data.primitivemodel.EntityModel;
 
 import java.util.Objects;
 
@@ -13,7 +13,7 @@ import javax.annotation.Nonnull;
 @Entity(tableName = RecipeCourseParentEntity.TABLE_RECIPE_COURSE_PARENT)
 public final class RecipeCourseParentEntity
         implements
-        PrimitiveModel {
+        EntityModel {
 
     public static final String TABLE_RECIPE_COURSE_PARENT = "tableRecipeCourseParent";
     public static final String DATA_ID = "dataId";

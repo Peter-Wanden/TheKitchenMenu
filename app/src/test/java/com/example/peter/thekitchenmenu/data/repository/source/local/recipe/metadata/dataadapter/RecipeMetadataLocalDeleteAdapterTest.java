@@ -60,11 +60,11 @@ public class RecipeMetadataLocalDeleteAdapterTest {
     public void deleteDataId() {
         // Arrange
         // Act
-        SUT.deleteDataId(dataId);
+        SUT.deleteByDataId(dataId);
         // Assert
         verify(repoParentMock).deleteByDataId(dataId);
-        verify(repoComponentStateMock).deleteAllByParentId(dataId);
-        verify(repoFailReasonsMock).deleteAllByParentId(dataId);
+        verify(repoComponentStateMock).deleteAllByParentDataId(dataId);
+        verify(repoFailReasonsMock).deleteAllByParentDataId(dataId);
     }
 
     @Test
@@ -82,9 +82,9 @@ public class RecipeMetadataLocalDeleteAdapterTest {
         verify(repoParentMock, times((4))).
                 deleteByDataId(parentEntities.get(0).getDataId());
         verify(repoFailReasonsMock, times((4))).
-                deleteAllByParentId(parentEntities.get(0).getDataId());
+                deleteAllByParentDataId(parentEntities.get(0).getDataId());
         verify(repoComponentStateMock, times((4))).
-                deleteAllByParentId(parentEntities.get(0).getDataId());
+                deleteAllByParentDataId(parentEntities.get(0).getDataId());
     }
 
     @Test

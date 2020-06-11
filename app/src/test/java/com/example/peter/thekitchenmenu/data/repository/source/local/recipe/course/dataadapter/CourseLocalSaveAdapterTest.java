@@ -1,8 +1,8 @@
 package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.dataadapter;
 
 import com.example.peter.thekitchenmenu.data.repository.recipe.course.TestDataRecipeCourse;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.RecipeCourseEntity;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.RecipeCourseLocalDataSource;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.courseitem.RecipeCourseItemEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.courseitem.RecipeCourseItemLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.TestDataRecipeCourseEntity;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCoursePersistenceModelItem;
 
@@ -21,7 +21,7 @@ public class CourseLocalSaveAdapterTest {
 
     // region helper fields ------------------------------------------------------------------------
     @Mock
-    RecipeCourseLocalDataSource repoMock;
+    RecipeCourseItemLocalDataSource repoMock;
     // endregion helper fields ---------------------------------------------------------------------
 
     private CourseLocalSaveAdapter SUT;
@@ -34,8 +34,8 @@ public class CourseLocalSaveAdapterTest {
 
     private CourseLocalSaveAdapter givenSystemUnderTest() {
         return new CourseLocalSaveAdapter(
-                repoMock
-        );
+                repoMock,
+                idProvider);
     }
 
     @Test
@@ -43,7 +43,7 @@ public class CourseLocalSaveAdapterTest {
         // Arrange
         RecipeCoursePersistenceModelItem modelUnderTest = TestDataRecipeCourse.
                 getExistingActiveRecipeCourseZero();
-        RecipeCourseEntity expectedModel = TestDataRecipeCourseEntity.
+        RecipeCourseItemEntity expectedModel = TestDataRecipeCourseEntity.
                 getExistingActiveRecipeCourseZero();
         // Act
         SUT.save(modelUnderTest);

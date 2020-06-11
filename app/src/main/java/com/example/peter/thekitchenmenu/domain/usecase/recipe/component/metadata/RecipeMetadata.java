@@ -117,11 +117,11 @@ public class RecipeMetadata
                 options.put(c.id, c);
         }
 
-        public static ComponentState getFromStateLevel(int id) {
+        public static ComponentState fromInt(int id) {
             return options.get(id);
         }
 
-        public int stateLevel() {
+        public int id() {
             return id;
         }
     }

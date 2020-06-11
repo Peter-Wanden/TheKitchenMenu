@@ -209,7 +209,7 @@ public class TestDataRecipeMetadataEntity {
                 setDataId(m.getDataId()).
                 setDomainId(m.getDomainId()).
                 setRecipeParentDomainId(m.getParentDomainId()).
-                setRecipeStateId(m.getRecipeState().stateLevel()).
+                setRecipeStateId(m.getRecipeState().id()).
                 setCreatedBy(m.getCreatedBy()).
                 setCreateDate(m.getCreateDate()).
                 setLastUpdate(m.getLastUpdate()).
@@ -242,7 +242,7 @@ public class TestDataRecipeMetadataEntity {
                             String.valueOf(dataId),
                             model.getDataId(),
                             name.getId(),
-                            model.getComponentStates().get(name).stateLevel()
+                            model.getComponentStates().get(name).id()
                     )
             );
             dataId++;

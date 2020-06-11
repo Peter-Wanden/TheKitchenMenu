@@ -1,36 +1,42 @@
 package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.dataadapter;
 
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.RecipeCourseLocalDataSource;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.parent.RecipeCourseParentEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.courseitem.RecipeCourseItemLocalDataSource;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.parent.RecipeCourseParentLocalDataSource;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCoursePersistenceModel;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCoursePersistenceModelItem;
 
 import javax.annotation.Nonnull;
 
 public class CourseLocalSaveAdapter {
 
     @Nonnull
-    private final RecipeCourseLocalDataSource dataSource;
+    private final RecipeCourseParentLocalDataSource parentLocalDataSource;
     @Nonnull
-    private final CourseModelConverterParent converter;
+    private final RecipeCourseItemLocalDataSource itemLocalDataSource;
+    @Nonnull
+    private final CourseModelConverter converter;
 
-    public CourseLocalSaveAdapter(@Nonnull RecipeCourseLocalDataSource dataSource) {
-        this.dataSource = dataSource;
-        converter = new CourseModelConverterParent();
+    public CourseLocalSaveAdapter(@Nonnull RecipeCourseParentLocalDataSource parentLocalDataSource,
+                                  @Nonnull RecipeCourseItemLocalDataSource itemLocalDataSource) {
+        this.parentLocalDataSource = parentLocalDataSource;
+        this.itemLocalDataSource = itemLocalDataSource;
+
+        converter = new CourseModelConverter();
     }
 
     public void save(RecipeCoursePersistenceModel model) {
         saveParentEntity(model);
+        saveCourseItems(model);
     }
 
     public void saveParentEntity(RecipeCoursePersistenceModel domainModel) {
-        RecipeCourseParentEntity e = new RecipeCourseParentEntity.Builder().
-                getDefault().setDomainId(domainModel.getDomainId()).
-                setCreateDate(domainModel.getCreateDate()).
-                setLastUpdate(domainModel.getLastUpdate()).
-                build();
-
+        parentLocalDataSource.save(converter.convertParentDomainModelToEntity(domainModel));
     }
 
-
+    public void saveCourseItems(RecipeCoursePersistenceModel domainModel) {
+        itemLocalDataSource.save(
+                converter.convertDomainCourseItemsToEntities(
+                        domainModel.getPersistenceModelItems(),
+                        domainModel.getDataId())
+        );
+    }
 }

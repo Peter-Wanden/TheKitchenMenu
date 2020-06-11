@@ -5,14 +5,14 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import com.example.peter.thekitchenmenu.data.primitivemodel.PrimitiveModel;
+import com.example.peter.thekitchenmenu.data.primitivemodel.EntityModel;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
 @Entity(tableName = RecipeFailReasonEntity.TABLE_RECIPE_FAIL_REASON)
-public final class RecipeFailReasonEntity implements PrimitiveModel {
+public final class RecipeFailReasonEntity implements EntityModel {
 
     public static final String TABLE_RECIPE_FAIL_REASON = "recipeFailReason";
     public static final String DATA_ID = "dataId";

@@ -10,7 +10,7 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
-import com.example.peter.thekitchenmenu.data.primitivemodel.PrimitiveModel;
+import com.example.peter.thekitchenmenu.data.primitivemodel.EntityModel;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;
 import com.google.android.gms.common.internal.Objects;
 
@@ -20,7 +20,7 @@ import java.util.UUID;
 import javax.annotation.Nonnull;
 
 @Entity(tableName = ProductEntity.TABLE_PRODUCT)
-public final class ProductEntity implements Parcelable, PrimitiveModel {
+public final class ProductEntity implements Parcelable, EntityModel {
 
     public static final String TABLE_PRODUCT = "product";
     public static final String DATA_ID = "dataId";

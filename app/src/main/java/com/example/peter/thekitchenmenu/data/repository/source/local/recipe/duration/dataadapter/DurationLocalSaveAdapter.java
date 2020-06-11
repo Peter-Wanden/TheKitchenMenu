@@ -18,6 +18,6 @@ public class DurationLocalSaveAdapter {
     }
 
     public void save(RecipeDurationPersistenceModel model) {
-        dataSource.save(converter.convertToPrimitive(model));
+        dataSource.save(converter.convertParentDomainModelToEntity(model));
     }
 }

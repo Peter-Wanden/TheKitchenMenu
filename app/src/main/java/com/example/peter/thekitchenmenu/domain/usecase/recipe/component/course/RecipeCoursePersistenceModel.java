@@ -2,9 +2,9 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course;
 
 import com.example.peter.thekitchenmenu.domain.model.BaseDomainPersistenceModel;
 
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 import javax.annotation.Nonnull;
 
@@ -13,14 +13,14 @@ public final class RecipeCoursePersistenceModel
         BaseDomainPersistenceModel {
 
     @Nonnull
-    private Set<RecipeCoursePersistenceModelItem> persistenceModelItems;
+    private List<RecipeCoursePersistenceModelItem> persistenceModelItems;
 
     private RecipeCoursePersistenceModel(){
-        persistenceModelItems = new HashSet<>();
+        persistenceModelItems = new ArrayList<>();
     }
 
     @Nonnull
-    public Set<RecipeCoursePersistenceModelItem> getPersistenceModelItems() {
+    public List<RecipeCoursePersistenceModelItem> getPersistenceModelItems() {
         return persistenceModelItems;
     }
 
@@ -62,7 +62,7 @@ public final class RecipeCoursePersistenceModel
         public Builder getDefault() {
             domainModel.dataId = "";
             domainModel.domainId = "";
-            domainModel.persistenceModelItems = new HashSet<>();
+            domainModel.persistenceModelItems = new ArrayList<>();
             domainModel.createDate = 0L;
             domainModel.lastUpdate = 0L;
             return self();
@@ -77,7 +77,7 @@ public final class RecipeCoursePersistenceModel
             return self();
         }
 
-        public Builder setPersistenceModelItems(Set<RecipeCoursePersistenceModelItem> items) {
+        public Builder setPersistenceModelItems(List<RecipeCoursePersistenceModelItem> items) {
             domainModel.persistenceModelItems = items;
             return self();
         }

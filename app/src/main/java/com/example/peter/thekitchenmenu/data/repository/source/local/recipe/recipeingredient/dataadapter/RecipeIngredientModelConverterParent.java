@@ -1,6 +1,6 @@
 package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.recipeingredient.dataadapter;
 
-import com.example.peter.thekitchenmenu.data.repository.source.local.DomainModelConverterParent;
+import com.example.peter.thekitchenmenu.data.repository.source.local.DomainModelConverter;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.recipeingredient.datasource.RecipeIngredientEntity;
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModel;
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModelBuilder;
@@ -14,9 +14,9 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 public class RecipeIngredientModelConverterParent
-implements DomainModelConverterParent<RecipeIngredientPersistenceModel, RecipeIngredientEntity> {
+implements DomainModelConverter<RecipeIngredientPersistenceModel, RecipeIngredientEntity> {
     @Override
-    public RecipeIngredientPersistenceModel convertToModelItem(
+    public RecipeIngredientPersistenceModel convertParentEntityToDomainModel(
             @Nonnull RecipeIngredientEntity entity) {
         return new RecipeIngredientPersistenceModel.Builder().
                 setDataId(entity.getDataId()).
@@ -34,7 +34,7 @@ implements DomainModelConverterParent<RecipeIngredientPersistenceModel, RecipeIn
     }
 
     @Override
-    public RecipeIngredientEntity convertToPrimitive(
+    public RecipeIngredientEntity convertParentDomainModelToEntity(
             @Nonnull RecipeIngredientPersistenceModel parent) {
         return new RecipeIngredientEntity(
                 parent.getDataId(),
@@ -53,11 +53,11 @@ implements DomainModelConverterParent<RecipeIngredientPersistenceModel, RecipeIn
     }
 
     @Override
-    public List<RecipeIngredientPersistenceModel> convertToModels(
+    public List<RecipeIngredientPersistenceModel> convertParentEntitiesToDomainModels(
             @Nonnull List<RecipeIngredientEntity> entities) {
         List<RecipeIngredientPersistenceModel> models = new ArrayList<>();
         for (RecipeIngredientEntity e : entities) {
-            models.add(convertToModelItem(e));
+            models.add(convertParentEntityToDomainModel(e));
         }
         return models;
     }

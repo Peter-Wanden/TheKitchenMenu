@@ -17,6 +17,6 @@ public class IdentityLocalSaveAdapter {
     }
 
     public void save(RecipeIdentityPersistenceModel model) {
-        dataSource.save(converter.convertToPrimitive(model));
+        dataSource.save(converter.convertParentDomainModelToEntity(model));
     }
 }

@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -39,24 +40,24 @@ public class RecipeCourse
         COURSE_SIX(6),
         COURSE_SEVEN(7);
 
-        private final int courseNo;
+        private final int id;
         @SuppressLint("UseSparseArrays")
         private static Map<Integer, Course> courseMap = new HashMap<>();
 
-        Course(int courseNo) {
-            this.courseNo = courseNo;
+        Course(int id) {
+            this.id = id;
         }
 
         static {
-            for (Course course : Course.values()) courseMap.put(course.courseNo, course);
+            for (Course course : Course.values()) courseMap.put(course.id, course);
         }
 
-        public static Course fromInt(int courseNo) {
+        public static Course fromId(int courseNo) {
             return courseMap.get(courseNo);
         }
 
-        public int getCourseNo() {
-            return courseNo;
+        public int getId() {
+            return id;
         }
     }
 
@@ -83,7 +84,7 @@ public class RecipeCourse
     @Nonnull
     private TimeProvider timeProvider;
 
-    private Set<RecipeCoursePersistenceModelItem> persistenceModelItems;
+    private List<RecipeCoursePersistenceModelItem> persistenceModelItems;
     private long createDate;
     private long lastUpdate;
 
@@ -105,7 +106,7 @@ public class RecipeCourse
     @Override
     protected void loadDomainModelByDomainId() {
         System.out.println(TAG + "loadDomainModelByDomainId called");
-        repository.getByDomainId(useCaseDomainId, this);
+        repository.getActiveByDomainId(useCaseDomainId, this);
     }
 
     @Override
@@ -113,7 +114,7 @@ public class RecipeCourse
         System.out.println(TAG + "onDomainModelsUnavailable");
         isDomainDataUnavailable = true;
 
-        persistenceModelItems = new HashSet<>();
+        persistenceModelItems = new ArrayList<>();
         activeDomainModel = new DomainModel(new HashSet<>());
         updatedDomainModel = activeDomainModel;
 
@@ -125,7 +126,7 @@ public class RecipeCourse
         System.out.println(TAG + "onAllDomainModelsLoaded=" + persistenceModel);
         isDomainDataUnavailable = false;
 
-        this.persistenceModelItems = new HashSet<>(persistenceModel.getPersistenceModelItems());
+        this.persistenceModelItems = persistenceModel.getPersistenceModelItems();
 
         getDomainModelFromPersistenceModel();
         getDatesFromPersistenceModels();

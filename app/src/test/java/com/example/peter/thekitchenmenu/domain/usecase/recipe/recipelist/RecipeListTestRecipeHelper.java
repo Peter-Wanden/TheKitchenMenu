@@ -75,7 +75,7 @@ public class RecipeListTestRecipeHelper {
                     TestDataRecipeIdentity.getActiveByDomainId(recipeDomainId));
 
             // RecipeCourse
-            verify(recipeTestBase.repoCourseMock).getByDomainId(eq(recipeDomainId),
+            verify(recipeTestBase.repoCourseMock).getActiveByDomainId(eq(recipeDomainId),
                     recipeTestBase.repoCourseCallback.capture());
             recipeTestBase.repoCourseCallback.getValue().onDomainModelLoaded(
                     TestDataRecipeCourse.getActiveByDomainId(recipeDomainId));

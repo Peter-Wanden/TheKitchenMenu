@@ -125,7 +125,7 @@ public class RepositoryRecipeMetadataLocal
 
     @Override
     public void deleteByDataId(String dataId) {
-        deleteAdapter.deleteDataId(dataId);
+        deleteAdapter.deleteByDataId(dataId);
     }
 
     @Override

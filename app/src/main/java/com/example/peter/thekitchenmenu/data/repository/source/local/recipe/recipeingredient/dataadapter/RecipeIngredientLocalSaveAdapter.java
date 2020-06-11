@@ -17,6 +17,6 @@ public class RecipeIngredientLocalSaveAdapter {
     }
 
     public void save(RecipeIngredientPersistenceModel model) {
-        dataSource.save(converter.convertToPrimitive(model));
+        dataSource.save(converter.convertParentDomainModelToEntity(model));
     }
 }

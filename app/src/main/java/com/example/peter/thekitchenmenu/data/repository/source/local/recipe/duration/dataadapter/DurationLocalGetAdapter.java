@@ -34,7 +34,7 @@ public class DurationLocalGetAdapter {
                 new GetPrimitiveCallback<RecipeDurationEntity>() {
                     @Override
                     public void onEntityLoaded(RecipeDurationEntity entity) {
-                        callback.onDomainModelLoaded(converter.convertToModelItem(entity));
+                        callback.onDomainModelLoaded(converter.convertParentEntityToDomainModel(entity));
                     }
 
                     @Override
@@ -53,7 +53,7 @@ public class DurationLocalGetAdapter {
                 new GetAllPrimitiveCallback<RecipeDurationEntity>() {
                     @Override
                     public void onAllLoaded(List<RecipeDurationEntity> entities) {
-                        callback.onAllDomainModelsLoaded(converter.convertToModels(entities));
+                        callback.onAllDomainModelsLoaded(converter.convertParentEntitiesToDomainModels(entities));
                     }
 
                     @Override
@@ -105,7 +105,7 @@ public class DurationLocalGetAdapter {
                 new GetAllPrimitiveCallback<RecipeDurationEntity>() {
                     @Override
                     public void onAllLoaded(List<RecipeDurationEntity> entities) {
-                        callback.onAllDomainModelsLoaded(converter.convertToModels(entities));
+                        callback.onAllDomainModelsLoaded(converter.convertParentEntitiesToDomainModels(entities));
                     }
 
                     @Override

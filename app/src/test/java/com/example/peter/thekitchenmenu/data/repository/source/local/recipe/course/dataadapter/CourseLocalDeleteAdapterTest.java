@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.dataadapter;
 
 import com.example.peter.thekitchenmenu.data.repository.recipe.metadata.TestDataRecipeMetadata;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.RecipeCourseLocalDataSource;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.courseitem.RecipeCourseItemLocalDataSource;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -18,7 +18,7 @@ public class CourseLocalDeleteAdapterTest {
 
     // region helper fields ------------------------------------------------------------------------
     @Mock
-    RecipeCourseLocalDataSource repoMock;
+    RecipeCourseItemLocalDataSource repoMock;
 
     private String dataId = TestDataRecipeMetadata.getValidChangedThree().getDataId();
     private String domainId = TestDataRecipeMetadata.getValidChangedThree().getDomainId();
@@ -35,7 +35,7 @@ public class CourseLocalDeleteAdapterTest {
 
     private CourseLocalDeleteAdapter givenSystemUnderTest() {
         return new CourseLocalDeleteAdapter(
-                repoMock
+                parentLocalDataSource, repoMock
         );
     }
 

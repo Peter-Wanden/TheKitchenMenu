@@ -1,6 +1,6 @@
 package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.dataadapter;
 
-import com.example.peter.thekitchenmenu.data.repository.source.local.DomainModelConverterParent;
+import com.example.peter.thekitchenmenu.data.repository.source.local.DomainModelConverter;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.datasource.RecipeDurationEntity;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDurationPersistenceModel;
 
@@ -11,10 +11,10 @@ import javax.annotation.Nonnull;
 
 public class DurationModelConverterParent
         implements
-        DomainModelConverterParent<RecipeDurationPersistenceModel, RecipeDurationEntity> {
+        DomainModelConverter<RecipeDurationPersistenceModel, RecipeDurationEntity> {
 
     @Override
-    public RecipeDurationPersistenceModel convertToModelItem(
+    public RecipeDurationPersistenceModel convertParentEntityToDomainModel(
             @Nonnull RecipeDurationEntity entity) {
         return new RecipeDurationPersistenceModel.Builder().
                 setDataId(entity.getDataId()).
@@ -27,7 +27,7 @@ public class DurationModelConverterParent
     }
 
     @Override
-    public RecipeDurationEntity convertToPrimitive(
+    public RecipeDurationEntity convertParentDomainModelToEntity(
             @Nonnull RecipeDurationPersistenceModel parent) {
         return new RecipeDurationEntity(
                 parent.getDataId(),
@@ -40,11 +40,12 @@ public class DurationModelConverterParent
     }
 
     @Override
-    public List<RecipeDurationPersistenceModel> convertToModels(
+    public List<RecipeDurationPersistenceModel> convertParentEntitiesToDomainModels(
             @Nonnull List<RecipeDurationEntity> entities) {
+
         List<RecipeDurationPersistenceModel> models = new ArrayList<>();
         for (RecipeDurationEntity e : entities) {
-            models.add(convertToModelItem(e));
+            models.add(convertParentEntityToDomainModel(e));
         }
         return models;
     }

@@ -1,8 +1,8 @@
 package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.dataadapter;
 
 import com.example.peter.thekitchenmenu.data.repository.recipe.course.TestDataRecipeCourse;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.RecipeCourseEntity;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.RecipeCourseLocalDataSource;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.courseitem.RecipeCourseItemEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.courseitem.RecipeCourseItemLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.TestDataRecipeCourseEntity;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCoursePersistenceModelItem;
 
@@ -21,7 +21,7 @@ public class CourseLocalUpdateAdapterTest {
 
     // region helper fields ------------------------------------------------------------------------
     @Mock
-    RecipeCourseLocalDataSource repoMock;
+    RecipeCourseItemLocalDataSource repoMock;
     // endregion helper fields ---------------------------------------------------------------------
 
     private CourseLocalUpdateAdapter SUT;
@@ -44,7 +44,7 @@ public class CourseLocalUpdateAdapterTest {
         // Arrange
         RecipeCoursePersistenceModelItem modelUnderTest = TestDataRecipeCourse.
                 getExistingActiveRecipeCourseZero();
-        RecipeCourseEntity expectedModelSaved = TestDataRecipeCourseEntity.
+        RecipeCourseItemEntity expectedModelSaved = TestDataRecipeCourseEntity.
                 getExistingActiveRecipeCourseZero();
         // Act
         SUT.update(modelUnderTest);

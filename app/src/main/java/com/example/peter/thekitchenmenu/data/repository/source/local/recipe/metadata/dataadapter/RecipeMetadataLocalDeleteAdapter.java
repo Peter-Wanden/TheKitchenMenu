@@ -6,6 +6,7 @@ import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.meta
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.parent.RecipeMetadataParentEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.parent.RecipeMetadataParentLocalDataSource;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -28,9 +29,9 @@ public class RecipeMetadataLocalDeleteAdapter {
         this.recipeFailReasonsDataSource = recipeFailReasonsDataSource;
     }
 
-    public void deleteDataId(String dataId) {
-        recipeFailReasonsDataSource.deleteAllByParentId(dataId);
-        componentStateDataSource.deleteAllByParentId(dataId);
+    public void deleteByDataId(String dataId) {
+        recipeFailReasonsDataSource.deleteAllByParentDataId(dataId);
+        componentStateDataSource.deleteAllByParentDataId(dataId);
         parentDataSource.deleteByDataId(dataId);
     }
 
@@ -45,15 +46,15 @@ public class RecipeMetadataLocalDeleteAdapter {
     }
 
     private void getParentDataIds(String domainId) {
+        List<String> parentDataIds = new ArrayList<>();
         parentDataSource.getAllByDomainId(
                 domainId,
                 new PrimitiveDataSource.GetAllPrimitiveCallback<RecipeMetadataParentEntity>() {
                     @Override
                     public void onAllLoaded(List<RecipeMetadataParentEntity> entities) {
                         if (!entities.isEmpty()) {
-                            for (RecipeMetadataParentEntity e : entities) {
-                                deleteDataId(e.getDataId());
-                            }
+                            entities.forEach(entity -> parentDataIds.add(entity.getDataId()));
+                            deleteRecordsByParentDataIds(parentDataIds);
                         }
                     }
 
@@ -63,5 +64,13 @@ public class RecipeMetadataLocalDeleteAdapter {
                     }
                 }
         );
+    }
+
+    private void deleteRecordsByParentDataIds(List<String> parentDataIds) {
+        parentDataIds.forEach(parentDataId -> {
+            componentStateDataSource.deleteAllByParentDataId(parentDataId);
+            recipeFailReasonsDataSource.deleteAllByParentDataId(parentDataId);
+            parentDataSource.deleteByDataId(parentDataId);
+        });
     }
 }

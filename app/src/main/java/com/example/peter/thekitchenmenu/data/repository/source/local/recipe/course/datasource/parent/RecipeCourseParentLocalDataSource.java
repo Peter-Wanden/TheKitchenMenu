@@ -2,8 +2,7 @@ package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.cou
 
 import com.example.peter.thekitchenmenu.app.AppExecutors;
 import com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter.PrimitiveDataSourceParent;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.RecipeCourseLocalDataSource;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.parent.RecipeMetadataParentEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.courseitem.RecipeCourseItemLocalDataSource;
 
 import java.util.List;
 
@@ -30,7 +29,7 @@ public class RecipeCourseParentLocalDataSource
             @Nonnull RecipeCourseParentEntityDao dao) {
 
         if (INSTANCE == null) {
-            synchronized (RecipeCourseLocalDataSource.class) {
+            synchronized (RecipeCourseItemLocalDataSource.class) {
                 if (INSTANCE == null) {
                     INSTANCE = new RecipeCourseParentLocalDataSource(executors, dao);
                 }

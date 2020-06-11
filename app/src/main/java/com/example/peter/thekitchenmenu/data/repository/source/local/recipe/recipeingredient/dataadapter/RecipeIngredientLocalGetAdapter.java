@@ -32,7 +32,7 @@ public class RecipeIngredientLocalGetAdapter {
                 new GetPrimitiveCallback<RecipeIngredientEntity>() {
                     @Override
                     public void onEntityLoaded(RecipeIngredientEntity entity) {
-                        callback.onDomainModelLoaded(converter.convertToModelItem(entity));
+                        callback.onDomainModelLoaded(converter.convertParentEntityToDomainModel(entity));
                     }
 
                     @Override
@@ -51,7 +51,7 @@ public class RecipeIngredientLocalGetAdapter {
                 new GetAllPrimitiveCallback<RecipeIngredientEntity>() {
                     @Override
                     public void onAllLoaded(List<RecipeIngredientEntity> entities) {
-                        callback.onAllDomainModelsLoaded(converter.convertToModels(entities));
+                        callback.onAllDomainModelsLoaded(converter.convertParentEntitiesToDomainModels(entities));
                     }
 
                     @Override
@@ -104,7 +104,7 @@ public class RecipeIngredientLocalGetAdapter {
                 new GetAllPrimitiveCallback<RecipeIngredientEntity>() {
                     @Override
                     public void onAllLoaded(List<RecipeIngredientEntity> entities) {
-                        callback.onAllDomainModelsLoaded(converter.convertToModels(entities));
+                        callback.onAllDomainModelsLoaded(converter.convertParentEntitiesToDomainModels(entities));
                     }
 
                     @Override
@@ -123,7 +123,7 @@ public class RecipeIngredientLocalGetAdapter {
                 new GetAllPrimitiveCallback<RecipeIngredientEntity>() {
                     @Override
                     public void onAllLoaded(List<RecipeIngredientEntity> entities) {
-                        callback.onAllDomainModelsLoaded(converter.convertToModels(entities));
+                        callback.onAllDomainModelsLoaded(converter.convertParentEntitiesToDomainModels(entities));
                     }
 
                     @Override
@@ -142,7 +142,7 @@ public class RecipeIngredientLocalGetAdapter {
                 new GetAllPrimitiveCallback<RecipeIngredientEntity>() {
                     @Override
                     public void onAllLoaded(List<RecipeIngredientEntity> entities) {
-                        callback.onAllDomainModelsLoaded(converter.convertToModels(entities));
+                        callback.onAllDomainModelsLoaded(converter.convertParentEntitiesToDomainModels(entities));
                     }
 
                     @Override
@@ -159,7 +159,7 @@ public class RecipeIngredientLocalGetAdapter {
                 new GetAllPrimitiveCallback<RecipeIngredientEntity>() {
                     @Override
                     public void onAllLoaded(List<RecipeIngredientEntity> entities) {
-                        callback.onAllDomainModelsLoaded(converter.convertToModels(entities));
+                        callback.onAllDomainModelsLoaded(converter.convertParentEntitiesToDomainModels(entities));
                     }
 
                     @Override

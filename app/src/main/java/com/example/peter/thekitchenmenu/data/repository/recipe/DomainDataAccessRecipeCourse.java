@@ -11,9 +11,5 @@ public interface DomainDataAccessRecipeCourse
         extends
         DomainDataAccess<RecipeCoursePersistenceModel> {
 
-    void getByDomainId(
-            @Nonnull String recipeId,
-            @Nonnull GetDomainModelCallback<RecipeCoursePersistenceModel> callback);
-
     void update(@Nonnull RecipeCoursePersistenceModel model);
 }

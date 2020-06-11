@@ -105,7 +105,7 @@ public class RecipeFailReasonsLocalDataSource
     }
 
     @Override
-    public void deleteAllByParentId(@Nonnull String parentDataId) {
+    public void deleteAllByParentDataId(@Nonnull String parentDataId) {
         Runnable r = () -> dao.deleteAllByParentDataId(parentDataId);
         executors.diskIO().execute(r);
     }

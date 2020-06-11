@@ -148,7 +148,7 @@ public class RecipeMetadataLocalGetAdapter {
                 setDataId(e.getDataId()).
                 setDomainId(e.getDomainId()).
                 setParentDomainId(e.getParentDomainId()).
-                setRecipeState(ComponentState.getFromStateLevel(e.getRecipeStateId())).
+                setRecipeState(ComponentState.fromInt(e.getRecipeStateId())).
                 setCreatedBy(e.getCreatedBy()).
                 setCreateDate(e.getCreateDate()).
                 setLastUpdate(e.getLastUpdate()
@@ -218,7 +218,7 @@ public class RecipeMetadataLocalGetAdapter {
         for (RecipeComponentStateEntity e : entities) {
             s.put(
                     ComponentName.getFromId(e.getComponentNameId()),
-                    ComponentState.getFromStateLevel(e.getComponentStateId())
+                    ComponentState.fromInt(e.getComponentStateId())
             );
         }
         modelBuilder.setComponentStates(s);

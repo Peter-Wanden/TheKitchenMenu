@@ -184,7 +184,7 @@ public class TestDataRecipeCourse {
     public static Set<RecipeCoursePersistenceModelItem> getAllExistingActiveEvenRecipeCourses() {
         Set<RecipeCoursePersistenceModelItem> evenModels = new HashSet<>();
         for (RecipeCoursePersistenceModelItem model : getAllExistingActiveRecipeCourses()) {
-            if (model.getCourse().getCourseNo() % 2 == 0) {
+            if (model.getCourse().getId() % 2 == 0) {
                 evenModels.add(model);
             }
         }

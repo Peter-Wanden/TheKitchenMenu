@@ -1,6 +1,6 @@
 package com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.dataadapter;
 
-import com.example.peter.thekitchenmenu.data.repository.source.local.DomainModelConverterParent;
+import com.example.peter.thekitchenmenu.data.repository.source.local.DomainModelConverter;
 import com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.datasource.IngredientEntity;
 import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientPersistenceModel;
 
@@ -10,10 +10,10 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 public class IngredientLocalModelConverterParent
-        implements DomainModelConverterParent<IngredientPersistenceModel, IngredientEntity> {
+        implements DomainModelConverter<IngredientPersistenceModel, IngredientEntity> {
 
     @Override
-    public IngredientPersistenceModel convertToModelItem(
+    public IngredientPersistenceModel convertParentEntityToDomainModel(
             @Nonnull IngredientEntity entity) {
         return new IngredientPersistenceModel.Builder().
                 setDataId(entity.getDataId()).
@@ -28,7 +28,7 @@ public class IngredientLocalModelConverterParent
     }
 
     @Override
-    public IngredientEntity convertToPrimitive(
+    public IngredientEntity convertParentDomainModelToEntity(
             @Nonnull IngredientPersistenceModel parent) {
         return new IngredientEntity(
                 parent.getDataId(),
@@ -43,11 +43,11 @@ public class IngredientLocalModelConverterParent
     }
 
     @Override
-    public List<IngredientPersistenceModel> convertToModels(
+    public List<IngredientPersistenceModel> convertParentEntitiesToDomainModels(
             @Nonnull List<IngredientEntity> entities) {
         List<IngredientPersistenceModel> models = new ArrayList<>();
         for (IngredientEntity e : entities) {
-            models.add(convertToModelItem(e));
+            models.add(convertParentEntityToDomainModel(e));
         }
         return models;
     }

@@ -4,10 +4,8 @@ import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.meta
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.componentstate.RecipeComponentStateLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.failreason.RecipeFailReasonEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.failreason.RecipeFailReasonsLocalDataSource;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.parent.RecipeMetadataParentEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.parent.RecipeMetadataParentLocalDataSource;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataPersistenceModel;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
@@ -25,6 +23,10 @@ public class RecipeMetadataLocalSaveAdapter {
     @Nonnull
     private final RecipeFailReasonsLocalDataSource failReasonsDataSource;
     @Nonnull
+    private final RecipeMetadataConverter parentConverter;
+    @Nonnull
+    private final ComponentStateConverter componentStateConverter;
+    @Nonnull
     private final UniqueIdProvider idProvider;
 
     public RecipeMetadataLocalSaveAdapter(
@@ -36,6 +38,8 @@ public class RecipeMetadataLocalSaveAdapter {
         this.componentStateDataSource = componentStateDataSource;
         this.failReasonsDataSource = failReasonsDataSource;
         this.idProvider = idProvider;
+        parentConverter = new RecipeMetadataConverter();
+        componentStateConverter = new ComponentStateConverter();
     }
 
     public void save(@Nonnull RecipeMetadataPersistenceModel model) {
@@ -45,38 +49,17 @@ public class RecipeMetadataLocalSaveAdapter {
     }
 
     private void saveParentEntity(RecipeMetadataPersistenceModel model) {
-        RecipeMetadataParentEntity e = new RecipeMetadataParentEntity.Builder().
-                setDataId(model.getDataId()).
-                setDomainId(model.getDomainId()).
-                setRecipeParentDomainId(model.getParentDomainId()).
-                setRecipeStateId(model.getRecipeState().stateLevel()).
-                setCreatedBy(model.getCreatedBy()).
-                setCreateDate(model.getCreateDate()).
-                setLastUpdate(model.getLastUpdate()).
-                build();
-
-        parentDataSource.save(e);
+        parentDataSource.save(parentConverter.convertParentDomainModelToEntity(model));
     }
 
     private void saveComponentStates(RecipeMetadataPersistenceModel model) {
-        List<RecipeComponentStateEntity> entityList = new ArrayList<>();
+        List<RecipeComponentStateEntity> entities = componentStateConverter.
+                convertToEntities(
+                        model.getComponentStates(),
+                        model.getDataId()
+                );
 
-        for (RecipeMetadata.ComponentName name : model.getComponentStates().keySet()) {
-            String dataId = idProvider.getUId();
-            String parentId = model.getDataId();
-            int componentNameAsInt = name.getId();
-            int componentStateAsInt = model.getComponentStates().get(name).stateLevel();
-
-            entityList.add(
-                    new RecipeComponentStateEntity(
-                            dataId,
-                            parentId,
-                            componentNameAsInt,
-                            componentStateAsInt
-                    )
-            );
-        }
-        componentStateDataSource.save(entityList.toArray(new RecipeComponentStateEntity[0]));
+        componentStateDataSource.save(entities.toArray(new RecipeComponentStateEntity[0]));
     }
 
     private void saveFailReasons(RecipeMetadataPersistenceModel model) {

@@ -4,9 +4,10 @@ import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.recipe.course.TestDataRecipeCourse;
 import com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter.PrimitiveDataSource.GetAllPrimitiveCallback;
 import com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter.PrimitiveDataSource.GetPrimitiveCallback;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.RecipeCourseEntity;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.RecipeCourseLocalDataSource;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.courseitem.RecipeCourseItemEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.courseitem.RecipeCourseItemLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.TestDataRecipeCourseEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.parent.RecipeCourseParentLocalDataSource;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse.Course;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCoursePersistenceModelItem;
 
@@ -35,11 +36,13 @@ public class CourseLocalGetAdapterTest {
 
     // region helper fields ------------------------------------------------------------------------
     @Mock
-    RecipeCourseLocalDataSource repoMock;
+    RecipeCourseParentLocalDataSource repoParent;
+    @Mock
+    RecipeCourseItemLocalDataSource repoItem;
     @Captor
-    ArgumentCaptor<GetAllPrimitiveCallback<RecipeCourseEntity>> repoGetAllCallback;
+    ArgumentCaptor<GetAllPrimitiveCallback<RecipeCourseItemEntity>> repoGetAllCallback;
     @Captor
-    ArgumentCaptor<GetPrimitiveCallback<RecipeCourseEntity>> repoGetEntityCallback;
+    ArgumentCaptor<GetPrimitiveCallback<RecipeCourseItemEntity>> repoGetEntityCallback;
 
     private DomainModelCallbackClient getModelCallbackClient;
     private GetAllDomainModelsCallbackClient getAllCallbackClient;
@@ -54,7 +57,7 @@ public class CourseLocalGetAdapterTest {
     }
 
     private CourseLocalGetAdapter givenUseCase() {
-        return new CourseLocalGetAdapter(repoMock);
+        return new CourseLocalGetAdapter(repoParent, repoItem);
     }
 
     @Test
@@ -63,9 +66,9 @@ public class CourseLocalGetAdapterTest {
         String dataId = "idNotInTestData";
         getModelCallbackClient = new DomainModelCallbackClient();
         // Act
-        SUT.getByDataId(dataId, getModelCallbackClient);
+//        SUT.getByDataId(dataId, getModelCallbackClient);
         // Assert
-        verify(repoMock).getByDataId(eq(dataId), repoGetEntityCallback.capture());
+        verify(repoItem).getByDataId(eq(dataId), repoGetEntityCallback.capture());
         repoGetEntityCallback.getValue().onDataUnavailable();
 
         assertTrue(
@@ -80,9 +83,9 @@ public class CourseLocalGetAdapterTest {
                 getExistingActiveRecipeCourseZero();
         getModelCallbackClient = new DomainModelCallbackClient();
         // Act
-        SUT.getByDataId(modelUnderTest.getDataId(), getModelCallbackClient);
+//        SUT.getByDataId(modelUnderTest.getDataId(), getModelCallbackClient);
         // Assert
-        verify(repoMock).getByDataId(
+        verify(repoItem).getByDataId(
                 eq(modelUnderTest.getDataId()),
                 repoGetEntityCallback.capture()
         );
@@ -103,9 +106,9 @@ public class CourseLocalGetAdapterTest {
                 getAllExistingActiveByDomainId(domainId));
         getAllCallbackClient = new GetAllDomainModelsCallbackClient();
         // Act
-        SUT.getAllActiveByDomainId(domainId, getAllCallbackClient);
+//        SUT.getAllActiveByDomainId(domainId, getAllCallbackClient);
         // Assert
-        verify(repoMock).getAllByDomainId(eq(domainId), repoGetAllCallback.capture());
+//        verify(repoMock).getAllByDomainId(eq(domainId), repoGetAllCallback.capture());
         repoGetAllCallback.getValue().onAllLoaded(TestDataRecipeCourseEntity.
                 getAllExistingActiveByDomainId(domainId)
         );
@@ -126,9 +129,9 @@ public class CourseLocalGetAdapterTest {
         // Act
         SUT.getAllByCourse(course, getAllCallbackClient);
         // Assert
-        verify(repoMock).getAllByCourseNo(eq(course.getCourseNo()), repoGetAllCallback.capture());
+        verify(repoItem).getAllByCourseNo(eq(course.getId()), repoGetAllCallback.capture());
         repoGetAllCallback.getValue().onAllLoaded(TestDataRecipeCourseEntity.
-                getAllByCourseNo(course.getCourseNo())
+                getAllByCourseNo(course.getId())
         );
 
         assertEquals(
@@ -144,9 +147,9 @@ public class CourseLocalGetAdapterTest {
                 TestDataRecipeCourse.getAll());
         getAllCallbackClient = new GetAllDomainModelsCallbackClient();
         // Act
-        SUT.getAll(getAllCallbackClient);
+//        SUT.getAll(getAllCallbackClient);
         // Assert
-        verify(repoMock).getAll(repoGetAllCallback.capture());
+        verify(repoItem).getAll(repoGetAllCallback.capture());
         repoGetAllCallback.getValue().onAllLoaded(TestDataRecipeCourseEntity.getAll());
 
         assertEquals(

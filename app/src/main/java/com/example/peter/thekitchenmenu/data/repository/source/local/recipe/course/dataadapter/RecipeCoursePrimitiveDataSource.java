@@ -1,15 +1,16 @@
 package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.dataadapter;
 
+import com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter.PrimitiveDataSourceChild;
 import com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter.PrimitiveDataSourceParent;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.RecipeCourseEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.courseitem.RecipeCourseItemEntity;
 
 import javax.annotation.Nonnull;
 
 public interface RecipeCoursePrimitiveDataSource
-        extends PrimitiveDataSourceParent<RecipeCourseEntity> {
+        extends PrimitiveDataSourceChild<RecipeCourseItemEntity> {
 
     void getAllByCourseNo(int courseNo,
-                          @Nonnull GetAllPrimitiveCallback<RecipeCourseEntity> callback);
+                          @Nonnull GetAllPrimitiveCallback<RecipeCourseItemEntity> callback);
 
-    void update(@Nonnull RecipeCourseEntity e);
+    void update(@Nonnull RecipeCourseItemEntity e);
 }

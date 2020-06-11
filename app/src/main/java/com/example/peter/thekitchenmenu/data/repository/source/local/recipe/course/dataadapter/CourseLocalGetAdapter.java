@@ -4,44 +4,86 @@ import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess.GetAllD
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess.GetDomainModelCallback;
 import com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter.PrimitiveDataSource.GetAllPrimitiveCallback;
 import com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter.PrimitiveDataSource.GetPrimitiveCallback;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.RecipeCourseEntity;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.RecipeCourseLocalDataSource;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.courseitem.RecipeCourseItemEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.courseitem.RecipeCourseItemLocalDataSource;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.parent.RecipeCourseParentEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.parent.RecipeCourseParentLocalDataSource;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse.Course;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCoursePersistenceModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCoursePersistenceModelItem;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Set;
 
 import javax.annotation.Nonnull;
 
 public class CourseLocalGetAdapter {
 
     @Nonnull
-    private final RecipeCourseLocalDataSource courseLocalDataSource;
+    private final RecipeCourseParentLocalDataSource parentLocalDataSource;
     @Nonnull
-    private final CourseModelConverterParent converter;
+    private final RecipeCourseItemLocalDataSource itemLocalDataSource;
+    @Nonnull
+    private final CourseModelConverter converter;
 
-    public CourseLocalGetAdapter(@Nonnull RecipeCourseLocalDataSource courseLocalDataSource) {
-        this.courseLocalDataSource = courseLocalDataSource;
-        converter = new CourseModelConverterParent();
+    private RecipeCoursePersistenceModel.Builder modelBuilder;
+    private GetDomainModelCallback<RecipeCoursePersistenceModel> courseCallback;
+    private GetAllDomainModelsCallback<RecipeCoursePersistenceModel> courseListCallback;
+
+    public CourseLocalGetAdapter(@Nonnull RecipeCourseParentLocalDataSource parentLocalDataSource,
+                                 @Nonnull RecipeCourseItemLocalDataSource itemLocalDataSource) {
+        this.parentLocalDataSource = parentLocalDataSource;
+        this.itemLocalDataSource = itemLocalDataSource;
+
+        converter = new CourseModelConverter();
     }
 
     public void getByDataId(
             String dataId,
             GetDomainModelCallback<RecipeCoursePersistenceModel> callback) {
-        courseLocalDataSource.getByDataId(
+
+        parentLocalDataSource.getByDataId(
                 dataId,
-                new GetPrimitiveCallback<RecipeCourseEntity>() {
+                new GetPrimitiveCallback<RecipeCourseParentEntity>() {
                     @Override
-                    public void onEntityLoaded(RecipeCourseEntity entity) {
-                        callback.onDomainModelLoaded(converter.convertToModel(
-                                Collections.singletonList(entity)));
+                    public void onEntityLoaded(RecipeCourseParentEntity entity) {
+                        courseCallback = callback;
+                        addParentEntityToModelBuilder(entity);
+                    }
+
+                    @Override
+                    public void onDataUnavailable() {
+                        callback.onDomainModelUnavailable();
+                    }
+                });
+    }
+
+    public void getActiveByDomainId(
+            @Nonnull String domainId,
+            @Nonnull GetDomainModelCallback<RecipeCoursePersistenceModel> callback) {
+        parentLocalDataSource.getAllByDomainId(
+                domainId,
+                new GetAllPrimitiveCallback<RecipeCourseParentEntity>() {
+                    @Override
+                    public void onAllLoaded(List<RecipeCourseParentEntity> entities) {
+                        RecipeCourseParentEntity activeEntity = null;
+                        long lastUpdate = 0L;
+
+                        for (RecipeCourseParentEntity e : entities) {
+                            if (e.getLastUpdate() > lastUpdate) {
+                                lastUpdate = e.getLastUpdate();
+                                activeEntity = e;
+                            }
+                        }
+
+                        if (activeEntity == null) {
+                            callback.onDomainModelUnavailable();
+                        } else {
+                            courseCallback = callback;
+                            addParentEntityToModelBuilder(activeEntity);
+                        }
                     }
 
                     @Override
@@ -49,37 +91,65 @@ public class CourseLocalGetAdapter {
                         callback.onDomainModelUnavailable();
                     }
                 }
+
         );
     }
 
-    public void getByDomainId(
-            @Nonnull String domainId,
-            @Nonnull GetDomainModelCallback<RecipeCoursePersistenceModel> callback) {
-        courseLocalDataSource.getAllByDomainId(
-                domainId,
-                new GetAllPrimitiveCallback<RecipeCourseEntity>() {
+    public void addParentEntityToModelBuilder(RecipeCourseParentEntity entity) {
+        modelBuilder = converter.convertParentEntityToDomainModel(entity);
+        addCourseModelItemsToModelBuilder(entity.getDataId());
+    }
+
+    private void addCourseModelItemsToModelBuilder(String parentDataId) {
+        itemLocalDataSource.getAllByParentDataId(
+                parentDataId,
+                new GetAllPrimitiveCallback<RecipeCourseItemEntity>() {
                     @Override
-                    public void onAllLoaded(List<RecipeCourseEntity> entities) {
-                        callback.onDomainModelLoaded(converter.convertToModel(entities));
+                    public void onAllLoaded(List<RecipeCourseItemEntity> entities) {
+                        if (entities.isEmpty()) {
+                            addActiveItems(new ArrayList<>());
+                        } else {
+                            addActiveItems(
+                                    converter.convertCourseItemEntitiesToDomainModels(entities));
+                            returnModel();
+                        }
                     }
 
                     @Override
                     public void onDataUnavailable() {
-                        callback.onDomainModelUnavailable();
+                        addActiveItems(new ArrayList<>());
                     }
-                }
-        );
+
+                    private void addActiveItems(List<RecipeCoursePersistenceModelItem> items) {
+                        List<RecipeCoursePersistenceModelItem> modelItems = new ArrayList<>();
+                        if (!items.isEmpty()) {
+                            items.forEach(item -> {
+                                if (item.isActive()) {
+                                    modelItems.add(item);
+                                }
+                            });
+                        }
+                        modelBuilder.setPersistenceModelItems(modelItems);
+                        returnModel();
+                    }
+                });
+    }
+
+    private void returnModel() {
+        courseCallback.onDomainModelLoaded(modelBuilder.build());
     }
 
     public void getAllByCourse(
-            @Nonnull Course c,
+            @Nonnull Course course,
             @Nonnull GetAllDomainModelsCallback<RecipeCoursePersistenceModelItem> callback) {
-        courseLocalDataSource.getAllByCourseNo(
-                c.getCourseNo(),
-                new GetAllPrimitiveCallback<RecipeCourseEntity>() {
+
+        itemLocalDataSource.getAllByCourseNo(
+                course.getId(),
+                new GetAllPrimitiveCallback<RecipeCourseItemEntity>() {
                     @Override
-                    public void onAllLoaded(List<RecipeCourseEntity> entities) {
-                        callback.onAllDomainModelsLoaded(converter.convertToModels(entities));
+                    public void onAllLoaded(List<RecipeCourseItemEntity> entities) {
+                        callback.onAllDomainModelsLoaded(
+                                converter.convertCourseItemEntitiesToDomainModels(entities));
                     }
 
                     @Override
@@ -88,68 +158,35 @@ public class CourseLocalGetAdapter {
                     }
                 }
         );
-    }
-
-    public void getAllActiveByDomainId(
-            String domainId,
-            GetAllDomainModelsCallback<RecipeCoursePersistenceModelItem> callback) {
-        courseLocalDataSource.getAllByDomainId(
-                domainId,
-                new GetAllPrimitiveCallback<RecipeCourseEntity>() {
-                    @Override
-                    public void onAllLoaded(List<RecipeCourseEntity> entities) {
-                        callback.onAllDomainModelsLoaded(filterForActive(entities));
-                    }
-
-                    @Override
-                    public void onDataUnavailable() {
-                        callback.onDomainModelsUnavailable();
-                    }
-                }
-        );
-    }
-
-    private List<RecipeCoursePersistenceModelItem> filterForActive(List<RecipeCourseEntity> entities) {
-        List<RecipeCoursePersistenceModelItem> models = new ArrayList<>();
-        for (RecipeCourseEntity e : entities) {
-            if (e.isActive()) {
-                models.add(converter.convertToModelItem(e));
-            }
-        }
-        return models;
     }
 
     public void getAll(
             @Nonnull GetAllDomainModelsCallback<RecipeCoursePersistenceModel> callback) {
+        courseListCallback = callback;
 
-        HashMap<String, List<RecipeCoursePersistenceModelItem>> modelItems = new LinkedHashMap<>();
-        HashMap<String, RecipeCoursePersistenceModel> models = new LinkedHashMap<>();
+        List<RecipeCoursePersistenceModel> modelItems = new ArrayList<>();
 
-        courseLocalDataSource.getAll(
-                new GetAllPrimitiveCallback<RecipeCourseEntity>() {
+        parentLocalDataSource.getAll(
+                new GetAllPrimitiveCallback<RecipeCourseParentEntity>() {
                     @Override
-                    public void onAllLoaded(List<RecipeCourseEntity> entities) {
+                    public void onAllLoaded(List<RecipeCourseParentEntity> entities) {
 
                         entities.forEach(entity -> {
-                            RecipeCoursePersistenceModelItem item = converter.
-                                    convertToModelItem(entity);
+                            getByDataId(
+                                    entity.getDataId(),
+                                    new GetDomainModelCallback<RecipeCoursePersistenceModel>() {
+                                        @Override
+                                        public void onDomainModelLoaded(
+                                                RecipeCoursePersistenceModel model) {
+                                            modelItems.add(model);
+                                        }
 
-                            String domainId = item.getDomainId();
-                            boolean isInList = modelItems.containsKey(item.getDomainId());
+                                        @Override
+                                        public void onDomainModelUnavailable() {
 
-                            if (isInList) {
-                                modelItems.get(domainId).add(item);
-                            } else {
-                                List<RecipeCoursePersistenceModelItem> newItems = new ArrayList<>();
-                                newItems.add(item);
-                                modelItems.put(domainId, newItems);
-                            }
+                                        }
+                                    });
                         });
-                        for (String domainId : modelItems.keySet()) {
-
-                            RecipeCoursePersistenceModel model =
-                                    new RecipeCoursePersistenceModel.Builder();
-                        }
                     }
 
                     @Override

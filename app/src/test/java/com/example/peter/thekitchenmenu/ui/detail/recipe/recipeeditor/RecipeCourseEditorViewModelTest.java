@@ -10,7 +10,7 @@ import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeM
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.data.repository.recipe.course.TestDataRecipeCourse;
 import com.example.peter.thekitchenmenu.data.repository.recipe.metadata.TestDataRecipeMetadata;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.RecipeCourseEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.courseitem.RecipeCourseItemEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.TestDataRecipeCourseEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.datasource.RecipeDurationEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.datasource.TestDataRecipeDurationEntity;
@@ -98,7 +98,7 @@ public class RecipeCourseEditorViewModelTest {
             TestDataRecipeDurationEntity.getValidExistingComplete();
     private static final RecipePortionsEntity PORTIONS_VALID_EXISTING_NINE =
             TestDataRecipePortionsEntity.getExistingValidNinePortions();
-    private static final List<RecipeCourseEntity> COURSES_VALID_EXISTING_ALL =
+    private static final List<RecipeCourseItemEntity> COURSES_VALID_EXISTING_ALL =
             TestDataRecipeCourseEntity.getAllExistingActiveRecipeCourses();
 
     // endregion constants -------------------------------------------------------------------------

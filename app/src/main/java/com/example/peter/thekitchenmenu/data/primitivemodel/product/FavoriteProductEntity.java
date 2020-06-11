@@ -8,7 +8,7 @@ import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
-import com.example.peter.thekitchenmenu.data.primitivemodel.PrimitiveModel;
+import com.example.peter.thekitchenmenu.data.primitivemodel.EntityModel;
 import com.google.android.gms.common.internal.Objects;
 import com.google.android.gms.common.util.Strings;
 
@@ -22,7 +22,7 @@ import static com.example.peter.thekitchenmenu.data.primitivemodel.product.Favor
 
 @Entity(tableName = TABLE_FAVORITE_PRODUCTS,
         indices = {@Index(value = {PRODUCT_ID}, unique = true)})
-public final class FavoriteProductEntity implements PrimitiveModel {
+public final class FavoriteProductEntity implements EntityModel {
 
     public static final String TAG = "FavoriteProductEntity";
 
