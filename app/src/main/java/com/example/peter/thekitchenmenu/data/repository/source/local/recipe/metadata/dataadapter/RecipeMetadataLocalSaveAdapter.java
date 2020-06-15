@@ -38,6 +38,7 @@ public class RecipeMetadataLocalSaveAdapter {
         this.componentStateDataSource = componentStateDataSource;
         this.failReasonsDataSource = failReasonsDataSource;
         this.idProvider = idProvider;
+
         parentConverter = new RecipeMetadataConverter();
         componentStateConverter = new ComponentStateConverter();
     }

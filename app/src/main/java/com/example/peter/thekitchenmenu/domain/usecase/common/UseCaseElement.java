@@ -1,6 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecase.common;
 
 import com.example.peter.thekitchenmenu.app.Constants;
+import com.example.peter.thekitchenmenu.domain.model.BaseDomainModel;
 import com.example.peter.thekitchenmenu.domain.model.BaseDomainPersistenceModel;
 import com.example.peter.thekitchenmenu.domain.model.UseCaseDomainModel;
 import com.example.peter.thekitchenmenu.domain.model.UseCaseMetadataModel;
@@ -13,8 +14,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataId.NO_ID;
-
 public abstract class UseCaseElement
         <PERSISTENCE_MODEL extends BaseDomainPersistenceModel,
                 USE_CASE_DOMAIN_MODEL extends UseCaseDomainModel>
@@ -23,8 +22,8 @@ public abstract class UseCaseElement
 
     private static final String TAG = "tkm-" + "UseCaseElement" + ": ";
 
-    protected String useCaseDataId = NO_ID;
-    protected String useCaseDomainId = NO_ID;
+    protected String useCaseDataId = UseCaseMessageModelDataId.NO_ID;
+    protected String useCaseDomainId = UseCaseMessageModelDataId.NO_ID;
 
     protected PERSISTENCE_MODEL persistenceModel;
 
@@ -40,16 +39,16 @@ public abstract class UseCaseElement
     @Override
     protected <REQUEST extends Request> void execute(REQUEST request) {
         accessCount++;
-        UseCaseMessageModelDataId r =
-                (UseCaseMessageModelDataId) request;
+
+        UseCaseMessageModelDataId<BaseDomainModel> r = (UseCaseMessageModelDataId<BaseDomainModel>) request;
 
         System.out.println(TAG + "Request No:" + accessCount + " " + request);
 
-        String requestDataId = r.getDataId() == null ? NO_ID : r.getDataId();
-        String requestDomainId = r.getDomainId() == null ? NO_ID : r.getDomainId();
+        String requestDataId = r.getDataId() == null ? UseCaseMessageModelDataId.NO_ID : r.getDataId();
+        String requestDomainId = r.getDomainId() == null ? UseCaseMessageModelDataId.NO_ID : r.getDomainId();
 
-        boolean requestHasDataId = !NO_ID.equals(requestDataId);
-        boolean requestHasDomainId = !NO_ID.equals(requestDomainId);
+        boolean requestHasDataId = !UseCaseMessageModelDataId.NO_ID.equals(requestDataId);
+        boolean requestHasDomainId = !UseCaseMessageModelDataId.NO_ID.equals(requestDomainId);
         boolean requestHasNoIdentifiers = !requestHasDataId && !requestHasDomainId;
         boolean dataIdsAreNotEqual = requestHasDataId &&
                 !requestDataId.equals(useCaseDataId);

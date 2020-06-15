@@ -15,7 +15,6 @@ import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.model.UseCaseMetadataModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCoursePersistenceModel;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCoursePersistenceModelItem;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourseRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourseResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDurationRequest;
@@ -549,7 +548,7 @@ public class RecipeTest {
                 setDomainId(modelItem.getDomainId()).
                 setCreateDate(modelItem.getCreateDate()).
                 setLastUpdate(modelItem.getLastUpdate()).
-                setPersistenceModelItems(modelItems).
+                setCourses(modelItems).
                 build();
 
         whenTimeProviderReturnTime(modelItem.getCreateDate());

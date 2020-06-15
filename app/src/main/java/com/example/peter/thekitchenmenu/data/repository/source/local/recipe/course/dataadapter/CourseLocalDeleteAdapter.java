@@ -30,7 +30,7 @@ public class CourseLocalDeleteAdapter {
     }
 
     public void deleteAllByDomainId(@Nonnull String domainId) {
-        getParentDataIds(domainId);
+        createParentDataIdList(domainId);
     }
 
     public void deleteAll() {
@@ -38,7 +38,7 @@ public class CourseLocalDeleteAdapter {
         itemLocalDataSource.deleteAll();
     }
 
-    private void getParentDataIds(String domainId) {
+    private void createParentDataIdList(String domainId) {
         List<String> parentDataIds = new ArrayList<>();
         parentLocalDataSource.getAllByDomainId(
                 domainId,

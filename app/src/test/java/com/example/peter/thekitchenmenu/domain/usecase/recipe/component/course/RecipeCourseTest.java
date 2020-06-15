@@ -120,11 +120,10 @@ public class RecipeCourseTest {
         newRequest_emptyCourseListReturned_stateINVALID_UNCHANGED();
 
         // Arrange to add course zero
-        RecipeCoursePersistenceModelItem modelUnderTest = TestDataRecipeCourse.
+        RecipeCoursePersistenceModel modelUnderTest = TestDataRecipeCourse.
                 getNewActiveRecipeCourseZero();
 
-        HashSet<Course> newCoursesToAdd = new HashSet<>();
-        newCoursesToAdd.add(modelUnderTest.getCourse());
+        List<Course> newCoursesToAdd = modelUnderTest.getCourses();
 
         RecipeCourseRequest.DomainModel model = new RecipeCourseRequest.DomainModel.Builder().
                 setCourseList(newCoursesToAdd).
@@ -142,13 +141,11 @@ public class RecipeCourseTest {
         SUT.execute(addCourseZeroRequest, new CourseCallbackClient());
 
         // Assert correct persistence model saved
-        Set<RecipeCoursePersistenceModelItem> courseItems = new HashSet<>();
-        courseItems.add(modelUnderTest);
         RecipeCoursePersistenceModel expectedModel = new RecipeCoursePersistenceModel.Builder().
                 getDefault().
                 setCreateDate(modelUnderTest.getCreateDate()).
                 setLastUpdate(modelUnderTest.getLastUpdate()).
-                setPersistenceModelItems(courseItems).
+                setCourses(modelUnderTest.getCourses()).
                 build();
         verify(repoCourseMock).save(eq(expectedModel));
 
@@ -183,8 +180,7 @@ public class RecipeCourseTest {
         // Arrange
         String domainId = TestDataRecipeCourse.NEW_RECIPE_ID;
 
-        List<RecipeCoursePersistenceModelItem> newActivatedModels = new ArrayList<>(TestDataRecipeCourse.
-                getNewActiveCourses());
+        RecipeCoursePersistenceModel newActivatedModel = TestDataRecipeCourse.getNewActiveCourses();
 
         List<RecipeCoursePersistenceModelItem> expectedArchivedModels = new ArrayList<>(
                 TestDataRecipeCourse.getNewArchivedRecipeCourses());
@@ -425,7 +421,7 @@ public class RecipeCourseTest {
         RecipeCoursePersistenceModel model = new RecipeCoursePersistenceModel.Builder().
                 getDefault().
                 setDomainId(recipeDomainId).
-                setPersistenceModelItems(new HashSet<>(persistenceModelItems)).
+                setCourses(new HashSet<>(persistenceModelItems)).
                 setCreateDate(createDate).
                 setLastUpdate(lastUpdate).
                 build();

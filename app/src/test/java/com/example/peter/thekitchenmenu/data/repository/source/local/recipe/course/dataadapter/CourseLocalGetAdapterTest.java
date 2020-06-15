@@ -4,12 +4,11 @@ import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.recipe.course.TestDataRecipeCourse;
 import com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter.PrimitiveDataSource.GetAllPrimitiveCallback;
 import com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter.PrimitiveDataSource.GetPrimitiveCallback;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.courseitem.RecipeCourseItemEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.courseitem.RecipeCourseEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.courseitem.RecipeCourseItemLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.TestDataRecipeCourseEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.parent.RecipeCourseParentLocalDataSource;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse.Course;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCoursePersistenceModelItem;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -40,9 +39,9 @@ public class CourseLocalGetAdapterTest {
     @Mock
     RecipeCourseItemLocalDataSource repoItem;
     @Captor
-    ArgumentCaptor<GetAllPrimitiveCallback<RecipeCourseItemEntity>> repoGetAllCallback;
+    ArgumentCaptor<GetAllPrimitiveCallback<RecipeCourseEntity>> repoGetAllCallback;
     @Captor
-    ArgumentCaptor<GetPrimitiveCallback<RecipeCourseItemEntity>> repoGetEntityCallback;
+    ArgumentCaptor<GetPrimitiveCallback<RecipeCourseEntity>> repoGetEntityCallback;
 
     private DomainModelCallbackClient getModelCallbackClient;
     private GetAllDomainModelsCallbackClient getAllCallbackClient;

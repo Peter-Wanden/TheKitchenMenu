@@ -1,12 +1,14 @@
 package com.example.peter.thekitchenmenu.data.repository.recipe.course;
 
 import com.example.peter.thekitchenmenu.data.repository.recipe.metadata.TestDataRecipeMetadata;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCoursePersistenceModel;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCoursePersistenceModelItem;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse.Course;
 
 public class TestDataRecipeCourse {
 
@@ -16,276 +18,241 @@ public class TestDataRecipeCourse {
     public static final String EXISTING_RECIPE_ID =
             TestDataRecipeMetadata.getValidUnchanged().getDomainId();
 
-    // first course added
-    public static RecipeCoursePersistenceModelItem getNewActiveRecipeCourseZero() {
-        return new RecipeCoursePersistenceModelItem.Builder().
+    // first course added, this is the default course which creates this default persistence model
+    public static RecipeCoursePersistenceModel getNewActiveRecipeCourseZero() {
+        return new RecipeCoursePersistenceModel.Builder().
                 setDataId("dataId-recipeCourse-new-id0").
                 setDomainId(NEW_RECIPE_ID).
-                setCourse(RecipeCourse.Course.COURSE_ZERO).
-                setIsActive(true).
+                setCourses(Collections.singletonList(Course.COURSE_ZERO)).
                 setCreateDate(10L).
                 setLastUpdate(10L).
                 build();
     }
 
-    // Second course added
-    public static RecipeCoursePersistenceModelItem getNewActiveRecipeCourseOne() {
-        return new RecipeCoursePersistenceModelItem.Builder().
-                setDataId("dataId-recipeCourse-new-id1").
-                setDomainId(NEW_RECIPE_ID).
-                setCourse(RecipeCourse.Course.COURSE_ONE).
-                setIsActive(true).
-                setCreateDate(10L).
-                setLastUpdate(10L).
-                build();
-    }
-
-    // State of recipe course data after new courses added
-    public static Set<RecipeCoursePersistenceModelItem> getNewActiveCourses() {
-        Set<RecipeCoursePersistenceModelItem> models = new HashSet<>();
-        models.add(getNewActiveRecipeCourseZero());
-        models.add(getNewActiveRecipeCourseOne());
-        return models;
-    }
-
-    // First course updated to deactivated
-    public static RecipeCoursePersistenceModelItem getNewArchivedRecipeCourseZero() {
-        return new RecipeCoursePersistenceModelItem.Builder().
+    // Second course added, old persistence model is archived
+    public static RecipeCoursePersistenceModel getNewArchivedAfterSecondCourseAdded() {
+        return new RecipeCoursePersistenceModel.Builder().
                 setDataId("dataId-recipeCourse-new-id0").
                 setDomainId(NEW_RECIPE_ID).
-                setCourse(RecipeCourse.Course.COURSE_ZERO).
-                setIsActive(false).
+                setCourses(Collections.singletonList(Course.COURSE_ZERO)).
                 setCreateDate(10L).
-                setLastUpdate(100L).
+                setLastUpdate(20L). // should be updated
                 build();
     }
 
-    // Second course updated to deactivated
-    public static RecipeCoursePersistenceModelItem getNewArchivedRecipeCourseOne() {
-        return new RecipeCoursePersistenceModelItem.Builder().
+    // Second course added, new active persistence model saved
+    public static RecipeCoursePersistenceModel getNewActiveRecipeCourseZeroAndOne() {
+        return new RecipeCoursePersistenceModel.Builder().
                 setDataId("dataId-recipeCourse-new-id1").
                 setDomainId(NEW_RECIPE_ID).
-                setCourse(RecipeCourse.Course.COURSE_ONE).
-                setIsActive(false).
+                setCourses(Arrays.asList(Course.COURSE_ZERO, Course.COURSE_ONE)). // new course added
+                setCreateDate(10L).
+                setLastUpdate(30L). // should be updated
+                build();
+    }
+
+    // First course deactivated, old persistence model is archived
+    public static RecipeCoursePersistenceModel getNewArchivedAfterCourseZeroDeactivated() {
+        return new RecipeCoursePersistenceModel.Builder().
+                setDataId("dataId-recipeCourse-new-id0").
+                setDomainId(NEW_RECIPE_ID).
+                setCourses(Arrays.asList(Course.COURSE_ZERO, Course.COURSE_ONE)).
+                setCreateDate(10L).
+                setLastUpdate(40L). // should be updated to current time
+                build();
+    }
+
+    // First course deactivated, new active persistence model saved
+    public static RecipeCoursePersistenceModel getNewActiveModelAfterCourseZeroDeactivated() {
+        return new RecipeCoursePersistenceModel.Builder().
+                setDataId("dataId-recipeCourse-new-id0").
+                setDomainId(NEW_RECIPE_ID).
+                setCourses(Collections.singletonList(Course.COURSE_ONE)).
+                setCreateDate(40L). // should be updated to current time
+                setLastUpdate(40L). // should be same as create date
+                build();
+    }
+
+    // Second course deactivated
+    public static RecipeCoursePersistenceModel getNewArchivedRecipeCourseOne() {
+        return new RecipeCoursePersistenceModel.Builder().
+                setDataId("dataId-recipeCourse-new-id1").
+                setDomainId(NEW_RECIPE_ID).
+                setCourses(new ArrayList<>()).
                 setCreateDate(10L).
                 setLastUpdate(100L).
                 build();
     }
 
-    // State of data after courses removed
-    public static Set<RecipeCoursePersistenceModelItem> getNewArchivedRecipeCourses() {
-        Set<RecipeCoursePersistenceModelItem> models = new HashSet<>();
-        models.add(getNewArchivedRecipeCourseZero());
-        models.add(getNewArchivedRecipeCourseOne());
-        return models;
-    }
-
-    public static RecipeCoursePersistenceModelItem getExistingActiveRecipeCourseZero() {
-        return new RecipeCoursePersistenceModelItem.Builder().
+    public static RecipeCoursePersistenceModel getExistingActiveRecipeCourseZero() {
+        return new RecipeCoursePersistenceModel.Builder().
                 setDataId("dataId-recipeCourse-existing-id0").
                 setDomainId(EXISTING_RECIPE_ID).
-                setCourse(RecipeCourse.Course.COURSE_ZERO).
-                setIsActive(true).
+                setCourses(Collections.singletonList(Course.COURSE_ZERO)).
                 setCreateDate(20L).
                 setLastUpdate(20L).
                 build();
     }
 
-    public static RecipeCoursePersistenceModelItem getExistingActiveRecipeCourseOne() {
-        return new RecipeCoursePersistenceModelItem.Builder().
+    public static RecipeCoursePersistenceModel getExistingActiveRecipeCourseOne() {
+        return new RecipeCoursePersistenceModel.Builder().
                 setDataId("dataId-recipeCourse-existing-id1").
                 setDomainId(EXISTING_RECIPE_ID).
-                setCourse(RecipeCourse.Course.COURSE_ONE).
-                setIsActive(true).
+                setCourses(Collections.singletonList(Course.COURSE_ONE)).
                 setCreateDate(20L).
                 setLastUpdate(20L).
                 build();
     }
 
-    public static RecipeCoursePersistenceModelItem getExistingActiveRecipeCourseTwo() {
-        return new RecipeCoursePersistenceModelItem.Builder().
+    public static RecipeCoursePersistenceModel getExistingActiveRecipeCourseTwo() {
+        return new RecipeCoursePersistenceModel.Builder().
                 setDataId("dataId-recipeCourse-existing-id2").
                 setDomainId(EXISTING_RECIPE_ID).
-                setCourse(RecipeCourse.Course.COURSE_TWO).
-                setIsActive(true).
+                setCourses(Collections.singletonList(Course.COURSE_TWO)).
                 setCreateDate(20L).
                 setLastUpdate(20L).
                 build();
     }
 
-    public static RecipeCoursePersistenceModelItem getExistingActiveRecipeCourseThree() {
-        return new RecipeCoursePersistenceModelItem.Builder().
+    public static RecipeCoursePersistenceModel getExistingActiveRecipeCourseThree() {
+        return new RecipeCoursePersistenceModel.Builder().
                 setDataId("dataId-recipeCourse-existing-id3").
                 setDomainId(EXISTING_RECIPE_ID).
-                setCourse(RecipeCourse.Course.COURSE_THREE).
-                setIsActive(true).
+                setCourses(Collections.singletonList(Course.COURSE_THREE)).
                 setCreateDate(20L).
                 setLastUpdate(20L).
                 build();
     }
 
-    public static RecipeCoursePersistenceModelItem getExistingActiveRecipeCourseFour() {
-        return new RecipeCoursePersistenceModelItem.Builder().
+    public static RecipeCoursePersistenceModel getExistingActiveRecipeCourseFour() {
+        return new RecipeCoursePersistenceModel.Builder().
                 setDataId("dataId-recipeCourse-existing-id4").
                 setDomainId(EXISTING_RECIPE_ID).
-                setCourse(RecipeCourse.Course.COURSE_FOUR).
-                setIsActive(true).
+                setCourses(Collections.singletonList(Course.COURSE_FOUR)).
                 setCreateDate(20L).
                 setLastUpdate(20L).
                 build();
     }
 
-    public static RecipeCoursePersistenceModelItem getExistingActiveRecipeCourseFive() {
-        return new RecipeCoursePersistenceModelItem.Builder().
+    public static RecipeCoursePersistenceModel getExistingActiveRecipeCourseFive() {
+        return new RecipeCoursePersistenceModel.Builder().
                 setDataId("dataId-recipeCourse-existing-id5").
                 setDomainId(EXISTING_RECIPE_ID).
-                setCourse(RecipeCourse.Course.COURSE_FIVE).
-                setIsActive(true).
+                setCourses(Collections.singletonList(Course.COURSE_FIVE)).
                 setCreateDate(20L).
                 setLastUpdate(20L).
                 build();
     }
 
-    public static RecipeCoursePersistenceModelItem getExistingActiveRecipeCourseSix() {
-        return new RecipeCoursePersistenceModelItem.Builder().
+    public static RecipeCoursePersistenceModel getExistingActiveRecipeCourseSix() {
+        return new RecipeCoursePersistenceModel.Builder().
                 setDataId("dataId-recipeCourse-existing-id6").
                 setDomainId(EXISTING_RECIPE_ID).
-                setCourse(RecipeCourse.Course.COURSE_SIX).
-                setIsActive(true).
+                setCourses(Collections.singletonList(Course.COURSE_SIX)).
                 setCreateDate(20L).
                 setLastUpdate(20L).
                 build();
     }
 
-    public static RecipeCoursePersistenceModelItem getExistingActiveRecipeCourseSeven() {
-        return new RecipeCoursePersistenceModelItem.Builder().
+    public static RecipeCoursePersistenceModel getExistingActiveRecipeCourseSeven() {
+        return new RecipeCoursePersistenceModel.Builder().
                 setDataId("dataId-recipeCourse-existing-id7").
                 setDomainId(EXISTING_RECIPE_ID).
-                setCourse(RecipeCourse.Course.COURSE_SEVEN).
-                setIsActive(true).
+                setCourses(Collections.singletonList(Course.COURSE_SEVEN)).
                 setCreateDate(20L).
                 setLastUpdate(20L).
                 build();
     }
 
-    public static Set<RecipeCoursePersistenceModelItem> getAllExistingActiveRecipeCourses() {
-        Set<RecipeCoursePersistenceModelItem> models = new HashSet<>();
-        models.add(getExistingActiveRecipeCourseZero());
-        models.add(getExistingActiveRecipeCourseOne());
-        models.add(getExistingActiveRecipeCourseTwo());
-        models.add(getExistingActiveRecipeCourseThree());
-        models.add(getExistingActiveRecipeCourseFour());
-        models.add(getExistingActiveRecipeCourseFive());
-        models.add(getExistingActiveRecipeCourseSix());
-        models.add(getExistingActiveRecipeCourseSeven());
-        return models;
+    public static List<RecipeCoursePersistenceModel> getAllExistingActiveCoursePersistentDomainModels() {
+        return Arrays.asList(
+                getExistingActiveRecipeCourseZero(),
+                getExistingActiveRecipeCourseOne(),
+                getExistingActiveRecipeCourseTwo(),
+                getExistingActiveRecipeCourseThree(),
+                getExistingActiveRecipeCourseFour(),
+                getExistingActiveRecipeCourseFive(),
+                getExistingActiveRecipeCourseSix(),
+                getExistingActiveRecipeCourseSeven()
+        );
     }
 
-    public static Set<RecipeCoursePersistenceModelItem> getAllExistingActiveEvenRecipeCourses() {
-        Set<RecipeCoursePersistenceModelItem> evenModels = new HashSet<>();
-        for (RecipeCoursePersistenceModelItem model : getAllExistingActiveRecipeCourses()) {
-            if (model.getCourse().getId() % 2 == 0) {
-                evenModels.add(model);
+    public static List<RecipeCoursePersistenceModel> getAllExistingActiveEvenPersistenceDomainModels() {
+        List<RecipeCoursePersistenceModel> evenModels = new ArrayList<>();
+        for (RecipeCoursePersistenceModel m : getAllExistingActiveCoursePersistentDomainModels()) {
+            for (Course course : m.getCourses()) {
+                if (course.getId() % 2 == 0) {
+                    evenModels.add(m);
+                }
             }
         }
         return evenModels;
     }
 
-    //TODO - "idFromAnotherUser" ??
-    public static Set<RecipeCoursePersistenceModelItem> getAllExistingActiveByDomainId(String domainId) {
-        if (domainId.equals("idFromAnotherUser")) {
-            return getAllRecipeCourseCopies();
-        } else {
-            Set<RecipeCoursePersistenceModelItem> models = new HashSet<>();
-            for (RecipeCoursePersistenceModelItem m : getAllExistingActiveRecipeCourses()) {
-                if (domainId.equals(m.getDomainId())) {
-                    models.add(m);
-                }
-            }
-            return models;
-        }
-    }
-
     public static RecipeCoursePersistenceModel getActiveByDomainId(String domainId) {
-        Set<RecipeCoursePersistenceModelItem> persistenceModelItems =
-                getAllExistingActiveByDomainId(domainId);
-
-        // The create date of the oldest active model
-        long createDate = persistenceModelItems.isEmpty() ? 0L : Long.MAX_VALUE;
-        // LastUpdate: If there are no current items; the last update of the most recently
-        // archived item, else 0L if there are current items.
+        RecipeCoursePersistenceModel persistenceDomainModel = null;
         long lastUpdate = 0L;
-
-        for (RecipeCoursePersistenceModelItem item : persistenceModelItems) {
-            createDate = Math.min(createDate, item.getCreateDate());
-            lastUpdate = Math.max(lastUpdate, item.getLastUpdate());
+        for (RecipeCoursePersistenceModel m : getAllExistingActiveCoursePersistentDomainModels()) {
+            if (m.getDomainId().equals(domainId) && m.getLastUpdate() > lastUpdate) {
+                lastUpdate = m.getLastUpdate();
+                persistenceDomainModel = m;
+            }
         }
-
-        return new RecipeCoursePersistenceModel.Builder().getDefault().
-                setDomainId(domainId).
-                setPersistenceModelItems(persistenceModelItems).
-                setCreateDate(createDate).
-                setLastUpdate(lastUpdate).
-                build();
+        return persistenceDomainModel;
     }
 
-    public static RecipeCoursePersistenceModelItem getCopiedRecipeCourseZero() {
-        return new RecipeCoursePersistenceModelItem.Builder().
+    public static RecipeCoursePersistenceModel getCopiedRecipeCourseZero() {
+        return new RecipeCoursePersistenceModel.Builder().
                 setDataId("dataId-recipeCourse-copy-id0").
                 setDomainId(NEW_RECIPE_ID).
-                setCourse(getExistingActiveRecipeCourseZero().getCourse()).
-                setIsActive(true).
+                setCourses(Collections.singletonList(Course.COURSE_ZERO)).
                 setCreateDate(30L).
                 setLastUpdate(30L).
                 build();
     }
 
-    public static RecipeCoursePersistenceModelItem getCopiedRecipeCourseOne() {
-        return new RecipeCoursePersistenceModelItem.Builder().
+    public static RecipeCoursePersistenceModel getCopiedRecipeCourseOne() {
+        return new RecipeCoursePersistenceModel.Builder().
                 setDataId("dataId-recipeCourse-copy-id1").
                 setDomainId(NEW_RECIPE_ID).
-                setCourse(getExistingActiveRecipeCourseOne().getCourse()).
-                setIsActive(true).
+                setCourses(Collections.singletonList(Course.COURSE_ONE)).
                 setCreateDate(30L).
                 setLastUpdate(30L).
                 build();
     }
 
-    public static RecipeCoursePersistenceModelItem getCopiedRecipeCourseTwo() {
-        return new RecipeCoursePersistenceModelItem.Builder().
+    public static RecipeCoursePersistenceModel getCopiedRecipeCourseTwo() {
+        return new RecipeCoursePersistenceModel.Builder().
                 setDataId("dataId-recipeCourse-copy-id2").
                 setDomainId(NEW_RECIPE_ID).
-                setCourse(getExistingActiveRecipeCourseOne().getCourse()).
-                setIsActive(true).
+                setCourses(Collections.singletonList(Course.COURSE_TWO)).
                 setCreateDate(30L).
                 setLastUpdate(30L).
                 build();
     }
 
-    public static RecipeCoursePersistenceModelItem getCopiedRecipeCourseFour() {
-        return new RecipeCoursePersistenceModelItem.Builder().
+    public static RecipeCoursePersistenceModel getCopiedRecipeCourseFour() {
+        return new RecipeCoursePersistenceModel.Builder().
                 setDataId("dataId-recipeCourse-copy-id4").
                 setDomainId(NEW_RECIPE_ID).
-                setCourse(getExistingActiveRecipeCourseFour().getCourse()).
-                setIsActive(true).
+                setCourses(Collections.singletonList(Course.COURSE_FOUR)).
                 setCreateDate(30L).
                 setLastUpdate(30L).
                 build();
     }
 
-    public static RecipeCoursePersistenceModelItem getCopiedRecipeCourseSix() {
-        return new RecipeCoursePersistenceModelItem.Builder().
+    public static RecipeCoursePersistenceModel getCopiedRecipeCourseSix() {
+        return new RecipeCoursePersistenceModel.Builder().
                 setDataId("dataId-recipeCourse-copy-id6").
                 setDomainId(NEW_RECIPE_ID).
-                setCourse(RecipeCourse.Course.COURSE_SIX).
-                setIsActive(true).
+                setCourses(Collections.singletonList(Course.COURSE_SIX)).
                 setCreateDate(30L).
                 setLastUpdate(30L).
                 build();
     }
 
-    public static Set<RecipeCoursePersistenceModelItem> getAllRecipeCourseCopies() {
-        Set<RecipeCoursePersistenceModelItem> models = new HashSet<>();
+    public static List<RecipeCoursePersistenceModel> getAllRecipeCourseCopies() {
+        List<RecipeCoursePersistenceModel> models = new ArrayList<>();
         models.add(getCopiedRecipeCourseZero());
         models.add(getCopiedRecipeCourseOne());
         models.add(getCopiedRecipeCourseTwo());
@@ -294,21 +261,23 @@ public class TestDataRecipeCourse {
         return models;
     }
 
-    public static Set<RecipeCoursePersistenceModelItem> getAllByCourse(RecipeCourse.Course c) {
-        Set<RecipeCoursePersistenceModelItem> models = new HashSet<>();
-        for (RecipeCoursePersistenceModelItem m : getAll()) {
-            if (c == m.getCourse()) {
-                models.add(m);
+    public static List<RecipeCoursePersistenceModel> getAllByCourse(Course course) {
+        List<RecipeCoursePersistenceModel> models = new ArrayList<>();
+        for (RecipeCoursePersistenceModel persistenceModel : getAll()) {
+            for (Course c : persistenceModel.getCourses()) {
+                if (course.equals(c)) {
+                    models.add(persistenceModel);
+                }
             }
         }
         return models;
     }
 
-    public static Set<RecipeCoursePersistenceModelItem> getAll() {
-        Set<RecipeCoursePersistenceModelItem> models = new HashSet<>();
+    public static List<RecipeCoursePersistenceModel> getAll() {
+        List<RecipeCoursePersistenceModel> models = new ArrayList<>();
         models.add(getNewActiveRecipeCourseZero());
-        models.add(getNewActiveRecipeCourseOne());
-        models.add(getNewArchivedRecipeCourseZero());
+        models.add(getNewActiveRecipeCourseZeroAndOne());
+        models.add(getNewArchivedAfterCourseZeroDeactivated());
         models.add(getNewArchivedRecipeCourseOne());
         models.add(getExistingActiveRecipeCourseZero());
         models.add(getExistingActiveRecipeCourseOne());

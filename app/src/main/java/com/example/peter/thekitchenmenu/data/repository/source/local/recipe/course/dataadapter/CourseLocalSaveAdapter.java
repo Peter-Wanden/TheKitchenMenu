@@ -3,6 +3,7 @@ package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.cou
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.courseitem.RecipeCourseItemLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.parent.RecipeCourseParentLocalDataSource;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCoursePersistenceModel;
+import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
 import javax.annotation.Nonnull;
 
@@ -16,11 +17,12 @@ public class CourseLocalSaveAdapter {
     private final CourseModelConverter converter;
 
     public CourseLocalSaveAdapter(@Nonnull RecipeCourseParentLocalDataSource parentLocalDataSource,
-                                  @Nonnull RecipeCourseItemLocalDataSource itemLocalDataSource) {
+                                  @Nonnull RecipeCourseItemLocalDataSource itemLocalDataSource,
+                                  @Nonnull UniqueIdProvider idProvider) {
         this.parentLocalDataSource = parentLocalDataSource;
         this.itemLocalDataSource = itemLocalDataSource;
 
-        converter = new CourseModelConverter();
+        converter = new CourseModelConverter(idProvider);
     }
 
     public void save(RecipeCoursePersistenceModel model) {
@@ -34,8 +36,8 @@ public class CourseLocalSaveAdapter {
 
     public void saveCourseItems(RecipeCoursePersistenceModel domainModel) {
         itemLocalDataSource.save(
-                converter.convertDomainCourseItemsToEntities(
-                        domainModel.getPersistenceModelItems(),
+                converter.convertDomainCoursesToEntities(
+                        domainModel.getCourses(),
                         domainModel.getDataId())
         );
     }

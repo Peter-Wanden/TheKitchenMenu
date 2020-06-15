@@ -30,9 +30,6 @@ public interface RecipeCourseParentEntityDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(RecipeCourseParentEntity... entities);
 
-    @Update
-    void update(RecipeCourseParentEntity e);
-
     @Query("DELETE FROM " + TABLE_RECIPE_COURSE_PARENT + " WHERE " + DATA_ID + " = :dataId")
     void deleteByDataId(String dataId);
 

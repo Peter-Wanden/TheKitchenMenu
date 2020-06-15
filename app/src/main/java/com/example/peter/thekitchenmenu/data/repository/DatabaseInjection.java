@@ -10,7 +10,7 @@ import com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.dataadapter.CourseLocalDeleteAdapter;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.dataadapter.CourseLocalGetAdapter;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.dataadapter.CourseLocalSaveAdapter;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.dataadapter.CourseLocalUpdateAdapter;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.parent.RecipeCourseParentLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.RepositoryRecipeDurationLocal;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.dataadapter.DurationLocalDeleteAdapter;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.dataadapter.DurationLocalGetAdapter;
@@ -97,7 +97,7 @@ public class DatabaseInjection {
                 RepositoryRecipeMetadataRemote.getInstance(),
                 RepositoryRecipeMetadataLocal.getInstance(
                         provideRecipeMetadataLocalGetAdapter(c),
-                        provideSaveAdapter(c),
+                        provideRecipeMetadataLocalSaveAdapter(c),
                         provideRecipeMetadataLocalDeleteAdapter(c)
                 )
         );
@@ -112,7 +112,8 @@ public class DatabaseInjection {
         );
     }
 
-    private static RecipeMetadataLocalSaveAdapter provideSaveAdapter(@Nonnull Context c) {
+    private static RecipeMetadataLocalSaveAdapter provideRecipeMetadataLocalSaveAdapter(
+            @Nonnull Context c) {
         return new RecipeMetadataLocalSaveAdapter(
                 provideRecipeMetaDataParentLocalDataSource(c),
                 provideRecipeComponentStateLocalDataSource(c),
@@ -163,33 +164,49 @@ public class DatabaseInjection {
         );
     }
 
-    public static RepositoryRecipeCourse provideRecipeCourseItemDataSource(
+    public static RepositoryRecipeCourse provideRecipeCourseDataSource(
             @Nonnull Context c) {
         return RepositoryRecipeCourse.getInstance(
                 RepositoryRecipeCourseRemote.getInstance(),
                 RepositoryRecipeCourseLocal.getInstance(
                         provideCourseLocalGetAdapter(c),
-                        provideCourseLocalUpdateAdapter(c),
                         provideCourseLocalSaveAdapter(c),
                         provideCourseLocalDeleteAdapter(c)
                 )
         );
     }
 
-    private static CourseLocalGetAdapter provideCourseLocalGetAdapter(@Nonnull Context c) {
-        return new CourseLocalGetAdapter(parentLocalDataSource, provideRecipeCourseItemLocalDataSource(c));
+    private static CourseLocalGetAdapter provideCourseLocalGetAdapter(
+            @Nonnull Context c) {
+        return new CourseLocalGetAdapter(
+                provideRecipeCourseParentLocalDataSource(c),
+                provideRecipeCourseItemLocalDataSource(c));
     }
 
-    private static CourseLocalUpdateAdapter provideCourseLocalUpdateAdapter(@Nonnull Context c) {
-        return new CourseLocalUpdateAdapter(provideRecipeCourseItemLocalDataSource(c));
+    private static CourseLocalSaveAdapter provideCourseLocalSaveAdapter(
+            @Nonnull Context c) {
+        return new CourseLocalSaveAdapter(
+                provideRecipeCourseParentLocalDataSource(c),
+                provideRecipeCourseItemLocalDataSource(c),
+                new UniqueIdProvider());
     }
 
-    private static CourseLocalSaveAdapter provideCourseLocalSaveAdapter(@Nonnull Context c) {
-        return new CourseLocalSaveAdapter(provideRecipeCourseItemLocalDataSource(c), idProvider);
+    private static CourseLocalDeleteAdapter provideCourseLocalDeleteAdapter(
+            @Nonnull Context c) {
+        return new CourseLocalDeleteAdapter(
+                provideRecipeCourseParentLocalDataSource(c),
+                provideRecipeCourseItemLocalDataSource(c));
     }
 
-    private static CourseLocalDeleteAdapter provideCourseLocalDeleteAdapter(@Nonnull Context c) {
-        return new CourseLocalDeleteAdapter(parentLocalDataSource, provideRecipeCourseItemLocalDataSource(c));
+    private static RecipeCourseParentLocalDataSource provideRecipeCourseParentLocalDataSource(
+            @Nonnull Context c) {
+
+        TKMDatabase database = TKMDatabase.getInstance(c, new AppExecutors());
+
+        return RecipeCourseParentLocalDataSource.getInstance(
+                new AppExecutors(),
+                database.recipeCourseParentEntityDao()
+        );
     }
 
     private static RecipeCourseItemLocalDataSource provideRecipeCourseItemLocalDataSource(

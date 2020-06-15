@@ -4,38 +4,34 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
-import androidx.room.Update;
 
 import java.util.List;
 
-import static com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.courseitem.RecipeCourseItemEntity.*;
+import static com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.courseitem.RecipeCourseEntity.DATA_ID;
+import static com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.courseitem.RecipeCourseEntity.PARENT_DATA_ID;
+import static com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.courseitem.RecipeCourseEntity.RECIPE_COURSE_ID;
+import static com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.courseitem.RecipeCourseEntity.TABLE_RECIPE_COURSE_ITEM;
 
 @Dao
 public interface RecipeCourseItemDao {
 
     @Query("SELECT * FROM " + TABLE_RECIPE_COURSE_ITEM)
-    List<RecipeCourseItemEntity> getAll();
+    List<RecipeCourseEntity> getAll();
 
     @Query("SELECT * FROM " + TABLE_RECIPE_COURSE_ITEM + " WHERE " + DATA_ID + " = :dataId")
-    RecipeCourseItemEntity getByDataId(String dataId);
+    RecipeCourseEntity getByDataId(String dataId);
 
     @Query("SELECT * FROM " + TABLE_RECIPE_COURSE_ITEM + " WHERE " + PARENT_DATA_ID + " = :parentDataId")
-    List<RecipeCourseItemEntity> getAllByParentDataId(String parentDataId);
+    List<RecipeCourseEntity> getAllByParentDataId(String parentDataId);
 
     @Query("SELECT * FROM " + TABLE_RECIPE_COURSE_ITEM + " WHERE " + RECIPE_COURSE_ID + " = :courseNo")
-    List<RecipeCourseItemEntity> getAllByCourseNo(int courseNo);
-
-    @Query("SELECT * FROM " + TABLE_RECIPE_COURSE_ITEM + " WHERE " + DOMAIN_ID + " = :domainId")
-    List<RecipeCourseItemEntity> getAllByDomainId(String domainId);
+    List<RecipeCourseEntity> getAllByCourseNo(int courseNo);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(RecipeCourseItemEntity recipeCourseItemEntity);
+    void insert(RecipeCourseEntity recipeCourseEntity);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(RecipeCourseItemEntity... recipeCourseItemEntity);
-
-    @Update
-    void update(RecipeCourseItemEntity recipeCourseItemEntity);
+    void insert(RecipeCourseEntity... recipeCourseEntity);
 
     @Query("DELETE FROM " + TABLE_RECIPE_COURSE_ITEM + " WHERE " + DATA_ID + " = :dataId")
     void deleteByDataId(String dataId);

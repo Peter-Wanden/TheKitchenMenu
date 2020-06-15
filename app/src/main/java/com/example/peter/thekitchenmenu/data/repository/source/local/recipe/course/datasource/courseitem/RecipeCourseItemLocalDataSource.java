@@ -37,9 +37,9 @@ public class RecipeCourseItemLocalDataSource
     }
 
     @Override
-    public void getAll(@Nonnull GetAllPrimitiveCallback<RecipeCourseItemEntity> callback) {
+    public void getAll(@Nonnull GetAllPrimitiveCallback<RecipeCourseEntity> callback) {
         Runnable r = () -> {
-            final List<RecipeCourseItemEntity> entities = dao.getAll();
+            final List<RecipeCourseEntity> entities = dao.getAll();
             executors.mainThread().execute(() -> {
                 if (entities.isEmpty())
                     callback.onDataUnavailable();
@@ -53,9 +53,9 @@ public class RecipeCourseItemLocalDataSource
     @Override
     public void getAllByCourseNo(
             int courseNo,
-            @Nonnull GetAllPrimitiveCallback<RecipeCourseItemEntity> callback) {
+            @Nonnull GetAllPrimitiveCallback<RecipeCourseEntity> callback) {
         Runnable r = () -> {
-            final List<RecipeCourseItemEntity> entities = dao.getAllByCourseNo(courseNo);
+            final List<RecipeCourseEntity> entities = dao.getAllByCourseNo(courseNo);
             executors.mainThread().execute(() -> {
                 if (entities.isEmpty()) {
                     callback.onDataUnavailable();
@@ -70,9 +70,9 @@ public class RecipeCourseItemLocalDataSource
     @Override
     public void getAllByParentDataId(
             @Nonnull String parentDataId,
-            @Nonnull GetAllPrimitiveCallback<RecipeCourseItemEntity> callback) {
+            @Nonnull GetAllPrimitiveCallback<RecipeCourseEntity> callback) {
         Runnable r = () -> {
-            final List<RecipeCourseItemEntity> e = dao.getAllByParentDataId(parentDataId);
+            final List<RecipeCourseEntity> e = dao.getAllByParentDataId(parentDataId);
             executors.mainThread().execute(() -> {
                 if (e.isEmpty())
                     callback.onDataUnavailable();
@@ -86,9 +86,9 @@ public class RecipeCourseItemLocalDataSource
     @Override
     public void getByDataId(
             @Nonnull String dataId,
-            @Nonnull GetPrimitiveCallback<RecipeCourseItemEntity> callback) {
+            @Nonnull GetPrimitiveCallback<RecipeCourseEntity> callback) {
         Runnable r = () -> {
-            final RecipeCourseItemEntity e = dao.getByDataId(dataId);
+            final RecipeCourseEntity e = dao.getByDataId(dataId);
             executors.mainThread().execute(() -> {
                 if (e != null)
                     callback.onEntityLoaded(e);
@@ -100,20 +100,14 @@ public class RecipeCourseItemLocalDataSource
     }
 
     @Override
-    public void save(@Nonnull RecipeCourseItemEntity entity) {
+    public void save(@Nonnull RecipeCourseEntity entity) {
         Runnable r = () -> dao.insert(entity);
         executors.diskIO().execute(r);
     }
 
     @Override
-    public void save(@Nonnull RecipeCourseItemEntity... entities) {
+    public void save(@Nonnull RecipeCourseEntity... entities) {
         Runnable r = () -> dao.insert(entities);
-        executors.diskIO().execute(r);
-    }
-
-    @Override
-    public void update(@Nonnull RecipeCourseItemEntity e) {
-        Runnable r = () -> dao.update(e);
         executors.diskIO().execute(r);
     }
 

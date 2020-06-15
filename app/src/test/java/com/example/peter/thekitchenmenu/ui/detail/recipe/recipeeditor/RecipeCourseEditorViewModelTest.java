@@ -10,7 +10,7 @@ import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeM
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.data.repository.recipe.course.TestDataRecipeCourse;
 import com.example.peter.thekitchenmenu.data.repository.recipe.metadata.TestDataRecipeMetadata;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.courseitem.RecipeCourseItemEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.courseitem.RecipeCourseEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.TestDataRecipeCourseEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.datasource.RecipeDurationEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.datasource.TestDataRecipeDurationEntity;
@@ -23,7 +23,6 @@ import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.Common
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCoursePersistenceModelItem;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourseResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDuration;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDurationPersistenceModel;
@@ -98,7 +97,7 @@ public class RecipeCourseEditorViewModelTest {
             TestDataRecipeDurationEntity.getValidExistingComplete();
     private static final RecipePortionsEntity PORTIONS_VALID_EXISTING_NINE =
             TestDataRecipePortionsEntity.getExistingValidNinePortions();
-    private static final List<RecipeCourseItemEntity> COURSES_VALID_EXISTING_ALL =
+    private static final List<RecipeCourseEntity> COURSES_VALID_EXISTING_ALL =
             TestDataRecipeCourseEntity.getAllExistingActiveRecipeCourses();
 
     // endregion constants -------------------------------------------------------------------------
@@ -813,7 +812,7 @@ public class RecipeCourseEditorViewModelTest {
     private void verifyRepoCourseCalledAndReturnEvenCoursesForId(String recipeId) {
 //        verify(repoCourseMock).getByDomainId(eq(recipeId), repoCourseCallback.capture());
         repoCourseCallback.getValue().onAllDomainModelsLoaded(new ArrayList<>(TestDataRecipeCourse.
-                getAllExistingActiveEvenRecipeCourses()));
+                getAllExistingActiveEvenPersistenceDomainModels()));
     }
 
     private void verifyRepoCourseCalledAndReturnDataUnavailableForId(String recipeId) {

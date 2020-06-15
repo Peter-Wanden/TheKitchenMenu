@@ -12,11 +12,8 @@ import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.annotation.Nonnull;
 
@@ -61,20 +58,11 @@ public class RecipeCourse
         }
     }
 
-    protected static final class DomainModel implements UseCaseDomainModel {
-        private final Set<Course> courses;
-
-        public DomainModel(Set<Course> courses) {
-            this.courses = courses;
-        }
-
-        @Nonnull
-        @Override
-        public String toString() {
-            return "DomainModel{" +
-                    "courses=" + courses +
-                    '}';
-        }
+    protected static final class DomainModel
+            extends
+            ArrayList<Course>
+            implements
+            UseCaseDomainModel {
     }
 
     @Nonnull
@@ -84,9 +72,7 @@ public class RecipeCourse
     @Nonnull
     private TimeProvider timeProvider;
 
-    private List<RecipeCoursePersistenceModelItem> persistenceModelItems;
     private long createDate;
-    private long lastUpdate;
 
     public RecipeCourse(@Nonnull RepositoryRecipeCourse repository,
                         @Nonnull UniqueIdProvider idProvider,
@@ -94,13 +80,16 @@ public class RecipeCourse
         this.repository = repository;
         this.idProvider = idProvider;
         this.timeProvider = timeProvider;
+
+        activeDomainModel = new DomainModel();
+        updatedDomainModel = new DomainModel();
     }
 
     @Override
     protected void loadDomainModelByDataId() {
         System.out.println(TAG + "loadDomainModelByDataId called, this shouldn't be called");
-        // only uses domain id's, this shouldn't be called
-        reprocessCurrentDomainModel();
+        // Currently only uses domain id's, this shouldn't be called
+        repository.getByDataId(useCaseDataId, this);
     }
 
     @Override
@@ -113,9 +102,6 @@ public class RecipeCourse
     public void onDomainModelUnavailable() {
         System.out.println(TAG + "onDomainModelsUnavailable");
         isDomainDataUnavailable = true;
-
-        persistenceModelItems = new ArrayList<>();
-        activeDomainModel = new DomainModel(new HashSet<>());
         updatedDomainModel = activeDomainModel;
 
         reprocessCurrentDomainModel();
@@ -125,35 +111,21 @@ public class RecipeCourse
     public void onDomainModelLoaded(RecipeCoursePersistenceModel persistenceModel) {
         System.out.println(TAG + "onAllDomainModelsLoaded=" + persistenceModel);
         isDomainDataUnavailable = false;
+        createDate = persistenceModel.getCreateDate();
 
-        this.persistenceModelItems = persistenceModel.getPersistenceModelItems();
-
-        getDomainModelFromPersistenceModel();
-        getDatesFromPersistenceModels();
+        createUpdatedDomainModelFromPersistenceModel(persistenceModel);
 
         activeDomainModel = updatedDomainModel;
+
         processUpdatedDomainModel();
     }
 
-    private void getDomainModelFromPersistenceModel() {
-        Set<Course> domainItemModels = new HashSet<>();
-        persistenceModelItems.forEach(model -> domainItemModels.add(model.getCourse()));
-        updatedDomainModel = new DomainModel(domainItemModels);
+    private void createUpdatedDomainModelFromPersistenceModel(
+            RecipeCoursePersistenceModel persistenceModel) {
+        updatedDomainModel.addAll(persistenceModel.getCourses());
 
         System.out.println(TAG + "getDomainModelFromPersistenceModel: updatedDomainModel=" +
                 updatedDomainModel);
-    }
-
-    private void getDatesFromPersistenceModels() {
-        createDate = persistenceModelItems.isEmpty() ? 0L : Long.MAX_VALUE;
-        lastUpdate = 0L;
-
-        persistenceModelItems.forEach(model -> {
-            createDate = Math.min(createDate, model.getCreateDate());
-            lastUpdate = Math.max(lastUpdate, model.getLastUpdate());
-        });
-        System.out.println(TAG + "getDatesFromPersistenceModels: createDate=" + createDate +
-                " lastUpdate=" + lastUpdate);
     }
 
     @Override
@@ -164,10 +136,8 @@ public class RecipeCourse
     }
 
     private void getDomainModelFromRequestModel() {
-        Set<Course> domainModelItems = ((RecipeCourseRequest) getRequest()).
-                getDomainModel().
-                getCourseList();
-        updatedDomainModel = new DomainModel(domainModelItems);
+        RecipeCourseRequest request = (RecipeCourseRequest) getRequest();
+        updatedDomainModel.addAll(request.getDomainModel().getCourseList());
 
         System.out.println(TAG + "getDomainModelFromRequestModel: updatedDomainModel=" +
                 updatedDomainModel);
@@ -181,10 +151,12 @@ public class RecipeCourse
 
     private void processUpdatedDomainModel() {
         isChanged = !activeDomainModel.equals(updatedDomainModel);
-        System.out.println(TAG + "processNewDomainModel: isChanged=" + isChanged);
+
         if (!isChanged) {
             updatedDomainModel = activeDomainModel;
         }
+
+        System.out.println(TAG + "processNewDomainModel: isChanged=" + isChanged);
         validateNewDomainModelElements();
     }
 
@@ -193,6 +165,9 @@ public class RecipeCourse
         setupDomainModelProcessing();
         processCourseAdditions();
         processCourseSubtractions();
+        if (isChanged) {
+            save();
+        }
         buildResponse();
     }
 
@@ -204,116 +179,61 @@ public class RecipeCourse
 
     private void processCourseAdditions() {
         System.out.println(TAG + "processCourseAdditions");
-        for (Course c : updatedDomainModel.courses) {
-            if (isCourseAdded(c)) {
-                addCourseActiveDomainModelList(c);
+        for (Course course : updatedDomainModel) {
+            if (isCourseAdded(course)) {
+                activeDomainModel.add(course);
+                isChanged = true;
+                addCommonFailReasonNone();
             }
+        }
+    }
+
+    private void addCommonFailReasonNone(){
+        if (!failReasons.contains(CommonFailReason.NONE)) {
+            failReasons.add(CommonFailReason.NONE);
         }
     }
 
     private boolean isCourseAdded(Course course) {
-        System.out.println(TAG + "isCourseAdded=" + !activeDomainModel.courses.contains(course));
-        return !activeDomainModel.courses.contains(course);
-    }
-
-    private void addCourseActiveDomainModelList(Course course) {
-        System.out.println(TAG + "addCourseToCurrentList: adding course=" + course);
-        isChanged = true;
-
-        Set<Course> courses = new HashSet<>(activeDomainModel.courses);
-        courses.add(course);
-        activeDomainModel = new DomainModel(courses);
-
-        failReasons.add(CommonFailReason.NONE);
-
-        addCourseToPersistenceModel(course);
-    }
-
-    private void addCourseToPersistenceModel(Course course) {
-        isDomainDataUnavailable = false; // domain persistence models now exist
-        RecipeCoursePersistenceModelItem model = createNewPersistenceModelItem(course);
-        persistenceModelItems.add(model);
-        System.out.println(TAG + "addCourseToPersistenceModel: persistence model=" + model);
-        save();
-    }
-
-    private RecipeCoursePersistenceModelItem createNewPersistenceModelItem(Course course) {
-        System.out.println(TAG + "createNewPersistenceModel for: " + course);
-        long currentTime = timeProvider.getCurrentTimeInMills();
-        lastUpdate = currentTime;
-        if (createDate == 0L) { // Create date has never been set
-            createDate = currentTime;
-        }
-        return new RecipeCoursePersistenceModelItem.Builder().
-                setDataId(idProvider.getUId()).
-                setDomainId(useCaseDomainId).
-                setCourse(course).
-                setIsActive(true).
-                setCreateDate(currentTime).
-                setLastUpdate(currentTime).
-                build();
+        System.out.println(TAG + "isCourseAdded=" + !activeDomainModel.contains(course));
+        return !activeDomainModel.contains(course);
     }
 
     private void processCourseSubtractions() {
-        Iterator<Course> i = activeDomainModel.courses.iterator();
+        Iterator<Course> i = activeDomainModel.iterator();
         while (i.hasNext()) {
             Course course = i.next();
 
             if (isCourseRemoved(course)) {
-                isChanged = true;
-                archiveExistingPersistenceModel(course);
                 i.remove();
+                isChanged = true;
             }
         }
-        if (activeDomainModel.courses.size() < MINIMUM_COURSE_LIST_SIZE) {
+        if (activeDomainModel.size() < MINIMUM_COURSE_LIST_SIZE) {
+            addCommonFailReasonDataUnavailable();
+        }
+        System.out.println(TAG + "processCourseSubtractions: courses=" + activeDomainModel);
+    }
+
+    private void addCommonFailReasonDataUnavailable() {
+        if (!failReasons.contains(CommonFailReason.DATA_UNAVAILABLE)) {
             failReasons.add(CommonFailReason.DATA_UNAVAILABLE);
         }
-        System.out.println(TAG + "processCourseSubtractions: courses=" + activeDomainModel.courses);
     }
 
     private boolean isCourseRemoved(Course course) {
         System.out.println(TAG + "isCourseRemoved: " + course + " " +
-                !updatedDomainModel.courses.contains(course));
-        return !updatedDomainModel.courses.contains(course);
-    }
-
-    private void archiveExistingPersistenceModel(Course course) {
-        System.out.println(TAG + "archiveExistingPersistenceModel");
-        RecipeCoursePersistenceModelItem modelToArchive = null;
-        for (RecipeCoursePersistenceModelItem model : persistenceModelItems) {
-            if (course.equals(model.getCourse())) {
-                modelToArchive = model;
-            }
-        }
-        if (modelToArchive != null) {
-            archivePersistenceModelItem(modelToArchive);
-        }
-    }
-
-    private void archivePersistenceModelItem(RecipeCoursePersistenceModelItem model) {
-        System.out.println(TAG + "archivePersistenceModel: " + model);
-        lastUpdate = timeProvider.getCurrentTimeInMills();
-        persistenceModelItems.remove(model);
-
-        RecipeCoursePersistenceModelItem archivedPersistenceModelItem =
-                new RecipeCoursePersistenceModelItem.Builder().
-                        basedOnModel(model).
-                        setIsActive(false).
-                        setLastUpdate(lastUpdate).
-                        build();
-
-        persistenceModelItems.add(archivedPersistenceModelItem);
-
-        save();
+                !updatedDomainModel.contains(course));
+        return !updatedDomainModel.contains(course);
     }
 
     private void save() {
         persistenceModel = new RecipeCoursePersistenceModel.Builder().
-                getDefault().
-                baseOnModel(persistenceModel).
-                setPersistenceModelItems(persistenceModelItems).
+                setDataId(idProvider.getUId()).
+                setDomainId(useCaseDomainId).
+                setCourses(activeDomainModel).
                 setCreateDate(createDate).
-                setLastUpdate(lastUpdate).
+                setLastUpdate(timeProvider.getCurrentTimeInMills()).
                 build();
 
         System.out.println(TAG + "save: saving persistence model=" + persistenceModel);
@@ -322,7 +242,7 @@ public class RecipeCourse
 
     protected void buildResponse() {
         RecipeCourseResponse response = new RecipeCourseResponse.Builder().
-                setDataId("").
+                setDataId(persistenceModel.getDataId()).
                 setDomainId(useCaseDomainId).
                 setMetadata(getMetadata()).
                 setDomainModel(getResponseModel()).
@@ -336,7 +256,7 @@ public class RecipeCourse
     private RecipeCourseResponse.Model getResponseModel() {
         System.out.println(TAG + "getResponseModel");
         return new RecipeCourseResponse.Model.Builder().
-                setCourseList(new ArrayList<>(activeDomainModel.courses)).
+                setCourseList(new ArrayList<>(activeDomainModel)).
                 build();
     }
 }

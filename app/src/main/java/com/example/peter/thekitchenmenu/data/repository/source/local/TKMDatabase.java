@@ -8,7 +8,7 @@ import com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.
 import com.example.peter.thekitchenmenu.data.primitivemodel.product.ProductEntity;
 import com.example.peter.thekitchenmenu.data.primitivemodel.product.ProductFastTextSearch;
 import com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.datasource.IngredientDao;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.courseitem.RecipeCourseItemEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.courseitem.RecipeCourseEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.parent.RecipeCourseParentEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.parent.RecipeCourseParentEntityDao;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.datasource.RecipeDurationDao;
@@ -48,7 +48,7 @@ import static com.example.peter.thekitchenmenu.data.primitivemodel.product.Produ
         FavoriteProductEntity.class,
         RecipeMetadataParentEntity.class,
         RecipeCourseParentEntity.class,
-        RecipeCourseItemEntity.class,
+        RecipeCourseEntity.class,
         RecipeIdentityEntity.class,
         RecipeDurationEntity.class,
         IngredientEntity.class,

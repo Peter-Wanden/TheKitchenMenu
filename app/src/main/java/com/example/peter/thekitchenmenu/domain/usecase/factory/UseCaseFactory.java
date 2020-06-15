@@ -91,7 +91,7 @@ public class UseCaseFactory {
                             DatabaseInjection.provideRecipeDurationDataSource(
                                     application.getApplicationContext()
                             ),
-                            DatabaseInjection.provideRecipeCourseItemDataSource(
+                            DatabaseInjection.provideRecipeCourseDataSource(
                                     application.getApplicationContext()
                             )
                     );

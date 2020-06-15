@@ -1,10 +1,9 @@
 package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course;
 
-import com.example.peter.thekitchenmenu.data.repository.recipe.DomainDataAccessRecipeCourse;
+import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.dataadapter.CourseLocalDeleteAdapter;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.dataadapter.CourseLocalGetAdapter;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.dataadapter.CourseLocalSaveAdapter;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.dataadapter.CourseLocalUpdateAdapter;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCoursePersistenceModel;
 
 import java.util.List;
@@ -12,14 +11,13 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 public class RepositoryRecipeCourseLocal
-        implements DomainDataAccessRecipeCourse {
+        implements
+        DomainDataAccess<RecipeCoursePersistenceModel> {
 
     private static volatile RepositoryRecipeCourseLocal INSTANCE;
 
     @Nonnull
     private final CourseLocalGetAdapter getAdapter;
-    @Nonnull
-    private final CourseLocalUpdateAdapter updateAdapter;
     @Nonnull
     private final CourseLocalSaveAdapter saveAdapter;
     @Nonnull
@@ -27,19 +25,16 @@ public class RepositoryRecipeCourseLocal
 
     private RepositoryRecipeCourseLocal(
             @Nonnull CourseLocalGetAdapter getAdapter,
-            @Nonnull CourseLocalUpdateAdapter updateAdapter,
             @Nonnull CourseLocalSaveAdapter saveAdapter,
             @Nonnull CourseLocalDeleteAdapter deleteAdapter) {
 
         this.getAdapter = getAdapter;
-        this.updateAdapter = updateAdapter;
         this.saveAdapter = saveAdapter;
         this.deleteAdapter = deleteAdapter;
     }
 
     public static RepositoryRecipeCourseLocal getInstance(
             @Nonnull CourseLocalGetAdapter getAdapter,
-            @Nonnull CourseLocalUpdateAdapter updateAdapter,
             @Nonnull CourseLocalSaveAdapter saveAdapter,
             @Nonnull CourseLocalDeleteAdapter deleteAdapter) {
 
@@ -48,7 +43,6 @@ public class RepositoryRecipeCourseLocal
                 if (INSTANCE == null) {
                     INSTANCE = new RepositoryRecipeCourseLocal(
                             getAdapter,
-                            updateAdapter,
                             saveAdapter,
                             deleteAdapter
                     );
@@ -113,11 +107,6 @@ public class RepositoryRecipeCourseLocal
                     }
                 }
         );
-    }
-
-    @Override
-    public void update(@Nonnull RecipeCoursePersistenceModel model) {
-        updateAdapter.update(model);
     }
 
     @Override
