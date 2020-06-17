@@ -101,7 +101,7 @@ public final class RecipeCourseRequest
             }
 
             public Builder getDefault() {
-                domainModel.courseList = Collections.singletonList(Course.COURSE_ZERO);
+                domainModel.courseList = new ArrayList<>();
                 return self();
             }
 

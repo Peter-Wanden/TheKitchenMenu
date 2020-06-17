@@ -843,8 +843,8 @@ public class RecipeCopyTest {
                 getValidCompleteFromAnotherUser());
 
 //        verify(repoCourseMock).getAllByDomainId(eq(recipeId), repoCourseCallback.capture());
-        repoCourseCallback.getValue().onAllLoaded(TestDataRecipeCourseEntity.
-                getAllExistingActiveByDomainId(recipeId));
+//        repoCourseCallback.getValue().onAllLoaded(TestDataRecipeCourseEntity.
+//                getAllExistingActiveByDomainId(recipeId));
 
 //        verify(repoPortionsMock).getAllByDomainId(eq(recipeId), repoPortionsCallback.capture());
         repoPortionsCallback.getValue().onEntityLoaded(TestDataRecipePortionsEntity.

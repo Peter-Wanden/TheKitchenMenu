@@ -18,77 +18,97 @@ public class TestDataRecipeCourse {
     public static final String EXISTING_RECIPE_ID =
             TestDataRecipeMetadata.getValidUnchanged().getDomainId();
 
-    // first course added, this is the default course which creates this default persistence model
-    public static RecipeCoursePersistenceModel getNewActiveRecipeCourseZero() {
+    // region Persistence models for testing adding and removing courses
+    // Course 'DEFAULT_NO_COURSES' is added as the default state when no courses have been added
+    public static RecipeCoursePersistenceModel getNewActiveDefaultNoCourses() {
         return new RecipeCoursePersistenceModel.Builder().
-                setDataId("dataId-recipeCourse-new-id0").
+                setDataId("dataId-recipeCourse-new-id0"). // new data id added
                 setDomainId(NEW_RECIPE_ID).
-                setCourses(Collections.singletonList(Course.COURSE_ZERO)).
-                setCreateDate(10L).
-                setLastUpdate(10L).
+                setCourses(Collections.singletonList(Course.DEFAULT_NO_COURSES)).
+                setCreateDate(10L). // updated to current time
+                setLastUpdate(10L). // updated to current time
+                build();
+    }
+    // When state changed (course added or removed), the old persistence model is archived
+    public static RecipeCoursePersistenceModel getNewArchivedDefaultNoCourses() {
+        return new RecipeCoursePersistenceModel.Builder().
+                basedOnModel(getNewActiveDefaultNoCourses()).
+                setLastUpdate(20L). // updated to current time
                 build();
     }
 
-    // Second course added, old persistence model is archived
-    public static RecipeCoursePersistenceModel getNewArchivedAfterSecondCourseAdded() {
+    // A course has been added, a new active persistence model is saved
+    public static RecipeCoursePersistenceModel getNewActiveRecipeCourseOne() {
         return new RecipeCoursePersistenceModel.Builder().
-                setDataId("dataId-recipeCourse-new-id0").
-                setDomainId(NEW_RECIPE_ID).
-                setCourses(Collections.singletonList(Course.COURSE_ZERO)).
-                setCreateDate(10L).
-                setLastUpdate(20L). // should be updated
+                basedOnModel(getNewActiveDefaultNoCourses()). // only have to add changed data
+                setDataId("dataId-recipeCourse-new-id1"). // new data id added
+                setCourses(Collections.singletonList(Course.COURSE_ONE)). // new course added
+                setCreateDate(20L). // current time added
+                setLastUpdate(20L). // current time added
                 build();
     }
-
-    // Second course added, new active persistence model saved
-    public static RecipeCoursePersistenceModel getNewActiveRecipeCourseZeroAndOne() {
-        return new RecipeCoursePersistenceModel.Builder().
-                setDataId("dataId-recipeCourse-new-id1").
-                setDomainId(NEW_RECIPE_ID).
-                setCourses(Arrays.asList(Course.COURSE_ZERO, Course.COURSE_ONE)). // new course added
-                setCreateDate(10L).
-                setLastUpdate(30L). // should be updated
-                build();
-    }
-
-    // First course deactivated, old persistence model is archived
-    public static RecipeCoursePersistenceModel getNewArchivedAfterCourseZeroDeactivated() {
-        return new RecipeCoursePersistenceModel.Builder().
-                setDataId("dataId-recipeCourse-new-id0").
-                setDomainId(NEW_RECIPE_ID).
-                setCourses(Arrays.asList(Course.COURSE_ZERO, Course.COURSE_ONE)).
-                setCreateDate(10L).
-                setLastUpdate(40L). // should be updated to current time
-                build();
-    }
-
-    // First course deactivated, new active persistence model saved
-    public static RecipeCoursePersistenceModel getNewActiveModelAfterCourseZeroDeactivated() {
-        return new RecipeCoursePersistenceModel.Builder().
-                setDataId("dataId-recipeCourse-new-id0").
-                setDomainId(NEW_RECIPE_ID).
-                setCourses(Collections.singletonList(Course.COURSE_ONE)).
-                setCreateDate(40L). // should be updated to current time
-                setLastUpdate(40L). // should be same as create date
-                build();
-    }
-
-    // Second course deactivated
+    // When state changed, old persistence model is archived
     public static RecipeCoursePersistenceModel getNewArchivedRecipeCourseOne() {
         return new RecipeCoursePersistenceModel.Builder().
-                setDataId("dataId-recipeCourse-new-id1").
-                setDomainId(NEW_RECIPE_ID).
-                setCourses(new ArrayList<>()).
-                setCreateDate(10L).
-                setLastUpdate(100L).
+                basedOnModel(getNewActiveRecipeCourseOne()).
+                setLastUpdate(30L). // current time added
                 build();
     }
+
+    // A second course is added, a new persistence model is saved
+    public static RecipeCoursePersistenceModel getNewActiveCourseOneAndTwo() {
+        return new RecipeCoursePersistenceModel.Builder().
+                basedOnModel(getNewActiveRecipeCourseOne()).
+                setDataId("dataId-recipeCourse-new-id2"). // new data id added
+                setCourses(Arrays.asList(Course.COURSE_ONE, Course.COURSE_TWO)). // 2nd course added
+                setCreateDate(30L). // current time added
+                setLastUpdate(30L). // current time added
+                build();
+    }
+    // When state changed, old persistence model is archived
+    public static RecipeCoursePersistenceModel getNewArchivedCourseOneAndTwo() {
+        return new RecipeCoursePersistenceModel.Builder().
+                basedOnModel(getNewActiveCourseOneAndTwo()).
+                setLastUpdate(40L). // current time added
+                build();
+    }
+
+    // The first course is now removed, new active persistence model saved
+    public static RecipeCoursePersistenceModel getNewActiveAfterCourseOneRemoved() {
+        return new RecipeCoursePersistenceModel.Builder().
+                basedOnModel(getNewActiveCourseOneAndTwo()).
+                setDataId("dataId-recipeCourse-new-id3"). // new data id added
+                setCourses(Collections.singletonList(Course.COURSE_TWO)).
+                setCreateDate(40L). // current time added
+                setLastUpdate(40L). // current time added
+                build();
+    }
+    // When state changed, old persistence model is archived
+    public static RecipeCoursePersistenceModel getNewArchivedAfterCourseOneRemoved() {
+        return new RecipeCoursePersistenceModel.Builder().
+                basedOnModel(getNewActiveAfterCourseOneRemoved()).
+                setLastUpdate(50L). // current time added
+                build();
+    }
+
+    // The second course is now removed, new active persistence model saved. As all courses have
+    // been removed, state reverts to default
+    public static RecipeCoursePersistenceModel getNewActiveCourseDefaultAfterAllCoursesRemoved() {
+        return new RecipeCoursePersistenceModel.Builder().
+                basedOnModel(getNewActiveDefaultNoCourses()).
+                setDataId("dataId-recipeCourse-new-id4"). // new data id for new state
+                setCourses(Collections.singletonList(Course.DEFAULT_NO_COURSES)). // default added
+                setCreateDate(50L). // current time added
+                setLastUpdate(50L). // current time added
+                build();
+    }
+    // endregion Persistence models for testing adding and removing courses
 
     public static RecipeCoursePersistenceModel getExistingActiveRecipeCourseZero() {
         return new RecipeCoursePersistenceModel.Builder().
                 setDataId("dataId-recipeCourse-existing-id0").
                 setDomainId(EXISTING_RECIPE_ID).
-                setCourses(Collections.singletonList(Course.COURSE_ZERO)).
+                setCourses(Collections.singletonList(Course.DEFAULT_NO_COURSES)).
                 setCreateDate(20L).
                 setLastUpdate(20L).
                 build();
@@ -205,7 +225,7 @@ public class TestDataRecipeCourse {
         return new RecipeCoursePersistenceModel.Builder().
                 setDataId("dataId-recipeCourse-copy-id0").
                 setDomainId(NEW_RECIPE_ID).
-                setCourses(Collections.singletonList(Course.COURSE_ZERO)).
+                setCourses(Collections.singletonList(Course.DEFAULT_NO_COURSES)).
                 setCreateDate(30L).
                 setLastUpdate(30L).
                 build();
@@ -275,9 +295,9 @@ public class TestDataRecipeCourse {
 
     public static List<RecipeCoursePersistenceModel> getAll() {
         List<RecipeCoursePersistenceModel> models = new ArrayList<>();
-        models.add(getNewActiveRecipeCourseZero());
-        models.add(getNewActiveRecipeCourseZeroAndOne());
-        models.add(getNewArchivedAfterCourseZeroDeactivated());
+        models.add(getNewActiveDefaultNoCourses());
+        models.add(getNewActiveRecipeCourseOne());
+        models.add(getNewActiveCourseOneAndTwo());
         models.add(getNewArchivedRecipeCourseOne());
         models.add(getExistingActiveRecipeCourseZero());
         models.add(getExistingActiveRecipeCourseOne());

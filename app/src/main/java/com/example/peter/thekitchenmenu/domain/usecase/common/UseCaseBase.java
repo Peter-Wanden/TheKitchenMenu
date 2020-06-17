@@ -2,15 +2,15 @@ package com.example.peter.thekitchenmenu.domain.usecase.common;
 
 public abstract class UseCaseBase {
 
-    // Base for request response messages
+    // Tagging interface for request response messages
     public interface Message {
     }
 
-    // Data passed to a request
+    // Tagging interface for passing data to a request
     public interface Request extends Message {
     }
 
-    // Data received after a request has been processed
+    // Tagging interface for sending data in a response after a request has been processed
     public interface Response extends Message {
     }
 

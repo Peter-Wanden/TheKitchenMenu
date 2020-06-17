@@ -31,7 +31,10 @@ import javax.annotation.Nonnull;
  */
 public class RecipeMetadata
         extends
-        UseCaseElement<RecipeMetadataPersistenceModel, RecipeMetadata.DomainModel>
+        UseCaseElement<
+                RecipeMetadataPersistenceModel,
+                RecipeMetadata.DomainModel,
+                RepositoryRecipeMetadata>
         implements
         DomainDataAccess.GetDomainModelCallback<RecipeMetadataPersistenceModel> {
 
@@ -161,20 +164,10 @@ public class RecipeMetadata
     }
 
     @Override
-    protected void loadDomainModelByDataId() {
-        repository.getByDataId(useCaseDataId, this);
-    }
-
-    @Override
-    protected void loadDomainModelByDomainId() {
-        repository.getActiveByDomainId(useCaseDomainId, this);
-    }
-
-    @Override
     public void onDomainModelUnavailable() {
         persistenceModel = createNewPersistenceModel();
         failReasons.add(CommonFailReason.DATA_UNAVAILABLE);
-        reprocessCurrentDomainModel();
+        reprocessDomainModel();
     }
 
     private RecipeMetadataPersistenceModel createNewPersistenceModel() {
@@ -200,11 +193,11 @@ public class RecipeMetadata
         failReasons.addAll(persistenceModel.getFailReasons());
         useCaseDataId = persistenceModel.getDataId();
 
-        reprocessCurrentDomainModel();
+        reprocessDomainModel();
     }
 
     @Override
-    protected void reprocessCurrentDomainModel() {
+    protected void reprocessDomainModel() {
 //        setupUseCase();
         setState();
         buildResponse();
@@ -212,6 +205,27 @@ public class RecipeMetadata
 
     @Override
     protected void processRequestDomainModel() {
+
+    }
+
+    @Override
+    protected void createUpdatedDomainModelFromRequestModel() {
+
+    }
+
+    @Override
+    protected void createUpdatedDomainModelFromPersistenceModel(
+            @Nonnull RecipeMetadataPersistenceModel persistenceModel) {
+
+    }
+
+    @Override
+    protected void initialiseUseCaseForNewDomainModelProcessing() {
+
+    }
+
+    @Override
+    protected void validateUpdatedDomainModelElements() {
 
     }
 
@@ -368,7 +382,8 @@ public class RecipeMetadata
         }
     }
 
-    private void save() {
+    @Override
+    protected void save() {
         repository.save(persistenceModel);
     }
 }

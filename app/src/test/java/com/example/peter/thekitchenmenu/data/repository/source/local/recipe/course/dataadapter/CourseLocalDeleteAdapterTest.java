@@ -2,6 +2,7 @@ package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.cou
 
 import com.example.peter.thekitchenmenu.data.repository.recipe.metadata.TestDataRecipeMetadata;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.courseitem.RecipeCourseItemLocalDataSource;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.parent.RecipeCourseParentLocalDataSource;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -18,7 +19,9 @@ public class CourseLocalDeleteAdapterTest {
 
     // region helper fields ------------------------------------------------------------------------
     @Mock
-    RecipeCourseItemLocalDataSource repoMock;
+    RecipeCourseParentLocalDataSource parentRepo;
+    @Mock
+    RecipeCourseItemLocalDataSource courseItemRepoMock;
 
     private String dataId = TestDataRecipeMetadata.getValidChangedThree().getDataId();
     private String domainId = TestDataRecipeMetadata.getValidChangedThree().getDomainId();
@@ -35,7 +38,7 @@ public class CourseLocalDeleteAdapterTest {
 
     private CourseLocalDeleteAdapter givenSystemUnderTest() {
         return new CourseLocalDeleteAdapter(
-                parentLocalDataSource, repoMock
+                parentRepo, courseItemRepoMock
         );
     }
 
@@ -45,7 +48,7 @@ public class CourseLocalDeleteAdapterTest {
         // Act
         SUT.deleteByDataId(dataId);
         // Assert
-        verify(repoMock).deleteByDataId(dataId);
+        verify(courseItemRepoMock).deleteByDataId(dataId);
     }
 
     @Test
@@ -54,7 +57,7 @@ public class CourseLocalDeleteAdapterTest {
         // Act
         SUT.deleteAllByDomainId(domainId);
         // Assert
-        verify(repoMock).deleteAllByDomainId(domainId);
+//        verify(courseItemRepoMock).deleteAllByDomainId(domainId);
     }
 
     @Test
@@ -63,7 +66,7 @@ public class CourseLocalDeleteAdapterTest {
         // Act
         SUT.deleteAll();
         // Assert
-        verify(repoMock).deleteAll();
+        verify(courseItemRepoMock).deleteAll();
     }
 
     // region helper methods -----------------------------------------------------------------------

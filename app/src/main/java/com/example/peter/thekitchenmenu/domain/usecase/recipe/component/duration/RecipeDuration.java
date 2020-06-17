@@ -23,8 +23,13 @@ import javax.annotation.Nonnull;
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentState;
 
 public class RecipeDuration
-        extends UseCaseElement<RecipeDurationPersistenceModel, RecipeDuration.DomainModel>
-        implements GetDomainModelCallback<RecipeDurationPersistenceModel> {
+        extends
+        UseCaseElement<
+                RecipeDurationPersistenceModel,
+                RecipeDuration.DomainModel,
+                RepositoryRecipeDuration>
+        implements
+        GetDomainModelCallback<RecipeDurationPersistenceModel> {
 
     private static final String TAG = "tkm-" + RecipeDuration.class.getSimpleName() + ": ";
 
@@ -92,25 +97,16 @@ public class RecipeDuration
         failReasons = new ArrayList<>();
     }
 
-    @Override
-    protected void loadDomainModelByDataId() {
-        repository.getByDataId(useCaseDataId, this);
-    }
-
-    @Override
-    protected void loadDomainModelByDomainId() {
-        repository.getActiveByDomainId(useCaseDomainId, this);
-    }
 
     @Override
     public void onDomainModelLoaded(RecipeDurationPersistenceModel persistenceModel) {
         this.persistenceModel = persistenceModel;
         useCaseDataId = persistenceModel.getDataId();
-        reprocessCurrentDomainModel();
+        reprocessDomainModel();
     }
 
     @Override
-    protected void reprocessCurrentDomainModel() {
+    protected void reprocessDomainModel() {
         setupUseCase();
         validateDomainData();
         buildResponse();
@@ -118,6 +114,26 @@ public class RecipeDuration
 
     @Override
     protected void processRequestDomainModel() {
+
+    }
+
+    @Override
+    protected void createUpdatedDomainModelFromRequestModel() {
+
+    }
+
+    @Override
+    protected void createUpdatedDomainModelFromPersistenceModel(RecipeDurationPersistenceModel persistenceModel) {
+
+    }
+
+    @Override
+    protected void initialiseUseCaseForNewDomainModelProcessing() {
+
+    }
+
+    @Override
+    protected void validateUpdatedDomainModelElements() {
 
     }
 
@@ -294,7 +310,8 @@ public class RecipeDuration
         }
     }
 
-    private void save() {
+    @Override
+    protected void save() {
         repository.save(persistenceModel);
     }
 }

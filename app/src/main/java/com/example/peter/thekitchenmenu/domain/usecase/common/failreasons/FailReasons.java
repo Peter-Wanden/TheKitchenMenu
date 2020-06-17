@@ -32,6 +32,7 @@ import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValida
  *
  * {@link RecipeCopy.FailReason} 600-649
  */
+
 public interface FailReasons {
 
     int getId();

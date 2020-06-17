@@ -26,7 +26,10 @@ import static com.example.peter.thekitchenmenu.domain.usecase.textvalidation.Tex
 
 public class RecipeIdentity
         extends
-        UseCaseElement<RecipeIdentityPersistenceModel, RecipeIdentity.DomainModel>
+        UseCaseElement<
+                RecipeIdentityPersistenceModel,
+                RecipeIdentity.DomainModel,
+                RepositoryRecipeIdentity>
         implements
         DomainDataAccess.GetDomainModelCallback<RecipeIdentityPersistenceModel> {
 
@@ -142,7 +145,7 @@ public class RecipeIdentity
     public void onDomainModelUnavailable() {
         isDomainDataUnavailable = true;
         updatedDomainModel = new DomainModel();
-        reprocessCurrentDomainModel();
+        reprocessDomainModel();
     }
 
     @Override
@@ -184,15 +187,23 @@ public class RecipeIdentity
     }
 
     @Override
-    protected void reprocessCurrentDomainModel() {
-        System.out.println(
-                TAG + "reprocessCurrentDomainData called"
-        );
-        updatedDomainModel = activeDomainModel;
-        processNewDomainModel();
+    protected void createUpdatedDomainModelFromRequestModel() {
+
     }
 
-    private void validateUpdatedDomainModelElements() {
+    @Override
+    protected void createUpdatedDomainModelFromPersistenceModel(
+            @Nonnull RecipeIdentityPersistenceModel persistenceModel) {
+
+    }
+
+    @Override
+    protected void initialiseUseCaseForNewDomainModelProcessing() {
+
+    }
+
+    @Override
+    protected void validateUpdatedDomainModelElements() {
         System.out.println(
                 TAG + "validateDomainDataElements: new domain model=" + updatedDomainModel
         );
@@ -200,6 +211,15 @@ public class RecipeIdentity
 
         validateTitle();
         validateDescription();
+    }
+
+    @Override
+    protected void reprocessDomainModel() {
+        System.out.println(
+                TAG + "reprocessCurrentDomainData called"
+        );
+        updatedDomainModel = activeDomainModel;
+        processNewDomainModel();
     }
 
     private void setupDomainModelProcessing() {
@@ -304,7 +324,8 @@ public class RecipeIdentity
                 build();
     }
 
-    private void save() {
+    @Override
+    protected void save() {
         activeDomainModel = updatedDomainModel;
         boolean hasExistingPersistenceModel = persistenceModel != null;
 

@@ -1,5 +1,6 @@
 package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.parent;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -22,11 +23,11 @@ public final class RecipeCourseParentEntity
     public static final String LAST_UPDATE = "lastUpdate";
 
     @PrimaryKey
-    @Nonnull
+    @NonNull
     @ColumnInfo(name = DATA_ID)
     private final String dataId;
 
-    @Nonnull
+    @NonNull
     @ColumnInfo(name = DOMAIN_ID)
     private final String domainId;
 
@@ -36,8 +37,8 @@ public final class RecipeCourseParentEntity
     @ColumnInfo(name = LAST_UPDATE)
     private final long lastUpdate;
 
-    public RecipeCourseParentEntity(@Nonnull String dataId,
-                                    @Nonnull String domainId,
+    public RecipeCourseParentEntity(@NonNull String dataId,
+                                    @NonNull String domainId,
                                     long createDate,
                                     long lastUpdate) {
         this.dataId = dataId;
@@ -74,12 +75,12 @@ public final class RecipeCourseParentEntity
     }
 
     @Override
-    @Nonnull
+    @NonNull
     public String getDataId() {
         return dataId;
     }
 
-    @Nonnull
+    @NonNull
     public String getDomainId() {
         return domainId;
     }

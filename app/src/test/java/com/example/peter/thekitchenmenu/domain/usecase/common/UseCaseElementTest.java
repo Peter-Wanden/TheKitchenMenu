@@ -1,12 +1,19 @@
 package com.example.peter.thekitchenmenu.domain.usecase.common;
 
+import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
+import com.example.peter.thekitchenmenu.data.repository.Repository;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.model.BaseDomainModel;
 import com.example.peter.thekitchenmenu.domain.model.BaseDomainPersistenceModel;
 import com.example.peter.thekitchenmenu.domain.model.UseCaseDomainModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataId;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataPersistenceModel;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.Objects;
@@ -24,6 +31,10 @@ public class UseCaseElementTest {
     // endregion constants -------------------------------------------------------------------------
 
     // region helper fields ------------------------------------------------------------------------
+    @Mock
+    RepositoryRecipeMetadata repoMock;
+    @Captor
+    ArgumentCaptor<DomainDataAccess<RecipeMetadataPersistenceModel>> repoCallbackCaptor;
     // endregion helper fields ---------------------------------------------------------------------
 
     private UseCaseElementInheritor SUT;
@@ -210,7 +221,11 @@ public class UseCaseElementTest {
     // Helper class to assist in testing abstract UseCaseElement
     public static class UseCaseElementInheritor
             extends
-            UseCaseElement<TestPersistenceModel, UseCaseElementInheritor.DomainModel> {
+            UseCaseElement<
+                    TestPersistenceModel,
+                    UseCaseElementInheritor.DomainModel,
+                    Repository<TestPersistenceModel>
+                    > {
 
         private static final String TAG = "tkm-" + UseCaseElementInheritor.class.
                 getSimpleName() + ": ";
@@ -240,7 +255,7 @@ public class UseCaseElementTest {
         }
 
         @Override
-        protected void reprocessCurrentDomainModel() {
+        protected void reprocessDomainModel() {
             isReprocessCurrentDomainModel = true;
             System.out.println(TAG + "processing use case data");
         }
@@ -251,6 +266,45 @@ public class UseCaseElementTest {
             System.out.println(TAG + "processing request domain model");
         }
 
+        @Override
+        public void onDomainModelLoaded(TestPersistenceModel model) {
+
+        }
+
+        @Override
+        public void onDomainModelUnavailable() {
+
+        }
+
+        @Override
+        protected void createUpdatedDomainModelFromRequestModel() {
+
+        }
+
+        @Override
+        protected void createUpdatedDomainModelFromPersistenceModel(@Nonnull TestPersistenceModel persistenceModel) {
+
+        }
+
+        @Override
+        protected void initialiseUseCaseForNewDomainModelProcessing() {
+
+        }
+
+        @Override
+        protected void validateUpdatedDomainModelElements() {
+
+        }
+
+        @Override
+        protected void save() {
+
+        }
+
+        @Override
+        protected void buildResponse() {
+
+        }
     }
 
     // Helper request class
