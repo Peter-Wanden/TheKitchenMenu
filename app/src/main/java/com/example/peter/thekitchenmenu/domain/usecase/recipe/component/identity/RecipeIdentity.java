@@ -145,7 +145,7 @@ public class RecipeIdentity
     public void onDomainModelUnavailable() {
         isDomainDataUnavailable = true;
         updatedDomainModel = new DomainModel();
-        reprocessDomainModel();
+//        reprocessDomainModel();
     }
 
     @Override
@@ -198,7 +198,7 @@ public class RecipeIdentity
     }
 
     @Override
-    protected void initialiseUseCaseForNewDomainModelProcessing() {
+    protected void initialiseUseCaseForUpdatedDomainModelProcessing() {
 
     }
 
@@ -213,13 +213,19 @@ public class RecipeIdentity
         validateDescription();
     }
 
+//    @Override
+//    protected void reprocessDomainModel() {
+//        System.out.println(
+//                TAG + "reprocessCurrentDomainData called"
+//        );
+//        updatedDomainModel = activeDomainModel;
+//        processNewDomainModel();
+//    }
+
+
     @Override
-    protected void reprocessDomainModel() {
-        System.out.println(
-                TAG + "reprocessCurrentDomainData called"
-        );
-        updatedDomainModel = activeDomainModel;
-        processNewDomainModel();
+    protected void createUpdatedDomainModelFromDefaultValues() {
+
     }
 
     private void setupDomainModelProcessing() {

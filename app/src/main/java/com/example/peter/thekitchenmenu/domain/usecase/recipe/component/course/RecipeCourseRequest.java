@@ -5,7 +5,6 @@ import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataId;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -69,7 +68,7 @@ public final class RecipeCourseRequest
         private DomainModel() {
         }
 
-        public List<Course> getCourseList() {
+        public List<Course> getCourses() {
             return courseList;
         }
 
@@ -106,7 +105,7 @@ public final class RecipeCourseRequest
             }
 
             public Builder basedOnResponseModel(RecipeCourseResponse.Model m) {
-                domainModel.courseList = new ArrayList<>(m.getCourseList());
+                domainModel.courseList = new ArrayList<>(m.getCourses());
                 return self();
             }
 

@@ -78,7 +78,7 @@ public class RecipeCourseEditorViewModel extends ObservableViewModel {
 
     private void setRecipeCoursesToObservables() {
         courseList.clear();
-        courseList.addAll(response.getDomainModel().getCourseList());
+        courseList.addAll(response.getDomainModel().getCourses());
 
         isUpdatingUi = true;
         notifyChange();
@@ -92,12 +92,12 @@ public class RecipeCourseEditorViewModel extends ObservableViewModel {
 
     @Bindable
     public boolean isCourseZero() {
-        return courseList.contains(Course.DEFAULT_NO_COURSES);
+        return courseList.contains(Course.COURSE_ZERO);
     }
 
     public void setCourseZero(boolean isCourseZero) {
         if (!isUpdatingUi) {
-            sendRequest(Course.DEFAULT_NO_COURSES, isCourseZero);
+            sendRequest(Course.COURSE_ZERO, isCourseZero);
         }
     }
 

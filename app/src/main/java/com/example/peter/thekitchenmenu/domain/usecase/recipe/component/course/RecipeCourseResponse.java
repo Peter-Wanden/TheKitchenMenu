@@ -57,7 +57,7 @@ public final class RecipeCourseResponse
         private Model(){}
 
         @Nonnull
-        public List<Course> getCourseList() {
+        public List<Course> getCourses() {
             return courseList;
         }
 

@@ -102,14 +102,20 @@ public class RecipeDuration
     public void onDomainModelLoaded(RecipeDurationPersistenceModel persistenceModel) {
         this.persistenceModel = persistenceModel;
         useCaseDataId = persistenceModel.getDataId();
-        reprocessDomainModel();
+//        reprocessDomainModel();
     }
 
+//    @Override
+//    protected void reprocessDomainModel() {
+//        setupUseCase();
+//        validateDomainData();
+//        buildResponse();
+//    }
+
+
     @Override
-    protected void reprocessDomainModel() {
-        setupUseCase();
-        validateDomainData();
-        buildResponse();
+    protected void createUpdatedDomainModelFromDefaultValues() {
+
     }
 
     @Override
@@ -123,12 +129,13 @@ public class RecipeDuration
     }
 
     @Override
-    protected void createUpdatedDomainModelFromPersistenceModel(RecipeDurationPersistenceModel persistenceModel) {
+    protected void createUpdatedDomainModelFromPersistenceModel(
+            @Nonnull RecipeDurationPersistenceModel persistenceModel) {
 
     }
 
     @Override
-    protected void initialiseUseCaseForNewDomainModelProcessing() {
+    protected void initialiseUseCaseForUpdatedDomainModelProcessing() {
 
     }
 

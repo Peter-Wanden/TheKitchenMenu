@@ -167,7 +167,7 @@ public class RecipeMetadata
     public void onDomainModelUnavailable() {
         persistenceModel = createNewPersistenceModel();
         failReasons.add(CommonFailReason.DATA_UNAVAILABLE);
-        reprocessDomainModel();
+//        reprocessDomainModel();
     }
 
     private RecipeMetadataPersistenceModel createNewPersistenceModel() {
@@ -193,19 +193,13 @@ public class RecipeMetadata
         failReasons.addAll(persistenceModel.getFailReasons());
         useCaseDataId = persistenceModel.getDataId();
 
-        reprocessDomainModel();
-    }
-
-    @Override
-    protected void reprocessDomainModel() {
-//        setupUseCase();
-        setState();
-        buildResponse();
+//        reprocessDomainModel();
     }
 
     @Override
     protected void processRequestDomainModel() {
-
+        setState();
+        buildResponse();
     }
 
     @Override
@@ -220,7 +214,12 @@ public class RecipeMetadata
     }
 
     @Override
-    protected void initialiseUseCaseForNewDomainModelProcessing() {
+    protected void initialiseUseCaseForUpdatedDomainModelProcessing() {
+
+    }
+
+    @Override
+    protected void createUpdatedDomainModelFromDefaultValues() {
 
     }
 

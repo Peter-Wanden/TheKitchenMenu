@@ -7,14 +7,12 @@ import androidx.annotation.NonNull;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeCourse;
 import com.example.peter.thekitchenmenu.domain.model.UseCaseDomainModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseElement;
-import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -28,12 +26,10 @@ public class RecipeCourse
                 RecipeCourse.DomainModel,
                 RepositoryRecipeCourse> {
 
-    private static final String TAG = "tkm-" + RecipeCourse.class.getSimpleName() + ": ";
-
-    static final int MINIMUM_COURSE_LIST_SIZE = 1;
+//    private static final String TAG = "tkm-" + RecipeCourse.class.getSimpleName() + ": ";
 
     public enum Course {
-        DEFAULT_NO_COURSES(0), // default if nothing selected
+        COURSE_ZERO(0),
         COURSE_ONE(1),
         COURSE_TWO(2),
         COURSE_THREE(3),
@@ -94,7 +90,7 @@ public class RecipeCourse
             extends
             ArrayList<Course>
             implements
-            UseCaseDomainModel, Cloneable {
+            UseCaseDomainModel {
 
         public DomainModel() {
         }
@@ -117,120 +113,60 @@ public class RecipeCourse
         this.idProvider = idProvider;
         this.timeProvider = timeProvider;
 
-        defaultDomainModel = new DomainModel(Collections.singletonList(Course.DEFAULT_NO_COURSES));
         activeDomainModel = new DomainModel();
         updatedDomainModel = new DomainModel();
     }
 
     @Override
     protected void createUpdatedDomainModelFromPersistenceModel(
-            RecipeCoursePersistenceModel persistenceModel) {
-        updatedDomainModel.addAll(persistenceModel.getCourses());
+            @Nonnull RecipeCoursePersistenceModel persistenceModel) {
+        updatedDomainModel = new DomainModel(persistenceModel.getCourses());
+        activeDomainModel = new DomainModel(persistenceModel.getCourses());
+    }
 
-        System.out.println(TAG + "createUpdatedDomainModelFromPersistenceModel: updatedDomainModel=" +
-                updatedDomainModel);
+    @Override
+    protected void createUpdatedDomainModelFromDefaultValues() {
+        updatedDomainModel.clear();
     }
 
     @Override
     protected void createUpdatedDomainModelFromRequestModel() {
         RecipeCourseRequest request = (RecipeCourseRequest) getRequest();
-        updatedDomainModel.clear();
-        updatedDomainModel.addAll(request.getDomainModel().getCourseList());
-
-        System.out.println(TAG + "createUpdatedDomainModelFromRequestModel: " +
-                "\n  - defaultDomainModel= " + defaultDomainModel +
-                "\n  - activeDomainModel= " + activeDomainModel +
-                "\n  - updatedDomainModel= " + updatedDomainModel
-        );
+        updatedDomainModel = new DomainModel(request.getDomainModel().getCourses());
     }
 
     @Override
-    protected void initialiseUseCaseForNewDomainModelProcessing() {
-        if (isDomainDataUnavailable) {
-            updatedDomainModel.addAll(defaultDomainModel);
-            if (updatedDomainModel.contains(Course.DEFAULT_NO_COURSES) && updatedDomainModel.size() > 1) {
-                updatedDomainModel.remove(Course.DEFAULT_NO_COURSES);
-                if (failReasons.contains(CommonFailReason.DATA_UNAVAILABLE)) {
-                    failReasons.remove(CommonFailReason.DATA_UNAVAILABLE);
-                }
-            }
-        }
+    protected void initialiseUseCaseForUpdatedDomainModelProcessing() {
         failReasons.clear();
-        isChanged = false;
-        System.out.println(TAG + "initialiseUseCaseForNewDomainModelProcessing: " +
-                "\n  - defaultDomainModel= " + defaultDomainModel +
-                "\n  - activeDomainModel= " + activeDomainModel +
-                "\n  - updatedDomainModel= " + updatedDomainModel +
-                "\n  - isDomainDataUnavailable= " + isDomainDataUnavailable
-        );
-        validateUpdatedDomainModelElements();
-    }
-
-    protected void processUpdatedDomainModel() {
         isChanged = !activeDomainModel.equals(updatedDomainModel);
-
-        System.out.println(TAG + "processUpdatedDomainModel:" +
-                "\n  - isChanged=" + isChanged + "\n" +
-                "\n  - defaultDomainModel= " + defaultDomainModel +
-                "\n  - activeDomainModel=" + activeDomainModel +
-                "\n  - updatedDomainModel= " + updatedDomainModel);
-        initialiseUseCaseForNewDomainModelProcessing();
+        validateUpdatedDomainModelElements();
     }
 
     @Override
     protected void validateUpdatedDomainModelElements() {
-        System.out.println(TAG + "validateNewDomainModelElements");
         processCourseAdditions();
         processCourseSubtractions();
 
+        if (isNoCourseSelected()) {
+            failReasons.add(FailReason.NO_COURSE_SELECTED);
+        }
         save();
     }
 
     private void processCourseAdditions() {
-        System.out.println(TAG + "processCourseAdditions:" +
-                " activeDomainModel=" + activeDomainModel +
-                " updatedDomainModel=" + updatedDomainModel
-        );
         for (Course course : updatedDomainModel) {
             if (isCourseAdded(course)) {
                 activeDomainModel.add(course);
-
-                if (isDefaultDomainModel()) {
-                    isChanged = false;
-                    failReasons.add(FailReason.NO_COURSE_SELECTED);
-                } else {
-                    isChanged = true;
-                    addCommonFailReasonNone();
-                }
+                isChanged = true;
             }
-        }
-        System.out.println(TAG + "processCourseAdditions:" +
-                " activeDomainModel=" + activeDomainModel +
-                " updatedDomainModel=" + updatedDomainModel
-        );
-    }
-
-    private boolean isDefaultDomainModel() {
-        return activeDomainModel.equals(defaultDomainModel);
-    }
-
-    private void addCommonFailReasonNone() {
-        if (failReasons.isEmpty()) {
-            failReasons.add(CommonFailReason.NONE);
         }
     }
 
     private boolean isCourseAdded(Course course) {
-        System.out.println(TAG + "isCourseAdded:" + course + " " + !activeDomainModel.contains(course));
         return !activeDomainModel.contains(course);
     }
 
     private void processCourseSubtractions() {
-        System.out.println(TAG + "processCourseSubtractions:" +
-                " activeDomainModel=" + activeDomainModel +
-                " updatedDomainModel=" + updatedDomainModel
-        );
-
         Iterator<Course> i = activeDomainModel.iterator();
         while (i.hasNext()) {
             Course course = i.next();
@@ -240,55 +176,52 @@ public class RecipeCourse
                 isChanged = true;
             }
         }
-        if (activeDomainModel.size() < MINIMUM_COURSE_LIST_SIZE) {
-            addCommonFailReasonDataUnavailable();
-        }
-        System.out.println(TAG + "processCourseSubtractions:" +
-                " activeDomainModel=" + activeDomainModel +
-                " updatedDomainModel=" + updatedDomainModel
-        );
-    }
-
-    private void addCommonFailReasonDataUnavailable() {
-        if (!failReasons.contains(CommonFailReason.DATA_UNAVAILABLE)) {
-            failReasons.add(CommonFailReason.DATA_UNAVAILABLE);
-        }
     }
 
     private boolean isCourseRemoved(Course course) {
-        System.out.println(TAG + "isCourseRemoved=" + course + " " +
-                !updatedDomainModel.contains(course));
         return !updatedDomainModel.contains(course);
     }
 
     @Override
     protected void save() {
-        if (isChanged || isDefaultDomainModel()) {
+        isDomainDataUnavailable = isNoCourseSelected();
 
-            long createDate;
-            if (isDefaultDomainModel()) {
-                createDate = timeProvider.getCurrentTimeInMills();
-            } else {
-                createDate = persistenceModel.getCreateDate();
+        if (isChanged || isNoCourseSelected()) {
+
+            long currentTime = timeProvider.getCurrentTimeInMills();
+
+            if (persistenceModel != null) {
+                archivePersistenceModel(currentTime);
             }
 
             persistenceModel = new RecipeCoursePersistenceModel.Builder().
                     setDataId(idProvider.getUId()).
                     setDomainId(useCaseDomainId).
-                    setCourses(activeDomainModel).
-                    setCreateDate(createDate). // todo
-                    setLastUpdate(timeProvider.getCurrentTimeInMills()).
+                    setCourses(new ArrayList<>(activeDomainModel)).
+                    setCreateDate(currentTime).
+                    setLastUpdate(currentTime).
                     build();
 
-            System.out.println(TAG + "save:" + persistenceModel);
             repository.save(persistenceModel);
         }
         buildResponse();
     }
 
+    private boolean isNoCourseSelected() {
+        return updatedDomainModel.isEmpty();
+    }
+
+    private void archivePersistenceModel(long currentTime) {
+        RecipeCoursePersistenceModel archivedModel = new RecipeCoursePersistenceModel.Builder().
+                basedOnModel(persistenceModel).
+                setLastUpdate(currentTime).
+                build();
+
+        repository.save(archivedModel);
+    }
+
     @Override
     protected void buildResponse() {
-        System.out.println(TAG + "buildResponse");
         useCaseDataId = persistenceModel.getDataId();
 
         RecipeCourseResponse response = new RecipeCourseResponse.Builder().
@@ -298,17 +231,12 @@ public class RecipeCourse
                 setDomainModel(getResponseModel()).
                 build();
 
-        System.out.println(TAG + "Response No:" + accessCount + " - " + response);
-
         sendResponse(response);
     }
 
     private RecipeCourseResponse.Model getResponseModel() {
-        RecipeCourseResponse.Model responseModel = new RecipeCourseResponse.Model.Builder().
+        return new RecipeCourseResponse.Model.Builder().
                 setCourseList(new ArrayList<>(activeDomainModel)).
                 build();
-
-        System.out.println(TAG + "getResponseModel=" + responseModel);
-        return responseModel;
     }
 }

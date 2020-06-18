@@ -254,10 +254,16 @@ public class UseCaseElementTest {
             System.out.println(TAG + "loading data by domain Id");
         }
 
+//        @Override
+//        protected void reprocessDomainModel() {
+//            isReprocessCurrentDomainModel = true;
+//            System.out.println(TAG + "processing use case data");
+//        }
+
+
         @Override
-        protected void reprocessDomainModel() {
-            isReprocessCurrentDomainModel = true;
-            System.out.println(TAG + "processing use case data");
+        protected void createUpdatedDomainModelFromDefaultValues() {
+
         }
 
         @Override
@@ -287,7 +293,7 @@ public class UseCaseElementTest {
         }
 
         @Override
-        protected void initialiseUseCaseForNewDomainModelProcessing() {
+        protected void initialiseUseCaseForUpdatedDomainModelProcessing() {
 
         }
 
