@@ -6,16 +6,11 @@ import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.dura
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.datasource.TestDataRecipeDurationEntity;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDurationPersistenceModel;
 
-import static org.junit.Assert.*;
-
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import static org.junit.Assert.*;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 
@@ -47,7 +42,7 @@ public class DurationLocalSaveAdapterTest {
     public void save() {
         // Arrange
         RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
-                getValidExistingComplete();
+                getExistingValidPrepTimeValidCookTime();
         RecipeDurationEntity expectedSaved = TestDataRecipeDurationEntity.
                 getValidExistingComplete();
         // Act

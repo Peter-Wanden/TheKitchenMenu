@@ -18,8 +18,9 @@ public class TestDataRecipeCourse {
     public static final String EXISTING_RECIPE_ID =
             TestDataRecipeMetadata.getValidUnchanged().getDomainId();
 
-    // region Persistence models for testing adding and removing courses
-    // Course 'DEFAULT_NO_COURSES' is added as the default state when no courses have been added
+    // region Persistence models for testing adding and removing data elements
+    // Course 'DEFAULT_NO_COURSES' is added as the default state when no courses have been added.
+    // This is a
     public static RecipeCoursePersistenceModel getNewActiveDefaultNoCourses() {
         return new RecipeCoursePersistenceModel.Builder().
                 setDataId("dataId-recipeCourse-new-id0"). // new data id added
@@ -106,7 +107,7 @@ public class TestDataRecipeCourse {
                 setLastUpdate(50L). // current time added
                 build();
     }
-    // endregion Persistence models for testing adding and removing courses
+    // endregion Persistence models for testing adding and removing data elements
 
     // region Persistence models for testing getting and modifying existing courses
     public static RecipeCoursePersistenceModel getExistingActiveRecipeCourseZero() {

@@ -25,7 +25,7 @@ public class TestDataRecipePortions {
     public static final int MIN_SITTINGS = 1;
     public static final int MAX_SITTINGS = 10;
 
-    public static RecipePortionsPersistenceModel getNewValidEmpty() {
+    public static RecipePortionsPersistenceModel getNewActiveDefault() {
         return new RecipePortionsPersistenceModel.Builder().
                 setDataId("dataId-recipePortions-id0").
                 setDomainId(NEW_RECIPE_ID).
@@ -33,6 +33,13 @@ public class TestDataRecipePortions {
                 setSittings(MIN_SITTINGS).
                 setCreateDate(10L).
                 setLastUpdate(10L).
+                build();
+    }
+
+    public static RecipePortionsPersistenceModel getNewArchivedDefault() {
+        return new RecipePortionsPersistenceModel.Builder().
+                basedOnModel(getNewActiveDefault()).
+                setLastUpdate(20L).
                 build();
     }
 
@@ -85,7 +92,7 @@ public class TestDataRecipePortions {
                 setDataId("dataId-recipePortions-id5").
                 setDomainId(NEW_RECIPE_ID).
                 setServings(MIN_SERVINGS).
-                setSittings(MAX_SERVINGS + 1).
+                setSittings(MAX_SITTINGS + 1).
                 setCreateDate(10L).
                 setLastUpdate(60L).
                 build();
@@ -104,7 +111,7 @@ public class TestDataRecipePortions {
 
     public static List<RecipePortionsPersistenceModel> getAllNew() {
         return Arrays.asList(
-                getNewValidEmpty(),
+                getNewActiveDefault(),
                 getNewValidFourPortions(),
                 getNewValidSixteenPortions(),
                 getNewInvalidTooHighServingsInvalidTooHighSittings(),
@@ -133,6 +140,13 @@ public class TestDataRecipePortions {
                 setSittings(3).
                 setCreateDate(20L).
                 setLastUpdate(30L).
+                build();
+    }
+
+    public static RecipePortionsPersistenceModel getArchivedValidNinePortions() {
+        return new RecipePortionsPersistenceModel.Builder().
+                basedOnModel(getExistingValidNinePortions()).
+                setLastUpdate(40L).
                 build();
     }
 

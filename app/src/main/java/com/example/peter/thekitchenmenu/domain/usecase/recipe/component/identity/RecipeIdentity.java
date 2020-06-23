@@ -2,11 +2,9 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identit
 
 import android.annotation.SuppressLint;
 
-import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeIdentity;
 import com.example.peter.thekitchenmenu.domain.model.UseCaseDomainModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseElement;
-import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
@@ -29,9 +27,7 @@ public class RecipeIdentity
         UseCaseElement<
                 RecipeIdentityPersistenceModel,
                 RecipeIdentity.DomainModel,
-                RepositoryRecipeIdentity>
-        implements
-        DomainDataAccess.GetDomainModelCallback<RecipeIdentityPersistenceModel> {
+                RepositoryRecipeIdentity> {
 
     private static final String TAG = "tkm-" + RecipeIdentity.class.getSimpleName() + ": ";
 
@@ -107,16 +103,11 @@ public class RecipeIdentity
     private static final TextType DESCRIPTION_TEXT_TYPE = TextType.LONG_TEXT;
 
     @Nonnull
-    private final RepositoryRecipeIdentity repository;
-    @Nonnull
     private final UniqueIdProvider idProvider;
     @Nonnull
     private final TimeProvider timeProvider;
     @Nonnull
     private final TextValidator textValidator;
-
-    private boolean isTitleValidationComplete;
-    private boolean isDescriptionValidationComplete;
 
     public RecipeIdentity(@Nonnull RepositoryRecipeIdentity repository,
                           @Nonnull UniqueIdProvider idProvider,
@@ -132,106 +123,56 @@ public class RecipeIdentity
     }
 
     @Override
-    protected void loadDomainModelByDataId() {
-        repository.getByDataId(useCaseDataId, this);
+    protected void createDomainModelsFromPersistenceModel(
+            @Nonnull RecipeIdentityPersistenceModel persistenceModel) {
+
+        updatedDomainModel = new DomainModel(
+                persistenceModel.getTitle(),
+                persistenceModel.getDescription()
+        );
+
+        activeDomainModel = new DomainModel(
+                persistenceModel.getTitle(),
+                persistenceModel.getDescription()
+        );
     }
 
     @Override
-    protected void loadDomainModelByDomainId() {
-        repository.getActiveByDomainId(useCaseDomainId, this);
-    }
-
-    @Override
-    public void onDomainModelUnavailable() {
-        isDomainDataUnavailable = true;
+    protected void createUpdatedDomainModelFromDefaultValues() {
         updatedDomainModel = new DomainModel();
-//        reprocessDomainModel();
-    }
-
-    @Override
-    public void onDomainModelLoaded(RecipeIdentityPersistenceModel persistenceModel) {
-        isDomainDataUnavailable = false;
-        this.persistenceModel = persistenceModel;
-        useCaseDataId = persistenceModel.getDataId();
-        useCaseDomainId = persistenceModel.getDomainId();
-        updatedDomainModel = getNewDomainModelFromPersistenceModel(persistenceModel);
-        activeDomainModel = updatedDomainModel;
-        processNewDomainModel();
-    }
-
-    private DomainModel getNewDomainModelFromPersistenceModel(
-            RecipeIdentityPersistenceModel persistenceModel) {
-        return new DomainModel(persistenceModel.getTitle(), persistenceModel.getDescription());
-    }
-
-    @Override
-    protected void processRequestDomainModel() {
-        updatedDomainModel = getNewDomainModelFromRequestData();
-        processNewDomainModel();
-    }
-
-    private DomainModel getNewDomainModelFromRequestData() {
-        RecipeIdentityRequest.DomainModel requestModel = ((RecipeIdentityRequest) getRequest()).
-                getDomainModel();
-        return new DomainModel(requestModel.getTitle(), requestModel.getDescription());
-    }
-
-    private void processNewDomainModel() {
-        isChanged = !activeDomainModel.equals(updatedDomainModel);
-        System.out.println(TAG + "processNewDomainModel: isChanged=" + isChanged);
-
-        if (!isChanged) {
-            updatedDomainModel = activeDomainModel;
-        }
-        validateUpdatedDomainModelElements();
     }
 
     @Override
     protected void createUpdatedDomainModelFromRequestModel() {
+        RecipeIdentityRequest request = (RecipeIdentityRequest) getRequest();
+        RecipeIdentityRequest.DomainModel requestModel = request.getDomainModel();
 
-    }
-
-    @Override
-    protected void createUpdatedDomainModelFromPersistenceModel(
-            @Nonnull RecipeIdentityPersistenceModel persistenceModel) {
-
+        updatedDomainModel = new DomainModel(
+                requestModel.getTitle(),
+                requestModel.getDescription()
+        );
     }
 
     @Override
     protected void initialiseUseCaseForUpdatedDomainModelProcessing() {
-
+        failReasons.clear();
+        isChanged = !activeDomainModel.equals(updatedDomainModel);
+        validateUpdatedDomainModelElements();
     }
 
     @Override
     protected void validateUpdatedDomainModelElements() {
-        System.out.println(
-                TAG + "validateDomainDataElements: new domain model=" + updatedDomainModel
+        System.out.println(TAG + "validateDomainDataElements: " +
+                "\n  - activeDomainModel= " + activeDomainModel +
+                "\n  - updatedDomainModel= " + updatedDomainModel
         );
-        setupDomainModelProcessing();
 
         validateTitle();
         validateDescription();
-    }
 
-//    @Override
-//    protected void reprocessDomainModel() {
-//        System.out.println(
-//                TAG + "reprocessCurrentDomainData called"
-//        );
-//        updatedDomainModel = activeDomainModel;
-//        processNewDomainModel();
-//    }
-
-
-    @Override
-    protected void createUpdatedDomainModelFromDefaultValues() {
-
-    }
-
-    private void setupDomainModelProcessing() {
-        failReasons.clear();
-        isTitleValidationComplete = false;
-        isDescriptionValidationComplete = false;
+        if (activeDomainModel.equals(updatedDomainModel)) {
+            save();
+        }
     }
 
     private void validateTitle() {
@@ -252,8 +193,7 @@ public class RecipeIdentity
             }
 
             private void processResults() {
-                isTitleValidationComplete = true;
-                processDomainModelValidationResults();
+                activeDomainModel.title = updatedDomainModel.title;
             }
         });
     }
@@ -285,8 +225,7 @@ public class RecipeIdentity
             }
 
             private void processResults() {
-                isDescriptionValidationComplete = true;
-                processDomainModelValidationResults();
+                activeDomainModel.description = updatedDomainModel.description;
             }
         });
     }
@@ -300,16 +239,45 @@ public class RecipeIdentity
         }
     }
 
-    private void processDomainModelValidationResults() {
-        if (isTitleValidationComplete && isDescriptionValidationComplete) {
-            if (failReasons.isEmpty()) {
-                failReasons.add(CommonFailReason.NONE);
+    @Override
+    protected void save() {
+        System.out.println(TAG + "save: " +
+                "\n  - isChanged=" + isChanged +
+                "\n  - isDomainModelValid=" + isDomainModelValid() +
+                "\n  - failReasons=" + failReasons
+        );
+
+        if ((isChanged && isDomainModelValid())) {
+
+            useCaseDataId = idProvider.getUId();
+            long currentTime = timeProvider.getCurrentTimeInMills();
+
+            if (persistenceModel != null) {
+                archivePersistenceModel(currentTime);
             }
-            if (isDomainModelValid() && isChanged) {
-                save();
-            }
-            buildResponse();
+
+            persistenceModel = new RecipeIdentityPersistenceModel.Builder().
+                    setDataId(useCaseDataId).
+                    setDomainId(useCaseDomainId).
+                    setTitle(activeDomainModel.title).
+                    setDescription(activeDomainModel.description).
+                    setCreateDate(currentTime).
+                    setLastUpdate(currentTime).
+                    build();
+
+            repository.save(persistenceModel);
         }
+        buildResponse();
+    }
+
+    @Override
+    protected void archivePersistenceModel(long currentTime) {
+        RecipeIdentityPersistenceModel archivedModel = new RecipeIdentityPersistenceModel.
+                Builder().basedOnPersistenceModel(persistenceModel).
+                setLastUpdate(currentTime).
+                build();
+
+        repository.save(archivedModel);
     }
 
     protected void buildResponse() {
@@ -317,53 +285,15 @@ public class RecipeIdentity
                 setDataId(useCaseDataId).
                 setDomainId(useCaseDomainId).
                 setMetadata(getMetadata()).
-                setDomainModel(getResponseDomainModel());
+                setDomainModel(getResponseModel());
 
         sendResponse(builder.build());
     }
 
-    private RecipeIdentityResponse.DomainModel getResponseDomainModel() {
-        activeDomainModel = updatedDomainModel;
+    private RecipeIdentityResponse.DomainModel getResponseModel() {
         return new RecipeIdentityResponse.DomainModel.Builder().
                 setTitle(activeDomainModel.title).
                 setDescription(activeDomainModel.description).
                 build();
-    }
-
-    @Override
-    protected void save() {
-        activeDomainModel = updatedDomainModel;
-        boolean hasExistingPersistenceModel = persistenceModel != null;
-
-        if (hasExistingPersistenceModel) {
-            archiveExistingPersistenceModel();
-        }
-        saveNewPersistenceModel();
-    }
-
-    private void saveNewPersistenceModel() {
-        useCaseDataId = idProvider.getUId();
-        long currentTime = timeProvider.getCurrentTimeInMills();
-        persistenceModel = new RecipeIdentityPersistenceModel.Builder().
-                setDataId(useCaseDataId).
-                setDomainId(useCaseDomainId).
-                setTitle(activeDomainModel.title).
-                setDescription(activeDomainModel.description).
-                setCreateDate(currentTime).
-                setLastUpdate(currentTime).
-                build();
-
-        repository.save(persistenceModel);
-        isDomainDataUnavailable = false;
-    }
-
-    private void archiveExistingPersistenceModel() {
-        long currentTime = timeProvider.getCurrentTimeInMills();
-        RecipeIdentityPersistenceModel persistenceModel = new RecipeIdentityPersistenceModel.
-                Builder().
-                basedOnPersistenceModel(this.persistenceModel).
-                setLastUpdate(currentTime).
-                build();
-        repository.save(persistenceModel);
     }
 }

@@ -37,11 +37,16 @@ public final class RecipePortionsPersistenceModel
         return Objects.hash(super.hashCode(), servings, sittings);
     }
 
+    @Nonnull
     @Override
     public String toString() {
         return "RecipePortionsPersistenceModel{" +
                 "servings=" + servings +
                 ", sittings=" + sittings +
+                ", dataId='" + dataId + '\'' +
+                ", domainId='" + domainId + '\'' +
+                ", createDate=" + createDate +
+                ", lastUpdate=" + lastUpdate +
                 '}';
     }
 

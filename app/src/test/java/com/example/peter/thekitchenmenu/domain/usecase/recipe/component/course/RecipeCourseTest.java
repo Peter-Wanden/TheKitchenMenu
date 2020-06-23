@@ -25,10 +25,10 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentState;
-import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 public class RecipeCourseTest {
@@ -48,8 +48,8 @@ public class RecipeCourseTest {
     @Mock
     TimeProvider timeProviderMock;
 
-    private RecipeCourseResponse onSuccessResponse;
-    private RecipeCourseResponse onErrorResponse;
+    private RecipeCourseResponse courseOnSuccessResponse;
+    private RecipeCourseResponse courseOnErrorResponse;
     // endregion helper fields ---------------------------------------------------------------------
 
     private RecipeCourse SUT;
@@ -69,53 +69,67 @@ public class RecipeCourseTest {
     }
 
     @Test
-    public void newRequest_defaultCourseListReturned_stateINVALID_UNCHANGED() {
+    public void newRequest_defaultNoCoursesReturned_stateINVALID_UNCHANGED() {
         // Arrange
-        RecipeCoursePersistenceModel expectedDefaultCourseSave = TestDataRecipeCourse.
+        RecipeCoursePersistenceModel expectedDefaultValues = TestDataRecipeCourse.
                 getNewActiveDefaultNoCourses();
 
         RecipeCourseRequest request = new RecipeCourseRequest.Builder().
                 getDefault().
-                setDomainId(expectedDefaultCourseSave.getDomainId()).
+                setDomainId(expectedDefaultValues.getDomainId()).
                 build();
-
-        when(idProviderMock.getUId()).thenReturn(
-                expectedDefaultCourseSave.getDataId()
-        );
-        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
-                expectedDefaultCourseSave.getCreateDate()
-        );
 
         // Act
         SUT.execute(request, new CourseCallbackClient());
 
         // Assert
-        verify(repoCourseMock).getActiveByDomainId(eq(expectedDefaultCourseSave.getDomainId()),
+        // Assert persistence calls
+        verify(repoCourseMock).getActiveByDomainId(eq(expectedDefaultValues.getDomainId()),
                 repoCourseCallback.capture());
         repoCourseCallback.getValue().onDomainModelUnavailable();
 
-        verify(repoCourseMock).save(eq(expectedDefaultCourseSave));
+        // assert no save
+        verifyNoMoreInteractions(repoCourseMock);
 
-        UseCaseMetadataModel metadata = onErrorResponse.getMetadata();
+        // Assert response values
+        RecipeCourseResponse response = courseOnErrorResponse;
 
+        // assert correct id's
+        String expectedDataId = "";
         assertEquals(
-                ComponentState.INVALID_UNCHANGED,
-                metadata.getComponentState()
+                expectedDataId,
+                response.getDataId()
+        );
+        assertEquals(
+                expectedDefaultValues.getDomainId(),
+                response.getDomainId()
         );
 
-        // Assert fail reasons
-        FailReasons[] expectedFailReasons = new FailReasons[]
-                {FailReason.NO_COURSE_SELECTED, CommonFailReason.DATA_UNAVAILABLE};
-        FailReasons[] actualFailReasons = metadata.getFailReasons().toArray(new FailReasons[0]);
+        // assert response metadata
+        UseCaseMetadataModel metadata = courseOnErrorResponse.getMetadata();
 
-        assertArrayEquals(
+        ComponentState expectedState = ComponentState.INVALID_UNCHANGED;
+        ComponentState actualComponentState = metadata.getComponentState();
+        assertEquals(
+                expectedState,
+                actualComponentState
+        );
+
+        // assert fail reasons
+        List<FailReasons> expectedFailReasons = Arrays.asList(
+                FailReason.NO_COURSE_SELECTED,
+                CommonFailReason.DATA_UNAVAILABLE
+        );
+        List<FailReasons> actualFailReasons = metadata.getFailReasons();
+
+        assertEquals(
                 expectedFailReasons,
                 actualFailReasons
         );
 
         // Assert course list is empty
         List<Course> expectedCourseList = new ArrayList<>();
-        List<Course> actualCourseList = onErrorResponse.getDomainModel().getCourses();
+        List<Course> actualCourseList = courseOnErrorResponse.getDomainModel().getCourses();
         assertEquals(
                 expectedCourseList,
                 actualCourseList
@@ -125,13 +139,10 @@ public class RecipeCourseTest {
     @Test
     public void newRequest_addCourseOne_VALID_CHANGED() {
         // Arrange
-        // execute and test a new empty request that returns DEFAULT_NO_COURSES
-        newRequest_defaultCourseListReturned_stateINVALID_UNCHANGED();
+        // execute and test a new domain Id only request that returns default state
+        newRequest_defaultNoCoursesReturned_stateINVALID_UNCHANGED();
 
-        // Arrange persistent model for archiving DEFAULT_NO_COURSES state
-        RecipeCoursePersistenceModel expectedArchivedDefaultNoCoursesModel = TestDataRecipeCourse.
-                getNewArchivedDefaultNoCourses();
-        // Arrange persistent model that represents state after adding course one
+        // Arrange persistent model that represents state after adding domain data
         RecipeCoursePersistenceModel expectedCourseOneSaveModel = TestDataRecipeCourse.
                 getNewActiveCourseOne();
 
@@ -140,13 +151,13 @@ public class RecipeCourseTest {
                 setCourseList(expectedCourseOneSaveModel.getCourses()).
                 build();
         RecipeCourseRequest addCourseOneRequest = new RecipeCourseRequest.Builder().
-                basedOnResponse(onErrorResponse).
+                basedOnResponse(courseOnErrorResponse).
                 setDomainModel(model).
                 build();
 
-        // new times for archive and new course model save
+        // new times for new course model save
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
-                expectedArchivedDefaultNoCoursesModel.getLastUpdate()
+                expectedCourseOneSaveModel.getCreateDate()
         );
         // data id for course one persistence model new state
         when(idProviderMock.getUId()).thenReturn(
@@ -156,13 +167,11 @@ public class RecipeCourseTest {
         // Act
         SUT.execute(addCourseOneRequest, new CourseCallbackClient());
 
-        // Assert old course archived
-        verify(repoCourseMock).save(eq(expectedArchivedDefaultNoCoursesModel));
         // Assert new persistence model saved
         verify(repoCourseMock).save(eq(expectedCourseOneSaveModel));
 
         // Assert correct response values
-        RecipeCourseResponse response = onSuccessResponse;
+        RecipeCourseResponse response = courseOnSuccessResponse;
         UseCaseMetadataModel metadata = response.getMetadata();
 
         // Assert state
@@ -201,7 +210,7 @@ public class RecipeCourseTest {
                 setCourseList(expectedCourseOneAndTwoSaveModel.getCourses()).
                 build();
         RecipeCourseRequest addCourseTwoRequest = new RecipeCourseRequest.Builder().
-                basedOnResponse(onSuccessResponse).
+                basedOnResponse(courseOnSuccessResponse).
                 setDomainModel(model).
                 build();
 
@@ -224,7 +233,7 @@ public class RecipeCourseTest {
         verify(repoCourseMock).save(eq(expectedCourseOneAndTwoSaveModel));
 
         // Assert correct response values
-        RecipeCourseResponse response = onSuccessResponse;
+        RecipeCourseResponse response = courseOnSuccessResponse;
         UseCaseMetadataModel metadata = response.getMetadata();
 
         // Assert state
@@ -263,7 +272,7 @@ public class RecipeCourseTest {
                 setCourseList(expectedActiveModelAfterCourseOneRemoved.getCourses()).
                 build();
         RecipeCourseRequest removeCourseOnRequest = new RecipeCourseRequest.Builder().
-                basedOnResponse(onSuccessResponse).
+                basedOnResponse(courseOnSuccessResponse).
                 setDomainModel(model).
                 build();
 
@@ -286,7 +295,7 @@ public class RecipeCourseTest {
         verify(repoCourseMock).save(eq(expectedActiveModelAfterCourseOneRemoved));
 
         // Assert correct metadata response values
-        RecipeCourseResponse response = onSuccessResponse;
+        RecipeCourseResponse response = courseOnSuccessResponse;
         UseCaseMetadataModel metadata = response.getMetadata();
 
         // Assert state
@@ -312,44 +321,24 @@ public class RecipeCourseTest {
         // execute and test a new empty request that adds two courses, then removes one
         newRequest_removeCourseOne_VALID_CHANGED();
 
-        // Arrange persistent model for archiving the removeCourseOne_VALID_CHANGED state
-        RecipeCoursePersistenceModel expectedArchivedModelForCourseTwo = TestDataRecipeCourse.
-                getNewArchivedAfterCourseOneRemoved(); // only course two remaining in the archived model
-
-        // Arrange persistent model that represents state after removing course two
-        RecipeCoursePersistenceModel expectedActiveModelAfterAllCoursesRemoved =
-                TestDataRecipeCourse.
-                        getNewActiveCourseDefaultAfterAllCoursesRemoved(); // no courses left
-
         // Arrange request to remove course two
         RecipeCourseRequest.DomainModel model = new RecipeCourseRequest.DomainModel.Builder().
                 setCourseList(new ArrayList<>()).
                 build();
         RecipeCourseRequest removeCourseOnRequest = new RecipeCourseRequest.Builder().
-                basedOnResponse(onSuccessResponse).
+                basedOnResponse(courseOnSuccessResponse).
                 setDomainModel(model).
                 build();
-
-        // new times for archive last update and new course model save
-        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
-                expectedActiveModelAfterAllCoursesRemoved.getLastUpdate()
-        );
-        // data id for persistence model new state
-        when(idProviderMock.getUId()).thenReturn(
-                expectedActiveModelAfterAllCoursesRemoved.getDataId()
-        );
 
         // Act
         SUT.execute(removeCourseOnRequest, new CourseCallbackClient());
 
         // Assert
-        // Assert old course archived
-        verify(repoCourseMock).save(eq(expectedArchivedModelForCourseTwo));
-        // Assert new persistence model saved
-        verify(repoCourseMock).save(eq(expectedActiveModelAfterAllCoursesRemoved));
+        // assert old state not archived (as new state is invalid as no data(no courses))
+        verifyNoMoreInteractions(repoCourseMock);
 
         // Assert correct metadata response values
-        RecipeCourseResponse response = onErrorResponse;
+        RecipeCourseResponse response = courseOnErrorResponse;
         UseCaseMetadataModel metadata = response.getMetadata();
 
         // Assert state
@@ -361,9 +350,8 @@ public class RecipeCourseTest {
         );
 
         // Assert fail reasons
-        List<FailReasons> expectedFailReasons = Arrays.asList(
-                FailReason.NO_COURSE_SELECTED,
-                CommonFailReason.DATA_UNAVAILABLE
+        List<FailReasons> expectedFailReasons = Collections.singletonList(
+                FailReason.NO_COURSE_SELECTED
         );
         List<FailReasons> actualFailReasons = metadata.getFailReasons();
         assertEquals(
@@ -393,8 +381,8 @@ public class RecipeCourseTest {
                 repoCourseCallback.capture());
         repoCourseCallback.getValue().onDomainModelLoaded(expectedAllCoursesModel);
 
-        RecipeCourseResponse.Model responseModel = onSuccessResponse.getDomainModel();
-        UseCaseMetadataModel metadata = onSuccessResponse.getMetadata();
+        RecipeCourseResponse.Model responseModel = courseOnSuccessResponse.getDomainModel();
+        UseCaseMetadataModel metadata = courseOnSuccessResponse.getMetadata();
 
         int expectedNumberOfModels = expectedAllCoursesModel.getCourses().size();
         int actualNumberOfModels = responseModel.getCourses().size();
@@ -420,48 +408,27 @@ public class RecipeCourseTest {
     @Test
     public void existingRequest_allModelsDeleted_INVALID_CHANGED() {
         // Arrange
-        // arrange persistence model representing all courses
-        RecipeCoursePersistenceModel expectedAllCoursesModel = TestDataRecipeCourse.
-                getExistingActiveWithAllCourses();
-
-        // arrange persistence model representing all courses persistent model archived
-        RecipeCoursePersistenceModel expectedArchivedModel = TestDataRecipeCourse.
-                getExistingArchivedWithAllCourses();
-
-        // arrange persistent model representing new state after courses removed
-        RecipeCoursePersistenceModel expectedNewStateAfterCoursesRemovedModel =
-                TestDataRecipeCourse.getExistingActiveAfterAllCoursesRemoved();
-
         // arrange test for testing the return of all courses
         existingRequest_completeListOfModelsReturned_VALID_UNCHANGED();
 
         // arrange a request for removing all courses
         RecipeCourseRequest request = new RecipeCourseRequest.Builder().
-                setDataId(expectedAllCoursesModel.getDataId()).
-                setDomainId(expectedAllCoursesModel.getDomainId()).
+                basedOnResponse(courseOnSuccessResponse).
                 setDomainModel(
                         new RecipeCourseRequest.DomainModel.Builder().
                                 getDefault().
                                 build()).
                 build();
 
-        when(timeProviderMock.getCurrentTimeInMills()).
-                thenReturn(expectedArchivedModel.getLastUpdate());
-        when(idProviderMock.getUId()).
-                thenReturn(expectedNewStateAfterCoursesRemovedModel.getDataId());
-
         // Act
         SUT.execute(request, new CourseCallbackClient());
 
         // Assert
-        // assert model correctly archived
-        verify(repoCourseMock).save(eq(expectedArchivedModel));
-
-        // assert new state saved
-        verify(repoCourseMock).save(eq(expectedNewStateAfterCoursesRemovedModel));
+        // assert no data saved (as new state is invalid)
+        verifyNoMoreInteractions(repoCourseMock);
 
         // assert response data
-        RecipeCourseResponse.Model model = onErrorResponse.getDomainModel();
+        RecipeCourseResponse.Model model = courseOnErrorResponse.getDomainModel();
         List<Course> expectedCourses = new ArrayList<>();
         List<Course> actualCourses = model.getCourses();
         assertEquals(
@@ -470,7 +437,7 @@ public class RecipeCourseTest {
         );
 
         // Assert metadata
-        UseCaseMetadataModel metadata = onErrorResponse.getMetadata();
+        UseCaseMetadataModel metadata = courseOnErrorResponse.getMetadata();
 
         ComponentState expectedState = ComponentState.INVALID_CHANGED;
         ComponentState actualState = metadata.getComponentState();
@@ -479,15 +446,14 @@ public class RecipeCourseTest {
                 actualState
         );
 
-        List<FailReasons> expectedFailReasons = Arrays.asList(
-                FailReason.NO_COURSE_SELECTED,
-                CommonFailReason.DATA_UNAVAILABLE);
+        List<FailReasons> expectedFailReasons = Collections.singletonList(
+                FailReason.NO_COURSE_SELECTED
+        );
         List<FailReasons> actualFailReasons = metadata.getFailReasons();
         assertEquals(
                 expectedFailReasons,
                 actualFailReasons
         );
-
     }
 
     // region helper methods -----------------------------------------------------------------------
@@ -500,13 +466,13 @@ public class RecipeCourseTest {
         @Override
         public void onUseCaseSuccess(RecipeCourseResponse response) {
             System.out.println(TAG + "onSuccess: " + response);
-            onSuccessResponse = response;
+            courseOnSuccessResponse = response;
         }
 
         @Override
         public void onUseCaseError(RecipeCourseResponse response) {
             System.out.println(TAG + "onError: " + response);
-            onErrorResponse = response;
+            courseOnErrorResponse = response;
         }
     }
     // endregion helper classes --------------------------------------------------------------------

@@ -288,7 +288,7 @@ public class UseCaseElementTest {
         }
 
         @Override
-        protected void createUpdatedDomainModelFromPersistenceModel(@Nonnull TestPersistenceModel persistenceModel) {
+        protected void createDomainModelsFromPersistenceModel(@Nonnull TestPersistenceModel persistenceModel) {
 
         }
 
@@ -304,6 +304,11 @@ public class UseCaseElementTest {
 
         @Override
         protected void save() {
+
+        }
+
+        @Override
+        protected void archivePersistenceModel(long currentTime) {
 
         }
 

@@ -22,7 +22,7 @@ public class TestDataRecipeIdentity {
     private static final String RECIPE_DOMAIN_ID_FROM_ANOTHER_USER = TestDataRecipeMetadata.
             getValidFromAnotherUser().getDomainId();
 
-    public static RecipeIdentityPersistenceModel getInvalidNewEmpty() {
+    public static RecipeIdentityPersistenceModel getNewInvalidActiveDefault() {
         return new RecipeIdentityPersistenceModel.Builder().
                 getDefault().
                 setDataId("dataId-recipeIdentity-id0").
@@ -128,7 +128,7 @@ public class TestDataRecipeIdentity {
 
     public static List<RecipeIdentityPersistenceModel> getAllNew() {
         return Arrays.asList(
-                getInvalidNewEmpty(),
+                getNewInvalidActiveDefault(),
                 getInvalidNewTitleTooShort(),
                 getInvalidNewTitleTooLong(),
                 getInvalidNewTitleTooLongDescriptionTooLong(),

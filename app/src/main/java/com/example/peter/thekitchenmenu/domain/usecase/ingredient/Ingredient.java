@@ -277,7 +277,7 @@ public class Ingredient
 
     private UseCaseMetadataModel getMetadata(IngredientPersistenceModel m) {
         return new UseCaseMetadataModel.Builder().
-                setState(getComponentState()).
+                setComponentState(getComponentState()).
                 setFailReasons(new ArrayList<>(failReasons)).
                 setCreatedBy(Constants.getUserId()).
                 setCreateDate(m.getCreateDate()).

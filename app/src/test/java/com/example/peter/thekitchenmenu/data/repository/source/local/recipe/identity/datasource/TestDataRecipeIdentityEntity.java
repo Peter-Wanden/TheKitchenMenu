@@ -11,7 +11,7 @@ public class TestDataRecipeIdentityEntity {
 
     public static RecipeIdentityEntity getInvalidNewEmpty() {
         return convertModelToEntity(
-                TestDataRecipeIdentity.getInvalidNewEmpty()
+                TestDataRecipeIdentity.getNewInvalidActiveDefault()
         );
     }
 

@@ -18,32 +18,32 @@ public class TestDataRecipeDurationEntity {
 
     public static RecipeDurationEntity getValidNew() {
         return convertDomainModelToDatabaseEntity(TestDataRecipeDuration.
-                getValidNew());
+                getNewActiveDefault());
     }
 
     public static RecipeDurationEntity getInvalidNewPrepTimeInvalid() {
         return convertDomainModelToDatabaseEntity(TestDataRecipeDuration.
-                getInvalidNewPrepTimeInvalid());
+                getNewInvalidPrepMinutes());
     }
 
     public static RecipeDurationEntity getInvalidNewCookTimeInvalid() {
         return convertDomainModelToDatabaseEntity(TestDataRecipeDuration.
-                getInvalidNewCookTimeInvalid());
+                getInvalidNewCookMinutes());
     }
 
     public static RecipeDurationEntity getValidNewPrepTimeValid() {
         return convertDomainModelToDatabaseEntity(TestDataRecipeDuration.
-                getValidNewPrepTimeValid());
+                getNewValidPrepTime());
     }
 
     public static RecipeDurationEntity getValidNewCookTimeValid() {
         return convertDomainModelToDatabaseEntity(TestDataRecipeDuration.
-                getValidNewCookTimeValid());
+                getNewValidCookTime());
     }
 
     public static RecipeDurationEntity getValidNewComplete() {
         return convertDomainModelToDatabaseEntity(TestDataRecipeDuration.
-                getValidNewComplete());
+                getNewValidPrepTimeValidCookTime());
     }
 
     public static List<RecipeDurationEntity> getAllNew() {
@@ -56,12 +56,12 @@ public class TestDataRecipeDurationEntity {
 
     public static RecipeDurationEntity getInvalidExistingComplete() {
         return convertDomainModelToDatabaseEntity(TestDataRecipeDuration.
-                getInvalidExistingComplete());
+                getExistingInvalidPreAndCookTime());
     }
 
     public static RecipeDurationEntity getValidExistingComplete() {
         return convertDomainModelToDatabaseEntity(TestDataRecipeDuration.
-                getValidExistingComplete());
+                getExistingValidPrepTimeValidCookTime());
     }
 
     public static RecipeDurationEntity getValidCompleteFromAnotherUser() {

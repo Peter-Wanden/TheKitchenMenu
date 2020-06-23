@@ -26,7 +26,7 @@ public class RecipeCourse
                 RecipeCourse.DomainModel,
                 RepositoryRecipeCourse> {
 
-//    private static final String TAG = "tkm-" + RecipeCourse.class.getSimpleName() + ": ";
+    private static final String TAG = "tkm-" + RecipeCourse.class.getSimpleName() + ": ";
 
     public enum Course {
         COURSE_ZERO(0),
@@ -118,7 +118,7 @@ public class RecipeCourse
     }
 
     @Override
-    protected void createUpdatedDomainModelFromPersistenceModel(
+    protected void createDomainModelsFromPersistenceModel(
             @Nonnull RecipeCoursePersistenceModel persistenceModel) {
         updatedDomainModel = new DomainModel(persistenceModel.getCourses());
         activeDomainModel = new DomainModel(persistenceModel.getCourses());
@@ -126,7 +126,7 @@ public class RecipeCourse
 
     @Override
     protected void createUpdatedDomainModelFromDefaultValues() {
-        updatedDomainModel.clear();
+        updatedDomainModel = new DomainModel();
     }
 
     @Override
@@ -147,10 +147,15 @@ public class RecipeCourse
         processCourseAdditions();
         processCourseSubtractions();
 
-        if (isNoCourseSelected()) {
+        if (isUpdatedDomainModelDefaultValues()) {
             failReasons.add(FailReason.NO_COURSE_SELECTED);
         }
+
         save();
+    }
+
+    private boolean isUpdatedDomainModelDefaultValues() {
+        return updatedDomainModel.equals(new DomainModel());
     }
 
     private void processCourseAdditions() {
@@ -184,10 +189,14 @@ public class RecipeCourse
 
     @Override
     protected void save() {
-        isDomainDataUnavailable = isNoCourseSelected();
+        System.out.println(TAG + "save: " +
+                "\n  - isChanged=" + isChanged +
+                "\n  - isDomainModelValid=" + isDomainModelValid()
+        );
 
-        if (isChanged || isNoCourseSelected()) {
+        if ((isChanged && isDomainModelValid())) {
 
+            useCaseDataId = idProvider.getUId();
             long currentTime = timeProvider.getCurrentTimeInMills();
 
             if (persistenceModel != null) {
@@ -195,7 +204,7 @@ public class RecipeCourse
             }
 
             persistenceModel = new RecipeCoursePersistenceModel.Builder().
-                    setDataId(idProvider.getUId()).
+                    setDataId(useCaseDataId).
                     setDomainId(useCaseDomainId).
                     setCourses(new ArrayList<>(activeDomainModel)).
                     setCreateDate(currentTime).
@@ -204,14 +213,12 @@ public class RecipeCourse
 
             repository.save(persistenceModel);
         }
+
         buildResponse();
     }
 
-    private boolean isNoCourseSelected() {
-        return updatedDomainModel.isEmpty();
-    }
-
-    private void archivePersistenceModel(long currentTime) {
+    @Override
+    protected void archivePersistenceModel(long currentTime) {
         RecipeCoursePersistenceModel archivedModel = new RecipeCoursePersistenceModel.Builder().
                 basedOnModel(persistenceModel).
                 setLastUpdate(currentTime).
@@ -222,8 +229,6 @@ public class RecipeCourse
 
     @Override
     protected void buildResponse() {
-        useCaseDataId = persistenceModel.getDataId();
-
         RecipeCourseResponse response = new RecipeCourseResponse.Builder().
                 setDataId(useCaseDataId).
                 setDomainId(useCaseDomainId).

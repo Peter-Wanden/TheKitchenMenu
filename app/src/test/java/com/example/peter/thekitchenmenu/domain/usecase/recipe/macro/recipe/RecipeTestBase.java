@@ -109,8 +109,8 @@ public class RecipeTestBase {
         );
         RecipeDuration duration = new RecipeDuration(
                 repoDurationMock,
-                timeProviderMock,
                 idProviderMock,
+                timeProviderMock,
                 RecipeDurationTest.MAX_PREP_TIME,
                 RecipeDurationTest.MAX_COOK_TIME
         );

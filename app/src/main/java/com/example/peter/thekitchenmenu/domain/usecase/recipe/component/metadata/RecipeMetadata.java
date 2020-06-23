@@ -208,7 +208,7 @@ public class RecipeMetadata
     }
 
     @Override
-    protected void createUpdatedDomainModelFromPersistenceModel(
+    protected void createDomainModelsFromPersistenceModel(
             @Nonnull RecipeMetadataPersistenceModel persistenceModel) {
 
     }
@@ -241,7 +241,7 @@ public class RecipeMetadata
         } else if (isValid() && !isDomainModelChanged()) {
             recipeState = ComponentState.VALID_UNCHANGED;
         } else {
-            addFailReasonNone();
+            addCommonFailReasons();
             recipeState = ComponentState.VALID_CHANGED;
         }
     }
@@ -260,7 +260,7 @@ public class RecipeMetadata
             isValid = false;
         }
         if (isValid) {
-            addFailReasonNone();
+            addCommonFailReasons();
         }
         return isValid;
     }
@@ -313,12 +313,6 @@ public class RecipeMetadata
         }
     }
 
-    private void addFailReasonNone() {
-        if (failReasons.isEmpty()) {
-            failReasons.add(CommonFailReason.NONE);
-        }
-    }
-
     protected void buildResponse() {
         RecipeMetadataResponse.Builder builder = new RecipeMetadataResponse.Builder();
         builder.setDomainId(useCaseDomainId);
@@ -341,7 +335,7 @@ public class RecipeMetadata
 
     private UseCaseMetadataModel getMetadata(RecipeMetadataPersistenceModel m) {
         return new UseCaseMetadataModel.Builder().
-                setState(recipeState).
+                setComponentState(recipeState).
                 setFailReasons(new ArrayList<>(failReasons)).
                 setCreatedBy(Constants.getUserId()).
                 setCreateDate(m.getCreateDate()).
@@ -384,5 +378,10 @@ public class RecipeMetadata
     @Override
     protected void save() {
         repository.save(persistenceModel);
+    }
+
+    @Override
+    protected void archivePersistenceModel(long currentTime) {
+
     }
 }

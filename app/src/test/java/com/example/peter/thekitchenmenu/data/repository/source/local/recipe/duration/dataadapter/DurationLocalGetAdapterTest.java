@@ -74,7 +74,7 @@ public class DurationLocalGetAdapterTest {
     public void getByDataId_domainModelReturned() {
         // Arrange
         RecipeDurationPersistenceModel expectedModel = TestDataRecipeDuration.
-                getValidExistingComplete();
+                getExistingValidPrepTimeValidCookTime();
         callbackClient = new GetDomainModelCallbackClient();
         // Act
         SUT.getByDataId(expectedModel.getDataId(), callbackClient);

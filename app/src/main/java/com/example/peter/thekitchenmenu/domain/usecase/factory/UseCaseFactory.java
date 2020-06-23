@@ -195,8 +195,8 @@ public class UseCaseFactory {
         Resources resources = application.getResources();
         return new RecipeDuration(
                 recipeDurationRepository,
-                new TimeProvider(),
                 new UniqueIdProvider(),
+                new TimeProvider(),
                 resources.getInteger(R.integer.recipe_max_prep_time_in_minutes),
                 resources.getInteger(R.integer.recipe_max_cook_time_in_minutes)
         );

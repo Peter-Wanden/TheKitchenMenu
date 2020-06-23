@@ -104,14 +104,14 @@ public class UseCaseMetadataModel {
 
         public Builder getDefault() {
             return new Builder().
-                    setState(ComponentState.INVALID_UNCHANGED).
+                    setComponentState(ComponentState.INVALID_UNCHANGED).
                     setFailReasons(getDefaultFailReasons()).
                     setCreatedBy(Constants.getUserId()).
                     setCreateDate(0L).
                     setLastUpdate(0L);
         }
 
-        public Builder setState(ComponentState state) {
+        public Builder setComponentState(ComponentState state) {
             this.state = state;
             return this;
         }

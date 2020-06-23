@@ -56,8 +56,6 @@ public final class RecipeDurationResponse
         private int cookMinutes;
         private int totalCookTime;
         private int totalTime;
-        private long createDate;
-        private long lastUpdate;
 
         private DomainModel(){}
 
@@ -89,14 +87,6 @@ public final class RecipeDurationResponse
             return totalTime;
         }
 
-        public long getCreateDate() {
-            return createDate;
-        }
-
-        public long getLastUpdate() {
-            return lastUpdate;
-        }
-
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
@@ -108,15 +98,13 @@ public final class RecipeDurationResponse
                     cookHours == domainModel.cookHours &&
                     cookMinutes == domainModel.cookMinutes &&
                     totalCookTime == domainModel.totalCookTime &&
-                    totalTime == domainModel.totalTime &&
-                    createDate == domainModel.createDate &&
-                    lastUpdate == domainModel.lastUpdate;
+                    totalTime == domainModel.totalTime;
         }
 
         @Override
         public int hashCode() {
             return Objects.hash(prepHours, prepMinutes, totalPrepTime, cookHours, cookMinutes,
-                    totalCookTime, totalTime, createDate, lastUpdate);
+                    totalCookTime, totalTime);
         }
 
         @Nonnull
@@ -130,8 +118,6 @@ public final class RecipeDurationResponse
                     ", cookMinutes=" + cookMinutes +
                     ", totalCookTime=" + totalCookTime +
                     ", totalTime=" + totalTime +
-                    ", createDate=" + createDate +
-                    ", lastUpdate=" + lastUpdate +
                     '}';
         }
 
@@ -149,8 +135,6 @@ public final class RecipeDurationResponse
                 domainModel.cookMinutes = 0;
                 domainModel.totalCookTime = 0;
                 domainModel.totalTime = 0;
-                domainModel.createDate = 0L;
-                domainModel.lastUpdate = 0L;
                 return self();
             }
 
@@ -186,16 +170,6 @@ public final class RecipeDurationResponse
 
             public Builder setTotalTime(int totalTime) {
                 domainModel.totalTime = totalTime;
-                return self();
-            }
-
-            public Builder setCreateDate(long createDate) {
-                domainModel.createDate = createDate;
-                return self();
-            }
-
-            public Builder setLastUpdate(long lastUpdate) {
-                domainModel.lastUpdate = lastUpdate;
                 return self();
             }
 

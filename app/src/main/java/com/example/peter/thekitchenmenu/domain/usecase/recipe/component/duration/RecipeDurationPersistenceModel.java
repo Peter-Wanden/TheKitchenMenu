@@ -5,7 +5,8 @@ import com.example.peter.thekitchenmenu.domain.model.BaseDomainPersistenceModel;
 import javax.annotation.Nonnull;
 
 public final class RecipeDurationPersistenceModel
-        extends BaseDomainPersistenceModel {
+        extends
+        BaseDomainPersistenceModel {
 
     private int prepTime;
     private int cookTime;
@@ -20,8 +21,42 @@ public final class RecipeDurationPersistenceModel
         return cookTime;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof RecipeDurationPersistenceModel)) return false;
+        if (!super.equals(o)) return false;
+
+        RecipeDurationPersistenceModel that = (RecipeDurationPersistenceModel) o;
+
+        if (prepTime != that.prepTime) return false;
+        return cookTime == that.cookTime;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + prepTime;
+        result = 31 * result + cookTime;
+        return result;
+    }
+
+    @Nonnull
+    @Override
+    public String toString() {
+        return "RecipeDurationPersistenceModel{" +
+                "dataId='" + dataId + '\'' +
+                ", domainId='" + domainId + '\'' +
+                ", prepTime=" + prepTime +
+                ", cookTime=" + cookTime +
+                ", createDate=" + createDate +
+                ", lastUpdate=" + lastUpdate +
+                '}';
+    }
+
     public static class Builder
-            extends PersistenceModelBuilder<Builder, RecipeDurationPersistenceModel> {
+            extends
+            PersistenceModelBuilder<Builder, RecipeDurationPersistenceModel> {
 
         public Builder() {
             domainModel = new RecipeDurationPersistenceModel();
@@ -37,7 +72,7 @@ public final class RecipeDurationPersistenceModel
             return self();
         }
 
-        public Builder basedOnPersistenceModel(@Nonnull RecipeDurationPersistenceModel m) {
+        public Builder basedOnModel(@Nonnull RecipeDurationPersistenceModel m) {
             domainModel.dataId = m.getDataId();
             domainModel.domainId = m.getDomainId();
             domainModel.prepTime = m.getPrepTime();

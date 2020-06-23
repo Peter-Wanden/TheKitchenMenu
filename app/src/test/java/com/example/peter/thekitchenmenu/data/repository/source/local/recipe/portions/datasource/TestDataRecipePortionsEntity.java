@@ -10,7 +10,7 @@ public class TestDataRecipePortionsEntity {
 
     public static RecipePortionsEntity getNewValidEmpty() {
         return convertModelToEntity(TestDataRecipePortions.
-                getNewValidEmpty()
+                getNewActiveDefault()
         );
     }
 
