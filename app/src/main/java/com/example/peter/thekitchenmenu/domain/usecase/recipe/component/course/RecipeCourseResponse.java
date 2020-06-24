@@ -13,8 +13,10 @@ import java.util.Objects;
 import javax.annotation.Nonnull;
 
 public final class RecipeCourseResponse
-        extends UseCaseMessageModelDataIdMetadata<RecipeCourseResponse.Model>
-        implements UseCaseBase.Response {
+        extends
+        UseCaseMessageModelDataIdMetadata<RecipeCourseResponse.Model>
+        implements
+        UseCaseBase.Response {
 
     @Nonnull
     @Override
@@ -36,6 +38,7 @@ public final class RecipeCourseResponse
             message = new RecipeCourseResponse();
         }
 
+        @Nonnull
         public Builder getDefault() {
             message.dataId = "";
             message.domainId = "";
@@ -74,6 +77,7 @@ public final class RecipeCourseResponse
             return Objects.hash(courseList);
         }
 
+        @Nonnull
         @Override
         public String toString() {
             return "Model{" +
@@ -81,12 +85,15 @@ public final class RecipeCourseResponse
                     '}';
         }
 
-        public static class Builder extends DomainModelBuilder<Builder, Model> {
+        public static class Builder
+                extends
+                DomainModelBuilder<Builder, Model> {
 
             public Builder() {
                 domainModel = new Model();
             }
 
+            @Override
             public Builder getDefault() {
                 domainModel.courseList = new ArrayList<>();
                 return self();

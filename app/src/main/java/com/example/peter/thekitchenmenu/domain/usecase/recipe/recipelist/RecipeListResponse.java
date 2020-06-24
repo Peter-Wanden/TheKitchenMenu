@@ -32,12 +32,17 @@ public class RecipeListResponse
     public RecipeListResponse(){}
 
     public static class Builder
-            extends MessageModelDataIdMetadataBuilder<Builder, RecipeListResponse, Model> {
+            extends
+            MessageModelDataIdMetadataBuilder<
+                    Builder,
+                    RecipeListResponse,
+                    Model> {
 
         public Builder() {
             message = new RecipeListResponse();
         }
 
+        @Override
         public Builder getDefault() {
             message.dataId = "";
             message.domainId = "";
@@ -52,7 +57,9 @@ public class RecipeListResponse
         }
     }
 
-    public static final class Model extends BaseDomainModel {
+    public static final class Model
+            extends
+            BaseDomainModel {
 
         private List<Recipe> recipes;
 
@@ -75,6 +82,7 @@ public class RecipeListResponse
             return Objects.hash(recipes);
         }
 
+        @Nonnull
         @Override
         public String toString() {
             return "Model{" +
@@ -82,12 +90,16 @@ public class RecipeListResponse
                     '}';
         }
 
-        public static class Builder extends DomainModelBuilder<Builder, Model> {
+        public static class Builder
+                extends DomainModelBuilder<
+                Builder,
+                Model> {
 
             public Builder() {
                 domainModel = new Model();
             }
 
+            @Override
             public Builder getDefault() {
                 domainModel.recipes = new ArrayList<>();
                 return self();

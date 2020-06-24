@@ -104,8 +104,8 @@ public class TestDataRecipePortions {
                 setDomainId(NEW_RECIPE_ID).
                 setServings(MAX_SERVINGS).
                 setSittings(MAX_SITTINGS).
-                setCreateDate(10L).
-                setLastUpdate(70L).
+                setCreateDate(20L).
+                setLastUpdate(20L).
                 build();
     }
 
@@ -156,7 +156,7 @@ public class TestDataRecipePortions {
                 setDomainId(EXISTING_RECIPE_ID).
                 setServings(getNewValidServingsValidSittings().getServings()).
                 setSittings(getExistingValidNinePortions().getSittings()).
-                setCreateDate(20L).
+                setCreateDate(40L).
                 setLastUpdate(40L).
                 build();
     }

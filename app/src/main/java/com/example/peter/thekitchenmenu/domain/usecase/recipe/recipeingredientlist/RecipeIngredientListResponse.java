@@ -6,7 +6,10 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-public final class RecipeIngredientListResponse implements UseCaseBase.Response {
+public final class RecipeIngredientListResponse
+        implements
+        UseCaseBase.Response {
+
     @Nonnull
     private final List<RecipeIngredientListItemModel> listItemModels;
 

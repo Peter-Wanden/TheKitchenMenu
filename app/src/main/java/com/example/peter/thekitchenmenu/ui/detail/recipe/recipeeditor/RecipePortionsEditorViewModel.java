@@ -143,7 +143,7 @@ public class RecipePortionsEditorViewModel extends ObservableViewModel {
                 if (servingsParsed == MEASUREMENT_ERROR)
                     servingsErrorMessage.set(numberFormatExceptionErrorMessage());
                 else {
-                    RecipePortionsRequest.Model model = new RecipePortionsRequest.Model.Builder().
+                    RecipePortionsRequest.DomainModel model = new RecipePortionsRequest.DomainModel.Builder().
                             basedResponseModel(response.getDomainModel()).
                             setServings(servingsParsed).
                             build();
@@ -192,7 +192,7 @@ public class RecipePortionsEditorViewModel extends ObservableViewModel {
                 if (sittingsParsed == MEASUREMENT_ERROR)
                     sittingsErrorMessage.set(numberFormatExceptionErrorMessage());
                 else {
-                    RecipePortionsRequest.Model model = new RecipePortionsRequest.Model.Builder().
+                    RecipePortionsRequest.DomainModel model = new RecipePortionsRequest.DomainModel.Builder().
                             basedResponseModel(response.getDomainModel()).
                             setSittings(sittingsParsed).
                             build();

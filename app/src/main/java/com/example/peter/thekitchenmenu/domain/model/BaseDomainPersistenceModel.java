@@ -60,18 +60,12 @@ public abstract class BaseDomainPersistenceModel
                 '}';
     }
 
-    public static class PersistenceModelBuilder<
+    public abstract static class PersistenceModelBuilder<
             SELF extends PersistenceModelBuilder<SELF, DOMAIN_MODEL>,
                     DOMAIN_MODEL extends BaseDomainPersistenceModel>
             extends DomainModelBuilder<SELF, DOMAIN_MODEL> {
-        @Override
-        public SELF getDefault() {
-            domainModel.dataId = "";
-            domainModel.domainId = "";
-            domainModel.createDate = 0L;
-            domainModel.lastUpdate = 0L;
-            return self();
-        }
+
+        public abstract SELF basedOnModel(DOMAIN_MODEL model);
 
         public SELF setDataId(String dataId) {
             domainModel.dataId = dataId;

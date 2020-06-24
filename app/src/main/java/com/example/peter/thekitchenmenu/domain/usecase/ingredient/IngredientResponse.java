@@ -11,8 +11,10 @@ import java.util.Objects;
 import javax.annotation.Nonnull;
 
 public final class IngredientResponse
-        extends UseCaseMessageModelDataIdMetadata<IngredientResponse.Model>
-        implements UseCaseBase.Response {
+        extends
+        UseCaseMessageModelDataIdMetadata<IngredientResponse.Model>
+        implements
+        UseCaseBase.Response {
 
     @Nonnull
     @Override
@@ -48,7 +50,10 @@ public final class IngredientResponse
         }
     }
 
-    public static final class Model extends BaseDomainModel {
+    public static final class Model
+            extends
+            BaseDomainModel {
+
         private String name;
         private String description;
         private double conversionFactor;
@@ -70,6 +75,7 @@ public final class IngredientResponse
             return Objects.hash(name, description, conversionFactor);
         }
 
+        @Nonnull
         @Override
         public String toString() {
             return "Model{" +
@@ -97,6 +103,7 @@ public final class IngredientResponse
                 domainModel = new Model();
             }
 
+            @Override
             public Builder getDefault() {
                 domainModel.name = "";
                 domainModel.description = "";

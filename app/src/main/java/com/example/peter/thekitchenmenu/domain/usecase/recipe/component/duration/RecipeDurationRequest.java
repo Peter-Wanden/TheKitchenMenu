@@ -10,9 +10,12 @@ import java.util.Objects;
 import javax.annotation.Nonnull;
 
 public final class RecipeDurationRequest
-        extends UseCaseMessageModelDataId<RecipeDurationRequest.DomainModel>
-        implements UseCaseBase.Request {
+        extends
+        UseCaseMessageModelDataId<RecipeDurationRequest.DomainModel>
+        implements
+        UseCaseBase.Request {
 
+    @Nonnull
     @Override
     public String toString() {
         return "RecipeDurationRequest{" +
@@ -22,15 +25,21 @@ public final class RecipeDurationRequest
                 '}';
     }
 
-    private RecipeDurationRequest() {}
+    private RecipeDurationRequest() {
+    }
 
     public static class Builder
-            extends UseCaseMessageModelDataIdBuilder<Builder, RecipeDurationRequest, DomainModel> {
+            extends
+            UseCaseMessageModelDataIdBuilder<
+                    Builder,
+                    RecipeDurationRequest,
+                    DomainModel> {
 
         public Builder() {
             message = new RecipeDurationRequest();
         }
 
+        @Override
         public Builder getDefault() {
             message.dataId = "";
             message.domainId = "";
@@ -53,13 +62,17 @@ public final class RecipeDurationRequest
         }
     }
 
-    public static final class DomainModel extends BaseDomainModel {
+    public static final class DomainModel
+            extends
+            BaseDomainModel {
+
         private int prepHours;
         private int prepMinutes;
         private int cookHours;
         private int cookMinutes;
 
-        private DomainModel() {}
+        private DomainModel() {
+        }
 
         public int getPrepHours() {
             return prepHours;
@@ -104,12 +117,17 @@ public final class RecipeDurationRequest
                     '}';
         }
 
-        public static class Builder extends DomainModelBuilder<Builder, DomainModel> {
+        public static class Builder
+                extends
+                DomainModelBuilder<
+                        Builder,
+                        DomainModel> {
 
             public Builder() {
                 domainModel = new DomainModel();
             }
 
+            @Override
             public Builder getDefault() {
                 domainModel.prepHours = 0;
                 domainModel.prepMinutes = 0;

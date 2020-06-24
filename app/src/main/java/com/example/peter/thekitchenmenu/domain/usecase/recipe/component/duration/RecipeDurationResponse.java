@@ -10,8 +10,10 @@ import java.util.Objects;
 import javax.annotation.Nonnull;
 
 public final class RecipeDurationResponse
-        extends UseCaseMessageModelDataIdMetadata<RecipeDurationResponse.DomainModel>
-        implements UseCaseBase.Response {
+        extends
+        UseCaseMessageModelDataIdMetadata<RecipeDurationResponse.DomainModel>
+        implements
+        UseCaseBase.Response {
 
     @Nonnull
     @Override
@@ -27,12 +29,17 @@ public final class RecipeDurationResponse
     private RecipeDurationResponse() {}
 
     public static class Builder
-            extends MessageModelDataIdMetadataBuilder<Builder, RecipeDurationResponse, DomainModel> {
+            extends
+            MessageModelDataIdMetadataBuilder<
+                    Builder,
+                    RecipeDurationResponse,
+                    DomainModel> {
 
         public Builder() {
             message = new RecipeDurationResponse();
         }
 
+        @Override
         public Builder getDefault() {
             message.dataId = "";
             message.domainId = "";
@@ -47,7 +54,9 @@ public final class RecipeDurationResponse
         }
     }
 
-    public static final class DomainModel extends BaseDomainModel {
+    public static final class DomainModel
+            extends
+            BaseDomainModel {
 
         private int prepHours;
         private int prepMinutes;
@@ -121,12 +130,17 @@ public final class RecipeDurationResponse
                     '}';
         }
 
-        public static class Builder extends DomainModelBuilder<Builder, DomainModel> {
+        public static class Builder
+                extends
+                DomainModelBuilder<
+                        Builder,
+                        DomainModel> {
 
             public Builder() {
                 domainModel = new DomainModel();
             }
 
+            @Override
             public Builder getDefault() {
                 domainModel.prepHours = 0;
                 domainModel.prepMinutes = 0;

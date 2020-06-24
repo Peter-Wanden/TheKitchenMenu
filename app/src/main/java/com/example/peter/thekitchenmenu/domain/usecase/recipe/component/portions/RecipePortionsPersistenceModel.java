@@ -57,6 +57,7 @@ public final class RecipePortionsPersistenceModel
             domainModel = new RecipePortionsPersistenceModel();
         }
 
+        @Override
         public Builder getDefault() {
             domainModel.dataId = "";
             domainModel.domainId = "";
@@ -67,6 +68,7 @@ public final class RecipePortionsPersistenceModel
             return self();
         }
 
+        @Override
         public Builder basedOnModel(@Nonnull RecipePortionsPersistenceModel m) {
             domainModel.dataId = m.getDataId();
             domainModel.domainId = m.getDomainId();

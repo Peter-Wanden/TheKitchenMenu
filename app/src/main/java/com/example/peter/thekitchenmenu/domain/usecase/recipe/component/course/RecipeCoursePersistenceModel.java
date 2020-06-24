@@ -42,6 +42,7 @@ public final class RecipeCoursePersistenceModel
         return result;
     }
 
+    @Nonnull
     @Override
     public String toString() {
         return "RecipeCoursePersistenceModel{" +
@@ -71,6 +72,7 @@ public final class RecipeCoursePersistenceModel
             return self();
         }
 
+        @Override
         public Builder basedOnModel(RecipeCoursePersistenceModel persistenceModel) {
             domainModel.dataId = persistenceModel.getDataId();
             domainModel.domainId = persistenceModel.getDomainId();

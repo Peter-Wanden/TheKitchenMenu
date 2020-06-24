@@ -10,9 +10,12 @@ import java.util.Objects;
 import javax.annotation.Nonnull;
 
 public final class RecipePortionsResponse
-        extends UseCaseMessageModelDataIdMetadata<RecipePortionsResponse.Model>
-        implements UseCaseBase.Response {
+        extends
+        UseCaseMessageModelDataIdMetadata<RecipePortionsResponse.Model>
+        implements
+        UseCaseBase.Response {
 
+    @Nonnull
     @Override
     public String toString() {
         return "RecipePortionsResponse{" +
@@ -26,12 +29,17 @@ public final class RecipePortionsResponse
     private RecipePortionsResponse() {}
 
     public static class Builder
-            extends MessageModelDataIdMetadataBuilder<Builder, RecipePortionsResponse, Model> {
+            extends
+            MessageModelDataIdMetadataBuilder<
+                    Builder,
+                    RecipePortionsResponse,
+                    Model> {
 
         public Builder() {
             message = new RecipePortionsResponse();
         }
 
+        @Override
         public Builder getDefault() {
             message.dataId = "";
             message.domainId = "";
@@ -46,7 +54,9 @@ public final class RecipePortionsResponse
         }
     }
 
-    public static final class Model extends BaseDomainModel {
+    public static final class Model
+            extends
+            BaseDomainModel {
 
         private int servings;
         private int sittings;
@@ -92,12 +102,17 @@ public final class RecipePortionsResponse
                     '}';
         }
 
-        public static class Builder extends DomainModelBuilder<Builder, Model> {
+        public static class Builder
+                extends
+                DomainModelBuilder<
+                        Builder,
+                        Model> {
 
             public Builder() {
                 domainModel = new RecipePortionsResponse.Model();
             }
 
+            @Override
             public Builder getDefault() {
                 domainModel.servings = RecipePortions.MIN_SERVINGS;
                 domainModel.sittings = RecipePortions.MIN_SITTINGS;

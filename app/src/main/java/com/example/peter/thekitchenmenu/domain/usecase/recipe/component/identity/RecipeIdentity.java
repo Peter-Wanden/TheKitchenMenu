@@ -25,13 +25,15 @@ import static com.example.peter.thekitchenmenu.domain.usecase.textvalidation.Tex
 public class RecipeIdentity
         extends
         UseCaseElement<
+                RepositoryRecipeIdentity,
                 RecipeIdentityPersistenceModel,
-                RecipeIdentity.DomainModel,
-                RepositoryRecipeIdentity> {
+                RecipeIdentity.DomainModel> {
 
     private static final String TAG = "tkm-" + RecipeIdentity.class.getSimpleName() + ": ";
 
-    protected static final class DomainModel implements UseCaseDomainModel {
+    protected static final class DomainModel
+            implements
+            UseCaseDomainModel {
         @Nonnull
         private String title = "";
         @Nonnull
@@ -69,7 +71,9 @@ public class RecipeIdentity
         }
     }
 
-    public enum FailReason implements FailReasons {
+    public enum FailReason
+            implements
+            FailReasons {
         TITLE_TOO_SHORT(300),
         TITLE_TOO_LONG(301),
         DESCRIPTION_TOO_SHORT(302),
@@ -103,82 +107,68 @@ public class RecipeIdentity
     private static final TextType DESCRIPTION_TEXT_TYPE = TextType.LONG_TEXT;
 
     @Nonnull
-    private final UniqueIdProvider idProvider;
-    @Nonnull
-    private final TimeProvider timeProvider;
-    @Nonnull
     private final TextValidator textValidator;
+
+    private boolean isTitleValidationComplete;
+    private boolean isDescriptionValidationComplete;
 
     public RecipeIdentity(@Nonnull RepositoryRecipeIdentity repository,
                           @Nonnull UniqueIdProvider idProvider,
                           @Nonnull TimeProvider timeProvider,
                           @Nonnull TextValidator textValidator) {
+
         this.repository = repository;
         this.idProvider = idProvider;
         this.timeProvider = timeProvider;
-        this.textValidator = textValidator;
 
-        activeDomainModel = new DomainModel();
-        updatedDomainModel = new DomainModel();
+        domainModel = new DomainModel();
+
+        this.textValidator = textValidator;
     }
 
     @Override
-    protected void createDomainModelsFromPersistenceModel(
+    protected DomainModel createDomainModelFromPersistenceModel(
             @Nonnull RecipeIdentityPersistenceModel persistenceModel) {
 
-        updatedDomainModel = new DomainModel(
-                persistenceModel.getTitle(),
-                persistenceModel.getDescription()
-        );
-
-        activeDomainModel = new DomainModel(
+        return new DomainModel(
                 persistenceModel.getTitle(),
                 persistenceModel.getDescription()
         );
     }
 
     @Override
-    protected void createUpdatedDomainModelFromDefaultValues() {
-        updatedDomainModel = new DomainModel();
+    protected DomainModel createDomainModelFromDefaultValues() {
+        return new DomainModel();
     }
 
     @Override
-    protected void createUpdatedDomainModelFromRequestModel() {
-        RecipeIdentityRequest request = (RecipeIdentityRequest) getRequest();
-        RecipeIdentityRequest.DomainModel requestModel = request.getDomainModel();
+    protected DomainModel createDomainModelFromRequestModel() {
+        RecipeIdentityRequest.DomainModel requestModel = ((RecipeIdentityRequest) getRequest()).
+                getDomainModel();
 
-        updatedDomainModel = new DomainModel(
+        return new DomainModel(
                 requestModel.getTitle(),
                 requestModel.getDescription()
         );
     }
 
     @Override
-    protected void initialiseUseCaseForUpdatedDomainModelProcessing() {
-        failReasons.clear();
-        isChanged = !activeDomainModel.equals(updatedDomainModel);
-        validateUpdatedDomainModelElements();
-    }
-
-    @Override
-    protected void validateUpdatedDomainModelElements() {
-        System.out.println(TAG + "validateDomainDataElements: " +
-                "\n  - activeDomainModel= " + activeDomainModel +
-                "\n  - updatedDomainModel= " + updatedDomainModel
-        );
-
+    protected void validateDomainModelElements() {
         validateTitle();
         validateDescription();
 
-        if (activeDomainModel.equals(updatedDomainModel)) {
+        boolean isValidationComplete = isTitleValidationComplete && isDescriptionValidationComplete;
+
+        if (isValidationComplete) {
             save();
         }
     }
 
     private void validateTitle() {
+        isTitleValidationComplete = false;
         TextValidatorRequest request = new TextValidatorRequest(
                 TITLE_TEXT_TYPE,
-                new TextValidatorModel(updatedDomainModel.title)
+                new TextValidatorModel(domainModel.title)
         );
         textValidator.execute(request, new UseCaseBase.Callback<TextValidatorResponse>() {
             @Override
@@ -193,7 +183,7 @@ public class RecipeIdentity
             }
 
             private void processResults() {
-                activeDomainModel.title = updatedDomainModel.title;
+                isTitleValidationComplete = true;
             }
         });
     }
@@ -208,9 +198,10 @@ public class RecipeIdentity
     }
 
     private void validateDescription() {
+        isDescriptionValidationComplete = false;
         TextValidatorRequest request = new TextValidatorRequest(
                 DESCRIPTION_TEXT_TYPE,
-                new TextValidatorModel(updatedDomainModel.description)
+                new TextValidatorModel(domainModel.description)
         );
         textValidator.execute(request, new UseCaseBase.Callback<TextValidatorResponse>() {
             @Override
@@ -225,7 +216,7 @@ public class RecipeIdentity
             }
 
             private void processResults() {
-                activeDomainModel.description = updatedDomainModel.description;
+                isDescriptionValidationComplete = true;
             }
         });
     }
@@ -241,26 +232,20 @@ public class RecipeIdentity
 
     @Override
     protected void save() {
-        System.out.println(TAG + "save: " +
-                "\n  - isChanged=" + isChanged +
-                "\n  - isDomainModelValid=" + isDomainModelValid() +
-                "\n  - failReasons=" + failReasons
-        );
-
         if ((isChanged && isDomainModelValid())) {
 
             useCaseDataId = idProvider.getUId();
             long currentTime = timeProvider.getCurrentTimeInMills();
 
             if (persistenceModel != null) {
-                archivePersistenceModel(currentTime);
+                archiveExistingPersistenceModel(currentTime);
             }
 
             persistenceModel = new RecipeIdentityPersistenceModel.Builder().
                     setDataId(useCaseDataId).
                     setDomainId(useCaseDomainId).
-                    setTitle(activeDomainModel.title).
-                    setDescription(activeDomainModel.description).
+                    setTitle(domainModel.title).
+                    setDescription(domainModel.description).
                     setCreateDate(currentTime).
                     setLastUpdate(currentTime).
                     build();
@@ -271,13 +256,15 @@ public class RecipeIdentity
     }
 
     @Override
-    protected void archivePersistenceModel(long currentTime) {
-        RecipeIdentityPersistenceModel archivedModel = new RecipeIdentityPersistenceModel.
-                Builder().basedOnPersistenceModel(persistenceModel).
+    protected void archiveExistingPersistenceModel(long currentTime) {
+        RecipeIdentityPersistenceModel model = new RecipeIdentityPersistenceModel.Builder().
+                basedOnModel(persistenceModel).
                 setLastUpdate(currentTime).
                 build();
 
-        repository.save(archivedModel);
+        System.out.println(TAG + "archivePersistenceModel= " + model);
+
+        repository.save(model);
     }
 
     protected void buildResponse() {
@@ -292,8 +279,8 @@ public class RecipeIdentity
 
     private RecipeIdentityResponse.DomainModel getResponseModel() {
         return new RecipeIdentityResponse.DomainModel.Builder().
-                setTitle(activeDomainModel.title).
-                setDescription(activeDomainModel.description).
+                setTitle(domainModel.title).
+                setDescription(domainModel.description).
                 build();
     }
 }

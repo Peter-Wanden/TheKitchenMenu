@@ -8,7 +8,10 @@ import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public final class TextValidatorResponse implements UseCaseBase.Response {
+public final class TextValidatorResponse
+        implements
+        UseCaseBase.Response {
+
     @Nonnull
     private final FailReasons failReason;
     @Nonnull

@@ -5,7 +5,9 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recip
 
 import javax.annotation.Nonnull;
 
-public final class RecipeCopyResponse implements UseCaseBase.Response {
+public final class RecipeCopyResponse
+        implements
+        UseCaseBase.Response {
 
     @Nonnull
     private final Recipe recipeMacro;
@@ -19,6 +21,7 @@ public final class RecipeCopyResponse implements UseCaseBase.Response {
         return recipeMacro;
     }
 
+    @Nonnull
     @Override
     public String toString() {
         return "RecipeMacroCopyResponse{" +

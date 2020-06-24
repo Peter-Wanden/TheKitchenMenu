@@ -62,6 +62,7 @@ public final class RecipeDurationPersistenceModel
             domainModel = new RecipeDurationPersistenceModel();
         }
 
+        @Override
         public Builder getDefault() {
             domainModel.dataId = "";
             domainModel.domainId = "";
@@ -72,6 +73,7 @@ public final class RecipeDurationPersistenceModel
             return self();
         }
 
+        @Override
         public Builder basedOnModel(@Nonnull RecipeDurationPersistenceModel m) {
             domainModel.dataId = m.getDataId();
             domainModel.domainId = m.getDomainId();

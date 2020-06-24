@@ -14,8 +14,10 @@ import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.m
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentState;
 
 public final class RecipeMetadataResponse
-        extends UseCaseMessageModelDataIdMetadata<RecipeMetadataResponse.Model>
-        implements UseCaseBase.Response {
+        extends
+        UseCaseMessageModelDataIdMetadata<RecipeMetadataResponse.Model>
+        implements
+        UseCaseBase.Response {
 
     @Nonnull
     @Override
@@ -31,12 +33,17 @@ public final class RecipeMetadataResponse
     private RecipeMetadataResponse() {}
 
     public static class Builder
-            extends MessageModelDataIdMetadataBuilder<Builder, RecipeMetadataResponse, Model> {
+            extends
+            MessageModelDataIdMetadataBuilder<
+                    Builder,
+                    RecipeMetadataResponse,
+                    Model> {
 
         public Builder() {
             message = new RecipeMetadataResponse();
         }
 
+        @Override
         public Builder getDefault() {
             message.dataId = "";
             message.domainId = "";
@@ -51,7 +58,10 @@ public final class RecipeMetadataResponse
         }
     }
 
-    public static final class Model extends BaseDomainModel {
+    public static final class Model
+            extends
+            BaseDomainModel {
+
         private String parentDomainId;
         private HashMap<ComponentName, ComponentState> componentStates;
 
@@ -80,6 +90,7 @@ public final class RecipeMetadataResponse
             return Objects.hash(parentDomainId, componentStates);
         }
 
+        @Nonnull
         @Override
         public String toString() {
             return "Model{" +
@@ -88,12 +99,17 @@ public final class RecipeMetadataResponse
                     '}';
         }
 
-        public static class Builder extends DomainModelBuilder<Builder, Model> {
+        public static class Builder
+                extends
+                DomainModelBuilder<
+                        Builder,
+                        Model> {
 
             public Builder() {
                 domainModel = new Model();
             }
 
+            @Override
             public Builder getDefault() {
                 domainModel.parentDomainId = "";
                 domainModel.componentStates = new HashMap<>();

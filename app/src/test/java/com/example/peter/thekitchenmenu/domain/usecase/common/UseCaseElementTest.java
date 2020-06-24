@@ -78,7 +78,7 @@ public class UseCaseElementTest {
         // Act
         SUT.execute(request, new DummyUseCaseCallback());
         // Assert
-       assertTrue(SUT.isLoadDomainModelByDomainId);
+        assertTrue(SUT.isLoadDomainModelByDomainId);
     }
 
     @Test
@@ -222,10 +222,9 @@ public class UseCaseElementTest {
     public static class UseCaseElementInheritor
             extends
             UseCaseElement<
+                    Repository<TestPersistenceModel>,
                     TestPersistenceModel,
-                    UseCaseElementInheritor.DomainModel,
-                    Repository<TestPersistenceModel>
-                    > {
+                    UseCaseElementInheritor.DomainModel>{
 
         private static final String TAG = "tkm-" + UseCaseElementInheritor.class.
                 getSimpleName() + ": ";
@@ -262,8 +261,8 @@ public class UseCaseElementTest {
 
 
         @Override
-        protected void createUpdatedDomainModelFromDefaultValues() {
-
+        protected DomainModel createDomainModelFromDefaultValues() {
+            return new DomainModel();
         }
 
         @Override
@@ -283,22 +282,22 @@ public class UseCaseElementTest {
         }
 
         @Override
-        protected void createUpdatedDomainModelFromRequestModel() {
+        protected DomainModel createDomainModelFromRequestModel() {
+            return new DomainModel();
+        }
+
+        @Override
+        protected DomainModel createDomainModelFromPersistenceModel(@Nonnull TestPersistenceModel persistenceModel) {
+            return new DomainModel();
+        }
+
+        @Override
+        protected void initialiseUseCaseForDomainModelProcessing() {
 
         }
 
         @Override
-        protected void createDomainModelsFromPersistenceModel(@Nonnull TestPersistenceModel persistenceModel) {
-
-        }
-
-        @Override
-        protected void initialiseUseCaseForUpdatedDomainModelProcessing() {
-
-        }
-
-        @Override
-        protected void validateUpdatedDomainModelElements() {
+        protected void validateDomainModelElements() {
 
         }
 
@@ -308,7 +307,7 @@ public class UseCaseElementTest {
         }
 
         @Override
-        protected void archivePersistenceModel(long currentTime) {
+        protected void archiveExistingPersistenceModel(long currentTime) {
 
         }
 

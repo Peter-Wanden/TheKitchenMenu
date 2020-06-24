@@ -91,7 +91,8 @@ public class ProductMeasurementPersistenceModel
     }
 
     public static class Builder
-            extends DomainModelBuilder<Builder, ProductMeasurementPersistenceModel> {
+            extends
+            PersistenceModelBuilder<Builder, ProductMeasurementPersistenceModel> {
 
         public Builder() {
             domainModel = new ProductMeasurementPersistenceModel();
@@ -108,6 +109,21 @@ public class ProductMeasurementPersistenceModel
             domainModel.numberOfItems = MIN_NUMBER_OF_ITEMS;
             domainModel.createDate = 0L;
             domainModel.lastUpdate = 0L;
+            return self();
+        }
+
+        @Override
+        public Builder basedOnModel(ProductMeasurementPersistenceModel model) {
+            domainModel.dataId = model.getDataId();
+            domainModel.domainId = model.getDomainId();
+            domainModel.productId = model.getProductId();
+            domainModel.shelfLife = model.getShelfLife();
+            domainModel.measurementSubtype = model.getMeasurementSubtype();
+            domainModel.baseUnits = model.getBaseUnits();
+            domainModel.numberOfItems = model.getNumberOfItems();
+            domainModel.createDate = model.getCreateDate();
+            domainModel.lastUpdate = model.getLastUpdate();
+
             return self();
         }
 

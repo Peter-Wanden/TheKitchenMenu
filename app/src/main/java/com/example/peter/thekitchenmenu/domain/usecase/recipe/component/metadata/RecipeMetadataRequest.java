@@ -13,8 +13,10 @@ import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.m
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentState;
 
 public final class RecipeMetadataRequest
-        extends UseCaseMessageModelDataId<RecipeMetadataRequest.Model>
-        implements UseCaseBase.Request {
+        extends
+        UseCaseMessageModelDataId<RecipeMetadataRequest.DomainModel>
+        implements
+        UseCaseBase.Request {
 
     @Nonnull
     @Override
@@ -30,17 +32,22 @@ public final class RecipeMetadataRequest
     }
 
     public static class Builder
-            extends UseCaseMessageModelDataIdBuilder<Builder, RecipeMetadataRequest, Model> {
+            extends
+            UseCaseMessageModelDataIdBuilder<
+                    Builder,
+                    RecipeMetadataRequest,
+                    DomainModel> {
 
         public Builder() {
             message = new RecipeMetadataRequest();
-            message.model = new Model();
+            message.model = new DomainModel();
         }
 
+        @Override
         public Builder getDefault() {
             message.dataId = NO_ID;
             message.domainId = NO_ID;
-            message.model = new Model.Builder().getDefault().build();
+            message.model = new DomainModel.Builder().getDefault().build();
             return self();
         }
 
@@ -58,7 +65,10 @@ public final class RecipeMetadataRequest
         }
     }
 
-    public static final class Model extends BaseDomainModel {
+    public static final class DomainModel
+            extends
+            BaseDomainModel {
+
         private String parentDomainId;
         private HashMap<ComponentName, ComponentState> componentStates;
 
@@ -76,7 +86,7 @@ public final class RecipeMetadataRequest
         public boolean equals(Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
-            Model model = (Model) o;
+            DomainModel model = (DomainModel) o;
             return Objects.equals(parentDomainId, model.parentDomainId) &&
                     Objects.equals(componentStates, model.componentStates);
         }
@@ -95,17 +105,23 @@ public final class RecipeMetadataRequest
                     '}';
         }
 
-        public static class Builder extends DomainModelBuilder<Builder, Model> {
+        public static class Builder
+                extends
+                DomainModelBuilder<
+                        Builder,
+                        DomainModel> {
 
             public Builder() {
-                domainModel = new Model();
+                domainModel = new DomainModel();
             }
 
+            @Override
             public Builder getDefault() {
                 domainModel.parentDomainId = "";
                 domainModel.componentStates = new HashMap<>();
                 return self();
             }
+
 
             public Builder basedOnResponseModel(RecipeMetadataResponse.Model m) {
                 domainModel.parentDomainId = m.getParentDomainId();

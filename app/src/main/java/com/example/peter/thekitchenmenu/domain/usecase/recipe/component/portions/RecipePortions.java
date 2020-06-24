@@ -17,43 +17,15 @@ import javax.annotation.Nonnull;
 public class RecipePortions
         extends
         UseCaseElement<
+                RepositoryRecipePortions,
                 RecipePortionsPersistenceModel,
-                RecipePortions.DomainModel,
-                RepositoryRecipePortions> {
+                RecipePortions.DomainModel> {
 
     private static final String TAG = "tkm-" + RecipePortions.class.getSimpleName() + ": ";
 
-    public enum FailReason implements FailReasons {
-        SERVINGS_TOO_LOW(350),
-        SERVINGS_TOO_HIGH(351),
-        SITTINGS_TOO_LOW(352),
-        SITTINGS_TOO_HIGH(353);
-
-        private final int id;
-
-        @SuppressLint("UseSparseArrays")
-        private static Map<Integer, FailReason> options = new HashMap<>();
-
-        FailReason(int id) {
-            this.id = id;
-        }
-
-        static {
-            for (FailReason s : FailReason.values())
-                options.put(s.id, s);
-        }
-
-        public static FailReason getById(int id) {
-            return options.get(id);
-        }
-
-        @Override
-        public int getId() {
-            return id;
-        }
-    }
-
-    protected static final class DomainModel implements UseCaseDomainModel {
+    protected static final class DomainModel
+            implements
+            UseCaseDomainModel {
         private int servings;
         private int sittings;
 
@@ -93,15 +65,42 @@ public class RecipePortions
         }
     }
 
+    public enum FailReason
+            implements
+            FailReasons {
+        SERVINGS_TOO_LOW(350),
+        SERVINGS_TOO_HIGH(351),
+        SITTINGS_TOO_LOW(352),
+        SITTINGS_TOO_HIGH(353);
+
+        private final int id;
+
+        @SuppressLint("UseSparseArrays")
+        private static Map<Integer, FailReason> options = new HashMap<>();
+
+        FailReason(int id) {
+            this.id = id;
+        }
+
+        static {
+            for (FailReason s : FailReason.values())
+                options.put(s.id, s);
+        }
+
+        public static FailReason getById(int id) {
+            return options.get(id);
+        }
+
+        @Override
+        public int getId() {
+            return id;
+        }
+    }
+
     static final int MIN_SERVINGS = 1;
     static final int MIN_SITTINGS = 1;
     private final int maxServings;
     private final int maxSittings;
-
-    @Nonnull
-    private final UniqueIdProvider idProvider;
-    @Nonnull
-    private final TimeProvider timeProvider;
 
     public RecipePortions(@Nonnull RepositoryRecipePortions repository,
                           @Nonnull UniqueIdProvider idProvider,
@@ -109,116 +108,88 @@ public class RecipePortions
                           int maxServings,
                           int maxSittings) {
         this.repository = repository;
-        this.timeProvider = timeProvider;
         this.idProvider = idProvider;
+        this.timeProvider = timeProvider;
+
+        domainModel = new DomainModel();
 
         this.maxServings = maxServings;
         this.maxSittings = maxSittings;
-
-        activeDomainModel = new DomainModel();
-        updatedDomainModel = new DomainModel();
     }
 
     @Override
-    protected void createDomainModelsFromPersistenceModel(
+    protected DomainModel createDomainModelFromPersistenceModel(
             @Nonnull RecipePortionsPersistenceModel persistenceModel) {
 
-        updatedDomainModel = new DomainModel(
-                persistenceModel.getServings(),
-                persistenceModel.getSittings()
-        );
-
-        activeDomainModel = new DomainModel(
+        return new DomainModel(
                 persistenceModel.getServings(),
                 persistenceModel.getSittings()
         );
     }
 
     @Override
-    protected void createUpdatedDomainModelFromDefaultValues() {
-        updatedDomainModel = new DomainModel(
+    protected DomainModel createDomainModelFromDefaultValues() {
+        return new DomainModel(
                 MIN_SERVINGS,
                 MIN_SITTINGS
         );
+    }
 
-        activeDomainModel = new DomainModel(
-                updatedDomainModel.servings,
-                updatedDomainModel.sittings
+    @Override
+    protected DomainModel createDomainModelFromRequestModel() {
+        RecipePortionsRequest.DomainModel domainModel = ((RecipePortionsRequest) getRequest()).
+                getDomainModel();
+
+        return new DomainModel(
+                domainModel.getServings(),
+                domainModel.getSittings()
         );
     }
 
     @Override
-    protected void createUpdatedDomainModelFromRequestModel() {
-        RecipePortionsRequest request = (RecipePortionsRequest) getRequest();
-        RecipePortionsRequest.Model requestModel = request.getDomainModel();
-
-        updatedDomainModel = new DomainModel(
-                requestModel.getServings(),
-                requestModel.getSittings()
-        );
-    }
-
-    @Override
-    protected void initialiseUseCaseForUpdatedDomainModelProcessing() {
-        failReasons.clear();
-        isChanged = !activeDomainModel.equals(updatedDomainModel);
-        validateUpdatedDomainModelElements();
-    }
-
-    @Override
-    protected void validateUpdatedDomainModelElements() {
+    protected void validateDomainModelElements() {
         validateServings();
         validateSittings();
         save();
     }
 
     private void validateServings() {
-        if (updatedDomainModel.servings < MIN_SERVINGS) {
+        if (domainModel.servings < MIN_SERVINGS) {
             failReasons.add(FailReason.SERVINGS_TOO_LOW);
-        } else if (updatedDomainModel.servings > maxServings) {
+
+        } else if (domainModel.servings > maxServings) {
             failReasons.add(FailReason.SERVINGS_TOO_HIGH);
         }
-        activeDomainModel.servings = updatedDomainModel.servings;
     }
 
     private void validateSittings() {
-        if (updatedDomainModel.sittings < MIN_SITTINGS) {
+        if (domainModel.sittings < MIN_SITTINGS) {
             failReasons.add(FailReason.SITTINGS_TOO_LOW);
-        } else if (updatedDomainModel.sittings > maxSittings) {
+
+        } else if (domainModel.sittings > maxSittings) {
             failReasons.add(FailReason.SITTINGS_TOO_HIGH);
         }
-        activeDomainModel.sittings = updatedDomainModel.sittings;
     }
 
     @Override
     protected void save() {
-        System.out.println(TAG + "save: " +
-                "\n  - isChanged=" + isChanged +
-                "\n  - isDomainModelValid=" + isDomainModelValid() +
-                "\n  - failReasons=" + failReasons +
-                "\n  - activeDomainModel= " + activeDomainModel +
-                "\n  - updatedDomainModel= " + updatedDomainModel
-        );
-
         if (isChanged && isDomainModelValid()) {
 
             useCaseDataId = idProvider.getUId();
             long currentTime = timeProvider.getCurrentTimeInMills();
 
             if (persistenceModel != null) {
-                archivePersistenceModel(currentTime);
+                archiveExistingPersistenceModel(currentTime);
             }
 
             persistenceModel = new RecipePortionsPersistenceModel.Builder().
                     setDataId(useCaseDataId).
                     setDomainId(useCaseDomainId).
-                    setServings(activeDomainModel.servings).
-                    setSittings(activeDomainModel.sittings).
+                    setServings(domainModel.servings).
+                    setSittings(domainModel.sittings).
                     setCreateDate(currentTime).
                     setLastUpdate(currentTime).
                     build();
-
-            System.out.println(TAG + "save: persistenceModel= " + persistenceModel);
 
             repository.save(persistenceModel);
         }
@@ -226,7 +197,7 @@ public class RecipePortions
     }
 
     @Override
-    protected void archivePersistenceModel(long currentTime) {
+    protected void archiveExistingPersistenceModel(long currentTime) {
         RecipePortionsPersistenceModel model = new RecipePortionsPersistenceModel.Builder().
                 basedOnModel(persistenceModel).
                 setLastUpdate(currentTime).
@@ -251,9 +222,9 @@ public class RecipePortions
 
     private RecipePortionsResponse.Model getResponseModel() {
         return new RecipePortionsResponse.Model.Builder().
-                setServings(activeDomainModel.servings).
-                setSittings(activeDomainModel.sittings).
-                setPortions(activeDomainModel.servings * activeDomainModel.sittings).
+                setServings(domainModel.servings).
+                setSittings(domainModel.sittings).
+                setPortions(domainModel.servings * domainModel.sittings).
                 build();
     }
 }

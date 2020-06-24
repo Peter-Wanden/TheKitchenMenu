@@ -6,7 +6,10 @@ import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public final class ConversionFactorStatusResponse implements UseCaseBase.Response {
+public final class ConversionFactorStatusResponse
+        implements
+        UseCaseBase.Response {
+
     @Nonnull
     private ConversionFactorStatus.Result result;
 

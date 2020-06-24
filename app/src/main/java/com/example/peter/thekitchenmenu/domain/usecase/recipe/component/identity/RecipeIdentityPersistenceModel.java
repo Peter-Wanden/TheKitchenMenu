@@ -49,12 +49,14 @@ public final class RecipeIdentityPersistenceModel
     }
 
     public static class Builder
-            extends PersistenceModelBuilder<Builder, RecipeIdentityPersistenceModel> {
+            extends
+            PersistenceModelBuilder<Builder, RecipeIdentityPersistenceModel> {
 
         public Builder() {
             domainModel = new RecipeIdentityPersistenceModel();
         }
 
+        @Override
         public Builder getDefault() {
             domainModel.dataId = "";
             domainModel.domainId = "";
@@ -65,13 +67,14 @@ public final class RecipeIdentityPersistenceModel
             return self();
         }
 
-        public Builder basedOnPersistenceModel(@Nonnull RecipeIdentityPersistenceModel m) {
-            domainModel.dataId = m.getDataId();
-            domainModel.domainId = m.getDomainId();
-            domainModel.title = m.getTitle();
-            domainModel.description = m.getDescription();
-            domainModel.createDate = m.getCreateDate();
-            domainModel.lastUpdate = m.getLastUpdate();
+        @Override
+        public Builder basedOnModel(@Nonnull RecipeIdentityPersistenceModel model) {
+            domainModel.dataId = model.getDataId();
+            domainModel.domainId = model.getDomainId();
+            domainModel.title = model.getTitle();
+            domainModel.description = model.getDescription();
+            domainModel.createDate = model.getCreateDate();
+            domainModel.lastUpdate = model.getLastUpdate();
             return self();
         }
 

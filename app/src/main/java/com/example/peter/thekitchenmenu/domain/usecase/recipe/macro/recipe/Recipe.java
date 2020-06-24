@@ -331,7 +331,7 @@ public class Recipe extends UseCaseBase {
                 setDataId(recipeMetadataResponse.getDataId()).
                 setDomainId(recipeDomainId).
                 setDomainModel(
-                        new RecipeMetadataRequest.Model.Builder().
+                        new RecipeMetadataRequest.DomainModel.Builder().
                                 setParentId(recipeMetadataResponse.getDomainModel().getParentDomainId()).
                                 setComponentStates(componentStates).
                                 build()).

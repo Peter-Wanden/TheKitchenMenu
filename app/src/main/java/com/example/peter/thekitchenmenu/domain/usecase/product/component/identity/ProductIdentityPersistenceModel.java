@@ -72,7 +72,8 @@ public class ProductIdentityPersistenceModel
     }
 
     public static class Builder
-            extends DomainModelBuilder<Builder, ProductIdentityPersistenceModel>  {
+            extends
+            PersistenceModelBuilder<Builder, ProductIdentityPersistenceModel>  {
 
         public Builder() {
             domainModel = new ProductIdentityPersistenceModel();
@@ -88,6 +89,18 @@ public class ProductIdentityPersistenceModel
             domainModel.createDate = 0L;
             domainModel.lastUpdate = 0L;
             return this;
+        }
+
+        @Override
+        public Builder basedOnModel(@Nonnull ProductIdentityPersistenceModel model) {
+            domainModel.dataId = model.getDataId();
+            domainModel.domainId = model.getDomainId();
+            domainModel.name = model.getName();
+            domainModel.description = model.getDescription();
+            domainModel.category = model.getCategory();
+            domainModel.createDate = model.getCreateDate();
+            domainModel.lastUpdate = model.getLastUpdate();
+            return self();
         }
 
         public Builder setDataId(String dataId) {

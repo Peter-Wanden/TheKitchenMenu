@@ -14,7 +14,6 @@ import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
@@ -22,11 +21,53 @@ import javax.annotation.Nonnull;
 public class RecipeCourse
         extends
         UseCaseElement<
+                RepositoryRecipeCourse,
                 RecipeCoursePersistenceModel,
-                RecipeCourse.DomainModel,
-                RepositoryRecipeCourse> {
+                RecipeCourse.DomainModel> {
 
     private static final String TAG = "tkm-" + RecipeCourse.class.getSimpleName() + ": ";
+
+    protected static final class DomainModel
+            extends
+            ArrayList<Course>
+            implements
+            UseCaseDomainModel {
+
+        public DomainModel() {
+        }
+
+        public DomainModel(@NonNull Collection<? extends Course> c) {
+            super(c);
+        }
+    }
+
+    public enum FailReason
+            implements
+            FailReasons {
+        NO_COURSE_SELECTED(200);
+
+        private final int id;
+        @SuppressLint("UseSparseArrays")
+        private static Map<Integer, FailReason> failReasonMap = new HashMap<>();
+
+        FailReason(int id) {
+            this.id = id;
+        }
+
+        static {
+            for (FailReason failReason : FailReason.values()) {
+                failReasonMap.put(failReason.id, failReason);
+            }
+        }
+
+        public static FailReasons fromId(int failReasonId) {
+            return failReasonMap.get(failReasonId);
+        }
+
+        public int getId() {
+            return id;
+        }
+    }
 
     public enum Course {
         COURSE_ZERO(0),
@@ -60,51 +101,6 @@ public class RecipeCourse
         }
     }
 
-    public enum FailReason implements FailReasons {
-        NO_COURSE_SELECTED(200);
-
-        private final int id;
-        @SuppressLint("UseSparseArrays")
-        private static Map<Integer, FailReason> failReasonMap = new HashMap<>();
-
-        FailReason(int id) {
-            this.id = id;
-        }
-
-        static {
-            for (FailReason failReason : FailReason.values()) {
-                failReasonMap.put(failReason.id, failReason);
-            }
-        }
-
-        public static FailReasons fromId(int failReasonId) {
-            return failReasonMap.get(failReasonId);
-        }
-
-        public int getId() {
-            return id;
-        }
-    }
-
-    protected static final class DomainModel
-            extends
-            ArrayList<Course>
-            implements
-            UseCaseDomainModel {
-
-        public DomainModel() {
-        }
-
-        public DomainModel(@NonNull Collection<? extends Course> c) {
-            super(c);
-        }
-    }
-
-    @Nonnull
-    private UniqueIdProvider idProvider;
-    @Nonnull
-    private TimeProvider timeProvider;
-
     public RecipeCourse(@Nonnull RepositoryRecipeCourse repository,
                         @Nonnull UniqueIdProvider idProvider,
                         @Nonnull TimeProvider timeProvider) {
@@ -113,100 +109,52 @@ public class RecipeCourse
         this.idProvider = idProvider;
         this.timeProvider = timeProvider;
 
-        activeDomainModel = new DomainModel();
-        updatedDomainModel = new DomainModel();
+        domainModel = new DomainModel();
     }
 
     @Override
-    protected void createDomainModelsFromPersistenceModel(
+    protected DomainModel createDomainModelFromPersistenceModel(
             @Nonnull RecipeCoursePersistenceModel persistenceModel) {
-        updatedDomainModel = new DomainModel(persistenceModel.getCourses());
-        activeDomainModel = new DomainModel(persistenceModel.getCourses());
+
+        return new DomainModel(persistenceModel.getCourses());
     }
 
     @Override
-    protected void createUpdatedDomainModelFromDefaultValues() {
-        updatedDomainModel = new DomainModel();
+    protected DomainModel createDomainModelFromDefaultValues() {
+        return new DomainModel();
     }
 
     @Override
-    protected void createUpdatedDomainModelFromRequestModel() {
-        RecipeCourseRequest request = (RecipeCourseRequest) getRequest();
-        updatedDomainModel = new DomainModel(request.getDomainModel().getCourses());
+    protected DomainModel createDomainModelFromRequestModel() {
+        RecipeCourseRequest.DomainModel requestModel = ((RecipeCourseRequest) getRequest()).
+                getDomainModel();
+
+        return new DomainModel(requestModel.getCourses());
     }
 
     @Override
-    protected void initialiseUseCaseForUpdatedDomainModelProcessing() {
-        failReasons.clear();
-        isChanged = !activeDomainModel.equals(updatedDomainModel);
-        validateUpdatedDomainModelElements();
-    }
-
-    @Override
-    protected void validateUpdatedDomainModelElements() {
-        processCourseAdditions();
-        processCourseSubtractions();
-
-        if (isUpdatedDomainModelDefaultValues()) {
+    protected void validateDomainModelElements() {
+        if (domainModel.isEmpty()) {
             failReasons.add(FailReason.NO_COURSE_SELECTED);
         }
-
         save();
-    }
-
-    private boolean isUpdatedDomainModelDefaultValues() {
-        return updatedDomainModel.equals(new DomainModel());
-    }
-
-    private void processCourseAdditions() {
-        for (Course course : updatedDomainModel) {
-            if (isCourseAdded(course)) {
-                activeDomainModel.add(course);
-                isChanged = true;
-            }
-        }
-    }
-
-    private boolean isCourseAdded(Course course) {
-        return !activeDomainModel.contains(course);
-    }
-
-    private void processCourseSubtractions() {
-        Iterator<Course> i = activeDomainModel.iterator();
-        while (i.hasNext()) {
-            Course course = i.next();
-
-            if (isCourseRemoved(course)) {
-                i.remove();
-                isChanged = true;
-            }
-        }
-    }
-
-    private boolean isCourseRemoved(Course course) {
-        return !updatedDomainModel.contains(course);
     }
 
     @Override
     protected void save() {
-        System.out.println(TAG + "save: " +
-                "\n  - isChanged=" + isChanged +
-                "\n  - isDomainModelValid=" + isDomainModelValid()
-        );
-
         if ((isChanged && isDomainModelValid())) {
 
             useCaseDataId = idProvider.getUId();
             long currentTime = timeProvider.getCurrentTimeInMills();
 
             if (persistenceModel != null) {
-                archivePersistenceModel(currentTime);
+                archiveExistingPersistenceModel(currentTime);
             }
 
             persistenceModel = new RecipeCoursePersistenceModel.Builder().
                     setDataId(useCaseDataId).
                     setDomainId(useCaseDomainId).
-                    setCourses(new ArrayList<>(activeDomainModel)).
+                    setCourses(new ArrayList<>(domainModel)).
                     setCreateDate(currentTime).
                     setLastUpdate(currentTime).
                     build();
@@ -218,7 +166,7 @@ public class RecipeCourse
     }
 
     @Override
-    protected void archivePersistenceModel(long currentTime) {
+    protected void archiveExistingPersistenceModel(long currentTime) {
         RecipeCoursePersistenceModel archivedModel = new RecipeCoursePersistenceModel.Builder().
                 basedOnModel(persistenceModel).
                 setLastUpdate(currentTime).
@@ -241,7 +189,7 @@ public class RecipeCourse
 
     private RecipeCourseResponse.Model getResponseModel() {
         return new RecipeCourseResponse.Model.Builder().
-                setCourseList(new ArrayList<>(activeDomainModel)).
+                setCourseList(new ArrayList<>(domainModel)).
                 build();
     }
 }

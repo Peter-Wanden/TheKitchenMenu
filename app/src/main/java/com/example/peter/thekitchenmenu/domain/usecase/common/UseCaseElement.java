@@ -11,9 +11,10 @@ import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.Common
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataId;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata;
+import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
+import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -27,9 +28,9 @@ import javax.annotation.Nonnull;
  * @param <REPOSITORY>            the repository for the persistence model
  */
 public abstract class UseCaseElement<
+        REPOSITORY extends Repository<PERSISTENCE_MODEL>,
         PERSISTENCE_MODEL extends BaseDomainPersistenceModel,
-        USE_CASE_DOMAIN_MODEL extends UseCaseDomainModel,
-        REPOSITORY extends Repository<PERSISTENCE_MODEL>>
+        USE_CASE_DOMAIN_MODEL extends UseCaseDomainModel>
         extends
         UseCaseBase
         implements DomainDataAccess.GetDomainModelCallback<PERSISTENCE_MODEL> {
@@ -41,9 +42,10 @@ public abstract class UseCaseElement<
 
     protected REPOSITORY repository;
     protected PERSISTENCE_MODEL persistenceModel;
+    protected UniqueIdProvider idProvider;
+    protected TimeProvider timeProvider;
 
-    protected USE_CASE_DOMAIN_MODEL activeDomainModel;
-    protected USE_CASE_DOMAIN_MODEL updatedDomainModel;
+    protected USE_CASE_DOMAIN_MODEL domainModel;
 
     protected List<FailReasons> failReasons = new ArrayList<>();
 
@@ -76,7 +78,7 @@ public abstract class UseCaseElement<
                 !requestDomainId.equals(useCaseDomainId);
 
         if (requestHasNoIdentifiers) {
-            initialiseUseCaseForUpdatedDomainModelProcessing();
+            initialiseUseCaseForDomainModelProcessing();
         } else {
             useCaseDataId = requestDataId;
             useCaseDomainId = requestDomainId;
@@ -103,44 +105,52 @@ public abstract class UseCaseElement<
 
     @Override
     public void onDomainModelUnavailable() {
-        System.out.println(TAG + "onDomainModelUnavailable: updatedDomainModel=" + updatedDomainModel);
-        createUpdatedDomainModelFromDefaultValues();
-        initialiseUseCaseForUpdatedDomainModelProcessing();
+        domainModel = createDomainModelFromDefaultValues();
+        System.out.println(TAG + "onDomainModelUnavailable: updatedDomainModel=" + domainModel);
+        initialiseUseCaseForDomainModelProcessing();
     }
 
     @Override
     public void onDomainModelLoaded(PERSISTENCE_MODEL persistenceModel) {
         System.out.println(TAG + "onDomainModelLoaded=" + persistenceModel);
 
+        isChanged = false;
         useCaseDataId = persistenceModel.getDataId();
         useCaseDomainId = persistenceModel.getDomainId();
 
         this.persistenceModel = persistenceModel;
 
-        createDomainModelsFromPersistenceModel(persistenceModel);
-        initialiseUseCaseForUpdatedDomainModelProcessing();
+        domainModel = createDomainModelFromPersistenceModel(persistenceModel);
+        initialiseUseCaseForDomainModelProcessing();
     }
 
     protected void processRequestDomainModel() {
         System.out.println(TAG + "processRequestDomainModel");
-        createUpdatedDomainModelFromRequestModel();
-        initialiseUseCaseForUpdatedDomainModelProcessing();
+
+        USE_CASE_DOMAIN_MODEL updatedDomainModel = createDomainModelFromRequestModel();
+        isChanged = !domainModel.equals(updatedDomainModel);
+        domainModel = updatedDomainModel;
+
+        initialiseUseCaseForDomainModelProcessing();
     }
 
-    protected abstract void createUpdatedDomainModelFromRequestModel();
-
-    protected abstract void createDomainModelsFromPersistenceModel(
+    protected abstract USE_CASE_DOMAIN_MODEL createDomainModelFromPersistenceModel(
             @Nonnull PERSISTENCE_MODEL persistenceModel);
 
-    protected abstract void createUpdatedDomainModelFromDefaultValues();
+    protected abstract USE_CASE_DOMAIN_MODEL createDomainModelFromRequestModel();
 
-    protected abstract void initialiseUseCaseForUpdatedDomainModelProcessing();
+    protected abstract USE_CASE_DOMAIN_MODEL createDomainModelFromDefaultValues();
 
-    protected abstract void validateUpdatedDomainModelElements();
+    protected void initialiseUseCaseForDomainModelProcessing() {
+        failReasons.clear();
+        validateDomainModelElements();
+    }
+
+    protected abstract void validateDomainModelElements();
 
     protected abstract void save();
 
-    protected abstract void archivePersistenceModel(long currentTime);
+    protected abstract void archiveExistingPersistenceModel(long currentTime);
 
     protected abstract void buildResponse();
 

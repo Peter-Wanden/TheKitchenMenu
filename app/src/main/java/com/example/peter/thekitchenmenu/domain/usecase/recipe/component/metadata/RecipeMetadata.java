@@ -19,26 +19,72 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
 
+import static com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataId.NO_ID;
+
 /**
- * Calculates and stores {@link Recipe} metadata state information based on recipe component
- * responses.
- * <p>
- * Always use as part of a {@link Recipe} macro component
+ * Calculates and stores {@link Recipe} metadata state information based on use case response values
  */
 public class RecipeMetadata
         extends
         UseCaseElement<
+                RepositoryRecipeMetadata,
                 RecipeMetadataPersistenceModel,
-                RecipeMetadata.DomainModel,
-                RepositoryRecipeMetadata>
+                RecipeMetadata.DomainModel>
         implements
         DomainDataAccess.GetDomainModelCallback<RecipeMetadataPersistenceModel> {
 
     private static final String TAG = "tkm-" + RecipeMetadata.class.getSimpleName() + ": ";
+
+    protected static final class DomainModel
+            implements
+            UseCaseDomainModel {
+
+        private String parentDomainId;
+        private HashMap<ComponentName, ComponentState> componentStates;
+
+        public DomainModel() {
+        }
+
+        public DomainModel(String parentDomainId,
+                           HashMap<ComponentName, ComponentState> componentStates) {
+
+            this.parentDomainId = parentDomainId;
+            this.componentStates = componentStates;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof DomainModel)) return false;
+
+            DomainModel that = (DomainModel) o;
+
+            if (!Objects.equals(parentDomainId, that.parentDomainId))
+                return false;
+            return Objects.equals(componentStates, that.componentStates);
+        }
+
+        @Override
+        public int hashCode() {
+            int result = parentDomainId != null ? parentDomainId.hashCode() : 0;
+            result = 31 * result + (componentStates != null ? componentStates.hashCode() : 0);
+            return result;
+        }
+
+        @Nonnull
+        @Override
+        public String toString() {
+            return "DomainModel{" +
+                    "parentDomainId='" + parentDomainId + '\'' +
+                    ", componentStates=" + componentStates +
+                    '}';
+        }
+    }
 
     public enum FailReason implements FailReasons {
         MISSING_COMPONENTS(400),
@@ -129,23 +175,8 @@ public class RecipeMetadata
         }
     }
 
-    static class DomainModel implements UseCaseDomainModel {
-
-    }
-
-    @Nonnull
-    private final RepositoryRecipeMetadata repository;
-    @Nonnull
-    private final UniqueIdProvider idProvider;
-    @Nonnull
-    private final TimeProvider timeProvider;
     @Nonnull
     private final Set<ComponentName> requiredComponents;
-    @Nonnull
-    private final List<FailReasons> failReasons;
-
-    private ComponentState recipeState;
-    private HashMap<ComponentName, ComponentState> componentStates;
 
     public RecipeMetadata(@Nonnull RepositoryRecipeMetadata repository,
                           @Nonnull UniqueIdProvider idProvider,
@@ -155,82 +186,43 @@ public class RecipeMetadata
         this.repository = repository;
         this.idProvider = idProvider;
         this.timeProvider = timeProvider;
+
         this.requiredComponents = requiredComponents;
 
-        recipeState = ComponentState.INVALID_UNCHANGED;
-        failReasons = new ArrayList<>();
-        componentStates = new HashMap<>();
-        persistenceModel = new RecipeMetadataPersistenceModel.Builder().getDefault().build();
+        domainModel = new DomainModel();
     }
 
     @Override
-    public void onDomainModelUnavailable() {
-        persistenceModel = createNewPersistenceModel();
-        failReasons.add(CommonFailReason.DATA_UNAVAILABLE);
-//        reprocessDomainModel();
-    }
-
-    private RecipeMetadataPersistenceModel createNewPersistenceModel() {
-        long currentTime = timeProvider.getCurrentTimeInMills();
-        useCaseDataId = idProvider.getUId();
-
-        return new RecipeMetadataPersistenceModel.Builder().
-                getDefault().
-                setDataId(useCaseDataId).
-                setDomainId(useCaseDomainId).
-                setCreateDate(currentTime).
-                setLastUpdate(currentTime).
-                build();
-    }
-
-    @Override
-    public void onDomainModelLoaded(RecipeMetadataPersistenceModel persistenceModel) {
-        this.persistenceModel = persistenceModel;
-        useCaseDataId = persistenceModel.getDataId();
-        useCaseDomainId = persistenceModel.getDomainId();
-        recipeState = persistenceModel.getRecipeState();
-        componentStates = persistenceModel.getComponentStates();
-        failReasons.addAll(persistenceModel.getFailReasons());
-        useCaseDataId = persistenceModel.getDataId();
-
-//        reprocessDomainModel();
-    }
-
-    @Override
-    protected void processRequestDomainModel() {
-        setState();
-        buildResponse();
-    }
-
-    @Override
-    protected void createUpdatedDomainModelFromRequestModel() {
-
-    }
-
-    @Override
-    protected void createDomainModelsFromPersistenceModel(
+    protected DomainModel createDomainModelFromPersistenceModel(
             @Nonnull RecipeMetadataPersistenceModel persistenceModel) {
-
+        return new DomainModel(
+                persistenceModel.getParentDomainId(),
+                persistenceModel.getComponentStates()
+        );
     }
 
     @Override
-    protected void initialiseUseCaseForUpdatedDomainModelProcessing() {
-
+    protected DomainModel createDomainModelFromDefaultValues() {
+        return new DomainModel(
+                NO_ID,
+                new HashMap<>()
+        );
     }
 
     @Override
-    protected void createUpdatedDomainModelFromDefaultValues() {
+    protected DomainModel createDomainModelFromRequestModel() {
+        RecipeMetadataRequest.DomainModel model = ((RecipeMetadataRequest) getRequest()).
+                getDomainModel();
 
+        return new DomainModel(
+                model.getParentDomainId(),
+                model.getComponentStates()
+        );
     }
 
     @Override
-    protected void validateUpdatedDomainModelElements() {
-
-    }
-
-    private void setupUseCase() {
-        failReasons.clear();
-        componentStates = ((RecipeMetadataRequest) getRequest()).getDomainModel().getComponentStates();
+    protected void validateDomainModelElements() {
+        calculateState();
     }
 
     private void setState() {
@@ -381,7 +373,7 @@ public class RecipeMetadata
     }
 
     @Override
-    protected void archivePersistenceModel(long currentTime) {
+    protected void archiveExistingPersistenceModel(long currentTime) {
 
     }
 }

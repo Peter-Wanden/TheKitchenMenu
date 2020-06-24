@@ -7,7 +7,7 @@ import com.example.peter.thekitchenmenu.domain.model.BaseDomainModel;
 import java.util.Objects;
 
 public final class RecipePortionsRequest
-        extends UseCaseMessageModelDataId<RecipePortionsRequest.Model>
+        extends UseCaseMessageModelDataId<RecipePortionsRequest.DomainModel>
         implements UseCaseBase.Request {
 
     @Override
@@ -22,17 +22,17 @@ public final class RecipePortionsRequest
     private RecipePortionsRequest() {}
 
     public static class Builder
-            extends UseCaseMessageModelDataIdBuilder<Builder, RecipePortionsRequest, Model> {
+            extends UseCaseMessageModelDataIdBuilder<Builder, RecipePortionsRequest, DomainModel> {
 
         public Builder() {
             message = new RecipePortionsRequest();
-            message.model = new RecipePortionsRequest.Model();
+            message.model = new DomainModel();
         }
 
         public Builder getDefault() {
             message.dataId = "";
             message.domainId = "";
-            message.model = new Model.Builder().getDefault().build();
+            message.model = new DomainModel.Builder().getDefault().build();
             return self();
         }
 
@@ -50,7 +50,7 @@ public final class RecipePortionsRequest
         }
     }
 
-    public static final class Model extends BaseDomainModel {
+    public static final class DomainModel extends BaseDomainModel {
         private int servings;
         private int sittings;
 
@@ -66,7 +66,7 @@ public final class RecipePortionsRequest
         public boolean equals(Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
-            Model model = (Model) o;
+            DomainModel model = (DomainModel) o;
             return servings == model.servings &&
                     sittings == model.sittings;
         }
@@ -84,10 +84,10 @@ public final class RecipePortionsRequest
                     '}';
         }
 
-        public static class Builder extends DomainModelBuilder<Builder, Model> {
+        public static class Builder extends DomainModelBuilder<Builder, DomainModel> {
 
             public Builder() {
-                domainModel = new Model();
+                domainModel = new DomainModel();
             }
 
             public Builder getDefault() {

@@ -64,8 +64,9 @@ public class RecipeIngredientPersistenceModel extends BaseDomainPersistenceModel
         return lastUpdate;
     }
 
-    public static class Builder extends DomainModelBuilder<
-            Builder,
+    public static class Builder
+            extends
+            PersistenceModelBuilder<Builder,
             RecipeIngredientPersistenceModel> {
 
         public Builder() {
@@ -85,6 +86,22 @@ public class RecipeIngredientPersistenceModel extends BaseDomainPersistenceModel
             domainModel.createdBy = "";
             domainModel.createDate = 0L;
             domainModel.lastUpdate = 0L;
+            return self();
+        }
+
+        @Override
+        public Builder basedOnModel(RecipeIngredientPersistenceModel model) {
+            domainModel.dataId = model.getDataId();
+            domainModel.recipeIngredientId = model.getDomainId();
+            domainModel.recipeDataId = model.getRecipeDataId();
+            domainModel.recipeDomainId = model.getRecipeDomainId();
+            domainModel.ingredientDataId = model.getIngredientDataId();
+            domainModel.ingredientDomainId = model.getRecipeDomainId();
+            domainModel.productDataId = model.getProductDataId();
+            domainModel.measurementModel = model.getMeasurementModel();
+            domainModel.createdBy = model.getCreatedBy();
+            domainModel.createDate = model.getCreateDate();
+            domainModel.lastUpdate = model.getLastUpdate();
             return self();
         }
 

@@ -10,8 +10,10 @@ import java.util.Objects;
 import javax.annotation.Nonnull;
 
 public final class RecipeIdentityResponse
-        extends UseCaseMessageModelDataIdMetadata<RecipeIdentityResponse.DomainModel>
-        implements UseCaseBase.Response {
+        extends
+        UseCaseMessageModelDataIdMetadata<RecipeIdentityResponse.DomainModel>
+        implements
+        UseCaseBase.Response {
 
     @Nonnull
     @Override
@@ -26,13 +28,18 @@ public final class RecipeIdentityResponse
 
     private RecipeIdentityResponse() {}
 
-    public static class Builder extends MessageModelDataIdMetadataBuilder
-            <Builder, RecipeIdentityResponse, DomainModel> {
+    public static class Builder
+            extends
+            MessageModelDataIdMetadataBuilder<
+                    Builder,
+                    RecipeIdentityResponse,
+                    DomainModel> {
 
         public Builder() {
             message = new RecipeIdentityResponse();
         }
 
+        @Override
         public Builder getDefault() {
             message.dataId = "";
             message.domainId = "";
@@ -50,6 +57,7 @@ public final class RecipeIdentityResponse
     public static final class DomainModel
             extends
             BaseDomainModel {
+
         private String title;
         private String description;
 
@@ -88,12 +96,17 @@ public final class RecipeIdentityResponse
                     '}';
         }
 
-        public static class Builder extends DomainModelBuilder<Builder, DomainModel> {
+        public static class Builder
+                extends
+                DomainModelBuilder<
+                        Builder,
+                        DomainModel> {
 
             public Builder() {
                 domainModel = new DomainModel();
             }
 
+            @Override
             public Builder getDefault() {
                 domainModel.title = "";
                 domainModel.description = "";

@@ -12,8 +12,10 @@ import javax.annotation.Nonnull;
 
 
 public final class RecipeResponse
-        extends UseCaseMessageModelDataId<RecipeResponse.Model>
-        implements UseCaseBase.Response {
+        extends
+        UseCaseMessageModelDataId<RecipeResponse.Model>
+        implements
+        UseCaseBase.Response {
 
     @Nonnull
     @Override
@@ -29,7 +31,11 @@ public final class RecipeResponse
     }
 
     public static class Builder
-            extends UseCaseMessageModelDataIdBuilder<Builder, RecipeResponse, Model> {
+            extends
+            UseCaseMessageModelDataIdBuilder<
+                    Builder,
+                    RecipeResponse,
+                    Model> {
 
         public Builder() {
             message = new RecipeResponse();
@@ -49,7 +55,9 @@ public final class RecipeResponse
         }
     }
 
-    public static final class Model extends BaseDomainModel {
+    public static final class Model
+            extends
+            BaseDomainModel {
 
         private HashMap<RecipeMetadata.ComponentName, UseCaseBase.Response> componentResponses;
 
@@ -60,6 +68,7 @@ public final class RecipeResponse
             return componentResponses;
         }
 
+        @Nonnull
         @Override
         public String toString() {
             return "Model{" +
@@ -68,12 +77,16 @@ public final class RecipeResponse
         }
 
         public static class Builder
-                extends DomainModelBuilder<Builder, Model> {
+                extends
+                DomainModelBuilder<
+                        Builder,
+                        Model> {
 
             public Builder() {
                 domainModel = new Model();
             }
 
+            @Override
             public Builder getDefault() {
                 return new Model.Builder().setComponentResponses(getDefaultComponentResponses());
             }

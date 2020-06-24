@@ -9,7 +9,10 @@ import javax.annotation.Nonnull;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredient.RecipeIngredient.*;
 
-public final class RecipeIngredientResponse implements UseCaseBase.Response {
+public final class RecipeIngredientResponse
+        implements
+        UseCaseBase.Response {
+
     @Nonnull
     private final MeasurementModel model;
     @Nonnull

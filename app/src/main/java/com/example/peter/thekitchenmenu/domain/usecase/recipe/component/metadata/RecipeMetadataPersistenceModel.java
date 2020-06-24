@@ -71,6 +71,20 @@ public final class RecipeMetadataPersistenceModel extends BaseDomainPersistenceM
             return self();
         }
 
+        @Override
+        public Builder basedOnModel(RecipeMetadataPersistenceModel model) {
+            domainModel.dataId = model.getDataId();
+            domainModel.domainId = model.getDomainId();
+            domainModel.parentDomainId = model.getParentDomainId();
+            domainModel.recipeState = model.getRecipeState();
+            domainModel.componentStates = model.getComponentStates();
+            domainModel.failReasons = model.getFailReasons();
+            domainModel.createdBy = model.getCreatedBy();
+            domainModel.createDate = model.getCreateDate();
+            domainModel.lastUpdate = model.getLastUpdate();
+            return self();
+        }
+
         public Builder setParentDomainId(String parentDomainId) {
             domainModel.parentDomainId = parentDomainId;
             return self();

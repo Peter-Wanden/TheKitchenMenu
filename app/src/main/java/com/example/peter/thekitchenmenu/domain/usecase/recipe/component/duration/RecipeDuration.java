@@ -17,39 +17,11 @@ import javax.annotation.Nonnull;
 public class RecipeDuration
         extends
         UseCaseElement<
+                RepositoryRecipeDuration,
                 RecipeDurationPersistenceModel,
-                RecipeDuration.DomainModel,
-                RepositoryRecipeDuration> {
+                RecipeDuration.DomainModel> {
 
     private static final String TAG = "tkm-" + RecipeDuration.class.getSimpleName() + ": ";
-
-    public enum FailReason implements FailReasons {
-        INVALID_PREP_TIME(250),
-        INVALID_COOK_TIME(251);
-
-        private final int id;
-
-        @SuppressLint("UseSparseArrays")
-        private static Map<Integer, FailReason> options = new HashMap<>();
-
-        FailReason(int id) {
-            this.id = id;
-        }
-
-        static {
-            for (FailReason s : FailReason.values())
-                options.put(s.id, s);
-        }
-
-        public static FailReason getById(int id) {
-            return options.get(id);
-        }
-
-        @Override
-        public int getId() {
-            return id;
-        }
-    }
 
     protected static final class DomainModel
             implements
@@ -93,111 +65,116 @@ public class RecipeDuration
         }
     }
 
+    public enum FailReason
+            implements
+            FailReasons {
+        INVALID_PREP_TIME(250),
+        INVALID_COOK_TIME(251);
+
+        private final int id;
+
+        @SuppressLint("UseSparseArrays")
+        private static Map<Integer, FailReason> options = new HashMap<>();
+
+        FailReason(int id) {
+            this.id = id;
+        }
+
+        static {
+            for (FailReason s : FailReason.values())
+                options.put(s.id, s);
+        }
+
+        public static FailReason getById(int id) {
+            return options.get(id);
+        }
+
+        @Override
+        public int getId() {
+            return id;
+        }
+    }
+
     private final int MAX_PREP_TIME;
     private final int MAX_COOK_TIME;
-
-    @Nonnull
-    private final UniqueIdProvider idProvider;
-    @Nonnull
-    private final TimeProvider timeProvider;
 
     public RecipeDuration(@Nonnull RepositoryRecipeDuration repository,
                           @Nonnull UniqueIdProvider idProvider,
                           @Nonnull TimeProvider timeProvider,
                           int maxPrepTime,
                           int maxCookTime) {
+
         this.repository = repository;
-        this.timeProvider = timeProvider;
         this.idProvider = idProvider;
+        this.timeProvider = timeProvider;
+
+        domainModel = new DomainModel();
 
         MAX_PREP_TIME = maxPrepTime;
         MAX_COOK_TIME = maxCookTime;
-
-        activeDomainModel = new DomainModel();
-        updatedDomainModel = new DomainModel();
     }
 
     @Override
-    protected void createDomainModelsFromPersistenceModel(
+    protected DomainModel createDomainModelFromPersistenceModel(
             @Nonnull RecipeDurationPersistenceModel persistenceModel) {
 
-        updatedDomainModel = new DomainModel(
-                persistenceModel.getPrepTime(),
-                persistenceModel.getCookTime()
-        );
-
-        activeDomainModel = new DomainModel(
+        return new DomainModel(
                 persistenceModel.getPrepTime(),
                 persistenceModel.getCookTime()
         );
     }
 
     @Override
-    protected void createUpdatedDomainModelFromDefaultValues() {
-        updatedDomainModel = new DomainModel();
+    protected DomainModel createDomainModelFromDefaultValues() {
+        return new DomainModel();
     }
 
     @Override
-    protected void createUpdatedDomainModelFromRequestModel() {
-        RecipeDurationRequest request = (RecipeDurationRequest) getRequest();
-        RecipeDurationRequest.DomainModel requestModel = request.getDomainModel();
+    protected DomainModel createDomainModelFromRequestModel() {
+        RecipeDurationRequest.DomainModel requestModel = ((RecipeDurationRequest) getRequest()).
+                getDomainModel();
 
-        updatedDomainModel = new DomainModel(
+        return new DomainModel(
                 getTotalMinutes(requestModel.getPrepHours(), requestModel.getPrepMinutes()),
                 getTotalMinutes(requestModel.getCookHours(), requestModel.getCookMinutes())
         );
     }
 
     @Override
-    protected void initialiseUseCaseForUpdatedDomainModelProcessing() {
-        failReasons.clear();
-        isChanged = !activeDomainModel.equals(updatedDomainModel);
-        validateUpdatedDomainModelElements();
-    }
-
-    @Override
-    protected void validateUpdatedDomainModelElements() {
+    protected void validateDomainModelElements() {
         validatePrepTime();
         validateCookTime();
         save();
     }
 
     private void validatePrepTime() {
-        if (updatedDomainModel.prepTime > MAX_PREP_TIME) {
+        if (domainModel.prepTime > MAX_PREP_TIME) {
             failReasons.add(FailReason.INVALID_PREP_TIME);
         }
-        activeDomainModel.prepTime = updatedDomainModel.prepTime;
     }
 
     private void validateCookTime() {
-        if (updatedDomainModel.cookTime > MAX_COOK_TIME) {
+        if (domainModel.cookTime > MAX_COOK_TIME) {
             failReasons.add(FailReason.INVALID_COOK_TIME);
         }
-        activeDomainModel.cookTime = updatedDomainModel.cookTime;
     }
 
     @Override
     protected void save() {
-        System.out.println(TAG + "save: " +
-                "\n  - isChanged=" + isChanged +
-                "\n  - isDomainModelValid=" + isDomainModelValid() +
-                "\n  - failReasons=" + failReasons
-        );
-
         if (isChanged && isDomainModelValid()) {
 
             useCaseDataId = idProvider.getUId();
             long currentTime = timeProvider.getCurrentTimeInMills();
 
             if (persistenceModel != null) {
-                archivePersistenceModel(currentTime);
+                archiveExistingPersistenceModel(currentTime);
             }
 
             persistenceModel = new RecipeDurationPersistenceModel.Builder().
                     setDataId(useCaseDataId).
                     setDomainId(useCaseDomainId).
-                    setPrepTime(activeDomainModel.prepTime).
-                    setCookTime(activeDomainModel.cookTime).
+                    setPrepTime(domainModel.prepTime).
+                    setCookTime(domainModel.cookTime).
                     setCreateDate(currentTime).
                     setLastUpdate(currentTime).
                     build();
@@ -208,13 +185,15 @@ public class RecipeDuration
     }
 
     @Override
-    protected void archivePersistenceModel(long currentTime) {
-        RecipeDurationPersistenceModel archiveModel = new RecipeDurationPersistenceModel.Builder().
+    protected void archiveExistingPersistenceModel(long currentTime) {
+        RecipeDurationPersistenceModel model = new RecipeDurationPersistenceModel.Builder().
                 basedOnModel(persistenceModel).
                 setLastUpdate(currentTime).
                 build();
 
-        repository.save(archiveModel);
+        System.out.println(TAG + "archivePersistenceModel= " + model);
+
+        repository.save(model);
     }
 
     protected void buildResponse() {
@@ -230,13 +209,13 @@ public class RecipeDuration
 
     private RecipeDurationResponse.DomainModel getResponseModel() {
         return new RecipeDurationResponse.DomainModel.Builder().
-                setPrepHours(getHours(activeDomainModel.prepTime)).
-                setPrepMinutes(getMinutes(activeDomainModel.prepTime)).
-                setTotalPrepTime(activeDomainModel.prepTime).
-                setCookHours(getHours(activeDomainModel.cookTime)).
-                setCookMinutes(getMinutes(activeDomainModel.cookTime)).
-                setTotalCookTime(activeDomainModel.cookTime).
-                setTotalTime(activeDomainModel.prepTime + activeDomainModel.cookTime).
+                setPrepHours(getHours(domainModel.prepTime)).
+                setPrepMinutes(getMinutes(domainModel.prepTime)).
+                setTotalPrepTime(domainModel.prepTime).
+                setCookHours(getHours(domainModel.cookTime)).
+                setCookMinutes(getMinutes(domainModel.cookTime)).
+                setTotalCookTime(domainModel.cookTime).
+                setTotalTime(domainModel.prepTime + domainModel.cookTime).
                 build();
     }
 

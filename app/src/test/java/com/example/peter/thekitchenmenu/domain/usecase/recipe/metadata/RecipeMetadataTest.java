@@ -224,7 +224,7 @@ public class RecipeMetadataTest {
         // Arrange MISSING_COMPONENT state (portions missing)
         componentStatesUnderTest = TestDataRecipeMetadata.getInvalidMissingComponentsStates();
 
-        RecipeMetadataRequest.Model model = new RecipeMetadataRequest.Model.Builder().
+        RecipeMetadataRequest.DomainModel model = new RecipeMetadataRequest.DomainModel.Builder().
                 basedOnResponseModel(onErrorResponse.getDomainModel()).
                 setComponentStates(componentStatesUnderTest).
                 build();
@@ -256,7 +256,7 @@ public class RecipeMetadataTest {
         // Arrange INVALID_UNCHANGED / INVALID_COMPONENTS state
         componentStatesUnderTest = TestDataRecipeMetadata.getInvalidUnchangedComponentStates();
 
-        RecipeMetadataRequest.Model model = new RecipeMetadataRequest.Model.Builder().
+        RecipeMetadataRequest.DomainModel model = new RecipeMetadataRequest.DomainModel.Builder().
                 basedOnResponseModel(onErrorResponse.getDomainModel()).
                 setComponentStates(componentStatesUnderTest).
                 build();
@@ -296,7 +296,7 @@ public class RecipeMetadataTest {
         // Arrange INVALID_CHANGED / INVALID_COMPONENTS state
         componentStatesUnderTest = TestDataRecipeMetadata.getInvalidChangedComponentStates();
 
-        RecipeMetadataRequest.Model model = new RecipeMetadataRequest.Model.Builder().
+        RecipeMetadataRequest.DomainModel model = new RecipeMetadataRequest.DomainModel.Builder().
                 basedOnResponseModel(onErrorResponse.getDomainModel()).
                 setComponentStates(componentStatesUnderTest).
                 build();
@@ -336,7 +336,7 @@ public class RecipeMetadataTest {
         // Arrange VALID_UNCHANGED / CommonFailReason.NONE state
         componentStatesUnderTest = TestDataRecipeMetadata.getValidUnchangedComponentStates();
 
-        RecipeMetadataRequest.Model model = new RecipeMetadataRequest.Model.Builder().
+        RecipeMetadataRequest.DomainModel model = new RecipeMetadataRequest.DomainModel.Builder().
                 basedOnResponseModel(onErrorResponse.getDomainModel()).
                 setComponentStates(componentStatesUnderTest).
                 build();
@@ -381,7 +381,7 @@ public class RecipeMetadataTest {
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 basedOnResponse(onErrorResponse).
                 setDomainModel(
-                        new RecipeMetadataRequest.Model.Builder().
+                        new RecipeMetadataRequest.DomainModel.Builder().
                                 basedOnResponseModel(onErrorResponse.getDomainModel()).
                                 setComponentStates(componentStatesUnderTest).build()).
                 build();
@@ -416,7 +416,7 @@ public class RecipeMetadataTest {
         // Arrange VALID_CHANGED / CommonFailReason.NONE state
         componentStatesUnderTest = TestDataRecipeMetadata.getValidChangedComponentStates();
 
-        RecipeMetadataRequest.Model model = new RecipeMetadataRequest.Model.Builder().
+        RecipeMetadataRequest.DomainModel model = new RecipeMetadataRequest.DomainModel.Builder().
                 getDefault().
                 setComponentStates(componentStatesUnderTest).
                 build();
@@ -460,7 +460,7 @@ public class RecipeMetadataTest {
         RecipeMetadataRequest secondRequest = new RecipeMetadataRequest.Builder().
                 basedOnResponse(onErrorResponse).
                 setDomainModel(
-                        new RecipeMetadataRequest.Model.Builder().
+                        new RecipeMetadataRequest.DomainModel.Builder().
                                 basedOnResponseModel(onErrorResponse.getDomainModel()).
                                 setComponentStates(componentStatesUnderTest).
                                 build()).
@@ -475,7 +475,7 @@ public class RecipeMetadataTest {
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 basedOnResponse(onErrorResponse).
                 setDomainModel(
-                        new RecipeMetadataRequest.Model.Builder().
+                        new RecipeMetadataRequest.DomainModel.Builder().
                                 basedOnResponseModel(onErrorResponse.getDomainModel()).
                                 setComponentStates(componentStatesUnderTest).
                                 build()
@@ -728,7 +728,7 @@ public class RecipeMetadataTest {
         RecipeMetadataRequest requestTwo = new RecipeMetadataRequest.Builder().
                 basedOnResponse(onErrorResponse).
                 setDomainModel(
-                        new RecipeMetadataRequest.Model.Builder().
+                        new RecipeMetadataRequest.DomainModel.Builder().
                                 basedOnResponseModel(onErrorResponse.getDomainModel()).
                                 setComponentStates(modelUnderTestTwo.getComponentStates()).
                                 build()).
@@ -753,7 +753,7 @@ public class RecipeMetadataTest {
         RecipeMetadataRequest requestThree = new RecipeMetadataRequest.Builder().
                 basedOnResponse(onErrorResponse).
                 setDomainModel(
-                        new RecipeMetadataRequest.Model.Builder().
+                        new RecipeMetadataRequest.DomainModel.Builder().
                                 basedOnResponseModel(onErrorResponse.getDomainModel()).
                                 setComponentStates(testModelThree.getComponentStates()).
                                 build()).
