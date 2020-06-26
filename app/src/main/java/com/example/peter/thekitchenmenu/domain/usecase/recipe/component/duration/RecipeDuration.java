@@ -29,10 +29,10 @@ public class RecipeDuration
         private int prepTime;
         private int cookTime;
 
-        public DomainModel() {
+        private DomainModel() {
         }
 
-        public DomainModel(int prepTime, int cookTime) {
+        private DomainModel(int prepTime, int cookTime) {
             this.prepTime = prepTime;
             this.cookTime = cookTime;
         }

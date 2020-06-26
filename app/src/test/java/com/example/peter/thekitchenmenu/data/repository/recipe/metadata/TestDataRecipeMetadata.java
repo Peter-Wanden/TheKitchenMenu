@@ -33,12 +33,12 @@ public class TestDataRecipeMetadata {
                 setDataId("dataId-recipeMetadata-id0").
                 setDomainId("domainId-recipe-id0").
                 setParentDomainId("").
-                setRecipeState(ComponentState.INVALID_UNCHANGED).
+                setRecipeState(ComponentState.INVALID_CHANGED). // changed as it prompts a new save
                 setComponentStates(getInvalidUnchangedComponentStates()).
                 setFailReasons(getDataUnavailableFailReasons()).
                 setCreatedBy(Constants.getUserId()).
-                setCreateDate(10L).
-                setLastUpdate(10L).
+                setCreateDate(0L).
+                setLastUpdate(0L).
                 build();
     }
 
@@ -256,12 +256,12 @@ public class TestDataRecipeMetadata {
     }
 
     public static HashMap<ComponentName, ComponentState> getInvalidUnchangedComponentStates() {
-        HashMap<ComponentName, ComponentState> s = new HashMap<>();
-        s.put(ComponentName.COURSE, ComponentState.INVALID_UNCHANGED);
-        s.put(ComponentName.DURATION, ComponentState.INVALID_UNCHANGED);
-        s.put(ComponentName.IDENTITY, ComponentState.INVALID_UNCHANGED);
-        s.put(ComponentName.PORTIONS, ComponentState.INVALID_UNCHANGED);
-        return s;
+        HashMap<ComponentName, ComponentState> componentStates = new HashMap<>();
+        componentStates.put(ComponentName.COURSE, ComponentState.INVALID_UNCHANGED);
+        componentStates.put(ComponentName.DURATION, ComponentState.INVALID_UNCHANGED);
+        componentStates.put(ComponentName.IDENTITY, ComponentState.INVALID_UNCHANGED);
+        componentStates.put(ComponentName.PORTIONS, ComponentState.INVALID_UNCHANGED);
+        return componentStates;
     }
 
     public static HashMap<ComponentName, ComponentState> getInvalidChangedComponentStates() {

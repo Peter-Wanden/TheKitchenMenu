@@ -33,10 +33,10 @@ public class RecipeCourse
             implements
             UseCaseDomainModel {
 
-        public DomainModel() {
+        private DomainModel() {
         }
 
-        public DomainModel(@NonNull Collection<? extends Course> c) {
+        private DomainModel(@NonNull Collection<? extends Course> c) {
             super(c);
         }
     }

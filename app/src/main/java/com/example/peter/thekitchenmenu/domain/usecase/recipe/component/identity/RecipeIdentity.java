@@ -39,10 +39,10 @@ public class RecipeIdentity
         @Nonnull
         private String description = "";
 
-        public DomainModel() {
+        private DomainModel() {
         }
 
-        public DomainModel(@Nonnull String title, @Nonnull String description) {
+        private DomainModel(@Nonnull String title, @Nonnull String description) {
             this.title = title;
             this.description = description;
         }

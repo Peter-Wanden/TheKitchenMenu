@@ -3,21 +3,16 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadat
 import android.annotation.SuppressLint;
 
 import com.example.peter.thekitchenmenu.app.Constants;
-import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.model.UseCaseDomainModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseElement;
-import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
-import com.example.peter.thekitchenmenu.domain.model.UseCaseMetadataModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -34,9 +29,7 @@ public class RecipeMetadata
         UseCaseElement<
                 RepositoryRecipeMetadata,
                 RecipeMetadataPersistenceModel,
-                RecipeMetadata.DomainModel>
-        implements
-        DomainDataAccess.GetDomainModelCallback<RecipeMetadataPersistenceModel> {
+                RecipeMetadata.DomainModel> {
 
     private static final String TAG = "tkm-" + RecipeMetadata.class.getSimpleName() + ": ";
 
@@ -45,12 +38,11 @@ public class RecipeMetadata
             UseCaseDomainModel {
 
         private String parentDomainId;
-        private HashMap<ComponentName, ComponentState> componentStates;
+        private HashMap<ComponentName, ComponentState> componentStates = new HashMap<>();
 
-        public DomainModel() {
-        }
+        private DomainModel() {}
 
-        public DomainModel(String parentDomainId,
+        private DomainModel(String parentDomainId,
                            HashMap<ComponentName, ComponentState> componentStates) {
 
             this.parentDomainId = parentDomainId;
@@ -178,6 +170,8 @@ public class RecipeMetadata
     @Nonnull
     private final Set<ComponentName> requiredComponents;
 
+    private ComponentState recipeState;
+
     public RecipeMetadata(@Nonnull RepositoryRecipeMetadata repository,
                           @Nonnull UniqueIdProvider idProvider,
                           @Nonnull TimeProvider timeProvider,
@@ -193,8 +187,18 @@ public class RecipeMetadata
     }
 
     @Override
+    public void onDomainModelUnavailable() {
+        isChanged = true; // Prompts an initial save for a new recipe
+        super.onDomainModelUnavailable();
+    }
+
+    @Override
     protected DomainModel createDomainModelFromPersistenceModel(
             @Nonnull RecipeMetadataPersistenceModel persistenceModel) {
+
+        recipeState = persistenceModel.getRecipeState();
+        failReasons.addAll(persistenceModel.getFailReasons());
+
         return new DomainModel(
                 persistenceModel.getParentDomainId(),
                 persistenceModel.getComponentStates()
@@ -222,80 +226,33 @@ public class RecipeMetadata
 
     @Override
     protected void validateDomainModelElements() {
-        calculateState();
+        checkForRequiredComponents();
+        validateComponents();
+        recipeState = getComponentState();
+        save();
     }
 
-    private void setState() {
-        if (!isValid() && !isDomainModelChanged()) {
-            recipeState = ComponentState.INVALID_UNCHANGED;
-        } else if (!isValid() && isDomainModelChanged()) {
-            recipeState = ComponentState.INVALID_CHANGED;
-        } else if (isValid() && !isDomainModelChanged()) {
-            recipeState = ComponentState.VALID_UNCHANGED;
-        } else {
-            addCommonFailReasons();
-            recipeState = ComponentState.VALID_CHANGED;
-        }
-    }
-
-    private boolean isValid() {
-        boolean isValid = true;
-        if (hasRequiredComponents()) {
-            for (ComponentState state : componentStates.values()) {
-                if (ComponentState.INVALID_UNCHANGED == state ||
-                        ComponentState.INVALID_CHANGED == state) {
-                    isValid = false;
-                    addFailReasonInvalidComponents();
-                }
-            }
-        } else {
-            isValid = false;
-        }
-        if (isValid) {
-            addCommonFailReasons();
-        }
-        return isValid;
-    }
-
-    protected boolean isDomainModelChanged() {
-        boolean isChanged = false;
-        for (ComponentState state : componentStates.values()) {
-            if (ComponentState.INVALID_CHANGED == state || ComponentState.VALID_CHANGED == state) {
-                isChanged = true;
-                break;
-            }
-        }
-        return isChanged;
-    }
-
-    private boolean hasRequiredComponents() {
-        int noOfRequiredComponents = requiredComponents.size();
-        int noOfComponentsSubmitted = 0;
-
+    private void checkForRequiredComponents() {
         for (ComponentName componentName : requiredComponents) {
-            if (isComponentSateSubmitted(componentName)) {
-                noOfComponentsSubmitted++;
-            } else {
-                componentNotSubmitted(componentName);
+            if (!domainModel.componentStates.containsKey(componentName)) {
+                domainModel.componentStates.put(componentName, ComponentState.INVALID_UNCHANGED);
+                addFailReasonsMissingComponents();
             }
         }
-        return noOfComponentsSubmitted == noOfRequiredComponents;
-    }
-
-    private boolean isComponentSateSubmitted(ComponentName componentName) {
-        return componentStates.containsKey(componentName);
-    }
-
-    private void componentNotSubmitted(ComponentName componentName) {
-        componentStates.put(componentName, ComponentState.INVALID_UNCHANGED);
-//        recipeState = ComponentState.INVALID_UNCHANGED;
-
-        addFailReasonsMissingComponents();
     }
 
     private void addFailReasonsMissingComponents() {
         if (!failReasons.contains(FailReason.MISSING_COMPONENTS)) {
             failReasons.add(FailReason.MISSING_COMPONENTS);
+        }
+    }
+
+    private void validateComponents() {
+        for (ComponentState componentState : domainModel.componentStates.values()) {
+            if (ComponentState.INVALID_CHANGED == componentState ||
+                    ComponentState.INVALID_UNCHANGED == componentState) {
+                addFailReasonInvalidComponents();
+            }
         }
     }
 
@@ -305,75 +262,58 @@ public class RecipeMetadata
         }
     }
 
-    protected void buildResponse() {
-        RecipeMetadataResponse.Builder builder = new RecipeMetadataResponse.Builder();
-        builder.setDomainId(useCaseDomainId);
-
-        if (isDomainModelChanged()) {
-            RecipeMetadataPersistenceModel m = updatePersistenceModel();
-            builder.setMetadata(getMetadata(m));
-            persistenceModel = m;
-            save();
-
-        } else {
-            builder.setMetadata(getMetadata(persistenceModel));
-        }
-
-        builder.setDomainModel(getResponseDomainModel());
-        builder.setDataId(useCaseDataId);
-
-        sendResponse(builder.build());
-    }
-
-    private UseCaseMetadataModel getMetadata(RecipeMetadataPersistenceModel m) {
-        return new UseCaseMetadataModel.Builder().
-                setComponentState(recipeState).
-                setFailReasons(new ArrayList<>(failReasons)).
-                setCreatedBy(Constants.getUserId()).
-                setCreateDate(m.getCreateDate()).
-                setLastUpdate(m.getLastUpdate()).
-                build();
-    }
-
-    private RecipeMetadataResponse.Model getResponseDomainModel() {
-        return new RecipeMetadataResponse.Model.Builder().
-                setParentDomainId(persistenceModel.getParentDomainId()).
-                setComponentStates(new LinkedHashMap<>(componentStates)).
-                build();
-    }
-
-    private RecipeMetadataPersistenceModel updatePersistenceModel() {
-        RecipeMetadataRequest r = (RecipeMetadataRequest) getRequest();
-        useCaseDataId = idProvider.getUId();
-        return new RecipeMetadataPersistenceModel.Builder().
-                setDataId(useCaseDataId).
-                setDomainId(useCaseDomainId).
-                setParentDomainId(r.getDomainModel().getParentDomainId()).
-                setRecipeState(recipeState).
-                setComponentStates(componentStates).
-                setFailReasons(failReasons).
-                setCreatedBy(Constants.getUserId()).
-                setCreateDate(persistenceModel.getCreateDate()).
-                setLastUpdate(timeProvider.getCurrentTimeInMills()).
-                build();
-    }
-
-    private void sendResponse(RecipeMetadataResponse r) {
-        System.out.println(TAG + "Response No:" + accessCount + " - " + r);
-        if (isValid()) {
-            getUseCaseCallback().onUseCaseSuccess(r);
-        } else {
-            getUseCaseCallback().onUseCaseError(r);
-        }
-    }
-
     @Override
     protected void save() {
-        repository.save(persistenceModel);
+        System.out.println(TAG + "save:" + "isChanged=" + isChanged);
+        if (isChanged) {
+
+            useCaseDataId = idProvider.getUId();
+            long currentTime = timeProvider.getCurrentTimeInMills();
+
+            if (persistenceModel != null) {
+                archiveExistingPersistenceModel(currentTime);
+            }
+
+            persistenceModel = new RecipeMetadataPersistenceModel.Builder().
+                    setDataId(useCaseDataId).
+                    setDomainId(useCaseDomainId).
+                    setParentDomainId(domainModel.parentDomainId).
+                    setRecipeState(recipeState).
+                    setComponentStates(domainModel.componentStates).
+                    setFailReasons(failReasons).
+                    setCreatedBy(Constants.getUserId()).
+                    setCreateDate(currentTime).
+                    setLastUpdate(currentTime).build();
+
+            repository.save(persistenceModel);
+        }
+        buildResponse();
     }
 
     @Override
     protected void archiveExistingPersistenceModel(long currentTime) {
+        RecipeMetadataPersistenceModel model = new RecipeMetadataPersistenceModel.Builder().
+                basedOnModel(persistenceModel).
+                setLastUpdate(currentTime).build();
 
+        repository.save(model);
+    }
+
+    protected void buildResponse() {
+        RecipeMetadataResponse response = new RecipeMetadataResponse.Builder().
+                setDataId(useCaseDataId).
+                setDomainId(useCaseDomainId).
+                setMetadata(getMetadata()).
+                setDomainModel(getResponseDomainModel()).
+                build();
+
+        sendResponse(response);
+    }
+
+    private RecipeMetadataResponse.Model getResponseDomainModel() {
+        return new RecipeMetadataResponse.Model.Builder().
+                setParentDomainId(domainModel.parentDomainId).
+                setComponentStates(new LinkedHashMap<>(domainModel.componentStates)).
+                build();
     }
 }

@@ -171,7 +171,7 @@ public abstract class UseCaseElement<
 
         addCommonFailReasons();
 
-        builder.setFailReasons(failReasons);
+        builder.setFailReasons(new ArrayList<>(failReasons));
         builder.setCreatedBy(Constants.getUserId());
         builder.setCreateDate(persistenceModel == null ? 0L : persistenceModel.getCreateDate());
         builder.setLastUpdate(persistenceModel == null ? 0L : persistenceModel.getLastUpdate());

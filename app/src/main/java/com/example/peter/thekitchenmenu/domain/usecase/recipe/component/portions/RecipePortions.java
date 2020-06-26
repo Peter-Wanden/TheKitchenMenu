@@ -29,10 +29,10 @@ public class RecipePortions
         private int servings;
         private int sittings;
 
-        public DomainModel() {
+        private DomainModel() {
         }
 
-        public DomainModel(int servings, int sittings) {
+        private DomainModel(int servings, int sittings) {
             this.servings = servings;
             this.sittings = sittings;
         }
