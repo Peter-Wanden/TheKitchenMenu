@@ -10,7 +10,6 @@ import com.example.peter.thekitchenmenu.domain.model.BaseDomainPersistenceModel;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentName;
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentState;
@@ -19,10 +18,12 @@ import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.m
  * Represented in primitive form by {@link RecipeMetadataParentEntity},
  * {@link RecipeComponentStateEntity} & {@link RecipeFailReasonEntity}
  */
-public final class RecipeMetadataPersistenceModel extends BaseDomainPersistenceModel {
+public final class RecipeMetadataPersistenceModel
+        extends
+        BaseDomainPersistenceModel {
 
     private String parentDomainId;
-    private ComponentState recipeState;
+    private ComponentState componentState;
     private HashMap<ComponentName, ComponentState> componentStates;
     private List<FailReasons> failReasons;
     private String createdBy;
@@ -33,8 +34,8 @@ public final class RecipeMetadataPersistenceModel extends BaseDomainPersistenceM
         return parentDomainId;
     }
 
-    public ComponentState getRecipeState() {
-        return recipeState;
+    public ComponentState getComponentState() {
+        return componentState;
     }
 
     public HashMap<ComponentName, ComponentState> getComponentStates() {
@@ -62,7 +63,7 @@ public final class RecipeMetadataPersistenceModel extends BaseDomainPersistenceM
             domainModel.dataId = "";
             domainModel.domainId = "";
             domainModel.parentDomainId = "";
-            domainModel.recipeState = ComponentState.INVALID_UNCHANGED;
+            domainModel.componentState = ComponentState.INVALID_UNCHANGED;
             domainModel.componentStates = new HashMap<>();
             domainModel.failReasons = new ArrayList<>();
             domainModel.createdBy = Constants.getUserId();
@@ -76,7 +77,7 @@ public final class RecipeMetadataPersistenceModel extends BaseDomainPersistenceM
             domainModel.dataId = model.getDataId();
             domainModel.domainId = model.getDomainId();
             domainModel.parentDomainId = model.getParentDomainId();
-            domainModel.recipeState = model.getRecipeState();
+            domainModel.componentState = model.getComponentState();
             domainModel.componentStates = model.getComponentStates();
             domainModel.failReasons = model.getFailReasons();
             domainModel.createdBy = model.getCreatedBy();
@@ -91,7 +92,7 @@ public final class RecipeMetadataPersistenceModel extends BaseDomainPersistenceM
         }
 
         public Builder setRecipeState(ComponentState state) {
-            domainModel.recipeState = state;
+            domainModel.componentState = state;
             return self();
         }
 

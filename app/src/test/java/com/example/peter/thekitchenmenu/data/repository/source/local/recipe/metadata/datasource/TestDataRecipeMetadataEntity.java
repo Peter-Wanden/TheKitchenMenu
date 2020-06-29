@@ -209,7 +209,7 @@ public class TestDataRecipeMetadataEntity {
                 setDataId(m.getDataId()).
                 setDomainId(m.getDomainId()).
                 setRecipeParentDomainId(m.getParentDomainId()).
-                setRecipeStateId(m.getRecipeState().id()).
+                setRecipeStateId(m.getComponentState().id()).
                 setCreatedBy(m.getCreatedBy()).
                 setCreateDate(m.getCreateDate()).
                 setLastUpdate(m.getLastUpdate()).

@@ -10,7 +10,6 @@ import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailRe
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.model.UseCaseMetadataModel;
-import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataId;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentName;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentState;
@@ -30,9 +29,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
@@ -78,51 +75,59 @@ public class RecipeMetadataTest {
         handler = new UseCaseHandler(new UseCaseSchedulerMock());
         expectedComponentStates = new HashMap<>();
 
-        final Set<ComponentName> requiredComponents = new HashSet<>();
-        requiredComponents.add(ComponentName.IDENTITY);
-        requiredComponents.add(ComponentName.COURSE);
-        requiredComponents.add(ComponentName.DURATION);
-        requiredComponents.add(ComponentName.PORTIONS);
-
         return new RecipeMetadata(
                 repoMock,
                 idProviderMock,
                 timeProviderMock,
-                requiredComponents
+                TestDataRecipeMetadata.requiredComponentNames,
+                TestDataRecipeMetadata.additionalComponentNames
         );
     }
 
     // region defaultValueTests
     @Test
-    public void defaultRequest_emptyStateReturned() {
+    public void defaultRequest_sentToDefaultUseCase_stateINVALID_DEFAULT() {
         // Arrange
         // A default request always returns the current state of the use case.
         // As this use case is currently 'empty' the default request should return the use case's
         // default values.
+        RecipeMetadataPersistenceModel modelUnderTest = TestDataRecipeMetadata.
+                getDefaultState();
+
+        // arrange default request
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().getDefault().build();
-
-        // Expected default component states
-        expectedComponentStates = TestDataRecipeMetadata.getInvalidUnchangedComponentStates();
-
-        // Expected default fail reasons
-        List<FailReasons> expectedFailReasons = Arrays.asList(
-                FailReason.MISSING_COMPONENTS,
-                FailReason.INVALID_COMPONENTS,
-                CommonFailReason.DATA_UNAVAILABLE
-        );
 
         // Act
         SUT.execute(request, new MetadataCallbackClient());
 
         // Assert
-        HashMap<ComponentName, ComponentState> actualComponentStates = onErrorResponse.
-                getDomainModel().getComponentStates();
+        UseCaseMetadataModel metadata = onErrorResponse.getMetadata();
+        RecipeMetadataResponse.DomainModel model = onErrorResponse.getDomainModel();
+
+        // assert no id's or times generated
+        verifyNoMoreInteractions(idProviderMock);
+        verifyNoMoreInteractions(timeProviderMock);
+
+        // assert recipe state
+        ComponentState expectedComponentState = ComponentState.INVALID_DEFAULT;
+        ComponentState actualComponentState = metadata.getComponentState();
+        assertEquals(
+                expectedComponentState,
+                actualComponentState
+        );
+
+        // assert recipe components states
+        HashMap<ComponentName, ComponentState> expectedComponentStates = modelUnderTest.
+                getComponentStates();
+        HashMap<ComponentName, ComponentState> actualComponentStates = model.
+                getComponentStates();
         assertEquals(
                 expectedComponentStates,
                 actualComponentStates
         );
 
-        UseCaseMetadataModel metadata = onErrorResponse.getMetadata();
+        // assert fail reasons
+        List<FailReasons> expectedFailReasons = modelUnderTest.getFailReasons();
         List<FailReasons> actualFailReasons = metadata.getFailReasons();
         assertEquals(
                 expectedFailReasons,
@@ -145,7 +150,7 @@ public class RecipeMetadataTest {
         // Assert response values
         RecipeMetadataResponse response = onErrorResponse;
         UseCaseMetadataModel metadata = response.getMetadata();
-        RecipeMetadataResponse.Model model = onErrorResponse.getDomainModel();
+        RecipeMetadataResponse.DomainModel domainModel = onErrorResponse.getDomainModel();
 
         // assert id's
         String expectedDataId = modelUnderTest.getDataId();
@@ -164,7 +169,7 @@ public class RecipeMetadataTest {
 
         // assert metadata state
         // assert overall component state
-        ComponentState expectedRecipeState = modelUnderTest.getRecipeState();
+        ComponentState expectedRecipeState = modelUnderTest.getComponentState();
         ComponentState actualRecipeState = metadata.getComponentState();
         assertEquals(
                 expectedRecipeState,
@@ -173,7 +178,7 @@ public class RecipeMetadataTest {
 
         // assert fail reasons
         List<FailReasons> expectedFailReasons = Arrays.asList(
-                FailReason.MISSING_COMPONENTS,
+                FailReason.MISSING_REQUIRED_COMPONENTS,
                 FailReason.INVALID_COMPONENTS
         );
         List<FailReasons> actualFailReasons = metadata.getFailReasons();
@@ -207,14 +212,14 @@ public class RecipeMetadataTest {
 
         // assert response model
         String expectedParentDomainId = modelUnderTest.getParentDomainId();
-        String actualParentDomainId = model.getParentDomainId();
+        String actualParentDomainId = domainModel.getParentDomainId();
         assertEquals(
                 expectedParentDomainId,
                 actualParentDomainId
         );
 
         // assert componentStates
-        HashMap<ComponentName, ComponentState> actualComponentStates = model.getComponentStates();
+        HashMap<ComponentName, ComponentState> actualComponentStates = domainModel.getComponentStates();
         assertEquals(
                 expectedComponentStates,
                 actualComponentStates
@@ -229,8 +234,9 @@ public class RecipeMetadataTest {
     @Test
     public void missingComponent_stateDATA_UNAVAILABLE_failReasonMISSING_COMPONENTS() {
         // Arrange/execute initial request
+
         String recipeId = TestDataRecipeMetadata.NEW_RECIPE_DOMAIN_ID;
-        givenDomainIdAsInitialRequestReturnDataUnavailable(recipeId);
+//        givenDomainIdAsInitialRequestReturnDataUnavailable(recipeId);
 
         // Arrange MISSING_COMPONENT state (portions missing)
         expectedComponentStates = TestDataRecipeMetadata.getInvalidMissingComponentsStates();
@@ -254,7 +260,7 @@ public class RecipeMetadataTest {
         );
         assertTrue(onErrorResponse.getMetadata().
                 getFailReasons().
-                contains(FailReason.MISSING_COMPONENTS)
+                contains(FailReason.MISSING_REQUIRED_COMPONENTS)
         );
     }
 
@@ -262,7 +268,7 @@ public class RecipeMetadataTest {
     public void invalidComponent_stateINVALID_UNCHANGED_failReasonINVALID_COMPONENTS() {
         // Arrange
         String recipeId = TestDataRecipeMetadata.NEW_RECIPE_DOMAIN_ID;
-        givenDomainIdAsInitialRequestReturnDataUnavailable(recipeId);
+//        givenDomainIdAsInitialRequestReturnDataUnavailable(recipeId);
 
         // Arrange INVALID_UNCHANGED / INVALID_COMPONENTS state
         expectedComponentStates = TestDataRecipeMetadata.getInvalidUnchangedComponentStates();
@@ -302,7 +308,7 @@ public class RecipeMetadataTest {
     public void invalidChangedComponent_stateINVALID_CHANGED_failReasonINVALID_COMPONENTS() {
         // Arrange
         String recipeId = TestDataRecipeMetadata.NEW_RECIPE_DOMAIN_ID;
-        givenDomainIdAsInitialRequestReturnDataUnavailable(recipeId);
+//        givenDomainIdAsInitialRequestReturnDataUnavailable(recipeId);
 
         // Arrange INVALID_CHANGED / INVALID_COMPONENTS state
         expectedComponentStates = TestDataRecipeMetadata.getInvalidChangedComponentStates();
@@ -342,7 +348,7 @@ public class RecipeMetadataTest {
     public void validUnchangedComponent_stateVALID_UNCHANGED_failReasonNONE() {
         // Arrange
         String recipeId = TestDataRecipeMetadata.NEW_RECIPE_DOMAIN_ID;
-        givenDomainIdAsInitialRequestReturnDataUnavailable(recipeId);
+//        givenDomainIdAsInitialRequestReturnDataUnavailable(recipeId);
 
         // Arrange VALID_UNCHANGED / CommonFailReason.NONE state
         expectedComponentStates = TestDataRecipeMetadata.getValidUnchangedComponentStates();
@@ -382,7 +388,7 @@ public class RecipeMetadataTest {
     public void validChangedComponent_recipeCourse_INVALID_UNCHANGED() {
         // Arrange
         String recipeId = TestDataRecipeMetadata.NEW_RECIPE_DOMAIN_ID;
-        givenDomainIdAsInitialRequestReturnDataUnavailable(recipeId);
+//        givenDomainIdAsInitialRequestReturnDataUnavailable(recipeId);
 
         // Arrange VALID_UNCHANGED / CommonFailReason.NONE state
         expectedComponentStates = TestDataRecipeMetadata.getInvalidUnchangedComponentStates();
@@ -421,7 +427,7 @@ public class RecipeMetadataTest {
     public void validChanged_stateVALID_CHANGED_failReasonNONE() {
         // Arrange
         String recipeId = TestDataRecipeMetadata.NEW_RECIPE_DOMAIN_ID;
-        givenDomainIdAsInitialRequestReturnDataUnavailable(recipeId);
+//        givenDomainIdAsInitialRequestReturnDataUnavailable(recipeId);
 
         // Arrange VALID_CHANGED / CommonFailReason.NONE state
         expectedComponentStates = TestDataRecipeMetadata.getValidChangedComponentStates();
@@ -462,7 +468,7 @@ public class RecipeMetadataTest {
         // Arrange
         String recipeId = TestDataRecipeMetadata.NEW_RECIPE_DOMAIN_ID;
         // Arrange and execute first request
-        givenDomainIdAsInitialRequestReturnDataUnavailable(recipeId);
+//        givenDomainIdAsInitialRequestReturnDataUnavailable(recipeId);
 
         // Arrange second request
         expectedComponentStates = TestDataRecipeMetadata.getInvalidUnchangedComponentStates();
@@ -520,7 +526,7 @@ public class RecipeMetadataTest {
         // Arrange
         String recipeId = TestDataRecipeMetadata.NEW_RECIPE_DOMAIN_ID;
         // Act
-        givenDomainIdAsInitialRequestReturnDataUnavailable(recipeId);
+//        givenDomainIdAsInitialRequestReturnDataUnavailable(recipeId);
 
         // Assert response
         UseCaseMetadataModel metadata = onErrorResponse.getMetadata();
@@ -534,7 +540,7 @@ public class RecipeMetadataTest {
 
         FailReasons[] expectedFailReasons = new FailReasons[]{
                 CommonFailReason.DATA_UNAVAILABLE,
-                FailReason.MISSING_COMPONENTS};
+                FailReason.MISSING_REQUIRED_COMPONENTS};
         FailReasons[] actualFailReasons = metadata.getFailReasons().toArray(new FailReasons[0]);
         assertArrayEquals(
                 expectedFailReasons,
@@ -795,13 +801,13 @@ public class RecipeMetadataTest {
 
         RecipeMetadataRequest initialRequest = new RecipeMetadataRequest.Builder().
                 getDefault().
-                setDomainId(domainId).
+                setDomainId(modelUnderTest.getDomainId()).
                 build();
 
         // Act
         SUT.execute(initialRequest, new MetadataCallbackClient());
 
-        whenRepoCalledReturnDataUnavailable(domainId);
+        whenRepoCalledReturnDataUnavailable(modelUnderTest.getDomainId());
     }
 
     private void whenRepoCalledReturnDataUnavailable(String domainId) {

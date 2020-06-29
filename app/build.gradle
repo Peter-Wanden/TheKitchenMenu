@@ -6,7 +6,6 @@ android {
     buildToolsVersion '29.0.3'
 
     signingConfigs {
-
         config {
             keyAlias 'TKMKey'
             keyPassword 'Z5g3yqgZZyuCpSfANITG'
@@ -16,7 +15,6 @@ android {
     }
 
     defaultConfig {
-
         applicationId "com.example.peter.thekitchenmenu"
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion

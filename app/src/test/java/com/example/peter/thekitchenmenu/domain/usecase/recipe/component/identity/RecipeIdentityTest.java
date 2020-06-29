@@ -85,7 +85,7 @@ public class RecipeIdentityTest {
     }
 
     @Test
-    public void newRequest_stateINVALID_UNCHANGED_failReasonDATA_UNAVAILABLE() {
+    public void newRequest_stateINVALID_DEFAULT_failReasonDATA_UNAVAILABLE() {
         // Arrange
         // This is the initial pre-test setup request for most tests cases, so check all return
         // values
@@ -116,7 +116,7 @@ public class RecipeIdentityTest {
         UseCaseMetadataModel metadata = response.getMetadata();
 
         // Assert component state
-        ComponentState expectedComponentState = ComponentState.INVALID_UNCHANGED;
+        ComponentState expectedComponentState = ComponentState.INVALID_DEFAULT;
         ComponentState actualComponentState = metadata.getComponentState();
         assertEquals(
                 expectedComponentState,

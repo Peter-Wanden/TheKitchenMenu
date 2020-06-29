@@ -10,7 +10,6 @@ import com.example.peter.thekitchenmenu.domain.model.UseCaseMetadataModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataId;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
@@ -19,6 +18,8 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentState;
 
 /**
  * Using the state of the data Id's, determines the updatedDomainModel to be processed.
@@ -183,17 +184,31 @@ public abstract class UseCaseElement<
         return metadataModel;
     }
 
-    protected RecipeMetadata.ComponentState getComponentState() {
-        RecipeMetadata.ComponentState componentState = isDomainModelValid() ?
-                (isChanged ?
-                        RecipeMetadata.ComponentState.VALID_CHANGED :
-                        RecipeMetadata.ComponentState.VALID_UNCHANGED) :
-                (isChanged ?
-                        RecipeMetadata.ComponentState.INVALID_CHANGED :
-                        RecipeMetadata.ComponentState.INVALID_UNCHANGED);
+    protected ComponentState getComponentState() {
+        ComponentState componentState;
+
+        if (isDefaultDomainModel()) {
+            componentState =
+                    isDomainModelValid() ?
+                            ComponentState.VALID_DEFAULT :
+                            ComponentState.INVALID_DEFAULT;
+        } else {
+            componentState =
+                    isDomainModelValid() ?
+                            (isChanged ?
+                                    ComponentState.VALID_CHANGED :
+                                    ComponentState.VALID_UNCHANGED) :
+                            (isChanged ?
+                                    ComponentState.INVALID_CHANGED :
+                                    ComponentState.INVALID_UNCHANGED);
+        }
 
         System.out.println(TAG + "getComponentState= " + componentState);
         return componentState;
+    }
+
+    private boolean isDefaultDomainModel() {
+        return domainModel.equals(createDomainModelFromDefaultValues());
     }
 
     protected boolean isDomainModelValid() {

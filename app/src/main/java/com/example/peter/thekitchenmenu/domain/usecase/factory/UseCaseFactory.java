@@ -20,6 +20,7 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.R
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDuration;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentity;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentName;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipecopy.RecipeCopy;
@@ -167,16 +168,19 @@ public class UseCaseFactory {
 
     private RecipeMetadata getRecipeMetadataUseCase() {
         final Set<RecipeMetadata.ComponentName> requiredComponents = new HashSet<>();
-        requiredComponents.add(RecipeMetadata.ComponentName.IDENTITY);
-        requiredComponents.add(RecipeMetadata.ComponentName.COURSE);
-        requiredComponents.add(RecipeMetadata.ComponentName.DURATION);
-        requiredComponents.add(RecipeMetadata.ComponentName.PORTIONS);
+        requiredComponents.add(ComponentName.IDENTITY);
+        requiredComponents.add(ComponentName.COURSE);
+        requiredComponents.add(ComponentName.PORTIONS);
+
+        final Set<RecipeMetadata.ComponentName> additionalComponents = new HashSet<>();
+        additionalComponents.add(ComponentName.DURATION);
 
         return new RecipeMetadata(
                 recipeMetadataRepository,
                 new UniqueIdProvider(),
                 new TimeProvider(),
-                requiredComponents
+                requiredComponents,
+                additionalComponents
         );
     }
 

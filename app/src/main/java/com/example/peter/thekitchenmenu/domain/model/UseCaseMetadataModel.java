@@ -138,7 +138,7 @@ public class UseCaseMetadataModel {
 
         private static List<FailReasons> getDefaultFailReasons() {
             List<FailReasons> failReasons = new ArrayList<>();
-            failReasons.add(RecipeMetadata.FailReason.MISSING_COMPONENTS);
+            failReasons.add(RecipeMetadata.FailReason.MISSING_REQUIRED_COMPONENTS);
             return failReasons;
         }
 

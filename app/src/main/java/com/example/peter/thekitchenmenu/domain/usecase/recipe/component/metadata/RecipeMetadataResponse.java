@@ -15,7 +15,7 @@ import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.m
 
 public final class RecipeMetadataResponse
         extends
-        UseCaseMessageModelDataIdMetadata<RecipeMetadataResponse.Model>
+        UseCaseMessageModelDataIdMetadata<RecipeMetadataResponse.DomainModel>
         implements
         UseCaseBase.Response {
 
@@ -37,7 +37,7 @@ public final class RecipeMetadataResponse
             MessageModelDataIdMetadataBuilder<
                     Builder,
                     RecipeMetadataResponse,
-                    Model> {
+                    DomainModel> {
 
         public Builder() {
             message = new RecipeMetadataResponse();
@@ -48,7 +48,7 @@ public final class RecipeMetadataResponse
             message.dataId = "";
             message.domainId = "";
             message.metadata = new UseCaseMetadataModel.Builder().getDefault().build();
-            message.model = new Model.Builder().getDefault().build();
+            message.model = new DomainModel.Builder().getDefault().build();
             return self();
         }
 
@@ -58,14 +58,14 @@ public final class RecipeMetadataResponse
         }
     }
 
-    public static final class Model
+    public static final class DomainModel
             extends
             BaseDomainModel {
 
         private String parentDomainId;
         private HashMap<ComponentName, ComponentState> componentStates;
 
-        private Model() {}
+        private DomainModel() {}
 
         @Nonnull
         public String getParentDomainId() {
@@ -80,9 +80,9 @@ public final class RecipeMetadataResponse
         public boolean equals(Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
-            Model model = (Model) o;
-            return Objects.equals(parentDomainId, model.parentDomainId) &&
-                    Objects.equals(componentStates, model.componentStates);
+            DomainModel domainModel = (DomainModel) o;
+            return Objects.equals(parentDomainId, domainModel.parentDomainId) &&
+                    Objects.equals(componentStates, domainModel.componentStates);
         }
 
         @Override
@@ -93,7 +93,7 @@ public final class RecipeMetadataResponse
         @Nonnull
         @Override
         public String toString() {
-            return "Model{" +
+            return "DomainModel{" +
                     "parentDomainId='" + parentDomainId + '\'' +
                     ", componentStates=" + componentStates +
                     '}';
@@ -103,10 +103,10 @@ public final class RecipeMetadataResponse
                 extends
                 DomainModelBuilder<
                         Builder,
-                        Model> {
+                        DomainModel> {
 
             public Builder() {
-                domainModel = new Model();
+                domainModel = new DomainModel();
             }
 
             @Override

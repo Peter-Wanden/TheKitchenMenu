@@ -73,7 +73,7 @@ public class RecipeDurationTest {
     }
 
     @Test
-    public void newRequest_componentStateINVALID_UNCHANGED() {
+    public void newRequest_componentStateVALID_DEFAULT() {
         // Arrange
         // This is the initial pre-test setup request for most tests cases, so check all return
         // values
@@ -100,11 +100,8 @@ public class RecipeDurationTest {
         // assert response values
         RecipeDurationResponse response = durationOnErrorResponse;
 
-        String expectedDataId = ""; // nothing saved so no data id generated
-        assertEquals(
-                expectedDataId,
-                response.getDataId()
-        );
+        verifyNoMoreInteractions(idProviderMock); // nothing saved so no data id generated
+
         assertEquals(
                 expectedDefaultValues.getDomainId(),
                 response.getDomainId()
@@ -113,7 +110,7 @@ public class RecipeDurationTest {
         // assert response metadata
         UseCaseMetadataModel metadata = durationOnErrorResponse.getMetadata();
 
-        ComponentState expectedState = ComponentState.VALID_UNCHANGED;
+        ComponentState expectedState = ComponentState.VALID_DEFAULT;
         ComponentState actualComponentState = metadata.getComponentState();
         assertEquals(
                 expectedState,
@@ -135,7 +132,7 @@ public class RecipeDurationTest {
     public void newRequest_invalidPrepHours_invalidValueNotSaved() {
         // Arrange
         // execute and test a new domain Id only request that returns default state
-        newRequest_componentStateINVALID_UNCHANGED();
+        newRequest_componentStateVALID_DEFAULT();
 
         // arrange persistent model that SHOULD NOT be saved as represents error state
         RecipeDurationPersistenceModel expectedInvalidStateModel = TestDataRecipeDuration.
@@ -193,7 +190,7 @@ public class RecipeDurationTest {
     public void newRequest_validPrepHours_prepHoursSaved() {
         // Arrange
         // execute and test a new domain Id only request that returns default state
-        newRequest_componentStateINVALID_UNCHANGED();
+        newRequest_componentStateVALID_DEFAULT();
 
         // arrange expected save
         RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
@@ -248,7 +245,7 @@ public class RecipeDurationTest {
     public void newRequest_invalidPrepMinutes_invalidValueNotSaved() {
         // Arrange
         // execute and test a new domain Id only request that returns default state
-        newRequest_componentStateINVALID_UNCHANGED();
+        newRequest_componentStateVALID_DEFAULT();
 
         // arrange persistent model that SHOULD NOT be saved as represents error state
         RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
@@ -273,7 +270,7 @@ public class RecipeDurationTest {
     public void newRequest_invalidPrepMinutes_resultINVALID_CHANGED() {
         // Arrange
         // execute and test a new domain Id only request that returns default state
-        newRequest_componentStateINVALID_UNCHANGED();
+        newRequest_componentStateVALID_DEFAULT();
 
         // arrange persistent model that SHOULD NOT be saved as represents error state
         RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
@@ -301,7 +298,7 @@ public class RecipeDurationTest {
     public void newRequest_invalidPrepMinutes_FaiReasonINVALID_PREP_TIME() {
         // Arrange
         // execute and test a new domain Id only request that returns default state
-        newRequest_componentStateINVALID_UNCHANGED();
+        newRequest_componentStateVALID_DEFAULT();
 
         // arrange persistent model that SHOULD NOT be saved as represents error state
         RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
@@ -336,7 +333,7 @@ public class RecipeDurationTest {
     public void newRequest_validPrepMinutes_resultVALID_CHANGED() {
         // Arrange
         // execute and test a new domain Id only request that returns default state
-        newRequest_componentStateINVALID_UNCHANGED();
+        newRequest_componentStateVALID_DEFAULT();
 
         // Arrange persistence model that should be saved
         RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
@@ -364,7 +361,7 @@ public class RecipeDurationTest {
     public void newRequest_validPrepMinutes_failReasonNONE() {
         // Arrange
         // execute and test a new domain Id only request that returns default state
-        newRequest_componentStateINVALID_UNCHANGED();
+        newRequest_componentStateVALID_DEFAULT();
 
         // Arrange persistence model that should be saved
         RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
@@ -398,7 +395,7 @@ public class RecipeDurationTest {
     public void newRequest_validPrepMinutes_prepMinutesSaved() {
         // Arrange
         // execute and test a new domain Id only request that returns default state
-        newRequest_componentStateINVALID_UNCHANGED();
+        newRequest_componentStateVALID_DEFAULT();
 
         // Arrange persistence model that should be saved
         RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
@@ -427,7 +424,7 @@ public class RecipeDurationTest {
     public void newRequest_validPrepMinutes_previousSavedStateArchived() {
         // Arrange
         // execute and test a new domain Id only request that returns default state
-        newRequest_componentStateINVALID_UNCHANGED();
+        newRequest_componentStateVALID_DEFAULT();
 
         // arrange persistence model that should be saved
         RecipeDurationPersistenceModel savedModel = TestDataRecipeDuration.
@@ -457,7 +454,7 @@ public class RecipeDurationTest {
     public void newRequest_invalidCookHours_invalidValueNotSaved() {
         // Arrange
         // execute and test a new domain Id only request that returns default state
-        newRequest_componentStateINVALID_UNCHANGED();
+        newRequest_componentStateVALID_DEFAULT();
 
         // arrange persistence model that SHOULD NOT BE SAVED
         RecipeDurationPersistenceModel invalidCookHoursModel = TestDataRecipeDuration.
@@ -482,7 +479,7 @@ public class RecipeDurationTest {
     public void newRequest_invalidCookHours_resultINVALID_CHANGED() {
         // Arrange
         // execute and test a new domain Id only request that returns default state
-        newRequest_componentStateINVALID_UNCHANGED();
+        newRequest_componentStateVALID_DEFAULT();
 
         // arrange persistence model that SHOULD NOT BE SAVED
         RecipeDurationPersistenceModel invalidCookHoursModel = TestDataRecipeDuration.
@@ -510,7 +507,7 @@ public class RecipeDurationTest {
     public void newRequest_invalidCookHours_failReasonINVALID_COOK_TIME() {
         // Arrange
         // execute and test a new domain Id only request that returns default state
-        newRequest_componentStateINVALID_UNCHANGED();
+        newRequest_componentStateVALID_DEFAULT();
 
         // arrange persistence model that SHOULD NOT BE SAVED
         RecipeDurationPersistenceModel invalidCookHoursModel = TestDataRecipeDuration.
@@ -544,7 +541,7 @@ public class RecipeDurationTest {
     public void newRequest_validCookHours_validValueSaved() {
         // Arrange
         // execute and test a new domain Id only request that returns default state
-        newRequest_componentStateINVALID_UNCHANGED();
+        newRequest_componentStateVALID_DEFAULT();
 
         // arrange valid persistence model
         RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
@@ -571,7 +568,7 @@ public class RecipeDurationTest {
     public void newRequest_validCookHours_resultVALID_CHANGED() {
         // Arrange
         // execute and test a new domain Id only request that returns default state
-        newRequest_componentStateINVALID_UNCHANGED();
+        newRequest_componentStateVALID_DEFAULT();
 
         // arrange valid persistence model
         RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
@@ -601,7 +598,7 @@ public class RecipeDurationTest {
     public void newRequest_validCookHours_failReasonNONE() {
         // Arrange
         // execute and test a new domain Id only request that returns default state
-        newRequest_componentStateINVALID_UNCHANGED();
+        newRequest_componentStateVALID_DEFAULT();
 
         // arrange valid persistence model
         RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
@@ -635,7 +632,7 @@ public class RecipeDurationTest {
     public void newRequest_invalidCookMinutes_invalidValueNotSaved() {
         // Arrange
         // execute and test a new domain Id only request that returns default state
-        newRequest_componentStateINVALID_UNCHANGED();
+        newRequest_componentStateVALID_DEFAULT();
 
         // arrange valid persistence model that SHOULD NOT be saved
         RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
@@ -659,7 +656,7 @@ public class RecipeDurationTest {
     public void newRequest_invalidCookMinutes_resultINVALID_CHANGED() {
         // Arrange
         // execute and test a new domain Id only request that returns default state
-        newRequest_componentStateINVALID_UNCHANGED();
+        newRequest_componentStateVALID_DEFAULT();
 
         // arrange valid persistence model that SHOULD NOT be saved
         RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
@@ -685,7 +682,7 @@ public class RecipeDurationTest {
     public void newRequest_invalidCookMinutes_failReasonINVALID_COOK_TIME() {
         // Arrange
         // execute and test a new domain Id only request that returns default state
-        newRequest_componentStateINVALID_UNCHANGED();
+        newRequest_componentStateVALID_DEFAULT();
 
         // arrange valid persistence model that SHOULD NOT be saved
         RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
@@ -719,7 +716,7 @@ public class RecipeDurationTest {
     public void newRequest_validCookMinutes_validValueSaved() {
         // Arrange
         // execute and test a new domain Id only request that returns default state
-        newRequest_componentStateINVALID_UNCHANGED();
+        newRequest_componentStateVALID_DEFAULT();
 
         // arrange valid persistence model
         RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
@@ -748,7 +745,7 @@ public class RecipeDurationTest {
     public void newRequest_validCookMinutes_stateVALID_CHANGED() {
         // Arrange
         // execute and test a new domain Id only request that returns default state
-        newRequest_componentStateINVALID_UNCHANGED();
+        newRequest_componentStateVALID_DEFAULT();
 
         // arrange valid persistence model
         RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
@@ -778,7 +775,7 @@ public class RecipeDurationTest {
     public void newRequest_validCookMinutes_failReasonNONE() {
         // Arrange
         // execute and test a new domain Id only request that returns default state
-        newRequest_componentStateINVALID_UNCHANGED();
+        newRequest_componentStateVALID_DEFAULT();
 
         // arrange valid persistence model
         RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
@@ -812,7 +809,7 @@ public class RecipeDurationTest {
     public void newRequest_invalidPrepAndInvalidCookTime_failReasonsINVALID_PREP_TIME_INVALID_COOK_TIME() {
         // Arrange
         // execute and test a new domain Id only request that returns default state
-        newRequest_componentStateINVALID_UNCHANGED();
+        newRequest_componentStateVALID_DEFAULT();
 
         // arrange invalid persistence model
         RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
@@ -855,7 +852,7 @@ public class RecipeDurationTest {
     public void newRequest_validPrepAndValidCookTime_failReasonsNONE() {
         // Arrange
         // execute and test a new domain Id only request that returns default state
-        newRequest_componentStateINVALID_UNCHANGED();
+        newRequest_componentStateVALID_DEFAULT();
 
         // arrange valid persistence model
         RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.

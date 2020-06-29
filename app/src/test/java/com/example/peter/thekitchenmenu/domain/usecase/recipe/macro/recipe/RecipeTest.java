@@ -13,8 +13,6 @@ import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailRe
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.model.UseCaseMetadataModel;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCoursePersistenceModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourseRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourseResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDurationRequest;
@@ -37,12 +35,9 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 import javax.annotation.Nonnull;
 
@@ -137,7 +132,7 @@ public class RecipeTest {
         // Assert recipe metadata listener updated with correct value
         verify(metadataListener1).onRecipeMetadataChanged(recipeMetadataCaptor.capture()
         );
-        RecipeMetadataResponse.Model model = recipeMetadataCaptor.getValue().getDomainModel();
+        RecipeMetadataResponse.DomainModel domainModel = recipeMetadataCaptor.getValue().getDomainModel();
         UseCaseMetadataModel recipeMetadata = recipeMetadataCaptor.getValue().getMetadata();
 
         // Assert recipe state updated
@@ -145,42 +140,42 @@ public class RecipeTest {
                 ComponentState.INVALID_UNCHANGED,
                 recipeMetadata.getComponentState()
         );
-        // Assert all components responded
+        // Assert all required components responded
         assertEquals(
-                recipeTestBase.getNoOfRequiredComponents(),
-                model.getComponentStates().size()
+                TestDataRecipeMetadata.requiredComponentNames.size(),
+                domainModel.getComponentStates().size()
         );
         // Assert identity component and state
         assertTrue(
-                model.getComponentStates().containsKey(ComponentName.IDENTITY)
+                domainModel.getComponentStates().containsKey(ComponentName.IDENTITY)
         );
         assertEquals(
                 ComponentState.INVALID_UNCHANGED,
-                model.getComponentStates().get(ComponentName.IDENTITY)
+                domainModel.getComponentStates().get(ComponentName.IDENTITY)
         );
         // Assert course component and state
         assertTrue(
-                model.getComponentStates().containsKey(ComponentName.COURSE)
+                domainModel.getComponentStates().containsKey(ComponentName.COURSE)
         );
         assertEquals(
                 ComponentState.INVALID_UNCHANGED,
-                model.getComponentStates().get(ComponentName.COURSE)
+                domainModel.getComponentStates().get(ComponentName.COURSE)
         );
         // Assert duration component and state
         assertTrue(
-                model.getComponentStates().containsKey(ComponentName.DURATION)
+                domainModel.getComponentStates().containsKey(ComponentName.DURATION)
         );
         assertEquals(
                 ComponentState.INVALID_UNCHANGED,
-                model.getComponentStates().get(ComponentName.DURATION)
+                domainModel.getComponentStates().get(ComponentName.DURATION)
         );
         // Assert portions component and state
         assertTrue(
-                model.getComponentStates().containsKey(ComponentName.PORTIONS)
+                domainModel.getComponentStates().containsKey(ComponentName.PORTIONS)
         );
         assertEquals(
                 ComponentState.INVALID_UNCHANGED,
-                model.getComponentStates().get(ComponentName.PORTIONS)
+                domainModel.getComponentStates().get(ComponentName.PORTIONS)
         );
     }
 

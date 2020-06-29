@@ -7,6 +7,7 @@ import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeD
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeIdentity;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeMetadata;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipePortions;
+import com.example.peter.thekitchenmenu.data.repository.recipe.metadata.TestDataRecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCoursePersistenceModel;
@@ -30,9 +31,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
-import java.util.HashSet;
-import java.util.Set;
 
 public class RecipeTestBase {
 
@@ -63,7 +61,6 @@ public class RecipeTestBase {
     private TimeProvider timeProviderMock;
 
     public UseCaseHandler handler;
-    private int noOfRequiredComponents;
     public Recipe SUT;
 
     @Before
@@ -82,19 +79,12 @@ public class RecipeTestBase {
                 setLongTextMaxLength(RecipeIdentityTest.DESCRIPTION_MAX_LENGTH).
                 build();
 
-        final Set<RecipeMetadata.ComponentName> requiredComponents = new HashSet<>();
-        requiredComponents.add(RecipeMetadata.ComponentName.IDENTITY);
-        requiredComponents.add(RecipeMetadata.ComponentName.COURSE);
-        requiredComponents.add(RecipeMetadata.ComponentName.DURATION);
-        requiredComponents.add(RecipeMetadata.ComponentName.PORTIONS);
-
-        noOfRequiredComponents = requiredComponents.size();
-
         RecipeMetadata recipeMetadata = new RecipeMetadata(
                 repoMetadataMock,
                 idProviderMock,
                 timeProviderMock,
-                requiredComponents
+                TestDataRecipeMetadata.requiredComponentNames,
+                TestDataRecipeMetadata.additionalComponentNames
         );
         RecipeIdentity identity = new RecipeIdentity(
                 repoIdentityMock,
@@ -141,10 +131,6 @@ public class RecipeTestBase {
 
     public UniqueIdProvider getIdProviderMock() {
         return idProviderMock;
-    }
-
-    int getNoOfRequiredComponents() {
-        return noOfRequiredComponents;
     }
 
     public TimeProvider getTimeProviderMock() {

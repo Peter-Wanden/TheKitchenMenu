@@ -86,9 +86,9 @@ public final class RecipeMetadataRequest
         public boolean equals(Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
-            DomainModel model = (DomainModel) o;
-            return Objects.equals(parentDomainId, model.parentDomainId) &&
-                    Objects.equals(componentStates, model.componentStates);
+            DomainModel domainModel = (DomainModel) o;
+            return Objects.equals(parentDomainId, domainModel.parentDomainId) &&
+                    Objects.equals(componentStates, domainModel.componentStates);
         }
 
         @Override
@@ -123,7 +123,7 @@ public final class RecipeMetadataRequest
             }
 
 
-            public Builder basedOnResponseModel(RecipeMetadataResponse.Model m) {
+            public Builder basedOnResponseModel(RecipeMetadataResponse.DomainModel m) {
                 domainModel.parentDomainId = m.getParentDomainId();
                 domainModel.componentStates = m.getComponentStates();
                 return self();

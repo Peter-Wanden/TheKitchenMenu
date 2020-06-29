@@ -35,7 +35,7 @@ public class RecipeMetadataConverter
                 setDataId(model.getDataId()).
                 setDomainId(model.getDomainId()).
                 setRecipeParentDomainId(model.getParentDomainId()).
-                setRecipeStateId(model.getRecipeState().id()).
+                setRecipeStateId(model.getComponentState().id()).
                 setCreatedBy(model.getCreatedBy()).
                 setCreateDate(model.getCreateDate()).
                 setLastUpdate(model.getLastUpdate()).

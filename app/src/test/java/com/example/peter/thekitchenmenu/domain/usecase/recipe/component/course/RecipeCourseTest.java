@@ -69,7 +69,7 @@ public class RecipeCourseTest {
     }
 
     @Test
-    public void newRequest_defaultNoCoursesReturned_stateINVALID_UNCHANGED() {
+    public void newRequest_defaultNoCoursesReturned_stateINVALID_DEFAULT() {
         // Arrange
         RecipeCoursePersistenceModel expectedDefaultValues = TestDataRecipeCourse.
                 getNewActiveDefaultNoCourses();
@@ -108,7 +108,7 @@ public class RecipeCourseTest {
         // assert response metadata
         UseCaseMetadataModel metadata = courseOnErrorResponse.getMetadata();
 
-        ComponentState expectedState = ComponentState.INVALID_UNCHANGED;
+        ComponentState expectedState = ComponentState.INVALID_DEFAULT;
         ComponentState actualComponentState = metadata.getComponentState();
         assertEquals(
                 expectedState,
@@ -140,7 +140,7 @@ public class RecipeCourseTest {
     public void newRequest_addCourseOne_VALID_CHANGED() {
         // Arrange
         // execute and test a new domain Id only request that returns default state
-        newRequest_defaultNoCoursesReturned_stateINVALID_UNCHANGED();
+        newRequest_defaultNoCoursesReturned_stateINVALID_DEFAULT();
 
         // Arrange persistent model that represents state after adding domain data
         RecipeCoursePersistenceModel expectedCourseOneSaveModel = TestDataRecipeCourse.
@@ -316,7 +316,7 @@ public class RecipeCourseTest {
     }
 
     @Test
-    public void newRequest_removeAllCourses_INVALID_CHANGED() {
+    public void newRequest_removeAllCourses_INVALID_DEFAULT() {
         // Arrange
         // execute and test a new empty request that adds two courses, then removes one
         newRequest_removeCourseOne_VALID_CHANGED();
@@ -342,7 +342,7 @@ public class RecipeCourseTest {
         UseCaseMetadataModel metadata = response.getMetadata();
 
         // Assert state
-        ComponentState expectedState = ComponentState.INVALID_CHANGED;
+        ComponentState expectedState = ComponentState.INVALID_DEFAULT;
         ComponentState actualState = metadata.getComponentState();
         assertEquals(
                 expectedState,
@@ -406,7 +406,7 @@ public class RecipeCourseTest {
     }
 
     @Test
-    public void existingRequest_allModelsDeleted_INVALID_CHANGED() {
+    public void existingRequest_allModelsDeleted_INVALID_DEFAULT() {
         // Arrange
         // arrange test for testing the return of all courses
         existingRequest_completeListOfModelsReturned_VALID_UNCHANGED();
@@ -439,7 +439,7 @@ public class RecipeCourseTest {
         // Assert metadata
         UseCaseMetadataModel metadata = courseOnErrorResponse.getMetadata();
 
-        ComponentState expectedState = ComponentState.INVALID_CHANGED;
+        ComponentState expectedState = ComponentState.INVALID_DEFAULT;
         ComponentState actualState = metadata.getComponentState();
         assertEquals(
                 expectedState,

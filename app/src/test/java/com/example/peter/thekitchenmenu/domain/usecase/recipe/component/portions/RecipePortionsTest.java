@@ -72,7 +72,7 @@ public class RecipePortionsTest {
     }
 
     @Test
-    public void newRequest_defaultModelGenerated_failReasonNONE_DATA_UNAVAILABLE() {
+    public void newRequest_stateVALID_DEFAULT_failReasonNONE_DATA_UNAVAILABLE() {
         // Arrange
         // This is the initial pre-test setup request for most tests cases, so check all return
         // values
@@ -102,7 +102,7 @@ public class RecipePortionsTest {
         UseCaseMetadataModel metadata = portionsOnErrorResponse.getMetadata();
 
         assertEquals(
-                ComponentState.VALID_UNCHANGED,
+                ComponentState.VALID_DEFAULT,
                 metadata.getComponentState()
         );
         List<FailReasons> expectedFailReasons = Arrays.asList(
@@ -117,14 +117,14 @@ public class RecipePortionsTest {
     }
 
     @Test
-    public void newRequest_defaultModelGenerated_stateVALID_UNCHANGED() {
+    public void newRequest_stateVALID_DEFAULT() {
         // Arrange
         // Act
         // act simulate new default request / response
-        newRequest_defaultModelGenerated_failReasonNONE_DATA_UNAVAILABLE();
+        newRequest_stateVALID_DEFAULT_failReasonNONE_DATA_UNAVAILABLE();
         // Assert
         assertEquals(
-                ComponentState.VALID_UNCHANGED,
+                ComponentState.VALID_DEFAULT,
                 portionsOnErrorResponse.getMetadata().getComponentState()
         );
     }
@@ -136,7 +136,7 @@ public class RecipePortionsTest {
                 getNewInvalidTooHighServingsInvalidTooHighSittings();
 
         // act simulate new default request / response
-        newRequest_defaultModelGenerated_failReasonNONE_DATA_UNAVAILABLE();
+        newRequest_stateVALID_DEFAULT_failReasonNONE_DATA_UNAVAILABLE();
 
         // Arrange
         RecipePortionsRequest.DomainModel model = new RecipePortionsRequest.DomainModel.Builder().
@@ -178,7 +178,7 @@ public class RecipePortionsTest {
                 getNewInvalidTooHighServingsValidSittings();
 
         // act simulate new default request / response
-        newRequest_defaultModelGenerated_failReasonNONE_DATA_UNAVAILABLE();
+        newRequest_stateVALID_DEFAULT_failReasonNONE_DATA_UNAVAILABLE();
 
         // Arrange
         RecipePortionsRequest.DomainModel model = new RecipePortionsRequest.DomainModel.Builder().
@@ -219,7 +219,7 @@ public class RecipePortionsTest {
                 getNewValidServingsInvalidTooHighSittings();
 
         // act simulate new default request / response
-        newRequest_defaultModelGenerated_failReasonNONE_DATA_UNAVAILABLE();
+        newRequest_stateVALID_DEFAULT_failReasonNONE_DATA_UNAVAILABLE();
 
         // Arrange
         RecipePortionsRequest.DomainModel model = new RecipePortionsRequest.DomainModel.Builder().
@@ -260,7 +260,7 @@ public class RecipePortionsTest {
                 getNewValidServingsValidSittings();
 
         // act simulate new default request / response
-        newRequest_defaultModelGenerated_failReasonNONE_DATA_UNAVAILABLE();
+        newRequest_stateVALID_DEFAULT_failReasonNONE_DATA_UNAVAILABLE();
 
         // Arrange
         RecipePortionsRequest.DomainModel model = new RecipePortionsRequest.DomainModel.Builder().
@@ -301,7 +301,7 @@ public class RecipePortionsTest {
     public void newRequest_validServingsValidSittings_saved() {
         // Arrange
         // simulate new default request / response
-        newRequest_defaultModelGenerated_failReasonNONE_DATA_UNAVAILABLE();
+        newRequest_stateVALID_DEFAULT_failReasonNONE_DATA_UNAVAILABLE();
 
         // expected eventual state
         RecipePortionsPersistenceModel modelUnderTest = TestDataRecipePortions.

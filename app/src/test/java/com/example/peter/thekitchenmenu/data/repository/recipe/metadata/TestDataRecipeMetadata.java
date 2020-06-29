@@ -2,14 +2,17 @@ package com.example.peter.thekitchenmenu.data.repository.recipe.metadata;
 
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.CommonFailReason;
-import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataPersistenceModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import static com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataId.NO_ID;
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentName;
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentState;
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.FailReason;
@@ -23,6 +26,39 @@ public class TestDataRecipeMetadata {
 
     public static final String NEW_RECIPE_DOMAIN_ID = getDataUnavailable().getDomainId();
 
+    public static final Set<ComponentName> requiredComponentNames = new HashSet<>();
+    static {
+        requiredComponentNames.add(ComponentName.COURSE);
+        requiredComponentNames.add(ComponentName.IDENTITY);
+        requiredComponentNames.add(ComponentName.PORTIONS);
+    }
+
+    public static final Set<ComponentName> additionalComponentNames = new HashSet<>();
+    static {
+        additionalComponentNames.add(ComponentName.DURATION);
+    }
+
+    /*
+    Represents the default state of a RecipeMetadata use case when a new recipe domain id is sent.
+    This state should never be saved. It is stored in this persistence model as it's a
+    convenient place to retrieve values for testing.
+     */
+    public static RecipeMetadataPersistenceModel getDefaultState() {
+        return new RecipeMetadataPersistenceModel.Builder().
+                setDataId(NO_ID).
+                setDomainId(NO_ID).
+                setRecipeState(ComponentState.INVALID_DEFAULT).
+                setComponentStates(getDefaultComponentStated()).
+                setFailReasons(Arrays.asList(
+                        FailReason.INVALID_COMPONENTS,
+                        FailReason.MISSING_REQUIRED_COMPONENTS,
+                        CommonFailReason.DATA_UNAVAILABLE)).
+                setCreatedBy(Constants.getUserId()).
+                setCreateDate(0L).
+                setLastUpdate(0L).
+                build();
+    }
+
     /*
     RecipeState.DATA_UNAVAILABLE - Represents the state of a recipe that:
     1. is newly created
@@ -35,7 +71,7 @@ public class TestDataRecipeMetadata {
                 setParentDomainId("").
                 setRecipeState(ComponentState.INVALID_CHANGED). // changed as it prompts a new save
                 setComponentStates(getInvalidUnchangedComponentStates()).
-                setFailReasons(getDataUnavailableFailReasons()).
+                setFailReasons(Collections.singletonList(CommonFailReason.DATA_UNAVAILABLE)).
                 setCreatedBy(Constants.getUserId()).
                 setCreateDate(0L).
                 setLastUpdate(0L).
@@ -54,7 +90,7 @@ public class TestDataRecipeMetadata {
                 setDomainId("domainId-recipe-Id1").
                 setParentDomainId("").
                 setRecipeState(ComponentState.INVALID_UNCHANGED).
-                setFailReasons(getInvalidComponentsFailReasons()).
+                setFailReasons(Collections.singletonList(FailReason.INVALID_COMPONENTS)).
                 setComponentStates(getInvalidUnchangedComponentStates()).
                 setCreatedBy(Constants.getUserId()).
                 setCreateDate(20L).
@@ -76,7 +112,7 @@ public class TestDataRecipeMetadata {
                 setDomainId(validModel.getDomainId()).
                 setParentDomainId(validModel.getParentDomainId()).
                 setRecipeState(ComponentState.INVALID_CHANGED).
-                setFailReasons(getInvalidComponentsFailReasons()).
+                setFailReasons(Collections.singletonList(FailReason.INVALID_COMPONENTS)).
                 setComponentStates(getInvalidChangedComponentStates()).
                 setCreatedBy(Constants.getUserId()).
                 setCreateDate(30L).
@@ -97,7 +133,7 @@ public class TestDataRecipeMetadata {
                 setDomainId(getDataUnavailable().getDomainId()).
                 setParentDomainId(getDataUnavailable().getParentDomainId()).
                 setRecipeState(ComponentState.VALID_CHANGED).
-                setFailReasons(getFailReasonsNone()).
+                setFailReasons(Collections.singletonList(CommonFailReason.NONE)).
                 setComponentStates(getValidChangedComponentStates()).
                 setCreatedBy(Constants.getUserId()).
                 setCreateDate(40L).
@@ -112,7 +148,7 @@ public class TestDataRecipeMetadata {
                 setDomainId(getDataUnavailable().getDomainId()).
                 setParentDomainId(getDataUnavailable().getParentDomainId()).
                 setRecipeState(ComponentState.INVALID_CHANGED).
-                setFailReasons(getInvalidComponentsFailReasons()).
+                setFailReasons(Collections.singletonList(FailReason.INVALID_COMPONENTS)).
                 setComponentStates(getInvalidChangedComponentStates()).
                 setCreatedBy(Constants.getUserId()).
                 setCreateDate(40L).
@@ -127,7 +163,7 @@ public class TestDataRecipeMetadata {
                 setDomainId(getDataUnavailable().getDomainId()).
                 setParentDomainId(getDataUnavailable().getParentDomainId()).
                 setRecipeState(ComponentState.INVALID_UNCHANGED).
-                setFailReasons(getDataUnavailableFailReasons()).
+                setFailReasons(Collections.singletonList(CommonFailReason.DATA_UNAVAILABLE)).
                 setComponentStates(getInvalidUnchangedComponentStates()).
                 setCreatedBy(Constants.getUserId()).
                 setCreateDate(40L).
@@ -147,7 +183,7 @@ public class TestDataRecipeMetadata {
                 setDomainId("domainId-recipe-Id2").
                 setParentDomainId("").
                 setRecipeState(ComponentState.VALID_UNCHANGED).
-                setFailReasons(getFailReasonsNone()).
+                setFailReasons(Collections.singletonList(CommonFailReason.NONE)).
                 setComponentStates(getValidUnchangedComponentStates()).
                 setCreatedBy(Constants.getUserId()).
                 setCreateDate(50L).
@@ -165,7 +201,7 @@ public class TestDataRecipeMetadata {
                 setDomainId("domainId-recipe-Id20").
                 setParentDomainId("").
                 setRecipeState(ComponentState.VALID_UNCHANGED).
-                setFailReasons(getFailReasonsNone()).
+                setFailReasons(Collections.singletonList(CommonFailReason.NONE)).
                 setComponentStates(getValidUnchangedComponentStates()).
                 setCreatedBy("anotherUsersId").
                 setCreateDate(60L).
@@ -183,7 +219,7 @@ public class TestDataRecipeMetadata {
                 setDomainId("domainId-recipe-Id21").
                 setParentDomainId("").
                 setRecipeState(ComponentState.INVALID_UNCHANGED).
-                setFailReasons(getInvalidComponentsFailReasons()).
+                setFailReasons(Collections.singletonList(FailReason.INVALID_COMPONENTS)).
                 setComponentStates(getInvalidUnchangedComponentStates()).
                 setCreatedBy(getValidFromAnotherUser().getCreatedBy()).
                 setCreateDate(80L).
@@ -201,7 +237,7 @@ public class TestDataRecipeMetadata {
                 setDataId("dataId-recipeMetadata-Id30").
                 setDomainId("domainId-recipe-Id30").
                 setParentDomainId(validParentFromAnotherUser.getDomainId()).
-                setRecipeState(validParentFromAnotherUser.getRecipeState()).
+                setRecipeState(validParentFromAnotherUser.getComponentState()).
                 setFailReasons(validParentFromAnotherUser.getFailReasons()).
                 setComponentStates(validParentFromAnotherUser.getComponentStates()).
                 setCreatedBy(Constants.getUserId()).
@@ -220,7 +256,7 @@ public class TestDataRecipeMetadata {
                 setDataId("dataId-recipeMetadata-Idd31").
                 setDomainId("domainId-recipe-Id40").
                 setParentDomainId(invalidParentFromAnotherUser.getDomainId()).
-                setRecipeState(invalidParentFromAnotherUser.getRecipeState()).
+                setRecipeState(invalidParentFromAnotherUser.getComponentState()).
                 setFailReasons(invalidParentFromAnotherUser.getFailReasons()).
                 setComponentStates(invalidParentFromAnotherUser.getComponentStates()).
                 setCreatedBy(Constants.getUserId()).
@@ -229,30 +265,31 @@ public class TestDataRecipeMetadata {
                 build();
     }
 
-    private static List<FailReasons> getDataUnavailableFailReasons() {
-        List<FailReasons> f = new ArrayList<>();
-        f.add(CommonFailReason.DATA_UNAVAILABLE);
-        return f;
-    }
-
-    private static List<FailReasons> getInvalidComponentsFailReasons() {
-        List<FailReasons> f = new ArrayList<>();
-        f.add(FailReason.INVALID_COMPONENTS);
-        return f;
-    }
-
-    private static List<FailReasons> getFailReasonsNone() {
-        List<FailReasons> f = new ArrayList<>();
-        f.add(CommonFailReason.NONE);
-        return f;
-    }
-
+    // Missing required component recipe identity
     public static HashMap<ComponentName, ComponentState> getInvalidMissingComponentsStates() {
-        HashMap<ComponentName, ComponentState> s = new HashMap<>();
-        s.put(ComponentName.IDENTITY, ComponentState.VALID_UNCHANGED);
-        s.put(ComponentName.DURATION, ComponentState.VALID_UNCHANGED);
-        s.put(ComponentName.COURSE, ComponentState.VALID_UNCHANGED);
-        return s;
+        HashMap<ComponentName, ComponentState> componentStates = new HashMap<>();
+        componentStates.put(ComponentName.COURSE, ComponentState.INVALID_UNCHANGED);
+        componentStates.put(ComponentName.DURATION, ComponentState.INVALID_UNCHANGED);
+        componentStates.put(ComponentName.PORTIONS, ComponentState.INVALID_UNCHANGED);
+        return componentStates;
+    }
+
+    // Default required components
+    public static HashMap<ComponentName, ComponentState> getDefaultRequiredComponents() {
+        HashMap<ComponentName, ComponentState> defaultComponentStates = new HashMap<>();
+        requiredComponentNames.forEach(componentName ->
+                defaultComponentStates.put(componentName, ComponentState.INVALID_UNCHANGED)
+        );
+        return defaultComponentStates;
+    }
+
+    public static HashMap<ComponentName, ComponentState> getDefaultComponentStated() {
+        HashMap<ComponentName, ComponentState> defaultComponentStates = new HashMap<>();
+        defaultComponentStates.put(ComponentName.COURSE, ComponentState.INVALID_DEFAULT);
+        defaultComponentStates.put(ComponentName.DURATION, ComponentState.VALID_DEFAULT);
+        defaultComponentStates.put(ComponentName.IDENTITY, ComponentState.INVALID_DEFAULT);
+        defaultComponentStates.put(ComponentName.PORTIONS, ComponentState.INVALID_DEFAULT);
+        return defaultComponentStates;
     }
 
     public static HashMap<ComponentName, ComponentState> getInvalidUnchangedComponentStates() {
