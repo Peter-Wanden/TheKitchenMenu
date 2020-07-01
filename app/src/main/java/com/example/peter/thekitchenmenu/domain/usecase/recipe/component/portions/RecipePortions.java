@@ -29,9 +29,6 @@ public class RecipePortions
         private int servings;
         private int sittings;
 
-        private DomainModel() {
-        }
-
         private DomainModel(int servings, int sittings) {
             this.servings = servings;
             this.sittings = sittings;
@@ -111,7 +108,7 @@ public class RecipePortions
         this.idProvider = idProvider;
         this.timeProvider = timeProvider;
 
-        domainModel = new DomainModel();
+        domainModel = createDomainModelFromDefaultValues();
 
         this.maxServings = maxServings;
         this.maxSittings = maxSittings;

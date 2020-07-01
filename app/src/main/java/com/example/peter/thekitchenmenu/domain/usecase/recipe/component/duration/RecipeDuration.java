@@ -29,9 +29,6 @@ public class RecipeDuration
         private int prepTime;
         private int cookTime;
 
-        private DomainModel() {
-        }
-
         private DomainModel(int prepTime, int cookTime) {
             this.prepTime = prepTime;
             this.cookTime = cookTime;
@@ -108,7 +105,7 @@ public class RecipeDuration
         this.idProvider = idProvider;
         this.timeProvider = timeProvider;
 
-        domainModel = new DomainModel();
+        domainModel = createDomainModelFromDefaultValues();
 
         MAX_PREP_TIME = maxPrepTime;
         MAX_COOK_TIME = maxCookTime;
@@ -126,7 +123,7 @@ public class RecipeDuration
 
     @Override
     protected DomainModel createDomainModelFromDefaultValues() {
-        return new DomainModel();
+        return new DomainModel(0,0);
     }
 
     @Override

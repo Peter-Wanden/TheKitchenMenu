@@ -112,7 +112,7 @@ public class IdentityLocalGetAdapterTest {
     @Test
     public void getAllByDomainId_returnAllModelsForDomainId() {
         // Arrange
-        String domainId = TestDataRecipeMetadata.getDataUnavailable().getDomainId();
+        String domainId = TestDataRecipeMetadata.getInvalidDefault().getDomainId();
         List<RecipeIdentityPersistenceModel> models = TestDataRecipeIdentity.
                 getAllByDomainId(domainId);
         // Act

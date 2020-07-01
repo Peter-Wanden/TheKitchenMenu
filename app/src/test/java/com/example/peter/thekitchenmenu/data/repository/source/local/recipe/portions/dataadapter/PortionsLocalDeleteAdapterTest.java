@@ -20,8 +20,8 @@ public class PortionsLocalDeleteAdapterTest {
     @Mock
     RecipePortionsLocalDataSource repoMock;
 
-    private String dataId = TestDataRecipeMetadata.getValidChangedThree().getDataId();
-    private String domainId = TestDataRecipeMetadata.getValidChangedThree().getDomainId();
+    private String dataId = TestDataRecipeMetadata.getValidChanged().getDataId();
+    private String domainId = TestDataRecipeMetadata.getValidChanged().getDomainId();
     // endregion helper fields ---------------------------------------------------------------------
 
     private PortionsLocalDeleteAdapter SUT;

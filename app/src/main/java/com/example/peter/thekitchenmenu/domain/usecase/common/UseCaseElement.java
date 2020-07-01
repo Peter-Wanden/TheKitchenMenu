@@ -107,7 +107,7 @@ public abstract class UseCaseElement<
     @Override
     public void onDomainModelUnavailable() {
         domainModel = createDomainModelFromDefaultValues();
-        System.out.println(TAG + "onDomainModelUnavailable: updatedDomainModel=" + domainModel);
+        System.out.println(TAG + "onDomainModelUnavailable: " + domainModel);
         initialiseUseCaseForDomainModelProcessing();
     }
 
@@ -185,6 +185,10 @@ public abstract class UseCaseElement<
     }
 
     protected ComponentState getComponentState() {
+        System.out.println(TAG + "getComponentState:" +
+                "\n  - defaultDomainModel=" + createDomainModelFromDefaultValues() +
+                "\n  - currentDomainModel=" + domainModel);
+
         ComponentState componentState;
 
         if (isDefaultDomainModel()) {
@@ -207,7 +211,7 @@ public abstract class UseCaseElement<
         return componentState;
     }
 
-    private boolean isDefaultDomainModel() {
+    protected boolean isDefaultDomainModel() {
         return domainModel.equals(createDomainModelFromDefaultValues());
     }
 

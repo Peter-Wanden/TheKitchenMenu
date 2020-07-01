@@ -15,192 +15,51 @@ public class TestDataRecipeMetadataEntity {
 
     public static RecipeMetadataParentEntity getDataUnavailableParentEntity() {
         return getParentEntityFromPersistenceModel(TestDataRecipeMetadata.
-                getDataUnavailable()
+                getInvalidDefault()
         );
     }
 
     public static List<RecipeFailReasonEntity> getDataUnavailableFailReasonEntities() {
         return getFailReasonEntitiesFromPersistentModel(TestDataRecipeMetadata.
-                getDataUnavailable()
+                getInvalidDefault()
         );
     }
 
     public static List<RecipeComponentStateEntity> getDataUnavailableComponentStateEntities() {
         return getComponentStateEntitiesFromPersistentModel(TestDataRecipeMetadata.
-                getDataUnavailable()
-        );
-    }
-
-    public static RecipeMetadataParentEntity getInvalidUnchangedParentEntity() {
-        return getParentEntityFromPersistenceModel(TestDataRecipeMetadata.
-                getInvalidUnchanged()
-        );
-    }
-
-    public static List<RecipeFailReasonEntity> getInvalidUnchangedFailReasonEntities() {
-        return getFailReasonEntitiesFromPersistentModel(TestDataRecipeMetadata.
-                getValidUnchanged()
-        );
-    }
-
-    public static List<RecipeComponentStateEntity> getInvalidUnchangedComponentStateEntities() {
-        return getComponentStateEntitiesFromPersistentModel(TestDataRecipeMetadata.
-                getInvalidUnchanged()
-        );
-    }
-
-    public static RecipeMetadataParentEntity getInvalidChangedParentEntity() {
-        return getParentEntityFromPersistenceModel(TestDataRecipeMetadata.
-                getInvalidChanged()
-        );
-    }
-
-    public static List<RecipeFailReasonEntity> getInvalidChangedFailReasonEntities() {
-        return getFailReasonEntitiesFromPersistentModel(TestDataRecipeMetadata.
-                getInvalidChanged()
-        );
-    }
-
-    public static List<RecipeComponentStateEntity> getInvalidChangedComponentStateEntities() {
-        return getComponentStateEntitiesFromPersistentModel(TestDataRecipeMetadata.
-                getInvalidChanged()
+                getInvalidDefault()
         );
     }
 
     public static RecipeMetadataParentEntity getValidChanged0ParentEntity() {
         return getParentEntityFromPersistenceModel(TestDataRecipeMetadata.
-                getValidChangedThree()
+                getValidChanged()
         );
     }
 
     public static List<RecipeFailReasonEntity> getValidChanged0FailReasonEntities() {
         return getFailReasonEntitiesFromPersistentModel(TestDataRecipeMetadata.
-                getValidChangedThree()
+                getValidChanged()
         );
     }
 
     public static List<RecipeComponentStateEntity> getValidChanged0ComponentStateEntities() {
         return getComponentStateEntitiesFromPersistentModel(TestDataRecipeMetadata.
-                getValidChangedThree()
+                getValidChanged()
         );
     }
 
-    public static RecipeMetadataParentEntity getValidChanged1ParentEntity() {
+    public static RecipeMetadataParentEntity getValidChangedParentEntity() {
         return getParentEntityFromPersistenceModel(TestDataRecipeMetadata.
-                getValidChangedTwo()
-        );
-    }
-
-    public static List<RecipeFailReasonEntity> getValidChanged1FailReasonEntities() {
-        return getFailReasonEntitiesFromPersistentModel(TestDataRecipeMetadata.
-                getValidChangedTwo()
-        );
-    }
-
-    public static List<RecipeComponentStateEntity> getValidChanged1ComponentStateEntities() {
-        return getComponentStateEntitiesFromPersistentModel(TestDataRecipeMetadata.
-                getValidChangedTwo()
-        );
-    }
-
-    public static RecipeMetadataParentEntity getValidChanged2ParentEntity() {
-        return getParentEntityFromPersistenceModel(TestDataRecipeMetadata.
-                getValidChangedOne()
-        );
-    }
-
-    public static List<RecipeFailReasonEntity> getValidChanged2FailReasonEntities() {
-        return getFailReasonEntitiesFromPersistentModel(TestDataRecipeMetadata.
-                getValidChangedOne()
-        );
-    }
-
-    public static List<RecipeComponentStateEntity> getValidChanged2ComponentStateEntities() {
-        return getComponentStateEntitiesFromPersistentModel(TestDataRecipeMetadata.
-                getValidChangedOne()
+                getValidChanged()
         );
     }
 
     public static List<RecipeMetadataParentEntity> getValidChangedParentEntityList() {
         List<RecipeMetadataParentEntity> entities = new ArrayList<>();
         entities.add(0, getValidChanged0ParentEntity());
-        entities.add(1, getValidChanged1ParentEntity());
-        entities.add(2, getValidChanged2ParentEntity());
+        entities.add(1, getValidChangedParentEntity());
         return entities;
-    }
-
-    public static RecipeMetadataParentEntity getValidUnchangedParentEntity() {
-        return getParentEntityFromPersistenceModel(TestDataRecipeMetadata.
-                getValidUnchanged()
-        );
-    }
-
-    public static List<RecipeFailReasonEntity> getValidUnchangedFailReasonEntities() {
-        return getFailReasonEntitiesFromPersistentModel(TestDataRecipeMetadata.
-                getValidUnchanged()
-        );
-    }
-
-    public static List<RecipeComponentStateEntity> getValidUnchangedComponentStateEntities() {
-        return getComponentStateEntitiesFromPersistentModel(TestDataRecipeMetadata.
-                getValidUnchanged()
-        );
-    }
-
-    public static RecipeMetadataParentEntity getValidFromAnotherUserParentEntity() {
-        return getParentEntityFromPersistenceModel(TestDataRecipeMetadata.
-                getValidFromAnotherUser()
-        );
-    }
-
-    public static List<RecipeFailReasonEntity> getValidFromAnotherUserFailReasonEntities() {
-        return getFailReasonEntitiesFromPersistentModel(TestDataRecipeMetadata.
-                getValidFromAnotherUser()
-        );
-    }
-
-    public static List<RecipeComponentStateEntity>
-    getValidFromAnotherUserComponentStateEntities() {
-        return getComponentStateEntitiesFromPersistentModel(TestDataRecipeMetadata.
-                getValidFromAnotherUser()
-        );
-    }
-
-    public static RecipeMetadataParentEntity getInvalidFromAnotherUserParentEntity() {
-        return getParentEntityFromPersistenceModel(TestDataRecipeMetadata.
-                getInvalidFromAnotherUser()
-        );
-    }
-
-    public static List<RecipeFailReasonEntity> getInvalidFromAnotherUserFailReasonEntities() {
-        return getFailReasonEntitiesFromPersistentModel(TestDataRecipeMetadata.
-                getInvalidFromAnotherUser()
-        );
-    }
-
-    public static List<RecipeComponentStateEntity>
-    getInvalidFromAnotherUserComponentStateEntities() {
-        return getComponentStateEntitiesFromPersistentModel(TestDataRecipeMetadata.
-                getInvalidFromAnotherUser()
-        );
-    }
-
-    public static RecipeMetadataParentEntity getValidCopiedParentEntity() {
-        return getParentEntityFromPersistenceModel(TestDataRecipeMetadata.
-                getValidCopied()
-        );
-    }
-
-    public static List<RecipeFailReasonEntity> getValidCopiedFailReasonEntities() {
-        return getFailReasonEntitiesFromPersistentModel(TestDataRecipeMetadata.
-                getValidCopied()
-        );
-    }
-
-    public static List<RecipeComponentStateEntity> getValidCopiedComponentStateEntities() {
-        return getComponentStateEntitiesFromPersistentModel(TestDataRecipeMetadata.
-                getValidCopied()
-        );
     }
 
     private static RecipeMetadataParentEntity getParentEntityFromPersistenceModel(

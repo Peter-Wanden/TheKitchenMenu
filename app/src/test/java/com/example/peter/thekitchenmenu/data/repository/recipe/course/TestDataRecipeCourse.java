@@ -13,7 +13,7 @@ import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.c
 public class TestDataRecipeCourse {
 
     public static final String NEW_RECIPE_ID =
-            TestDataRecipeMetadata.getDataUnavailable().getDomainId();
+            TestDataRecipeMetadata.getInvalidDefault().getDomainId();
 
     public static final String EXISTING_RECIPE_ID =
             TestDataRecipeMetadata.getValidUnchanged().getDomainId();

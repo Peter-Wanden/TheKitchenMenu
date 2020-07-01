@@ -12,7 +12,7 @@ import java.util.List;
 public class TestDataRecipeIdentity {
 
     private static final String NEW_RECIPE_DOMAIN_ID = TestDataRecipeMetadata.
-            getDataUnavailable().
+            getInvalidDefault().
             getDomainId();
 
     private static final String EXISTING_RECIPE_DOMAIN_ID = TestDataRecipeMetadata.

@@ -10,7 +10,7 @@ import java.util.List;
 public class TestDataRecipePortions {
 
     private static final String NEW_RECIPE_ID = TestDataRecipeMetadata.
-            getDataUnavailable().
+            getInvalidDefault().
             getDomainId();
 
     private static final String EXISTING_RECIPE_ID = TestDataRecipeMetadata.

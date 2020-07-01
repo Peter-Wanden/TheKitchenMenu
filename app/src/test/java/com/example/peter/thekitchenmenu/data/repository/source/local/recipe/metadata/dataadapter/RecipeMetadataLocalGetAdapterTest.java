@@ -86,7 +86,7 @@ public class RecipeMetadataLocalGetAdapterTest {
     @Test
     public void getByDataId_domainModelReturned() {
         // Arrange
-        String dataId = TestDataRecipeMetadata.getDataUnavailable().getDataId();
+        String dataId = TestDataRecipeMetadata.getInvalidDefault().getDataId();
         GetDomainModelCallbackClient callbackClient = new GetDomainModelCallbackClient();
         // Act
         SUT.getByDataId(dataId, callbackClient);
@@ -115,7 +115,7 @@ public class RecipeMetadataLocalGetAdapterTest {
                         getDataUnavailableFailReasonEntities()
         );
         // Assert result
-        assertEquals(TestDataRecipeMetadata.getDataUnavailable(),
+        assertEquals(TestDataRecipeMetadata.getInvalidDefault(),
                 callbackClient.domainModel
         );
     }
@@ -123,7 +123,7 @@ public class RecipeMetadataLocalGetAdapterTest {
     @Test
     public void getActiveByDomainId_returnMostRecentDomainModel() {
         // Arrange
-        RecipeMetadataPersistenceModel expectedModel = TestDataRecipeMetadata.getValidChangedThree();
+        RecipeMetadataPersistenceModel expectedModel = TestDataRecipeMetadata.getValidChanged();
         String domainId = expectedModel.getDomainId();
         String parentDataId = expectedModel.getDataId();
 
@@ -161,7 +161,7 @@ public class RecipeMetadataLocalGetAdapterTest {
     @Test
     public void getAllActive_returnOnlyMostRecentModels() {
         // Arrange
-        String domainId = TestDataRecipeMetadata.getValidChangedThree().getDomainId();
+        String domainId = TestDataRecipeMetadata.getValidChanged().getDomainId();
         GetAllCallbackClient getAllCallbackClient = new GetAllCallbackClient ();
 
         String correctParentDataId = TestDataRecipeMetadataEntity.
@@ -194,7 +194,7 @@ public class RecipeMetadataLocalGetAdapterTest {
                 TestDataRecipeMetadataEntity.getValidChanged0ComponentStateEntities()
         );
 
-        assertEquals(TestDataRecipeMetadata.getValidChangedThree(), getAllCallbackClient.models.get(0));
+        assertEquals(TestDataRecipeMetadata.getValidChanged(), getAllCallbackClient.models.get(0));
     }
 
     // region helper methods -----------------------------------------------------------------------

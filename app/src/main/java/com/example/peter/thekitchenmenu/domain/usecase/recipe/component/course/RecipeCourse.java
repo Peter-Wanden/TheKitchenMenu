@@ -33,9 +33,6 @@ public class RecipeCourse
             implements
             UseCaseDomainModel {
 
-        private DomainModel() {
-        }
-
         private DomainModel(@NonNull Collection<? extends Course> c) {
             super(c);
         }
@@ -109,7 +106,7 @@ public class RecipeCourse
         this.idProvider = idProvider;
         this.timeProvider = timeProvider;
 
-        domainModel = new DomainModel();
+        domainModel = createDomainModelFromDefaultValues();
     }
 
     @Override
@@ -121,7 +118,7 @@ public class RecipeCourse
 
     @Override
     protected DomainModel createDomainModelFromDefaultValues() {
-        return new DomainModel();
+        return new DomainModel(new ArrayList<>());
     }
 
     @Override

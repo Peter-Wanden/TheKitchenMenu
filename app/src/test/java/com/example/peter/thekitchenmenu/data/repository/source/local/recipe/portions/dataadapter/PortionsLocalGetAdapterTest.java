@@ -113,7 +113,7 @@ public class PortionsLocalGetAdapterTest {
     @Test
     public void getAllByDomainId_returnAllModelsForDomainId() {
         // Arrange
-        String domainId = TestDataRecipeMetadata.getDataUnavailable().getDomainId();
+        String domainId = TestDataRecipeMetadata.getInvalidDefault().getDomainId();
         List<RecipePortionsPersistenceModel> models = TestDataRecipePortions.
                 getAllByDomainId(domainId);
         // Act

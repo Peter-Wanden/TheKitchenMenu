@@ -24,7 +24,7 @@ import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.m
  */
 public class TestDataRecipeMetadata {
 
-    public static final String NEW_RECIPE_DOMAIN_ID = getDataUnavailable().getDomainId();
+    public static final String NEW_RECIPE_DOMAIN_ID = getInvalidDefault().getDomainId();
 
     public static final Set<ComponentName> requiredComponentNames = new HashSet<>();
     static {
@@ -39,7 +39,8 @@ public class TestDataRecipeMetadata {
     }
 
     /*
-    Represents the default state of a RecipeMetadata use case when a new recipe domain id is sent.
+    RecipeState.INVALID_DEFAULT - Represents the default state of the RecipeMetadata use case when
+    a default request is sent.
     This state should never be saved. It is stored in this persistence model as it's a
     convenient place to retrieve values for testing.
      */
@@ -47,10 +48,10 @@ public class TestDataRecipeMetadata {
         return new RecipeMetadataPersistenceModel.Builder().
                 setDataId(NO_ID).
                 setDomainId(NO_ID).
+                setParentDomainId(NO_ID).
                 setRecipeState(ComponentState.INVALID_DEFAULT).
-                setComponentStates(getDefaultComponentStated()).
+                setComponentStates(new HashMap<>()). // no component state data received
                 setFailReasons(Arrays.asList(
-                        FailReason.INVALID_COMPONENTS,
                         FailReason.MISSING_REQUIRED_COMPONENTS,
                         CommonFailReason.DATA_UNAVAILABLE)).
                 setCreatedBy(Constants.getUserId()).
@@ -60,18 +61,19 @@ public class TestDataRecipeMetadata {
     }
 
     /*
-    RecipeState.DATA_UNAVAILABLE - Represents the state of a recipe that:
-    1. is newly created
-    2. has one or more components reporting data unavailable (as it may have not been entered yet).
+    RecipeState.INVALID_DEFAULT - Represents the state of a recipe whose:
+      - request has no data id and has a domain id
+      - is a newly created recipe
+      - has one or more components reporting INVALID_DEFAULT state.
      */
-    public static RecipeMetadataPersistenceModel getDataUnavailable() {
+    public static RecipeMetadataPersistenceModel getInvalidDefault() {
         return new RecipeMetadataPersistenceModel.Builder().
-                setDataId("dataId-recipeMetadata-id0").
-                setDomainId("domainId-recipe-id0").
-                setParentDomainId("").
-                setRecipeState(ComponentState.INVALID_CHANGED). // changed as it prompts a new save
-                setComponentStates(getInvalidUnchangedComponentStates()).
-                setFailReasons(Collections.singletonList(CommonFailReason.DATA_UNAVAILABLE)).
+                setDataId(NO_ID).
+                setDomainId("domainId-recipeMetadata-id0").
+                setParentDomainId(NO_ID).
+                setRecipeState(ComponentState.INVALID_DEFAULT).
+                setComponentStates(new HashMap<>()).
+                setFailReasons(getDefaultState().getFailReasons()).
                 setCreatedBy(Constants.getUserId()).
                 setCreateDate(0L).
                 setLastUpdate(0L).
@@ -79,17 +81,43 @@ public class TestDataRecipeMetadata {
     }
 
     /*
-    RecipeState.INVALID_UNCHANGED - Represents the state of a recipe that:
-     1. has all required components
-     2. has one or more components reporting invalid unchanged data
-     3. remains unchanged by the current session
+    RecipeState.INVALID_CHANGED - Represents the state of a recipe whose:
+      - the default state has changed
+      - Either or:
+        - one or more components are invalid
+        - one or more required components are missing
+    It is valid to save as the user will have been entering data to get to this state
+     */
+    public static RecipeMetadataPersistenceModel getInvalidMissingComponents() {
+        return new RecipeMetadataPersistenceModel.Builder().
+                setDataId("dataId-recipeMetadata-id0").
+                setDomainId(getInvalidDefault().getDomainId()).
+                setParentDomainId(NO_ID).
+                setRecipeState(ComponentState.INVALID_CHANGED). // changed from invalid default
+                setComponentStates(getInvalidMissingComponentsStates()).
+                setFailReasons(Arrays.asList(
+                        FailReason.MISSING_REQUIRED_COMPONENTS,
+                        FailReason.INVALID_COMPONENTS
+                )).
+                setCreatedBy(Constants.getUserId()).
+                setCreateDate(10L).
+                setLastUpdate(10L).
+                build();
+    }
+
+    /*
+    RecipeState.INVALID_UNCHANGED - Represents the state of a recipe where:
+     - all required components have reported their state
+     - all required components are reporting UNCHANGED
+     - all additional components are reporting DEFAULT or UNCHANGED
+     - has one or more components reporting INVALID
      */
     public static RecipeMetadataPersistenceModel getInvalidUnchanged() {
         return new RecipeMetadataPersistenceModel.Builder().
                 setDataId("dataId-recipeMetadata-id1").
-                setDomainId("domainId-recipe-Id1").
-                setParentDomainId("").
-                setRecipeState(ComponentState.INVALID_UNCHANGED).
+                setDomainId(getInvalidDefault().getDomainId()).
+                setParentDomainId(NO_ID).
+                setRecipeState(ComponentState.INVALID_CHANGED). // changed from invalid default
                 setFailReasons(Collections.singletonList(FailReason.INVALID_COMPONENTS)).
                 setComponentStates(getInvalidUnchangedComponentStates()).
                 setCreatedBy(Constants.getUserId()).
@@ -97,20 +125,21 @@ public class TestDataRecipeMetadata {
                 setLastUpdate(20L).
                 build();
 
+
+        // todo, can't have an invalid unchanged state from a new request, only loaded data
     }
 
     /*
-    RecipeState.INVALID_CHANGED - Represents a recipe state that:
-    1. has all required components
-    2. one or more components is reporting invalid data
-    3. one or more components data has been changed in the current session
+    RecipeState.INVALID_CHANGED - Represents the state of a recipe where:
+    1. all required components have reported their state
+    2. one or more components is reporting INVALID
+    3. one or more components is reporting CHANGED
      */
     public static RecipeMetadataPersistenceModel getInvalidChanged() {
-        RecipeMetadataPersistenceModel validModel = getValidChangedThree();
         return new RecipeMetadataPersistenceModel.Builder().
                 setDataId("dataId-recipeMetadata-Id2").
-                setDomainId(validModel.getDomainId()).
-                setParentDomainId(validModel.getParentDomainId()).
+                setDomainId(getInvalidDefault().getDomainId()).
+                setParentDomainId(NO_ID).
                 setRecipeState(ComponentState.INVALID_CHANGED).
                 setFailReasons(Collections.singletonList(FailReason.INVALID_COMPONENTS)).
                 setComponentStates(getInvalidChangedComponentStates()).
@@ -122,49 +151,18 @@ public class TestDataRecipeMetadata {
 
     /*
     RecipeState.VALID_CHANGED - Represents the state of a recipe which:
-    1. is newly created
-    2. has all required components
-    3. all completed components are reporting valid data.
+    2. has all required components reporting VALID
+    3. all additional components are reporting valid or DEFAULT
+    4. At least one component is reporting CHANGED
      */
-    // getValidChanged() final state
-    public static RecipeMetadataPersistenceModel getValidChangedThree() {
+    public static RecipeMetadataPersistenceModel getValidChanged() {
         return new RecipeMetadataPersistenceModel.Builder().
                 setDataId("dataId-recipeMetadata-id5").
-                setDomainId(getDataUnavailable().getDomainId()).
-                setParentDomainId(getDataUnavailable().getParentDomainId()).
+                setDomainId(getInvalidDefault().getDomainId()).
+                setParentDomainId(getInvalidDefault().getParentDomainId()).
                 setRecipeState(ComponentState.VALID_CHANGED).
                 setFailReasons(Collections.singletonList(CommonFailReason.NONE)).
                 setComponentStates(getValidChangedComponentStates()).
-                setCreatedBy(Constants.getUserId()).
-                setCreateDate(40L).
-                setLastUpdate(60L).
-                build();
-    }
-
-    // getValidChanged() previous state 1
-    public static RecipeMetadataPersistenceModel getValidChangedTwo() {
-        return new RecipeMetadataPersistenceModel.Builder().
-                setDataId("dataId-recipeMetadata-id4").
-                setDomainId(getDataUnavailable().getDomainId()).
-                setParentDomainId(getDataUnavailable().getParentDomainId()).
-                setRecipeState(ComponentState.INVALID_CHANGED).
-                setFailReasons(Collections.singletonList(FailReason.INVALID_COMPONENTS)).
-                setComponentStates(getInvalidChangedComponentStates()).
-                setCreatedBy(Constants.getUserId()).
-                setCreateDate(40L).
-                setLastUpdate(50L).
-                build();
-    }
-
-    // getValidChanged() previous state 2
-    public static RecipeMetadataPersistenceModel getValidChangedOne() {
-        return new RecipeMetadataPersistenceModel.Builder().
-                setDataId("dataId-recipeMetadata-id3").
-                setDomainId(getDataUnavailable().getDomainId()).
-                setParentDomainId(getDataUnavailable().getParentDomainId()).
-                setRecipeState(ComponentState.INVALID_UNCHANGED).
-                setFailReasons(Collections.singletonList(CommonFailReason.DATA_UNAVAILABLE)).
-                setComponentStates(getInvalidUnchangedComponentStates()).
                 setCreatedBy(Constants.getUserId()).
                 setCreateDate(40L).
                 setLastUpdate(40L).
@@ -266,16 +264,16 @@ public class TestDataRecipeMetadata {
     }
 
     // Missing required component recipe identity
-    public static HashMap<ComponentName, ComponentState> getInvalidMissingComponentsStates() {
+    private static HashMap<ComponentName, ComponentState> getInvalidMissingComponentsStates() {
         HashMap<ComponentName, ComponentState> componentStates = new HashMap<>();
         componentStates.put(ComponentName.COURSE, ComponentState.INVALID_UNCHANGED);
-        componentStates.put(ComponentName.DURATION, ComponentState.INVALID_UNCHANGED);
+        componentStates.put(ComponentName.DURATION, ComponentState.VALID_UNCHANGED);
         componentStates.put(ComponentName.PORTIONS, ComponentState.INVALID_UNCHANGED);
         return componentStates;
     }
 
     // Default required components
-    public static HashMap<ComponentName, ComponentState> getDefaultRequiredComponents() {
+    private static HashMap<ComponentName, ComponentState> getDefaultRequiredComponents() {
         HashMap<ComponentName, ComponentState> defaultComponentStates = new HashMap<>();
         requiredComponentNames.forEach(componentName ->
                 defaultComponentStates.put(componentName, ComponentState.INVALID_UNCHANGED)
@@ -283,16 +281,15 @@ public class TestDataRecipeMetadata {
         return defaultComponentStates;
     }
 
-    public static HashMap<ComponentName, ComponentState> getDefaultComponentStated() {
+    private static HashMap<ComponentName, ComponentState> getDefaultComponentStates() {
         HashMap<ComponentName, ComponentState> defaultComponentStates = new HashMap<>();
         defaultComponentStates.put(ComponentName.COURSE, ComponentState.INVALID_DEFAULT);
-        defaultComponentStates.put(ComponentName.DURATION, ComponentState.VALID_DEFAULT);
         defaultComponentStates.put(ComponentName.IDENTITY, ComponentState.INVALID_DEFAULT);
-        defaultComponentStates.put(ComponentName.PORTIONS, ComponentState.INVALID_DEFAULT);
+        defaultComponentStates.put(ComponentName.PORTIONS, ComponentState.VALID_DEFAULT);
         return defaultComponentStates;
     }
 
-    public static HashMap<ComponentName, ComponentState> getInvalidUnchangedComponentStates() {
+    private static HashMap<ComponentName, ComponentState> getInvalidUnchangedComponentStates() {
         HashMap<ComponentName, ComponentState> componentStates = new HashMap<>();
         componentStates.put(ComponentName.COURSE, ComponentState.INVALID_UNCHANGED);
         componentStates.put(ComponentName.DURATION, ComponentState.INVALID_UNCHANGED);
@@ -301,16 +298,16 @@ public class TestDataRecipeMetadata {
         return componentStates;
     }
 
-    public static HashMap<ComponentName, ComponentState> getInvalidChangedComponentStates() {
+    private static HashMap<ComponentName, ComponentState> getInvalidChangedComponentStates() {
         HashMap<ComponentName, ComponentState> s = new HashMap<>();
-        s.put(ComponentName.COURSE, ComponentState.VALID_UNCHANGED);
-        s.put(ComponentName.DURATION, ComponentState.INVALID_CHANGED);
+        s.put(ComponentName.COURSE, ComponentState.VALID_CHANGED);
         s.put(ComponentName.IDENTITY, ComponentState.VALID_UNCHANGED);
-        s.put(ComponentName.PORTIONS, ComponentState.VALID_UNCHANGED);
+        s.put(ComponentName.PORTIONS, ComponentState.VALID_DEFAULT);
+        s.put(ComponentName.DURATION, ComponentState.INVALID_CHANGED);
         return s;
     }
 
-    public static HashMap<ComponentName, ComponentState> getValidChangedComponentStates() {
+    private static HashMap<ComponentName, ComponentState> getValidChangedComponentStates() {
         HashMap<ComponentName, ComponentState> s = new HashMap<>();
         s.put(ComponentName.COURSE, ComponentState.VALID_UNCHANGED);
         s.put(ComponentName.DURATION, ComponentState.VALID_CHANGED);
@@ -319,7 +316,7 @@ public class TestDataRecipeMetadata {
         return s;
     }
 
-    public static HashMap<ComponentName, ComponentState> getValidUnchangedComponentStates() {
+    private static HashMap<ComponentName, ComponentState> getValidUnchangedComponentStates() {
         HashMap<ComponentName, ComponentState> s = new HashMap<>();
         s.put(ComponentName.COURSE, ComponentState.VALID_UNCHANGED);
         s.put(ComponentName.DURATION, ComponentState.VALID_UNCHANGED);
@@ -330,12 +327,10 @@ public class TestDataRecipeMetadata {
 
     public static List<RecipeMetadataPersistenceModel> getAll() {
         return Arrays.asList(
-                getDataUnavailable(),
+                getInvalidDefault(),
                 getInvalidUnchanged(),
                 getInvalidChanged(),
-                getValidChangedThree(),
-                getValidChangedTwo(),
-                getValidChangedOne(),
+                getValidChanged(),
                 getValidUnchanged(),
                 getValidFromAnotherUser(),
                 getInvalidFromAnotherUser(),

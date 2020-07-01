@@ -15,7 +15,7 @@ public class TestDataRecipeDuration {
     public static final int MAX_COOK_TIME = 6000;
 
     public static final String NEW_RECIPE_DOMAIN_ID = TestDataRecipeMetadata.
-            getDataUnavailable().
+            getInvalidDefault().
             getDomainId();
 
     public static final String EXISTING_RECIPE_DOMAIN_ID = TestDataRecipeMetadata.

@@ -39,9 +39,6 @@ public class RecipeIdentity
         @Nonnull
         private String description = "";
 
-        private DomainModel() {
-        }
-
         private DomainModel(@Nonnull String title, @Nonnull String description) {
             this.title = title;
             this.description = description;
@@ -121,7 +118,7 @@ public class RecipeIdentity
         this.idProvider = idProvider;
         this.timeProvider = timeProvider;
 
-        domainModel = new DomainModel();
+        domainModel = createDomainModelFromDefaultValues();
 
         this.textValidator = textValidator;
     }
@@ -138,7 +135,7 @@ public class RecipeIdentity
 
     @Override
     protected DomainModel createDomainModelFromDefaultValues() {
-        return new DomainModel();
+        return new DomainModel("", "");
     }
 
     @Override
