@@ -1,14 +1,14 @@
 package com.example.peter.thekitchenmenu.data.repository.source.local;
 
 import com.example.peter.thekitchenmenu.data.primitivemodel.EntityModel;
-import com.example.peter.thekitchenmenu.domain.model.BaseDomainPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.model.BasePersistenceDomainModel;
 
 import java.util.List;
 
 import javax.annotation.Nonnull;
 
-public interface DomainModelConverter<
-        PARENT extends BaseDomainPersistenceModel,
+public interface PersistenceModelToDatabaseEntityConverter<
+        PARENT extends BasePersistenceDomainModel,
         ENTITY extends EntityModel> {
 
     PARENT convertParentEntityToDomainModel(@Nonnull ENTITY entity);

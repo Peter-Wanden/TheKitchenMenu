@@ -9,7 +9,7 @@ import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.meta
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.failreason.RecipeFailReasonsLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.parent.RecipeMetadataParentEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.parent.RecipeMetadataParentLocalDataSource;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataPersistenceDomainModel;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -123,7 +123,7 @@ public class RecipeMetadataLocalGetAdapterTest {
     @Test
     public void getActiveByDomainId_returnMostRecentDomainModel() {
         // Arrange
-        RecipeMetadataPersistenceModel expectedModel = TestDataRecipeMetadata.getValidChanged();
+        RecipeMetadataPersistenceDomainModel expectedModel = TestDataRecipeMetadata.getValidChanged();
         String domainId = expectedModel.getDomainId();
         String parentDataId = expectedModel.getDataId();
 
@@ -202,37 +202,37 @@ public class RecipeMetadataLocalGetAdapterTest {
 
     // region helper classes -----------------------------------------------------------------------
     private static class GetDomainModelCallbackClient
-            implements GetDomainModelCallback<RecipeMetadataPersistenceModel> {
+            implements GetDomainModelCallback<RecipeMetadataPersistenceDomainModel> {
 
         private static final String TAG = RecipeMetadataLocalGetAdapterTest.TAG +
                 "GetModelCallbackClient: ";
 
-        private RecipeMetadataPersistenceModel domainModel;
+        private RecipeMetadataPersistenceDomainModel domainModel;
         private boolean onModelUnavailable;
 
         @Override
-        public void onDomainModelLoaded(RecipeMetadataPersistenceModel model) {
+        public void onPersistenceModelLoaded(RecipeMetadataPersistenceDomainModel model) {
             System.out.println(TAG + model);
             this.domainModel = model;
         }
 
         @Override
-        public void onDomainModelUnavailable() {
+        public void onPersistenceModelUnavailable() {
             System.out.println(TAG + "onModelUnavailable");
             onModelUnavailable = true;
         }
     }
 
     private static class GetAllCallbackClient
-            implements GetAllDomainModelsCallback<RecipeMetadataPersistenceModel> {
+            implements GetAllDomainModelsCallback<RecipeMetadataPersistenceDomainModel> {
 
         private static final String TAG = "tkm-" + RecipeMetadataLocalGetAdapterTest.TAG +
                 "GetAllModelsCallbackClient: ";
 
-        private List<RecipeMetadataPersistenceModel> models = new ArrayList<>();
+        private List<RecipeMetadataPersistenceDomainModel> models = new ArrayList<>();
 
         @Override
-        public void onAllDomainModelsLoaded(List<RecipeMetadataPersistenceModel> models) {
+        public void onAllDomainModelsLoaded(List<RecipeMetadataPersistenceDomainModel> models) {
             System.out.println(TAG + models);
             this.models = models;
         }

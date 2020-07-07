@@ -9,7 +9,7 @@ import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.cour
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.parent.RecipeCourseParentEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.parent.RecipeCourseParentLocalDataSource;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCoursePersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCoursePersistenceDomainModel;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
 import java.util.ArrayList;
@@ -35,10 +35,10 @@ public class CourseLocalGetAdapter {
     private boolean courseItemsComplete;
 
     private boolean isListCallback;
-    private GetDomainModelCallback<RecipeCoursePersistenceModel> courseCallback;
-    private GetAllDomainModelsCallback<RecipeCoursePersistenceModel> courseListCallback;
+    private GetDomainModelCallback<RecipeCoursePersistenceDomainModel> courseCallback;
+    private GetAllDomainModelsCallback<RecipeCoursePersistenceDomainModel> courseListCallback;
 
-    private HashMap<String, RecipeCoursePersistenceModel.Builder> modelBuilders;
+    private HashMap<String, RecipeCoursePersistenceDomainModel.Builder> modelBuilders;
 
     public CourseLocalGetAdapter(@Nonnull RecipeCourseParentLocalDataSource parentLocalDataSource,
                                  @Nonnull RecipeCourseItemLocalDataSource courseItemLocalDataSource) {
@@ -51,7 +51,7 @@ public class CourseLocalGetAdapter {
 
     public void getActiveByDomainId(
             @Nonnull String domainId,
-            @Nonnull GetDomainModelCallback<RecipeCoursePersistenceModel> callback) {
+            @Nonnull GetDomainModelCallback<RecipeCoursePersistenceDomainModel> callback) {
         courseCallback = callback;
         isListCallback = false;
 
@@ -71,7 +71,7 @@ public class CourseLocalGetAdapter {
                         }
 
                         if (activeEntity == null) {
-                            callback.onDomainModelUnavailable();
+                            callback.onPersistenceModelUnavailable();
                         } else {
                             parentDataId = activeEntity.getDataId();
 
@@ -82,7 +82,7 @@ public class CourseLocalGetAdapter {
 
                     @Override
                     public void onDataUnavailable() {
-                        callback.onDomainModelUnavailable();
+                        callback.onPersistenceModelUnavailable();
                     }
                 }
 
@@ -90,7 +90,7 @@ public class CourseLocalGetAdapter {
     }
 
     public void getAll(
-            @Nonnull GetAllDomainModelsCallback<RecipeCoursePersistenceModel> callback) {
+            @Nonnull GetAllDomainModelsCallback<RecipeCoursePersistenceDomainModel> callback) {
         courseListCallback = callback;
         isListCallback = true;
 
@@ -120,7 +120,7 @@ public class CourseLocalGetAdapter {
 
     public void getByDataId(
             String dataId,
-            GetDomainModelCallback<RecipeCoursePersistenceModel> callback) {
+            GetDomainModelCallback<RecipeCoursePersistenceDomainModel> callback) {
         courseCallback = callback;
         isListCallback = false;
 
@@ -136,7 +136,7 @@ public class CourseLocalGetAdapter {
 
                     @Override
                     public void onDataUnavailable() {
-                        callback.onDomainModelUnavailable();
+                        callback.onPersistenceModelUnavailable();
                     }
                 });
     }
@@ -156,7 +156,7 @@ public class CourseLocalGetAdapter {
     }
 
     private void addNewModelBuilder(String dataId) {
-        RecipeCoursePersistenceModel.Builder builder = new RecipeCoursePersistenceModel.Builder();
+        RecipeCoursePersistenceDomainModel.Builder builder = new RecipeCoursePersistenceDomainModel.Builder();
         builder.setDataId(dataId);
         modelBuilders.put(dataId, builder);
     }
@@ -204,9 +204,9 @@ public class CourseLocalGetAdapter {
     private void returnResult() {
         if (isListCallback) {
 
-            final List<RecipeCoursePersistenceModel> domainModels = new ArrayList<>();
+            final List<RecipeCoursePersistenceDomainModel> domainModels = new ArrayList<>();
 
-            Iterator<RecipeCoursePersistenceModel.Builder> iterator = modelBuilders.values().
+            Iterator<RecipeCoursePersistenceDomainModel.Builder> iterator = modelBuilders.values().
                     iterator();
 
             iterator.forEachRemaining(builder -> {
@@ -217,9 +217,9 @@ public class CourseLocalGetAdapter {
             courseListCallback.onAllDomainModelsLoaded(domainModels);
 
         } else {
-            RecipeCoursePersistenceModel domainModel = modelBuilders.get(parentDataId).build();
+            RecipeCoursePersistenceDomainModel domainModel = modelBuilders.get(parentDataId).build();
             modelBuilders.remove(parentDataId);
-            courseCallback.onDomainModelLoaded(domainModel);
+            courseCallback.onPersistenceModelLoaded(domainModel);
         }
     }
 }

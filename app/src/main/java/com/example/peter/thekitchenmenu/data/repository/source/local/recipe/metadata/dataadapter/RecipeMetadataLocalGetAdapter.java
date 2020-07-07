@@ -12,7 +12,7 @@ import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.meta
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.parent.RecipeMetadataParentLocalDataSource;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataPersistenceDomainModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,13 +40,13 @@ public class RecipeMetadataLocalGetAdapter {
     @Nonnull
     private final Set<String> uniqueDomainIdList;
     @Nonnull
-    private List<RecipeMetadataPersistenceModel> domainModels;
+    private List<RecipeMetadataPersistenceDomainModel> domainModels;
 
-    private GetDomainModelCallback<RecipeMetadataPersistenceModel> getModelCallback;
-    private GetAllDomainModelsCallback<RecipeMetadataPersistenceModel> getAllCallback;
+    private GetDomainModelCallback<RecipeMetadataPersistenceDomainModel> getModelCallback;
+    private GetAllDomainModelsCallback<RecipeMetadataPersistenceDomainModel> getAllCallback;
 
     private String activeDataId = "";
-    private RecipeMetadataPersistenceModel.Builder modelBuilder;
+    private RecipeMetadataPersistenceDomainModel.Builder modelBuilder;
     private int uniqueDomainIdListSize;
     private int domainModelsProcessed;
 
@@ -68,7 +68,7 @@ public class RecipeMetadataLocalGetAdapter {
 
     public void getByDataId(
             @Nonnull String dataId,
-            @Nonnull GetDomainModelCallback<RecipeMetadataPersistenceModel> callback) {
+            @Nonnull GetDomainModelCallback<RecipeMetadataPersistenceDomainModel> callback) {
         this.getModelCallback = callback;
 
         getParentEntityFromDataId(dataId);
@@ -87,7 +87,7 @@ public class RecipeMetadataLocalGetAdapter {
 
                     @Override
                     public void onDataUnavailable() {
-                        getModelCallback.onDomainModelUnavailable();
+                        getModelCallback.onPersistenceModelUnavailable();
                     }
                 }
         );
@@ -95,7 +95,7 @@ public class RecipeMetadataLocalGetAdapter {
 
     public void getActiveByDomainId(
             @Nonnull String domainId,
-            @Nonnull GetDomainModelCallback<RecipeMetadataPersistenceModel> callback) {
+            @Nonnull GetDomainModelCallback<RecipeMetadataPersistenceDomainModel> callback) {
 
         this.getModelCallback = callback;
         getParentEntitiesFromDomainId(domainId);
@@ -112,7 +112,7 @@ public class RecipeMetadataLocalGetAdapter {
 
                     @Override
                     public void onDataUnavailable() {
-                        getModelCallback.onDomainModelUnavailable();
+                        getModelCallback.onPersistenceModelUnavailable();
                     }
                 }
         );
@@ -133,7 +133,7 @@ public class RecipeMetadataLocalGetAdapter {
         }
 
         if (activeDataId.isEmpty()) {
-            getModelCallback.onDomainModelUnavailable();
+            getModelCallback.onPersistenceModelUnavailable();
         } else {
             addParentEntityToModelBuilder(parentEntity);
             getFailReasonsFromParentDataId(activeDataId);
@@ -142,7 +142,7 @@ public class RecipeMetadataLocalGetAdapter {
     }
 
     private void addParentEntityToModelBuilder(RecipeMetadataParentEntity e) {
-        modelBuilder = new RecipeMetadataPersistenceModel.Builder();
+        modelBuilder = new RecipeMetadataPersistenceDomainModel.Builder();
 
         modelBuilder.
                 setDataId(e.getDataId()).
@@ -228,7 +228,7 @@ public class RecipeMetadataLocalGetAdapter {
 
     private void createModel() {
         if (isModelComplete()) {
-            getModelCallback.onDomainModelLoaded(modelBuilder.build());
+            getModelCallback.onPersistenceModelLoaded(modelBuilder.build());
         }
     }
 
@@ -237,7 +237,7 @@ public class RecipeMetadataLocalGetAdapter {
     }
 
     public void getAllActive(
-            @Nonnull GetAllDomainModelsCallback<RecipeMetadataPersistenceModel> callback) {
+            @Nonnull GetAllDomainModelsCallback<RecipeMetadataPersistenceDomainModel> callback) {
         getAllCallback = callback;
         getAllParents();
     }
@@ -279,16 +279,16 @@ public class RecipeMetadataLocalGetAdapter {
         for (String domainId : uniqueDomainIdList) {
             getActiveByDomainId(
                     domainId,
-                    new GetDomainModelCallback<RecipeMetadataPersistenceModel>() {
+                    new GetDomainModelCallback<RecipeMetadataPersistenceDomainModel>() {
                         @Override
-                        public void onDomainModelLoaded(RecipeMetadataPersistenceModel model) {
+                        public void onPersistenceModelLoaded(RecipeMetadataPersistenceDomainModel model) {
                             domainModels.add(model);
                             domainModelsProcessed++;
                             returnAllDomainModels();
                         }
 
                         @Override
-                        public void onDomainModelUnavailable() {
+                        public void onPersistenceModelUnavailable() {
                             returnAllDomainModels();
                         }
                     }

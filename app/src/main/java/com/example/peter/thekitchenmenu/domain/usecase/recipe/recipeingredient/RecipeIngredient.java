@@ -13,7 +13,7 @@ import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModelBuil
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasure;
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModel;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortionsPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortionsPersistenceDomainModel;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
@@ -108,7 +108,7 @@ public class RecipeIngredient extends UseCaseBase {
 
     private MeasurementModel modelIn;
     private MeasurementModel existingModel;
-    private RecipeIngredientPersistenceModel persistenceModel;
+    private RecipeIngredientPersistenceDomainModel persistenceModel;
     private IngredientEntity ingredientEntity;
 
     public RecipeIngredient(@Nonnull RepositoryRecipePortions portionsRepository,
@@ -160,9 +160,9 @@ public class RecipeIngredient extends UseCaseBase {
         loadIngredient();
     }
 
-    private RecipeIngredientPersistenceModel createNewPersistenceModel() {
+    private RecipeIngredientPersistenceDomainModel createNewPersistenceModel() {
         long currentTime = timeProvider.getCurrentTimeInMills();
-        return new RecipeIngredientPersistenceModel.Builder().getDefault().build();
+        return new RecipeIngredientPersistenceDomainModel.Builder().getDefault().build();
     }
 
     private void start(String recipeIngredientId) {
@@ -210,16 +210,16 @@ public class RecipeIngredient extends UseCaseBase {
     private void loadPortions() {
         portionsRepository.getActiveByDomainId(
                 recipeId,
-                new GetDomainModelCallback<RecipePortionsPersistenceModel>() {
+                new GetDomainModelCallback<RecipePortionsPersistenceDomainModel>() {
                     @Override
-                    public void onDomainModelLoaded(RecipePortionsPersistenceModel model) {
+                    public void onPersistenceModelLoaded(RecipePortionsPersistenceDomainModel model) {
                         numberOfPortions = model.getServings() *
                                 model.getSittings();
                         setupUnitOfMeasure();
                     }
 
                     @Override
-                    public void onDomainModelUnavailable() {
+                    public void onPersistenceModelUnavailable() {
                         returnDataUnAvailable(Result.PORTIONS_DATA_UNAVAILABLE);
                     }
                 }

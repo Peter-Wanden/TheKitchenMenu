@@ -6,7 +6,7 @@ import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.meta
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.parent.RecipeMetadataParentEntity;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataPersistenceDomainModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +63,7 @@ public class TestDataRecipeMetadataEntity {
     }
 
     private static RecipeMetadataParentEntity getParentEntityFromPersistenceModel(
-            RecipeMetadataPersistenceModel m) {
+            RecipeMetadataPersistenceDomainModel m) {
         return new RecipeMetadataParentEntity.Builder().
                 setDataId(m.getDataId()).
                 setDomainId(m.getDomainId()).
@@ -76,7 +76,7 @@ public class TestDataRecipeMetadataEntity {
     }
 
     private static List<RecipeFailReasonEntity> getFailReasonEntitiesFromPersistentModel(
-            RecipeMetadataPersistenceModel m) {
+            RecipeMetadataPersistenceDomainModel m) {
         List<RecipeFailReasonEntity> entities = new ArrayList<>();
         int dataId = 0;
         for (FailReasons f : m.getFailReasons()) {
@@ -92,7 +92,7 @@ public class TestDataRecipeMetadataEntity {
     }
 
     private static List<RecipeComponentStateEntity> getComponentStateEntitiesFromPersistentModel(
-            RecipeMetadataPersistenceModel model) {
+            RecipeMetadataPersistenceDomainModel model) {
         List<RecipeComponentStateEntity> e = new ArrayList<>();
         int dataId = 0;
         for (RecipeMetadata.ComponentName name : model.getComponentStates().keySet()) {
@@ -111,7 +111,7 @@ public class TestDataRecipeMetadataEntity {
 
     public static List<RecipeMetadataParentEntity> getAllByDomainId(String domainId) {
         List<RecipeMetadataParentEntity> entities = new ArrayList<>();
-        for (RecipeMetadataPersistenceModel m : TestDataRecipeMetadata.getAll()) {
+        for (RecipeMetadataPersistenceDomainModel m : TestDataRecipeMetadata.getAll()) {
             if (domainId.equals(m.getDomainId())) {
                 entities.add(getParentEntityFromPersistenceModel(m));
             }

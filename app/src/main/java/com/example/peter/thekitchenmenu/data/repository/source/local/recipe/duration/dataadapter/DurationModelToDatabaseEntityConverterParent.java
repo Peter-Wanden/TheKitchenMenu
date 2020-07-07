@@ -1,22 +1,22 @@
 package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.dataadapter;
 
-import com.example.peter.thekitchenmenu.data.repository.source.local.DomainModelConverter;
+import com.example.peter.thekitchenmenu.data.repository.source.local.PersistenceModelToDatabaseEntityConverter;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.datasource.RecipeDurationEntity;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDurationPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDurationPersistenceDomainModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nonnull;
 
-public class DurationModelConverterParent
+public class DurationModelToDatabaseEntityConverterParent
         implements
-        DomainModelConverter<RecipeDurationPersistenceModel, RecipeDurationEntity> {
+        PersistenceModelToDatabaseEntityConverter<RecipeDurationPersistenceDomainModel, RecipeDurationEntity> {
 
     @Override
-    public RecipeDurationPersistenceModel convertParentEntityToDomainModel(
+    public RecipeDurationPersistenceDomainModel convertParentEntityToDomainModel(
             @Nonnull RecipeDurationEntity entity) {
-        return new RecipeDurationPersistenceModel.Builder().
+        return new RecipeDurationPersistenceDomainModel.Builder().
                 setDataId(entity.getDataId()).
                 setDomainId(entity.getDomainId()).
                 setPrepTime(entity.getPrepTime()).
@@ -28,7 +28,7 @@ public class DurationModelConverterParent
 
     @Override
     public RecipeDurationEntity convertParentDomainModelToEntity(
-            @Nonnull RecipeDurationPersistenceModel parent) {
+            @Nonnull RecipeDurationPersistenceDomainModel parent) {
         return new RecipeDurationEntity(
                 parent.getDataId(),
                 parent.getDomainId(),
@@ -40,10 +40,10 @@ public class DurationModelConverterParent
     }
 
     @Override
-    public List<RecipeDurationPersistenceModel> convertParentEntitiesToDomainModels(
+    public List<RecipeDurationPersistenceDomainModel> convertParentEntitiesToDomainModels(
             @Nonnull List<RecipeDurationEntity> entities) {
 
-        List<RecipeDurationPersistenceModel> models = new ArrayList<>();
+        List<RecipeDurationPersistenceDomainModel> models = new ArrayList<>();
         for (RecipeDurationEntity e : entities) {
             models.add(convertParentEntityToDomainModel(e));
         }

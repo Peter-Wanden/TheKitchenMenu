@@ -1,5 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecase.common;
 
+import com.example.peter.thekitchenmenu.domain.model.DomainModel;
+
 public abstract class UseCaseBase {
 
     // Tagging interface for request response messages
@@ -46,7 +48,8 @@ public abstract class UseCaseBase {
     // For running use cases on the current thread (handler not required).
     // -- DO NOT USE ON THE UI THREAD IF USE CASE USES SYNCHRONOUS OR ASYNCHRONOUS METHODS --
     public <REQUEST extends Request, RESPONSE extends Response> void execute (
-            REQUEST request, Callback<RESPONSE> callback) {
+            REQUEST request,
+            Callback<RESPONSE> callback) {
 
         setRequest(request);
         setUseCaseCallback((Callback<Response>) callback);
@@ -54,5 +57,6 @@ public abstract class UseCaseBase {
         run();
     }
 
+    // For running asynchronous use cases on another thread. See UseCaseHandler / UseCaseScheduler.
     protected abstract <REQUEST extends UseCaseBase.Request> void execute(REQUEST request);
 }

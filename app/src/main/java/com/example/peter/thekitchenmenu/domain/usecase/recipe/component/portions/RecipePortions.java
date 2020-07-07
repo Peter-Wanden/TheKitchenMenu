@@ -3,7 +3,6 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portion
 import android.annotation.SuppressLint;
 
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipePortions;
-import com.example.peter.thekitchenmenu.domain.model.UseCaseDomainModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseElement;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
@@ -18,14 +17,14 @@ public class RecipePortions
         extends
         UseCaseElement<
                 RepositoryRecipePortions,
-                RecipePortionsPersistenceModel,
+                RecipePortionsPersistenceDomainModel,
                 RecipePortions.DomainModel> {
 
     private static final String TAG = "tkm-" + RecipePortions.class.getSimpleName() + ": ";
 
     protected static final class DomainModel
             implements
-            UseCaseDomainModel {
+            com.example.peter.thekitchenmenu.domain.model.DomainModel.UseCaseDomainModel {
         private int servings;
         private int sittings;
 
@@ -108,15 +107,15 @@ public class RecipePortions
         this.idProvider = idProvider;
         this.timeProvider = timeProvider;
 
-        domainModel = createDomainModelFromDefaultValues();
+        useCaseModel = createUseCaseModelFromDefaultValues();
 
         this.maxServings = maxServings;
         this.maxSittings = maxSittings;
     }
 
     @Override
-    protected DomainModel createDomainModelFromPersistenceModel(
-            @Nonnull RecipePortionsPersistenceModel persistenceModel) {
+    protected DomainModel createUseCaseModelFromPersistenceModel(
+            @Nonnull RecipePortionsPersistenceDomainModel persistenceModel) {
 
         return new DomainModel(
                 persistenceModel.getServings(),
@@ -125,7 +124,7 @@ public class RecipePortions
     }
 
     @Override
-    protected DomainModel createDomainModelFromDefaultValues() {
+    protected DomainModel createUseCaseModelFromDefaultValues() {
         return new DomainModel(
                 MIN_SERVINGS,
                 MIN_SITTINGS
@@ -133,7 +132,7 @@ public class RecipePortions
     }
 
     @Override
-    protected DomainModel createDomainModelFromRequestModel() {
+    protected DomainModel createUseCaseModelFromRequestModel() {
         RecipePortionsRequest.DomainModel domainModel = ((RecipePortionsRequest) getRequest()).
                 getDomainModel();
 
@@ -151,19 +150,19 @@ public class RecipePortions
     }
 
     private void validateServings() {
-        if (domainModel.servings < MIN_SERVINGS) {
+        if (useCaseModel.servings < MIN_SERVINGS) {
             failReasons.add(FailReason.SERVINGS_TOO_LOW);
 
-        } else if (domainModel.servings > maxServings) {
+        } else if (useCaseModel.servings > maxServings) {
             failReasons.add(FailReason.SERVINGS_TOO_HIGH);
         }
     }
 
     private void validateSittings() {
-        if (domainModel.sittings < MIN_SITTINGS) {
+        if (useCaseModel.sittings < MIN_SITTINGS) {
             failReasons.add(FailReason.SITTINGS_TOO_LOW);
 
-        } else if (domainModel.sittings > maxSittings) {
+        } else if (useCaseModel.sittings > maxSittings) {
             failReasons.add(FailReason.SITTINGS_TOO_HIGH);
         }
     }
@@ -176,14 +175,14 @@ public class RecipePortions
             long currentTime = timeProvider.getCurrentTimeInMills();
 
             if (persistenceModel != null) {
-                archiveExistingPersistenceModel(currentTime);
+                archivePreviousState(currentTime);
             }
 
-            persistenceModel = new RecipePortionsPersistenceModel.Builder().
+            persistenceModel = new RecipePortionsPersistenceDomainModel.Builder().
                     setDataId(useCaseDataId).
                     setDomainId(useCaseDomainId).
-                    setServings(domainModel.servings).
-                    setSittings(domainModel.sittings).
+                    setServings(useCaseModel.servings).
+                    setSittings(useCaseModel.sittings).
                     setCreateDate(currentTime).
                     setLastUpdate(currentTime).
                     build();
@@ -194,8 +193,8 @@ public class RecipePortions
     }
 
     @Override
-    protected void archiveExistingPersistenceModel(long currentTime) {
-        RecipePortionsPersistenceModel model = new RecipePortionsPersistenceModel.Builder().
+    protected void archivePreviousState(long currentTime) {
+        RecipePortionsPersistenceDomainModel model = new RecipePortionsPersistenceDomainModel.Builder().
                 basedOnModel(persistenceModel).
                 setLastUpdate(currentTime).
                 build();
@@ -219,9 +218,9 @@ public class RecipePortions
 
     private RecipePortionsResponse.Model getResponseModel() {
         return new RecipePortionsResponse.Model.Builder().
-                setServings(domainModel.servings).
-                setSittings(domainModel.sittings).
-                setPortions(domainModel.servings * domainModel.sittings).
+                setServings(useCaseModel.servings).
+                setSittings(useCaseModel.sittings).
+                setPortions(useCaseModel.servings * useCaseModel.sittings).
                 build();
     }
 }

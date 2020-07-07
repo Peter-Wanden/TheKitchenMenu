@@ -42,7 +42,7 @@ public class RecipeCourseTest {
     @Mock
     RepositoryRecipeCourse repoCourseMock;
     @Captor
-    ArgumentCaptor<GetDomainModelCallback<RecipeCoursePersistenceModel>> repoCourseCallback;
+    ArgumentCaptor<GetDomainModelCallback<RecipeCoursePersistenceDomainModel>> repoCourseCallback;
     @Mock
     UniqueIdProvider idProviderMock;
     @Mock
@@ -71,7 +71,7 @@ public class RecipeCourseTest {
     @Test
     public void newRequest_defaultNoCoursesReturned_stateINVALID_DEFAULT() {
         // Arrange
-        RecipeCoursePersistenceModel expectedDefaultValues = TestDataRecipeCourse.
+        RecipeCoursePersistenceDomainModel expectedDefaultValues = TestDataRecipeCourse.
                 getNewActiveDefaultNoCourses();
 
         RecipeCourseRequest request = new RecipeCourseRequest.Builder().
@@ -86,7 +86,7 @@ public class RecipeCourseTest {
         // Assert persistence calls
         verify(repoCourseMock).getActiveByDomainId(eq(expectedDefaultValues.getDomainId()),
                 repoCourseCallback.capture());
-        repoCourseCallback.getValue().onDomainModelUnavailable();
+        repoCourseCallback.getValue().onPersistenceModelUnavailable();
 
         // assert no save
         verifyNoMoreInteractions(repoCourseMock);
@@ -143,7 +143,7 @@ public class RecipeCourseTest {
         newRequest_defaultNoCoursesReturned_stateINVALID_DEFAULT();
 
         // Arrange persistent model that represents state after adding domain data
-        RecipeCoursePersistenceModel expectedCourseOneSaveModel = TestDataRecipeCourse.
+        RecipeCoursePersistenceDomainModel expectedCourseOneSaveModel = TestDataRecipeCourse.
                 getNewActiveCourseOne();
 
         // Arrange request to add course one
@@ -198,11 +198,11 @@ public class RecipeCourseTest {
         newRequest_addCourseOne_VALID_CHANGED();
 
         // Arrange persistent model for archiving the addCourseOne_VALID_CHANGED state
-        RecipeCoursePersistenceModel expectedArchivedCourseOne = TestDataRecipeCourse.
+        RecipeCoursePersistenceDomainModel expectedArchivedCourseOne = TestDataRecipeCourse.
                 getNewArchivedCourseOne();
 
         // Arrange persistent model that represents state after adding course two
-        RecipeCoursePersistenceModel expectedCourseOneAndTwoSaveModel = TestDataRecipeCourse.
+        RecipeCoursePersistenceDomainModel expectedCourseOneAndTwoSaveModel = TestDataRecipeCourse.
                 getNewActiveCourseOneAndTwo();
 
         // Arrange request to add course two
@@ -260,11 +260,11 @@ public class RecipeCourseTest {
         newRequest_addCourseOneAndTwo_VALID_CHANGED();
 
         // Arrange persistent model for archiving the addCourseOneAndTwo_VALID_CHANGED state
-        RecipeCoursePersistenceModel expectedArchivedModelForCourseOneAndTwo = TestDataRecipeCourse.
+        RecipeCoursePersistenceDomainModel expectedArchivedModelForCourseOneAndTwo = TestDataRecipeCourse.
                 getNewArchivedCourseOneAndTwo();
 
         // Arrange persistent model that represents state after removing course one
-        RecipeCoursePersistenceModel expectedActiveModelAfterCourseOneRemoved = TestDataRecipeCourse.
+        RecipeCoursePersistenceDomainModel expectedActiveModelAfterCourseOneRemoved = TestDataRecipeCourse.
                 getNewActiveAfterCourseOneRemoved();
 
         // Arrange request to remove course one
@@ -364,7 +364,7 @@ public class RecipeCourseTest {
     public void existingRequest_completeListOfModelsReturned_VALID_UNCHANGED() {
         // Arrange
         // arrange persistence model representing all courses
-        RecipeCoursePersistenceModel expectedAllCoursesModel = TestDataRecipeCourse.
+        RecipeCoursePersistenceDomainModel expectedAllCoursesModel = TestDataRecipeCourse.
                 getExistingActiveWithAllCourses();
 
         // arrange request to get all courses
@@ -379,13 +379,13 @@ public class RecipeCourseTest {
         // Assert
         verify(repoCourseMock).getActiveByDomainId(eq(expectedAllCoursesModel.getDomainId()),
                 repoCourseCallback.capture());
-        repoCourseCallback.getValue().onDomainModelLoaded(expectedAllCoursesModel);
+        repoCourseCallback.getValue().onPersistenceModelLoaded(expectedAllCoursesModel);
 
-        RecipeCourseResponse.Model responseModel = courseOnSuccessResponse.getDomainModel();
+        RecipeCourseResponse.DomainModel responseDomainModel = courseOnSuccessResponse.getDomainModel();
         UseCaseMetadataModel metadata = courseOnSuccessResponse.getMetadata();
 
         int expectedNumberOfModels = expectedAllCoursesModel.getCourses().size();
-        int actualNumberOfModels = responseModel.getCourses().size();
+        int actualNumberOfModels = responseDomainModel.getCourses().size();
         assertEquals(
                 expectedNumberOfModels,
                 actualNumberOfModels
@@ -428,9 +428,9 @@ public class RecipeCourseTest {
         verifyNoMoreInteractions(repoCourseMock);
 
         // assert response data
-        RecipeCourseResponse.Model model = courseOnErrorResponse.getDomainModel();
+        RecipeCourseResponse.DomainModel domainModel = courseOnErrorResponse.getDomainModel();
         List<Course> expectedCourses = new ArrayList<>();
-        List<Course> actualCourses = model.getCourses();
+        List<Course> actualCourses = domainModel.getCourses();
         assertEquals(
                 expectedCourses,
                 actualCourses

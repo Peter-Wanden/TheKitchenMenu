@@ -1,5 +1,6 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course;
 
+import com.example.peter.thekitchenmenu.domain.model.DomainModelBuilder;
 import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataIdMetadata;
 import com.example.peter.thekitchenmenu.domain.model.BaseDomainModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
@@ -14,7 +15,7 @@ import javax.annotation.Nonnull;
 
 public final class RecipeCourseResponse
         extends
-        UseCaseMessageModelDataIdMetadata<RecipeCourseResponse.Model>
+        UseCaseMessageModelDataIdMetadata<RecipeCourseResponse.DomainModel>
         implements
         UseCaseBase.Response {
 
@@ -29,10 +30,11 @@ public final class RecipeCourseResponse
                 "'}'";
     }
 
-    private RecipeCourseResponse() {}
+    private RecipeCourseResponse() {
+    }
 
     public static class Builder
-            extends MessageModelDataIdMetadataBuilder<Builder, RecipeCourseResponse, Model> {
+            extends MessageModelDataIdMetadataBuilder<Builder, RecipeCourseResponse, DomainModel> {
 
         public Builder() {
             message = new RecipeCourseResponse();
@@ -43,7 +45,7 @@ public final class RecipeCourseResponse
             message.dataId = "";
             message.domainId = "";
             message.metadata = new UseCaseMetadataModel.Builder().getDefault().build();
-            message.model = new Model.Builder().getDefault().build();
+            message.model = new DomainModel.Builder().getDefault().build();
             return self();
         }
 
@@ -53,11 +55,14 @@ public final class RecipeCourseResponse
         }
     }
 
-    public static final class Model extends BaseDomainModel {
+    public static final class DomainModel
+            extends
+            BaseDomainModel {
 
         private List<Course> courseList;
 
-        private Model(){}
+        private DomainModel() {
+        }
 
         @Nonnull
         public List<Course> getCourses() {
@@ -67,9 +72,9 @@ public final class RecipeCourseResponse
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
-            if (!(o instanceof Model)) return false;
-            Model model = (Model) o;
-            return Objects.equals(courseList, model.courseList);
+            if (!(o instanceof DomainModel)) return false;
+            DomainModel domainModel = (DomainModel) o;
+            return Objects.equals(courseList, domainModel.courseList);
         }
 
         @Override
@@ -87,10 +92,10 @@ public final class RecipeCourseResponse
 
         public static class Builder
                 extends
-                DomainModelBuilder<Builder, Model> {
+                DomainModelBuilder<Builder, DomainModel> {
 
             public Builder() {
-                domainModel = new Model();
+                domainModel = new DomainModel();
             }
 
             @Override

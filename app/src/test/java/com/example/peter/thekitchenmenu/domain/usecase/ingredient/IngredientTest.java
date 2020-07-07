@@ -47,7 +47,7 @@ public class IngredientTest {
     @Mock
     RepositoryIngredient repoMock;
     @Captor
-    ArgumentCaptor<GetDomainModelCallback<IngredientPersistenceModel>> repoCallbackCaptor;
+    ArgumentCaptor<GetDomainModelCallback<IngredientPersistenceDomainModel>> repoCallbackCaptor;
     @Mock
     UniqueIdProvider idProviderMock;
     @Mock
@@ -97,7 +97,7 @@ public class IngredientTest {
     @Test
     public void newRequest_stateINVALID_UNCHANGED_failReasonDATA_UNAVAILABLE() {
         // Arrange
-        IngredientPersistenceModel modelUnderTest = TestDataIngredient.getInvalidNewEmpty();
+        IngredientPersistenceDomainModel modelUnderTest = TestDataIngredient.getInvalidNewEmpty();
         // Act
         simulateNewInitialisationRequest(modelUnderTest);
         // Assert
@@ -117,7 +117,7 @@ public class IngredientTest {
     @Test
     public void newRequest_nameTooLongDescriptionTooLong_stateINVALID_CHANGED() {
         // Arrange
-        IngredientPersistenceModel modelUnderTest = TestDataIngredient.
+        IngredientPersistenceDomainModel modelUnderTest = TestDataIngredient.
                 getInvalidNewNameTooLongDescriptionTooLong();
 
         simulateNewInitialisationRequest(modelUnderTest);
@@ -147,7 +147,7 @@ public class IngredientTest {
     @Test
     public void newRequest_nameTooLongDescriptionTooLong_failReasonsNAME_TOO_LONG_DESCRIPTION_TOO_LONG() {
         // Arrange
-        IngredientPersistenceModel modelUnderTest = TestDataIngredient.
+        IngredientPersistenceDomainModel modelUnderTest = TestDataIngredient.
                 getInvalidNewNameTooLongDescriptionTooLong();
         expectedNoOfDuplicateChecks = 1;
         expectedNoOfFailReasons = 2;
@@ -185,7 +185,7 @@ public class IngredientTest {
     @Test
     public void newRequest_nameTooShortDescriptionValid_stateINVALID_CHANGED() {
         // Arrange
-        IngredientPersistenceModel modelUnderTest = TestDataIngredient.
+        IngredientPersistenceDomainModel modelUnderTest = TestDataIngredient.
                 getInvalidNewNameTooShortDescriptionValid();
         expectedNoOfFailReasons = 1;
 
@@ -225,7 +225,7 @@ public class IngredientTest {
     @Test
     public void newRequest_nameValid_valuesPersisted() {
         // Arrange
-        IngredientPersistenceModel modelUnderTest = TestDataIngredient.
+        IngredientPersistenceDomainModel modelUnderTest = TestDataIngredient.
                 getValidNewNameValid();
 
         simulateNewInitialisationRequest(modelUnderTest);
@@ -255,7 +255,7 @@ public class IngredientTest {
     @Test
     public void newRequest_nameValid_state_VALID_CHANGED() {
         // Arrange
-        IngredientPersistenceModel modelUnderTest = TestDataIngredient.
+        IngredientPersistenceDomainModel modelUnderTest = TestDataIngredient.
                 getValidNewNameValid();
         expectedNoOfFailReasons = 1;
 
@@ -298,7 +298,7 @@ public class IngredientTest {
     @Test
     public void newRequest_nameValidDescriptionValid_valuesPersisted() {
         // Arrange
-        IngredientPersistenceModel modelUnderTest = TestDataIngredient.
+        IngredientPersistenceDomainModel modelUnderTest = TestDataIngredient.
                 getValidNewNameValidDescriptionValid();
 
         simulateNewInitialisationRequest(modelUnderTest);
@@ -329,7 +329,7 @@ public class IngredientTest {
     @Test
     public void newRequest_titleValid_then_descriptionValid_stateVALID_CHANGED() {
         // Arrange
-        IngredientPersistenceModel modelUnderTest = TestDataIngredient.
+        IngredientPersistenceDomainModel modelUnderTest = TestDataIngredient.
                 getValidNewNameValidDescriptionValid();
 
         // Request 1: initialisation
@@ -387,7 +387,7 @@ public class IngredientTest {
     @Test
     public void existingRequest_nameValidDescriptionValid_stateVALID_UNCHANGED() {
         // Arrange
-        IngredientPersistenceModel modelUnderTest = TestDataIngredient.
+        IngredientPersistenceDomainModel modelUnderTest = TestDataIngredient.
                 getValidExistingNameValidDescriptionValid();
 
         // Act
@@ -443,7 +443,7 @@ public class IngredientTest {
     @Test
     public void existingRequest_nameTooShort_stateINVALID_UNCHANGED() {
         // Arrange
-        IngredientPersistenceModel modelUnderTest = TestDataIngredient.
+        IngredientPersistenceDomainModel modelUnderTest = TestDataIngredient.
                 getInvalidExistingNameTooShort();
         // Act
         simulateExistingInitialisationRequest(modelUnderTest);
@@ -457,7 +457,7 @@ public class IngredientTest {
     @Test
     public void existingRequest_nameTooShort_failReasonsNAME_TOO_SHORT() {
         // Arrange
-        IngredientPersistenceModel modelUnderTest = TestDataIngredient.
+        IngredientPersistenceDomainModel modelUnderTest = TestDataIngredient.
                 getInvalidExistingNameTooShort();
         // Act
         simulateExistingInitialisationRequest(modelUnderTest);
@@ -473,7 +473,7 @@ public class IngredientTest {
     @Test
     public void existingRequest_nameTooLong_stateINVALID_UNCHANGED() {
         // Arrange
-        IngredientPersistenceModel modelUnderTest = TestDataIngredient.
+        IngredientPersistenceDomainModel modelUnderTest = TestDataIngredient.
                 getInvalidExistingNameTooLong();
         // Act
         simulateExistingInitialisationRequest(modelUnderTest);
@@ -491,7 +491,7 @@ public class IngredientTest {
     @Test
     public void existingRequest_nameValidDescriptionTooLong_stateINVALID_UNCHANGED() {
         // Arrange
-        IngredientPersistenceModel modelUnderTest = TestDataIngredient.
+        IngredientPersistenceDomainModel modelUnderTest = TestDataIngredient.
                 getInvalidExistingNameValidDescriptionTooLong();
         // Act
         simulateExistingInitialisationRequest(modelUnderTest);
@@ -509,7 +509,7 @@ public class IngredientTest {
     @Test
     public void existingRequest_nameTooShortDescriptionTooLong_INVALID_UNCHANGED() {
         // Arrange
-        IngredientPersistenceModel modelUnderTest = TestDataIngredient.
+        IngredientPersistenceDomainModel modelUnderTest = TestDataIngredient.
                 getInvalidExistingNameTooShortDescriptionTooLong();
         expectedNoOfFailReasons = 2;
         // Act
@@ -535,7 +535,7 @@ public class IngredientTest {
     @Test
     public void existingRequest_titleValid_stateVALID_UNCHANGED() {
         // Arrange
-        IngredientPersistenceModel modelUnderTest = TestDataIngredient.
+        IngredientPersistenceDomainModel modelUnderTest = TestDataIngredient.
                 getValidExistingNameValid();
         // Act
         simulateExistingInitialisationRequest(modelUnderTest);
@@ -551,7 +551,7 @@ public class IngredientTest {
     }
 
     // region helper methods -----------------------------------------------------------------------
-    private void simulateNewInitialisationRequest(IngredientPersistenceModel modelUnderTest) {
+    private void simulateNewInitialisationRequest(IngredientPersistenceDomainModel modelUnderTest) {
         // Arrange - data id requested when creating a new persistence model
         when(idProviderMock.getUId()).thenReturn(TestDataIngredient.
                 getInvalidNewEmpty().getDataId());
@@ -571,10 +571,10 @@ public class IngredientTest {
                 eq(modelUnderTest.getDomainId()),
                 repoCallbackCaptor.capture()
         );
-        repoCallbackCaptor.getValue().onDomainModelUnavailable();
+        repoCallbackCaptor.getValue().onPersistenceModelUnavailable();
     }
 
-    private void simulateExistingInitialisationRequest(IngredientPersistenceModel modelUnderTest) {
+    private void simulateExistingInitialisationRequest(IngredientPersistenceDomainModel modelUnderTest) {
         // Arrange
         IngredientRequest initialisationRequest = new IngredientRequest.Builder().
                 getDefault().
@@ -586,10 +586,10 @@ public class IngredientTest {
         verify(repoMock).getActiveByDomainId(eq(modelUnderTest.getDomainId()),
                 repoCallbackCaptor.capture()
         );
-        repoCallbackCaptor.getValue().onDomainModelLoaded(modelUnderTest);
+        repoCallbackCaptor.getValue().onPersistenceModelLoaded(modelUnderTest);
     }
 
-    private void assertNoDuplicateFound(IngredientPersistenceModel modelUnderTest) {
+    private void assertNoDuplicateFound(IngredientPersistenceDomainModel modelUnderTest) {
         verify(duplicateCheckerMock, times(expectedNoOfDuplicateChecks)).
                 checkForDuplicateAndNotify(
                         eq(modelUnderTest.getName()),

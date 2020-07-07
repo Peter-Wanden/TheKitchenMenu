@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.data.repository.source.remote.recipe;
 
 import com.example.peter.thekitchenmenu.data.repository.recipe.DomainDataAccessRecipePortions;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortionsPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortionsPersistenceDomainModel;
 
 import javax.annotation.Nonnull;
 
@@ -19,32 +19,32 @@ public class RepositoryRecipePortionsRemote
     @Override
     public void getByDataId(
             @Nonnull String dataId,
-            @Nonnull GetDomainModelCallback<RecipePortionsPersistenceModel> callback) {
-        callback.onDomainModelUnavailable();
+            @Nonnull GetDomainModelCallback<RecipePortionsPersistenceDomainModel> callback) {
+        callback.onPersistenceModelUnavailable();
     }
 
     @Override
     public void getAllByDomainId(
             @Nonnull String domainId,
-            @Nonnull GetAllDomainModelsCallback<RecipePortionsPersistenceModel> callback) {
+            @Nonnull GetAllDomainModelsCallback<RecipePortionsPersistenceDomainModel> callback) {
         callback.onDomainModelsUnavailable();
     }
 
     @Override
     public void getActiveByDomainId(
             @Nonnull String domainId,
-            @Nonnull GetDomainModelCallback<RecipePortionsPersistenceModel> callback) {
-        callback.onDomainModelUnavailable();
+            @Nonnull GetDomainModelCallback<RecipePortionsPersistenceDomainModel> callback) {
+        callback.onPersistenceModelUnavailable();
     }
 
     @Override
     public void getAll(
-            @Nonnull GetAllDomainModelsCallback<RecipePortionsPersistenceModel> callback) {
+            @Nonnull GetAllDomainModelsCallback<RecipePortionsPersistenceDomainModel> callback) {
         callback.onDomainModelsUnavailable();
     }
 
     @Override
-    public void save(@Nonnull RecipePortionsPersistenceModel model) {
+    public void save(@Nonnull RecipePortionsPersistenceDomainModel model) {
 
     }
 

@@ -1,5 +1,6 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata;
 
+import com.example.peter.thekitchenmenu.domain.model.DomainModelBuilder;
 import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataId;
 import com.example.peter.thekitchenmenu.domain.model.BaseDomainModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
@@ -108,8 +109,8 @@ public final class RecipeMetadataRequest
         public static class Builder
                 extends
                 DomainModelBuilder<
-                        Builder,
-                        DomainModel> {
+                                        Builder,
+                                        DomainModel> {
 
             public Builder() {
                 domainModel = new DomainModel();

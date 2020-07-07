@@ -3,7 +3,7 @@ package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.cou
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.courseitem.RecipeCourseEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.parent.RecipeCourseParentEntity;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCoursePersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCoursePersistenceDomainModel;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
 import java.util.ArrayList;
@@ -20,25 +20,25 @@ public class CourseModelConverter {
         this.idProvider = idProvider;
     }
 
-    public RecipeCoursePersistenceModel.Builder addParentEntityToDomainModelBuilder(
+    public RecipeCoursePersistenceDomainModel.Builder addParentEntityToDomainModelBuilder(
             @Nonnull RecipeCourseParentEntity entity) {
-        return new RecipeCoursePersistenceModel.Builder().
+        return new RecipeCoursePersistenceDomainModel.Builder().
                 setDataId(entity.getDataId()).
                 setDomainId(entity.getDomainId()).
                 setCreateDate(entity.getCreateDate()).
                 setLastUpdate(entity.getLastUpdate());
     }
 
-    public List<RecipeCoursePersistenceModel.Builder> convertParentEntitiesToDomainModels(
+    public List<RecipeCoursePersistenceDomainModel.Builder> convertParentEntitiesToDomainModels(
             @Nonnull List<RecipeCourseParentEntity> entities) {
 
-        List<RecipeCoursePersistenceModel.Builder> models = new ArrayList<>();
+        List<RecipeCoursePersistenceDomainModel.Builder> models = new ArrayList<>();
         entities.forEach(entity -> models.add(addParentEntityToDomainModelBuilder(entity)));
         return models;
     }
 
     public RecipeCourseParentEntity convertParentDomainModelToEntity(
-            @Nonnull RecipeCoursePersistenceModel model) {
+            @Nonnull RecipeCoursePersistenceDomainModel model) {
         return new RecipeCourseParentEntity.Builder().
                 getDefault().
                 setDataId(model.getDataId()).

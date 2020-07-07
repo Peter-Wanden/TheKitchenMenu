@@ -1,23 +1,23 @@
 package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.dataadapter;
 
-import com.example.peter.thekitchenmenu.data.repository.source.local.DomainModelConverter;
+import com.example.peter.thekitchenmenu.data.repository.source.local.PersistenceModelToDatabaseEntityConverter;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.parent.RecipeMetadataParentEntity;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentState;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataPersistenceDomainModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nonnull;
 
-public class RecipeMetadataConverter
+public class RecipeMetadataToDatabaseEntityConverter
         implements
-        DomainModelConverter<RecipeMetadataPersistenceModel, RecipeMetadataParentEntity> {
+        PersistenceModelToDatabaseEntityConverter<RecipeMetadataPersistenceDomainModel, RecipeMetadataParentEntity> {
 
     @Override
-    public RecipeMetadataPersistenceModel convertParentEntityToDomainModel(
+    public RecipeMetadataPersistenceDomainModel convertParentEntityToDomainModel(
             @Nonnull RecipeMetadataParentEntity entity) {
-        return new RecipeMetadataPersistenceModel.Builder().
+        return new RecipeMetadataPersistenceDomainModel.Builder().
                 setDataId(entity.getDataId()).
                 setDomainId(entity.getDomainId()).
                 setParentDomainId(entity.getParentDomainId()).
@@ -30,7 +30,7 @@ public class RecipeMetadataConverter
 
     @Override
     public RecipeMetadataParentEntity convertParentDomainModelToEntity(
-            @Nonnull RecipeMetadataPersistenceModel model) {
+            @Nonnull RecipeMetadataPersistenceDomainModel model) {
         return new RecipeMetadataParentEntity.Builder().
                 setDataId(model.getDataId()).
                 setDomainId(model.getDomainId()).
@@ -43,10 +43,10 @@ public class RecipeMetadataConverter
     }
 
     @Override
-    public List<RecipeMetadataPersistenceModel> convertParentEntitiesToDomainModels(
+    public List<RecipeMetadataPersistenceDomainModel> convertParentEntitiesToDomainModels(
             @Nonnull List<RecipeMetadataParentEntity> entities) {
 
-        List<RecipeMetadataPersistenceModel> models = new ArrayList<>();
+        List<RecipeMetadataPersistenceDomainModel> models = new ArrayList<>();
         entities.forEach(entity -> models.add(convertParentEntityToDomainModel(entity)));
         return models;
     }

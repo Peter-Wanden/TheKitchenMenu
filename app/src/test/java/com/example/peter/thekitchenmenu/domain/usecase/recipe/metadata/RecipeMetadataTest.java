@@ -13,7 +13,7 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentName;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentState;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.FailReason;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataPersistenceDomainModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataResponse;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
@@ -31,7 +31,6 @@ import java.util.List;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -47,7 +46,7 @@ public class RecipeMetadataTest {
     @Mock
     RepositoryRecipeMetadata repoMock;
     @Captor
-    ArgumentCaptor<GetDomainModelCallback<RecipeMetadataPersistenceModel>> repoMetadataCallback;
+    ArgumentCaptor<GetDomainModelCallback<RecipeMetadataPersistenceDomainModel>> repoMetadataCallback;
     @Mock
     UniqueIdProvider idProviderMock;
     @Mock
@@ -89,7 +88,7 @@ public class RecipeMetadataTest {
         // A default request always returns the current state of the use case.
         // As this use case is currently 'empty' the default request should return the use case's
         // default values.
-        RecipeMetadataPersistenceModel modelUnderTest = TestDataRecipeMetadata.
+        RecipeMetadataPersistenceDomainModel modelUnderTest = TestDataRecipeMetadata.
                 getDefaultState();
 
         // arrange default request
@@ -102,7 +101,7 @@ public class RecipeMetadataTest {
         UseCaseMetadataModel metadata = onErrorResponse.getMetadata();
         RecipeMetadataResponse.DomainModel model = onErrorResponse.getDomainModel();
 
-        // assert no id's or times generated
+        // assert no id's or times generated and no persistent access
         verifyNoMoreInteractions(idProviderMock);
         verifyNoMoreInteractions(timeProviderMock);
         verifyNoMoreInteractions(repoMock);
@@ -135,11 +134,11 @@ public class RecipeMetadataTest {
     }
 
     @Test
-    public void newRequest_domainIdSent_stateINVALID_DEFAULT() {
+    public void newRequest_sentToDefaultUseCase_stateINVALID_DEFAULT() {
         // Arrange
         // This test is large as it tests the initial request on which most other tests
         // depend, therefore an assertion is performed on every data element.
-        RecipeMetadataPersistenceModel modelUnderTest = TestDataRecipeMetadata.
+        RecipeMetadataPersistenceDomainModel modelUnderTest = TestDataRecipeMetadata.
                 getInvalidDefault();
 
         RecipeMetadataRequest initialRequest = new RecipeMetadataRequest.Builder().
@@ -150,10 +149,12 @@ public class RecipeMetadataTest {
         // Act
         SUT.execute(initialRequest, new MetadataCallbackClient());
 
+        // Assert
+        // assert correct id requested from persistence
         verify(repoMock).getActiveByDomainId(eq(modelUnderTest.getDomainId()),
                 repoMetadataCallback.capture()
         );
-        repoMetadataCallback.getValue().onDomainModelUnavailable();
+        repoMetadataCallback.getValue().onPersistenceModelUnavailable();
 
         // verify default values not saved
         verifyNoMoreInteractions(timeProviderMock);
@@ -181,7 +182,7 @@ public class RecipeMetadataTest {
         );
 
         // assert metadata state
-        // assert overall component state
+        // assert overall recipe component state
         ComponentState expectedRecipeState = modelUnderTest.getComponentState();
         ComponentState actualRecipeState = metadata.getComponentState();
         assertEquals(
@@ -242,15 +243,15 @@ public class RecipeMetadataTest {
 
     // region componentStatesTests
     @Test
-    public void newRequest_missingComponent_failReasonMISSING_REQUIRED_COMPONENTS() {
+    public void newRequest_missingComponent_failReasonMISSING_REQUIRED_COMPONENTSStateINVALID_CHANGED() {
         // Arrange
-        RecipeMetadataPersistenceModel modelUnderTest = TestDataRecipeMetadata.
+        RecipeMetadataPersistenceDomainModel modelUnderTest = TestDataRecipeMetadata.
                 getInvalidMissingComponents();
 
         // arrange / act initial request
-        newRequest_domainIdSent_stateINVALID_DEFAULT();
+        newRequest_sentToDefaultUseCase_stateINVALID_DEFAULT();
 
-        // Arrange MISSING_COMPONENT state (identity missing)
+        // Arrange MISSING_REQUIRED_COMPONENTS state (identity missing)
         RecipeMetadataRequest.DomainModel model = new RecipeMetadataRequest.DomainModel.Builder().
                 basedOnResponseModel(onErrorResponse.getDomainModel()).
                 setComponentStates(modelUnderTest.getComponentStates()).
@@ -261,6 +262,7 @@ public class RecipeMetadataTest {
                 setDomainModel(model).
                 build();
 
+        // arrange id and time for save
         when(idProviderMock.getUId()).thenReturn(modelUnderTest.getDataId());
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(modelUnderTest.getCreateDate());
 
@@ -292,9 +294,9 @@ public class RecipeMetadataTest {
     @Test
     public void newRequest_invalidChangedComponent_stateINVALID_CHANGED() {
         // Arrange
-        RecipeMetadataPersistenceModel modelUnderTest = TestDataRecipeMetadata.getInvalidChanged();
+        RecipeMetadataPersistenceDomainModel modelUnderTest = TestDataRecipeMetadata.getInvalidChanged();
 
-        newRequest_domainIdSent_stateINVALID_DEFAULT();
+        newRequest_sentToDefaultUseCase_stateINVALID_DEFAULT();
 
         RecipeMetadataRequest.DomainModel model = new RecipeMetadataRequest.DomainModel.Builder().
                 basedOnResponseModel(onErrorResponse.getDomainModel()).
@@ -335,12 +337,12 @@ public class RecipeMetadataTest {
     }
 
     @Test
-    public void newRequest_validUnchangedComponent_stateVALID_CHANGED() {
+    public void newRequest_validChangedComponent_stateVALID_CHANGED() {
         // Arrange
-        RecipeMetadataPersistenceModel modelUnderTest = TestDataRecipeMetadata.
+        RecipeMetadataPersistenceDomainModel modelUnderTest = TestDataRecipeMetadata.
                 getValidChanged();
 
-        newRequest_domainIdSent_stateINVALID_DEFAULT();
+        newRequest_sentToDefaultUseCase_stateINVALID_DEFAULT();
 
         RecipeMetadataRequest.DomainModel model = new RecipeMetadataRequest.DomainModel.Builder().
                 basedOnResponseModel(onErrorResponse.getDomainModel()).
@@ -383,10 +385,10 @@ public class RecipeMetadataTest {
     @Test
     public void existingRequest_oldStateINVALID_CHANGED_newStateVALID_CHANGED() {
         // Arrange
-        RecipeMetadataPersistenceModel invalidModelToLoad = TestDataRecipeMetadata.
+        RecipeMetadataPersistenceDomainModel invalidModelToLoad = TestDataRecipeMetadata.
                 getInvalidUnchanged();
 
-        RecipeMetadataPersistenceModel validChangedModel = TestDataRecipeMetadata.getValidChanged();
+        RecipeMetadataPersistenceDomainModel validChangedModel = TestDataRecipeMetadata.getValidChanged();
 
         // Assert
         RecipeMetadataRequest requestGetInvalidModel = new RecipeMetadataRequest.Builder().
@@ -401,7 +403,7 @@ public class RecipeMetadataTest {
         verify(repoMock).getActiveByDomainId(eq(invalidModelToLoad.getDomainId()),
                 repoMetadataCallback.capture()
         );
-        repoMetadataCallback.getValue().onDomainModelLoaded(invalidModelToLoad);
+        repoMetadataCallback.getValue().onPersistenceModelLoaded(invalidModelToLoad);
 
         // now update with VALID_CHANGED states
         RecipeMetadataRequest validRequest = new RecipeMetadataRequest.Builder().
@@ -441,39 +443,56 @@ public class RecipeMetadataTest {
     }
 
     @Test
-    public void validChanged_stateVALID_CHANGED_failReasonNONE() {
+    public void existingRequest_validChangedStateLoaded_defaultRequestStateVALID_UNCHANGED() {
         // Arrange
-        String recipeId = TestDataRecipeMetadata.NEW_RECIPE_DOMAIN_ID;
-//        givenDomainIdAsInitialRequestReturnDataUnavailable(recipeId);
+        RecipeMetadataPersistenceDomainModel validChangedModel = TestDataRecipeMetadata.getValidChanged();
 
-        // Arrange VALID_CHANGED / CommonFailReason.NONE state
+        RecipeMetadataPersistenceDomainModel validUnchangedModel = TestDataRecipeMetadata.
+                getInvalidUnchanged();
 
-        RecipeMetadataRequest.DomainModel model = new RecipeMetadataRequest.DomainModel.Builder().
+        RecipeMetadataRequest initialLoadRequest = new RecipeMetadataRequest.Builder().
                 getDefault().
-                setComponentStates(expectedComponentStates).
-                build();
-
-        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
-                basedOnResponse(onErrorResponse).
-                setDomainModel(model).
+                setDataId(validChangedModel.getDataId()).
                 build();
 
         // Act
-        handler.executeAsync(SUT, request, new MetadataCallbackClient());
+        SUT.execute(initialLoadRequest, new MetadataCallbackClient());
 
         // Assert
+        // assert load
+        verify(repoMock).getByDataId(eq(validChangedModel.getDataId()),
+                repoMetadataCallback.capture());
+        repoMetadataCallback.getValue().onPersistenceModelLoaded(validChangedModel);
+
+        // Arrange
+        // arrange default request, returns current state, however in the metadata use case if state
+        // has not changed, state will change to UNCHANGED
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().getDefault().build();
+
+        // Arrange id and times for save
+        when(idProviderMock.getUId()).thenReturn(validChangedModel.getDataId());
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(validUnchangedModel.getLastUpdate());
+
+        // Act
+        SUT.execute(request, new MetadataCallbackClient());
+
+        // Assert
+        // assert save
+        verify(repoMock).save(validUnchangedModel);
+
+        // assert metadata
         UseCaseMetadataModel metadata = onSuccessResponse.getMetadata();
 
-        ComponentState expectedComponentState = ComponentState.VALID_CHANGED;
+        ComponentState expectedComponentState = validChangedModel.getComponentState();
         ComponentState actualComponentState = metadata.getComponentState();
         assertEquals(
                 expectedComponentState,
                 actualComponentState
         );
 
-        FailReasons[] expectedFailReasons = new FailReasons[]{CommonFailReason.NONE};
-        FailReasons[] actualFailReasons = metadata.getFailReasons().toArray(new FailReasons[0]);
-        assertArrayEquals(
+        List<FailReasons> expectedFailReasons = validUnchangedModel.getFailReasons();
+        List<FailReasons> actualFailReasons = metadata.getFailReasons();
+        assertEquals(
                 expectedFailReasons,
                 actualFailReasons
         );
@@ -565,7 +584,7 @@ public class RecipeMetadataTest {
     @Test
     public void invalidUnchanged_persistenceCalled_stateINVALID_UNCHANGED() {
         // Arrange
-        RecipeMetadataPersistenceModel modelUnderTest = TestDataRecipeMetadata.getInvalidUnchanged();
+        RecipeMetadataPersistenceDomainModel modelUnderTest = TestDataRecipeMetadata.getInvalidUnchanged();
         String recipeId = modelUnderTest.getDomainId();
 
         RecipeMetadataRequest r = new RecipeMetadataRequest.Builder().
@@ -577,7 +596,7 @@ public class RecipeMetadataTest {
 
         // Assert
         verify(repoMock).getActiveByDomainId(eq(recipeId), repoMetadataCallback.capture());
-        repoMetadataCallback.getValue().onDomainModelLoaded(modelUnderTest);
+        repoMetadataCallback.getValue().onPersistenceModelLoaded(modelUnderTest);
 
         UseCaseMetadataModel metadata = onErrorResponse.getMetadata();
 
@@ -599,7 +618,7 @@ public class RecipeMetadataTest {
     @Test
     public void invalidChanged_persistenceCalled_stateINVALID_CHANGED() {
         // Arrange
-        RecipeMetadataPersistenceModel modelUnderTest = TestDataRecipeMetadata.getInvalidChanged();
+        RecipeMetadataPersistenceDomainModel modelUnderTest = TestDataRecipeMetadata.getInvalidChanged();
         String recipeId = modelUnderTest.getDomainId();
 
         RecipeMetadataRequest r = new RecipeMetadataRequest.Builder().
@@ -611,7 +630,7 @@ public class RecipeMetadataTest {
         );
         // Assert
         verify(repoMock).getActiveByDomainId(eq(recipeId), repoMetadataCallback.capture());
-        repoMetadataCallback.getValue().onDomainModelLoaded(modelUnderTest);
+        repoMetadataCallback.getValue().onPersistenceModelLoaded(modelUnderTest);
 
         UseCaseMetadataModel metadata = onErrorResponse.getMetadata();
 
@@ -633,7 +652,7 @@ public class RecipeMetadataTest {
     @Test
     public void validUnchanged_persistenceCalled_stateVALID_UNCHANGED() {
         // Arrange
-        RecipeMetadataPersistenceModel modelUnderTest = TestDataRecipeMetadata.getValidUnchanged();
+        RecipeMetadataPersistenceDomainModel modelUnderTest = TestDataRecipeMetadata.getValidUnchanged();
         String recipeId = modelUnderTest.getDomainId();
 
         RecipeMetadataRequest r = new RecipeMetadataRequest.Builder().
@@ -645,7 +664,7 @@ public class RecipeMetadataTest {
 
         // Assert
         verify(repoMock).getActiveByDomainId(eq(recipeId), repoMetadataCallback.capture());
-        repoMetadataCallback.getValue().onDomainModelLoaded(modelUnderTest);
+        repoMetadataCallback.getValue().onPersistenceModelLoaded(modelUnderTest);
 
         UseCaseMetadataModel metadata = onSuccessResponse.getMetadata();
 
@@ -694,7 +713,7 @@ public class RecipeMetadataTest {
     @Test
     public void validChanged_persistenceCalled_stateVALID_CHANGED() {
         // Arrange
-        RecipeMetadataPersistenceModel modelUnderTest = TestDataRecipeMetadata.getValidChanged();
+        RecipeMetadataPersistenceDomainModel modelUnderTest = TestDataRecipeMetadata.getValidChanged();
         String recipeId = modelUnderTest.getDomainId();
 
         RecipeMetadataRequest r = new RecipeMetadataRequest.Builder().
@@ -706,7 +725,7 @@ public class RecipeMetadataTest {
         );
         // Assert
         verify(repoMock).getActiveByDomainId(eq(recipeId), repoMetadataCallback.capture());
-        repoMetadataCallback.getValue().onDomainModelLoaded(modelUnderTest);
+        repoMetadataCallback.getValue().onPersistenceModelLoaded(modelUnderTest);
 
         UseCaseMetadataModel metadata = onSuccessResponse.getMetadata();
 
@@ -728,7 +747,7 @@ public class RecipeMetadataTest {
     @Test
     public void dataChanged_persistenceModelSaved() {
         // Arrange - first transaction, loads previous state
-        RecipeMetadataPersistenceModel modelUnderTestOne = TestDataRecipeMetadata.getValidChanged();
+        RecipeMetadataPersistenceDomainModel modelUnderTestOne = TestDataRecipeMetadata.getValidChanged();
         String recipeId = modelUnderTestOne.getDomainId();
 
         RecipeMetadataRequest initialiseRequest = new RecipeMetadataRequest.Builder().
@@ -741,7 +760,7 @@ public class RecipeMetadataTest {
 
         // Assert
         verify(repoMock).getActiveByDomainId(eq(recipeId), repoMetadataCallback.capture());
-        repoMetadataCallback.getValue().onDomainModelLoaded(modelUnderTestOne);
+        repoMetadataCallback.getValue().onPersistenceModelLoaded(modelUnderTestOne);
 
         UseCaseMetadataModel metadata = onErrorResponse.getMetadata();
 
@@ -753,7 +772,7 @@ public class RecipeMetadataTest {
         );
 
         // Arrange - second transaction
-        RecipeMetadataPersistenceModel modelUnderTestTwo = TestDataRecipeMetadata.getValidChanged();
+        RecipeMetadataPersistenceDomainModel modelUnderTestTwo = TestDataRecipeMetadata.getValidChanged();
 
         RecipeMetadataRequest requestTwo = new RecipeMetadataRequest.Builder().
                 basedOnResponse(onErrorResponse).
@@ -778,7 +797,7 @@ public class RecipeMetadataTest {
         verify(repoMock).save(eq(modelUnderTestTwo));
 
         // Arrange - third transaction
-        RecipeMetadataPersistenceModel testModelThree = TestDataRecipeMetadata.getValidChanged();
+        RecipeMetadataPersistenceDomainModel testModelThree = TestDataRecipeMetadata.getValidChanged();
 
         RecipeMetadataRequest requestThree = new RecipeMetadataRequest.Builder().
                 basedOnResponse(onErrorResponse).

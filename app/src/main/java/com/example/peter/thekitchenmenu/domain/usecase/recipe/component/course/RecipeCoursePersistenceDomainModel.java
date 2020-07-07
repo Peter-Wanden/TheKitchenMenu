@@ -1,6 +1,6 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course;
 
-import com.example.peter.thekitchenmenu.domain.model.BaseDomainPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.model.BasePersistenceDomainModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse.Course;
 
 import java.util.ArrayList;
@@ -8,14 +8,14 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-public final class RecipeCoursePersistenceModel
+public final class RecipeCoursePersistenceDomainModel
         extends
-        BaseDomainPersistenceModel {
+        BasePersistenceDomainModel {
 
     @Nonnull
     private List<Course> courses;
 
-    private RecipeCoursePersistenceModel(){
+    private RecipeCoursePersistenceDomainModel(){
         courses = new ArrayList<>();
     }
 
@@ -27,10 +27,10 @@ public final class RecipeCoursePersistenceModel
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof RecipeCoursePersistenceModel)) return false;
+        if (!(o instanceof RecipeCoursePersistenceDomainModel)) return false;
         if (!super.equals(o)) return false;
 
-        RecipeCoursePersistenceModel that = (RecipeCoursePersistenceModel) o;
+        RecipeCoursePersistenceDomainModel that = (RecipeCoursePersistenceDomainModel) o;
 
         return courses.equals(that.courses);
     }
@@ -56,34 +56,34 @@ public final class RecipeCoursePersistenceModel
 
     public static class Builder
             extends
-            PersistenceModelBuilder<Builder, RecipeCoursePersistenceModel> {
+            PersistenceModelBuilder<Builder, RecipeCoursePersistenceDomainModel> {
 
         public Builder() {
-            domainModel = new RecipeCoursePersistenceModel();
+            persistenceModel = new RecipeCoursePersistenceDomainModel();
         }
 
         @Override
         public Builder getDefault() {
-            domainModel.dataId = "";
-            domainModel.domainId = "";
-            domainModel.courses = new ArrayList<>();
-            domainModel.createDate = 0L;
-            domainModel.lastUpdate = 0L;
+            persistenceModel.dataId = "";
+            persistenceModel.domainId = "";
+            persistenceModel.courses = new ArrayList<>();
+            persistenceModel.createDate = 0L;
+            persistenceModel.lastUpdate = 0L;
             return self();
         }
 
         @Override
-        public Builder basedOnModel(RecipeCoursePersistenceModel persistenceModel) {
-            domainModel.dataId = persistenceModel.getDataId();
-            domainModel.domainId = persistenceModel.getDomainId();
-            domainModel.courses = persistenceModel.getCourses();
-            domainModel.createDate = persistenceModel.getCreateDate();
-            domainModel.lastUpdate = persistenceModel.getLastUpdate();
+        public Builder basedOnModel(RecipeCoursePersistenceDomainModel persistenceModel) {
+            this.persistenceModel.dataId = persistenceModel.getDataId();
+            this.persistenceModel.domainId = persistenceModel.getDomainId();
+            this.persistenceModel.courses = persistenceModel.getCourses();
+            this.persistenceModel.createDate = persistenceModel.getCreateDate();
+            this.persistenceModel.lastUpdate = persistenceModel.getLastUpdate();
             return self();
         }
 
         public Builder setCourses(List<Course> items) {
-            domainModel.courses = items;
+            persistenceModel.courses = items;
             return self();
         }
     }

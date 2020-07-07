@@ -10,13 +10,13 @@ import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailRe
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasure;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants;
-import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientPersistenceDomainModel;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class ConversionFactorStatus extends UseCaseBase
-        implements DomainDataAccess.GetDomainModelCallback<IngredientPersistenceModel> {
+        implements DomainDataAccess.GetDomainModelCallback<IngredientPersistenceDomainModel> {
 
     private static final String TAG = "tkm-" + ConversionFactorStatus.class.getSimpleName() + ": ";
 
@@ -60,7 +60,7 @@ public class ConversionFactorStatus extends UseCaseBase
 
     private RepositoryIngredient repository;
     private IngredientEntity ingredientEntity;
-    private IngredientPersistenceModel persistenceModel;
+    private IngredientPersistenceDomainModel persistenceModel;
 
     public ConversionFactorStatus(RepositoryIngredient repository) {
         this.repository = repository;
@@ -98,13 +98,13 @@ public class ConversionFactorStatus extends UseCaseBase
     }
 
     @Override
-    public void onDomainModelLoaded(IngredientPersistenceModel model) {
+    public void onPersistenceModelLoaded(IngredientPersistenceDomainModel model) {
         persistenceModel = model;
         checkEditableStatus();
     }
 
     @Override
-    public void onDomainModelUnavailable() {
+    public void onPersistenceModelUnavailable() {
         returnDataNotAvailable();
     }
 

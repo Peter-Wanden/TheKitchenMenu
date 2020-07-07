@@ -3,18 +3,13 @@ package com.example.peter.thekitchenmenu.data.repository.source.local.ingredient
 import com.example.peter.thekitchenmenu.data.repository.ingredient.TestDataIngredient;
 import com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.datasource.IngredientLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.datasource.TestDataIngredientEntity;
-import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientPersistenceModel;
-
-import static org.junit.Assert.*;
+import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientPersistenceDomainModel;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import static org.junit.Assert.*;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 
@@ -46,7 +41,7 @@ public class IngredientLocalSaveAdapterTest {
     @Test
     public void save() {
         // Arrange
-        IngredientPersistenceModel modelUnderTest = TestDataIngredient.
+        IngredientPersistenceDomainModel modelUnderTest = TestDataIngredient.
                 getValidNewNameValidDescriptionValid();
         // Act
         SUT.save(modelUnderTest);

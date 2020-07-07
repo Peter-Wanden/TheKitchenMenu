@@ -9,7 +9,7 @@
 
         <variable
             name="favoriteRecipeModel"
-            type="com.example.peter.thekitchenmenu.data.model.FavoriteRecipeModel" />
+            type="com.example.peter.thekitchenmenu.data.domainModel.FavoriteRecipeModel" />
 
         <variable
             name="listener"

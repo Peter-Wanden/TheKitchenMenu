@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.data.repository.recipe;
 
 import com.example.peter.thekitchenmenu.data.repository.Repository;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortionsPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortionsPersistenceDomainModel;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -10,7 +10,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 public class RepositoryRecipePortions
-        extends Repository<RecipePortionsPersistenceModel>
+        extends Repository<RecipePortionsPersistenceDomainModel>
         implements DomainDataAccessRecipePortions {
 
     public static RepositoryRecipePortions INSTANCE;
@@ -33,9 +33,9 @@ public class RepositoryRecipePortions
     @Override
     public void getAllByDomainId(
             @Nonnull String domainId,
-            @Nonnull GetAllDomainModelsCallback<RecipePortionsPersistenceModel> callback) {
+            @Nonnull GetAllDomainModelsCallback<RecipePortionsPersistenceDomainModel> callback) {
 
-        List<RecipePortionsPersistenceModel> models = getModelsFromCache(domainId);
+        List<RecipePortionsPersistenceDomainModel> models = getModelsFromCache(domainId);
 
         if (!models.isEmpty()) {
             callback.onAllDomainModelsLoaded(models);
@@ -43,13 +43,13 @@ public class RepositoryRecipePortions
         }
         ((DomainDataAccessRecipePortions) localDomainDataAccess).getAllByDomainId(
                 domainId,
-                new GetAllDomainModelsCallback<RecipePortionsPersistenceModel>() {
+                new GetAllDomainModelsCallback<RecipePortionsPersistenceDomainModel>() {
                     @Override
-                    public void onAllDomainModelsLoaded(List<RecipePortionsPersistenceModel> models) {
+                    public void onAllDomainModelsLoaded(List<RecipePortionsPersistenceDomainModel> models) {
                         if (cache == null) {
                             cache = new LinkedHashMap<>();
                         }
-                        for (RecipePortionsPersistenceModel m : models) {
+                        for (RecipePortionsPersistenceDomainModel m : models) {
                             cache.put(m.getDataId(), m);
                         }
                         callback.onAllDomainModelsLoaded(models);
@@ -59,14 +59,14 @@ public class RepositoryRecipePortions
                     public void onDomainModelsUnavailable() {
                         ((DomainDataAccessRecipePortions)remoteDomainDataAccess).getAllByDomainId(
                                 domainId,
-                                new GetAllDomainModelsCallback<RecipePortionsPersistenceModel>() {
+                                new GetAllDomainModelsCallback<RecipePortionsPersistenceDomainModel>() {
                                     @Override
                                     public void onAllDomainModelsLoaded(
-                                            List<RecipePortionsPersistenceModel> models) {
+                                            List<RecipePortionsPersistenceDomainModel> models) {
                                         if (cache == null) {
                                             cache = new LinkedHashMap<>();
                                         }
-                                        for (RecipePortionsPersistenceModel m : models) {
+                                        for (RecipePortionsPersistenceDomainModel m : models) {
                                             cache.put(m.getDataId(), m);
                                         }
                                         callback.onAllDomainModelsLoaded(models);
@@ -83,13 +83,13 @@ public class RepositoryRecipePortions
         );
     }
 
-    private List<RecipePortionsPersistenceModel> getModelsFromCache(String domainId) {
-        List<RecipePortionsPersistenceModel> models = new ArrayList<>();
+    private List<RecipePortionsPersistenceDomainModel> getModelsFromCache(String domainId) {
+        List<RecipePortionsPersistenceDomainModel> models = new ArrayList<>();
 
         if (cache == null || cache.isEmpty())
             return null;
         else {
-            for (RecipePortionsPersistenceModel model : cache.values()) {
+            for (RecipePortionsPersistenceDomainModel model : cache.values()) {
                 if (domainId.equals(model.getDomainId())) {
                     models.add(model);
                 }

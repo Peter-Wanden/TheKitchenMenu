@@ -3,16 +3,16 @@ package com.example.peter.thekitchenmenu.data.repository.recipe;
 import com.example.peter.thekitchenmenu.data.repository.Repository;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.RepositoryRecipeMetadataLocal;
 import com.example.peter.thekitchenmenu.data.repository.source.remote.recipe.RepositoryRecipeMetadataRemote;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataPersistenceDomainModel;
 
 import javax.annotation.Nonnull;
 
 
 public class RepositoryRecipeMetadata
         extends
-        Repository<RecipeMetadataPersistenceModel> {
+        Repository<RecipeMetadataPersistenceDomainModel> {
 
-    protected static Repository<RecipeMetadataPersistenceModel> INSTANCE = null;
+    protected static Repository<RecipeMetadataPersistenceDomainModel> INSTANCE = null;
 
     private RepositoryRecipeMetadata(@Nonnull RepositoryRecipeMetadataRemote remoteDataAccess,
                                      @Nonnull RepositoryRecipeMetadataLocal localDataAccess) {

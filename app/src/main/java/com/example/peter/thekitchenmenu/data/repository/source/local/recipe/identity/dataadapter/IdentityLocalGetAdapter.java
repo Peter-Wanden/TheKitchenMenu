@@ -5,7 +5,7 @@ import com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter
 import com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter.PrimitiveDataSource.GetPrimitiveCallback;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.datasource.RecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.datasource.RecipeIdentityLocalDataSource;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityPersistenceDomainModel;
 
 import java.util.List;
 
@@ -20,27 +20,27 @@ public class IdentityLocalGetAdapter {
     @Nonnull
     private final RecipeIdentityLocalDataSource dataSource;
     @Nonnull
-    private final IdentityModelConverterParent converter;
+    private final IdentityModelToDatabaseEntityConverterParent converter;
 
     public IdentityLocalGetAdapter(@Nonnull RecipeIdentityLocalDataSource dataSource) {
         this.dataSource = dataSource;
-        converter = new IdentityModelConverterParent();
+        converter = new IdentityModelToDatabaseEntityConverterParent();
     }
 
     public void getByDataId(
             @Nonnull String dataId,
-            @Nonnull GetDomainModelCallback<RecipeIdentityPersistenceModel> callback) {
+            @Nonnull GetDomainModelCallback<RecipeIdentityPersistenceDomainModel> callback) {
         dataSource.getByDataId(
                 dataId,
                 new GetPrimitiveCallback<RecipeIdentityEntity>() {
                     @Override
                     public void onEntityLoaded(RecipeIdentityEntity entity) {
-                        callback.onDomainModelLoaded(converter.convertParentEntityToDomainModel(entity));
+                        callback.onPersistenceModelLoaded(converter.convertParentEntityToDomainModel(entity));
                     }
 
                     @Override
                     public void onDataUnavailable() {
-                        callback.onDomainModelUnavailable();
+                        callback.onPersistenceModelUnavailable();
                     }
                 }
         );
@@ -48,7 +48,7 @@ public class IdentityLocalGetAdapter {
 
     public void getAllByDomainId(
             @Nonnull String domainId,
-            @Nonnull GetAllDomainModelsCallback<RecipeIdentityPersistenceModel> callback) {
+            @Nonnull GetAllDomainModelsCallback<RecipeIdentityPersistenceDomainModel> callback) {
         dataSource.getAllByDomainId(
                 domainId,
                 new GetAllPrimitiveCallback<RecipeIdentityEntity>() {
@@ -67,31 +67,31 @@ public class IdentityLocalGetAdapter {
 
     public void getActiveByDomainId(
             @Nonnull String domainId,
-            @Nonnull GetDomainModelCallback<RecipeIdentityPersistenceModel> callback) {
+            @Nonnull GetDomainModelCallback<RecipeIdentityPersistenceDomainModel> callback) {
         getAllByDomainId(
                 domainId,
-                new GetAllDomainModelsCallback<RecipeIdentityPersistenceModel>() {
+                new GetAllDomainModelsCallback<RecipeIdentityPersistenceDomainModel>() {
                     @Override
-                    public void onAllDomainModelsLoaded(List<RecipeIdentityPersistenceModel> models) {
-                        callback.onDomainModelLoaded(filterForActiveModel(models));
+                    public void onAllDomainModelsLoaded(List<RecipeIdentityPersistenceDomainModel> models) {
+                        callback.onPersistenceModelLoaded(filterForActiveModel(models));
                     }
 
                     @Override
                     public void onDomainModelsUnavailable() {
-                        callback.onDomainModelUnavailable();
+                        callback.onPersistenceModelUnavailable();
                     }
                 }
         );
     }
 
-    private RecipeIdentityPersistenceModel filterForActiveModel(
-            List<RecipeIdentityPersistenceModel> models) {
+    private RecipeIdentityPersistenceDomainModel filterForActiveModel(
+            List<RecipeIdentityPersistenceDomainModel> models) {
         long lastUpdate = 0L;
-        RecipeIdentityPersistenceModel activeModel = new RecipeIdentityPersistenceModel.Builder().
+        RecipeIdentityPersistenceDomainModel activeModel = new RecipeIdentityPersistenceDomainModel.Builder().
                 getDefault().
                 build();
 
-        for (RecipeIdentityPersistenceModel model : models) {
+        for (RecipeIdentityPersistenceDomainModel model : models) {
             if (model.getLastUpdate() > lastUpdate) {
                 activeModel = model;
             }
@@ -100,7 +100,7 @@ public class IdentityLocalGetAdapter {
     }
 
     public void getAll(
-            @Nonnull GetAllDomainModelsCallback<RecipeIdentityPersistenceModel> callback) {
+            @Nonnull GetAllDomainModelsCallback<RecipeIdentityPersistenceDomainModel> callback) {
         dataSource.getAll(
                 new GetAllPrimitiveCallback<RecipeIdentityEntity>() {
                     @Override

@@ -4,9 +4,9 @@ import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public abstract class BaseDomainPersistenceModel
-        extends BaseDomainModel
-        implements DomainPersistenceModel {
+public abstract class BasePersistenceDomainModel
+        implements
+        DomainModel.PersistenceDomainModel {
 
     protected String dataId;
     protected String domainId;
@@ -36,8 +36,8 @@ public abstract class BaseDomainPersistenceModel
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof BaseDomainPersistenceModel)) return false;
-        BaseDomainPersistenceModel that = (BaseDomainPersistenceModel) o;
+        if (!(o instanceof BasePersistenceDomainModel)) return false;
+        BasePersistenceDomainModel that = (BasePersistenceDomainModel) o;
         return createDate == that.createDate &&
                 lastUpdate == that.lastUpdate &&
                 Objects.equals(dataId, that.dataId) &&
@@ -61,30 +61,42 @@ public abstract class BaseDomainPersistenceModel
     }
 
     public abstract static class PersistenceModelBuilder<
-            SELF extends PersistenceModelBuilder<SELF, DOMAIN_MODEL>,
-                    DOMAIN_MODEL extends BaseDomainPersistenceModel>
-            extends DomainModelBuilder<SELF, DOMAIN_MODEL> {
+            SELF extends PersistenceModelBuilder<SELF, PERSISTENCE_MODEL>,
+            PERSISTENCE_MODEL extends BasePersistenceDomainModel> {
 
-        public abstract SELF basedOnModel(DOMAIN_MODEL model);
+        protected PERSISTENCE_MODEL persistenceModel;
+
+        public abstract SELF basedOnModel(PERSISTENCE_MODEL model);
+
+        public abstract SELF getDefault();
 
         public SELF setDataId(String dataId) {
-            domainModel.dataId = dataId;
+            persistenceModel.dataId = dataId;
             return self();
         }
 
         public SELF setDomainId(String domainId) {
-            domainModel.domainId = domainId;
+            persistenceModel.domainId = domainId;
             return self();
         }
 
         public SELF setCreateDate(long createDate) {
-            domainModel.createDate = createDate;
+            persistenceModel.createDate = createDate;
             return self();
         }
 
         public SELF setLastUpdate(long lastUpdate) {
-            domainModel.lastUpdate = lastUpdate;
+            persistenceModel.lastUpdate = lastUpdate;
             return self();
+        }
+
+        public PERSISTENCE_MODEL build() {
+            return persistenceModel;
+        }
+
+        protected SELF self() {
+            // noinspection unchecked
+            return (SELF) this;
         }
     }
 }

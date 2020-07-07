@@ -4,7 +4,7 @@ import com.example.peter.thekitchenmenu.data.repository.recipe.duration.TestData
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.datasource.RecipeDurationEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.datasource.RecipeDurationLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.datasource.TestDataRecipeDurationEntity;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDurationPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDurationPersistenceDomainModel;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -41,7 +41,7 @@ public class DurationLocalSaveAdapterTest {
     @Test
     public void save() {
         // Arrange
-        RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
+        RecipeDurationPersistenceDomainModel modelUnderTest = TestDataRecipeDuration.
                 getExistingValidPrepTimeValidCookTime();
         RecipeDurationEntity expectedSaved = TestDataRecipeDurationEntity.
                 getValidExistingComplete();

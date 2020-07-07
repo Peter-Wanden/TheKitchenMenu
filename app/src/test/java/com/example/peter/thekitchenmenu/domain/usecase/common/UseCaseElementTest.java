@@ -4,10 +4,10 @@ import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.Repository;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.model.BaseDomainModel;
-import com.example.peter.thekitchenmenu.domain.model.BaseDomainPersistenceModel;
-import com.example.peter.thekitchenmenu.domain.model.UseCaseDomainModel;
+import com.example.peter.thekitchenmenu.domain.model.BasePersistenceDomainModel;
+import com.example.peter.thekitchenmenu.domain.model.DomainModelBuilder;
 import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataId;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataPersistenceDomainModel;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -34,7 +34,7 @@ public class UseCaseElementTest {
     @Mock
     RepositoryRecipeMetadata repoMock;
     @Captor
-    ArgumentCaptor<DomainDataAccess<RecipeMetadataPersistenceModel>> repoCallbackCaptor;
+    ArgumentCaptor<DomainDataAccess<RecipeMetadataPersistenceDomainModel>> repoCallbackCaptor;
     // endregion helper fields ---------------------------------------------------------------------
 
     private UseCaseElementInheritor SUT;
@@ -222,14 +222,14 @@ public class UseCaseElementTest {
     public static class UseCaseElementInheritor
             extends
             UseCaseElement<
-                    Repository<TestPersistenceModel>,
-                    TestPersistenceModel,
+                    Repository<TestPersistenceDomainModel>,
+                    TestPersistenceDomainModel,
                     UseCaseElementInheritor.DomainModel>{
 
         private static final String TAG = "tkm-" + UseCaseElementInheritor.class.
                 getSimpleName() + ": ";
 
-        static final class DomainModel implements UseCaseDomainModel {
+        static final class DomainModel implements com.example.peter.thekitchenmenu.domain.model.DomainModel {
             String comparisonString;
         }
 
@@ -242,13 +242,13 @@ public class UseCaseElementTest {
         }
 
         @Override
-        protected void loadDomainModelByDataId() {
+        protected void getPersistenceModelByDataId() {
             isLoadDomainModelByDataId = true;
             System.out.println(TAG + "loading data by dataId");
         }
 
         @Override
-        protected void loadDomainModelByDomainId() {
+        protected void getPersistenceModelByDomainId() {
             isLoadDomainModelByDomainId = true;
             System.out.println(TAG + "loading data by domain Id");
         }
@@ -261,38 +261,38 @@ public class UseCaseElementTest {
 
 
         @Override
-        protected DomainModel createDomainModelFromDefaultValues() {
+        protected DomainModel createUseCaseModelFromDefaultValues() {
             return new DomainModel();
         }
 
         @Override
-        protected void processRequestDomainModel() {
+        protected void setupForRequestModelProcessing() {
             isProcessRequestDomainModel = true;
             System.out.println(TAG + "processing request domain model");
         }
 
         @Override
-        public void onDomainModelLoaded(TestPersistenceModel model) {
+        public void onPersistenceModelLoaded(TestPersistenceDomainModel model) {
 
         }
 
         @Override
-        public void onDomainModelUnavailable() {
+        public void onPersistenceModelUnavailable() {
 
         }
 
         @Override
-        protected DomainModel createDomainModelFromRequestModel() {
+        protected DomainModel createUseCaseModelFromRequestModel() {
             return new DomainModel();
         }
 
         @Override
-        protected DomainModel createDomainModelFromPersistenceModel(@Nonnull TestPersistenceModel persistenceModel) {
+        protected DomainModel createUseCaseModelFromPersistenceModel(@Nonnull TestPersistenceDomainModel persistenceModel) {
             return new DomainModel();
         }
 
         @Override
-        protected void initialiseUseCaseForDomainModelProcessing() {
+        protected void initialiseUseCase() {
 
         }
 
@@ -307,7 +307,7 @@ public class UseCaseElementTest {
         }
 
         @Override
-        protected void archiveExistingPersistenceModel(long currentTime) {
+        protected void archivePreviousState(long currentTime) {
 
         }
 
@@ -429,9 +429,9 @@ public class UseCaseElementTest {
         }
     }
 
-    private static class TestPersistenceModel
+    private static class TestPersistenceDomainModel
             extends
-            BaseDomainPersistenceModel {
+            BasePersistenceDomainModel {
     }
     // endregion helper classes --------------------------------------------------------------------
 }

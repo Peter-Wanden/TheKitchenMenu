@@ -1,15 +1,12 @@
 package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.dataadapter;
 
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
-import com.example.peter.thekitchenmenu.data.repository.recipe.course.TestDataRecipeCourse;
 import com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter.PrimitiveDataSource.GetAllPrimitiveCallback;
 import com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter.PrimitiveDataSource.GetPrimitiveCallback;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.courseitem.RecipeCourseEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.courseitem.RecipeCourseItemLocalDataSource;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.TestDataRecipeCourseEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.parent.RecipeCourseParentLocalDataSource;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse.Course;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCoursePersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCoursePersistenceDomainModel;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -18,7 +15,6 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -163,38 +159,38 @@ public class CourseLocalGetAdapterTest {
 
     // region helper classes -----------------------------------------------------------------------
     private static class DomainModelCallbackClient
-            implements DomainDataAccess.GetDomainModelCallback<RecipeCoursePersistenceModel> {
+            implements DomainDataAccess.GetDomainModelCallback<RecipeCoursePersistenceDomainModel> {
 
         private static final String TAG = CourseLocalGetAdapterTest.TAG +
                 DomainModelCallbackClient.class.getSimpleName() + ": ";
 
-        private RecipeCoursePersistenceModel model;
+        private RecipeCoursePersistenceDomainModel model;
         private boolean isModelUnavailable;
 
         @Override
-        public void onDomainModelLoaded(RecipeCoursePersistenceModel m) {
+        public void onPersistenceModelLoaded(RecipeCoursePersistenceDomainModel m) {
             System.out.println(TAG + m);
             model = m;
         }
 
         @Override
-        public void onDomainModelUnavailable() {
+        public void onPersistenceModelUnavailable() {
             isModelUnavailable = true;
             System.out.println(TAG + "isModelUnavailable=" + isModelUnavailable);
         }
     }
 
     private static class GetAllDomainModelsCallbackClient
-            implements DomainDataAccess.GetAllDomainModelsCallback<RecipeCoursePersistenceModel> {
+            implements DomainDataAccess.GetAllDomainModelsCallback<RecipeCoursePersistenceDomainModel> {
 
         private static final String TAG = CourseLocalGetAdapterTest.TAG +
                 GetAllDomainModelsCallbackClient.class.getSimpleName() + ": ";
 
-        private List<RecipeCoursePersistenceModel> models;
+        private List<RecipeCoursePersistenceDomainModel> models;
         private boolean isModelsUnavailable;
 
         @Override
-        public void onAllDomainModelsLoaded(List<RecipeCoursePersistenceModel> m) {
+        public void onAllDomainModelsLoaded(List<RecipeCoursePersistenceDomainModel> m) {
             System.out.println(TAG + m);
             models = m;
         }

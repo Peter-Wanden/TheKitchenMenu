@@ -3,7 +3,6 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duratio
 import android.annotation.SuppressLint;
 
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeDuration;
-import com.example.peter.thekitchenmenu.domain.model.UseCaseDomainModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseElement;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
@@ -18,14 +17,14 @@ public class RecipeDuration
         extends
         UseCaseElement<
                 RepositoryRecipeDuration,
-                RecipeDurationPersistenceModel,
+                RecipeDurationPersistenceDomainModel,
                 RecipeDuration.DomainModel> {
 
     private static final String TAG = "tkm-" + RecipeDuration.class.getSimpleName() + ": ";
 
     protected static final class DomainModel
             implements
-            UseCaseDomainModel {
+            com.example.peter.thekitchenmenu.domain.model.DomainModel.UseCaseDomainModel {
         private int prepTime;
         private int cookTime;
 
@@ -105,15 +104,15 @@ public class RecipeDuration
         this.idProvider = idProvider;
         this.timeProvider = timeProvider;
 
-        domainModel = createDomainModelFromDefaultValues();
+        useCaseModel = createUseCaseModelFromDefaultValues();
 
         MAX_PREP_TIME = maxPrepTime;
         MAX_COOK_TIME = maxCookTime;
     }
 
     @Override
-    protected DomainModel createDomainModelFromPersistenceModel(
-            @Nonnull RecipeDurationPersistenceModel persistenceModel) {
+    protected DomainModel createUseCaseModelFromPersistenceModel(
+            @Nonnull RecipeDurationPersistenceDomainModel persistenceModel) {
 
         return new DomainModel(
                 persistenceModel.getPrepTime(),
@@ -122,12 +121,12 @@ public class RecipeDuration
     }
 
     @Override
-    protected DomainModel createDomainModelFromDefaultValues() {
+    protected DomainModel createUseCaseModelFromDefaultValues() {
         return new DomainModel(0,0);
     }
 
     @Override
-    protected DomainModel createDomainModelFromRequestModel() {
+    protected DomainModel createUseCaseModelFromRequestModel() {
         RecipeDurationRequest.DomainModel requestModel = ((RecipeDurationRequest) getRequest()).
                 getDomainModel();
 
@@ -145,13 +144,13 @@ public class RecipeDuration
     }
 
     private void validatePrepTime() {
-        if (domainModel.prepTime > MAX_PREP_TIME) {
+        if (useCaseModel.prepTime > MAX_PREP_TIME) {
             failReasons.add(FailReason.INVALID_PREP_TIME);
         }
     }
 
     private void validateCookTime() {
-        if (domainModel.cookTime > MAX_COOK_TIME) {
+        if (useCaseModel.cookTime > MAX_COOK_TIME) {
             failReasons.add(FailReason.INVALID_COOK_TIME);
         }
     }
@@ -164,14 +163,14 @@ public class RecipeDuration
             long currentTime = timeProvider.getCurrentTimeInMills();
 
             if (persistenceModel != null) {
-                archiveExistingPersistenceModel(currentTime);
+                archivePreviousState(currentTime);
             }
 
-            persistenceModel = new RecipeDurationPersistenceModel.Builder().
+            persistenceModel = new RecipeDurationPersistenceDomainModel.Builder().
                     setDataId(useCaseDataId).
                     setDomainId(useCaseDomainId).
-                    setPrepTime(domainModel.prepTime).
-                    setCookTime(domainModel.cookTime).
+                    setPrepTime(useCaseModel.prepTime).
+                    setCookTime(useCaseModel.cookTime).
                     setCreateDate(currentTime).
                     setLastUpdate(currentTime).
                     build();
@@ -182,8 +181,8 @@ public class RecipeDuration
     }
 
     @Override
-    protected void archiveExistingPersistenceModel(long currentTime) {
-        RecipeDurationPersistenceModel model = new RecipeDurationPersistenceModel.Builder().
+    protected void archivePreviousState(long currentTime) {
+        RecipeDurationPersistenceDomainModel model = new RecipeDurationPersistenceDomainModel.Builder().
                 basedOnModel(persistenceModel).
                 setLastUpdate(currentTime).
                 build();
@@ -206,13 +205,13 @@ public class RecipeDuration
 
     private RecipeDurationResponse.DomainModel getResponseModel() {
         return new RecipeDurationResponse.DomainModel.Builder().
-                setPrepHours(getHours(domainModel.prepTime)).
-                setPrepMinutes(getMinutes(domainModel.prepTime)).
-                setTotalPrepTime(domainModel.prepTime).
-                setCookHours(getHours(domainModel.cookTime)).
-                setCookMinutes(getMinutes(domainModel.cookTime)).
-                setTotalCookTime(domainModel.cookTime).
-                setTotalTime(domainModel.prepTime + domainModel.cookTime).
+                setPrepHours(getHours(useCaseModel.prepTime)).
+                setPrepMinutes(getMinutes(useCaseModel.prepTime)).
+                setTotalPrepTime(useCaseModel.prepTime).
+                setCookHours(getHours(useCaseModel.cookTime)).
+                setCookMinutes(getMinutes(useCaseModel.cookTime)).
+                setTotalCookTime(useCaseModel.cookTime).
+                setTotalTime(useCaseModel.prepTime + useCaseModel.cookTime).
                 build();
     }
 

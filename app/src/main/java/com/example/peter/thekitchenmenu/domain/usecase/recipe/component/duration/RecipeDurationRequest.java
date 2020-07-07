@@ -1,6 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration;
 
 
+import com.example.peter.thekitchenmenu.domain.model.DomainModelBuilder;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataId;
 import com.example.peter.thekitchenmenu.domain.model.BaseDomainModel;
@@ -120,8 +121,8 @@ public final class RecipeDurationRequest
         public static class Builder
                 extends
                 DomainModelBuilder<
-                        Builder,
-                        DomainModel> {
+                                        Builder,
+                                        DomainModel> {
 
             public Builder() {
                 domainModel = new DomainModel();

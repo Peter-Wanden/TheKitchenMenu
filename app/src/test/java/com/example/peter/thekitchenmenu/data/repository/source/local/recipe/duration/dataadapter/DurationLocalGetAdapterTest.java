@@ -5,7 +5,7 @@ import com.example.peter.thekitchenmenu.data.repository.recipe.duration.TestData
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.datasource.RecipeDurationEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.datasource.RecipeDurationLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.datasource.TestDataRecipeDurationEntity;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDurationPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDurationPersistenceDomainModel;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -73,7 +73,7 @@ public class DurationLocalGetAdapterTest {
     @Test
     public void getByDataId_domainModelReturned() {
         // Arrange
-        RecipeDurationPersistenceModel expectedModel = TestDataRecipeDuration.
+        RecipeDurationPersistenceDomainModel expectedModel = TestDataRecipeDuration.
                 getExistingValidPrepTimeValidCookTime();
         callbackClient = new GetDomainModelCallbackClient();
         // Act
@@ -96,9 +96,9 @@ public class DurationLocalGetAdapterTest {
     public void getActiveModelByDomainId_returnMostRecentModel() {
         // Arrange
         long lastUpdate = 0L;
-        RecipeDurationPersistenceModel modelUnderTest = new RecipeDurationPersistenceModel.Builder().
+        RecipeDurationPersistenceDomainModel modelUnderTest = new RecipeDurationPersistenceDomainModel.Builder().
                 getDefault().build();
-        for (RecipeDurationPersistenceModel m : TestDataRecipeDuration.getAllNew()) {
+        for (RecipeDurationPersistenceDomainModel m : TestDataRecipeDuration.getAllNew()) {
             if (m.getLastUpdate() > lastUpdate) {
                 modelUnderTest = m;
             }
@@ -140,36 +140,36 @@ public class DurationLocalGetAdapterTest {
 
     // region helper classes -----------------------------------------------------------------------
     private static class GetDomainModelCallbackClient
-            implements GetDomainModelCallback<RecipeDurationPersistenceModel> {
+            implements GetDomainModelCallback<RecipeDurationPersistenceDomainModel> {
 
         private static final String TAG = DurationLocalGetAdapterTest.TAG +
                 GetDomainModelCallbackClient.class.getSimpleName() + ": " ;
-        private RecipeDurationPersistenceModel model;
+        private RecipeDurationPersistenceDomainModel model;
         private boolean onModelUnavailable;
 
         @Override
-        public void onDomainModelLoaded(RecipeDurationPersistenceModel m) {
+        public void onPersistenceModelLoaded(RecipeDurationPersistenceDomainModel m) {
             System.out.println(TAG + "onSuccess: " + m);
             model = m;
         }
 
         @Override
-        public void onDomainModelUnavailable() {
+        public void onPersistenceModelUnavailable() {
             onModelUnavailable = true;
             System.out.println(TAG + "onModelUnavailable");
         }
     }
 
     private static class GetAllModelsCallbackClient
-            implements GetAllDomainModelsCallback<RecipeDurationPersistenceModel> {
+            implements GetAllDomainModelsCallback<RecipeDurationPersistenceDomainModel> {
 
         private final String TAG = DurationLocalGetAdapterTest.TAG + "GetAllCallback: ";
 
-        private List<RecipeDurationPersistenceModel> models;
+        private List<RecipeDurationPersistenceDomainModel> models;
         private boolean onModelsUnavailable;
 
         @Override
-        public void onAllDomainModelsLoaded(List<RecipeDurationPersistenceModel> m) {
+        public void onAllDomainModelsLoaded(List<RecipeDurationPersistenceDomainModel> m) {
             System.out.println(TAG + "onSuccess: " + m);
             models = m;
         }

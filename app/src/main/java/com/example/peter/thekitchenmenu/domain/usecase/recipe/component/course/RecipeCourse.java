@@ -5,7 +5,6 @@ import android.annotation.SuppressLint;
 import androidx.annotation.NonNull;
 
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeCourse;
-import com.example.peter.thekitchenmenu.domain.model.UseCaseDomainModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseElement;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
@@ -22,7 +21,7 @@ public class RecipeCourse
         extends
         UseCaseElement<
                 RepositoryRecipeCourse,
-                RecipeCoursePersistenceModel,
+                RecipeCoursePersistenceDomainModel,
                 RecipeCourse.DomainModel> {
 
     private static final String TAG = "tkm-" + RecipeCourse.class.getSimpleName() + ": ";
@@ -31,7 +30,7 @@ public class RecipeCourse
             extends
             ArrayList<Course>
             implements
-            UseCaseDomainModel {
+            com.example.peter.thekitchenmenu.domain.model.DomainModel.UseCaseDomainModel {
 
         private DomainModel(@NonNull Collection<? extends Course> c) {
             super(c);
@@ -106,23 +105,23 @@ public class RecipeCourse
         this.idProvider = idProvider;
         this.timeProvider = timeProvider;
 
-        domainModel = createDomainModelFromDefaultValues();
+        useCaseModel = createUseCaseModelFromDefaultValues();
     }
 
     @Override
-    protected DomainModel createDomainModelFromPersistenceModel(
-            @Nonnull RecipeCoursePersistenceModel persistenceModel) {
+    protected DomainModel createUseCaseModelFromPersistenceModel(
+            @Nonnull RecipeCoursePersistenceDomainModel persistenceModel) {
 
         return new DomainModel(persistenceModel.getCourses());
     }
 
     @Override
-    protected DomainModel createDomainModelFromDefaultValues() {
+    protected DomainModel createUseCaseModelFromDefaultValues() {
         return new DomainModel(new ArrayList<>());
     }
 
     @Override
-    protected DomainModel createDomainModelFromRequestModel() {
+    protected DomainModel createUseCaseModelFromRequestModel() {
         RecipeCourseRequest.DomainModel requestModel = ((RecipeCourseRequest) getRequest()).
                 getDomainModel();
 
@@ -131,7 +130,7 @@ public class RecipeCourse
 
     @Override
     protected void validateDomainModelElements() {
-        if (domainModel.isEmpty()) {
+        if (useCaseModel.isEmpty()) {
             failReasons.add(FailReason.NO_COURSE_SELECTED);
         }
         save();
@@ -145,13 +144,13 @@ public class RecipeCourse
             long currentTime = timeProvider.getCurrentTimeInMills();
 
             if (persistenceModel != null) {
-                archiveExistingPersistenceModel(currentTime);
+                archivePreviousState(currentTime);
             }
 
-            persistenceModel = new RecipeCoursePersistenceModel.Builder().
+            persistenceModel = new RecipeCoursePersistenceDomainModel.Builder().
                     setDataId(useCaseDataId).
                     setDomainId(useCaseDomainId).
-                    setCourses(new ArrayList<>(domainModel)).
+                    setCourses(new ArrayList<>(useCaseModel)).
                     setCreateDate(currentTime).
                     setLastUpdate(currentTime).
                     build();
@@ -163,8 +162,8 @@ public class RecipeCourse
     }
 
     @Override
-    protected void archiveExistingPersistenceModel(long currentTime) {
-        RecipeCoursePersistenceModel archivedModel = new RecipeCoursePersistenceModel.Builder().
+    protected void archivePreviousState(long currentTime) {
+        RecipeCoursePersistenceDomainModel archivedModel = new RecipeCoursePersistenceDomainModel.Builder().
                 basedOnModel(persistenceModel).
                 setLastUpdate(currentTime).
                 build();
@@ -184,9 +183,9 @@ public class RecipeCourse
         sendResponse(response);
     }
 
-    private RecipeCourseResponse.Model getResponseModel() {
-        return new RecipeCourseResponse.Model.Builder().
-                setCourseList(new ArrayList<>(domainModel)).
+    private RecipeCourseResponse.DomainModel getResponseModel() {
+        return new RecipeCourseResponse.DomainModel.Builder().
+                setCourseList(new ArrayList<>(useCaseModel)).
                 build();
     }
 }

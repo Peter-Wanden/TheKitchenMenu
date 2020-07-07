@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.data.repository;
 
 import androidx.annotation.Nullable;
 
-import com.example.peter.thekitchenmenu.domain.model.DomainPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.model.DomainModel;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -13,7 +13,7 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 
 
-public abstract class Repository<T extends DomainPersistenceModel>
+public abstract class Repository<T extends DomainModel.PersistenceDomainModel>
         implements DomainDataAccess<T> {
 
     protected DomainDataAccess<T> remoteDomainDataAccess;
@@ -54,38 +54,38 @@ public abstract class Repository<T extends DomainPersistenceModel>
         T cachedModel = getFromCacheModelWithDataId(dataId);
 
         if (cachedModel != null) {
-            callback.onDomainModelLoaded(cachedModel);
+            callback.onPersistenceModelLoaded(cachedModel);
             return;
         }
         localDomainDataAccess.getByDataId(dataId, new GetDomainModelCallback<T>() {
             @Override
-            public void onDomainModelLoaded(T model) {
+            public void onPersistenceModelLoaded(T model) {
                 if (cache == null) {
                     cache = new LinkedHashMap<>();
                 }
                 cache.put(model.getDataId(), model);
-                callback.onDomainModelLoaded(model);
+                callback.onPersistenceModelLoaded(model);
             }
 
             @Override
-            public void onDomainModelUnavailable() {
+            public void onPersistenceModelUnavailable() {
                 remoteDomainDataAccess.getByDataId(dataId, new GetDomainModelCallback<T>() {
                     @Override
-                    public void onDomainModelLoaded(T model) {
+                    public void onPersistenceModelLoaded(T model) {
                         if (model == null) {
-                            callback.onDomainModelUnavailable();
+                            callback.onPersistenceModelUnavailable();
                             return;
                         }
                         if (cache == null) {
                             cache = new LinkedHashMap<>();
                         }
                         cache.put(model.getDataId(), model);
-                        callback.onDomainModelLoaded(model);
+                        callback.onPersistenceModelLoaded(model);
                     }
 
                     @Override
-                    public void onDomainModelUnavailable() {
-                        callback.onDomainModelUnavailable();
+                    public void onPersistenceModelUnavailable() {
+                        callback.onPersistenceModelUnavailable();
                     }
                 });
             }
@@ -107,40 +107,40 @@ public abstract class Repository<T extends DomainPersistenceModel>
         T cachedModel = getFromCacheModelWithDomainId(domainId);
 
         if (cachedModel != null) {
-            callback.onDomainModelLoaded(cachedModel);
+            callback.onPersistenceModelLoaded(cachedModel);
             return;
         }
         localDomainDataAccess.getActiveByDomainId(domainId, new GetDomainModelCallback<T>() {
             @Override
-            public void onDomainModelLoaded(T model) {
+            public void onPersistenceModelLoaded(T model) {
                 if (cache == null) {
                     cache = new LinkedHashMap<>();
                 }
                 cache.put(model.getDataId(), model);
-                callback.onDomainModelLoaded(model);
+                callback.onPersistenceModelLoaded(model);
             }
 
             @Override
-            public void onDomainModelUnavailable() {
+            public void onPersistenceModelUnavailable() {
                 remoteDomainDataAccess.getActiveByDomainId(
                         domainId,
                         new GetDomainModelCallback<T>() {
                     @Override
-                    public void onDomainModelLoaded(T model) {
+                    public void onPersistenceModelLoaded(T model) {
                         if (model == null) {
-                            callback.onDomainModelUnavailable();
+                            callback.onPersistenceModelUnavailable();
                             return;
                         }
                         if (cache == null) {
                             cache = new LinkedHashMap<>();
                         }
                         cache.put(model.getDataId(), model);
-                        callback.onDomainModelLoaded(model);
+                        callback.onPersistenceModelLoaded(model);
                     }
 
                     @Override
-                    public void onDomainModelUnavailable() {
-                        callback.onDomainModelUnavailable();
+                    public void onPersistenceModelUnavailable() {
+                        callback.onPersistenceModelUnavailable();
                     }
                 });
             }

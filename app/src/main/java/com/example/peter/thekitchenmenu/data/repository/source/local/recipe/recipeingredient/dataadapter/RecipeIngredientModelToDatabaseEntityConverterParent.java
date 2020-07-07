@@ -1,24 +1,24 @@
 package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.recipeingredient.dataadapter;
 
-import com.example.peter.thekitchenmenu.data.repository.source.local.DomainModelConverter;
+import com.example.peter.thekitchenmenu.data.repository.source.local.PersistenceModelToDatabaseEntityConverter;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.recipeingredient.datasource.RecipeIngredientEntity;
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModel;
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModelBuilder;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasure;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredient.RecipeIngredientPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredient.RecipeIngredientPersistenceDomainModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nonnull;
 
-public class RecipeIngredientModelConverterParent
-implements DomainModelConverter<RecipeIngredientPersistenceModel, RecipeIngredientEntity> {
+public class RecipeIngredientModelToDatabaseEntityConverterParent
+implements PersistenceModelToDatabaseEntityConverter<RecipeIngredientPersistenceDomainModel, RecipeIngredientEntity> {
     @Override
-    public RecipeIngredientPersistenceModel convertParentEntityToDomainModel(
+    public RecipeIngredientPersistenceDomainModel convertParentEntityToDomainModel(
             @Nonnull RecipeIngredientEntity entity) {
-        return new RecipeIngredientPersistenceModel.Builder().
+        return new RecipeIngredientPersistenceDomainModel.Builder().
                 setDataId(entity.getDataId()).
                 setRecipeIngredientId(entity.getRecipeIngredientId()).
                 setRecipeDataId(entity.getRecipeDataId()).
@@ -35,7 +35,7 @@ implements DomainModelConverter<RecipeIngredientPersistenceModel, RecipeIngredie
 
     @Override
     public RecipeIngredientEntity convertParentDomainModelToEntity(
-            @Nonnull RecipeIngredientPersistenceModel parent) {
+            @Nonnull RecipeIngredientPersistenceDomainModel parent) {
         return new RecipeIngredientEntity(
                 parent.getDataId(),
                 parent.getRecipeIngredientId(),
@@ -53,9 +53,9 @@ implements DomainModelConverter<RecipeIngredientPersistenceModel, RecipeIngredie
     }
 
     @Override
-    public List<RecipeIngredientPersistenceModel> convertParentEntitiesToDomainModels(
+    public List<RecipeIngredientPersistenceDomainModel> convertParentEntitiesToDomainModels(
             @Nonnull List<RecipeIngredientEntity> entities) {
-        List<RecipeIngredientPersistenceModel> models = new ArrayList<>();
+        List<RecipeIngredientPersistenceDomainModel> models = new ArrayList<>();
         for (RecipeIngredientEntity e : entities) {
             models.add(convertParentEntityToDomainModel(e));
         }

@@ -1,6 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course;
 
 import com.example.peter.thekitchenmenu.domain.model.BaseDomainModel;
+import com.example.peter.thekitchenmenu.domain.model.DomainModelBuilder;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataId;
 
@@ -18,6 +19,7 @@ public final class RecipeCourseRequest
         implements
         UseCaseBase.Request {
 
+    @Nonnull
     @Override
     public String toString() {
         return "RecipeCourseRequest{" +
@@ -61,7 +63,9 @@ public final class RecipeCourseRequest
         }
     }
 
-    public static final class DomainModel extends BaseDomainModel {
+    public static final class DomainModel
+            extends
+            BaseDomainModel {
 
         private List<Course> courseList;
 
@@ -93,7 +97,9 @@ public final class RecipeCourseRequest
                     '}';
         }
 
-        public static class Builder extends DomainModelBuilder<Builder, DomainModel> {
+        public static class Builder
+                extends
+                DomainModelBuilder<Builder, DomainModel> {
 
             public Builder() {
                 domainModel = new DomainModel();
@@ -104,7 +110,7 @@ public final class RecipeCourseRequest
                 return self();
             }
 
-            public Builder basedOnResponseModel(RecipeCourseResponse.Model m) {
+            public Builder basedOnResponseModel(RecipeCourseResponse.DomainModel m) {
                 domainModel.courseList = new ArrayList<>(m.getCourses());
                 return self();
             }

@@ -1,18 +1,18 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity;
 
-import com.example.peter.thekitchenmenu.domain.model.BaseDomainPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.model.BasePersistenceDomainModel;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public final class RecipeIdentityPersistenceModel
-        extends BaseDomainPersistenceModel {
+public final class RecipeIdentityPersistenceDomainModel
+        extends BasePersistenceDomainModel {
 
     private String title;
     private String description;
 
-    private RecipeIdentityPersistenceModel(){}
+    private RecipeIdentityPersistenceDomainModel(){}
 
     @Nonnull
     public String getTitle() {
@@ -27,9 +27,9 @@ public final class RecipeIdentityPersistenceModel
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof RecipeIdentityPersistenceModel)) return false;
+        if (!(o instanceof RecipeIdentityPersistenceDomainModel)) return false;
         if (!super.equals(o)) return false;
-        RecipeIdentityPersistenceModel that = (RecipeIdentityPersistenceModel) o;
+        RecipeIdentityPersistenceDomainModel that = (RecipeIdentityPersistenceDomainModel) o;
         return Objects.equals(title, that.title) &&
                 Objects.equals(description, that.description);
     }
@@ -50,41 +50,41 @@ public final class RecipeIdentityPersistenceModel
 
     public static class Builder
             extends
-            PersistenceModelBuilder<Builder, RecipeIdentityPersistenceModel> {
+            PersistenceModelBuilder<Builder, RecipeIdentityPersistenceDomainModel> {
 
         public Builder() {
-            domainModel = new RecipeIdentityPersistenceModel();
+            persistenceModel = new RecipeIdentityPersistenceDomainModel();
         }
 
         @Override
         public Builder getDefault() {
-            domainModel.dataId = "";
-            domainModel.domainId = "";
-            domainModel.title = "";
-            domainModel.description = "";
-            domainModel.createDate = 0L;
-            domainModel.lastUpdate = 0L;
+            persistenceModel.dataId = "";
+            persistenceModel.domainId = "";
+            persistenceModel.title = "";
+            persistenceModel.description = "";
+            persistenceModel.createDate = 0L;
+            persistenceModel.lastUpdate = 0L;
             return self();
         }
 
         @Override
-        public Builder basedOnModel(@Nonnull RecipeIdentityPersistenceModel model) {
-            domainModel.dataId = model.getDataId();
-            domainModel.domainId = model.getDomainId();
-            domainModel.title = model.getTitle();
-            domainModel.description = model.getDescription();
-            domainModel.createDate = model.getCreateDate();
-            domainModel.lastUpdate = model.getLastUpdate();
+        public Builder basedOnModel(@Nonnull RecipeIdentityPersistenceDomainModel model) {
+            persistenceModel.dataId = model.getDataId();
+            persistenceModel.domainId = model.getDomainId();
+            persistenceModel.title = model.getTitle();
+            persistenceModel.description = model.getDescription();
+            persistenceModel.createDate = model.getCreateDate();
+            persistenceModel.lastUpdate = model.getLastUpdate();
             return self();
         }
 
         public Builder setTitle(String title) {
-            domainModel.title = title;
+            persistenceModel.title = title;
             return self();
         }
 
         public Builder setDescription(String description) {
-            domainModel.description = description;
+            persistenceModel.description = description;
             return self();
         }
 

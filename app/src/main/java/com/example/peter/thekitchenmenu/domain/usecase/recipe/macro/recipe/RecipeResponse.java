@@ -1,5 +1,6 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe;
 
+import com.example.peter.thekitchenmenu.domain.model.DomainModelBuilder;
 import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataId;
 import com.example.peter.thekitchenmenu.domain.model.BaseDomainModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
@@ -79,8 +80,8 @@ public final class RecipeResponse
         public static class Builder
                 extends
                 DomainModelBuilder<
-                        Builder,
-                        Model> {
+                                        Builder,
+                                        Model> {
 
             public Builder() {
                 domainModel = new Model();

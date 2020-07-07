@@ -8,9 +8,9 @@ import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModel;
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModelBuilder;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasure;
-import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientPersistenceModel;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortionsPersistenceModel;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredient.RecipeIngredientPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientPersistenceDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortionsPersistenceDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredient.RecipeIngredientPersistenceDomainModel;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -29,9 +29,9 @@ public class RecipeIngredientList extends UseCaseBase {
     private RepositoryRecipePortions repoPortions;
 
     private String recipeId;
-    private Map<String, RecipeIngredientPersistenceModel> recipeIngredientQuantities =
+    private Map<String, RecipeIngredientPersistenceDomainModel> recipeIngredientQuantities =
             new LinkedHashMap<>();
-    private Map<String, IngredientPersistenceModel> ingredients = new LinkedHashMap<>();
+    private Map<String, IngredientPersistenceDomainModel> ingredients = new LinkedHashMap<>();
     private List<RecipeIngredientListItemModel> listItemModels = new ArrayList<>();
     private int portions;
 
@@ -55,16 +55,16 @@ public class RecipeIngredientList extends UseCaseBase {
     private void getPortionsForRecipe() {
         repoPortions.getActiveByDomainId(
                 recipeId,
-                new DomainDataAccess.GetDomainModelCallback<RecipePortionsPersistenceModel>() {
+                new DomainDataAccess.GetDomainModelCallback<RecipePortionsPersistenceDomainModel>() {
                     @Override
-                    public void onDomainModelLoaded(RecipePortionsPersistenceModel model) {
+                    public void onPersistenceModelLoaded(RecipePortionsPersistenceDomainModel model) {
                         RecipeIngredientList.this.portions =
                                 model.getServings() * model.getSittings();
                         getRecipeIngredientQuantities();
                     }
 
                     @Override
-                    public void onDomainModelUnavailable() {
+                    public void onPersistenceModelUnavailable() {
 
                     }
                 }
@@ -76,10 +76,10 @@ public class RecipeIngredientList extends UseCaseBase {
 
         repoRecipeIngredient.getAllByRecipeId(
                 recipeId,
-                new DomainDataAccess.GetAllDomainModelsCallback<RecipeIngredientPersistenceModel>() {
+                new DomainDataAccess.GetAllDomainModelsCallback<RecipeIngredientPersistenceDomainModel>() {
                     @Override
-                    public void onAllDomainModelsLoaded(List<RecipeIngredientPersistenceModel> models) {
-                        for (RecipeIngredientPersistenceModel m : models) {
+                    public void onAllDomainModelsLoaded(List<RecipeIngredientPersistenceDomainModel> models) {
+                        for (RecipeIngredientPersistenceDomainModel m : models) {
                             recipeIngredientQuantities.put(m.getIngredientDomainId(), m);
                         }
                         getRecipeIngredients();
@@ -103,15 +103,15 @@ public class RecipeIngredientList extends UseCaseBase {
     private void getIngredient(String ingredientId) {
         repoIngredient.getByDataId(
                 ingredientId,
-                new DomainDataAccess.GetDomainModelCallback<IngredientPersistenceModel>() {
+                new DomainDataAccess.GetDomainModelCallback<IngredientPersistenceDomainModel>() {
                     @Override
-                    public void onDomainModelLoaded(IngredientPersistenceModel model) {
+                    public void onPersistenceModelLoaded(IngredientPersistenceDomainModel model) {
                         ingredients.put(model.getDataId(), model);
                         createResponseModels();
                     }
 
                     @Override
-                    public void onDomainModelUnavailable() {
+                    public void onPersistenceModelUnavailable() {
 
                     }
                 }
@@ -123,10 +123,10 @@ public class RecipeIngredientList extends UseCaseBase {
             listItemModels.clear();
             for (String ingredientId : recipeIngredientQuantities.keySet()) {
 
-                RecipeIngredientPersistenceModel recipeIngredient = recipeIngredientQuantities.
+                RecipeIngredientPersistenceDomainModel recipeIngredient = recipeIngredientQuantities.
                         get(ingredientId);
 
-                IngredientPersistenceModel ingredient = ingredients.get(ingredientId);
+                IngredientPersistenceDomainModel ingredient = ingredients.get(ingredientId);
 
                 RecipeIngredientListItemModel listItemModel = new RecipeIngredientListItemModel(
                         recipeIngredient.getDataId(),
@@ -147,8 +147,8 @@ public class RecipeIngredientList extends UseCaseBase {
         return recipeIngredientQuantities.keySet().equals(ingredients.keySet());
     }
 
-    private MeasurementModel getMeasurementModel(RecipeIngredientPersistenceModel recipeIngredient,
-                                                 IngredientPersistenceModel ingredient) {
+    private MeasurementModel getMeasurementModel(RecipeIngredientPersistenceDomainModel recipeIngredient,
+                                                 IngredientPersistenceDomainModel ingredient) {
 
         UnitOfMeasure unitOfMeasure = recipeIngredient.
                 getMeasurementModel().

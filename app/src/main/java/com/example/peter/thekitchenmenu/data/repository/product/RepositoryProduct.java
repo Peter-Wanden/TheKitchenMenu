@@ -3,13 +3,11 @@ package com.example.peter.thekitchenmenu.data.repository.product;
 import com.example.peter.thekitchenmenu.data.primitivemodel.product.ProductEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.Repository;
-import com.example.peter.thekitchenmenu.domain.usecase.product.component.identity.ProductIdentityPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecase.product.component.identity.ProductIdentityPersistenceDomainModel;
 
-import javax.annotation.Nonnull;
+public class RepositoryProduct extends Repository<ProductIdentityPersistenceDomainModel> {
 
-public class RepositoryProduct extends Repository<ProductIdentityPersistenceModel> {
-
-    protected static Repository<ProductIdentityPersistenceModel> INSTANCE = null;
+    protected static Repository<ProductIdentityPersistenceDomainModel> INSTANCE = null;
 
 //    private RepositoryProduct(
 //            @Nonnull PrimitiveDataSource<ProductEntity> remoteDataSource,

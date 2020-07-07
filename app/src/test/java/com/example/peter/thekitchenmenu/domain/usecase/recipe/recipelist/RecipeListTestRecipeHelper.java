@@ -5,7 +5,7 @@ import com.example.peter.thekitchenmenu.data.repository.recipe.duration.TestData
 import com.example.peter.thekitchenmenu.data.repository.recipe.identity.TestDataRecipeIdentity;
 import com.example.peter.thekitchenmenu.data.repository.recipe.metadata.TestDataRecipeMetadata;
 import com.example.peter.thekitchenmenu.data.repository.recipe.portions.TestDataRecipePortions;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataPersistenceDomainModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.RecipeTestBase;
 
@@ -27,7 +27,7 @@ public class RecipeListTestRecipeHelper {
     // endregion constants -------------------------------------------------------------------------
 
     // region helper fields ------------------------------------------------------------------------
-    private List<RecipeMetadataPersistenceModel> metadataModels;
+    private List<RecipeMetadataPersistenceDomainModel> metadataModels;
 
     private List<RecipeTestBase> recipeTestBases;
     // endregion helper fields ---------------------------------------------------------------------
@@ -39,7 +39,7 @@ public class RecipeListTestRecipeHelper {
         metadataModels = new ArrayList<>();
     }
 
-    void createRecipeMocksForMetadataModels(List<RecipeMetadataPersistenceModel> metadataModels) {
+    void createRecipeMocksForMetadataModels(List<RecipeMetadataPersistenceDomainModel> metadataModels) {
         this.metadataModels = metadataModels;
         this.metadataModels.forEach((metadataModel) -> {
             RecipeTestBase recipeTestBase = new RecipeTestBase();
@@ -59,37 +59,37 @@ public class RecipeListTestRecipeHelper {
         for (int i = 0; i < recipeTestBases.size() -1; i++) {
 
             RecipeTestBase recipeTestBase = recipeTestBases.get(i);
-            RecipeMetadataPersistenceModel metadataModel = metadataModels.get(i);
+            RecipeMetadataPersistenceDomainModel metadataModel = metadataModels.get(i);
             String recipeDomainId = metadataModel.getDomainId();
 
             // RecipeMetadata
             verify(recipeTestBase.repoMetadataMock).getActiveByDomainId(eq(recipeDomainId),
                     recipeTestBase.repoMetadataCallback.capture());
-            recipeTestBase.repoMetadataCallback.getValue().onDomainModelLoaded(
+            recipeTestBase.repoMetadataCallback.getValue().onPersistenceModelLoaded(
                     TestDataRecipeMetadata.getActiveByDomainId(recipeDomainId));
 
             // RecipeIdentity
             verify(recipeTestBase.repoIdentityMock).getActiveByDomainId(eq(recipeDomainId),
                     recipeTestBase.repoIdentityCallback.capture());
-            recipeTestBase.repoIdentityCallback.getValue().onDomainModelLoaded(
+            recipeTestBase.repoIdentityCallback.getValue().onPersistenceModelLoaded(
                     TestDataRecipeIdentity.getActiveByDomainId(recipeDomainId));
 
             // RecipeCourse
             verify(recipeTestBase.repoCourseMock).getActiveByDomainId(eq(recipeDomainId),
                     recipeTestBase.repoCourseCallback.capture());
-            recipeTestBase.repoCourseCallback.getValue().onDomainModelLoaded(
+            recipeTestBase.repoCourseCallback.getValue().onPersistenceModelLoaded(
                     TestDataRecipeCourse.getActiveByDomainId(recipeDomainId));
 
             // RecipeDuration
             verify(recipeTestBase.repoDurationMock).getActiveByDomainId(eq(recipeDomainId),
                     recipeTestBase.repoDurationCallback.capture());
-            recipeTestBase.repoDurationCallback.getValue().onDomainModelLoaded(
+            recipeTestBase.repoDurationCallback.getValue().onPersistenceModelLoaded(
                     TestDataRecipeDuration.getActiveByDomainId(recipeDomainId));
 
             // RecipePortions
             verify(recipeTestBase.repoPortionsMock).getActiveByDomainId(eq(recipeDomainId),
                     recipeTestBase.repoPortionsCallback.capture());
-            recipeTestBase.repoPortionsCallback.getValue().onDomainModelLoaded(
+            recipeTestBase.repoPortionsCallback.getValue().onPersistenceModelLoaded(
                     TestDataRecipePortions.getActiveByDomainId(recipeDomainId)
             );
         }

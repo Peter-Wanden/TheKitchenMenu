@@ -43,7 +43,7 @@ public class RecipePortionsTest {
     @Mock
     RepositoryRecipePortions repoPortionsMock;
     @Captor
-    ArgumentCaptor<GetDomainModelCallback<RecipePortionsPersistenceModel>> repoPortionsCallback;
+    ArgumentCaptor<GetDomainModelCallback<RecipePortionsPersistenceDomainModel>> repoPortionsCallback;
     @Mock
     TimeProvider timeProviderMock;
     @Mock
@@ -76,7 +76,7 @@ public class RecipePortionsTest {
         // Arrange
         // This is the initial pre-test setup request for most tests cases, so check all return
         // values
-        RecipePortionsPersistenceModel defaultModel = TestDataRecipePortions.
+        RecipePortionsPersistenceDomainModel defaultModel = TestDataRecipePortions.
                 getNewActiveDefault();
 
         RecipePortionsRequest request = new RecipePortionsRequest.Builder().
@@ -96,7 +96,7 @@ public class RecipePortionsTest {
                 eq(defaultModel.getDomainId()),
                 repoPortionsCallback.capture()
         );
-        repoPortionsCallback.getValue().onDomainModelUnavailable();
+        repoPortionsCallback.getValue().onPersistenceModelUnavailable();
 
         // assert response values
         UseCaseMetadataModel metadata = portionsOnErrorResponse.getMetadata();
@@ -132,7 +132,7 @@ public class RecipePortionsTest {
     @Test
     public void newRequest_invalidServingsInvalidSittings_resultINVALID_CHANGED() {
         // Arrange
-        RecipePortionsPersistenceModel modelUnderTest = TestDataRecipePortions.
+        RecipePortionsPersistenceDomainModel modelUnderTest = TestDataRecipePortions.
                 getNewInvalidTooHighServingsInvalidTooHighSittings();
 
         // act simulate new default request / response
@@ -174,7 +174,7 @@ public class RecipePortionsTest {
     @Test
     public void newRequest_invalidServingsValidSittings_resultINVALID_CHANGED() {
         // Arrange
-        RecipePortionsPersistenceModel modelUnderTest = TestDataRecipePortions.
+        RecipePortionsPersistenceDomainModel modelUnderTest = TestDataRecipePortions.
                 getNewInvalidTooHighServingsValidSittings();
 
         // act simulate new default request / response
@@ -215,7 +215,7 @@ public class RecipePortionsTest {
     @Test
     public void newRequest_validServingsInvalidSittings_resultINVALID_CHANGED() {
         // Arrange
-        RecipePortionsPersistenceModel modelUnderTest = TestDataRecipePortions.
+        RecipePortionsPersistenceDomainModel modelUnderTest = TestDataRecipePortions.
                 getNewValidServingsInvalidTooHighSittings();
 
         // act simulate new default request / response
@@ -256,7 +256,7 @@ public class RecipePortionsTest {
     @Test
     public void newRequest_validServingsValidSittings_resultVALID_CHANGED() {
         // Arrange
-        RecipePortionsPersistenceModel modelUnderTest = TestDataRecipePortions.
+        RecipePortionsPersistenceDomainModel modelUnderTest = TestDataRecipePortions.
                 getNewValidServingsValidSittings();
 
         // act simulate new default request / response
@@ -304,7 +304,7 @@ public class RecipePortionsTest {
         newRequest_stateVALID_DEFAULT_failReasonNONE_DATA_UNAVAILABLE();
 
         // expected eventual state
-        RecipePortionsPersistenceModel modelUnderTest = TestDataRecipePortions.
+        RecipePortionsPersistenceDomainModel modelUnderTest = TestDataRecipePortions.
                 getNewValidServingsValidSittings();
 
         // Arrange
@@ -332,7 +332,7 @@ public class RecipePortionsTest {
     @Test
     public void existingRequest_validExistingValuesLoaded_equalValuesInResponse() {
         // Arrange
-        RecipePortionsPersistenceModel modelUnderTest = TestDataRecipePortions.
+        RecipePortionsPersistenceDomainModel modelUnderTest = TestDataRecipePortions.
                 getExistingValidNinePortions();
 
         RecipePortionsRequest request = new RecipePortionsRequest.Builder().
@@ -347,7 +347,7 @@ public class RecipePortionsTest {
                 eq(modelUnderTest.getDomainId()),
                 repoPortionsCallback.capture()
         );
-        repoPortionsCallback.getValue().onDomainModelLoaded(modelUnderTest);
+        repoPortionsCallback.getValue().onPersistenceModelLoaded(modelUnderTest);
 
         // Assert values equal
         assertEquals(
@@ -403,7 +403,7 @@ public class RecipePortionsTest {
         // Arrange // Act // Assert
         existingRequest_validExistingValuesLoaded_equalValuesInResponse();
 
-        RecipePortionsPersistenceModel modelUnderTest = TestDataRecipePortions.
+        RecipePortionsPersistenceDomainModel modelUnderTest = TestDataRecipePortions.
                 getExistingInvalidTooHighSittingsInvalidTooHighServings();
 
         // Arrange second request with invalid servings
@@ -425,15 +425,15 @@ public class RecipePortionsTest {
     public void existingRequest_validUpdatedServings_saved() {
         // Arrange
         // arrange initial model to load
-        RecipePortionsPersistenceModel initialModel = TestDataRecipePortions.
+        RecipePortionsPersistenceDomainModel initialModel = TestDataRecipePortions.
                 getExistingValidNinePortions();
 
         // arrange initial model to archive
-        RecipePortionsPersistenceModel initialModelArchived = TestDataRecipePortions.
+        RecipePortionsPersistenceDomainModel initialModelArchived = TestDataRecipePortions.
                 getArchivedValidNinePortions();
 
         // Expected model after modification request
-        RecipePortionsPersistenceModel newStateModel = TestDataRecipePortions.
+        RecipePortionsPersistenceDomainModel newStateModel = TestDataRecipePortions.
                 getExistingValidUpdatedServings();
 
         // new data id for updated model
@@ -455,7 +455,7 @@ public class RecipePortionsTest {
                 eq(initialModel.getDataId()),
                 repoPortionsCallback.capture()
         );
-        repoPortionsCallback.getValue().onDomainModelLoaded(initialModel);
+        repoPortionsCallback.getValue().onPersistenceModelLoaded(initialModel);
 
         // Arrange updated model
         RecipePortionsRequest.DomainModel model = new RecipePortionsRequest.DomainModel.Builder().
@@ -477,7 +477,7 @@ public class RecipePortionsTest {
     public void existingRequest_invalidUpdatedSittings_invalidValueNotSaved() {
         // Arrange
         // arrange initial model to load data
-        RecipePortionsPersistenceModel initialModel = TestDataRecipePortions.
+        RecipePortionsPersistenceDomainModel initialModel = TestDataRecipePortions.
                 getExistingValidNinePortions();
 
         // arrange initial request to load data
@@ -492,7 +492,7 @@ public class RecipePortionsTest {
                 eq(initialModel.getDomainId()),
                 repoPortionsCallback.capture()
         );
-        repoPortionsCallback.getValue().onDomainModelLoaded(initialModel);
+        repoPortionsCallback.getValue().onPersistenceModelLoaded(initialModel);
 
         // arrange invalid sittings update request
         RecipePortionsRequest.DomainModel model = new RecipePortionsRequest.DomainModel.Builder().
@@ -523,13 +523,13 @@ public class RecipePortionsTest {
     @Test
     public void existingId_validUpdatedSittings_saved() {
         // Arrange initial model to load
-        RecipePortionsPersistenceModel initialModel = TestDataRecipePortions.
+        RecipePortionsPersistenceDomainModel initialModel = TestDataRecipePortions.
                 getExistingValidNinePortions();
 
-        RecipePortionsPersistenceModel archivedInitialModel = TestDataRecipePortions.
+        RecipePortionsPersistenceDomainModel archivedInitialModel = TestDataRecipePortions.
                 getNewArchivedDefault();
 
-        RecipePortionsPersistenceModel finalModelUnderTest = TestDataRecipePortions.
+        RecipePortionsPersistenceDomainModel finalModelUnderTest = TestDataRecipePortions.
                 getExistingValidUpdatedSittings();
 
         RecipePortionsRequest initialRequest = new RecipePortionsRequest.Builder().
@@ -545,7 +545,7 @@ public class RecipePortionsTest {
                 eq(initialModel.getDomainId()),
                 repoPortionsCallback.capture()
         );
-        repoPortionsCallback.getValue().onDomainModelLoaded(initialModel);
+        repoPortionsCallback.getValue().onPersistenceModelLoaded(initialModel);
 
         // Arrange update request
         // arrange last update timestamp for archived model
@@ -568,7 +568,7 @@ public class RecipePortionsTest {
         // Act
         SUT.execute(request, new PortionsCallbackClient());
         // Assert
-        ArgumentCaptor<RecipePortionsPersistenceModel> ac = ArgumentCaptor.forClass(RecipePortionsPersistenceModel.class);
+        ArgumentCaptor<RecipePortionsPersistenceDomainModel> ac = ArgumentCaptor.forClass(RecipePortionsPersistenceDomainModel.class);
         verify(repoPortionsMock, times(2)).save(ac.capture());
         ac.getAllValues().forEach(models -> System.out.println(TAG + models));
     }

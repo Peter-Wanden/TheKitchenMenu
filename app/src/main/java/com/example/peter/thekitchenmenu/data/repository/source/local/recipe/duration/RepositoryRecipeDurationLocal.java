@@ -4,14 +4,14 @@ import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.dataadapter.DurationLocalDeleteAdapter;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.dataadapter.DurationLocalGetAdapter;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.dataadapter.DurationLocalSaveAdapter;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDurationPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDurationPersistenceDomainModel;
 
 import java.util.List;
 
 import javax.annotation.Nonnull;
 
 public class RepositoryRecipeDurationLocal
-        implements DomainDataAccess<RecipeDurationPersistenceModel> {
+        implements DomainDataAccess<RecipeDurationPersistenceDomainModel> {
 
     public static volatile RepositoryRecipeDurationLocal INSTANCE;
 
@@ -53,18 +53,18 @@ public class RepositoryRecipeDurationLocal
     @Override
     public void getByDataId(
             @Nonnull String dataId,
-            @Nonnull GetDomainModelCallback<RecipeDurationPersistenceModel> callback) {
+            @Nonnull GetDomainModelCallback<RecipeDurationPersistenceDomainModel> callback) {
         getAdapter.getByDataId(
                 dataId,
-                new GetDomainModelCallback<RecipeDurationPersistenceModel>() {
+                new GetDomainModelCallback<RecipeDurationPersistenceDomainModel>() {
                     @Override
-                    public void onDomainModelLoaded(RecipeDurationPersistenceModel model) {
-                        callback.onDomainModelLoaded(model);
+                    public void onPersistenceModelLoaded(RecipeDurationPersistenceDomainModel model) {
+                        callback.onPersistenceModelLoaded(model);
                     }
 
                     @Override
-                    public void onDomainModelUnavailable() {
-                        callback.onDomainModelUnavailable();
+                    public void onPersistenceModelUnavailable() {
+                        callback.onPersistenceModelUnavailable();
                     }
                 }
         );
@@ -72,11 +72,11 @@ public class RepositoryRecipeDurationLocal
 
     @Override
     public void getAll(
-            @Nonnull GetAllDomainModelsCallback<RecipeDurationPersistenceModel> callback) {
+            @Nonnull GetAllDomainModelsCallback<RecipeDurationPersistenceDomainModel> callback) {
         getAdapter.getAll(
-                new GetAllDomainModelsCallback<RecipeDurationPersistenceModel>() {
+                new GetAllDomainModelsCallback<RecipeDurationPersistenceDomainModel>() {
                     @Override
-                    public void onAllDomainModelsLoaded(List<RecipeDurationPersistenceModel> models) {
+                    public void onAllDomainModelsLoaded(List<RecipeDurationPersistenceDomainModel> models) {
                         callback.onAllDomainModelsLoaded(models);
                     }
 
@@ -91,24 +91,24 @@ public class RepositoryRecipeDurationLocal
     @Override
     public void getActiveByDomainId(
             @Nonnull String domainId,
-            @Nonnull GetDomainModelCallback<RecipeDurationPersistenceModel> callback) {
+            @Nonnull GetDomainModelCallback<RecipeDurationPersistenceDomainModel> callback) {
         getAdapter.getActiveByDomainId(
-                domainId, new GetDomainModelCallback<RecipeDurationPersistenceModel>() {
+                domainId, new GetDomainModelCallback<RecipeDurationPersistenceDomainModel>() {
                     @Override
-                    public void onDomainModelLoaded(RecipeDurationPersistenceModel model) {
-                        callback.onDomainModelLoaded(model);
+                    public void onPersistenceModelLoaded(RecipeDurationPersistenceDomainModel model) {
+                        callback.onPersistenceModelLoaded(model);
                     }
 
                     @Override
-                    public void onDomainModelUnavailable() {
-                        callback.onDomainModelUnavailable();
+                    public void onPersistenceModelUnavailable() {
+                        callback.onPersistenceModelUnavailable();
                     }
                 }
         );
     }
 
     @Override
-    public void save(@Nonnull RecipeDurationPersistenceModel model) {
+    public void save(@Nonnull RecipeDurationPersistenceDomainModel model) {
         saveAdapter.save(model);
     }
 

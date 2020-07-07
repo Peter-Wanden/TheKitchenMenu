@@ -5,7 +5,7 @@ import com.example.peter.thekitchenmenu.data.repository.recipe.metadata.TestData
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.datasource.RecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.datasource.RecipeIdentityLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.datasource.TestDataRecipeIdentityEntity;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityPersistenceDomainModel;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -78,7 +78,7 @@ public class IdentityLocalGetAdapterTest {
     @Test
     public void getByDataId_domainModelReturned() {
         // Arrange
-        RecipeIdentityPersistenceModel modelUnderTest = TestDataRecipeIdentity.
+        RecipeIdentityPersistenceDomainModel modelUnderTest = TestDataRecipeIdentity.
                 getValidExistingTitleValidDescriptionValid();
         // Act
         SUT.getByDataId(modelUnderTest.getDataId(), callbackClient);
@@ -113,7 +113,7 @@ public class IdentityLocalGetAdapterTest {
     public void getAllByDomainId_returnAllModelsForDomainId() {
         // Arrange
         String domainId = TestDataRecipeMetadata.getInvalidDefault().getDomainId();
-        List<RecipeIdentityPersistenceModel> models = TestDataRecipeIdentity.
+        List<RecipeIdentityPersistenceDomainModel> models = TestDataRecipeIdentity.
                 getAllByDomainId(domainId);
         // Act
         SUT.getAllByDomainId(domainId, getAllCallbackClient);
@@ -151,9 +151,9 @@ public class IdentityLocalGetAdapterTest {
     public void getActiveByDomainId_returnMostRecentModel() {
         // Arrange
         long lastUpdate = 0L;
-        RecipeIdentityPersistenceModel modelUnderTest = new RecipeIdentityPersistenceModel.Builder().
+        RecipeIdentityPersistenceDomainModel modelUnderTest = new RecipeIdentityPersistenceDomainModel.Builder().
                 getDefault().build();
-        for (RecipeIdentityPersistenceModel m : TestDataRecipeIdentity.getAllNew()) {
+        for (RecipeIdentityPersistenceDomainModel m : TestDataRecipeIdentity.getAllNew()) {
             if (m.getLastUpdate() > lastUpdate) {
                 modelUnderTest = m;
                 lastUpdate = m.getLastUpdate();
@@ -191,7 +191,7 @@ public class IdentityLocalGetAdapterTest {
     @Test
     public void getAll_returnAllModels() {
         // Arrange
-        List<RecipeIdentityPersistenceModel> modelsUnderTest = TestDataRecipeIdentity.getAll();
+        List<RecipeIdentityPersistenceDomainModel> modelsUnderTest = TestDataRecipeIdentity.getAll();
         // Act
         SUT.getAll(getAllCallbackClient);
         // Assert
@@ -209,38 +209,38 @@ public class IdentityLocalGetAdapterTest {
 
     // region helper classes -----------------------------------------------------------------------
     private static class GetDomainModelCallbackClient
-            implements GetDomainModelCallback<RecipeIdentityPersistenceModel> {
+            implements GetDomainModelCallback<RecipeIdentityPersistenceDomainModel> {
 
         private static final String TAG = IdentityLocalGetAdapterTest.TAG +
                 GetDomainModelCallbackClient.class.getSimpleName() + ": ";
 
-        private RecipeIdentityPersistenceModel model;
+        private RecipeIdentityPersistenceDomainModel model;
         private boolean isModelUnavailable;
 
         @Override
-        public void onDomainModelLoaded(RecipeIdentityPersistenceModel m) {
+        public void onPersistenceModelLoaded(RecipeIdentityPersistenceDomainModel m) {
             System.out.println(TAG + model);
             model = m;
         }
 
         @Override
-        public void onDomainModelUnavailable() {
+        public void onPersistenceModelUnavailable() {
             isModelUnavailable = true;
             System.out.println(TAG + "isModelUnavailable=" + isModelUnavailable);
         }
     }
 
     private static class GetAllDomainModelsCallbackClient
-            implements GetAllDomainModelsCallback<RecipeIdentityPersistenceModel> {
+            implements GetAllDomainModelsCallback<RecipeIdentityPersistenceDomainModel> {
 
         private static final String TAG = IdentityLocalGetAdapterTest.TAG +
                 GetAllDomainModelsCallbackClient.class.getSimpleName() + ": ";
 
-        private List<RecipeIdentityPersistenceModel> models;
+        private List<RecipeIdentityPersistenceDomainModel> models;
         private boolean isModelsUnavailable;
 
         @Override
-        public void onAllDomainModelsLoaded(List<RecipeIdentityPersistenceModel> m) {
+        public void onAllDomainModelsLoaded(List<RecipeIdentityPersistenceDomainModel> m) {
             System.out.println(TAG + m);
             models = m;
         }

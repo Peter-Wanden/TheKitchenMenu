@@ -50,7 +50,7 @@ public class RecipeIdentityTest {
     @Mock
     RepositoryRecipeIdentity repoIdentityMock;
     @Captor
-    ArgumentCaptor<GetDomainModelCallback<RecipeIdentityPersistenceModel>> repoCallback;
+    ArgumentCaptor<GetDomainModelCallback<RecipeIdentityPersistenceDomainModel>> repoCallback;
     @Mock
     TimeProvider timeProviderMock;
     @Mock
@@ -89,7 +89,7 @@ public class RecipeIdentityTest {
         // Arrange
         // This is the initial pre-test setup request for most tests cases, so check all return
         // values
-        RecipeIdentityPersistenceModel modelUnderTest = TestDataRecipeIdentity.
+        RecipeIdentityPersistenceDomainModel modelUnderTest = TestDataRecipeIdentity.
                 getNewInvalidActiveDefault();
         // Act
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
@@ -106,7 +106,7 @@ public class RecipeIdentityTest {
                 eq(modelUnderTest.getDomainId()),
                 repoCallback.capture()
         );
-        repoCallback.getValue().onDomainModelUnavailable();
+        repoCallback.getValue().onPersistenceModelUnavailable();
 
         // verify no save
         verifyNoMoreInteractions(repoIdentityMock);
@@ -138,7 +138,7 @@ public class RecipeIdentityTest {
     @Test
     public void newRequest_titleTooLongDescriptionTooLong_stateINVALID_CHANGED() {
         // Arrange
-        RecipeIdentityPersistenceModel modelUnderTest = TestDataRecipeIdentity.
+        RecipeIdentityPersistenceDomainModel modelUnderTest = TestDataRecipeIdentity.
                 getInvalidNewTitleTooLongDescriptionTooLong();
 
         simulateNewInitialisationRequest(modelUnderTest);
@@ -172,7 +172,7 @@ public class RecipeIdentityTest {
     @Test
     public void newRequest_titleTooLongDescriptionTooLong_failReasonsTITLE_TOO_LONG_DESCRIPTION_TOO_LONG() {
         // Arrange
-        RecipeIdentityPersistenceModel modelUnderTest = TestDataRecipeIdentity.
+        RecipeIdentityPersistenceDomainModel modelUnderTest = TestDataRecipeIdentity.
                 getInvalidNewTitleTooLongDescriptionTooLong();
 
         simulateNewInitialisationRequest(modelUnderTest); // first request
@@ -210,7 +210,7 @@ public class RecipeIdentityTest {
     @Test
     public void newRequest_titleTooShortDescriptionValid_stateINVALID_CHANGED() {
         // Arrange
-        RecipeIdentityPersistenceModel modelUnderTest = TestDataRecipeIdentity.
+        RecipeIdentityPersistenceDomainModel modelUnderTest = TestDataRecipeIdentity.
                 getInvalidNewTitleTooShortDescriptionValid();
 
         simulateNewInitialisationRequest(modelUnderTest);
@@ -253,7 +253,7 @@ public class RecipeIdentityTest {
     @Test
     public void newRequest_titleTooShort_stateINVALID_CHANGED() {
         // Arrange
-        RecipeIdentityPersistenceModel modelUnderTest = TestDataRecipeIdentity.
+        RecipeIdentityPersistenceDomainModel modelUnderTest = TestDataRecipeIdentity.
                 getInvalidNewTitleTooShort();
 
         simulateNewInitialisationRequest(modelUnderTest);
@@ -296,7 +296,7 @@ public class RecipeIdentityTest {
     @Test
     public void newRequest_titleValid_valuesPersisted() {
         // Arrange
-        RecipeIdentityPersistenceModel modelUnderTest = TestDataRecipeIdentity.
+        RecipeIdentityPersistenceDomainModel modelUnderTest = TestDataRecipeIdentity.
                 getValidNewTitleValid();
 
         simulateNewInitialisationRequest(modelUnderTest);
@@ -323,7 +323,7 @@ public class RecipeIdentityTest {
     @Test
     public void newRequest_titleValid_stateVALID_CHANGED() {
         // Arrange
-        RecipeIdentityPersistenceModel modelUnderTest = TestDataRecipeIdentity.
+        RecipeIdentityPersistenceDomainModel modelUnderTest = TestDataRecipeIdentity.
                 getValidNewTitleValid();
 
         simulateNewInitialisationRequest(modelUnderTest);
@@ -367,7 +367,7 @@ public class RecipeIdentityTest {
     @Test
     public void newRequest_titleValidDescriptionValid_valuesPersisted() {
         // Arrange
-        RecipeIdentityPersistenceModel modelUnderTest = TestDataRecipeIdentity.
+        RecipeIdentityPersistenceDomainModel modelUnderTest = TestDataRecipeIdentity.
                 getValidNewTitleValid();
 
         simulateNewInitialisationRequest(modelUnderTest);
@@ -406,7 +406,7 @@ public class RecipeIdentityTest {
     @Test
     public void newRequest_titleValidThenDescriptionValid_stateVALID_CHANGED() {
         // Arrange
-        RecipeIdentityPersistenceModel modelUnderTest = TestDataRecipeIdentity.
+        RecipeIdentityPersistenceDomainModel modelUnderTest = TestDataRecipeIdentity.
                 getValidNewComplete();
 
         // Request 1: initialisation request
@@ -456,11 +456,11 @@ public class RecipeIdentityTest {
         int expectedNumberOfSaves = 3;
 
         // Assert data saved
-        ArgumentCaptor<RecipeIdentityPersistenceModel> ac = ArgumentCaptor.
-                forClass(RecipeIdentityPersistenceModel.class);
+        ArgumentCaptor<RecipeIdentityPersistenceDomainModel> ac = ArgumentCaptor.
+                forClass(RecipeIdentityPersistenceDomainModel.class);
         verify(repoIdentityMock, times(expectedNumberOfSaves)).save(ac.capture());
 
-        RecipeIdentityPersistenceModel lastSavedDomainModel = ac.getValue();
+        RecipeIdentityPersistenceDomainModel lastSavedDomainModel = ac.getValue();
         assertEquals(
                 modelUnderTest,
                 lastSavedDomainModel
@@ -488,7 +488,7 @@ public class RecipeIdentityTest {
     @Test
     public void existingRequest_titleValidDescriptionValid_VALID_UNCHANGED() {
         // Arrange
-        RecipeIdentityPersistenceModel modelUnderTest = TestDataRecipeIdentity.
+        RecipeIdentityPersistenceDomainModel modelUnderTest = TestDataRecipeIdentity.
                 getValidExistingTitleValidDescriptionValid();
         // Act
         simulateExistingInitialisationRequest(modelUnderTest);
@@ -508,7 +508,7 @@ public class RecipeIdentityTest {
     @Test
     public void existingRequest_titleValidDescriptionValid_correctValuesReturned() {
         // Arrange
-        RecipeIdentityPersistenceModel modelUnderTest = TestDataRecipeIdentity.
+        RecipeIdentityPersistenceDomainModel modelUnderTest = TestDataRecipeIdentity.
                 getValidExistingTitleValidDescriptionValid();
         // Act
         simulateExistingInitialisationRequest(modelUnderTest);
@@ -565,7 +565,7 @@ public class RecipeIdentityTest {
     @Test
     public void existingRequest_titleTooShort_stateINVALID_UNCHANGED() {
         // Arrange
-        RecipeIdentityPersistenceModel modelUnderTest = TestDataRecipeIdentity.
+        RecipeIdentityPersistenceDomainModel modelUnderTest = TestDataRecipeIdentity.
                 getInvalidExistingTitleTooShort();
         // Act
         simulateExistingInitialisationRequest(modelUnderTest);
@@ -584,7 +584,7 @@ public class RecipeIdentityTest {
     @Test
     public void existingRequest_titleTooShort_failReasonsTITLE_TOO_SHORT() {
         // Arrange
-        RecipeIdentityPersistenceModel modelUnderTest = TestDataRecipeIdentity.
+        RecipeIdentityPersistenceDomainModel modelUnderTest = TestDataRecipeIdentity.
                 getInvalidExistingTitleTooShort();
         // Act
         simulateExistingInitialisationRequest(modelUnderTest);
@@ -604,7 +604,7 @@ public class RecipeIdentityTest {
     @Test
     public void existingRequest_titleTooLong_stateINVALID_UNCHANGED() {
         // Arrange
-        RecipeIdentityPersistenceModel modelUnderTest = TestDataRecipeIdentity.
+        RecipeIdentityPersistenceDomainModel modelUnderTest = TestDataRecipeIdentity.
                 getInvalidExistingTitleTooLong();
         // Act
         simulateExistingInitialisationRequest(modelUnderTest);
@@ -623,7 +623,7 @@ public class RecipeIdentityTest {
     @Test
     public void existingRequest_titleValidDescriptionTooLong_stateINVALID_UNCHANGED() {
         // Arrange
-        RecipeIdentityPersistenceModel modelUnderTest = TestDataRecipeIdentity.
+        RecipeIdentityPersistenceDomainModel modelUnderTest = TestDataRecipeIdentity.
                 getInvalidExistingTitleValidDescriptionTooLong();
         // Act
         simulateExistingInitialisationRequest(modelUnderTest);
@@ -642,7 +642,7 @@ public class RecipeIdentityTest {
     @Test
     public void existingRequest_titleValidDescriptionTooLong_failReasonsDESCRIPTION_TOO_LONG() {
         // Arrange
-        RecipeIdentityPersistenceModel modelUnderTest = TestDataRecipeIdentity.
+        RecipeIdentityPersistenceDomainModel modelUnderTest = TestDataRecipeIdentity.
                 getInvalidExistingTitleValidDescriptionTooLong();
 
         // Act
@@ -662,7 +662,7 @@ public class RecipeIdentityTest {
     @Test
     public void existingRequest_titleTooShortDescriptionTooLong_stateINVALID_UNCHANGED() {
         // Arrange
-        RecipeIdentityPersistenceModel modelUnderTest = TestDataRecipeIdentity.
+        RecipeIdentityPersistenceDomainModel modelUnderTest = TestDataRecipeIdentity.
                 getInvalidExistingTitleTooShortDescriptionTooLong();
         // Act
         simulateExistingInitialisationRequest(modelUnderTest);
@@ -676,7 +676,7 @@ public class RecipeIdentityTest {
     @Test
     public void existingRequest_titleTooShortDescriptionTooLong_failReasonsTITLE_TOO_SHORT_DESCRIPTION_TOO_LONG() {
         // Arrange
-        RecipeIdentityPersistenceModel modelUnderTest = TestDataRecipeIdentity.
+        RecipeIdentityPersistenceDomainModel modelUnderTest = TestDataRecipeIdentity.
                 getInvalidExistingTitleTooShortDescriptionTooLong();
 
         // Act
@@ -696,7 +696,7 @@ public class RecipeIdentityTest {
     @Test
     public void existingRequest_titleTooLongDescriptionTooLong_stateINVALID_UNCHANGED() {
         // Arrange
-        RecipeIdentityPersistenceModel modelUnderTest = TestDataRecipeIdentity.
+        RecipeIdentityPersistenceDomainModel modelUnderTest = TestDataRecipeIdentity.
                 getInvalidExistingTitleTooLongDescriptionTooLong();
         // Act
         simulateExistingInitialisationRequest(modelUnderTest);
@@ -710,7 +710,7 @@ public class RecipeIdentityTest {
     @Test
     public void existingRequest_titleTooLongDescriptionTooLong_failReasonsTITLE_TOO_LONG_DESCRIPTION_TOO_LONG() {
         // Arrange
-        RecipeIdentityPersistenceModel modelUnderTest = TestDataRecipeIdentity.
+        RecipeIdentityPersistenceDomainModel modelUnderTest = TestDataRecipeIdentity.
                 getInvalidExistingTitleTooLongDescriptionTooLong();
 
         // Act
@@ -730,7 +730,7 @@ public class RecipeIdentityTest {
     @Test
     public void existingRequest_titleValidDescriptionDefault_stateVAILD_UNCHANGED() {
         // Arrange
-        RecipeIdentityPersistenceModel modelUnderTest = TestDataRecipeIdentity.
+        RecipeIdentityPersistenceDomainModel modelUnderTest = TestDataRecipeIdentity.
                 getValidExistingTitleValid();
         // Act
         simulateExistingInitialisationRequest(modelUnderTest);
@@ -744,7 +744,7 @@ public class RecipeIdentityTest {
     @Test
     public void existingRequest_titleValidDescriptionDefault_failReasonsNONE() {
         // Arrange
-        RecipeIdentityPersistenceModel modelUnderTest = TestDataRecipeIdentity.
+        RecipeIdentityPersistenceDomainModel modelUnderTest = TestDataRecipeIdentity.
                 getValidExistingTitleValid();
         // Act
         simulateExistingInitialisationRequest(modelUnderTest);
@@ -762,7 +762,7 @@ public class RecipeIdentityTest {
     @Test
     public void existingRequest_titleValidDescriptionValid_stateVALID_UNCHANGED() {
         // Arrange
-        RecipeIdentityPersistenceModel modelUnderTest = TestDataRecipeIdentity.
+        RecipeIdentityPersistenceDomainModel modelUnderTest = TestDataRecipeIdentity.
                 getValidExistingTitleValid();
         // Act
         simulateExistingInitialisationRequest(modelUnderTest);
@@ -775,7 +775,7 @@ public class RecipeIdentityTest {
     @Test
     public void existingRequest_titleValidDescriptionValid_failReasonsNONE() {
         // Arrange
-        RecipeIdentityPersistenceModel modelUnderTest = TestDataRecipeIdentity.
+        RecipeIdentityPersistenceDomainModel modelUnderTest = TestDataRecipeIdentity.
                 getValidExistingTitleValidDescriptionValid();
         // Act
         simulateExistingInitialisationRequest(modelUnderTest);
@@ -791,7 +791,7 @@ public class RecipeIdentityTest {
     @Test
     public void existingRequest_titleTooLong_failReasonsTITLE_TOO_LONG() {
         // Arrange
-        RecipeIdentityPersistenceModel modelUnderTest = TestDataRecipeIdentity.
+        RecipeIdentityPersistenceDomainModel modelUnderTest = TestDataRecipeIdentity.
                 getInvalidExistingTitleTooLong();
         // Act
         simulateExistingInitialisationRequest(modelUnderTest);
@@ -807,7 +807,7 @@ public class RecipeIdentityTest {
 
     // region helper methods -----------------------------------------------------------------------
     private void simulateNewInitialisationRequest(
-            RecipeIdentityPersistenceModel modelUnderTest) {
+            RecipeIdentityPersistenceDomainModel modelUnderTest) {
 
         // Arrange - data id requested when creating a new persistence model
         when(idProvider.getUId()).thenReturn(modelUnderTest.getDataId());
@@ -826,11 +826,11 @@ public class RecipeIdentityTest {
                 eq(modelUnderTest.getDomainId()),
                 repoCallback.capture()
         );
-        repoCallback.getValue().onDomainModelUnavailable();
+        repoCallback.getValue().onPersistenceModelUnavailable();
     }
 
     private void simulateExistingInitialisationRequest(
-            RecipeIdentityPersistenceModel modelUnderTest) {
+            RecipeIdentityPersistenceDomainModel modelUnderTest) {
         // Arrange
         RecipeIdentityRequest initialisationRequest = new RecipeIdentityRequest.Builder().
                 getDefault().
@@ -843,7 +843,7 @@ public class RecipeIdentityTest {
                 eq(modelUnderTest.getDomainId()),
                 repoCallback.capture()
         );
-        repoCallback.getValue().onDomainModelLoaded(modelUnderTest);
+        repoCallback.getValue().onPersistenceModelLoaded(modelUnderTest);
     }
     // endregion helper methods --------------------------------------------------------------------
 

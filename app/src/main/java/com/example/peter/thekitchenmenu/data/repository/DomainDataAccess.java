@@ -1,6 +1,6 @@
 package com.example.peter.thekitchenmenu.data.repository;
 
-import com.example.peter.thekitchenmenu.domain.model.DomainPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.model.DomainModel;
 
 import java.util.List;
 
@@ -10,23 +10,23 @@ import javax.annotation.Nonnull;
  * Implemented by the use cases and business entities to send and receive data structures to and
  * from the dataLayer.
  *
- * @param <T> any domain object data models that extend the {@link DomainPersistenceModel}
+ * @param <T> any domain object data models that extend the {@link DomainModel.PersistenceDomainModel}
  *           interface.
  */
-public interface DomainDataAccess<T extends DomainPersistenceModel> {
+public interface DomainDataAccess<T extends DomainModel.PersistenceDomainModel> {
 
-    interface GetAllDomainModelsCallback<E extends DomainPersistenceModel> {
+    interface GetAllDomainModelsCallback<E extends DomainModel.PersistenceDomainModel> {
 
         void onAllDomainModelsLoaded(List<E> models);
 
         void onDomainModelsUnavailable();
     }
 
-    interface GetDomainModelCallback<T extends DomainPersistenceModel> {
+    interface GetDomainModelCallback<T extends DomainModel.PersistenceDomainModel> {
 
-        void onDomainModelLoaded(T model);
+        void onPersistenceModelLoaded(T model);
 
-        void onDomainModelUnavailable();
+        void onPersistenceModelUnavailable();
     }
 
     void getByDataId(@Nonnull String dataId, @Nonnull GetDomainModelCallback<T> callback);

@@ -4,8 +4,7 @@ import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.Repository;
 import com.example.peter.thekitchenmenu.domain.model.BaseDomainModel;
-import com.example.peter.thekitchenmenu.domain.model.BaseDomainPersistenceModel;
-import com.example.peter.thekitchenmenu.domain.model.UseCaseDomainModel;
+import com.example.peter.thekitchenmenu.domain.model.DomainModel;
 import com.example.peter.thekitchenmenu.domain.model.UseCaseMetadataModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
@@ -25,13 +24,13 @@ import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.m
  * Using the state of the data Id's, determines the updatedDomainModel to be processed.
  *
  * @param <PERSISTENCE_MODEL>     the domain model the use case sends to the repository
- * @param <USE_CASE_DOMAIN_MODEL> the use case's internal domain model
+ * @param <USE_CASE_MODEL> the use case's internal domain model
  * @param <REPOSITORY>            the repository for the persistence model
  */
 public abstract class UseCaseElement<
         REPOSITORY extends Repository<PERSISTENCE_MODEL>,
-        PERSISTENCE_MODEL extends BaseDomainPersistenceModel,
-        USE_CASE_DOMAIN_MODEL extends UseCaseDomainModel>
+        PERSISTENCE_MODEL extends DomainModel.PersistenceDomainModel,
+        USE_CASE_MODEL extends DomainModel.UseCaseDomainModel>
         extends
         UseCaseBase
         implements DomainDataAccess.GetDomainModelCallback<PERSISTENCE_MODEL> {
@@ -42,11 +41,11 @@ public abstract class UseCaseElement<
     protected String useCaseDomainId = UseCaseMessageModelDataId.NO_ID;
 
     protected REPOSITORY repository;
-    protected PERSISTENCE_MODEL persistenceModel;
     protected UniqueIdProvider idProvider;
     protected TimeProvider timeProvider;
 
-    protected USE_CASE_DOMAIN_MODEL domainModel;
+    protected PERSISTENCE_MODEL persistenceModel;
+    protected USE_CASE_MODEL useCaseModel;
 
     protected List<FailReasons> failReasons = new ArrayList<>();
 
@@ -79,79 +78,78 @@ public abstract class UseCaseElement<
                 !requestDomainId.equals(useCaseDomainId);
 
         if (requestHasNoIdentifiers) {
-            initialiseUseCaseForDomainModelProcessing();
+            initialiseUseCase();
         } else {
             useCaseDataId = requestDataId;
             useCaseDomainId = requestDomainId;
 
             if (dataIdsAreNotEqual) {
-                loadDomainModelByDataId();
+                getPersistenceModelByDataId();
             } else if (domainIdIsAreNotEqual) {
-                loadDomainModelByDomainId();
+                getPersistenceModelByDomainId();
             } else {
-                processRequestDomainModel();
+                setupForRequestModelProcessing();
             }
         }
     }
 
-    protected void loadDomainModelByDataId() {
-        System.out.println(TAG + "loadDomainModelByDataId=" + useCaseDataId);
+    protected void getPersistenceModelByDataId() {
+        System.out.println(TAG + "getPersistenceModelByDataId=" + useCaseDataId);
         repository.getByDataId(useCaseDataId, this);
     }
 
-    protected void loadDomainModelByDomainId() {
-        System.out.println(TAG + "loadDomainModelByDomainId=" + useCaseDomainId);
+    protected void getPersistenceModelByDomainId() {
+        System.out.println(TAG + "getPersistenceModelByDomainId=" + useCaseDomainId);
         repository.getActiveByDomainId(useCaseDomainId, this);
     }
 
     @Override
-    public void onDomainModelUnavailable() {
-        domainModel = createDomainModelFromDefaultValues();
-        System.out.println(TAG + "onDomainModelUnavailable: " + domainModel);
-        initialiseUseCaseForDomainModelProcessing();
+    public void onPersistenceModelUnavailable() {
+        useCaseModel = createUseCaseModelFromDefaultValues();
+        System.out.println(TAG + "onPersistenceModelUnavailable: " + useCaseModel);
+        initialiseUseCase();
     }
 
     @Override
-    public void onDomainModelLoaded(PERSISTENCE_MODEL persistenceModel) {
-        System.out.println(TAG + "onDomainModelLoaded=" + persistenceModel);
+    public void onPersistenceModelLoaded(PERSISTENCE_MODEL model) {
+        System.out.println(TAG + "onPersistenceModelLoaded=" + model);
 
         isChanged = false;
-        useCaseDataId = persistenceModel.getDataId();
-        useCaseDomainId = persistenceModel.getDomainId();
+        useCaseDataId = model.getDataId();
+        useCaseDomainId = model.getDomainId();
 
-        this.persistenceModel = persistenceModel;
-
-        domainModel = createDomainModelFromPersistenceModel(persistenceModel);
-        initialiseUseCaseForDomainModelProcessing();
+        persistenceModel = model;
+        useCaseModel = createUseCaseModelFromPersistenceModel(model);
+        initialiseUseCase();
     }
 
-    protected void processRequestDomainModel() {
+    protected void setupForRequestModelProcessing() {
         System.out.println(TAG + "processRequestDomainModel");
 
-        USE_CASE_DOMAIN_MODEL updatedDomainModel = createDomainModelFromRequestModel();
-        isChanged = !domainModel.equals(updatedDomainModel);
-        domainModel = updatedDomainModel;
+        USE_CASE_MODEL updatedDomainModel = createUseCaseModelFromRequestModel();
+        isChanged = !useCaseModel.equals(updatedDomainModel);
+        useCaseModel = updatedDomainModel;
 
-        initialiseUseCaseForDomainModelProcessing();
+        initialiseUseCase();
     }
 
-    protected abstract USE_CASE_DOMAIN_MODEL createDomainModelFromPersistenceModel(
+    protected abstract USE_CASE_MODEL createUseCaseModelFromDefaultValues();
+
+    protected abstract USE_CASE_MODEL createUseCaseModelFromPersistenceModel(
             @Nonnull PERSISTENCE_MODEL persistenceModel);
 
-    protected abstract USE_CASE_DOMAIN_MODEL createDomainModelFromRequestModel();
+    protected abstract USE_CASE_MODEL createUseCaseModelFromRequestModel();
 
-    protected abstract USE_CASE_DOMAIN_MODEL createDomainModelFromDefaultValues();
-
-    protected void initialiseUseCaseForDomainModelProcessing() {
+    protected void initialiseUseCase() {
         failReasons.clear();
         validateDomainModelElements();
     }
 
     protected abstract void validateDomainModelElements();
 
-    protected abstract void save();
+    protected abstract void archivePreviousState(long currentTime);
 
-    protected abstract void archiveExistingPersistenceModel(long currentTime);
+    protected abstract void save();
 
     protected abstract void buildResponse();
 
@@ -186,8 +184,8 @@ public abstract class UseCaseElement<
 
     protected ComponentState getComponentState() {
         System.out.println(TAG + "getComponentState:" +
-                "\n  - defaultDomainModel=" + createDomainModelFromDefaultValues() +
-                "\n  - currentDomainModel=" + domainModel);
+                "\n  - defaultDomainModel=" + createUseCaseModelFromDefaultValues() +
+                "\n  - currentDomainModel=" + useCaseModel);
 
         ComponentState componentState;
 
@@ -212,7 +210,7 @@ public abstract class UseCaseElement<
     }
 
     protected boolean isDefaultDomainModel() {
-        return domainModel.equals(createDomainModelFromDefaultValues());
+        return useCaseModel.equals(createUseCaseModelFromDefaultValues());
     }
 
     protected boolean isDomainModelValid() {
