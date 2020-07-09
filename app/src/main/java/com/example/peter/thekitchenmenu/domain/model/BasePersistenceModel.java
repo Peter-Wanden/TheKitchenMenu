@@ -4,9 +4,9 @@ import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public abstract class BasePersistenceDomainModel
+public abstract class BasePersistenceModel
         implements
-        DomainModel.PersistenceDomainModel {
+        DomainModel.PersistenceModel {
 
     protected String dataId;
     protected String domainId;
@@ -36,8 +36,8 @@ public abstract class BasePersistenceDomainModel
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof BasePersistenceDomainModel)) return false;
-        BasePersistenceDomainModel that = (BasePersistenceDomainModel) o;
+        if (!(o instanceof BasePersistenceModel)) return false;
+        BasePersistenceModel that = (BasePersistenceModel) o;
         return createDate == that.createDate &&
                 lastUpdate == that.lastUpdate &&
                 Objects.equals(dataId, that.dataId) &&
@@ -62,7 +62,7 @@ public abstract class BasePersistenceDomainModel
 
     public abstract static class PersistenceModelBuilder<
             SELF extends PersistenceModelBuilder<SELF, PERSISTENCE_MODEL>,
-            PERSISTENCE_MODEL extends BasePersistenceDomainModel> {
+            PERSISTENCE_MODEL extends BasePersistenceModel> {
 
         protected PERSISTENCE_MODEL persistenceModel;
 

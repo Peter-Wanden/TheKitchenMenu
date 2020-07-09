@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.domain.usecase.ingredient;
 
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants;
-import com.example.peter.thekitchenmenu.domain.model.BasePersistenceDomainModel;
+import com.example.peter.thekitchenmenu.domain.model.BasePersistenceModel;
 
 import java.util.Objects;
 
@@ -10,15 +10,15 @@ import javax.annotation.Nonnull;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.ingredient.Ingredient.NO_ID;
 
-public final class IngredientPersistenceDomainModel
-        extends BasePersistenceDomainModel {
+public final class IngredientPersistenceModel
+        extends BasePersistenceModel {
 
     private String name;
     private String description;
     private double conversionFactor;
     private String createdBy;
 
-    private IngredientPersistenceDomainModel() {
+    private IngredientPersistenceModel() {
     }
 
     public String getName() {
@@ -40,9 +40,9 @@ public final class IngredientPersistenceDomainModel
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof IngredientPersistenceDomainModel)) return false;
+        if (!(o instanceof IngredientPersistenceModel)) return false;
         if (!super.equals(o)) return false;
-        IngredientPersistenceDomainModel that = (IngredientPersistenceDomainModel) o;
+        IngredientPersistenceModel that = (IngredientPersistenceModel) o;
         return Double.compare(that.conversionFactor, conversionFactor) == 0 &&
                 Objects.equals(name, that.name) &&
                 Objects.equals(description, that.description) &&
@@ -67,10 +67,10 @@ public final class IngredientPersistenceDomainModel
 
     public static class Builder
             extends
-            PersistenceModelBuilder<Builder, IngredientPersistenceDomainModel> {
+            PersistenceModelBuilder<Builder, IngredientPersistenceModel> {
 
         public Builder() {
-            persistenceModel = new IngredientPersistenceDomainModel();
+            persistenceModel = new IngredientPersistenceModel();
         }
 
         @Override
@@ -87,7 +87,7 @@ public final class IngredientPersistenceDomainModel
         }
 
         @Override
-        public Builder basedOnModel(@Nonnull IngredientPersistenceDomainModel m) {
+        public Builder basedOnModel(@Nonnull IngredientPersistenceModel m) {
             persistenceModel.dataId = m.getDataId();
             persistenceModel.domainId = m.getDomainId();
             persistenceModel.name = m.getName();

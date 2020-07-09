@@ -1,18 +1,18 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions;
 
-import com.example.peter.thekitchenmenu.domain.model.BasePersistenceDomainModel;
+import com.example.peter.thekitchenmenu.domain.model.BasePersistenceModel;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public final class RecipePortionsPersistenceDomainModel
-        extends BasePersistenceDomainModel {
+public final class RecipePortionsPersistenceModel
+        extends BasePersistenceModel {
 
     private int servings;
     private int sittings;
 
-    private RecipePortionsPersistenceDomainModel() {}
+    private RecipePortionsPersistenceModel() {}
 
     public int getServings() {
         return servings;
@@ -25,9 +25,9 @@ public final class RecipePortionsPersistenceDomainModel
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof RecipePortionsPersistenceDomainModel)) return false;
+        if (!(o instanceof RecipePortionsPersistenceModel)) return false;
         if (!super.equals(o)) return false;
-        RecipePortionsPersistenceDomainModel that = (RecipePortionsPersistenceDomainModel) o;
+        RecipePortionsPersistenceModel that = (RecipePortionsPersistenceModel) o;
         return servings == that.servings &&
                 sittings == that.sittings;
     }
@@ -51,10 +51,10 @@ public final class RecipePortionsPersistenceDomainModel
     }
 
     public static class Builder
-            extends PersistenceModelBuilder<Builder, RecipePortionsPersistenceDomainModel> {
+            extends PersistenceModelBuilder<Builder, RecipePortionsPersistenceModel> {
 
         public Builder() {
-            persistenceModel = new RecipePortionsPersistenceDomainModel();
+            persistenceModel = new RecipePortionsPersistenceModel();
         }
 
         @Override
@@ -69,7 +69,7 @@ public final class RecipePortionsPersistenceDomainModel
         }
 
         @Override
-        public Builder basedOnModel(@Nonnull RecipePortionsPersistenceDomainModel m) {
+        public Builder basedOnModel(@Nonnull RecipePortionsPersistenceModel m) {
             persistenceModel.dataId = m.getDataId();
             persistenceModel.domainId = m.getDomainId();
             persistenceModel.servings = m.getServings();

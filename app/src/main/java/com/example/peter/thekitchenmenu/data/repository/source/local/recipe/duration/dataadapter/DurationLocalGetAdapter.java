@@ -6,7 +6,7 @@ import com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter
 import com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter.PrimitiveDataSource.GetPrimitiveCallback;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.datasource.RecipeDurationEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.datasource.RecipeDurationLocalDataSource;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDurationPersistenceDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDurationPersistenceModel;
 
 import java.util.List;
 
@@ -28,7 +28,7 @@ public class DurationLocalGetAdapter {
 
     public void getByDataId(
             @Nonnull String dataId,
-            @Nonnull GetDomainModelCallback<RecipeDurationPersistenceDomainModel> callback) {
+            @Nonnull GetDomainModelCallback<RecipeDurationPersistenceModel> callback) {
         dataSource.getByDataId(
                 dataId,
                 new GetPrimitiveCallback<RecipeDurationEntity>() {
@@ -47,7 +47,7 @@ public class DurationLocalGetAdapter {
 
     public void getAllByDomainId(
             @Nonnull String domainId,
-            @Nonnull GetAllDomainModelsCallback<RecipeDurationPersistenceDomainModel> callback) {
+            @Nonnull GetAllDomainModelsCallback<RecipeDurationPersistenceModel> callback) {
         dataSource.getAllByDomainId(
                 domainId,
                 new GetAllPrimitiveCallback<RecipeDurationEntity>() {
@@ -66,12 +66,12 @@ public class DurationLocalGetAdapter {
 
     public void getActiveByDomainId(
             @Nonnull String domainId,
-            @Nonnull GetDomainModelCallback<RecipeDurationPersistenceDomainModel> callback) {
+            @Nonnull GetDomainModelCallback<RecipeDurationPersistenceModel> callback) {
         getAllByDomainId(
                 domainId,
-                new GetAllDomainModelsCallback<RecipeDurationPersistenceDomainModel>() {
+                new GetAllDomainModelsCallback<RecipeDurationPersistenceModel>() {
                     @Override
-                    public void onAllDomainModelsLoaded(List<RecipeDurationPersistenceDomainModel> models) {
+                    public void onAllDomainModelsLoaded(List<RecipeDurationPersistenceModel> models) {
                         callback.onPersistenceModelLoaded(filterForActiveModel(models));
                     }
 
@@ -83,15 +83,15 @@ public class DurationLocalGetAdapter {
         );
     }
 
-    private RecipeDurationPersistenceDomainModel filterForActiveModel(
-            List<RecipeDurationPersistenceDomainModel> models) {
+    private RecipeDurationPersistenceModel filterForActiveModel(
+            List<RecipeDurationPersistenceModel> models) {
         long lastUpdated = 0;
-        RecipeDurationPersistenceDomainModel activeModel =
-                new RecipeDurationPersistenceDomainModel.Builder().
+        RecipeDurationPersistenceModel activeModel =
+                new RecipeDurationPersistenceModel.Builder().
                         getDefault().
                         build();
 
-        for (RecipeDurationPersistenceDomainModel m : models) {
+        for (RecipeDurationPersistenceModel m : models) {
             if (m.getLastUpdate() > lastUpdated) {
                 activeModel = m;
             }
@@ -100,7 +100,7 @@ public class DurationLocalGetAdapter {
     }
 
     public void getAll(
-            @Nonnull GetAllDomainModelsCallback<RecipeDurationPersistenceDomainModel> callback) {
+            @Nonnull GetAllDomainModelsCallback<RecipeDurationPersistenceModel> callback) {
         dataSource.getAll(
                 new GetAllPrimitiveCallback<RecipeDurationEntity>() {
                     @Override

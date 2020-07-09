@@ -17,14 +17,14 @@ public class RecipeDuration
         extends
         UseCaseElement<
                 RepositoryRecipeDuration,
-                RecipeDurationPersistenceDomainModel,
+                RecipeDurationPersistenceModel,
                 RecipeDuration.DomainModel> {
 
     private static final String TAG = "tkm-" + RecipeDuration.class.getSimpleName() + ": ";
 
     protected static final class DomainModel
             implements
-            com.example.peter.thekitchenmenu.domain.model.DomainModel.UseCaseDomainModel {
+            com.example.peter.thekitchenmenu.domain.model.DomainModel.UseCaseModel {
         private int prepTime;
         private int cookTime;
 
@@ -112,7 +112,7 @@ public class RecipeDuration
 
     @Override
     protected DomainModel createUseCaseModelFromPersistenceModel(
-            @Nonnull RecipeDurationPersistenceDomainModel persistenceModel) {
+            @Nonnull RecipeDurationPersistenceModel persistenceModel) {
 
         return new DomainModel(
                 persistenceModel.getPrepTime(),
@@ -166,7 +166,7 @@ public class RecipeDuration
                 archivePreviousState(currentTime);
             }
 
-            persistenceModel = new RecipeDurationPersistenceDomainModel.Builder().
+            persistenceModel = new RecipeDurationPersistenceModel.Builder().
                     setDataId(useCaseDataId).
                     setDomainId(useCaseDomainId).
                     setPrepTime(useCaseModel.prepTime).
@@ -182,7 +182,7 @@ public class RecipeDuration
 
     @Override
     protected void archivePreviousState(long currentTime) {
-        RecipeDurationPersistenceDomainModel model = new RecipeDurationPersistenceDomainModel.Builder().
+        RecipeDurationPersistenceModel model = new RecipeDurationPersistenceModel.Builder().
                 basedOnModel(persistenceModel).
                 setLastUpdate(currentTime).
                 build();

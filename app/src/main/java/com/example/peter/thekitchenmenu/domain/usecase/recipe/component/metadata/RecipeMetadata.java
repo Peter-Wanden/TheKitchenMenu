@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseElement;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
@@ -27,20 +28,20 @@ public class RecipeMetadata
         extends
         UseCaseElement<
                 RepositoryRecipeMetadata,
-                RecipeMetadataPersistenceDomainModel,
+                RecipeMetadataPersistenceModel,
                 RecipeMetadata.DomainModel> {
 
     private static final String TAG = "tkm-" + RecipeMetadata.class.getSimpleName() + ": ";
 
     protected static final class DomainModel
             implements
-            com.example.peter.thekitchenmenu.domain.model.DomainModel.UseCaseDomainModel {
+            com.example.peter.thekitchenmenu.domain.model.DomainModel.UseCaseModel {
 
         private String parentDomainId;
-        private HashMap<ComponentName, ComponentState> componentStates;
+        private HashMap<ComponentName, UseCaseMetadata.ComponentState> componentStates;
 
         private DomainModel(String parentDomainId,
-                            HashMap<ComponentName, ComponentState> componentStates) {
+                            HashMap<ComponentName, UseCaseMetadata.ComponentState> componentStates) {
 
             this.parentDomainId = parentDomainId;
             this.componentStates = componentStates;
@@ -108,37 +109,6 @@ public class RecipeMetadata
 
     }
 
-    public enum ComponentState {
-        INVALID_DEFAULT(1),
-        INVALID_UNCHANGED(2),
-        INVALID_CHANGED(3),
-        VALID_DEFAULT(4),
-        VALID_UNCHANGED(5),
-        VALID_CHANGED(6);
-
-        private final int id;
-
-        @SuppressLint("UseSparseArrays")
-        private static Map<Integer, ComponentState> options = new HashMap<>();
-
-        ComponentState(int id) {
-            this.id = id;
-        }
-
-        static {
-            for (ComponentState c : ComponentState.values())
-                options.put(c.id, c);
-        }
-
-        public static ComponentState fromInt(int id) {
-            return options.get(id);
-        }
-
-        public int id() {
-            return id;
-        }
-    }
-
     public enum FailReason implements FailReasons {
         MISSING_REQUIRED_COMPONENTS(400),
         INVALID_COMPONENTS(401);
@@ -172,7 +142,7 @@ public class RecipeMetadata
     @Nonnull
     private final Set<ComponentName> additionalComponentNames;
 
-    private ComponentState recipeState;
+    private UseCaseMetadata.ComponentState recipeState;
 
     public RecipeMetadata(@Nonnull RepositoryRecipeMetadata repository,
                           @Nonnull UniqueIdProvider idProvider,
@@ -198,9 +168,9 @@ public class RecipeMetadata
 
     @Override
     protected DomainModel createUseCaseModelFromDefaultValues() {
-        HashMap<ComponentName, ComponentState> defaultComponentStates = new HashMap<>();
+        HashMap<ComponentName, UseCaseMetadata.ComponentState> defaultComponentStates = new HashMap<>();
         requiredComponentNames.forEach(componentName ->
-                defaultComponentStates.put(componentName, ComponentState.INVALID_DEFAULT)
+                defaultComponentStates.put(componentName, UseCaseMetadata.ComponentState.INVALID_DEFAULT)
         );
 
         DomainModel defaultDomainModel = new DomainModel(NO_ID, defaultComponentStates);
@@ -213,7 +183,7 @@ public class RecipeMetadata
 
     @Override
     protected DomainModel createUseCaseModelFromPersistenceModel(
-            @Nonnull RecipeMetadataPersistenceDomainModel persistenceModel) {
+            @Nonnull RecipeMetadataPersistenceModel persistenceModel) {
 
         recipeState = persistenceModel.getComponentState();
         failReasons.addAll(persistenceModel.getFailReasons());
@@ -266,14 +236,14 @@ public class RecipeMetadata
     }
 
     private void checkForInvalidComponentStates() {
-        ComponentState componentState;
+        UseCaseMetadata.ComponentState componentState;
 
         for (ComponentName componentName : requiredComponentNames) {
             componentState = useCaseModel.componentStates.get(componentName);
 
-            if (ComponentState.INVALID_UNCHANGED.equals(componentState) ||
-                    ComponentState.INVALID_CHANGED.equals(componentState) ||
-                    ComponentState.INVALID_DEFAULT.equals(componentState)) {
+            if (UseCaseMetadata.ComponentState.INVALID_UNCHANGED.equals(componentState) ||
+                    UseCaseMetadata.ComponentState.INVALID_CHANGED.equals(componentState) ||
+                    UseCaseMetadata.ComponentState.INVALID_DEFAULT.equals(componentState)) {
                 addFailReasonInvalidComponents();
             }
         }
@@ -283,8 +253,8 @@ public class RecipeMetadata
         for (ComponentName componentName : additionalComponentNames) {
             componentState = useCaseModel.componentStates.get(componentName);
 
-            if (ComponentState.INVALID_UNCHANGED.equals(componentState) ||
-                    ComponentState.INVALID_CHANGED.equals(componentState)) {
+            if (UseCaseMetadata.ComponentState.INVALID_UNCHANGED.equals(componentState) ||
+                    UseCaseMetadata.ComponentState.INVALID_CHANGED.equals(componentState)) {
                 addFailReasonInvalidComponents();
             }
         }
@@ -308,7 +278,7 @@ public class RecipeMetadata
                     archivePreviousState(currentTime);
                 }
 
-                persistenceModel = new RecipeMetadataPersistenceDomainModel.Builder().
+                persistenceModel = new RecipeMetadataPersistenceModel.Builder().
                         setDataId(useCaseDataId).
                         setDomainId(useCaseDomainId).
                         setParentDomainId(useCaseModel.parentDomainId).
@@ -330,7 +300,7 @@ public class RecipeMetadata
 
     @Override
     protected void archivePreviousState(long currentTime) {
-        RecipeMetadataPersistenceDomainModel model = new RecipeMetadataPersistenceDomainModel.Builder().
+        RecipeMetadataPersistenceModel model = new RecipeMetadataPersistenceModel.Builder().
                 basedOnModel(persistenceModel).
                 setLastUpdate(currentTime).
                 build();

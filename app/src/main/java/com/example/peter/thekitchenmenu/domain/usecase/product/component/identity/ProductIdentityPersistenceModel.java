@@ -1,13 +1,13 @@
 package com.example.peter.thekitchenmenu.domain.usecase.product.component.identity;
 
-import com.example.peter.thekitchenmenu.domain.model.BasePersistenceDomainModel;
+import com.example.peter.thekitchenmenu.domain.model.BasePersistenceModel;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public class ProductIdentityPersistenceDomainModel
-        extends BasePersistenceDomainModel {
+public class ProductIdentityPersistenceModel
+        extends BasePersistenceModel {
 
     private String name;
     private String description;
@@ -15,7 +15,7 @@ public class ProductIdentityPersistenceDomainModel
     private long createDate;
     private long lastUpdate;
 
-    private ProductIdentityPersistenceDomainModel(){}
+    private ProductIdentityPersistenceModel(){}
 
     public String getName() {
         return name;
@@ -41,7 +41,7 @@ public class ProductIdentityPersistenceDomainModel
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ProductIdentityPersistenceDomainModel that = (ProductIdentityPersistenceDomainModel) o;
+        ProductIdentityPersistenceModel that = (ProductIdentityPersistenceModel) o;
         return dataId.equals(that.dataId) &&
                 domainId.equals(that.domainId) &&
                 name.equals(that.name) &&
@@ -73,10 +73,10 @@ public class ProductIdentityPersistenceDomainModel
 
     public static class Builder
             extends
-            PersistenceModelBuilder<Builder, ProductIdentityPersistenceDomainModel>  {
+            PersistenceModelBuilder<Builder, ProductIdentityPersistenceModel>  {
 
         public Builder() {
-            persistenceModel = new ProductIdentityPersistenceDomainModel();
+            persistenceModel = new ProductIdentityPersistenceModel();
         }
 
         @Override
@@ -92,7 +92,7 @@ public class ProductIdentityPersistenceDomainModel
         }
 
         @Override
-        public Builder basedOnModel(@Nonnull ProductIdentityPersistenceDomainModel model) {
+        public Builder basedOnModel(@Nonnull ProductIdentityPersistenceModel model) {
             persistenceModel.dataId = model.getDataId();
             persistenceModel.domainId = model.getDomainId();
             persistenceModel.name = model.getName();

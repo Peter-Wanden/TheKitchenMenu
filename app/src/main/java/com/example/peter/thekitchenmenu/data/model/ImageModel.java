@@ -2,7 +2,8 @@ package com.example.peter.thekitchenmenu.data.model;
 
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
-import androidx.databinding.library.baseAdapters.BR;
+
+import com.example.peter.thekitchenmenu.BR;
 
 import javax.annotation.Nonnull;
 

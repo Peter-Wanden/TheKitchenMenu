@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.recipeingredient.dataadapter;
 
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.recipeingredient.datasource.RecipeIngredientLocalDataSource;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredient.RecipeIngredientPersistenceDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredient.RecipeIngredientPersistenceModel;
 
 import javax.annotation.Nonnull;
 
@@ -16,7 +16,7 @@ public class RecipeIngredientLocalSaveAdapter {
         converter = new RecipeIngredientModelToDatabaseEntityConverterParent();
     }
 
-    public void save(RecipeIngredientPersistenceDomainModel model) {
+    public void save(RecipeIngredientPersistenceModel model) {
         dataSource.save(converter.convertParentDomainModelToEntity(model));
     }
 }

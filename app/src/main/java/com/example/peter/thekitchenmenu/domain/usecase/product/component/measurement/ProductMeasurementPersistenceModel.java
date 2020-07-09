@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecase.product.component.measurement;
 
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;
-import com.example.peter.thekitchenmenu.domain.model.BasePersistenceDomainModel;
+import com.example.peter.thekitchenmenu.domain.model.BasePersistenceModel;
 import com.example.peter.thekitchenmenu.domain.usecase.product.component.measurement.ProductMeasurement.ShelfLife;
 
 import java.util.Objects;
@@ -10,8 +10,8 @@ import javax.annotation.Nonnull;
 
 import static com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants.*;
 
-public class ProductMeasurementPersistenceDomainModel
-        extends BasePersistenceDomainModel {
+public class ProductMeasurementPersistenceModel
+        extends BasePersistenceModel {
 
     private String productId;
     private int numberOfItems;
@@ -21,7 +21,7 @@ public class ProductMeasurementPersistenceDomainModel
     private long createDate;
     private long lastUpdate;
 
-    private ProductMeasurementPersistenceDomainModel() {
+    private ProductMeasurementPersistenceModel() {
     }
 
     public String getProductId() {
@@ -56,7 +56,7 @@ public class ProductMeasurementPersistenceDomainModel
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ProductMeasurementPersistenceDomainModel that = (ProductMeasurementPersistenceDomainModel) o;
+        ProductMeasurementPersistenceModel that = (ProductMeasurementPersistenceModel) o;
         return dataId.equals(that.dataId) &&
                 domainId.equals(that.domainId) &&
                 productId.equals(that.productId) &&
@@ -92,10 +92,10 @@ public class ProductMeasurementPersistenceDomainModel
 
     public static class Builder
             extends
-            PersistenceModelBuilder<Builder, ProductMeasurementPersistenceDomainModel> {
+            PersistenceModelBuilder<Builder, ProductMeasurementPersistenceModel> {
 
         public Builder() {
-            persistenceModel = new ProductMeasurementPersistenceDomainModel();
+            persistenceModel = new ProductMeasurementPersistenceModel();
         }
 
         @Override
@@ -113,7 +113,7 @@ public class ProductMeasurementPersistenceDomainModel
         }
 
         @Override
-        public Builder basedOnModel(ProductMeasurementPersistenceDomainModel model) {
+        public Builder basedOnModel(ProductMeasurementPersistenceModel model) {
             persistenceModel.dataId = model.getDataId();
             persistenceModel.domainId = model.getDomainId();
             persistenceModel.productId = model.getProductId();

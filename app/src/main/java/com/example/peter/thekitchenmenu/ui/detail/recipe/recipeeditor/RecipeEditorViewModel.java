@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModel;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentState;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
@@ -177,12 +177,12 @@ public class RecipeEditorViewModel
     }
 
     private void updateButtonVisibility() {
-        if (metadataResponse.getMetadata().getComponentState() == ComponentState.VALID_CHANGED) {
+        if (metadataResponse.getMetadata().getComponentState() == UseCaseMetadata.ComponentState.VALID_CHANGED) {
             showIngredientsButtonObservable.set(true);
             showReviewButton = true;
             navigator.refreshOptionsMenu();
 
-        } else if (metadataResponse.getMetadata().getComponentState() == ComponentState.VALID_UNCHANGED) {
+        } else if (metadataResponse.getMetadata().getComponentState() == UseCaseMetadata.ComponentState.VALID_UNCHANGED) {
             showIngredientsButtonObservable.set(true);
             showReviewButton = false;
             navigator.refreshOptionsMenu();
@@ -203,7 +203,7 @@ public class RecipeEditorViewModel
     }
 
     void upOrBackPressed() {
-        if (metadataResponse.getMetadata().getComponentState() == ComponentState.INVALID_CHANGED) {
+        if (metadataResponse.getMetadata().getComponentState() == UseCaseMetadata.ComponentState.INVALID_CHANGED) {
             navigator.showUnsavedChangedDialog();
         } else {
             navigator.cancelEditing();

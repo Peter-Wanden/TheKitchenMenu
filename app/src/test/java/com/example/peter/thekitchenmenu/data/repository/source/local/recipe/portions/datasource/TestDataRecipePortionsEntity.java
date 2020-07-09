@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.datasource;
 
 import com.example.peter.thekitchenmenu.data.repository.recipe.portions.TestDataRecipePortions;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortionsPersistenceDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortionsPersistenceModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +52,7 @@ public class TestDataRecipePortionsEntity {
 
     public static List<RecipePortionsEntity> getAllNew() {
         List<RecipePortionsEntity> entities = new ArrayList<>();
-        for (RecipePortionsPersistenceDomainModel m : TestDataRecipePortions.getAllNew()) {
+        for (RecipePortionsPersistenceModel m : TestDataRecipePortions.getAllNew()) {
             entities.add(convertModelToEntity(m));
         }
         return entities;
@@ -96,7 +96,7 @@ public class TestDataRecipePortionsEntity {
 
     public static List<RecipePortionsEntity> getAllExisting() {
         List<RecipePortionsEntity> entities = new ArrayList<>();
-        for (RecipePortionsPersistenceDomainModel m : TestDataRecipePortions.getAllExisting()) {
+        for (RecipePortionsPersistenceModel m : TestDataRecipePortions.getAllExisting()) {
             entities.add(convertModelToEntity(m));
         }
         return entities;
@@ -116,7 +116,7 @@ public class TestDataRecipePortionsEntity {
 
     public static List<RecipePortionsEntity> getAllFromAnotherUser() {
         List<RecipePortionsEntity> entities = new ArrayList<>();
-        for (RecipePortionsPersistenceDomainModel m : TestDataRecipePortions.getAllFromAnotherUser()) {
+        for (RecipePortionsPersistenceModel m : TestDataRecipePortions.getAllFromAnotherUser()) {
             entities.add(convertModelToEntity(m));
         }
         return entities;
@@ -132,7 +132,7 @@ public class TestDataRecipePortionsEntity {
 
     public static List<RecipePortionsEntity> getAllByDomainId(String domainId) {
         List<RecipePortionsEntity> entities = new ArrayList<>();
-        for (RecipePortionsPersistenceDomainModel m : TestDataRecipePortions.getAll()) {
+        for (RecipePortionsPersistenceModel m : TestDataRecipePortions.getAll()) {
             if (domainId.equals(m.getDomainId())) {
                 entities.add(convertModelToEntity(m));
             }
@@ -140,7 +140,7 @@ public class TestDataRecipePortionsEntity {
         return entities;
     }
 
-    private static RecipePortionsEntity convertModelToEntity(RecipePortionsPersistenceDomainModel m) {
+    private static RecipePortionsEntity convertModelToEntity(RecipePortionsPersistenceModel m) {
         return new RecipePortionsEntity(
                 m.getDataId(),
                 m.getDomainId(),

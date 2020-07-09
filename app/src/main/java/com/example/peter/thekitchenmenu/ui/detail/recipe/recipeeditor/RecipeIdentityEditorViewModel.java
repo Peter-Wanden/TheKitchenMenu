@@ -15,6 +15,7 @@ import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentity;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityRequest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityRequestModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
@@ -94,7 +95,7 @@ public class RecipeIdentityEditorViewModel
 
     public void setTitle(String title) {
         if (isTitleChanged(title)) {
-            RecipeIdentityRequest.DomainModel model = new RecipeIdentityRequest.DomainModel.Builder().
+            RecipeIdentityRequestModel model = new RecipeIdentityRequestModel.Builder().
                     basedOnResponseModel(response.getDomainModel()).
                     setTitle(title).
                     build();
@@ -118,7 +119,7 @@ public class RecipeIdentityEditorViewModel
 
     public void setDescription(String description) {
         if (isDescriptionChanged(description)) {
-            RecipeIdentityRequest.DomainModel model = new RecipeIdentityRequest.DomainModel.Builder().
+            RecipeIdentityRequestModel model = new RecipeIdentityRequestModel.Builder().
                     basedOnResponseModel(response.getDomainModel()).
                     setDescription(description).
                     build();

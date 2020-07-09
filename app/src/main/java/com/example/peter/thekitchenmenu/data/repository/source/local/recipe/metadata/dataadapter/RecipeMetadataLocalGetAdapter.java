@@ -12,7 +12,7 @@ import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.meta
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.parent.RecipeMetadataParentLocalDataSource;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataPersistenceDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataPersistenceModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,7 +23,7 @@ import java.util.Set;
 import javax.annotation.Nonnull;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentName;
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentState;
+import static com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseMetadata.ComponentState;
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.FailReason;
 
 public class RecipeMetadataLocalGetAdapter {
@@ -40,13 +40,13 @@ public class RecipeMetadataLocalGetAdapter {
     @Nonnull
     private final Set<String> uniqueDomainIdList;
     @Nonnull
-    private List<RecipeMetadataPersistenceDomainModel> domainModels;
+    private List<RecipeMetadataPersistenceModel> domainModels;
 
-    private GetDomainModelCallback<RecipeMetadataPersistenceDomainModel> getModelCallback;
-    private GetAllDomainModelsCallback<RecipeMetadataPersistenceDomainModel> getAllCallback;
+    private GetDomainModelCallback<RecipeMetadataPersistenceModel> getModelCallback;
+    private GetAllDomainModelsCallback<RecipeMetadataPersistenceModel> getAllCallback;
 
     private String activeDataId = "";
-    private RecipeMetadataPersistenceDomainModel.Builder modelBuilder;
+    private RecipeMetadataPersistenceModel.Builder modelBuilder;
     private int uniqueDomainIdListSize;
     private int domainModelsProcessed;
 
@@ -68,7 +68,7 @@ public class RecipeMetadataLocalGetAdapter {
 
     public void getByDataId(
             @Nonnull String dataId,
-            @Nonnull GetDomainModelCallback<RecipeMetadataPersistenceDomainModel> callback) {
+            @Nonnull GetDomainModelCallback<RecipeMetadataPersistenceModel> callback) {
         this.getModelCallback = callback;
 
         getParentEntityFromDataId(dataId);
@@ -95,7 +95,7 @@ public class RecipeMetadataLocalGetAdapter {
 
     public void getActiveByDomainId(
             @Nonnull String domainId,
-            @Nonnull GetDomainModelCallback<RecipeMetadataPersistenceDomainModel> callback) {
+            @Nonnull GetDomainModelCallback<RecipeMetadataPersistenceModel> callback) {
 
         this.getModelCallback = callback;
         getParentEntitiesFromDomainId(domainId);
@@ -142,7 +142,7 @@ public class RecipeMetadataLocalGetAdapter {
     }
 
     private void addParentEntityToModelBuilder(RecipeMetadataParentEntity e) {
-        modelBuilder = new RecipeMetadataPersistenceDomainModel.Builder();
+        modelBuilder = new RecipeMetadataPersistenceModel.Builder();
 
         modelBuilder.
                 setDataId(e.getDataId()).
@@ -237,7 +237,7 @@ public class RecipeMetadataLocalGetAdapter {
     }
 
     public void getAllActive(
-            @Nonnull GetAllDomainModelsCallback<RecipeMetadataPersistenceDomainModel> callback) {
+            @Nonnull GetAllDomainModelsCallback<RecipeMetadataPersistenceModel> callback) {
         getAllCallback = callback;
         getAllParents();
     }
@@ -279,9 +279,9 @@ public class RecipeMetadataLocalGetAdapter {
         for (String domainId : uniqueDomainIdList) {
             getActiveByDomainId(
                     domainId,
-                    new GetDomainModelCallback<RecipeMetadataPersistenceDomainModel>() {
+                    new GetDomainModelCallback<RecipeMetadataPersistenceModel>() {
                         @Override
-                        public void onPersistenceModelLoaded(RecipeMetadataPersistenceDomainModel model) {
+                        public void onPersistenceModelLoaded(RecipeMetadataPersistenceModel model) {
                             domainModels.add(model);
                             domainModelsProcessed++;
                             returnAllDomainModels();

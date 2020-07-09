@@ -3,7 +3,6 @@ package com.example.peter.thekitchenmenu.domain.usecase.common;
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.Repository;
 import com.example.peter.thekitchenmenu.domain.model.DomainModel;
-import com.example.peter.thekitchenmenu.domain.model.DomainModelConverter;
 import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.RequestModelBase;
 import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.RequestWithId;
 import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataId;
@@ -12,12 +11,13 @@ import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
 import javax.annotation.Nonnull;
 
-public abstract class UseCaseData<
+public abstract class UseCaseModel<
         REPOSITORY extends Repository<PERSISTENCE_MODEL>,
-        PERSISTENCE_MODEL extends DomainModel.PersistenceDomainModel,
-        USE_CASE_MODEL extends DomainModel.UseCaseDomainModel,
-        REQUEST_MODEL extends DomainModel.RequestDomainModel,
-        RESPONSE_MODEL extends DomainModel.ResponseDomainModel>
+        PERSISTENCE_MODEL extends DomainModel.PersistenceModel,
+        ENTITY_MODEL extends DomainModel.EntityModel,
+        USE_CASE_MODEL extends DomainModel.UseCaseModel,
+        REQUEST_MODEL extends DomainModel.RequestModel,
+        RESPONSE_MODEL extends DomainModel.ResponseModel>
         extends
         UseCaseBase
         implements
@@ -35,7 +35,8 @@ public abstract class UseCaseData<
     protected PERSISTENCE_MODEL persistenceModel;
     protected USE_CASE_MODEL useCaseModel;
 
-    protected DomainModelConverter<
+    protected DomainModel.ModelConverter<
+            ENTITY_MODEL,
             USE_CASE_MODEL,
             PERSISTENCE_MODEL,
             REQUEST_MODEL,
@@ -44,12 +45,20 @@ public abstract class UseCaseData<
     protected boolean isChanged;
     protected int accessCount;
 
-    public UseCaseData(DomainModelConverter<
-            USE_CASE_MODEL,
-            PERSISTENCE_MODEL,
-            REQUEST_MODEL,
-            RESPONSE_MODEL> modelConverter) {
+    public UseCaseModel(
+            REPOSITORY repository,
+            DomainModel.ModelConverter<
+                    ENTITY_MODEL,
+                    USE_CASE_MODEL,
+                    PERSISTENCE_MODEL,
+                    REQUEST_MODEL,
+                    RESPONSE_MODEL> modelConverter,
+            UniqueIdProvider idProvider,
+            TimeProvider timeProvider) {
+        this.repository = repository;
         this.modelConverter = modelConverter;
+        this.idProvider = idProvider;
+        this.timeProvider = timeProvider;
     }
 
     @Override
@@ -135,11 +144,18 @@ public abstract class UseCaseData<
 
     private USE_CASE_MODEL createUseCaseModelFromRequestModel() {
         REQUEST_MODEL requestModel = ((RequestModelBase<REQUEST_MODEL>) getRequest()).getDomainModel();
-        return modelConverter.convertRequestModelToUseCaseModel(requestModel);
+        return modelConverter.convertRequestToUseCaseModel(requestModel);
     }
 
-    private void archivePreviousState(long currentTime) {
-        repository.save(modelConverter.convertPersistentModelToArchivedModel(currentTime));
+    protected void createNewPersistenceModel() {
+        persistenceModel = modelConverter.createNewPersistenceModel();
+        repository.save(persistenceModel);
+    }
+
+    protected void archivePreviousPersistenceModel() {
+        if (persistenceModel != null) {
+            repository.save(modelConverter.createArchivedPersistenceModel(persistenceModel));
+        }
     }
 
     protected abstract USE_CASE_MODEL createUseCaseModelFromDefaultValues();

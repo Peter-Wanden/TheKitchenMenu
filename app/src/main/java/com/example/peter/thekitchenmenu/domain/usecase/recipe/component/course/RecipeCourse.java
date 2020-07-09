@@ -21,7 +21,7 @@ public class RecipeCourse
         extends
         UseCaseElement<
                 RepositoryRecipeCourse,
-                RecipeCoursePersistenceDomainModel,
+                RecipeCoursePersistenceModel,
                 RecipeCourse.DomainModel> {
 
     private static final String TAG = "tkm-" + RecipeCourse.class.getSimpleName() + ": ";
@@ -30,7 +30,7 @@ public class RecipeCourse
             extends
             ArrayList<Course>
             implements
-            com.example.peter.thekitchenmenu.domain.model.DomainModel.UseCaseDomainModel {
+            com.example.peter.thekitchenmenu.domain.model.DomainModel.UseCaseModel {
 
         private DomainModel(@NonNull Collection<? extends Course> c) {
             super(c);
@@ -110,7 +110,7 @@ public class RecipeCourse
 
     @Override
     protected DomainModel createUseCaseModelFromPersistenceModel(
-            @Nonnull RecipeCoursePersistenceDomainModel persistenceModel) {
+            @Nonnull RecipeCoursePersistenceModel persistenceModel) {
 
         return new DomainModel(persistenceModel.getCourses());
     }
@@ -147,7 +147,7 @@ public class RecipeCourse
                 archivePreviousState(currentTime);
             }
 
-            persistenceModel = new RecipeCoursePersistenceDomainModel.Builder().
+            persistenceModel = new RecipeCoursePersistenceModel.Builder().
                     setDataId(useCaseDataId).
                     setDomainId(useCaseDomainId).
                     setCourses(new ArrayList<>(useCaseModel)).
@@ -163,7 +163,7 @@ public class RecipeCourse
 
     @Override
     protected void archivePreviousState(long currentTime) {
-        RecipeCoursePersistenceDomainModel archivedModel = new RecipeCoursePersistenceDomainModel.Builder().
+        RecipeCoursePersistenceModel archivedModel = new RecipeCoursePersistenceModel.Builder().
                 basedOnModel(persistenceModel).
                 setLastUpdate(currentTime).
                 build();

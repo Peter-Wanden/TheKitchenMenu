@@ -4,10 +4,10 @@ import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.Repository;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.model.BaseDomainModel;
-import com.example.peter.thekitchenmenu.domain.model.BasePersistenceDomainModel;
+import com.example.peter.thekitchenmenu.domain.model.BasePersistenceModel;
 import com.example.peter.thekitchenmenu.domain.model.DomainModelBuilder;
 import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataId;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataPersistenceDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataPersistenceModel;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -34,7 +34,7 @@ public class UseCaseElementTest {
     @Mock
     RepositoryRecipeMetadata repoMock;
     @Captor
-    ArgumentCaptor<DomainDataAccess<RecipeMetadataPersistenceDomainModel>> repoCallbackCaptor;
+    ArgumentCaptor<DomainDataAccess<RecipeMetadataPersistenceModel>> repoCallbackCaptor;
     // endregion helper fields ---------------------------------------------------------------------
 
     private UseCaseElementInheritor SUT;
@@ -222,8 +222,8 @@ public class UseCaseElementTest {
     public static class UseCaseElementInheritor
             extends
             UseCaseElement<
-                    Repository<TestPersistenceDomainModel>,
-                    TestPersistenceDomainModel,
+                    Repository<TestPersistenceModel>,
+                    TestPersistenceModel,
                     UseCaseElementInheritor.DomainModel>{
 
         private static final String TAG = "tkm-" + UseCaseElementInheritor.class.
@@ -272,7 +272,7 @@ public class UseCaseElementTest {
         }
 
         @Override
-        public void onPersistenceModelLoaded(TestPersistenceDomainModel model) {
+        public void onPersistenceModelLoaded(TestPersistenceModel model) {
 
         }
 
@@ -287,7 +287,7 @@ public class UseCaseElementTest {
         }
 
         @Override
-        protected DomainModel createUseCaseModelFromPersistenceModel(@Nonnull TestPersistenceDomainModel persistenceModel) {
+        protected DomainModel createUseCaseModelFromPersistenceModel(@Nonnull TestPersistenceModel persistenceModel) {
             return new DomainModel();
         }
 
@@ -370,7 +370,7 @@ public class UseCaseElementTest {
             public boolean equals(Object o) {
                 if (this == o) return true;
                 if (o == null || getClass() != o.getClass()) return false;
-                RequestDomainModel that = (RequestDomainModel) o;
+                RequestModel that = (RequestModel) o;
                 return Objects.equals(comparisonString, that.comparisonString);
             }
 
@@ -389,10 +389,10 @@ public class UseCaseElementTest {
 
             private static class Builder
                     extends
-                    DomainModelBuilder<Builder, RequestDomainModel> {
+                    DomainModelBuilder<Builder, RequestModel> {
 
                 public Builder() {
-                    domainModel = new RequestDomainModel();
+                    domainModel = new RequestModel();
                 }
 
                 @Override
@@ -429,9 +429,9 @@ public class UseCaseElementTest {
         }
     }
 
-    private static class TestPersistenceDomainModel
+    private static class TestPersistenceModel
             extends
-            BasePersistenceDomainModel {
+            BasePersistenceModel {
     }
     // endregion helper classes --------------------------------------------------------------------
 }

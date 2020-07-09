@@ -3,7 +3,7 @@ package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.ide
 import com.example.peter.thekitchenmenu.data.repository.recipe.identity.TestDataRecipeIdentity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.datasource.RecipeIdentityLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.datasource.TestDataRecipeIdentityEntity;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityPersistenceDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityPersistenceModel;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -40,7 +40,7 @@ public class IdentityLocalSaveAdapterTest {
     @Test
     public void save() {
         // Arrange
-        RecipeIdentityPersistenceDomainModel modelUnderTest = TestDataRecipeIdentity.getValidNewComplete();
+        RecipeIdentityPersistenceModel modelUnderTest = TestDataRecipeIdentity.getValidNewComplete();
         // Act
         SUT.save(modelUnderTest);
         // Assert

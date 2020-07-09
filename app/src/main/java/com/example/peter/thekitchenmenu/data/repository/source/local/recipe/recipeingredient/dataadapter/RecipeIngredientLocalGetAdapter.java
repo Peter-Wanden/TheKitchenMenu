@@ -6,7 +6,7 @@ import com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter
 import com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter.PrimitiveDataSource.GetPrimitiveCallback;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.recipeingredient.datasource.RecipeIngredientEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.recipeingredient.datasource.RecipeIngredientLocalDataSource;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredient.RecipeIngredientPersistenceDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredient.RecipeIngredientPersistenceModel;
 
 import java.util.List;
 
@@ -26,7 +26,7 @@ public class RecipeIngredientLocalGetAdapter {
 
     public void getByDataId(
             @Nonnull String dataId,
-            GetDomainModelCallback<RecipeIngredientPersistenceDomainModel> callback) {
+            GetDomainModelCallback<RecipeIngredientPersistenceModel> callback) {
         dataSource.getByDataId(
                 dataId,
                 new GetPrimitiveCallback<RecipeIngredientEntity>() {
@@ -45,7 +45,7 @@ public class RecipeIngredientLocalGetAdapter {
 
     public void getAllByDomainId(
             @Nonnull String domainId,
-            @Nonnull GetAllDomainModelsCallback<RecipeIngredientPersistenceDomainModel> callback) {
+            @Nonnull GetAllDomainModelsCallback<RecipeIngredientPersistenceModel> callback) {
         dataSource.getAllByDomainId(
                 domainId,
                 new GetAllPrimitiveCallback<RecipeIngredientEntity>() {
@@ -64,12 +64,12 @@ public class RecipeIngredientLocalGetAdapter {
 
     public void getActiveByDomainId(
             @Nonnull String domainId,
-            @Nonnull GetDomainModelCallback<RecipeIngredientPersistenceDomainModel> callback) {
+            @Nonnull GetDomainModelCallback<RecipeIngredientPersistenceModel> callback) {
         getAllByDomainId(
                 domainId,
-                new GetAllDomainModelsCallback<RecipeIngredientPersistenceDomainModel>() {
+                new GetAllDomainModelsCallback<RecipeIngredientPersistenceModel>() {
                     @Override
-                    public void onAllDomainModelsLoaded(List<RecipeIngredientPersistenceDomainModel> models) {
+                    public void onAllDomainModelsLoaded(List<RecipeIngredientPersistenceModel> models) {
                         callback.onPersistenceModelLoaded(filterForActiveModel(models));
                     }
 
@@ -81,14 +81,14 @@ public class RecipeIngredientLocalGetAdapter {
         );
     }
 
-    private RecipeIngredientPersistenceDomainModel filterForActiveModel(
-            List<RecipeIngredientPersistenceDomainModel> models) {
+    private RecipeIngredientPersistenceModel filterForActiveModel(
+            List<RecipeIngredientPersistenceModel> models) {
         long lastUpdated = 0;
-        RecipeIngredientPersistenceDomainModel activeModel = new RecipeIngredientPersistenceDomainModel.Builder().
+        RecipeIngredientPersistenceModel activeModel = new RecipeIngredientPersistenceModel.Builder().
                 getDefault().
                 build();
 
-        for (RecipeIngredientPersistenceDomainModel currentModel : models) {
+        for (RecipeIngredientPersistenceModel currentModel : models) {
             if (currentModel.getLastUpdate() > lastUpdated) {
                 activeModel = currentModel;
             }
@@ -98,7 +98,7 @@ public class RecipeIngredientLocalGetAdapter {
 
     public void getAllByRecipeId(
             @Nonnull String recipeId,
-            @Nonnull GetAllDomainModelsCallback<RecipeIngredientPersistenceDomainModel> callback) {
+            @Nonnull GetAllDomainModelsCallback<RecipeIngredientPersistenceModel> callback) {
         dataSource.getAllByRecipeId(
                 recipeId,
                 new GetAllPrimitiveCallback<RecipeIngredientEntity>() {
@@ -117,7 +117,7 @@ public class RecipeIngredientLocalGetAdapter {
 
     public void getAllByProductId(
             @Nonnull String productId,
-            @Nonnull GetAllDomainModelsCallback<RecipeIngredientPersistenceDomainModel> callback) {
+            @Nonnull GetAllDomainModelsCallback<RecipeIngredientPersistenceModel> callback) {
         dataSource.getAllByProductId(
                 productId,
                 new GetAllPrimitiveCallback<RecipeIngredientEntity>() {
@@ -136,7 +136,7 @@ public class RecipeIngredientLocalGetAdapter {
 
     public void getAllByIngredientId(
             @Nonnull String ingredientId,
-            @Nonnull GetAllDomainModelsCallback<RecipeIngredientPersistenceDomainModel> callback) {
+            @Nonnull GetAllDomainModelsCallback<RecipeIngredientPersistenceModel> callback) {
         dataSource.getAllByIngredientId(
                 ingredientId,
                 new GetAllPrimitiveCallback<RecipeIngredientEntity>() {
@@ -154,7 +154,7 @@ public class RecipeIngredientLocalGetAdapter {
     }
 
     public void getAll(
-            @Nonnull GetAllDomainModelsCallback<RecipeIngredientPersistenceDomainModel> callback) {
+            @Nonnull GetAllDomainModelsCallback<RecipeIngredientPersistenceModel> callback) {
         dataSource.getAll(
                 new GetAllPrimitiveCallback<RecipeIngredientEntity>() {
                     @Override

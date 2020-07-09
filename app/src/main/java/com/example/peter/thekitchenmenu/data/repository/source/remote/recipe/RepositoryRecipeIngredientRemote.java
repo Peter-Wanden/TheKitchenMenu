@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.data.repository.source.remote.recipe;
 
 
 import com.example.peter.thekitchenmenu.data.repository.recipe.DomainDataAccessRecipeIngredient;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredient.RecipeIngredientPersistenceDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredient.RecipeIngredientPersistenceModel;
 
 import javax.annotation.Nonnull;
 
@@ -21,7 +21,7 @@ public class RepositoryRecipeIngredientRemote
     @Override
     public void getActiveByDomainId(
             @Nonnull String domainId,
-            @Nonnull GetDomainModelCallback<RecipeIngredientPersistenceDomainModel> callback) {
+            @Nonnull GetDomainModelCallback<RecipeIngredientPersistenceModel> callback) {
         callback.onPersistenceModelUnavailable();
     }
 
@@ -33,39 +33,39 @@ public class RepositoryRecipeIngredientRemote
     @Override
     public void getAllByRecipeId(
             @Nonnull String recipeId,
-            @Nonnull GetAllDomainModelsCallback<RecipeIngredientPersistenceDomainModel> callback) {
+            @Nonnull GetAllDomainModelsCallback<RecipeIngredientPersistenceModel> callback) {
         callback.onDomainModelsUnavailable();
     }
 
     @Override
     public void getAllByProductId(
             @Nonnull String productId,
-            @Nonnull GetAllDomainModelsCallback<RecipeIngredientPersistenceDomainModel> callback) {
+            @Nonnull GetAllDomainModelsCallback<RecipeIngredientPersistenceModel> callback) {
         callback.onDomainModelsUnavailable();
     }
 
     @Override
     public void getAllByIngredientId(
             @Nonnull String ingredientId,
-            @Nonnull GetAllDomainModelsCallback<RecipeIngredientPersistenceDomainModel> callback) {
+            @Nonnull GetAllDomainModelsCallback<RecipeIngredientPersistenceModel> callback) {
         callback.onDomainModelsUnavailable();
     }
 
     @Override
     public void getAll(
-            @Nonnull GetAllDomainModelsCallback<RecipeIngredientPersistenceDomainModel> callback) {
+            @Nonnull GetAllDomainModelsCallback<RecipeIngredientPersistenceModel> callback) {
         callback.onDomainModelsUnavailable();
     }
 
     @Override
     public void getByDataId(
             @Nonnull String dataId,
-            @Nonnull GetDomainModelCallback<RecipeIngredientPersistenceDomainModel> callback) {
+            @Nonnull GetDomainModelCallback<RecipeIngredientPersistenceModel> callback) {
         callback.onPersistenceModelUnavailable();
     }
 
     @Override
-    public void save(@Nonnull RecipeIngredientPersistenceDomainModel model) {
+    public void save(@Nonnull RecipeIngredientPersistenceModel model) {
 
     }
 

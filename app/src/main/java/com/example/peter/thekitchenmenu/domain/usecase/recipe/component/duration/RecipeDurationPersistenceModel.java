@@ -1,17 +1,17 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration;
 
-import com.example.peter.thekitchenmenu.domain.model.BasePersistenceDomainModel;
+import com.example.peter.thekitchenmenu.domain.model.BasePersistenceModel;
 
 import javax.annotation.Nonnull;
 
-public final class RecipeDurationPersistenceDomainModel
+public final class RecipeDurationPersistenceModel
         extends
-        BasePersistenceDomainModel {
+        BasePersistenceModel {
 
     private int prepTime;
     private int cookTime;
 
-    private RecipeDurationPersistenceDomainModel() {}
+    private RecipeDurationPersistenceModel() {}
 
     public int getPrepTime() {
         return prepTime;
@@ -24,10 +24,10 @@ public final class RecipeDurationPersistenceDomainModel
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof RecipeDurationPersistenceDomainModel)) return false;
+        if (!(o instanceof RecipeDurationPersistenceModel)) return false;
         if (!super.equals(o)) return false;
 
-        RecipeDurationPersistenceDomainModel that = (RecipeDurationPersistenceDomainModel) o;
+        RecipeDurationPersistenceModel that = (RecipeDurationPersistenceModel) o;
 
         if (prepTime != that.prepTime) return false;
         return cookTime == that.cookTime;
@@ -56,10 +56,10 @@ public final class RecipeDurationPersistenceDomainModel
 
     public static class Builder
             extends
-            PersistenceModelBuilder<Builder, RecipeDurationPersistenceDomainModel> {
+            PersistenceModelBuilder<Builder, RecipeDurationPersistenceModel> {
 
         public Builder() {
-            persistenceModel = new RecipeDurationPersistenceDomainModel();
+            persistenceModel = new RecipeDurationPersistenceModel();
         }
 
         @Override
@@ -74,7 +74,7 @@ public final class RecipeDurationPersistenceDomainModel
         }
 
         @Override
-        public Builder basedOnModel(@Nonnull RecipeDurationPersistenceDomainModel m) {
+        public Builder basedOnModel(@Nonnull RecipeDurationPersistenceModel m) {
             persistenceModel.dataId = m.getDataId();
             persistenceModel.domainId = m.getDomainId();
             persistenceModel.prepTime = m.getPrepTime();

@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.data.repository.recipe.duration;
 
 import com.example.peter.thekitchenmenu.data.repository.recipe.metadata.TestDataRecipeMetadata;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDurationPersistenceDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDurationPersistenceModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,8 +27,8 @@ public class TestDataRecipeDuration {
 
     // region Persistence models for testing adding and removing data elements
     // Valid MIN_PREP and MIN_COOK times are added as the default when no values have been entered
-    public static RecipeDurationPersistenceDomainModel getNewActiveDefault() {
-        return new RecipeDurationPersistenceDomainModel.Builder().
+    public static RecipeDurationPersistenceModel getNewActiveDefault() {
+        return new RecipeDurationPersistenceModel.Builder().
                 setDataId("dataId-recipeDuration-new-id0").
                 setDomainId(NEW_RECIPE_DOMAIN_ID).
                 setPrepTime(MIN_PREP_TIME).
@@ -39,16 +39,16 @@ public class TestDataRecipeDuration {
     }
 
     // When domain data state changes to a new valid value, the previous persisted state is archived
-    public static RecipeDurationPersistenceDomainModel getNewArchivedDefault() {
-        return new RecipeDurationPersistenceDomainModel.Builder().
+    public static RecipeDurationPersistenceModel getNewArchivedDefault() {
+        return new RecipeDurationPersistenceModel.Builder().
                 basedOnModel(getNewActiveDefault()).
                 setLastUpdate(20L). // updated to current time
                 build();
     }
 
     // User enters invalid prep hours. This is an invalid state and should not be persisted
-    public static RecipeDurationPersistenceDomainModel getNewInvalidPrepHours() {
-        return new RecipeDurationPersistenceDomainModel.Builder().
+    public static RecipeDurationPersistenceModel getNewInvalidPrepHours() {
+        return new RecipeDurationPersistenceModel.Builder().
                 setDataId("dataId-recipeDuration-new-id1").
                 setDomainId(NEW_RECIPE_DOMAIN_ID).
                 setPrepTime(MAX_PREP_TIME + 60).
@@ -59,8 +59,8 @@ public class TestDataRecipeDuration {
     }
 
     // User enters invalid prep minutes. This is an invalid state and should not be persisted
-    public static RecipeDurationPersistenceDomainModel getNewInvalidPrepMinutes() {
-        return new RecipeDurationPersistenceDomainModel.Builder().
+    public static RecipeDurationPersistenceModel getNewInvalidPrepMinutes() {
+        return new RecipeDurationPersistenceModel.Builder().
                 setDataId("dataId-recipeDuration-new-id1").
                 setDomainId(NEW_RECIPE_DOMAIN_ID).
                 setPrepTime(MAX_PREP_TIME + 1).
@@ -71,8 +71,8 @@ public class TestDataRecipeDuration {
     }
 
     // User enters an invalid cook hours. This is an invalid state and should not be persisted
-    public static RecipeDurationPersistenceDomainModel getNewInvalidCookHours() {
-        return new RecipeDurationPersistenceDomainModel.Builder().
+    public static RecipeDurationPersistenceModel getNewInvalidCookHours() {
+        return new RecipeDurationPersistenceModel.Builder().
                 setDataId("dataId-recipeDuration-new-id2").
                 setDomainId(NEW_RECIPE_DOMAIN_ID).
                 setPrepTime(MIN_PREP_TIME).
@@ -83,8 +83,8 @@ public class TestDataRecipeDuration {
     }
 
     // User enters an invalid cook minutes. This is an invalid state and should not be persisted
-    public static RecipeDurationPersistenceDomainModel getInvalidNewCookMinutes() {
-        return new RecipeDurationPersistenceDomainModel.Builder().
+    public static RecipeDurationPersistenceModel getInvalidNewCookMinutes() {
+        return new RecipeDurationPersistenceModel.Builder().
                 setDataId("dataId-recipeDuration-new-id2").
                 setDomainId(NEW_RECIPE_DOMAIN_ID).
                 setPrepTime(MIN_PREP_TIME).
@@ -95,8 +95,8 @@ public class TestDataRecipeDuration {
     }
 
     // User enters a valid prep time, domain model is persisted
-    public static RecipeDurationPersistenceDomainModel getNewValidPrepTime() {
-        return new RecipeDurationPersistenceDomainModel.Builder().
+    public static RecipeDurationPersistenceModel getNewValidPrepTime() {
+        return new RecipeDurationPersistenceModel.Builder().
                 setDataId("dataId-recipeDuration-new-id3").
                 setDomainId(NEW_RECIPE_DOMAIN_ID).
                 setPrepTime(MAX_PREP_TIME).
@@ -107,16 +107,16 @@ public class TestDataRecipeDuration {
     }
 
     // When domain data state changes to a new valid value, the previous persisted state is archived
-    public static RecipeDurationPersistenceDomainModel getNewValidArchivedPrepTimeValid() {
-        return new RecipeDurationPersistenceDomainModel.Builder().
+    public static RecipeDurationPersistenceModel getNewValidArchivedPrepTimeValid() {
+        return new RecipeDurationPersistenceModel.Builder().
                 basedOnModel(getNewValidPrepTime()).
                 setLastUpdate(30L).
                 build();
     }
 
     // User enters a valid cook time, domain model is persisted
-    public static RecipeDurationPersistenceDomainModel getNewValidCookTime() {
-        return new RecipeDurationPersistenceDomainModel.Builder().
+    public static RecipeDurationPersistenceModel getNewValidCookTime() {
+        return new RecipeDurationPersistenceModel.Builder().
                 setDataId("dataId-recipeDuration-new-id4").
                 setDomainId(NEW_RECIPE_DOMAIN_ID).
                 setPrepTime(MIN_PREP_TIME).
@@ -127,16 +127,16 @@ public class TestDataRecipeDuration {
     }
 
     // When domain data state changes to a new valid value, the previous persisted state is archived
-    public static RecipeDurationPersistenceDomainModel getNewValidArchivedCookTimeValid() {
-        return new RecipeDurationPersistenceDomainModel.Builder().
+    public static RecipeDurationPersistenceModel getNewValidArchivedCookTimeValid() {
+        return new RecipeDurationPersistenceModel.Builder().
                 basedOnModel(getNewValidCookTime()).
                 setLastUpdate(30L).
                 build();
     }
 
     // User enters a valid prep and cook time, domain model is persisted
-    public static RecipeDurationPersistenceDomainModel getNewValidPrepTimeValidCookTime() {
-        return new RecipeDurationPersistenceDomainModel.Builder().
+    public static RecipeDurationPersistenceModel getNewValidPrepTimeValidCookTime() {
+        return new RecipeDurationPersistenceModel.Builder().
                 setDataId("dataId-recipeDuration-new-id5").
                 setDomainId(NEW_RECIPE_DOMAIN_ID).
                 setPrepTime(MAX_PREP_TIME).
@@ -147,8 +147,8 @@ public class TestDataRecipeDuration {
     }
 
     // When domain data state changes to a new valid value, the previous persisted state is archived
-    public static RecipeDurationPersistenceDomainModel getNewArchivedPrepTimeValidCookTimeValid() {
-        return new RecipeDurationPersistenceDomainModel.Builder().
+    public static RecipeDurationPersistenceModel getNewArchivedPrepTimeValidCookTimeValid() {
+        return new RecipeDurationPersistenceModel.Builder().
                 basedOnModel(getNewValidPrepTimeValidCookTime()).
                 setLastUpdate(40).
                 build();
@@ -156,8 +156,8 @@ public class TestDataRecipeDuration {
 
     // user enters invalid prep time and invalid cook time/ . This is an invalid state and should
     // not be persisted
-    public static RecipeDurationPersistenceDomainModel getNewInvalidPrepTimeInvalidCookTime() {
-        return new RecipeDurationPersistenceDomainModel.Builder().
+    public static RecipeDurationPersistenceModel getNewInvalidPrepTimeInvalidCookTime() {
+        return new RecipeDurationPersistenceModel.Builder().
                 setDataId("dataId-recipeDuration-new-id6").
                 setDomainId(NEW_RECIPE_DOMAIN_ID).
                 setPrepTime(MAX_PREP_TIME + 1).
@@ -166,7 +166,7 @@ public class TestDataRecipeDuration {
                 build();
     }
 
-    public static List<RecipeDurationPersistenceDomainModel> getAllNew() {
+    public static List<RecipeDurationPersistenceModel> getAllNew() {
         return Arrays.asList(
                 getNewActiveDefault(),
                 getNewInvalidPrepMinutes(),
@@ -179,8 +179,8 @@ public class TestDataRecipeDuration {
     // endregion Persistence models for testing adding and removing data elements
 
     // region Persistence models for testing existing loaded domain models
-    public static RecipeDurationPersistenceDomainModel getExistingValidPrepTimeValidCookTime() {
-        return new RecipeDurationPersistenceDomainModel.Builder().
+    public static RecipeDurationPersistenceModel getExistingValidPrepTimeValidCookTime() {
+        return new RecipeDurationPersistenceModel.Builder().
                 setDataId("dataId-recipeDuration-existing-id1").
                 setDomainId(EXISTING_RECIPE_DOMAIN_ID).
                 setPrepTime(MAX_PREP_TIME).
@@ -190,8 +190,8 @@ public class TestDataRecipeDuration {
                 build();
     }
 
-    public static RecipeDurationPersistenceDomainModel getExistingInvalidPreAndCookTime() {
-        return new RecipeDurationPersistenceDomainModel.Builder().
+    public static RecipeDurationPersistenceModel getExistingInvalidPreAndCookTime() {
+        return new RecipeDurationPersistenceModel.Builder().
                 setDataId("dataId-recipeDuration-existing-id0").
                 setDomainId(EXISTING_RECIPE_DOMAIN_ID).
                 setPrepTime(MAX_PREP_TIME + 1).
@@ -201,7 +201,7 @@ public class TestDataRecipeDuration {
                 build();
     }
 
-    public static List<RecipeDurationPersistenceDomainModel> getAllExisting() {
+    public static List<RecipeDurationPersistenceModel> getAllExisting() {
         return Arrays.asList(
                 getExistingInvalidPreAndCookTime(),
                 getExistingValidPrepTimeValidCookTime()
@@ -210,8 +210,8 @@ public class TestDataRecipeDuration {
 
     // endregion Persistence models for testing existing loaded domain models
 
-    public static RecipeDurationPersistenceDomainModel getValidCompleteFromAnotherUser() {
-        return new RecipeDurationPersistenceDomainModel.Builder().
+    public static RecipeDurationPersistenceModel getValidCompleteFromAnotherUser() {
+        return new RecipeDurationPersistenceModel.Builder().
                 setDataId("dataId-recipeDuration-anotherUser-id0").
                 setDomainId(RECIPE_ID_FROM_ANOTHER_USER).
                 setPrepTime(MAX_PREP_TIME).
@@ -221,8 +221,8 @@ public class TestDataRecipeDuration {
                 build();
     }
 
-    public static RecipeDurationPersistenceDomainModel getInvalidCompleteFromAnotherUser() {
-        return new RecipeDurationPersistenceDomainModel.Builder().
+    public static RecipeDurationPersistenceModel getInvalidCompleteFromAnotherUser() {
+        return new RecipeDurationPersistenceModel.Builder().
                 setDataId("dataId-recipeDuration-anotherUser-id1").
                 setDomainId(RECIPE_ID_FROM_ANOTHER_USER).
                 setPrepTime(MAX_PREP_TIME + 1).
@@ -232,15 +232,15 @@ public class TestDataRecipeDuration {
                 build();
     }
 
-    public static List<RecipeDurationPersistenceDomainModel> getAllFromAnotherUser() {
+    public static List<RecipeDurationPersistenceModel> getAllFromAnotherUser() {
         return Arrays.asList(
                 getValidCompleteFromAnotherUser(),
                 getInvalidCompleteFromAnotherUser()
         );
     }
 
-    public static RecipeDurationPersistenceDomainModel getValidNewCopied() {
-        return new RecipeDurationPersistenceDomainModel.Builder().
+    public static RecipeDurationPersistenceModel getValidNewCopied() {
+        return new RecipeDurationPersistenceModel.Builder().
                 setDataId("dataId-recipeDuration-copied-id0").
                 setDomainId(TestDataRecipeMetadata.getValidCopied().getDomainId()).
                 setPrepTime(getValidCompleteFromAnotherUser().getPrepTime()).
@@ -250,8 +250,8 @@ public class TestDataRecipeDuration {
                 build();
     }
 
-    public static RecipeDurationPersistenceDomainModel getInvalidNewCopied() {
-        return new RecipeDurationPersistenceDomainModel.Builder().
+    public static RecipeDurationPersistenceModel getInvalidNewCopied() {
+        return new RecipeDurationPersistenceModel.Builder().
                 setDataId("dataId-recipeDuration-copied-id1").
                 setDomainId(TestDataRecipeMetadata.getInvalidCopied().getDomainId()).
                 setPrepTime(getInvalidCompleteFromAnotherUser().getPrepTime()).
@@ -261,8 +261,8 @@ public class TestDataRecipeDuration {
                 build();
     }
 
-    public static RecipeDurationPersistenceDomainModel getValidNewCopiedPrepTimeUpdated() {
-        return new RecipeDurationPersistenceDomainModel.Builder().
+    public static RecipeDurationPersistenceModel getValidNewCopiedPrepTimeUpdated() {
+        return new RecipeDurationPersistenceModel.Builder().
                 setDataId("dataId-recipeDuration-copied-id2").
                 setDomainId(getInvalidNewCopied().getDomainId()).
                 setPrepTime(MAX_PREP_TIME / 2).
@@ -272,7 +272,7 @@ public class TestDataRecipeDuration {
                 build();
     }
 
-    public static List<RecipeDurationPersistenceDomainModel> getAllCopied() {
+    public static List<RecipeDurationPersistenceModel> getAllCopied() {
         return Arrays.asList(
                 getValidNewCopied(),
                 getInvalidNewCopied(),
@@ -280,8 +280,8 @@ public class TestDataRecipeDuration {
         );
     }
 
-    public static List<RecipeDurationPersistenceDomainModel> getAll() {
-        List<RecipeDurationPersistenceDomainModel> models = new ArrayList<>();
+    public static List<RecipeDurationPersistenceModel> getAll() {
+        List<RecipeDurationPersistenceModel> models = new ArrayList<>();
         models.addAll(getAllNew());
         models.addAll(getAllExisting());
         models.addAll(getAllFromAnotherUser());
@@ -289,11 +289,11 @@ public class TestDataRecipeDuration {
         return models;
     }
 
-    public static RecipeDurationPersistenceDomainModel getActiveByDomainId(String domainId) {
+    public static RecipeDurationPersistenceModel getActiveByDomainId(String domainId) {
         long lastUpdate = 0;
-        RecipeDurationPersistenceDomainModel model = new RecipeDurationPersistenceDomainModel.Builder().
+        RecipeDurationPersistenceModel model = new RecipeDurationPersistenceModel.Builder().
                 getDefault().build();
-        for (RecipeDurationPersistenceDomainModel m : getAll()) {
+        for (RecipeDurationPersistenceModel m : getAll()) {
             if (lastUpdate < m.getLastUpdate()) {
                 model = m;
                 lastUpdate = m.getLastUpdate();

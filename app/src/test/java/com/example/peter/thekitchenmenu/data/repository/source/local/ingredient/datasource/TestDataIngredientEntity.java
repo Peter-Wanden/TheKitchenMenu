@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.datasource;
 
 import com.example.peter.thekitchenmenu.data.repository.ingredient.TestDataIngredient;
-import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientPersistenceDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientPersistenceModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -130,13 +130,13 @@ public class TestDataIngredientEntity {
     public static List<IngredientEntity> getAllByDomainId(String domainId) {
         List<IngredientEntity> ingredients = new ArrayList<>();
 
-        for (IngredientPersistenceDomainModel m : TestDataIngredient.getAllByDomainId(domainId)) {
+        for (IngredientPersistenceModel m : TestDataIngredient.getAllByDomainId(domainId)) {
             ingredients.add(convertModelToEntity(m));
         }
         return ingredients;
     }
 
-    private static IngredientEntity convertModelToEntity(IngredientPersistenceDomainModel m) {
+    private static IngredientEntity convertModelToEntity(IngredientPersistenceModel m) {
         return new IngredientEntity(
                 m.getDataId(),
                 m.getDomainId(),

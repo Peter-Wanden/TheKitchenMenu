@@ -5,7 +5,7 @@ import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.meta
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.failreason.RecipeFailReasonEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.parent.RecipeMetadataParentEntity;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
-import com.example.peter.thekitchenmenu.domain.model.BasePersistenceDomainModel;
+import com.example.peter.thekitchenmenu.domain.model.BasePersistenceModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,15 +14,15 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentName;
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentState;
+import static com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseMetadata.ComponentState;
 
 /**
  * Represented in primitive form by {@link RecipeMetadataParentEntity},
  * {@link RecipeComponentStateEntity} & {@link RecipeFailReasonEntity}
  */
-public final class RecipeMetadataPersistenceDomainModel
+public final class RecipeMetadataPersistenceModel
         extends
-        BasePersistenceDomainModel {
+        BasePersistenceModel {
 
     private String parentDomainId;
     private ComponentState componentState;
@@ -30,7 +30,7 @@ public final class RecipeMetadataPersistenceDomainModel
     private List<FailReasons> failReasons;
     private String createdBy;
 
-    private RecipeMetadataPersistenceDomainModel(){}
+    private RecipeMetadataPersistenceModel(){}
 
     public String getParentDomainId() {
         return parentDomainId;
@@ -70,10 +70,10 @@ public final class RecipeMetadataPersistenceDomainModel
 
     public static class Builder
             extends
-            PersistenceModelBuilder<Builder, RecipeMetadataPersistenceDomainModel> {
+            PersistenceModelBuilder<Builder, RecipeMetadataPersistenceModel> {
 
         public Builder() {
-            persistenceModel = new RecipeMetadataPersistenceDomainModel();
+            persistenceModel = new RecipeMetadataPersistenceModel();
         }
 
         @Override
@@ -91,7 +91,7 @@ public final class RecipeMetadataPersistenceDomainModel
         }
 
         @Override
-        public Builder basedOnModel(RecipeMetadataPersistenceDomainModel model) {
+        public Builder basedOnModel(RecipeMetadataPersistenceModel model) {
             persistenceModel.dataId = model.getDataId();
             persistenceModel.domainId = model.getDomainId();
             persistenceModel.parentDomainId = model.getParentDomainId();

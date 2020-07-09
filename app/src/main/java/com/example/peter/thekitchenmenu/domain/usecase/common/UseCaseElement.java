@@ -18,7 +18,7 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentState;
+import static com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseMetadata.ComponentState;
 
 /**
  * Using the state of the data Id's, determines the updatedDomainModel to be processed.
@@ -29,8 +29,8 @@ import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.m
  */
 public abstract class UseCaseElement<
         REPOSITORY extends Repository<PERSISTENCE_MODEL>,
-        PERSISTENCE_MODEL extends DomainModel.PersistenceDomainModel,
-        USE_CASE_MODEL extends DomainModel.UseCaseDomainModel>
+        PERSISTENCE_MODEL extends DomainModel.PersistenceModel,
+        USE_CASE_MODEL extends DomainModel.UseCaseModel>
         extends
         UseCaseBase
         implements DomainDataAccess.GetDomainModelCallback<PERSISTENCE_MODEL> {

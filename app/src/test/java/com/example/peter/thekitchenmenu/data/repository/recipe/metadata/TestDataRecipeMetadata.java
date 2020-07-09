@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.data.repository.recipe.metadata;
 
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.CommonFailReason;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataPersistenceDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataPersistenceModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,7 +14,7 @@ import java.util.Set;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataId.NO_ID;
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentName;
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentState;
+import static com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseMetadata.ComponentState;
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.FailReason;
 
 /**
@@ -44,8 +44,8 @@ public class TestDataRecipeMetadata {
     This state should never be saved. It is stored in this persistence model as it's a
     convenient place to retrieve values for testing.
      */
-    public static RecipeMetadataPersistenceDomainModel getDefaultState() {
-        return new RecipeMetadataPersistenceDomainModel.Builder().
+    public static RecipeMetadataPersistenceModel getDefaultState() {
+        return new RecipeMetadataPersistenceModel.Builder().
                 setDataId(NO_ID).
                 setDomainId(NO_ID).
                 setParentDomainId(NO_ID).
@@ -66,8 +66,8 @@ public class TestDataRecipeMetadata {
       - is a newly created recipe
       - has one or more components reporting INVALID_DEFAULT state.
      */
-    public static RecipeMetadataPersistenceDomainModel getInvalidDefault() {
-        return new RecipeMetadataPersistenceDomainModel.Builder().
+    public static RecipeMetadataPersistenceModel getInvalidDefault() {
+        return new RecipeMetadataPersistenceModel.Builder().
                 setDataId(NO_ID).
                 setDomainId("domainId-recipeMetadata-id0").
                 setParentDomainId(NO_ID).
@@ -88,8 +88,8 @@ public class TestDataRecipeMetadata {
         - one or more required components are missing
     It is valid to save as the user will have been entering data to get to this state
      */
-    public static RecipeMetadataPersistenceDomainModel getInvalidMissingComponents() {
-        return new RecipeMetadataPersistenceDomainModel.Builder().
+    public static RecipeMetadataPersistenceModel getInvalidMissingComponents() {
+        return new RecipeMetadataPersistenceModel.Builder().
                 setDataId("dataId-recipeMetadata-id0").
                 setDomainId(getInvalidDefault().getDomainId()).
                 setParentDomainId(NO_ID).
@@ -112,8 +112,8 @@ public class TestDataRecipeMetadata {
      - all additional components are reporting DEFAULT or UNCHANGED
      - has one or more components reporting INVALID
      */
-    public static RecipeMetadataPersistenceDomainModel getInvalidUnchanged() {
-        return new RecipeMetadataPersistenceDomainModel.Builder().
+    public static RecipeMetadataPersistenceModel getInvalidUnchanged() {
+        return new RecipeMetadataPersistenceModel.Builder().
                 setDataId("dataId-recipeMetadata-id1").
                 setDomainId(getInvalidDefault().getDomainId()).
                 setParentDomainId(NO_ID).
@@ -135,8 +135,8 @@ public class TestDataRecipeMetadata {
     2. one or more components is reporting INVALID
     3. one or more components is reporting CHANGED
      */
-    public static RecipeMetadataPersistenceDomainModel getInvalidChanged() {
-        return new RecipeMetadataPersistenceDomainModel.Builder().
+    public static RecipeMetadataPersistenceModel getInvalidChanged() {
+        return new RecipeMetadataPersistenceModel.Builder().
                 setDataId("dataId-recipeMetadata-Id2").
                 setDomainId(getInvalidDefault().getDomainId()).
                 setParentDomainId(NO_ID).
@@ -155,8 +155,8 @@ public class TestDataRecipeMetadata {
     3. all additional components are reporting valid or DEFAULT
     4. At least one component is reporting CHANGED
      */
-    public static RecipeMetadataPersistenceDomainModel getValidChanged() {
-        return new RecipeMetadataPersistenceDomainModel.Builder().
+    public static RecipeMetadataPersistenceModel getValidChanged() {
+        return new RecipeMetadataPersistenceModel.Builder().
                 setDataId("dataId-recipeMetadata-id5").
                 setDomainId(getInvalidDefault().getDomainId()).
                 setParentDomainId(getInvalidDefault().getParentDomainId()).
@@ -175,8 +175,8 @@ public class TestDataRecipeMetadata {
      2. has all components report their data valid
      3. remains unchanged by the current session.
      */
-    public static RecipeMetadataPersistenceDomainModel getValidUnchanged() {
-        return new RecipeMetadataPersistenceDomainModel.Builder().
+    public static RecipeMetadataPersistenceModel getValidUnchanged() {
+        return new RecipeMetadataPersistenceModel.Builder().
                 setDataId("dataId-recipeMetadata-Id6").
                 setDomainId("domainId-recipe-Id2").
                 setParentDomainId("").
@@ -193,8 +193,8 @@ public class TestDataRecipeMetadata {
     Represents a valid recipe created using an user Id that is different from the one in the 
     current session.
      */
-    public static RecipeMetadataPersistenceDomainModel getValidFromAnotherUser() {
-        return new RecipeMetadataPersistenceDomainModel.Builder().
+    public static RecipeMetadataPersistenceModel getValidFromAnotherUser() {
+        return new RecipeMetadataPersistenceModel.Builder().
                 setDataId("dataId-recipeMetadata-Id7").
                 setDomainId("domainId-recipe-Id20").
                 setParentDomainId("").
@@ -211,8 +211,8 @@ public class TestDataRecipeMetadata {
     Represents an invalid recipe created using an user Id that is different from the one in the 
     current session.  
      */
-    public static RecipeMetadataPersistenceDomainModel getInvalidFromAnotherUser() {
-        return new RecipeMetadataPersistenceDomainModel.Builder().
+    public static RecipeMetadataPersistenceModel getInvalidFromAnotherUser() {
+        return new RecipeMetadataPersistenceModel.Builder().
                 setDataId(getValidFromAnotherUser().getDataId()).
                 setDomainId("domainId-recipe-Id21").
                 setParentDomainId("").
@@ -229,9 +229,9 @@ public class TestDataRecipeMetadata {
     Represents a valid recipe that has been copied from another user to the user in the 
     current session.  
      */
-    public static RecipeMetadataPersistenceDomainModel getValidCopied() {
-        RecipeMetadataPersistenceDomainModel validParentFromAnotherUser = getValidFromAnotherUser();
-        return new RecipeMetadataPersistenceDomainModel.Builder().
+    public static RecipeMetadataPersistenceModel getValidCopied() {
+        RecipeMetadataPersistenceModel validParentFromAnotherUser = getValidFromAnotherUser();
+        return new RecipeMetadataPersistenceModel.Builder().
                 setDataId("dataId-recipeMetadata-Id30").
                 setDomainId("domainId-recipe-Id30").
                 setParentDomainId(validParentFromAnotherUser.getDomainId()).
@@ -248,9 +248,9 @@ public class TestDataRecipeMetadata {
     Represents an invalid recipe that has been copied from another user to the user in the 
     current session.
      */
-    public static RecipeMetadataPersistenceDomainModel getInvalidCopied() {
-        RecipeMetadataPersistenceDomainModel invalidParentFromAnotherUser = getInvalidFromAnotherUser();
-        return new RecipeMetadataPersistenceDomainModel.Builder().
+    public static RecipeMetadataPersistenceModel getInvalidCopied() {
+        RecipeMetadataPersistenceModel invalidParentFromAnotherUser = getInvalidFromAnotherUser();
+        return new RecipeMetadataPersistenceModel.Builder().
                 setDataId("dataId-recipeMetadata-Idd31").
                 setDomainId("domainId-recipe-Id40").
                 setParentDomainId(invalidParentFromAnotherUser.getDomainId()).
@@ -325,7 +325,7 @@ public class TestDataRecipeMetadata {
         return s;
     }
 
-    public static List<RecipeMetadataPersistenceDomainModel> getAll() {
+    public static List<RecipeMetadataPersistenceModel> getAll() {
         return Arrays.asList(
                 getInvalidDefault(),
                 getInvalidUnchanged(),
@@ -339,9 +339,9 @@ public class TestDataRecipeMetadata {
         );
     }
 
-    public static List<RecipeMetadataPersistenceDomainModel> getAllByDomainId(String domainId) {
-        List<RecipeMetadataPersistenceDomainModel> models = new ArrayList<>();
-        for (RecipeMetadataPersistenceDomainModel m : getAll()) {
+    public static List<RecipeMetadataPersistenceModel> getAllByDomainId(String domainId) {
+        List<RecipeMetadataPersistenceModel> models = new ArrayList<>();
+        for (RecipeMetadataPersistenceModel m : getAll()) {
             if (domainId.equals(m.getDomainId())) {
                 models.add(m);
             }
@@ -349,11 +349,11 @@ public class TestDataRecipeMetadata {
         return models;
     }
 
-    public static RecipeMetadataPersistenceDomainModel getActiveByDomainId(String domainId) {
+    public static RecipeMetadataPersistenceModel getActiveByDomainId(String domainId) {
         long lastUpdate = 0;
-        RecipeMetadataPersistenceDomainModel model = new RecipeMetadataPersistenceDomainModel.Builder().
+        RecipeMetadataPersistenceModel model = new RecipeMetadataPersistenceModel.Builder().
                 getDefault().build();
-        for (RecipeMetadataPersistenceDomainModel m : getAllByDomainId(domainId)) {
+        for (RecipeMetadataPersistenceModel m : getAllByDomainId(domainId)) {
             if (lastUpdate < m.getLastUpdate()) {
                 model = m;
                 lastUpdate = m.getLastUpdate();

@@ -9,7 +9,7 @@
 
         <variable
             name="productModel"
-            type="com.example.peter.thekitchenmenu.data.domainModel.ProductModel" />
+            type="com.example.peter.thekitchenmenu.data.model.ProductModel" />
 
         <variable
             name="listener"

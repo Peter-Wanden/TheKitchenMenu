@@ -10,7 +10,7 @@ import android.widget.FrameLayout;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseMetadata;
 import com.example.peter.thekitchenmenu.ui.common.toolbar.ToolbarView;
 import com.example.peter.thekitchenmenu.ui.common.views.BaseObservableViewMvc;
 import com.example.peter.thekitchenmenu.ui.common.views.ViewFactory;
@@ -96,12 +96,12 @@ public class RecipeEditorViewImpl
     }
 
     @Override
-    public void setRecipeState(RecipeMetadata.ComponentState recipeState) {
-        if (RecipeMetadata.ComponentState.VALID_CHANGED == recipeState) {
+    public void setRecipeState(UseCaseMetadata.ComponentState recipeState) {
+        if (UseCaseMetadata.ComponentState.VALID_CHANGED == recipeState) {
             ingredientsButton.setVisibility(View.VISIBLE);
             isShowReviewButton = true;
 
-        } else if (RecipeMetadata.ComponentState.VALID_UNCHANGED == recipeState) {
+        } else if (UseCaseMetadata.ComponentState.VALID_UNCHANGED == recipeState) {
             ingredientsButton.setVisibility(View.VISIBLE);
             isShowReviewButton = false;
 

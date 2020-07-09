@@ -1,9 +1,9 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredient;
 
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModel;
-import com.example.peter.thekitchenmenu.domain.model.BasePersistenceDomainModel;
+import com.example.peter.thekitchenmenu.domain.model.BasePersistenceModel;
 
-public class RecipeIngredientPersistenceDomainModel extends BasePersistenceDomainModel {
+public class RecipeIngredientPersistenceModel extends BasePersistenceModel {
 
     private String dataId;
     private String recipeIngredientId;
@@ -17,7 +17,7 @@ public class RecipeIngredientPersistenceDomainModel extends BasePersistenceDomai
     private long createDate;
     private long lastUpdate;
 
-    private RecipeIngredientPersistenceDomainModel() {}
+    private RecipeIngredientPersistenceModel() {}
 
     @Override
     public String getDataId() {
@@ -67,10 +67,10 @@ public class RecipeIngredientPersistenceDomainModel extends BasePersistenceDomai
     public static class Builder
             extends
             PersistenceModelBuilder<Builder,
-                    RecipeIngredientPersistenceDomainModel> {
+                    RecipeIngredientPersistenceModel> {
 
         public Builder() {
-            persistenceModel = new RecipeIngredientPersistenceDomainModel();
+            persistenceModel = new RecipeIngredientPersistenceModel();
         }
 
         @Override
@@ -90,7 +90,7 @@ public class RecipeIngredientPersistenceDomainModel extends BasePersistenceDomai
         }
 
         @Override
-        public Builder basedOnModel(RecipeIngredientPersistenceDomainModel model) {
+        public Builder basedOnModel(RecipeIngredientPersistenceModel model) {
             persistenceModel.dataId = model.getDataId();
             persistenceModel.recipeIngredientId = model.getDomainId();
             persistenceModel.recipeDataId = model.getRecipeDataId();

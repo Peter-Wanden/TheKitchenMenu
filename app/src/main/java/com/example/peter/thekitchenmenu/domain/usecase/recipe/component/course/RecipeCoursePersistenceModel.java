@@ -1,6 +1,6 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course;
 
-import com.example.peter.thekitchenmenu.domain.model.BasePersistenceDomainModel;
+import com.example.peter.thekitchenmenu.domain.model.BasePersistenceModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse.Course;
 
 import java.util.ArrayList;
@@ -8,14 +8,14 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-public final class RecipeCoursePersistenceDomainModel
+public final class RecipeCoursePersistenceModel
         extends
-        BasePersistenceDomainModel {
+        BasePersistenceModel {
 
     @Nonnull
     private List<Course> courses;
 
-    private RecipeCoursePersistenceDomainModel(){
+    private RecipeCoursePersistenceModel(){
         courses = new ArrayList<>();
     }
 
@@ -27,10 +27,10 @@ public final class RecipeCoursePersistenceDomainModel
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof RecipeCoursePersistenceDomainModel)) return false;
+        if (!(o instanceof RecipeCoursePersistenceModel)) return false;
         if (!super.equals(o)) return false;
 
-        RecipeCoursePersistenceDomainModel that = (RecipeCoursePersistenceDomainModel) o;
+        RecipeCoursePersistenceModel that = (RecipeCoursePersistenceModel) o;
 
         return courses.equals(that.courses);
     }
@@ -56,10 +56,10 @@ public final class RecipeCoursePersistenceDomainModel
 
     public static class Builder
             extends
-            PersistenceModelBuilder<Builder, RecipeCoursePersistenceDomainModel> {
+            PersistenceModelBuilder<Builder, RecipeCoursePersistenceModel> {
 
         public Builder() {
-            persistenceModel = new RecipeCoursePersistenceDomainModel();
+            persistenceModel = new RecipeCoursePersistenceModel();
         }
 
         @Override
@@ -73,7 +73,7 @@ public final class RecipeCoursePersistenceDomainModel
         }
 
         @Override
-        public Builder basedOnModel(RecipeCoursePersistenceDomainModel persistenceModel) {
+        public Builder basedOnModel(RecipeCoursePersistenceModel persistenceModel) {
             this.persistenceModel.dataId = persistenceModel.getDataId();
             this.persistenceModel.domainId = persistenceModel.getDomainId();
             this.persistenceModel.courses = persistenceModel.getCourses();

@@ -1,18 +1,18 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity;
 
-import com.example.peter.thekitchenmenu.domain.model.BasePersistenceDomainModel;
+import com.example.peter.thekitchenmenu.domain.model.BasePersistenceModel;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public final class RecipeIdentityPersistenceDomainModel
-        extends BasePersistenceDomainModel {
+public final class RecipeIdentityPersistenceModel
+        extends BasePersistenceModel {
 
     private String title;
     private String description;
 
-    private RecipeIdentityPersistenceDomainModel(){}
+    private RecipeIdentityPersistenceModel(){}
 
     @Nonnull
     public String getTitle() {
@@ -27,9 +27,9 @@ public final class RecipeIdentityPersistenceDomainModel
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof RecipeIdentityPersistenceDomainModel)) return false;
+        if (!(o instanceof RecipeIdentityPersistenceModel)) return false;
         if (!super.equals(o)) return false;
-        RecipeIdentityPersistenceDomainModel that = (RecipeIdentityPersistenceDomainModel) o;
+        RecipeIdentityPersistenceModel that = (RecipeIdentityPersistenceModel) o;
         return Objects.equals(title, that.title) &&
                 Objects.equals(description, that.description);
     }
@@ -50,10 +50,10 @@ public final class RecipeIdentityPersistenceDomainModel
 
     public static class Builder
             extends
-            PersistenceModelBuilder<Builder, RecipeIdentityPersistenceDomainModel> {
+            PersistenceModelBuilder<Builder, RecipeIdentityPersistenceModel> {
 
         public Builder() {
-            persistenceModel = new RecipeIdentityPersistenceDomainModel();
+            persistenceModel = new RecipeIdentityPersistenceModel();
         }
 
         @Override
@@ -68,7 +68,7 @@ public final class RecipeIdentityPersistenceDomainModel
         }
 
         @Override
-        public Builder basedOnModel(@Nonnull RecipeIdentityPersistenceDomainModel model) {
+        public Builder basedOnModel(@Nonnull RecipeIdentityPersistenceModel model) {
             persistenceModel.dataId = model.getDataId();
             persistenceModel.domainId = model.getDomainId();
             persistenceModel.title = model.getTitle();

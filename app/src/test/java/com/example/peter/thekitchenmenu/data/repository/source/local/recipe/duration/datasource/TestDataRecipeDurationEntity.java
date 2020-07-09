@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.datasource;
 
 import com.example.peter.thekitchenmenu.data.repository.recipe.duration.TestDataRecipeDuration;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDurationPersistenceDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDurationPersistenceModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +48,7 @@ public class TestDataRecipeDurationEntity {
 
     public static List<RecipeDurationEntity> getAllNew() {
         List<RecipeDurationEntity> entities = new ArrayList<>();
-        for (RecipeDurationPersistenceDomainModel m : TestDataRecipeDuration.getAllNew()) {
+        for (RecipeDurationPersistenceModel m : TestDataRecipeDuration.getAllNew()) {
             entities.add(convertDomainModelToDatabaseEntity(m));
         }
         return entities;
@@ -90,7 +90,7 @@ public class TestDataRecipeDurationEntity {
     }
 
     private static RecipeDurationEntity convertDomainModelToDatabaseEntity(
-            RecipeDurationPersistenceDomainModel m) {
+            RecipeDurationPersistenceModel m) {
         return new RecipeDurationEntity(
                 m.getDataId(),
                 m.getDomainId(),

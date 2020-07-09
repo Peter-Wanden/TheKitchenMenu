@@ -4,7 +4,7 @@ import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.dataadapter.RecipeMetadataLocalDeleteAdapter;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.dataadapter.RecipeMetadataLocalGetAdapter;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.dataadapter.RecipeMetadataLocalSaveAdapter;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataPersistenceDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataPersistenceModel;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ import javax.annotation.Nonnull;
  * persistence local persistence framework.
  */
 public class RepositoryRecipeMetadataLocal
-        implements DomainDataAccess<RecipeMetadataPersistenceDomainModel> {
+        implements DomainDataAccess<RecipeMetadataPersistenceModel> {
 
     private static volatile RepositoryRecipeMetadataLocal INSTANCE;
 
@@ -56,11 +56,11 @@ public class RepositoryRecipeMetadataLocal
 
     @Override
     public void getAll(
-            @Nonnull GetAllDomainModelsCallback<RecipeMetadataPersistenceDomainModel> callback) {
+            @Nonnull GetAllDomainModelsCallback<RecipeMetadataPersistenceModel> callback) {
         getAdapter.getAllActive(
-                new GetAllDomainModelsCallback<RecipeMetadataPersistenceDomainModel>() {
+                new GetAllDomainModelsCallback<RecipeMetadataPersistenceModel>() {
                     @Override
-                    public void onAllDomainModelsLoaded(List<RecipeMetadataPersistenceDomainModel> models) {
+                    public void onAllDomainModelsLoaded(List<RecipeMetadataPersistenceModel> models) {
                         callback.onAllDomainModelsLoaded(models);
                     }
 
@@ -75,12 +75,12 @@ public class RepositoryRecipeMetadataLocal
     @Override
     public void getByDataId(
             @Nonnull String dataId,
-            @Nonnull GetDomainModelCallback<RecipeMetadataPersistenceDomainModel> callback) {
+            @Nonnull GetDomainModelCallback<RecipeMetadataPersistenceModel> callback) {
         getAdapter.getByDataId(
                 dataId,
-                new GetDomainModelCallback<RecipeMetadataPersistenceDomainModel>() {
+                new GetDomainModelCallback<RecipeMetadataPersistenceModel>() {
                     @Override
-                    public void onPersistenceModelLoaded(@Nonnull RecipeMetadataPersistenceDomainModel model) {
+                    public void onPersistenceModelLoaded(@Nonnull RecipeMetadataPersistenceModel model) {
                         callback.onPersistenceModelLoaded(model);
                     }
 
@@ -95,12 +95,12 @@ public class RepositoryRecipeMetadataLocal
     @Override
     public void getActiveByDomainId(
             @Nonnull String domainId,
-            @Nonnull GetDomainModelCallback<RecipeMetadataPersistenceDomainModel> callback) {
+            @Nonnull GetDomainModelCallback<RecipeMetadataPersistenceModel> callback) {
         getAdapter.getActiveByDomainId(
                 domainId,
-                new GetDomainModelCallback<RecipeMetadataPersistenceDomainModel>() {
+                new GetDomainModelCallback<RecipeMetadataPersistenceModel>() {
                     @Override
-                    public void onPersistenceModelLoaded(RecipeMetadataPersistenceDomainModel model) {
+                    public void onPersistenceModelLoaded(RecipeMetadataPersistenceModel model) {
                         callback.onPersistenceModelLoaded(model);
                     }
 
@@ -113,7 +113,7 @@ public class RepositoryRecipeMetadataLocal
     }
 
     @Override
-    public void save(@Nonnull RecipeMetadataPersistenceDomainModel persistenceModel) {
+    public void save(@Nonnull RecipeMetadataPersistenceModel persistenceModel) {
         saveAdapter.save(persistenceModel);
     }
 

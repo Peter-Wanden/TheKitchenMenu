@@ -1,17 +1,13 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity;
 
-import com.example.peter.thekitchenmenu.domain.model.DomainModelBuilder;
 import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataId;
-import com.example.peter.thekitchenmenu.domain.model.BaseDomainModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
-
-import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
 public final class RecipeIdentityRequest
         extends
-        UseCaseMessageModelDataId<RecipeIdentityRequest.DomainModel>
+        UseCaseMessageModelDataId<RecipeIdentityRequestModel>
         implements
         UseCaseBase.Request {
 
@@ -29,7 +25,10 @@ public final class RecipeIdentityRequest
 
     public static class Builder
             extends
-            UseCaseMessageModelDataIdBuilder<Builder, RecipeIdentityRequest, DomainModel> {
+            UseCaseMessageModelDataIdBuilder<
+                    Builder,
+                    RecipeIdentityRequest,
+                    RecipeIdentityRequestModel> {
 
         public Builder() {
             message = new RecipeIdentityRequest();
@@ -39,14 +38,14 @@ public final class RecipeIdentityRequest
         public Builder getDefault() {
             message.dataId = "";
             message.domainId = "";
-            message.model = new DomainModel.Builder().getDefault().build();
+            message.model = new RecipeIdentityRequestModel.Builder().getDefault().build();
             return self();
         }
 
         public Builder basedOnResponse(RecipeIdentityResponse response) {
             message.dataId = response.getDataId();
             message.domainId = response.getDomainId();
-            message.model = new DomainModel.Builder().
+            message.model = new RecipeIdentityRequestModel.Builder().
                     basedOnResponseModel(response.getDomainModel()).
                     build();
             return self();
@@ -58,78 +57,4 @@ public final class RecipeIdentityRequest
         }
     }
 
-    public static final class DomainModel
-            extends
-            BaseDomainModel {
-
-        private String title;
-        private String description;
-
-        public String getTitle() {
-            return title;
-        }
-
-        public String getDescription() {
-            return description;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            DomainModel model = (DomainModel) o;
-            return title.equals(model.title) &&
-                    description.equals(model.description);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(title, description);
-        }
-
-        @Nonnull
-        @Override
-        public String toString() {
-            return "Model{" +
-                    "title='" + title + '\'' +
-                    ", description='" + description + '\'' +
-                    '}';
-        }
-
-        public static class Builder
-                extends
-                DomainModelBuilder<Builder, DomainModel> {
-
-            public Builder() {
-                domainModel = new DomainModel();
-            }
-
-            public Builder getDefault() {
-                domainModel.title = "";
-                domainModel.description = "";
-                return self();
-            }
-
-            public Builder basedOnResponseModel(RecipeIdentityResponse.DomainModel domainModel) {
-                this.domainModel.title = domainModel.getTitle();
-                this.domainModel.description = domainModel.getDescription();
-                return self();
-            }
-
-            public Builder setTitle(String title) {
-                domainModel.title = title;
-                return self();
-            }
-
-            public Builder setDescription(String description) {
-                domainModel.description = description;
-                return self();
-            }
-
-            @Override
-            protected Builder self() {
-                return this;
-            }
-        }
-    }
 }

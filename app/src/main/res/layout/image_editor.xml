@@ -14,7 +14,7 @@
 
         <variable
             name="imageModel"
-            type="com.example.peter.thekitchenmenu.data.domainModel.ImageModel">
+            type="com.example.peter.thekitchenmenu.data.model.ImageModel">
         </variable>
     </data>
 

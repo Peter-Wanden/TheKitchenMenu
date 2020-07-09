@@ -5,7 +5,7 @@ import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeM
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.factory.UseCaseFactory;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataPersistenceDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataPersistenceModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.RecipeUseCaseCallback;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.RecipeRequest;
@@ -20,7 +20,7 @@ public class RecipeList
         extends
         UseCaseBase
         implements
-        DomainDataAccess.GetAllDomainModelsCallback<RecipeMetadataPersistenceDomainModel> {
+        DomainDataAccess.GetAllDomainModelsCallback<RecipeMetadataPersistenceModel> {
 
     private static final String TAG = "tkm:" + RecipeList.class.getSimpleName() +
             ": ";
@@ -84,10 +84,10 @@ public class RecipeList
     }
 
     @Override
-    public void onAllDomainModelsLoaded(List<RecipeMetadataPersistenceDomainModel> metadataModels) {
+    public void onAllDomainModelsLoaded(List<RecipeMetadataPersistenceModel> metadataModels) {
         System.out.println(TAG + "onAllLoadedCalled");
 
-        for (RecipeMetadataPersistenceDomainModel metadataModel : metadataModels) {
+        for (RecipeMetadataPersistenceModel metadataModel : metadataModels) {
             Recipe recipe = factory.getRecipeUseCase();
             recipes.add(recipe);
 

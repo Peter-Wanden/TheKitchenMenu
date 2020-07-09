@@ -4,14 +4,14 @@ import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.dataadapter.DurationLocalDeleteAdapter;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.dataadapter.DurationLocalGetAdapter;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.dataadapter.DurationLocalSaveAdapter;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDurationPersistenceDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDurationPersistenceModel;
 
 import java.util.List;
 
 import javax.annotation.Nonnull;
 
 public class RepositoryRecipeDurationLocal
-        implements DomainDataAccess<RecipeDurationPersistenceDomainModel> {
+        implements DomainDataAccess<RecipeDurationPersistenceModel> {
 
     public static volatile RepositoryRecipeDurationLocal INSTANCE;
 
@@ -53,12 +53,12 @@ public class RepositoryRecipeDurationLocal
     @Override
     public void getByDataId(
             @Nonnull String dataId,
-            @Nonnull GetDomainModelCallback<RecipeDurationPersistenceDomainModel> callback) {
+            @Nonnull GetDomainModelCallback<RecipeDurationPersistenceModel> callback) {
         getAdapter.getByDataId(
                 dataId,
-                new GetDomainModelCallback<RecipeDurationPersistenceDomainModel>() {
+                new GetDomainModelCallback<RecipeDurationPersistenceModel>() {
                     @Override
-                    public void onPersistenceModelLoaded(RecipeDurationPersistenceDomainModel model) {
+                    public void onPersistenceModelLoaded(RecipeDurationPersistenceModel model) {
                         callback.onPersistenceModelLoaded(model);
                     }
 
@@ -72,11 +72,11 @@ public class RepositoryRecipeDurationLocal
 
     @Override
     public void getAll(
-            @Nonnull GetAllDomainModelsCallback<RecipeDurationPersistenceDomainModel> callback) {
+            @Nonnull GetAllDomainModelsCallback<RecipeDurationPersistenceModel> callback) {
         getAdapter.getAll(
-                new GetAllDomainModelsCallback<RecipeDurationPersistenceDomainModel>() {
+                new GetAllDomainModelsCallback<RecipeDurationPersistenceModel>() {
                     @Override
-                    public void onAllDomainModelsLoaded(List<RecipeDurationPersistenceDomainModel> models) {
+                    public void onAllDomainModelsLoaded(List<RecipeDurationPersistenceModel> models) {
                         callback.onAllDomainModelsLoaded(models);
                     }
 
@@ -91,11 +91,11 @@ public class RepositoryRecipeDurationLocal
     @Override
     public void getActiveByDomainId(
             @Nonnull String domainId,
-            @Nonnull GetDomainModelCallback<RecipeDurationPersistenceDomainModel> callback) {
+            @Nonnull GetDomainModelCallback<RecipeDurationPersistenceModel> callback) {
         getAdapter.getActiveByDomainId(
-                domainId, new GetDomainModelCallback<RecipeDurationPersistenceDomainModel>() {
+                domainId, new GetDomainModelCallback<RecipeDurationPersistenceModel>() {
                     @Override
-                    public void onPersistenceModelLoaded(RecipeDurationPersistenceDomainModel model) {
+                    public void onPersistenceModelLoaded(RecipeDurationPersistenceModel model) {
                         callback.onPersistenceModelLoaded(model);
                     }
 
@@ -108,7 +108,7 @@ public class RepositoryRecipeDurationLocal
     }
 
     @Override
-    public void save(@Nonnull RecipeDurationPersistenceDomainModel model) {
+    public void save(@Nonnull RecipeDurationPersistenceModel model) {
         saveAdapter.save(model);
     }
 

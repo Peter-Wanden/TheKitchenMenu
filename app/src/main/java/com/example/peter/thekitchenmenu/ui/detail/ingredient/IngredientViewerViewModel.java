@@ -5,11 +5,11 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.ingredient.RepositoryIngredient;
-import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientPersistenceDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientPersistenceModel;
 
 public class IngredientViewerViewModel
         extends ViewModel
-        implements DomainDataAccess.GetDomainModelCallback<IngredientPersistenceDomainModel> {
+        implements DomainDataAccess.GetDomainModelCallback<IngredientPersistenceModel> {
 
     private RepositoryIngredient repositoryIngredient;
 
@@ -28,7 +28,7 @@ public class IngredientViewerViewModel
     }
 
     @Override
-    public void onPersistenceModelLoaded(IngredientPersistenceDomainModel model) {
+    public void onPersistenceModelLoaded(IngredientPersistenceModel model) {
         setIngredientToDisplay(model);
     }
 
@@ -37,7 +37,7 @@ public class IngredientViewerViewModel
 
     }
 
-    private void setIngredientToDisplay(IngredientPersistenceDomainModel model) {
+    private void setIngredientToDisplay(IngredientPersistenceModel model) {
         ingredientName.set(model.getName());
     }
 }

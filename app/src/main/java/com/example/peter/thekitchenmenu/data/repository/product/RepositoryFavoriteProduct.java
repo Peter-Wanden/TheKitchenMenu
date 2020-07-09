@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.data.repository.product;
 
 import com.example.peter.thekitchenmenu.data.primitivemodel.product.FavoriteProductEntity;
 import com.example.peter.thekitchenmenu.data.repository.Repository;
-import com.example.peter.thekitchenmenu.domain.usecase.product.component.favoriteproduct.FavoriteProductPersistenceDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecase.product.component.favoriteproduct.FavoriteProductPersistenceModel;
 
 import java.util.LinkedHashMap;
 
@@ -11,7 +11,7 @@ import javax.annotation.Nonnull;
 import static androidx.core.util.Preconditions.checkNotNull;
 
 public class RepositoryFavoriteProduct
-        extends Repository<FavoriteProductPersistenceDomainModel>
+        extends Repository<FavoriteProductPersistenceModel>
         implements DataSourceFavoriteProducts {
 
     public static RepositoryFavoriteProduct INSTANCE = null;

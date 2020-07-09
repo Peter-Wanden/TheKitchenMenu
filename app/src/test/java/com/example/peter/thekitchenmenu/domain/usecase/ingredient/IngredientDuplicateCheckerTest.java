@@ -15,7 +15,7 @@ public class IngredientDuplicateCheckerTest {
     private String VALID_NAME_NO_DUPLICATE = TestDataIngredient.
             getValidNonDuplicatedName();
 
-    private IngredientPersistenceDomainModel VALID_DUPLICATE = TestDataIngredient.
+    private IngredientPersistenceModel VALID_DUPLICATE = TestDataIngredient.
             getExistingValidDefaultConversionFactor();
 
     private String VALID_NAME_DUPLICATE_IS_BEING_EDITED = TestDataIngredient.
@@ -26,7 +26,7 @@ public class IngredientDuplicateCheckerTest {
     @Mock
     RepositoryIngredient repoMock;
     @Captor
-    ArgumentCaptor<GetAllDomainModelsCallback<IngredientPersistenceDomainModel>> getRepoCallbackCaptor;
+    ArgumentCaptor<GetAllDomainModelsCallback<IngredientPersistenceModel>> getRepoCallbackCaptor;
     @Mock
     IngredientDuplicateChecker.DuplicateCallback callbackMock;
     // endregion helper fields ---------------------------------------------------------------------

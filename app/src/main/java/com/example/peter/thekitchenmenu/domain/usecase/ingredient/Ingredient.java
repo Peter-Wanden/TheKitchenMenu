@@ -24,12 +24,12 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientDuplicateChecker.NO_DUPLICATE_FOUND;
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentState;
+import static com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseMetadata.ComponentState;
 import static com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator.TextType;
 
 public class Ingredient
         extends UseCaseBase
-        implements DomainDataAccess.GetDomainModelCallback<IngredientPersistenceDomainModel> {
+        implements DomainDataAccess.GetDomainModelCallback<IngredientPersistenceModel> {
 
     private static final String TAG = "tkm-" + Ingredient.class.getSimpleName() + ": ";
 
@@ -87,7 +87,7 @@ public class Ingredient
     private boolean isNewRequest;
 
     private IngredientRequest.Model requestModel;
-    private IngredientPersistenceDomainModel persistenceModel;
+    private IngredientPersistenceModel persistenceModel;
 
     public Ingredient(@Nonnull RepositoryIngredient repository,
                       @Nonnull UniqueIdProvider idProvider,
@@ -130,7 +130,7 @@ public class Ingredient
     }
 
     @Override
-    public void onPersistenceModelLoaded(IngredientPersistenceDomainModel model) {
+    public void onPersistenceModelLoaded(IngredientPersistenceModel model) {
         persistenceModel = model;
         dataId = model.getDataId();
         ingredientId = model.getDomainId();
@@ -151,11 +151,11 @@ public class Ingredient
         buildResponse();
     }
 
-    private IngredientPersistenceDomainModel createNewPersistenceModel() {
+    private IngredientPersistenceModel createNewPersistenceModel() {
         long currentTime = timeProvider.getCurrentTimeInMills();
         dataId = idProvider.getUId();
 
-        return new IngredientPersistenceDomainModel.Builder().
+        return new IngredientPersistenceModel.Builder().
                 getDefault().
                 setDataId(dataId).
                 setDomainId(ingredientId).
@@ -262,7 +262,7 @@ public class Ingredient
         builder.setDomainId(ingredientId);
 
         if (ComponentState.VALID_CHANGED == getComponentState()) {
-            IngredientPersistenceDomainModel m = updatePersistenceModel();
+            IngredientPersistenceModel m = updatePersistenceModel();
             builder.setMetadata(getMetadata(m));
             persistenceModel = m;
             save();
@@ -275,7 +275,7 @@ public class Ingredient
         sendResponse(builder.build());
     }
 
-    private UseCaseMetadataModel getMetadata(IngredientPersistenceDomainModel m) {
+    private UseCaseMetadataModel getMetadata(IngredientPersistenceModel m) {
         return new UseCaseMetadataModel.Builder().
                 setComponentState(getComponentState()).
                 setFailReasons(new ArrayList<>(failReasons)).
@@ -327,8 +327,8 @@ public class Ingredient
                 build();
     }
 
-    private IngredientPersistenceDomainModel updatePersistenceModel() {
-        return new IngredientPersistenceDomainModel.Builder().
+    private IngredientPersistenceModel updatePersistenceModel() {
+        return new IngredientPersistenceModel.Builder().
                 basedOnModel(persistenceModel).
                 setDataId(idProvider.getUId()).
                 setName(requestModel.getName()).

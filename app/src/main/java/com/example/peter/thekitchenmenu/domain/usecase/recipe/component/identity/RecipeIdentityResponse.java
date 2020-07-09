@@ -1,18 +1,14 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity;
 
-import com.example.peter.thekitchenmenu.domain.model.DomainModelBuilder;
 import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataIdMetadata;
-import com.example.peter.thekitchenmenu.domain.model.BaseDomainModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.model.UseCaseMetadataModel;
-
-import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
 public final class RecipeIdentityResponse
         extends
-        UseCaseMessageModelDataIdMetadata<RecipeIdentityResponse.DomainModel>
+        UseCaseMessageModelDataIdMetadata<RecipeIdentityResponseModel>
         implements
         UseCaseBase.Response {
 
@@ -34,7 +30,7 @@ public final class RecipeIdentityResponse
             MessageModelDataIdMetadataBuilder<
                     Builder,
                     RecipeIdentityResponse,
-                    DomainModel> {
+                    RecipeIdentityResponseModel> {
 
         public Builder() {
             message = new RecipeIdentityResponse();
@@ -44,7 +40,7 @@ public final class RecipeIdentityResponse
         public Builder getDefault() {
             message.dataId = "";
             message.domainId = "";
-            message.model = new DomainModel.Builder().getDefault().build();
+            message.model = new RecipeIdentityResponseModel.Builder().getDefault().build();
             message.metadata = new UseCaseMetadataModel.Builder().getDefault().build();
             return self();
         }
@@ -55,79 +51,4 @@ public final class RecipeIdentityResponse
         }
     }
 
-    public static final class DomainModel
-            extends
-            BaseDomainModel {
-
-        private String title;
-        private String description;
-
-        private DomainModel() {}
-
-        @Nonnull
-        public String getTitle() {
-            return title;
-        }
-
-        @Nonnull
-        public String getDescription() {
-            return description;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            DomainModel domainModel = (DomainModel) o;
-            return title.equals(domainModel.title) &&
-                    description.equals(domainModel.description);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(title, description);
-        }
-
-        @Nonnull
-        @Override
-        public String toString() {
-            return "Model{" +
-                    "title='" + title + '\'' +
-                    ", description='" + description + '\'' +
-                    '}';
-        }
-
-        public static class Builder
-                extends
-                DomainModelBuilder<
-                                        Builder,
-                                        DomainModel> {
-
-            public Builder() {
-                domainModel = new DomainModel();
-            }
-
-            @Override
-            public Builder getDefault() {
-                domainModel.title = "";
-                domainModel.description = "";
-                return self();
-            }
-
-            public Builder setTitle(String title) {
-                domainModel.title = title;
-                return self();
-            }
-
-            public Builder setDescription(String description) {
-                domainModel.description = description;
-                return self();
-            }
-
-            @Override
-            protected Builder self() {
-                return this;
-            }
-        }
-    }
 }

@@ -24,7 +24,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentState;
+import static com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseMetadata.ComponentState;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
@@ -42,7 +42,7 @@ public class RecipeCourseTest {
     @Mock
     RepositoryRecipeCourse repoCourseMock;
     @Captor
-    ArgumentCaptor<GetDomainModelCallback<RecipeCoursePersistenceDomainModel>> repoCourseCallback;
+    ArgumentCaptor<GetDomainModelCallback<RecipeCoursePersistenceModel>> repoCourseCallback;
     @Mock
     UniqueIdProvider idProviderMock;
     @Mock
@@ -71,7 +71,7 @@ public class RecipeCourseTest {
     @Test
     public void newRequest_defaultNoCoursesReturned_stateINVALID_DEFAULT() {
         // Arrange
-        RecipeCoursePersistenceDomainModel expectedDefaultValues = TestDataRecipeCourse.
+        RecipeCoursePersistenceModel expectedDefaultValues = TestDataRecipeCourse.
                 getNewActiveDefaultNoCourses();
 
         RecipeCourseRequest request = new RecipeCourseRequest.Builder().
@@ -143,7 +143,7 @@ public class RecipeCourseTest {
         newRequest_defaultNoCoursesReturned_stateINVALID_DEFAULT();
 
         // Arrange persistent model that represents state after adding domain data
-        RecipeCoursePersistenceDomainModel expectedCourseOneSaveModel = TestDataRecipeCourse.
+        RecipeCoursePersistenceModel expectedCourseOneSaveModel = TestDataRecipeCourse.
                 getNewActiveCourseOne();
 
         // Arrange request to add course one
@@ -198,11 +198,11 @@ public class RecipeCourseTest {
         newRequest_addCourseOne_VALID_CHANGED();
 
         // Arrange persistent model for archiving the addCourseOne_VALID_CHANGED state
-        RecipeCoursePersistenceDomainModel expectedArchivedCourseOne = TestDataRecipeCourse.
+        RecipeCoursePersistenceModel expectedArchivedCourseOne = TestDataRecipeCourse.
                 getNewArchivedCourseOne();
 
         // Arrange persistent model that represents state after adding course two
-        RecipeCoursePersistenceDomainModel expectedCourseOneAndTwoSaveModel = TestDataRecipeCourse.
+        RecipeCoursePersistenceModel expectedCourseOneAndTwoSaveModel = TestDataRecipeCourse.
                 getNewActiveCourseOneAndTwo();
 
         // Arrange request to add course two
@@ -260,11 +260,11 @@ public class RecipeCourseTest {
         newRequest_addCourseOneAndTwo_VALID_CHANGED();
 
         // Arrange persistent model for archiving the addCourseOneAndTwo_VALID_CHANGED state
-        RecipeCoursePersistenceDomainModel expectedArchivedModelForCourseOneAndTwo = TestDataRecipeCourse.
+        RecipeCoursePersistenceModel expectedArchivedModelForCourseOneAndTwo = TestDataRecipeCourse.
                 getNewArchivedCourseOneAndTwo();
 
         // Arrange persistent model that represents state after removing course one
-        RecipeCoursePersistenceDomainModel expectedActiveModelAfterCourseOneRemoved = TestDataRecipeCourse.
+        RecipeCoursePersistenceModel expectedActiveModelAfterCourseOneRemoved = TestDataRecipeCourse.
                 getNewActiveAfterCourseOneRemoved();
 
         // Arrange request to remove course one
@@ -364,7 +364,7 @@ public class RecipeCourseTest {
     public void existingRequest_completeListOfModelsReturned_VALID_UNCHANGED() {
         // Arrange
         // arrange persistence model representing all courses
-        RecipeCoursePersistenceDomainModel expectedAllCoursesModel = TestDataRecipeCourse.
+        RecipeCoursePersistenceModel expectedAllCoursesModel = TestDataRecipeCourse.
                 getExistingActiveWithAllCourses();
 
         // arrange request to get all courses

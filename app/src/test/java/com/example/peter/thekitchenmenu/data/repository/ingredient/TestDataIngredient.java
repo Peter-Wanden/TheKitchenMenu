@@ -3,7 +3,7 @@ package com.example.peter.thekitchenmenu.data.repository.ingredient;
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.commonmocks.StringMaker;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants;
-import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientPersistenceDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientPersistenceModel;
 import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientTest;
 
 import java.util.ArrayList;
@@ -17,8 +17,8 @@ public class TestDataIngredient {
     private static final String INGREDIENT_DOMAIN_ID_FROM_ANOTHER_USER = "domainId-ingredient-20";
 
     // Test data for newly created models:
-    public static IngredientPersistenceDomainModel getInvalidNewEmpty() {
-        return new IngredientPersistenceDomainModel.Builder().
+    public static IngredientPersistenceModel getInvalidNewEmpty() {
+        return new IngredientPersistenceModel.Builder().
                 getDefault().
                 setDataId("dataId-ingredient-id0").
                 setDomainId(NEW_INGREDIENT_DOMAIN_ID).
@@ -27,14 +27,14 @@ public class TestDataIngredient {
                 build();
     }
 
-    public static IngredientPersistenceDomainModel getInvalidNewNameTooShort() {
+    public static IngredientPersistenceModel getInvalidNewNameTooShort() {
         String nameTooShort = new StringMaker().
                 makeStringOfExactLength(IngredientTest.NAME_MIN_LENGTH).
                 includeStringAtStart("newNameTooShort").
                 thenRemoveOneCharacter().
                 build();
 
-        return new IngredientPersistenceDomainModel.Builder().
+        return new IngredientPersistenceModel.Builder().
                 getDefault().
                 setDataId("dataId-ingredient-id1").
                 setDomainId(NEW_INGREDIENT_DOMAIN_ID).
@@ -44,8 +44,8 @@ public class TestDataIngredient {
                 build();
     }
 
-    public static IngredientPersistenceDomainModel getInvalidNewNameTooLong() {
-        return new IngredientPersistenceDomainModel.Builder().
+    public static IngredientPersistenceModel getInvalidNewNameTooLong() {
+        return new IngredientPersistenceModel.Builder().
                 getDefault().
                 setDataId("dataId-ingredient-id2").
                 setDomainId(NEW_INGREDIENT_DOMAIN_ID).
@@ -55,7 +55,7 @@ public class TestDataIngredient {
                 build();
     }
 
-    public static IngredientPersistenceDomainModel getInvalidNewNameTooLongDescriptionTooLong() {
+    public static IngredientPersistenceModel getInvalidNewNameTooLongDescriptionTooLong() {
         String nameTooLong = new StringMaker().
                 makeStringOfExactLength(IngredientTest.NAME_MAX_LENGTH).
                 includeStringAtStart("newNameTooLong").
@@ -68,7 +68,7 @@ public class TestDataIngredient {
                 thenAddOneCharacter().
                 build();
 
-        return new IngredientPersistenceDomainModel.Builder().
+        return new IngredientPersistenceModel.Builder().
                 getDefault().
                 setDataId("dataId-ingredient-id3").
                 setDomainId(NEW_INGREDIENT_DOMAIN_ID).
@@ -79,8 +79,8 @@ public class TestDataIngredient {
                 build();
     }
 
-    public static IngredientPersistenceDomainModel getInvalidNewNameTooShortDescriptionValid() {
-        return new IngredientPersistenceDomainModel.Builder().
+    public static IngredientPersistenceModel getInvalidNewNameTooShortDescriptionValid() {
+        return new IngredientPersistenceModel.Builder().
                 getDefault().
                 setDataId("dataId-ingredient-id4").
                 setDomainId(NEW_INGREDIENT_DOMAIN_ID).
@@ -91,8 +91,8 @@ public class TestDataIngredient {
                 build();
     }
 
-    public static IngredientPersistenceDomainModel getValidNewNameValid() {
-        return new IngredientPersistenceDomainModel.Builder().
+    public static IngredientPersistenceModel getValidNewNameValid() {
+        return new IngredientPersistenceModel.Builder().
                 getDefault().
                 setDataId("dataId-ingredient-id5").
                 setDomainId(NEW_INGREDIENT_DOMAIN_ID).
@@ -102,7 +102,7 @@ public class TestDataIngredient {
                 build();
     }
 
-    public static IngredientPersistenceDomainModel getValidNewNameValidDescriptionValid() {
+    public static IngredientPersistenceModel getValidNewNameValidDescriptionValid() {
         String validName = new StringMaker().
                 makeStringOfExactLength(IngredientTest.NAME_MAX_LENGTH).
                 includeStringAtStart("newValidName").
@@ -113,7 +113,7 @@ public class TestDataIngredient {
                 includeStringAtStart("newValidDescription").
                 build();
 
-        return new IngredientPersistenceDomainModel.Builder().
+        return new IngredientPersistenceModel.Builder().
                 getDefault().
                 setDataId("dataId-ingredient-id6").
                 setDomainId(NEW_INGREDIENT_DOMAIN_ID).
@@ -125,7 +125,7 @@ public class TestDataIngredient {
     }
 
     // Test data for existing models being queried
-    public static IngredientPersistenceDomainModel getValidExistingNameValidDescriptionValid() {
+    public static IngredientPersistenceModel getValidExistingNameValidDescriptionValid() {
         String validName = new StringMaker().
                 makeStringOfExactLength(IngredientTest.NAME_MAX_LENGTH).
                 includeStringAtStart("existingValidName").
@@ -136,7 +136,7 @@ public class TestDataIngredient {
                 includeStringAtStart("existingValidDescription").
                 build();
 
-        return new IngredientPersistenceDomainModel.Builder().
+        return new IngredientPersistenceModel.Builder().
                 getDefault().
                 setDataId("dataId-ingredient-id10").
                 setDomainId(EXISTING_INGREDIENT_DOMAIN_ID).
@@ -147,14 +147,14 @@ public class TestDataIngredient {
                 build();
     }
 
-    public static IngredientPersistenceDomainModel getInvalidExistingNameTooShort() {
+    public static IngredientPersistenceModel getInvalidExistingNameTooShort() {
         String nameTooShort = new StringMaker().
                 makeStringOfExactLength(IngredientTest.NAME_MIN_LENGTH).
                 includeStringAtStart("existingNmeTooShort").
                 thenRemoveOneCharacter().
                 build();
 
-        return new IngredientPersistenceDomainModel.Builder().
+        return new IngredientPersistenceModel.Builder().
                 getDefault().
                 setDataId("dataId-ingredient-id11").
                 setDomainId(EXISTING_INGREDIENT_DOMAIN_ID).
@@ -164,14 +164,14 @@ public class TestDataIngredient {
                 build();
     }
 
-    public static IngredientPersistenceDomainModel getInvalidExistingNameTooLong() {
+    public static IngredientPersistenceModel getInvalidExistingNameTooLong() {
         String nameTooLong = new StringMaker().
                 makeStringOfExactLength(IngredientTest.NAME_MAX_LENGTH).
                 includeStringAtStart("nameTooLong").
                 thenAddOneCharacter().
                 build();
 
-        return new IngredientPersistenceDomainModel.Builder().
+        return new IngredientPersistenceModel.Builder().
                 getDefault().
                 setDataId("dataId-ingredient-id12").
                 setDomainId(EXISTING_INGREDIENT_DOMAIN_ID).
@@ -181,14 +181,14 @@ public class TestDataIngredient {
                 build();
     }
 
-    public static IngredientPersistenceDomainModel getInvalidExistingNameValidDescriptionTooLong() {
+    public static IngredientPersistenceModel getInvalidExistingNameValidDescriptionTooLong() {
         String descriptionTooLong = new StringMaker().
                 makeStringOfExactLength(IngredientTest.DESCRIPTION_MAX_LENGTH).
                 includeStringAtStart("descriptionTooLong").
                 thenAddOneCharacter().
                 build();
 
-        return new IngredientPersistenceDomainModel.Builder().
+        return new IngredientPersistenceModel.Builder().
                 getDefault().
                 setDataId("dataId-ingredient-id13").
                 setDomainId(EXISTING_INGREDIENT_DOMAIN_ID).
@@ -199,8 +199,8 @@ public class TestDataIngredient {
                 build();
     }
 
-    public static IngredientPersistenceDomainModel getInvalidExistingNameTooShortDescriptionTooLong() {
-        return new IngredientPersistenceDomainModel.Builder().
+    public static IngredientPersistenceModel getInvalidExistingNameTooShortDescriptionTooLong() {
+        return new IngredientPersistenceModel.Builder().
                 getDefault().
                 setDataId("dataId-ingredient-id14").
                 setDomainId(EXISTING_INGREDIENT_DOMAIN_ID).
@@ -211,8 +211,8 @@ public class TestDataIngredient {
                 build();
     }
 
-    public static IngredientPersistenceDomainModel getValidExistingNameValid() {
-        return new IngredientPersistenceDomainModel.Builder().
+    public static IngredientPersistenceModel getValidExistingNameValid() {
+        return new IngredientPersistenceModel.Builder().
                 getDefault().
                 setDataId("dataId-ingredient-id15").
                 setDomainId(EXISTING_INGREDIENT_DOMAIN_ID).
@@ -223,7 +223,7 @@ public class TestDataIngredient {
     }
 
     // Test data for existing models created by another user
-    public static IngredientPersistenceDomainModel getExistingValidNameValidDescriptionValidFromAnotherUser() {
+    public static IngredientPersistenceModel getExistingValidNameValidDescriptionValidFromAnotherUser() {
         String validNameFromAnotherUser = new StringMaker().
                 makeStringOfExactLength(IngredientTest.NAME_MAX_LENGTH).
                 includeStringAtStart("validNameFromAnotherUser ").
@@ -234,7 +234,7 @@ public class TestDataIngredient {
                 includeStringAtStart("validDescriptionFromAnotherUser").
                 build();
 
-        return new IngredientPersistenceDomainModel.Builder().
+        return new IngredientPersistenceModel.Builder().
                 getDefault().
                 setDataId("dataId-ingredient-id16").
                 setDomainId(INGREDIENT_DOMAIN_ID_FROM_ANOTHER_USER).
@@ -246,8 +246,8 @@ public class TestDataIngredient {
     }
 
     // Test data for conversion factor tests
-    public static IngredientPersistenceDomainModel getNewValidMaxConversionFactor() {
-        return new IngredientPersistenceDomainModel.Builder().
+    public static IngredientPersistenceModel getNewValidMaxConversionFactor() {
+        return new IngredientPersistenceModel.Builder().
                 setDataId("dataId-ingredient-id7").
                 setDomainId(NEW_INGREDIENT_DOMAIN_ID).
                 setName(getValidNewNameValidDescriptionValid().getName()).
@@ -259,8 +259,8 @@ public class TestDataIngredient {
                 build();
     }
 
-    public static IngredientPersistenceDomainModel getNewValidConversionFactorUpdated() {
-        return new IngredientPersistenceDomainModel.Builder().
+    public static IngredientPersistenceModel getNewValidConversionFactorUpdated() {
+        return new IngredientPersistenceModel.Builder().
                 setDataId("dataId-ingredient-id8").
                 setDomainId(NEW_INGREDIENT_DOMAIN_ID).
                 setName(getValidNewNameValidDescriptionValid().getName()).
@@ -272,8 +272,8 @@ public class TestDataIngredient {
                 build();
     }
 
-    public static IngredientPersistenceDomainModel getExistingValidDefaultConversionFactor() {
-        return new IngredientPersistenceDomainModel.Builder().
+    public static IngredientPersistenceModel getExistingValidDefaultConversionFactor() {
+        return new IngredientPersistenceModel.Builder().
                 setDataId("dataId-ingredient-id17").
                 setDomainId(EXISTING_INGREDIENT_DOMAIN_ID).
                 setName(getValidNewNameValidDescriptionValid().getName()).
@@ -285,8 +285,8 @@ public class TestDataIngredient {
                 build();
     }
 
-    public static IngredientPersistenceDomainModel getExistingValidMinimumConversionFactor() {
-        return new IngredientPersistenceDomainModel.Builder().
+    public static IngredientPersistenceModel getExistingValidMinimumConversionFactor() {
+        return new IngredientPersistenceModel.Builder().
                 setDataId("dataId-ingredient-id18").
                 setDomainId(EXISTING_INGREDIENT_DOMAIN_ID).
                 setName(getValidNewNameValidDescriptionValid().getName()).
@@ -298,7 +298,7 @@ public class TestDataIngredient {
                 build();
     }
 
-    public static List<IngredientPersistenceDomainModel> getAll() {
+    public static List<IngredientPersistenceModel> getAll() {
         return Arrays.asList(
                 getInvalidNewEmpty(),
                 getInvalidNewNameTooShort(),
@@ -321,8 +321,8 @@ public class TestDataIngredient {
         );
     }
 
-    public static List<IngredientPersistenceDomainModel> getAllByDomainId(String domainId) {
-        List<IngredientPersistenceDomainModel> models = new ArrayList<>();
+    public static List<IngredientPersistenceModel> getAllByDomainId(String domainId) {
+        List<IngredientPersistenceModel> models = new ArrayList<>();
 
         getAll().forEach(
                 (ingredient) -> {

@@ -1,12 +1,12 @@
 package com.example.peter.thekitchenmenu.data.repository.source.remote;
 
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
-import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientPersistenceDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientPersistenceModel;
 
 import javax.annotation.Nonnull;
 
 public class RepositoryIngredientRemote
-        implements DomainDataAccess<IngredientPersistenceDomainModel> {
+        implements DomainDataAccess<IngredientPersistenceModel> {
 
     private static RepositoryIngredientRemote INSTANCE;
 
@@ -19,25 +19,25 @@ public class RepositoryIngredientRemote
     @Override
     public void getByDataId(
             @Nonnull String dataId,
-            @Nonnull GetDomainModelCallback<IngredientPersistenceDomainModel> callback) {
+            @Nonnull GetDomainModelCallback<IngredientPersistenceModel> callback) {
         callback.onPersistenceModelUnavailable();
     }
 
     @Override
     public void getActiveByDomainId(
             @Nonnull String domainId,
-            @Nonnull GetDomainModelCallback<IngredientPersistenceDomainModel> callback) {
+            @Nonnull GetDomainModelCallback<IngredientPersistenceModel> callback) {
         callback.onPersistenceModelUnavailable();
     }
 
     @Override
     public void getAll(
-            @Nonnull GetAllDomainModelsCallback<IngredientPersistenceDomainModel> callback) {
+            @Nonnull GetAllDomainModelsCallback<IngredientPersistenceModel> callback) {
         callback.onDomainModelsUnavailable();
     }
 
     @Override
-    public void save(@Nonnull IngredientPersistenceDomainModel model) {
+    public void save(@Nonnull IngredientPersistenceModel model) {
 
     }
 

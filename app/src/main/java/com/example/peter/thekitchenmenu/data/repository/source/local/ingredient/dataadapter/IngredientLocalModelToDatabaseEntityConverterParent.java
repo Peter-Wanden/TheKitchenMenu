@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.data.repository.source.local.ingredient
 
 import com.example.peter.thekitchenmenu.data.repository.source.local.PersistenceModelToDatabaseEntityConverter;
 import com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.datasource.IngredientEntity;
-import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientPersistenceDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientPersistenceModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,12 +10,12 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 public class IngredientLocalModelToDatabaseEntityConverterParent
-        implements PersistenceModelToDatabaseEntityConverter<IngredientPersistenceDomainModel, IngredientEntity> {
+        implements PersistenceModelToDatabaseEntityConverter<IngredientPersistenceModel, IngredientEntity> {
 
     @Override
-    public IngredientPersistenceDomainModel convertParentEntityToDomainModel(
+    public IngredientPersistenceModel convertParentEntityToDomainModel(
             @Nonnull IngredientEntity entity) {
-        return new IngredientPersistenceDomainModel.Builder().
+        return new IngredientPersistenceModel.Builder().
                 setDataId(entity.getDataId()).
                 setDomainId(entity.getDomainId()).
                 setName(entity.getName()).
@@ -29,7 +29,7 @@ public class IngredientLocalModelToDatabaseEntityConverterParent
 
     @Override
     public IngredientEntity convertParentDomainModelToEntity(
-            @Nonnull IngredientPersistenceDomainModel parent) {
+            @Nonnull IngredientPersistenceModel parent) {
         return new IngredientEntity(
                 parent.getDataId(),
                 parent.getDomainId(),
@@ -43,9 +43,9 @@ public class IngredientLocalModelToDatabaseEntityConverterParent
     }
 
     @Override
-    public List<IngredientPersistenceDomainModel> convertParentEntitiesToDomainModels(
+    public List<IngredientPersistenceModel> convertParentEntitiesToDomainModels(
             @Nonnull List<IngredientEntity> entities) {
-        List<IngredientPersistenceDomainModel> models = new ArrayList<>();
+        List<IngredientPersistenceModel> models = new ArrayList<>();
         for (IngredientEntity e : entities) {
             models.add(convertParentEntityToDomainModel(e));
         }

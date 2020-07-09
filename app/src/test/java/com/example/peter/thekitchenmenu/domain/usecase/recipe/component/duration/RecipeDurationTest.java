@@ -4,12 +4,12 @@ import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess.GetDoma
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeDuration;
 import com.example.peter.thekitchenmenu.data.repository.recipe.duration.TestDataRecipeDuration;
 import com.example.peter.thekitchenmenu.domain.model.UseCaseMetadataModel;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDuration.FailReason;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentState;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseMetadata.ComponentState;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
@@ -44,7 +44,7 @@ public class RecipeDurationTest {
     @Mock
     RepositoryRecipeDuration repoMock;
     @Captor
-    ArgumentCaptor<GetDomainModelCallback<RecipeDurationPersistenceDomainModel>> repoDurationCallback;
+    ArgumentCaptor<GetDomainModelCallback<RecipeDurationPersistenceModel>> repoDurationCallback;
     @Mock
     UniqueIdProvider idProviderMock;
     @Mock
@@ -77,7 +77,7 @@ public class RecipeDurationTest {
         // Arrange
         // This is the initial pre-test setup request for most tests cases, so check all return
         // values
-        RecipeDurationPersistenceDomainModel expectedDefaultValues = TestDataRecipeDuration.
+        RecipeDurationPersistenceModel expectedDefaultValues = TestDataRecipeDuration.
                 getNewActiveDefault();
 
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
@@ -110,7 +110,7 @@ public class RecipeDurationTest {
         // assert response metadata
         UseCaseMetadataModel metadata = durationOnErrorResponse.getMetadata();
 
-        ComponentState expectedState = ComponentState.VALID_DEFAULT;
+        ComponentState expectedState = UseCaseMetadata.ComponentState.VALID_DEFAULT;
         ComponentState actualComponentState = metadata.getComponentState();
         assertEquals(
                 expectedState,
@@ -135,7 +135,7 @@ public class RecipeDurationTest {
         newRequest_componentStateVALID_DEFAULT();
 
         // arrange persistent model that SHOULD NOT be saved as represents error state
-        RecipeDurationPersistenceDomainModel expectedInvalidStateModel = TestDataRecipeDuration.
+        RecipeDurationPersistenceModel expectedInvalidStateModel = TestDataRecipeDuration.
                 getNewInvalidPrepHours();
 
         // arrange invalid prep hours request
@@ -163,7 +163,7 @@ public class RecipeDurationTest {
 
         // Assert state
         assertEquals(
-                RecipeMetadata.ComponentState.INVALID_CHANGED,
+                UseCaseMetadata.ComponentState.INVALID_CHANGED,
                 durationOnErrorResponse.getMetadata().getComponentState()
         );
     }
@@ -193,7 +193,7 @@ public class RecipeDurationTest {
         newRequest_componentStateVALID_DEFAULT();
 
         // arrange expected save
-        RecipeDurationPersistenceDomainModel modelUnderTest = TestDataRecipeDuration.
+        RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
                 getNewValidPrepTime();
 
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(modelUnderTest.getLastUpdate());
@@ -221,7 +221,7 @@ public class RecipeDurationTest {
 
         // Assert
         assertEquals(
-                ComponentState.VALID_CHANGED,
+                UseCaseMetadata.ComponentState.VALID_CHANGED,
                 durationOnSuccessResponse.getMetadata().getComponentState()
         );
     }
@@ -248,7 +248,7 @@ public class RecipeDurationTest {
         newRequest_componentStateVALID_DEFAULT();
 
         // arrange persistent model that SHOULD NOT be saved as represents error state
-        RecipeDurationPersistenceDomainModel modelUnderTest = TestDataRecipeDuration.
+        RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
                 getNewInvalidPrepMinutes();
 
         // arrange invalid prep minutes
@@ -273,7 +273,7 @@ public class RecipeDurationTest {
         newRequest_componentStateVALID_DEFAULT();
 
         // arrange persistent model that SHOULD NOT be saved as represents error state
-        RecipeDurationPersistenceDomainModel modelUnderTest = TestDataRecipeDuration.
+        RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
                 getNewInvalidPrepMinutes();
 
         // arrange invalid prep minutes
@@ -289,7 +289,7 @@ public class RecipeDurationTest {
         SUT.execute(request, new DurationCallbackClient());
         // Assert
         assertEquals(
-                RecipeMetadata.ComponentState.INVALID_CHANGED,
+                UseCaseMetadata.ComponentState.INVALID_CHANGED,
                 durationOnErrorResponse.getMetadata().getComponentState()
         );
     }
@@ -301,7 +301,7 @@ public class RecipeDurationTest {
         newRequest_componentStateVALID_DEFAULT();
 
         // arrange persistent model that SHOULD NOT be saved as represents error state
-        RecipeDurationPersistenceDomainModel modelUnderTest = TestDataRecipeDuration.
+        RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
                 getNewInvalidPrepMinutes();
 
         // arrange invalid prep minutes request
@@ -336,7 +336,7 @@ public class RecipeDurationTest {
         newRequest_componentStateVALID_DEFAULT();
 
         // Arrange persistence model that should be saved
-        RecipeDurationPersistenceDomainModel modelUnderTest = TestDataRecipeDuration.
+        RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
                 getNewValidPrepTime();
 
         // arrange valid prep minutes request
@@ -352,7 +352,7 @@ public class RecipeDurationTest {
         SUT.execute(validRequest, new DurationCallbackClient());
         // Assert
         assertEquals(
-                ComponentState.VALID_CHANGED,
+                UseCaseMetadata.ComponentState.VALID_CHANGED,
                 durationOnSuccessResponse.getMetadata().getComponentState()
         );
     }
@@ -364,7 +364,7 @@ public class RecipeDurationTest {
         newRequest_componentStateVALID_DEFAULT();
 
         // Arrange persistence model that should be saved
-        RecipeDurationPersistenceDomainModel modelUnderTest = TestDataRecipeDuration.
+        RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
                 getNewValidPrepTime();
 
         // arrange valid prep minutes request
@@ -398,7 +398,7 @@ public class RecipeDurationTest {
         newRequest_componentStateVALID_DEFAULT();
 
         // Arrange persistence model that should be saved
-        RecipeDurationPersistenceDomainModel modelUnderTest = TestDataRecipeDuration.
+        RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
                 getNewValidPrepTime();
 
         // arrange valid prep minutes request
@@ -427,7 +427,7 @@ public class RecipeDurationTest {
         newRequest_componentStateVALID_DEFAULT();
 
         // arrange persistence model that should be saved
-        RecipeDurationPersistenceDomainModel savedModel = TestDataRecipeDuration.
+        RecipeDurationPersistenceModel savedModel = TestDataRecipeDuration.
                 getNewValidPrepTime();
 
         // arrange valid prep minutes request
@@ -457,7 +457,7 @@ public class RecipeDurationTest {
         newRequest_componentStateVALID_DEFAULT();
 
         // arrange persistence model that SHOULD NOT BE SAVED
-        RecipeDurationPersistenceDomainModel invalidCookHoursModel = TestDataRecipeDuration.
+        RecipeDurationPersistenceModel invalidCookHoursModel = TestDataRecipeDuration.
                 getNewInvalidCookHours();
 
         // arrange invalid request
@@ -482,7 +482,7 @@ public class RecipeDurationTest {
         newRequest_componentStateVALID_DEFAULT();
 
         // arrange persistence model that SHOULD NOT BE SAVED
-        RecipeDurationPersistenceDomainModel invalidCookHoursModel = TestDataRecipeDuration.
+        RecipeDurationPersistenceModel invalidCookHoursModel = TestDataRecipeDuration.
                 getNewInvalidCookHours();
 
         // arrange invalid request
@@ -498,7 +498,7 @@ public class RecipeDurationTest {
         SUT.execute(invalidRequest, new DurationCallbackClient());
         // Assert
         assertEquals(
-                RecipeMetadata.ComponentState.INVALID_CHANGED,
+                UseCaseMetadata.ComponentState.INVALID_CHANGED,
                 durationOnErrorResponse.getMetadata().getComponentState()
         );
     }
@@ -510,7 +510,7 @@ public class RecipeDurationTest {
         newRequest_componentStateVALID_DEFAULT();
 
         // arrange persistence model that SHOULD NOT BE SAVED
-        RecipeDurationPersistenceDomainModel invalidCookHoursModel = TestDataRecipeDuration.
+        RecipeDurationPersistenceModel invalidCookHoursModel = TestDataRecipeDuration.
                 getNewInvalidCookHours();
 
         // arrange invalid request
@@ -544,7 +544,7 @@ public class RecipeDurationTest {
         newRequest_componentStateVALID_DEFAULT();
 
         // arrange valid persistence model
-        RecipeDurationPersistenceDomainModel modelUnderTest = TestDataRecipeDuration.
+        RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
                 getNewValidCookTime();
 
         when(idProviderMock.getUId()).thenReturn(modelUnderTest.getDataId());
@@ -571,7 +571,7 @@ public class RecipeDurationTest {
         newRequest_componentStateVALID_DEFAULT();
 
         // arrange valid persistence model
-        RecipeDurationPersistenceDomainModel modelUnderTest = TestDataRecipeDuration.
+        RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
                 getNewValidCookTime();
 
         when(idProviderMock.getUId()).thenReturn(modelUnderTest.getDataId());
@@ -589,7 +589,7 @@ public class RecipeDurationTest {
         SUT.execute(validRequest, new DurationCallbackClient());
         // Assert
         assertEquals(
-                RecipeMetadata.ComponentState.VALID_CHANGED,
+                UseCaseMetadata.ComponentState.VALID_CHANGED,
                 durationOnSuccessResponse.getMetadata().getComponentState()
         );
     }
@@ -601,7 +601,7 @@ public class RecipeDurationTest {
         newRequest_componentStateVALID_DEFAULT();
 
         // arrange valid persistence model
-        RecipeDurationPersistenceDomainModel modelUnderTest = TestDataRecipeDuration.
+        RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
                 getNewValidCookTime();
 
         when(idProviderMock.getUId()).thenReturn(modelUnderTest.getDataId());
@@ -635,7 +635,7 @@ public class RecipeDurationTest {
         newRequest_componentStateVALID_DEFAULT();
 
         // arrange valid persistence model that SHOULD NOT be saved
-        RecipeDurationPersistenceDomainModel modelUnderTest = TestDataRecipeDuration.
+        RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
                 getInvalidNewCookMinutes();
 
         RecipeDurationRequest.DomainModel model = new RecipeDurationRequest.DomainModel.Builder().
@@ -659,7 +659,7 @@ public class RecipeDurationTest {
         newRequest_componentStateVALID_DEFAULT();
 
         // arrange valid persistence model that SHOULD NOT be saved
-        RecipeDurationPersistenceDomainModel modelUnderTest = TestDataRecipeDuration.
+        RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
                 getInvalidNewCookMinutes();
 
         RecipeDurationRequest.DomainModel model = new RecipeDurationRequest.DomainModel.Builder().
@@ -674,7 +674,7 @@ public class RecipeDurationTest {
         SUT.execute(request, new DurationCallbackClient());
         // Assert
         assertEquals(
-                RecipeMetadata.ComponentState.INVALID_CHANGED,
+                UseCaseMetadata.ComponentState.INVALID_CHANGED,
                 durationOnErrorResponse.getMetadata().getComponentState());
     }
 
@@ -685,7 +685,7 @@ public class RecipeDurationTest {
         newRequest_componentStateVALID_DEFAULT();
 
         // arrange valid persistence model that SHOULD NOT be saved
-        RecipeDurationPersistenceDomainModel modelUnderTest = TestDataRecipeDuration.
+        RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
                 getInvalidNewCookMinutes();
 
         RecipeDurationRequest.DomainModel model = new RecipeDurationRequest.DomainModel.Builder().
@@ -719,7 +719,7 @@ public class RecipeDurationTest {
         newRequest_componentStateVALID_DEFAULT();
 
         // arrange valid persistence model
-        RecipeDurationPersistenceDomainModel modelUnderTest = TestDataRecipeDuration.
+        RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
                 getNewValidCookTime();
 
         when(idProviderMock.getUId()).thenReturn(modelUnderTest.getDataId()
@@ -748,7 +748,7 @@ public class RecipeDurationTest {
         newRequest_componentStateVALID_DEFAULT();
 
         // arrange valid persistence model
-        RecipeDurationPersistenceDomainModel modelUnderTest = TestDataRecipeDuration.
+        RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
                 getNewValidCookTime();
 
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(modelUnderTest.getCreateDate());
@@ -766,7 +766,7 @@ public class RecipeDurationTest {
         SUT.execute(request, new DurationCallbackClient());
         // Assert
         assertEquals(
-                RecipeMetadata.ComponentState.VALID_CHANGED,
+                UseCaseMetadata.ComponentState.VALID_CHANGED,
                 durationOnSuccessResponse.getMetadata().getComponentState()
         );
     }
@@ -778,7 +778,7 @@ public class RecipeDurationTest {
         newRequest_componentStateVALID_DEFAULT();
 
         // arrange valid persistence model
-        RecipeDurationPersistenceDomainModel modelUnderTest = TestDataRecipeDuration.
+        RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
                 getNewValidCookTime();
 
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(modelUnderTest.getCreateDate());
@@ -812,7 +812,7 @@ public class RecipeDurationTest {
         newRequest_componentStateVALID_DEFAULT();
 
         // arrange invalid persistence model
-        RecipeDurationPersistenceDomainModel modelUnderTest = TestDataRecipeDuration.
+        RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
                 getNewInvalidPrepTimeInvalidCookTime();
 
         RecipeDurationRequest.DomainModel model = new RecipeDurationRequest.DomainModel.Builder().
@@ -832,7 +832,7 @@ public class RecipeDurationTest {
         UseCaseMetadataModel metadata = durationOnErrorResponse.getMetadata();
 
         assertEquals(
-                ComponentState.INVALID_CHANGED,
+                UseCaseMetadata.ComponentState.INVALID_CHANGED,
                 metadata.getComponentState()
         );
 
@@ -855,7 +855,7 @@ public class RecipeDurationTest {
         newRequest_componentStateVALID_DEFAULT();
 
         // arrange valid persistence model
-        RecipeDurationPersistenceDomainModel modelUnderTest = TestDataRecipeDuration.
+        RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
                 getNewValidPrepTimeValidCookTime();
 
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(modelUnderTest.getCreateDate());
@@ -889,7 +889,7 @@ public class RecipeDurationTest {
     @Test
     public void existingRequest_validDomainId_domainIdSentToRepo() {
         // Arrange
-        RecipeDurationPersistenceDomainModel modelUnderTest = TestDataRecipeDuration.
+        RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
                 getExistingValidPrepTimeValidCookTime();
 
         // arrange request to load existing model
@@ -932,7 +932,7 @@ public class RecipeDurationTest {
         existingRequest_validDomainId_domainIdSentToRepo();
         // Assert
         assertEquals(
-                RecipeMetadata.ComponentState.VALID_UNCHANGED,
+                UseCaseMetadata.ComponentState.VALID_UNCHANGED,
                 durationOnSuccessResponse.getMetadata().getComponentState()
         );
     }
@@ -940,7 +940,7 @@ public class RecipeDurationTest {
     @Test
     public void existingRequest_invalidPrepAndCookTime_statusINVALID_UNCHANGED() {
         // Arrange
-        RecipeDurationPersistenceDomainModel modelUnderTest = TestDataRecipeDuration.
+        RecipeDurationPersistenceModel modelUnderTest = TestDataRecipeDuration.
                 getExistingInvalidPreAndCookTime();
 
         // arrange request to load existing model
@@ -959,7 +959,7 @@ public class RecipeDurationTest {
         repoDurationCallback.getValue().onPersistenceModelLoaded(modelUnderTest);
 
         assertEquals(
-                RecipeMetadata.ComponentState.INVALID_UNCHANGED,
+                UseCaseMetadata.ComponentState.INVALID_UNCHANGED,
                 durationOnErrorResponse.getMetadata().getComponentState()
         );
     }

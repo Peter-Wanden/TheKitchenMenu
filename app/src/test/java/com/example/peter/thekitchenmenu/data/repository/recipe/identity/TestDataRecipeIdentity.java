@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.data.repository.recipe.identity;
 
 import com.example.peter.thekitchenmenu.commonmocks.StringMaker;
 import com.example.peter.thekitchenmenu.data.repository.recipe.metadata.TestDataRecipeMetadata;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityPersistenceDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityPersistenceModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityTest;
 
 import java.util.ArrayList;
@@ -22,8 +22,8 @@ public class TestDataRecipeIdentity {
     private static final String RECIPE_DOMAIN_ID_FROM_ANOTHER_USER = TestDataRecipeMetadata.
             getValidFromAnotherUser().getDomainId();
 
-    public static RecipeIdentityPersistenceDomainModel getNewInvalidActiveDefault() {
-        return new RecipeIdentityPersistenceDomainModel.Builder().
+    public static RecipeIdentityPersistenceModel getNewInvalidActiveDefault() {
+        return new RecipeIdentityPersistenceModel.Builder().
                 getDefault().
                 setDataId("dataId-recipeIdentity-id0").
                 setDomainId(NEW_RECIPE_DOMAIN_ID).
@@ -32,14 +32,14 @@ public class TestDataRecipeIdentity {
                 build();
     }
 
-    public static RecipeIdentityPersistenceDomainModel getInvalidNewTitleTooShort() {
+    public static RecipeIdentityPersistenceModel getInvalidNewTitleTooShort() {
         String titleTooShort = new StringMaker().
                 makeStringOfExactLength(RecipeIdentityTest.TITLE_MIN_LENGTH).
                 includeStringAtStart("newTitleTooShort").
                 thenRemoveOneCharacter().
                 build();
 
-        return new RecipeIdentityPersistenceDomainModel.Builder().
+        return new RecipeIdentityPersistenceModel.Builder().
                 getDefault().
                 setDataId("dataId-recipeIdentity-id1").
                 setDomainId(NEW_RECIPE_DOMAIN_ID).
@@ -49,14 +49,14 @@ public class TestDataRecipeIdentity {
                 build();
     }
 
-    public static RecipeIdentityPersistenceDomainModel getInvalidNewTitleTooLong() {
+    public static RecipeIdentityPersistenceModel getInvalidNewTitleTooLong() {
         String titleTooLong = new StringMaker().
                 makeStringOfExactLength(RecipeIdentityTest.TITLE_MAX_LENGTH).
                 includeStringAtStart("newTitleTooLong").
                 thenAddOneCharacter().
                 build();
 
-        return new RecipeIdentityPersistenceDomainModel.Builder().
+        return new RecipeIdentityPersistenceModel.Builder().
                 getDefault().
                 setDataId("dataId-recipeIdentity=id2").
                 setDomainId(NEW_RECIPE_DOMAIN_ID).
@@ -66,14 +66,14 @@ public class TestDataRecipeIdentity {
                 build();
     }
 
-    public static RecipeIdentityPersistenceDomainModel getInvalidNewTitleTooLongDescriptionTooLong() {
+    public static RecipeIdentityPersistenceModel getInvalidNewTitleTooLongDescriptionTooLong() {
         String descriptionTooLong = new StringMaker().
                 makeStringOfExactLength(RecipeIdentityTest.DESCRIPTION_MAX_LENGTH).
                 includeStringAtStart("newDescriptionTooLong").
                 thenAddOneCharacter().
                 build();
 
-        return new RecipeIdentityPersistenceDomainModel.Builder().
+        return new RecipeIdentityPersistenceModel.Builder().
                 getDefault().
                 setDataId("dataId-recipeIdentity-id3").
                 setDomainId(NEW_RECIPE_DOMAIN_ID).
@@ -84,8 +84,8 @@ public class TestDataRecipeIdentity {
                 build();
     }
 
-    public static RecipeIdentityPersistenceDomainModel getInvalidNewTitleTooShortDescriptionValid() {
-        return new RecipeIdentityPersistenceDomainModel.Builder().
+    public static RecipeIdentityPersistenceModel getInvalidNewTitleTooShortDescriptionValid() {
+        return new RecipeIdentityPersistenceModel.Builder().
                 setDataId("dataId-recipeIdentity-id4").
                 setDomainId(NEW_RECIPE_DOMAIN_ID).
                 setTitle(getInvalidNewTitleTooShort().getTitle()).
@@ -95,8 +95,8 @@ public class TestDataRecipeIdentity {
                 build();
     }
 
-    public static RecipeIdentityPersistenceDomainModel getValidNewTitleValid() {
-        return new RecipeIdentityPersistenceDomainModel.Builder().
+    public static RecipeIdentityPersistenceModel getValidNewTitleValid() {
+        return new RecipeIdentityPersistenceModel.Builder().
                 getDefault().
                 setDataId("dataId-recipeIdentity=id5").
                 setDomainId(NEW_RECIPE_DOMAIN_ID).
@@ -106,7 +106,7 @@ public class TestDataRecipeIdentity {
                 build();
     }
 
-    public static RecipeIdentityPersistenceDomainModel getValidNewComplete() {
+    public static RecipeIdentityPersistenceModel getValidNewComplete() {
         String validTitle = new StringMaker().
                 makeStringOfExactLength(RecipeIdentityTest.TITLE_MAX_LENGTH).
                 includeStringAtStart("newValidTitle").
@@ -116,7 +116,7 @@ public class TestDataRecipeIdentity {
                 includeStringAtStart("newValidDescription").
                 build();
 
-        return new RecipeIdentityPersistenceDomainModel.Builder().
+        return new RecipeIdentityPersistenceModel.Builder().
                 setDataId("dataId-recipeIdentity-id6").
                 setDomainId(NEW_RECIPE_DOMAIN_ID).
                 setTitle(validTitle).
@@ -126,7 +126,7 @@ public class TestDataRecipeIdentity {
                 build();
     }
 
-    public static List<RecipeIdentityPersistenceDomainModel> getAllNew() {
+    public static List<RecipeIdentityPersistenceModel> getAllNew() {
         return Arrays.asList(
                 getNewInvalidActiveDefault(),
                 getInvalidNewTitleTooShort(),
@@ -138,14 +138,14 @@ public class TestDataRecipeIdentity {
         );
     }
 
-    public static RecipeIdentityPersistenceDomainModel getInvalidExistingTitleTooShort() {
+    public static RecipeIdentityPersistenceModel getInvalidExistingTitleTooShort() {
         String invalidExistingTitleTooShort = new StringMaker().
                 makeStringOfExactLength(RecipeIdentityTest.TITLE_MIN_LENGTH).
                 includeStringAtStart("invalidExistingTitleTooShort").
                 thenRemoveOneCharacter().
                 build();
 
-        return new RecipeIdentityPersistenceDomainModel.Builder().
+        return new RecipeIdentityPersistenceModel.Builder().
                 getDefault().
                 setDataId("dataId-recipeIdentity-id10").
                 setDomainId(EXISTING_RECIPE_DOMAIN_ID).
@@ -155,13 +155,13 @@ public class TestDataRecipeIdentity {
                 build();
     }
 
-    public static RecipeIdentityPersistenceDomainModel getInvalidExistingTitleTooLong() {
+    public static RecipeIdentityPersistenceModel getInvalidExistingTitleTooLong() {
         String invalidExistingTitleTooLong = new StringMaker().
                 makeStringOfExactLength(RecipeIdentityTest.TITLE_MAX_LENGTH).
                 includeStringAtStart("invalidExistingTitleTooLong").thenAddOneCharacter().
                 build();
 
-        return new RecipeIdentityPersistenceDomainModel.Builder().
+        return new RecipeIdentityPersistenceModel.Builder().
                 getDefault().
                 setDataId("dataId-recipeIdentity-id11").
                 setDomainId(EXISTING_RECIPE_DOMAIN_ID).
@@ -171,14 +171,14 @@ public class TestDataRecipeIdentity {
                 build();
     }
 
-    public static RecipeIdentityPersistenceDomainModel getInvalidExistingTitleValidDescriptionTooLong() {
+    public static RecipeIdentityPersistenceModel getInvalidExistingTitleValidDescriptionTooLong() {
         String existingDescriptionTooLong = new StringMaker().
                 makeStringOfExactLength(RecipeIdentityTest.DESCRIPTION_MAX_LENGTH).
                 includeStringAtStart("existingDescriptionTooLong").
                 thenAddOneCharacter().
                 build();
 
-        return new RecipeIdentityPersistenceDomainModel.Builder().
+        return new RecipeIdentityPersistenceModel.Builder().
                 setDataId("dataId-recipeIdentity-12").
                 setDomainId(EXISTING_RECIPE_DOMAIN_ID).
                 setTitle(getValidExistingTitleValidDescriptionValid().getTitle()).
@@ -188,8 +188,8 @@ public class TestDataRecipeIdentity {
                 build();
     }
 
-    public static RecipeIdentityPersistenceDomainModel getInvalidExistingTitleTooShortDescriptionTooLong() {
-        return new RecipeIdentityPersistenceDomainModel.Builder().
+    public static RecipeIdentityPersistenceModel getInvalidExistingTitleTooShortDescriptionTooLong() {
+        return new RecipeIdentityPersistenceModel.Builder().
                 setDataId("dataID-recipeIdentity-13").
                 setDomainId(EXISTING_RECIPE_DOMAIN_ID).
                 setTitle(getInvalidExistingTitleTooShort().getTitle()).
@@ -199,8 +199,8 @@ public class TestDataRecipeIdentity {
                 build();
     }
 
-    public static RecipeIdentityPersistenceDomainModel getInvalidExistingTitleTooLongDescriptionTooLong() {
-        return new RecipeIdentityPersistenceDomainModel.Builder().
+    public static RecipeIdentityPersistenceModel getInvalidExistingTitleTooLongDescriptionTooLong() {
+        return new RecipeIdentityPersistenceModel.Builder().
                 setDataId("dataId-recipeIdentity-14").
                 setDomainId(EXISTING_RECIPE_DOMAIN_ID).
                 setTitle(getInvalidExistingTitleTooLong().getTitle()).
@@ -210,7 +210,7 @@ public class TestDataRecipeIdentity {
                 build();
     }
 
-    public static RecipeIdentityPersistenceDomainModel getValidExistingTitleValidDescriptionValid() {
+    public static RecipeIdentityPersistenceModel getValidExistingTitleValidDescriptionValid() {
         String validExistingCompleteTitle = new StringMaker().
                 makeStringOfExactLength(RecipeIdentityTest.TITLE_MAX_LENGTH).
                 includeStringAtStart("validExistingCompleteTitle").
@@ -220,7 +220,7 @@ public class TestDataRecipeIdentity {
                 includeStringAtStart("validExistingCompleteDescription").
                 build();
 
-        return new RecipeIdentityPersistenceDomainModel.Builder().
+        return new RecipeIdentityPersistenceModel.Builder().
                 setDataId("dataId-recipeIdentity-id15").
                 setDomainId(EXISTING_RECIPE_DOMAIN_ID).
                 setTitle(validExistingCompleteTitle).
@@ -230,8 +230,8 @@ public class TestDataRecipeIdentity {
                 build();
     }
 
-    public static RecipeIdentityPersistenceDomainModel getValidExistingTitleValid() {
-        return new RecipeIdentityPersistenceDomainModel.Builder().
+    public static RecipeIdentityPersistenceModel getValidExistingTitleValid() {
+        return new RecipeIdentityPersistenceModel.Builder().
                 getDefault().
                 setDataId("dataId-recipeIdentity-id16").
                 setDomainId(EXISTING_RECIPE_DOMAIN_ID).
@@ -241,7 +241,7 @@ public class TestDataRecipeIdentity {
                 build();
     }
 
-    public static List<RecipeIdentityPersistenceDomainModel> getAllExisting() {
+    public static List<RecipeIdentityPersistenceModel> getAllExisting() {
         return Arrays.asList(
                 getInvalidExistingTitleTooShort(),
                 getInvalidExistingTitleTooLong(),
@@ -253,7 +253,7 @@ public class TestDataRecipeIdentity {
         );
     }
 
-    public static RecipeIdentityPersistenceDomainModel getValidCompleteFromAnotherUser() {
+    public static RecipeIdentityPersistenceModel getValidCompleteFromAnotherUser() {
         String validCompleteFromAnotherUserTitle = new StringMaker().
                 makeStringOfExactLength(RecipeIdentityTest.TITLE_MAX_LENGTH).
                 includeStringAtStart("validCompleteFromAnotherUserTitle").
@@ -263,7 +263,7 @@ public class TestDataRecipeIdentity {
                 includeStringAtStart("validCompleteFromAnotherUserDescription").
                 build();
 
-        return new RecipeIdentityPersistenceDomainModel.Builder().
+        return new RecipeIdentityPersistenceModel.Builder().
                 setDataId("dataId-recipeIdentity-id20").
                 setDomainId(RECIPE_DOMAIN_ID_FROM_ANOTHER_USER).
                 setTitle(validCompleteFromAnotherUserTitle).
@@ -273,7 +273,7 @@ public class TestDataRecipeIdentity {
                 build();
     }
 
-    public static RecipeIdentityPersistenceDomainModel getInvalidFromAnotherUser() {
+    public static RecipeIdentityPersistenceModel getInvalidFromAnotherUser() {
         String invalidCompleteFromAnotherUserTitle = new StringMaker().
                 makeStringOfExactLength(RecipeIdentityTest.TITLE_MAX_LENGTH).
                 includeStringAtStart("invalidFromAnotherUserTitle").
@@ -285,7 +285,7 @@ public class TestDataRecipeIdentity {
                 thenAddOneCharacter().
                 build();
 
-        return new RecipeIdentityPersistenceDomainModel.Builder().
+        return new RecipeIdentityPersistenceModel.Builder().
                 setDataId("dataId-recipeIdentity-id21").
                 setDomainId(RECIPE_DOMAIN_ID_FROM_ANOTHER_USER).
                 setTitle(invalidCompleteFromAnotherUserTitle).
@@ -295,15 +295,15 @@ public class TestDataRecipeIdentity {
                 build();
     }
 
-    public static List<RecipeIdentityPersistenceDomainModel> getAllFromAnotherUser() {
+    public static List<RecipeIdentityPersistenceModel> getAllFromAnotherUser() {
         return Arrays.asList(
                 getValidCompleteFromAnotherUser(),
                 getInvalidFromAnotherUser()
         );
     }
 
-    public static RecipeIdentityPersistenceDomainModel getValidCompleteAfterCopied() {
-        return new RecipeIdentityPersistenceDomainModel.Builder().
+    public static RecipeIdentityPersistenceModel getValidCompleteAfterCopied() {
+        return new RecipeIdentityPersistenceModel.Builder().
                 setDataId("dataId-recipeIdentity-id30").
                 setDomainId(NEW_RECIPE_DOMAIN_ID).
                 setTitle(getValidCompleteFromAnotherUser().getTitle()).
@@ -313,13 +313,13 @@ public class TestDataRecipeIdentity {
                 build();
     }
 
-    public static RecipeIdentityPersistenceDomainModel getValidCopiedDescriptionUpdated() {
+    public static RecipeIdentityPersistenceModel getValidCopiedDescriptionUpdated() {
         String validCopiedUpdatedDescription = new StringMaker().
                 makeStringOfExactLength(RecipeIdentityTest.DESCRIPTION_MAX_LENGTH).
                 includeStringAtStart("validClonedValidUpdatedDescription").
                 build();
 
-        return new RecipeIdentityPersistenceDomainModel.Builder().
+        return new RecipeIdentityPersistenceModel.Builder().
                 setDataId("dataId-recipeIdentity-id31")    .
                 setDomainId(NEW_RECIPE_DOMAIN_ID).
                 setTitle(getValidCompleteFromAnotherUser().getTitle()).
@@ -329,7 +329,7 @@ public class TestDataRecipeIdentity {
                 build();
     }
 
-    public static RecipeIdentityPersistenceDomainModel getValidAfterInvalidCopy() {
+    public static RecipeIdentityPersistenceModel getValidAfterInvalidCopy() {
         StringBuilder truncatedTitle = new StringBuilder().
                 append(getInvalidFromAnotherUser().getTitle());
         truncatedTitle.setLength(RecipeIdentityTest.TITLE_MAX_LENGTH);
@@ -338,7 +338,7 @@ public class TestDataRecipeIdentity {
                 append(getInvalidFromAnotherUser().getDescription());
         truncatedDescription.setLength(RecipeIdentityTest.DESCRIPTION_MAX_LENGTH);
 
-        return new RecipeIdentityPersistenceDomainModel.Builder().
+        return new RecipeIdentityPersistenceModel.Builder().
                 setDataId("dataId-recipeIdentity-id32").
                 setDomainId(NEW_RECIPE_DOMAIN_ID).
                 setTitle(truncatedTitle.toString()).
@@ -348,7 +348,7 @@ public class TestDataRecipeIdentity {
                 build();
     }
 
-    public static List<RecipeIdentityPersistenceDomainModel> getAllCopied() {
+    public static List<RecipeIdentityPersistenceModel> getAllCopied() {
         return Arrays.asList(
                 getValidCompleteAfterCopied(),
                 getValidCopiedDescriptionUpdated(),
@@ -356,7 +356,7 @@ public class TestDataRecipeIdentity {
         );
     }
 
-    public static List<RecipeIdentityPersistenceDomainModel> getAllValidModels() {
+    public static List<RecipeIdentityPersistenceModel> getAllValidModels() {
         return Arrays.asList(
                 getValidNewComplete(),
                 getValidNewTitleValid(),
@@ -369,9 +369,9 @@ public class TestDataRecipeIdentity {
         );
     }
 
-    public static List<RecipeIdentityPersistenceDomainModel> getAllByDomainId(String domainId) {
-        List<RecipeIdentityPersistenceDomainModel> models = new ArrayList<>();
-        for (RecipeIdentityPersistenceDomainModel m : getAll()) {
+    public static List<RecipeIdentityPersistenceModel> getAllByDomainId(String domainId) {
+        List<RecipeIdentityPersistenceModel> models = new ArrayList<>();
+        for (RecipeIdentityPersistenceModel m : getAll()) {
             if (domainId.equals(m.getDomainId())) {
                 models.add(m);
             }
@@ -379,8 +379,8 @@ public class TestDataRecipeIdentity {
         return models;
     }
 
-    public static List<RecipeIdentityPersistenceDomainModel> getAll() {
-        List<RecipeIdentityPersistenceDomainModel> models = new ArrayList<>();
+    public static List<RecipeIdentityPersistenceModel> getAll() {
+        List<RecipeIdentityPersistenceModel> models = new ArrayList<>();
         models.addAll(getAllNew());
         models.addAll(getAllExisting());
         models.addAll(getAllFromAnotherUser());
@@ -388,11 +388,11 @@ public class TestDataRecipeIdentity {
         return models;
     }
 
-    public static RecipeIdentityPersistenceDomainModel getActiveByDomainId(String domainId) {
+    public static RecipeIdentityPersistenceModel getActiveByDomainId(String domainId) {
         long lastUpdate = 0;
-        RecipeIdentityPersistenceDomainModel model = new RecipeIdentityPersistenceDomainModel.Builder().
+        RecipeIdentityPersistenceModel model = new RecipeIdentityPersistenceModel.Builder().
                 getDefault().build();
-        for (RecipeIdentityPersistenceDomainModel m : getAllByDomainId(domainId)) {
+        for (RecipeIdentityPersistenceModel m : getAllByDomainId(domainId)) {
             if (m.getLastUpdate() > lastUpdate) {
                 model = m;
                 lastUpdate = m.getLastUpdate();

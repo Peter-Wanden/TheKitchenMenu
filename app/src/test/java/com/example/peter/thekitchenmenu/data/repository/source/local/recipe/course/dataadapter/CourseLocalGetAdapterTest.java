@@ -6,7 +6,7 @@ import com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.courseitem.RecipeCourseEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.courseitem.RecipeCourseItemLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.parent.RecipeCourseParentLocalDataSource;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCoursePersistenceDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCoursePersistenceModel;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -159,16 +159,16 @@ public class CourseLocalGetAdapterTest {
 
     // region helper classes -----------------------------------------------------------------------
     private static class DomainModelCallbackClient
-            implements DomainDataAccess.GetDomainModelCallback<RecipeCoursePersistenceDomainModel> {
+            implements DomainDataAccess.GetDomainModelCallback<RecipeCoursePersistenceModel> {
 
         private static final String TAG = CourseLocalGetAdapterTest.TAG +
                 DomainModelCallbackClient.class.getSimpleName() + ": ";
 
-        private RecipeCoursePersistenceDomainModel model;
+        private RecipeCoursePersistenceModel model;
         private boolean isModelUnavailable;
 
         @Override
-        public void onPersistenceModelLoaded(RecipeCoursePersistenceDomainModel m) {
+        public void onPersistenceModelLoaded(RecipeCoursePersistenceModel m) {
             System.out.println(TAG + m);
             model = m;
         }
@@ -181,16 +181,16 @@ public class CourseLocalGetAdapterTest {
     }
 
     private static class GetAllDomainModelsCallbackClient
-            implements DomainDataAccess.GetAllDomainModelsCallback<RecipeCoursePersistenceDomainModel> {
+            implements DomainDataAccess.GetAllDomainModelsCallback<RecipeCoursePersistenceModel> {
 
         private static final String TAG = CourseLocalGetAdapterTest.TAG +
                 GetAllDomainModelsCallbackClient.class.getSimpleName() + ": ";
 
-        private List<RecipeCoursePersistenceDomainModel> models;
+        private List<RecipeCoursePersistenceModel> models;
         private boolean isModelsUnavailable;
 
         @Override
-        public void onAllDomainModelsLoaded(List<RecipeCoursePersistenceDomainModel> m) {
+        public void onAllDomainModelsLoaded(List<RecipeCoursePersistenceModel> m) {
             System.out.println(TAG + m);
             models = m;
         }

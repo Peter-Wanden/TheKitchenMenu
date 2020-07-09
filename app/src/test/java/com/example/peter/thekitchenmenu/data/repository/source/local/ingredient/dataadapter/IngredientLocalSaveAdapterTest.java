@@ -3,7 +3,7 @@ package com.example.peter.thekitchenmenu.data.repository.source.local.ingredient
 import com.example.peter.thekitchenmenu.data.repository.ingredient.TestDataIngredient;
 import com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.datasource.IngredientLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.datasource.TestDataIngredientEntity;
-import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientPersistenceDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientPersistenceModel;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -41,7 +41,7 @@ public class IngredientLocalSaveAdapterTest {
     @Test
     public void save() {
         // Arrange
-        IngredientPersistenceDomainModel modelUnderTest = TestDataIngredient.
+        IngredientPersistenceModel modelUnderTest = TestDataIngredient.
                 getValidNewNameValidDescriptionValid();
         // Act
         SUT.save(modelUnderTest);
