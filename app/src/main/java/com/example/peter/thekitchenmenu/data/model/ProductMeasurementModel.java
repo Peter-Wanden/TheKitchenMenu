@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.data.model;
 
 
-import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;
+import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.MeasurementSubtype;
 
 import javax.annotation.Nonnull;
 

@@ -3,7 +3,7 @@ package com.example.peter.thekitchenmenu.testdata;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredient.RecipeIngredientRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredient.RecipeIngredientResponse;
 
-import static com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants.DEFAULT_MEASUREMENT_MODEL;
+import static com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.UnitOfMeasureConstants.DEFAULT_MEASUREMENT_MODEL;
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredient.RecipeIngredient.*;
 
 public class TestDataUseCasePortionCalculatorRequestResponse {

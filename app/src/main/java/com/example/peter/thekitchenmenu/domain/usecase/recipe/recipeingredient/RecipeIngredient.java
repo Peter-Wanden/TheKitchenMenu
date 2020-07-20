@@ -9,10 +9,10 @@ import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeI
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
-import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModelBuilder;
-import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasure;
-import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModel;
-import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants;
+import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.model.MeasurementModelBuilder;
+import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.UnitOfMeasure;
+import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.model.MeasurementModel;
+import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.UnitOfMeasureConstants;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortionsPersistenceModel;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;

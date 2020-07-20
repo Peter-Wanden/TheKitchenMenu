@@ -4,16 +4,14 @@ import android.content.res.Resources;
 import android.os.Build;
 import android.widget.TextView;
 
-import androidx.databinding.BindingAdapter;
-
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.Count;
-import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.ImperialMass;
-import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.ImperialVolume;
-import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;
-import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MetricMass;
-import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MetricVolume;
-import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasure;
+import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.Count;
+import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.ImperialMass;
+import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.ImperialVolume;
+import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.MeasurementSubtype;
+import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.MetricMass;
+import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.MetricVolume;
+import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.UnitOfMeasure;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -25,7 +23,7 @@ public class UnitOfMeasureListItemBindingAdapter {
     private static final String TAG = "tkm-UOMListItemAdapter";
 
     // Todo send in a measurement model- also use one in measurement viewmodel instead of bindable viewmodel
-    @BindingAdapter(value = {"setLabelForSubtypeInt", "formatBaseUnits", "formatNumberOfItems"})
+//    @BindingAdapter(value = {"setLabelForSubtypeInt", "formatBaseUnits", "formatNumberOfItems"})
     public static void setLabelForSubtypeInt(TextView view,
                                              int subtypeInt,
                                              double baseUnits,

@@ -6,12 +6,10 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.databinding.RecipeIngredientEditorBinding;
 import com.example.peter.thekitchenmenu.ui.ViewModelFactoryIngredient;
 import com.example.peter.thekitchenmenu.ui.ViewModelFactoryRecipe;
 import com.example.peter.thekitchenmenu.ui.detail.ingredient.IngredientViewerViewModel;
@@ -31,7 +29,7 @@ public class RecipeIngredientEditorActivity
     public static final String EXTRA_INGREDIENT_ID = "INGREDIENT_ID";
     public static final String EXTRA_RECIPE_INGREDIENT_ID = "EXTRA_RECIPE_INGREDIENT_ID";
 
-    private RecipeIngredientEditorBinding binding;
+//    private RecipeIngredientEditorBinding binding;
     private RecipeNameAndPortionsViewModel recipeNameAndPortionsViewModel;
     private IngredientViewerViewModel ingredientViewerViewModel;
     private RecipeIngredientCalculatorViewModel measurementViewModel;
@@ -99,12 +97,12 @@ public class RecipeIngredientEditorActivity
     }
 
     private void initialiseBindings() {
-        binding = DataBindingUtil.setContentView(this, R.layout.recipe_ingredient_editor);
-        binding.setLifecycleOwner(this);
+//        binding = DataBindingUtil.setContentView(this, R.layout.recipe_ingredient_editor);
+//        binding.setLifecycleOwner(this);
     }
 
     private void setupActionBar() {
-        setSupportActionBar(binding.recipeIngredientEditorToolbar);
+//        setSupportActionBar(binding.recipeIngredientEditorToolbar);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar == null) {
@@ -118,10 +116,10 @@ public class RecipeIngredientEditorActivity
 
     private void setupViewModels() {
         recipeNameAndPortionsViewModel = obtainRecipeNameAndPortionsViewModel(this);
-        binding.setNameAndPortions(recipeNameAndPortionsViewModel);
+//        binding.setNameAndPortions(recipeNameAndPortionsViewModel);
 
         ingredientViewerViewModel = obtainIngredientViewerViewModel(this);
-        binding.setIngredient(ingredientViewerViewModel);
+//        binding.setIngredient(ingredientViewerViewModel);
 
         measurementViewModel = obtainRecipeIngredientMeasurementViewModel(this);
     }

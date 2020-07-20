@@ -1,18 +1,18 @@
 package com.example.peter.thekitchenmenu.ui.catalog.product;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.model.ProductModel;
-import com.example.peter.thekitchenmenu.databinding.ProductListItemBinding;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.databinding.DataBindingUtil;
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import javax.annotation.Nonnull;
@@ -34,13 +34,14 @@ public class ProductCatalogAllRecyclerAdapter
     @Override
     public ViewHolder onCreateViewHolder(@Nonnull ViewGroup viewGroup, int viewType) {
 
-        ProductListItemBinding binding = DataBindingUtil.inflate(
-                LayoutInflater.from(viewGroup.getContext()),
-                R.layout.product_list_item,
-                viewGroup,
-                false);
-
-        return new ViewHolder(binding);
+//        ProductListItemBinding binding = DataBindingUtil.inflate(
+//                LayoutInflater.from(viewGroup.getContext()),
+//                R.layout.product_list_item,
+//                viewGroup,
+//                false);
+//
+//        return new ViewHolder(binding);
+        return null;
     }
 
     @Override
@@ -104,7 +105,7 @@ public class ProductCatalogAllRecyclerAdapter
 
     /* Inner class for creating ViewHolders */
     class ViewHolder extends RecyclerView.ViewHolder {
-        ProductListItemBinding binding;
+//        ProductListItemBinding binding;
 
         ProductItemNavigator listener = new ProductItemNavigator() {
             @Override
@@ -123,15 +124,19 @@ public class ProductCatalogAllRecyclerAdapter
             }
         };
 
-        ViewHolder(ProductListItemBinding binding) {
-            super(binding.getRoot());
-            this.binding = binding;
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
         }
 
+//        ViewHolder(ProductListItemBinding binding) {
+//            super(binding.getRoot());
+//            this.binding = binding;
+//        }
+
         void bind(ProductModel product) {
-            binding.setProductModel(product);
-            binding.setListener(listener);
-            binding.executePendingBindings();
+//            binding.setProductModel(product);
+//            binding.setListener(listener);
+//            binding.executePendingBindings();
         }
     }
 }

@@ -1,6 +1,6 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredient;
 
-import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModel;
+import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.model.MeasurementModel;
 import com.example.peter.thekitchenmenu.domain.model.BasePersistenceModel;
 
 public class RecipeIngredientPersistenceModel extends BasePersistenceModel {

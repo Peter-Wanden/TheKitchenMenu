@@ -9,12 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.databinding.FavoriteProductEditorFragmentBinding;
 import com.example.peter.thekitchenmenu.ui.detail.product.producteditor.ProductEditorActivity;
 import com.example.peter.thekitchenmenu.ui.utils.CurrencyInputWatcher;
 
 import androidx.annotation.Nullable;
-import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
 import javax.annotation.Nonnull;
@@ -24,7 +22,7 @@ public class FavoriteProductEditorFragment extends Fragment {
     private static final String TAG = "tkm-" + FavoriteProductEditorFragment.class.getSimpleName()
             + ":";
 
-    private FavoriteProductEditorFragmentBinding binding;
+//    private FavoriteProductEditorFragmentBinding binding;
     private FavoriteProductEditorViewModel viewModel;
 
     public FavoriteProductEditorFragment() {}
@@ -43,21 +41,22 @@ public class FavoriteProductEditorFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        binding = DataBindingUtil.inflate(
-                inflater,
-                R.layout.favorite_product_editor_fragment,
-                container,
-                false);
+//        binding = DataBindingUtil.inflate(
+//                inflater,
+//                R.layout.favorite_product_editor_fragment,
+//                container,
+//                false);
 
         viewModel = obtainViewModel();
         setBindingInstanceVariables();
 
-        binding.setLifecycleOwner(this);
-        return binding.getRoot();
+//        binding.setLifecycleOwner(this);
+//        return binding.getRoot();
+        return null;
     }
 
     private void setBindingInstanceVariables() {
-        binding.setViewModel(viewModel);
+//        binding.setViewModel(viewModel);
     }
 
     private FavoriteProductEditorViewModel obtainViewModel() {
@@ -85,8 +84,8 @@ public class FavoriteProductEditorFragment extends Fragment {
     }
 
     private void setUpPricingInput() {
-        binding.editablePrice.addTextChangedListener(
-                new CurrencyInputWatcher(binding.editablePrice));
+//        binding.editablePrice.addTextChangedListener(
+//                new CurrencyInputWatcher(binding.editablePrice));
     }
 
     @Override

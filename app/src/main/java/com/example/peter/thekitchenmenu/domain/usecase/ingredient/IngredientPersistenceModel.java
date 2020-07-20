@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecase.ingredient;
 
 import com.example.peter.thekitchenmenu.app.Constants;
-import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants;
+import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.UnitOfMeasureConstants;
 import com.example.peter.thekitchenmenu.domain.model.BasePersistenceModel;
 
 import java.util.Objects;

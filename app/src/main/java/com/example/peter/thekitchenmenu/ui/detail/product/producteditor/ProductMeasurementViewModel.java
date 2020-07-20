@@ -5,16 +5,15 @@ import android.app.Application;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.model.ProductMeasurementModel;
 import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
-import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;
-import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasure;
+import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.MeasurementSubtype;
+import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.UnitOfMeasure;
 import com.example.peter.thekitchenmenu.ui.ObservableAndroidViewModel;
 
-import androidx.databinding.Bindable;
 import androidx.lifecycle.MutableLiveData;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureAbstract.UNIT_ONE_WIDTH_INDEX;
+import static com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.UnitOfMeasureAbstract.UNIT_ONE_WIDTH_INDEX;
 
 public class ProductMeasurementViewModel extends ObservableAndroidViewModel {
 
@@ -65,7 +64,7 @@ public class ProductMeasurementViewModel extends ObservableAndroidViewModel {
         return unitOfMeasure.getTotalBaseUnits() != baseUnits;
     }
 
-    @Bindable
+//    @Bindable
     public MeasurementSubtype getSubtype() {
         return subtype;
     }
@@ -81,12 +80,12 @@ public class ProductMeasurementViewModel extends ObservableAndroidViewModel {
         updateUi();
     }
 
-    @Bindable
+//    @Bindable
     public int getNumberOfUnits() {
         return numberOfUnits;
     }
 
-    @Bindable
+//    @Bindable
     public int getNumberOfItems() {
         return numberOfItems;
     }
@@ -112,22 +111,22 @@ public class ProductMeasurementViewModel extends ObservableAndroidViewModel {
         return unitOfMeasure.getNumberOfItems() != numberOfItems;
     }
 
-    @Bindable
+//    @Bindable
     public String getTotalUnitOne() {
         return totalUnitOne;
     }
 
-    @Bindable
+//    @Bindable
     public String getItemUnitOne() {
         return itemUnitOne;
     }
 
-    @Bindable
+//    @Bindable
     public String getTotalUnitTwo() {
         return totalUnitTwo;
     }
 
-    @Bindable
+//    @Bindable
     public String getItemUnitTwo() {
         return itemUnitTwo;
     }
@@ -228,7 +227,7 @@ public class ProductMeasurementViewModel extends ObservableAndroidViewModel {
             totalUnitTwo = String.valueOf(unitOfMeasure.getTotalUnitTwo());
             itemUnitTwo = String.valueOf(unitOfMeasure.getItemUnitTwo());
         }
-        notifyChange();
+//        notifyChange();
         updateMeasurementModel();
     }
 

@@ -4,22 +4,21 @@ import android.text.InputFilter;
 import android.widget.EditText;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;
-import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasure;
+import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.MeasurementSubtype;
+import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.UnitOfMeasure;
 import com.example.peter.thekitchenmenu.ui.utils.DecimalDigitsInputFilter;
 
 import androidx.core.util.Pair;
-import androidx.databinding.BindingAdapter;
 
 import static android.text.InputType.TYPE_CLASS_NUMBER;
 import static android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL;
-import static com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureAbstract.CONVERSION_FACTOR_WIDTH_INDEX;
-import static com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureAbstract.UNIT_ONE_WIDTH_INDEX;
-import static com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureAbstract.UNIT_TWO_WIDTH_INDEX;
+import static com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.UnitOfMeasureAbstract.CONVERSION_FACTOR_WIDTH_INDEX;
+import static com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.UnitOfMeasureAbstract.UNIT_ONE_WIDTH_INDEX;
+import static com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.UnitOfMeasureAbstract.UNIT_TWO_WIDTH_INDEX;
 
 public class UnitOfMeasureEditTextBindingAdapter {
 
-    @BindingAdapter(value = {"setUpEditTextForSubtypeSelected"})
+//    @BindingAdapter(value = {"setUpEditTextForSubtypeSelected"})
     public static void setUpEditTextForSubtypeSelected(EditText editText,
                                                        MeasurementSubtype subtype) {
         UnitOfMeasure unitOfMeasure = subtype.getMeasurementClass();
@@ -81,7 +80,7 @@ public class UnitOfMeasureEditTextBindingAdapter {
         }
     }
 
-    @BindingAdapter(value = {"setUpEditTextForConversionFactor"})
+//    @BindingAdapter(value = {"setUpEditTextForConversionFactor"})
     public static void setUpEditTextForConversionFactor(EditText editText,
                                                         MeasurementSubtype subtype) {
         UnitOfMeasure unitOfMeasure = subtype.getMeasurementClass();

@@ -1,7 +1,9 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity;
 
-import com.example.peter.thekitchenmenu.domain.entity.recipeIdentity.RecipeIdentityEntityModel;
+import com.example.peter.thekitchenmenu.domain.businessentity.recipeIdentity.RecipeIdentityEntityModel;
 import com.example.peter.thekitchenmenu.domain.model.DomainModel;
+
+import javax.annotation.Nonnull;
 
 public class RecipeIdentityDomainModelConverter
         implements
@@ -13,22 +15,32 @@ public class RecipeIdentityDomainModelConverter
                 RecipeIdentityResponseModel> {
 
     @Override
-    public RecipeIdentityEntityModel convertUseCaseToEntityModel(RecipeIdentityUseCaseModel useCaseModel) {
+    public RecipeIdentityEntityModel convertUseCaseToEntityModel(
+            @Nonnull RecipeIdentityUseCaseModel useCaseModel) {
+        return new RecipeIdentityEntityModel(
+                useCaseModel.getTitle(),
+                useCaseModel.getDescription()
+        );
+    }
+
+    @Override
+    public RecipeIdentityUseCaseModel convertPersistenceToDomainModel(
+            @Nonnull RecipeIdentityPersistenceModel persistenceModel) {
+        return new RecipeIdentityUseCaseModel(
+                persistenceModel.getTitle(),
+                persistenceModel.getDescription()
+        );
+    }
+
+    @Override
+    public RecipeIdentityUseCaseModel convertRequestToUseCaseModel(
+            @Nonnull RecipeIdentityRequestModel requestModel) {
         return null;
     }
 
     @Override
-    public RecipeIdentityUseCaseModel convertPersistenceToDomainModel(RecipeIdentityPersistenceModel model) {
-        return null;
-    }
-
-    @Override
-    public RecipeIdentityUseCaseModel convertRequestToUseCaseModel(RecipeIdentityRequestModel model) {
-        return null;
-    }
-
-    @Override
-    public RecipeIdentityUseCaseModel convertEntityToUseCaseModel(RecipeIdentityEntityModel entityModel) {
+    public RecipeIdentityUseCaseModel convertEntityToUseCaseModel(
+            @Nonnull RecipeIdentityEntityModel entityModel) {
         return null;
     }
 
@@ -38,7 +50,14 @@ public class RecipeIdentityDomainModelConverter
     }
 
     @Override
-    public RecipeIdentityPersistenceModel createArchivedPersistenceModel(RecipeIdentityPersistenceModel model) {
+    public RecipeIdentityPersistenceModel createArchivedPersistenceModel(
+            @Nonnull RecipeIdentityPersistenceModel model) {
+        return null;
+    }
+
+    @Override
+    public RecipeIdentityResponseModel convertUseCaseToResponseModel(
+            @Nonnull RecipeIdentityUseCaseModel model) {
         return null;
     }
 }

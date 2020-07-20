@@ -6,12 +6,10 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.databinding.RecipeIngredientListActivityBinding;
 import com.example.peter.thekitchenmenu.ui.ViewModelFactoryRecipe;
 import com.example.peter.thekitchenmenu.ui.detail.ingredient.IngredientEditorActivity;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredienteditor.RecipeIngredientEditorActivity;
@@ -28,7 +26,7 @@ public class RecipeIngredientListActivity
 
     public static final String EXTRA_RECIPE_ID = "RECIPE_ID";
 
-    private RecipeIngredientListActivityBinding binding;
+//    private RecipeIngredientListActivityBinding binding;
     private RecipeNameAndPortionsViewModel nameAndPortionsViewModel;
     private RecipeIngredientListViewModel recipeIngredientListViewModel;
     private String recipeId;
@@ -49,13 +47,13 @@ public class RecipeIngredientListActivity
     }
 
     private void initialiseBindings() {
-        binding = DataBindingUtil.setContentView(this,
-                R.layout.recipe_ingredient_list_activity);
-        binding.setLifecycleOwner(this);
+//        binding = DataBindingUtil.setContentView(this,
+//                R.layout.recipe_ingredient_list_activity);
+//        binding.setLifecycleOwner(this);
     }
 
     private void setupActionBar() {
-        setSupportActionBar(binding.toolbar);
+//        setSupportActionBar(binding.toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar == null)
             return;
@@ -66,11 +64,11 @@ public class RecipeIngredientListActivity
 
     private void setupViewModel() {
         nameAndPortionsViewModel = obtainRecipeNameAndPortionsViewModel(this);
-        binding.setNameAndPortions(nameAndPortionsViewModel);
+//        binding.setNameAndPortions(nameAndPortionsViewModel);
 
         recipeIngredientListViewModel = obtainRecipeIngredientListViewModel(this);
         recipeIngredientListViewModel.setNavigator(this);
-        binding.setViewModel(recipeIngredientListViewModel);
+//        binding.setViewModel(recipeIngredientListViewModel);
     }
 
     static RecipeNameAndPortionsViewModel obtainRecipeNameAndPortionsViewModel(

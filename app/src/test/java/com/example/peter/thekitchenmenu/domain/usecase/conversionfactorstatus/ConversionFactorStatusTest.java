@@ -6,7 +6,7 @@ import com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter
 import com.example.peter.thekitchenmenu.data.repository.ingredient.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;
+import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.MeasurementSubtype;
 import com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.datasource.TestDataIngredientEntity;
 import com.example.peter.thekitchenmenu.testdata.TestDataUseCaseConversionFactorStatusRequestResponse;
 

@@ -1,22 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-    <FrameLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/recipe_catalog_all_fragment_container"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/recipe_catalog_all_fragment_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ProgressBar
+        android:id="@+id/recipe_catalog_all_fragment_progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recipe_catalog_all_fragment_recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <ProgressBar
-            android:id="@+id/recipe_catalog_all_fragment_progress_bar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recipe_catalog_all_fragment_recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-        </androidx.recyclerview.widget.RecyclerView>
-    </FrameLayout>
+        android:layout_height="match_parent"/>
+</FrameLayout>

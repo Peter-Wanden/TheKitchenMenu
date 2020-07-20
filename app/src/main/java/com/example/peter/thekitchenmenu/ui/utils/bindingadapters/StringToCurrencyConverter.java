@@ -2,8 +2,6 @@ package com.example.peter.thekitchenmenu.ui.utils.bindingadapters;
 
 import android.widget.TextView;
 
-import androidx.databinding.BindingAdapter;
-
 import com.google.android.gms.common.util.Strings;
 
 import java.math.BigDecimal;
@@ -11,7 +9,7 @@ import java.text.NumberFormat;
 
 public class StringToCurrencyConverter {
 
-    @BindingAdapter(value = "stringToCurrency")
+//    @BindingAdapter(value = "stringToCurrency")
     public static void toString(TextView view, String price) {
 
         if (Strings.isEmptyOrWhitespace(price)) {

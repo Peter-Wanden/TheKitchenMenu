@@ -3,11 +3,6 @@ package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor;
 import android.content.res.Resources;
 
 import androidx.core.util.Pair;
-import androidx.databinding.Bindable;
-import androidx.databinding.ObservableBoolean;
-import androidx.databinding.ObservableField;
-
-import com.example.peter.thekitchenmenu.BR;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseHandler;
@@ -34,11 +29,11 @@ public class RecipeDurationEditorViewModel extends ObservableViewModel {
     @Nonnull
     private Recipe recipeMacro;
 
-    public final ObservableField<String> prepTimeErrorMessage = new ObservableField<>();
-    public final ObservableField<String> cookTimeErrorMessage = new ObservableField<>();
+//    public final ObservableField<String> prepTimeErrorMessage = new ObservableField<>();
+//    public final ObservableField<String> cookTimeErrorMessage = new ObservableField<>();
 
-    private final ObservableBoolean isDataLoading = new ObservableBoolean();
-    private final ObservableBoolean isDataLoadingError = new ObservableBoolean();
+//    private final ObservableBoolean isDataLoading = new ObservableBoolean();
+//    private final ObservableBoolean isDataLoadingError = new ObservableBoolean();
 
     private RecipeDurationResponse response;
 
@@ -61,7 +56,7 @@ public class RecipeDurationEditorViewModel extends ObservableViewModel {
     private class DurationCallbackListener implements UseCaseBase.Callback<RecipeDurationResponse> {
         @Override
         public void onUseCaseSuccess(RecipeDurationResponse response) {
-            isDataLoading.set(false);
+//            isDataLoading.set(false);
             if (isStateChanged(response)) {
                 System.out.println(TAG + "onSuccess:" + response);
                 RecipeDurationEditorViewModel.this.response = response;
@@ -71,7 +66,7 @@ public class RecipeDurationEditorViewModel extends ObservableViewModel {
 
         @Override
         public void onUseCaseError(RecipeDurationResponse response) {
-            isDataLoading.set(false);
+//            isDataLoading.set(false);
             if (isStateChanged(response)) {
                 RecipeDurationEditorViewModel.this.response = response;
                 displayErrors();
@@ -85,16 +80,16 @@ public class RecipeDurationEditorViewModel extends ObservableViewModel {
 
     private void updateObservables() {
         isUpdatingUi = true;
-        notifyPropertyChanged(BR.prepHoursInView);
-        notifyPropertyChanged(BR.prepMinutesInView);
-        notifyPropertyChanged(BR.cookHoursInView);
-        notifyPropertyChanged(BR.cookMinutesInView);
+//        notifyPropertyChanged(BR.prepHoursInView);
+//        notifyPropertyChanged(BR.prepMinutesInView);
+//        notifyPropertyChanged(BR.cookHoursInView);
+//        notifyPropertyChanged(BR.cookMinutesInView);
         isUpdatingUi = false;
     }
 
     private void displayErrors() {
-        prepTimeErrorMessage.set(isInvalidPrepTime() ? getPrepTimeErrorMessage() : null);
-        cookTimeErrorMessage.set(isInvalidCookTime() ? getCookTimeErrorMessage() : null);
+//        prepTimeErrorMessage.set(isInvalidPrepTime() ? getPrepTimeErrorMessage() : null);
+//        cookTimeErrorMessage.set(isInvalidCookTime() ? getCookTimeErrorMessage() : null);
     }
 
     private boolean isInvalidPrepTime() {
@@ -117,7 +112,7 @@ public class RecipeDurationEditorViewModel extends ObservableViewModel {
         return resources.getString(R.string.input_error_recipe_cook_time_too_long);
     }
 
-    @Bindable
+//    @Bindable
     public String getPrepHoursInView() {
         return response == null ? "" : String.valueOf(response.getDomainModel().getPrepHours());
     }
@@ -128,21 +123,21 @@ public class RecipeDurationEditorViewModel extends ObservableViewModel {
                 if (!prepHoursInView.isEmpty()) {
                     int prepHoursParsed = parseIntegerFromString(prepHoursInView);
 
-                    if (prepHoursParsed == MEASUREMENT_ERROR)
-                        prepTimeErrorMessage.set(numberFormatExceptionErrorMessage());
-                    else {
-                        RecipeDurationRequest.DomainModel domainModel = new RecipeDurationRequest.DomainModel.
-                                Builder().
-                                basedOnResponseModel(response.getDomainModel()).
-                                setPrepHours(prepHoursParsed).
-                                build();
-                        RecipeDurationRequest request = new RecipeDurationRequest.Builder().
-                                setDataId(response.getDataId()).
-                                setDomainId(response.getDomainId()).
-                                setDomainModel(domainModel).
-                                build();
-                        handler.executeAsync(recipeMacro, request, new DurationCallbackListener());
-                    }
+//                    if (prepHoursParsed == MEASUREMENT_ERROR)
+////                        prepTimeErrorMessage.set(numberFormatExceptionErrorMessage());
+//                    else {
+//                        RecipeDurationRequest.DomainModel domainModel = new RecipeDurationRequest.DomainModel.
+//                                Builder().
+//                                basedOnResponseModel(response.getDomainModel()).
+//                                setPrepHours(prepHoursParsed).
+//                                build();
+//                        RecipeDurationRequest request = new RecipeDurationRequest.Builder().
+//                                setDataId(response.getDataId()).
+//                                setDomainId(response.getDomainId()).
+//                                setDomainModel(domainModel).
+//                                build();
+//                        handler.executeAsync(recipeMacro, request, new DurationCallbackListener());
+//                    }
                 }
             }
         }
@@ -152,7 +147,7 @@ public class RecipeDurationEditorViewModel extends ObservableViewModel {
         return !String.valueOf(response.getDomainModel().getPrepHours()).equals(prepHoursInView);
     }
 
-    @Bindable
+//    @Bindable
     public String getPrepMinutesInView() {
         return response == null ? "" : String.valueOf(response.getDomainModel().getPrepMinutes());
     }
@@ -163,21 +158,21 @@ public class RecipeDurationEditorViewModel extends ObservableViewModel {
                 if (!prepMinutesInView.isEmpty()) {
                     int prepMinutesParsed = parseIntegerFromString(prepMinutesInView);
 
-                    if (prepMinutesParsed == MEASUREMENT_ERROR)
-                        prepTimeErrorMessage.set(numberFormatExceptionErrorMessage());
-                    else {
-                        RecipeDurationRequest.DomainModel domainModel = new RecipeDurationRequest.DomainModel.
-                                Builder().
-                                basedOnResponseModel(response.getDomainModel()).
-                                setPrepMinutes(prepMinutesParsed).
-                                build();
-                        RecipeDurationRequest request = new RecipeDurationRequest.Builder().
-                                setDataId(response.getDataId()).
-                                setDomainId(response.getDomainId()).
-                                setDomainModel(domainModel).
-                                build();
-                        handler.executeAsync(recipeMacro, request, new DurationCallbackListener());
-                    }
+//                    if (prepMinutesParsed == MEASUREMENT_ERROR)
+//                        prepTimeErrorMessage.set(numberFormatExceptionErrorMessage());
+//                    else {
+//                        RecipeDurationRequest.DomainModel domainModel = new RecipeDurationRequest.DomainModel.
+//                                Builder().
+//                                basedOnResponseModel(response.getDomainModel()).
+//                                setPrepMinutes(prepMinutesParsed).
+//                                build();
+//                        RecipeDurationRequest request = new RecipeDurationRequest.Builder().
+//                                setDataId(response.getDataId()).
+//                                setDomainId(response.getDomainId()).
+//                                setDomainModel(domainModel).
+//                                build();
+//                        handler.executeAsync(recipeMacro, request, new DurationCallbackListener());
+//                    }
                 }
             }
         }
@@ -187,7 +182,7 @@ public class RecipeDurationEditorViewModel extends ObservableViewModel {
         return !String.valueOf(response.getDomainModel().getPrepMinutes()).equals(prepMinutesInView);
     }
 
-    @Bindable
+//    @Bindable
     public String getCookHoursInView() {
         return response == null ? "" : String.valueOf(response.getDomainModel().getCookHours());
     }
@@ -198,21 +193,21 @@ public class RecipeDurationEditorViewModel extends ObservableViewModel {
                 if (!cookHoursInView.isEmpty()) {
                     int cookHoursParsed = parseIntegerFromString(cookHoursInView);
 
-                    if (cookHoursParsed == MEASUREMENT_ERROR)
-                        cookTimeErrorMessage.set(numberFormatExceptionErrorMessage());
-                    else {
-                        RecipeDurationRequest.DomainModel domainModel = new RecipeDurationRequest.DomainModel.
-                                Builder().
-                                basedOnResponseModel(response.getDomainModel()).
-                                setCookHours(cookHoursParsed).
-                                build();
-                        RecipeDurationRequest request = new RecipeDurationRequest.Builder().
-                                setDataId(response.getDataId()).
-                                setDomainId(response.getDomainId()).
-                                setDomainModel(domainModel).
-                                build();
-                        handler.executeAsync(recipeMacro, request, new DurationCallbackListener());
-                    }
+//                    if (cookHoursParsed == MEASUREMENT_ERROR)
+//                        cookTimeErrorMessage.set(numberFormatExceptionErrorMessage());
+//                    else {
+//                        RecipeDurationRequest.DomainModel domainModel = new RecipeDurationRequest.DomainModel.
+//                                Builder().
+//                                basedOnResponseModel(response.getDomainModel()).
+//                                setCookHours(cookHoursParsed).
+//                                build();
+//                        RecipeDurationRequest request = new RecipeDurationRequest.Builder().
+//                                setDataId(response.getDataId()).
+//                                setDomainId(response.getDomainId()).
+//                                setDomainModel(domainModel).
+//                                build();
+//                        handler.executeAsync(recipeMacro, request, new DurationCallbackListener());
+//                    }
                 }
             }
         }
@@ -222,7 +217,7 @@ public class RecipeDurationEditorViewModel extends ObservableViewModel {
         return !String.valueOf(response.getDomainModel().getCookHours()).equals(cookHoursInView);
     }
 
-    @Bindable
+//    @Bindable
     public String getCookMinutesInView() {
         return response == null ? "" : String.valueOf(response.getDomainModel().getCookMinutes());
     }
@@ -233,21 +228,21 @@ public class RecipeDurationEditorViewModel extends ObservableViewModel {
                 if (!cookMinutesInView.isEmpty()) {
                     int cookMinutesParsed = parseIntegerFromString(cookMinutesInView);
 
-                    if (cookMinutesParsed == MEASUREMENT_ERROR)
-                        cookTimeErrorMessage.set(numberFormatExceptionErrorMessage());
-                    else {
-                        RecipeDurationRequest.DomainModel domainModel = new RecipeDurationRequest.DomainModel.
-                                Builder().
-                                basedOnResponseModel(response.getDomainModel()).
-                                setCookMinutes(cookMinutesParsed).
-                                build();
-                        RecipeDurationRequest request = new RecipeDurationRequest.Builder().
-                                setDataId(response.getDataId()).
-                                setDomainId(response.getDomainId()).
-                                setDomainModel(domainModel).
-                                build();
-                        handler.executeAsync(recipeMacro, request, new DurationCallbackListener());
-                    }
+//                    if (cookMinutesParsed == MEASUREMENT_ERROR)
+//                        cookTimeErrorMessage.set(numberFormatExceptionErrorMessage());
+//                    else {
+//                        RecipeDurationRequest.DomainModel domainModel = new RecipeDurationRequest.DomainModel.
+//                                Builder().
+//                                basedOnResponseModel(response.getDomainModel()).
+//                                setCookMinutes(cookMinutesParsed).
+//                                build();
+//                        RecipeDurationRequest request = new RecipeDurationRequest.Builder().
+//                                setDataId(response.getDataId()).
+//                                setDomainId(response.getDomainId()).
+//                                setDomainModel(domainModel).
+//                                build();
+//                        handler.executeAsync(recipeMacro, request, new DurationCallbackListener());
+//                    }
                 }
             }
         }

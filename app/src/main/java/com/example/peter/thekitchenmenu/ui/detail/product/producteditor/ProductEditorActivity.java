@@ -10,13 +10,12 @@ import com.example.peter.thekitchenmenu.data.primitivemodel.product.ProductEntit
 import com.example.peter.thekitchenmenu.data.model.ImageModel;
 import com.example.peter.thekitchenmenu.data.model.ProductIdentityModel;
 import com.example.peter.thekitchenmenu.data.model.ProductMeasurementModel;
-import com.example.peter.thekitchenmenu.databinding.ProductEditorBinding;
 import com.example.peter.thekitchenmenu.ui.UnsavedChangesDialogFragment;
 import com.example.peter.thekitchenmenu.ui.ViewModelFactoryProduct;
 import com.example.peter.thekitchenmenu.ui.detail.product.productviewer.ProductViewerActivity;
 import com.example.peter.thekitchenmenu.ui.imageeditor.ImageEditorFragment;
 import com.example.peter.thekitchenmenu.utils.ActivityUtils;
-import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;
+import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.MeasurementSubtype;
 import com.example.peter.thekitchenmenu.ui.imageeditor.ImageEditorViewModel;
 
 import androidx.fragment.app.Fragment;
@@ -24,7 +23,6 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.annotation.Nullable;
-import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -40,7 +38,7 @@ public class ProductEditorActivity extends AppCompatActivity implements AddEditP
     public static final int RESULT_ADD_EDIT_PRODUCT_OK = RESULT_FIRST_USER + 1;
     public static final int RESULT_ADD_EDIT_PRODUCT_CANCELED = RESULT_FIRST_USER + 2;
 
-    private ProductEditorBinding productEditorBinding;
+//    private ProductEditorBinding productEditorBinding;
 
     private ProductEditorViewModel productEditorViewModel;
     private ImageEditorViewModel imageEditorViewModel;
@@ -68,12 +66,12 @@ public class ProductEditorActivity extends AppCompatActivity implements AddEditP
     }
 
     private void initialiseBindings() {
-        productEditorBinding = DataBindingUtil.setContentView(this, R.layout.product_editor);
-        productEditorBinding.setLifecycleOwner(this);
+//        productEditorBinding = DataBindingUtil.setContentView(this, R.layout.product_editor);
+//        productEditorBinding.setLifecycleOwner(this);
     }
 
     private void setupToolbar() {
-        setSupportActionBar(productEditorBinding.toolbar);
+//        setSupportActionBar(productEditorBinding.toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }

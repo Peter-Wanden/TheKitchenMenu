@@ -3,8 +3,6 @@ package com.example.peter.thekitchenmenu.ui.detail.product.productviewer;
 import android.app.Application;
 import android.content.Intent;
 
-import androidx.databinding.ObservableBoolean;
-import androidx.databinding.ObservableField;
 import androidx.lifecycle.AndroidViewModel;
 
 import com.example.peter.thekitchenmenu.data.primitivemodel.product.FavoriteProductEntity;
@@ -26,9 +24,9 @@ public class FavoriteProductViewerViewModel
     private FavoriteProductViewerNavigator navigator;
 
     private DataSourceFavoriteProducts favoriteProductEntityDataSource;
-    public final ObservableBoolean dataIsLoading = new ObservableBoolean();
-    public final ObservableField<FavoriteProductEntity> favoriteProduct = new ObservableField<>();
-    public final ObservableBoolean isFavorite = new ObservableBoolean();
+//    public final ObservableBoolean dataIsLoading = new ObservableBoolean();
+//    public final ObservableField<FavoriteProductEntity> favoriteProduct = new ObservableField<>();
+//    public final ObservableBoolean isFavorite = new ObservableBoolean();
 
     private final SingleLiveEvent<Void> hasOptionsMenuEvent = new SingleLiveEvent<>();
 
@@ -55,32 +53,32 @@ public class FavoriteProductViewerViewModel
     public void start(String productId) {
         if (Strings.emptyToNull(productId) != null) {
             this.productId = productId;
-            dataIsLoading.set(true);
+//            dataIsLoading.set(true);
             favoriteProductEntityDataSource.getByProductId(productId, this);
         }
     }
 
     @Override
     public void onEntityLoaded(FavoriteProductEntity entity) {
-        dataIsLoading.set(false);
+//        dataIsLoading.set(false);
         setFavoriteProduct(entity);
     }
 
     private void setFavoriteProduct(FavoriteProductEntity favoriteProductEntity) {
-        this.favoriteProduct.set(favoriteProductEntity);
-        isFavorite.set(true);
+//        this.favoriteProduct.set(favoriteProductEntity);
+//        isFavorite.set(true);
         hasOptionsMenuEvent.call();
     }
 
     @Override
     public void onDataUnavailable() {
-        dataIsLoading.set(false);
+//        dataIsLoading.set(false);
         setAddFavoriteMode();
     }
 
     private void setAddFavoriteMode() {
-        favoriteProduct.set(null);
-        isFavorite.set(false);
+//        favoriteProduct.set(null);
+//        isFavorite.set(false);
         hasOptionsMenuEvent.call();
     }
 
@@ -104,12 +102,12 @@ public class FavoriteProductViewerViewModel
     }
 
     void deleteFavoriteProduct() {
-        if (favoriteProduct.get() != null) {
-            favoriteProductEntityDataSource.deleteByDataId(favoriteProduct.get().getDataId());
-            isFavorite.set(false);
-            favoriteProduct.set(null);
-            hasOptionsMenuEvent.call();
-        }
+//        if (favoriteProduct.get() != null) {
+//            favoriteProductEntityDataSource.deleteByDataId(favoriteProduct.get().getDataId());
+//            isFavorite.set(false);
+//            favoriteProduct.set(null);
+//            hasOptionsMenuEvent.call();
+//        }
     }
 
     SingleLiveEvent<Void> getHasOptionsMenuEvent() {

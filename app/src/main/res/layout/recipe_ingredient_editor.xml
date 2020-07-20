@@ -1,99 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:bind="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
-    <data>
-
-        <import type="android.view.View" />
-
-        <variable
-            name="nameAndPortions"
-            type="com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredientlist.RecipeNameAndPortionsViewModel" />
-
-        <variable
-            name="ingredient"
-            type="com.example.peter.thekitchenmenu.ui.detail.ingredient.IngredientViewerViewModel" />
-    </data>
-
-    <ScrollView
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-        <androidx.appcompat.widget.LinearLayoutCompat
+        <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="wrap_content">
 
-            <com.google.android.material.appbar.AppBarLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <androidx.appcompat.widget.Toolbar
-                    android:id="@+id/recipe_ingredient_editor_toolbar"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fitsSystemWindows="true" />
-            </com.google.android.material.appbar.AppBarLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/recipe_ingredient_editor_parent"
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/recipe_ingredient_editor_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:animateLayoutChanges="true">
+                android:fitsSystemWindows="true" />
+        </com.google.android.material.appbar.AppBarLayout>
 
-                <TextView
-                    android:id="@+id/recipe_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:padding="4dp"
-                    android:textSize="24sp"
-                    android:text="@{nameAndPortions.recipeTitleObservable}"
-                    app:layout_constraintEnd_toEndOf="@id/recipe_ingredient_editor_parent"
-                    app:layout_constraintStart_toStartOf="@id/recipe_ingredient_editor_parent"
-                    app:layout_constraintTop_toTopOf="@id/recipe_ingredient_editor_parent"
-                    tools:text="Butter Chicken Curry" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/recipe_ingredient_editor_parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:animateLayoutChanges="true">
 
-                <include
-                    android:id="@+id/portion_information"
-                    layout="@layout/recipe_viewer_portions"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/recipe_name"
-                    bind:nameAndPortions="@{nameAndPortions}"/>
+            <TextView
+                android:id="@+id/recipe_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:padding="4dp"
+                android:text="@{nameAndPortions.recipeTitleObservable}"
+                android:textSize="24sp"
+                app:layout_constraintEnd_toEndOf="@id/recipe_ingredient_editor_parent"
+                app:layout_constraintStart_toStartOf="@id/recipe_ingredient_editor_parent"
+                app:layout_constraintTop_toTopOf="@id/recipe_ingredient_editor_parent"
+                tools:text="Butter Chicken Curry" />
 
-                <include
-                    android:id="@+id/ingredient_view"
-                    layout="@layout/ingredient_viewer"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/portion_information"
-                    bind:ingredient="@{ingredient}"/>
+            <include
+                android:id="@+id/portion_information"
+                layout="@layout/recipe_viewer_portions"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/recipe_name"
+                />
 
-                <androidx.fragment.app.FragmentContainerView
-                    android:id="@+id/recipe_ingredient_editor_measurement_content_frame"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/ingredient_view"/>
+            <include
+                android:id="@+id/ingredient_view"
+                layout="@layout/ingredient_viewer"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/portion_information" />
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/recipe_editor_add_ingredients_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/add_recommended_product"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/recipe_ingredient_editor_measurement_content_frame" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </androidx.appcompat.widget.LinearLayoutCompat>
-    </ScrollView>
-</layout>
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/recipe_ingredient_editor_measurement_content_frame"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ingredient_view" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/recipe_editor_add_ingredients_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/add_recommended_product"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/recipe_ingredient_editor_measurement_content_frame" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</ScrollView>

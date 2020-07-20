@@ -2,7 +2,6 @@ package com.example.peter.thekitchenmenu.ui.detail.ingredient;
 
 import android.content.res.Resources;
 
-import androidx.databinding.ObservableField;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -32,8 +31,8 @@ public class IngredientEditorViewModel extends ViewModel {
     private Ingredient ingredient;
     private AddEditIngredientNavigator navigator;
 
-    public final ObservableField<String> showNameError = new ObservableField<>();
-    public final ObservableField<String> showDescriptionError = new ObservableField<>();
+//    public final ObservableField<String> showNameError = new ObservableField<>();
+//    public final ObservableField<String> showDescriptionError = new ObservableField<>();
     final MutableLiveData<Boolean> showUseButton = new MutableLiveData<>(false);
     private MutableLiveData<Boolean> dataLoading = new MutableLiveData<>(false);
     private MutableLiveData<Boolean> dataLoadingError = new MutableLiveData<>(false);
@@ -103,7 +102,7 @@ public class IngredientEditorViewModel extends ViewModel {
     }
 
     private void validateName(String name) {
-        showNameError.set(null);
+//        showNameError.set(null);
         // todo - strip out html
         TextValidatorRequest request = new TextValidatorRequest(
                 TextValidator.TextType.SHORT_TEXT,
@@ -141,7 +140,7 @@ public class IngredientEditorViewModel extends ViewModel {
             executeUseCaseIngredient(request);
 
         } else {
-            setError(showNameError, response);
+//            setError(showNameError, response);
             updateUseButtonVisibility();
         }
     }
@@ -157,7 +156,7 @@ public class IngredientEditorViewModel extends ViewModel {
     }
 
     private void validateDescription(String description) {
-        showDescriptionError.set(null);
+//        showDescriptionError.set(null);
 
         TextValidatorRequest request = new TextValidatorRequest(
                 TextValidator.TextType.LONG_TEXT,
@@ -197,7 +196,7 @@ public class IngredientEditorViewModel extends ViewModel {
 
             executeUseCaseIngredient(request);
         } else {
-            setError(showDescriptionError, response);
+//            setError(showDescriptionError, response);
             updateUseButtonVisibility();
         }
     }
@@ -240,7 +239,7 @@ public class IngredientEditorViewModel extends ViewModel {
         } else if (failReasons.contains(Ingredient.FailReason.DUPLICATE)) {
             isValid = false;
             isChanged = false;
-            showNameError.set(resources.getString(R.string.ingredient_name_duplicate_error_message));
+//            showNameError.set(resources.getString(R.string.ingredient_name_duplicate_error_message));
 
         } else if (state == UseCaseMetadata.ComponentState.INVALID_UNCHANGED) {
             isChanged = false;
@@ -271,23 +270,23 @@ public class IngredientEditorViewModel extends ViewModel {
         updateUseButtonVisibility();
     }
 
-    private void setError(ObservableField<String> errorObservable,
-                          TextValidatorResponse response) {
-
-        if (response.getFailReason() == TextValidator.FailReason.TOO_SHORT) {
-            errorObservable.set(resources.getString(
-                    R.string.input_error_text_too_short,
-                    response.getMinLength(),
-                    response.getMaxLength()));
-
-        } else if (response.getFailReason() == TextValidator.FailReason.TOO_LONG) {
-            errorObservable.set(resources.getString(
-                    R.string.input_error_text_too_long,
-                    response.getMinLength(),
-                    response.getMaxLength()
-            ));
-        }
-    }
+//    private void setError(ObservableField<String> errorObservable,
+//                          TextValidatorResponse response) {
+//
+//        if (response.getFailReason() == TextValidator.FailReason.TOO_SHORT) {
+//            errorObservable.set(resources.getString(
+//                    R.string.input_error_text_too_short,
+//                    response.getMinLength(),
+//                    response.getMaxLength()));
+//
+//        } else if (response.getFailReason() == TextValidator.FailReason.TOO_LONG) {
+//            errorObservable.set(resources.getString(
+//                    R.string.input_error_text_too_long,
+//                    response.getMinLength(),
+//                    response.getMaxLength()
+//            ));
+//        }
+//    }
 
     private void updateUseButtonVisibility() {
         if (!updatingUi) {

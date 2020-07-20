@@ -5,14 +5,13 @@ import android.text.InputFilter;
 import android.text.InputType;
 import android.widget.EditText;
 
-import androidx.databinding.BindingAdapter;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.ui.utils.DecimalDigitsInputFilter;
 
 public class RecipeBindingAdapters {
 
-    @BindingAdapter(value = {"setupEditTextForRecipeTimes"})
+//    @BindingAdapter(value = {"setupEditTextForRecipeTimes"})
     public static void setupEditTextForRecipeDurationInput(EditText editText, String time) {
 
         int viewId = editText.getId();
@@ -45,7 +44,7 @@ public class RecipeBindingAdapters {
         }
     }
 
-    @BindingAdapter(value = {"setUpEditTextForRecipePortions"})
+//    @BindingAdapter(value = {"setUpEditTextForRecipePortions"})
     public static void setupEditTextForRecipePortions(EditText editText, String portion) {
         int viewId = editText.getId();
         int maxValue = 0;

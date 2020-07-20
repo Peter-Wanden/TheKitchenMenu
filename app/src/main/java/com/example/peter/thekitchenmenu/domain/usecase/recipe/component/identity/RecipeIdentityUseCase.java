@@ -1,9 +1,9 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity;
 
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeIdentity;
-import com.example.peter.thekitchenmenu.domain.entity.BusinessEntity;
-import com.example.peter.thekitchenmenu.domain.entity.recipeIdentity.RecipeIdentityEntity;
-import com.example.peter.thekitchenmenu.domain.entity.recipeIdentity.RecipeIdentityEntityModel;
+import com.example.peter.thekitchenmenu.domain.businessentity.BusinessEntity;
+import com.example.peter.thekitchenmenu.domain.businessentity.recipeIdentity.RecipeIdentityEntity;
+import com.example.peter.thekitchenmenu.domain.businessentity.recipeIdentity.RecipeIdentityEntityModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseMetadata;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
@@ -60,7 +60,7 @@ public class RecipeIdentityUseCase
                 setDataId(useCaseDataId).
                 setDomainId(useCaseDomainId).
                 setMetadata(getMetadata()).
-                setDomainModel(modelConverter.convertUseCaseToResponseModel());
+                setDomainModel(modelConverter.convertUseCaseToResponseModel(useCaseModel));
 
         sendResponse(builder.build());
     }

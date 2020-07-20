@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus;
 
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
-import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;
+import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.MeasurementSubtype;
 
 import java.util.Objects;
 

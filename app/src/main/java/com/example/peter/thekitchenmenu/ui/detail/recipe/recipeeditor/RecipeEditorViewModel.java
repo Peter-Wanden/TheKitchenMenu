@@ -2,8 +2,6 @@ package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor;
 
 import android.content.res.Resources;
 
-import androidx.databinding.ObservableBoolean;
-import androidx.databinding.ObservableField;
 import androidx.lifecycle.ViewModel;
 
 import com.example.peter.thekitchenmenu.R;
@@ -38,9 +36,9 @@ public class RecipeEditorViewModel
     @Nonnull
     private UniqueIdProvider idProvider;
 
-    public final ObservableBoolean showIngredientsButtonObservable = new ObservableBoolean();
-    public final ObservableField<String> ingredientsButtonTextObservable = new ObservableField<>();
-    public final ObservableBoolean dataIsLoadingObservable = new ObservableBoolean();
+//    public final ObservableBoolean showIngredientsButtonObservable = new ObservableBoolean();
+//    public final ObservableField<String> ingredientsButtonTextObservable = new ObservableField<>();
+//    public final ObservableBoolean dataIsLoadingObservable = new ObservableBoolean();
 
     private boolean isNewRecipe;
     private boolean showReviewButton;
@@ -168,22 +166,22 @@ public class RecipeEditorViewModel
     }
 
     private void setIngredientsButton() {
-        if (isNewRecipe) {
-            ingredientsButtonTextObservable.set(resources.getString(R.string.add_ingredients));
-
-        } else {
-            ingredientsButtonTextObservable.set(resources.getString(R.string.edit_ingredients));
-        }
+//        if (isNewRecipe) {
+//            ingredientsButtonTextObservable.set(resources.getString(R.string.add_ingredients));
+//
+//        } else {
+//            ingredientsButtonTextObservable.set(resources.getString(R.string.edit_ingredients));
+//        }
     }
 
     private void updateButtonVisibility() {
         if (metadataResponse.getMetadata().getComponentState() == UseCaseMetadata.ComponentState.VALID_CHANGED) {
-            showIngredientsButtonObservable.set(true);
+//            showIngredientsButtonObservable.set(true);
             showReviewButton = true;
             navigator.refreshOptionsMenu();
 
         } else if (metadataResponse.getMetadata().getComponentState() == UseCaseMetadata.ComponentState.VALID_UNCHANGED) {
-            showIngredientsButtonObservable.set(true);
+//            showIngredientsButtonObservable.set(true);
             showReviewButton = false;
             navigator.refreshOptionsMenu();
 
@@ -193,7 +191,7 @@ public class RecipeEditorViewModel
     }
 
     private void hideButtons() {
-        showIngredientsButtonObservable.set(false);
+//        showIngredientsButtonObservable.set(false);
         showReviewButton = false;
         navigator.refreshOptionsMenu();
     }

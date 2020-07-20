@@ -4,8 +4,6 @@ import android.app.Application;
 import android.content.Intent;
 import android.content.res.Resources;
 
-import androidx.databinding.ObservableBoolean;
-import androidx.databinding.ObservableField;
 import androidx.lifecycle.AndroidViewModel;
 
 import com.example.peter.thekitchenmenu.R;
@@ -25,12 +23,12 @@ public class ProductViewerViewModel
     private ProductViewerNavigator navigator;
     private PrimitiveDataSource<ProductEntity> productEntityDataSource;
 
-    public final ObservableBoolean dataIsLoading = new ObservableBoolean();
-    public final ObservableField<ProductEntity> productEntityObservable = new ObservableField<>();
+//    public final ObservableBoolean dataIsLoading = new ObservableBoolean();
+//    public final ObservableField<ProductEntity> productEntityObservable = new ObservableField<>();
     private boolean dataHasChanged;
 
-    public final ObservableBoolean showPostMessageEvent = new ObservableBoolean();
-    public final ObservableField<String> reviewBeforePostMessage = new ObservableField<>();
+//    public final ObservableBoolean showPostMessageEvent = new ObservableBoolean();
+//    public final ObservableField<String> reviewBeforePostMessage = new ObservableField<>();
 
     // Non-default modes of operation
     private boolean viewOnlyMode;
@@ -56,22 +54,22 @@ public class ProductViewerViewModel
     }
 
     public void start(ProductEntity productEntity) {
-        productEntityObservable.set(productEntity);
+//        productEntityObservable.set(productEntity);
         setupDisplayAsReviewAfterEdit();
     }
 
     public void start(String productId) {
-        if (!showPostMessageEvent.get()) {
-            if (!Strings.isEmptyOrWhitespace(productId)) {
-                dataIsLoading.set(true);
-                productEntityDataSource.getByDataId(productId, this);
-            }
-        }
+//        if (!showPostMessageEvent.get()) {
+//            if (!Strings.isEmptyOrWhitespace(productId)) {
+//                dataIsLoading.set(true);
+//                productEntityDataSource.getByDataId(productId, this);
+//            }
+//        }
     }
 
     @Override
     public void onEntityLoaded(ProductEntity entity) {
-        dataIsLoading.set(false);
+//        dataIsLoading.set(false);
         setProductEntityObservable(entity);
         setupDisplayAsViewer();
     }
@@ -82,7 +80,7 @@ public class ProductViewerViewModel
     }
 
     private void setProductEntityObservable(ProductEntity productEntityObservable) {
-        this.productEntityObservable.set(productEntityObservable);
+//        this.productEntityObservable.set(productEntityObservable);
     }
 
     void handleActivityResult(int resultCode, Intent data) {
@@ -98,8 +96,8 @@ public class ProductViewerViewModel
         setTitleEvent.setValue(R.string.activity_title_review_new_product);
         hasOptionsMenuEvent.setValue(true);
         resetOptionsMenu.call();
-        showPostMessageEvent.set(true);
-        reviewBeforePostMessage.set(resources.getString(R.string.review_before_post_message));
+//        showPostMessageEvent.set(true);
+//        reviewBeforePostMessage.set(resources.getString(R.string.review_before_post_message));
     }
 
     SingleLiveEvent<Integer> getSetTitleEvent() {
@@ -116,7 +114,7 @@ public class ProductViewerViewModel
 
     private void setupDisplayAsViewer() {
         reviewBeforePostMode = false;
-        showPostMessageEvent.set(false);
+//        showPostMessageEvent.set(false);
 
         setTitleEvent.setValue(R.string.activity_title_view_product);
         if (!viewOnlyMode) {
@@ -140,21 +138,21 @@ public class ProductViewerViewModel
 
     @Override
     public void deleteProduct(String productId) {
-        if (showPostMessageEvent.get()) {
-            // Product add/edit has not been saved so exit as is.
-            productEntityObservable.set(null);
-            doneWithProduct(productEntityObservable.get().getDataId());
-        }
-        else {
-            productEntityDataSource.deleteByDataId(productEntityObservable.get().getDataId());
-            navigator.deleteProduct(productEntityObservable.get().getDataId());
-        }
+//        if (showPostMessageEvent.get()) {
+//            // Product add/edit has not been saved so exit as is.
+//            productEntityObservable.set(null);
+//            doneWithProduct(productEntityObservable.get().getDataId());
+//        }
+//        else {
+//            productEntityDataSource.deleteByDataId(productEntityObservable.get().getDataId());
+//            navigator.deleteProduct(productEntityObservable.get().getDataId());
+//        }
     }
 
     @Override
     public void discardProductEdits() {
         // Reloads the product to reset it to its last saved state
-        start(productEntityObservable.get().getDataId());
+//        start(productEntityObservable.get().getDataId());
     }
 
     @Override
@@ -164,7 +162,7 @@ public class ProductViewerViewModel
 
     @Override
     public void postProduct() {
-        productEntityDataSource.save(productEntityObservable.get());
+//        productEntityDataSource.save(productEntityObservable.get());
         dataHasChanged = true;
         setupDisplayAsViewer();
     }
@@ -178,7 +176,7 @@ public class ProductViewerViewModel
             showUnsavedChangesDialog();
 
         } else if (dataHasChanged) {
-            navigator.doneWithProduct(productEntityObservable.get().getDataId());
+//            navigator.doneWithProduct(productEntityObservable.get().getDataId());
 
         } else {
             navigator.discardProductEdits();

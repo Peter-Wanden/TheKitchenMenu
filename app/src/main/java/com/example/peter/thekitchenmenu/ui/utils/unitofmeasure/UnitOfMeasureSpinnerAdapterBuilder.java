@@ -6,7 +6,7 @@ import android.widget.SpinnerAdapter;
 import androidx.fragment.app.FragmentActivity;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;
+import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.MeasurementSubtype;
 import com.example.peter.thekitchenmenu.ui.utils.SpinnerItemType;
 
 import java.util.ArrayList;

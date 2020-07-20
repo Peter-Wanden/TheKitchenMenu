@@ -3,18 +3,16 @@ package com.example.peter.thekitchenmenu.ui.utils.unitofmeasure;
 import android.view.View;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;
-
-import androidx.databinding.BindingAdapter;
+import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.MeasurementSubtype;
 
 public class UnitOfMeasureFieldVisibilityBindingAdapter {
 
     private static final String TAG = "tkm-FieldVisibility";
 
-    @BindingAdapter(value = {
-            "fieldVisibilityNumberOfProducts",
-            "fieldVisibilityNumberOfMeasurementUnits"},
-            requireAll = false)
+//    @BindingAdapter(value = {
+//            "fieldVisibilityNumberOfProducts",
+//            "fieldVisibilityNumberOfMeasurementUnits"},
+//            requireAll = false)
     public static void fieldVisibility(View view,
                                        int numberOfItems,
                                        int numberOfMeasurementUnits) {
@@ -44,7 +42,7 @@ public class UnitOfMeasureFieldVisibilityBindingAdapter {
         }
     }
 
-    @BindingAdapter(value = {"fieldVisibilitySubtype"})
+//    @BindingAdapter(value = {"fieldVisibilitySubtype"})
     public static void fieldVisibilitySubtype(View view, MeasurementSubtype subtype) {
         int viewId = view.getId();
 

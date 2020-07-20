@@ -2,15 +2,14 @@ package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredienteditor
 
 import android.content.res.Resources;
 
-import androidx.databinding.Bindable;
+
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.peter.thekitchenmenu.BR;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModel;
-import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModelBuilder;
+import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.model.MeasurementModel;
+import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.model.MeasurementModelBuilder;
 import com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.ConversionFactorStatusRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.ConversionFactorStatus;
 import com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.ConversionFactorStatusResponse;
@@ -21,11 +20,11 @@ import com.example.peter.thekitchenmenu.ui.ObservableViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.common.MeasurementErrorMessageMaker;
 import com.example.peter.thekitchenmenu.ui.utils.unitofmeasure.CountFraction;
 import com.example.peter.thekitchenmenu.ui.utils.NumberFormatter;
-import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;
-import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants;
+import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.MeasurementSubtype;
+import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.UnitOfMeasureConstants;
 
 import javax.annotation.Nonnull;
-import static com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants.NOT_SET;
+import static com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.UnitOfMeasureConstants.NOT_SET;
 import static com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.ConversionFactorStatus.*;
 
 public class RecipeIngredientCalculatorViewModel extends ObservableViewModel {
@@ -106,7 +105,7 @@ public class RecipeIngredientCalculatorViewModel extends ObservableViewModel {
                 !this.recipeIngredientId.equals(recipeIngredientId);
     }
 
-    @Bindable
+//    @Bindable
     public MeasurementSubtype getSubtype() {
         return measurementModel.getSubtype();
     }
@@ -131,37 +130,37 @@ public class RecipeIngredientCalculatorViewModel extends ObservableViewModel {
         executeIngredientCalculator(model);
     }
 
-    @Bindable
+//    @Bindable
     public int getNumberOfUnits() {
         return measurementModel.getNumberOfUnits();
     }
 
-    @Bindable
+//    @Bindable
     public boolean isConversionFactorEnabled() {
         return measurementModel.isConversionFactorEnabled();
     }
 
-    @Bindable
+//    @Bindable
     public boolean isShowConversionFactorEditableFields() {
         return isShowConversionFactorEditableFields;
     }
 
-    @Bindable
+//    @Bindable
     public boolean isShowConversionFactorUneditableFields() {
         return isShowConversionFactorUneditableFields;
     }
 
-    @Bindable
+//    @Bindable
     public boolean isAdvancedCheckBoxChecked() {
         return isAdvancedCheckBoxChecked;
     }
 
     public void setAdvancedCheckBoxChecked(boolean advancedCheckBoxChecked) {
         isShowConversionFactorEditableFields = advancedCheckBoxChecked;
-        notifyPropertyChanged(BR.showConversionFactorEditableFields);
+//        notifyPropertyChanged(BR.showConversionFactorEditableFields);
     }
 
-    @Bindable
+//    @Bindable
     public String getConversionFactor() {
         return numberFormatter.formatDecimalForDisplay(measurementModel.getConversionFactor());
     }
@@ -186,7 +185,7 @@ public class RecipeIngredientCalculatorViewModel extends ObservableViewModel {
 
     private void displayConversionFactorParseError() {
         conversionFactorErrorMessage = numberFormatExceptionErrorMessage();
-        notifyPropertyChanged(BR.conversionFactorErrorMessage);
+//        notifyPropertyChanged(BR.conversionFactorErrorMessage);
     }
 
     private void processConversionFactor(double conversionFactor) {
@@ -205,12 +204,12 @@ public class RecipeIngredientCalculatorViewModel extends ObservableViewModel {
         return Double.compare(measurementModel.getConversionFactor(), conversionFactorParsed) != 0;
     }
 
-    @Bindable
+//    @Bindable
     public String getConversionFactorErrorMessage() {
         return conversionFactorErrorMessage;
     }
 
-    @Bindable
+//    @Bindable
     public CountFraction getCountFraction() {
         return CountFraction.findClosest(measurementModel.getTotalUnitOne());
     }
@@ -221,7 +220,7 @@ public class RecipeIngredientCalculatorViewModel extends ObservableViewModel {
         }
     }
 
-    @Bindable
+//    @Bindable
     public String getUnitOne() {
         return numberFormatter.formatDecimalForDisplay(measurementModel.getTotalUnitOne());
     }
@@ -250,7 +249,7 @@ public class RecipeIngredientCalculatorViewModel extends ObservableViewModel {
 
     private void displayUnitOneParseError() {
         unitOneErrorMessage = numberFormatExceptionErrorMessage();
-        notifyPropertyChanged(BR.unitOneErrorMessage);
+//        notifyPropertyChanged(BR.unitOneErrorMessage);
     }
 
     private void processUnitOne(double unitOne) {
@@ -276,12 +275,12 @@ public class RecipeIngredientCalculatorViewModel extends ObservableViewModel {
         }
     }
 
-    @Bindable
+//    @Bindable
     public String getUnitOneErrorMessage() {
         return unitOneErrorMessage;
     }
 
-    @Bindable
+//    @Bindable
     public String getUnitTwo() {
         return numberFormatter.formatIntegerForDisplay(measurementModel.getTotalUnitTwo());
     }
@@ -308,7 +307,7 @@ public class RecipeIngredientCalculatorViewModel extends ObservableViewModel {
 
     private void displayUnitTwoParseError() {
         unitTwoErrorMessage = numberFormatExceptionErrorMessage();
-        notifyPropertyChanged(BR.unitTwoErrorMessage);
+//        notifyPropertyChanged(BR.unitTwoErrorMessage);
     }
 
     private void processUnitTwo(int unitTwo) {
@@ -334,7 +333,7 @@ public class RecipeIngredientCalculatorViewModel extends ObservableViewModel {
         }
     }
 
-    @Bindable
+//    @Bindable
     public String getUnitTwoErrorMessage() {
         return unitTwoErrorMessage;
     }
@@ -371,28 +370,28 @@ public class RecipeIngredientCalculatorViewModel extends ObservableViewModel {
     private void processModelResult(MeasurementModel resultModel) {
         updatingUi = true;
 
-        if (measurementModel.getSubtype() != resultModel.getSubtype()) {
-            notifyPropertyChanged(BR.subtype);
-        }
-        if (measurementModel.getNumberOfUnits() != resultModel.getNumberOfUnits()) {
-            notifyPropertyChanged(BR.numberOfUnits);
-        }
-        if (measurementModel.getConversionFactor() != resultModel.getConversionFactor()) {
-            notifyPropertyChanged(BR.conversionFactor);
-        }
-        if (measurementModel.isConversionFactorEnabled() != resultModel.isConversionFactorEnabled()) {
-            notifyPropertyChanged(BR.conversionFactorEnabled);
-        }
-        if (measurementModel.getTotalUnitOne() != resultModel.getTotalUnitOne() &&
-                measurementModel.getSubtype() != MeasurementSubtype.COUNT) {
-            notifyPropertyChanged(BR.unitOne);
-        }
-        if (measurementModel.getSubtype() == MeasurementSubtype.COUNT) {
-            notifyPropertyChanged(BR.countFraction);
-        }
-        if (measurementModel.getTotalUnitTwo() != resultModel.getTotalUnitTwo()) {
-            notifyPropertyChanged(BR.unitTwo);
-        }
+//        if (measurementModel.getSubtype() != resultModel.getSubtype()) {
+//            notifyPropertyChanged(BR.subtype);
+//        }
+//        if (measurementModel.getNumberOfUnits() != resultModel.getNumberOfUnits()) {
+//            notifyPropertyChanged(BR.numberOfUnits);
+//        }
+//        if (measurementModel.getConversionFactor() != resultModel.getConversionFactor()) {
+//            notifyPropertyChanged(BR.conversionFactor);
+//        }
+//        if (measurementModel.isConversionFactorEnabled() != resultModel.isConversionFactorEnabled()) {
+//            notifyPropertyChanged(BR.conversionFactorEnabled);
+//        }
+//        if (measurementModel.getTotalUnitOne() != resultModel.getTotalUnitOne() &&
+//                measurementModel.getSubtype() != MeasurementSubtype.COUNT) {
+//            notifyPropertyChanged(BR.unitOne);
+//        }
+//        if (measurementModel.getSubtype() == MeasurementSubtype.COUNT) {
+//            notifyPropertyChanged(BR.countFraction);
+//        }
+//        if (measurementModel.getTotalUnitTwo() != resultModel.getTotalUnitTwo()) {
+//            notifyPropertyChanged(BR.unitTwo);
+//        }
 
         measurementModel = resultModel;
     }
@@ -402,26 +401,26 @@ public class RecipeIngredientCalculatorViewModel extends ObservableViewModel {
 
         if (resultStatus == RecipeIngredient.Result.INVALID_CONVERSION_FACTOR) {
             conversionFactorErrorMessage = errorMessageMaker.getConversionFactorErrorMessage();
-            notifyPropertyChanged(BR.conversionFactorErrorMessage);
+//            notifyPropertyChanged(BR.conversionFactorErrorMessage);
 
         } else if (resultStatus == RecipeIngredient.Result.INVALID_TOTAL_UNIT_ONE) {
             unitOneErrorMessage = errorMessageMaker.getMeasurementErrorMessage(measurementModel);
-            notifyPropertyChanged(BR.unitOneErrorMessage);
+//            notifyPropertyChanged(BR.unitOneErrorMessage);
 
         } else if (resultStatus == RecipeIngredient.Result.INVALID_TOTAL_UNIT_TWO) {
             unitTwoErrorMessage = errorMessageMaker.getMeasurementErrorMessage(measurementModel);
-            notifyPropertyChanged(BR.unitTwoErrorMessage);
+//            notifyPropertyChanged(BR.unitTwoErrorMessage);
         }
         executeUseCaseConversionFactorStatus();
     }
 
     private void hideAllInputErrors() {
         conversionFactorErrorMessage = null;
-        notifyPropertyChanged(BR.conversionFactorErrorMessage);
+//        notifyPropertyChanged(BR.conversionFactorErrorMessage);
         unitOneErrorMessage = null;
-        notifyPropertyChanged(BR.unitOneErrorMessage);
+//        notifyPropertyChanged(BR.unitOneErrorMessage);
         unitTwoErrorMessage = null;
-        notifyPropertyChanged(BR.unitTwoErrorMessage);
+//        notifyPropertyChanged(BR.unitTwoErrorMessage);
     }
 
     private void executeUseCaseConversionFactorStatus() {
@@ -479,39 +478,39 @@ public class RecipeIngredientCalculatorViewModel extends ObservableViewModel {
     }
 
     private void hideAllConversionFactorInformation() {
-        notifyPropertyChanged(BR.conversionFactorEnabled);
+//        notifyPropertyChanged(BR.conversionFactorEnabled);
         isShowConversionFactorEditableFields = false;
-        notifyPropertyChanged(BR.showConversionFactorEditableFields);
+//        notifyPropertyChanged(BR.showConversionFactorEditableFields);
         isShowConversionFactorUneditableFields = false;
-        notifyPropertyChanged(BR.showConversionFactorUneditableFields);
+//        notifyPropertyChanged(BR.showConversionFactorUneditableFields);
     }
 
     private void showUneditableConversionFactorInformation() {
-        notifyPropertyChanged(BR.conversionFactorEnabled);
+//        notifyPropertyChanged(BR.conversionFactorEnabled);
         isShowConversionFactorEditableFields = false;
-        notifyPropertyChanged(BR.showConversionFactorEditableFields);
+//        notifyPropertyChanged(BR.showConversionFactorEditableFields);
         isShowConversionFactorUneditableFields = true;
-        notifyPropertyChanged(BR.showConversionFactorUneditableFields);
+//        notifyPropertyChanged(BR.showConversionFactorUneditableFields);
     }
 
     private void showOptionToAddConversionFactorInformation() {
-        notifyPropertyChanged(BR.conversionFactorEnabled);
+//        notifyPropertyChanged(BR.conversionFactorEnabled);
         isShowConversionFactorEditableFields = false;
-        notifyPropertyChanged(BR.showConversionFactorEditableFields);
+//        notifyPropertyChanged(BR.showConversionFactorEditableFields);
         isShowConversionFactorUneditableFields = false;
-        notifyPropertyChanged(BR.showConversionFactorUneditableFields);
+//        notifyPropertyChanged(BR.showConversionFactorUneditableFields);
         isAdvancedCheckBoxChecked = false;
-        notifyPropertyChanged(BR.advancedCheckBoxChecked);
+//        notifyPropertyChanged(BR.advancedCheckBoxChecked);
     }
 
     private void showAllConversionFactorInformation() {
-        notifyPropertyChanged(BR.conversionFactorEnabled);
+//        notifyPropertyChanged(BR.conversionFactorEnabled);
         isShowConversionFactorEditableFields = true;
-        notifyPropertyChanged(BR.showConversionFactorEditableFields);
+//        notifyPropertyChanged(BR.showConversionFactorEditableFields);
         isShowConversionFactorUneditableFields = false;
-        notifyPropertyChanged(BR.showConversionFactorUneditableFields);
+//        notifyPropertyChanged(BR.showConversionFactorUneditableFields);
         isAdvancedCheckBoxChecked = true;
-        notifyPropertyChanged(BR.advancedCheckBoxChecked);
+//        notifyPropertyChanged(BR.advancedCheckBoxChecked);
     }
 
     MutableLiveData<Boolean> getIsValidMeasurement() {

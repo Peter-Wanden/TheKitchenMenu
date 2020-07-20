@@ -8,9 +8,6 @@ import com.example.peter.thekitchenmenu.data.model.ProductIdentityModel;
 import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
 import com.example.peter.thekitchenmenu.ui.utils.TextValidator;
 
-import androidx.databinding.Observable;
-import androidx.databinding.ObservableField;
-import androidx.databinding.ObservableInt;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
@@ -28,12 +25,12 @@ public class ProductIdentityViewModel extends AndroidViewModel {
     private final MutableLiveData<ProductIdentityModel> existingIdentityModel =
             new MutableLiveData<>();
 
-    public final ObservableField<String> description = new ObservableField<>();
-    public final ObservableField<String> descriptionErrorMessage = new ObservableField<>();
-    public final ObservableField<String> shoppingListItemName = new ObservableField<>();
-    public final ObservableField<String> shoppingListItemNameErrorMessage = new ObservableField<>();
-    public final ObservableInt category = new ObservableInt();
-    public final ObservableInt shelfLife = new ObservableInt();
+//    public final ObservableField<String> description = new ObservableField<>();
+//    public final ObservableField<String> descriptionErrorMessage = new ObservableField<>();
+//    public final ObservableField<String> shoppingListItemName = new ObservableField<>();
+//    public final ObservableField<String> shoppingListItemNameErrorMessage = new ObservableField<>();
+//    public final ObservableInt category = new ObservableInt();
+//    public final ObservableInt shelfLife = new ObservableInt();
 
     private final SingleLiveEvent<Boolean> identityModelValidEvent = new SingleLiveEvent<>();
 
@@ -46,19 +43,19 @@ public class ProductIdentityViewModel extends AndroidViewModel {
         resources = application.getResources();
         this.validationHandler = validationHandler;
 
-        description.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
-            @Override
-            public void onPropertyChanged(Observable sender, int propertyId) {
-                descriptionChanged();
-            }
-        });
+//        description.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+//            @Override
+//            public void onPropertyChanged(Observable sender, int propertyId) {
+//                descriptionChanged();
+//            }
+//        });
 
-        shoppingListItemName.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
-            @Override
-            public void onPropertyChanged(Observable sender, int propertyId) {
-                shoppingListItemNameChanged();
-            }
-        });
+//        shoppingListItemName.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+//            @Override
+//            public void onPropertyChanged(Observable sender, int propertyId) {
+//                shoppingListItemNameChanged();
+//            }
+//        });
     }
 
     MutableLiveData<ProductIdentityModel> getExistingIdentityModel() {
@@ -66,39 +63,39 @@ public class ProductIdentityViewModel extends AndroidViewModel {
     }
 
     void setIdentityModel(ProductIdentityModel model) {
-        description.set(model.getDescription());
-        shoppingListItemName.set(model.getShoppingListItemName());
-        category.set(model.getCategory());
-        shelfLife.set(model.getShelfLife());
+//        description.set(model.getDescription());
+//        shoppingListItemName.set(model.getShoppingListItemName());
+//        category.set(model.getCategory());
+//        shelfLife.set(model.getShelfLife());
     }
 
     private void descriptionChanged() {
-        descriptionErrorMessage.set(null);
-
-        TextValidator.Response response = validateText(description.get());
-
-        if (response.getResult() == TextValidator.Result.VALID) {
-            descriptionValidated = true;
-        } else {
-            descriptionValidated = false;
-            setError(descriptionErrorMessage, response);
-        }
+//        descriptionErrorMessage.set(null);
+//
+//        TextValidator.Response response = validateText(description.get());
+//
+//        if (response.getResult() == TextValidator.Result.VALID) {
+//            descriptionValidated = true;
+//        } else {
+//            descriptionValidated = false;
+//            setError(descriptionErrorMessage, response);
+//        }
         checkAllFieldsValidated();
     }
 
-    private void shoppingListItemNameChanged() {
-        shoppingListItemNameErrorMessage.set(null);
-
-        TextValidator.Response response = validateText(shoppingListItemName.get());
-
-        if (response.getResult() == TextValidator.Result.VALID) {
-            shoppingItemNameValidated = true;
-        } else {
-            shoppingItemNameValidated = false;
-            setError(shoppingListItemNameErrorMessage, response);
-        }
-        checkAllFieldsValidated();
-    }
+//    private void shoppingListItemNameChanged() {
+//        shoppingListItemNameErrorMessage.set(null);
+//
+//        TextValidator.Response response = validateText(shoppingListItemName.get());
+//
+//        if (response.getResult() == TextValidator.Result.VALID) {
+//            shoppingItemNameValidated = true;
+//        } else {
+//            shoppingItemNameValidated = false;
+//            setError(shoppingListItemNameErrorMessage, response);
+//        }
+//        checkAllFieldsValidated();
+//    }
 
     private TextValidator.Response validateText(String textToValidate) {
         TextValidator.Request request = new TextValidator.Request(
@@ -108,22 +105,22 @@ public class ProductIdentityViewModel extends AndroidViewModel {
         return validationHandler.validateText(request);
     }
 
-    private void setError(ObservableField<String> errorObservable,
-                          TextValidator.Response response) {
-        if (response.getResult() == TextValidator.Result.TOO_SHORT) {
-            errorObservable.set(resources.getString(
-                    R.string.input_error_text_too_short,
-                    response.getMinLength(),
-                    response.getMaxLength()));
-
-        } else if (response.getResult() == TextValidator.Result.TOO_LONG) {
-            errorObservable.set(resources.getString(
-                    R.string.input_error_text_too_long,
-                    response.getMinLength(),
-                    response.getMaxLength()
-            ));
-        }
-    }
+//    private void setError(ObservableField<String> errorObservable,
+//                          TextValidator.Response response) {
+//        if (response.getResult() == TextValidator.Result.TOO_SHORT) {
+//            errorObservable.set(resources.getString(
+//                    R.string.input_error_text_too_short,
+//                    response.getMinLength(),
+//                    response.getMaxLength()));
+//
+//        } else if (response.getResult() == TextValidator.Result.TOO_LONG) {
+//            errorObservable.set(resources.getString(
+//                    R.string.input_error_text_too_long,
+//                    response.getMinLength(),
+//                    response.getMaxLength()
+//            ));
+//        }
+//    }
 
     SingleLiveEvent<Boolean> getIdentityModelValidEvent() {
         return identityModelValidEvent;
@@ -132,13 +129,13 @@ public class ProductIdentityViewModel extends AndroidViewModel {
     private void checkAllFieldsValidated() {
         if (descriptionValidated && shoppingItemNameValidated) {
 
-            ProductIdentityModel model = new ProductIdentityModel(
-                    description.get(),
-                    shoppingListItemName.get(),
-                    category.get(),
-                    shelfLife.get());
+//            ProductIdentityModel model = new ProductIdentityModel(
+//                    description.get(),
+//                    shoppingListItemName.get(),
+//                    category.get(),
+//                    shelfLife.get());
 
-            existingIdentityModel.setValue(model);
+//            existingIdentityModel.setValue(model);
             identityModelValidEvent.setValue(true);
         } else
             identityModelValidEvent.setValue(false);

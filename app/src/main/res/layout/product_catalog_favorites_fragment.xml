@@ -1,24 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <data>
-        <import type="android.view.View"/>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/product_catalog_favorites_fragment_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-        <variable
-            name="viewModel"
-            type="com.example.peter.thekitchenmenu.ui.catalog.product.ProductCatalogViewModel" />
-    </data>
-
-    <LinearLayout
-        android:id="@+id/product_catalog_favorites_fragment_container"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/product_catalog_favorites_fragment_recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/product_catalog_favorites_fragment_recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-        </androidx.recyclerview.widget.RecyclerView>
-    </LinearLayout>
-</layout>
+        android:layout_height="match_parent"/>
+</LinearLayout>

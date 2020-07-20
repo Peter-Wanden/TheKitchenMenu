@@ -8,12 +8,10 @@ import android.view.MenuItem;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.databinding.IngredientEditorBinding;
 import com.example.peter.thekitchenmenu.ui.ViewModelFactoryIngredient;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredienteditor.RecipeIngredientEditorActivity;
 
@@ -26,7 +24,7 @@ public class IngredientEditorActivity
     public static final int REQUEST_ADD_INGREDIENT = 1;
     public static final int RESULT_ADD_INGREDIENT_OK = 2;
     private static final String EXTRA_INGREDIENT_ID = "EXTRA_INGREDIENT_ID";
-    private IngredientEditorBinding binding;
+//    private IngredientEditorBinding binding;
     private IngredientEditorViewModel viewModel;
 
     @Override
@@ -57,12 +55,12 @@ public class IngredientEditorActivity
     }
 
     private void initialiseBindings() {
-        binding = DataBindingUtil.setContentView(this, R.layout.ingredient_editor);
-        binding.setLifecycleOwner(this);
+//        binding = DataBindingUtil.setContentView(this, R.layout.ingredient_editor);
+//        binding.setLifecycleOwner(this);
     }
 
     private void setupToolbar() {
-        setSupportActionBar(binding.ingredientEditorToolbar);
+//        setSupportActionBar(binding.ingredientEditorToolbar);
     }
 
     private void setUpActionBar() {
@@ -85,7 +83,7 @@ public class IngredientEditorActivity
     private void setupViewModels() {
         viewModel = obtainIdentityEditorViewModel(this);
         viewModel.setNavigator(this);
-        binding.setViewModel(viewModel);
+//        binding.setViewModel(viewModel);
     }
 
     private static IngredientEditorViewModel obtainIdentityEditorViewModel(

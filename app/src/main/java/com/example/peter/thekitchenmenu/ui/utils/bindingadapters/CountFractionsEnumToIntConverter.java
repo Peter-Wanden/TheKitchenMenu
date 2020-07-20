@@ -1,12 +1,10 @@
 package com.example.peter.thekitchenmenu.ui.utils.bindingadapters;
 
-import androidx.databinding.InverseMethod;
-
 import com.example.peter.thekitchenmenu.ui.utils.unitofmeasure.CountFraction;
 
 public class CountFractionsEnumToIntConverter {
 
-    @InverseMethod("toFraction")
+//    @InverseMethod("toFraction")
     public static int toInt(CountFraction fraction) {
         return fraction.toInt();
     }

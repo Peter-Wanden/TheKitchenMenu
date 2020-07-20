@@ -1,6 +1,5 @@
 package com.example.peter.thekitchenmenu.ui.detail.ingredient;
 
-import androidx.databinding.ObservableField;
 import androidx.lifecycle.ViewModel;
 
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
@@ -13,7 +12,7 @@ public class IngredientViewerViewModel
 
     private RepositoryIngredient repositoryIngredient;
 
-    public final ObservableField<String> ingredientName = new ObservableField<>();
+//    public final ObservableField<String> ingredientName = new ObservableField<>();
 
     public IngredientViewerViewModel(RepositoryIngredient repositoryIngredient) {
         this.repositoryIngredient = repositoryIngredient;
@@ -38,6 +37,6 @@ public class IngredientViewerViewModel
     }
 
     private void setIngredientToDisplay(IngredientPersistenceModel model) {
-        ingredientName.set(model.getName());
+//        ingredientName.set(model.getName());
     }
 }

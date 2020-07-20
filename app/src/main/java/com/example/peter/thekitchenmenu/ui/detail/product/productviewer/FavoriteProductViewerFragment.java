@@ -9,11 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
-import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.databinding.FavoriteProductViewerFragmentBinding;
 import com.example.peter.thekitchenmenu.ui.detail.product.producteditor.ProductEditorActivity;
 
 import javax.annotation.Nonnull;
@@ -23,7 +21,7 @@ public class FavoriteProductViewerFragment extends Fragment {
     private static final String TAG = "tkm-" + FavoriteProductViewerFragment.class.getSimpleName() +
             ":";
 
-    private FavoriteProductViewerFragmentBinding binding;
+//    private FavoriteProductViewerFragmentBinding binding;
     private FavoriteProductViewerViewModel viewModel;
 
     static FavoriteProductViewerFragment newInstance(String productId) {
@@ -51,17 +49,18 @@ public class FavoriteProductViewerFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        binding = DataBindingUtil.inflate(
-                inflater,
-                R.layout.favorite_product_viewer_fragment,
-                container,
-                false);
+//        binding = DataBindingUtil.inflate(
+//                inflater,
+//                R.layout.favorite_product_viewer_fragment,
+//                container,
+//                false);
 
         setViewModel();
         setBindingInstanceVariables();
         setupObservers();
 
-        return binding.getRoot();
+//        return binding.getRoot();
+        return null;
     }
 
     private void setViewModel() {
@@ -69,7 +68,7 @@ public class FavoriteProductViewerFragment extends Fragment {
     }
 
     private void setBindingInstanceVariables() {
-        binding.setViewModel(viewModel);
+//        binding.setViewModel(viewModel);
     }
 
     private void setupObservers() {
@@ -79,7 +78,7 @@ public class FavoriteProductViewerFragment extends Fragment {
     }
 
     private void hasMenuOptions() {
-        setHasOptionsMenu(viewModel.isFavorite.get());
+//        setHasOptionsMenu(viewModel.isFavorite.get());
     }
 
     @Override

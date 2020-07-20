@@ -10,11 +10,9 @@ import android.view.ViewGroup;
 import android.widget.SpinnerAdapter;
 
 import androidx.annotation.Nullable;
-import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.databinding.RecipeIngredientEditorMeasurementBinding;
 import com.example.peter.thekitchenmenu.ui.utils.unitofmeasure.CountFractionsSpinnerAdapterBuilder;
 import com.example.peter.thekitchenmenu.ui.utils.unitofmeasure.UnitOfMeasureSpinnerAdapterBuilder;
 
@@ -22,7 +20,7 @@ import javax.annotation.Nonnull;
 
 public class RecipeIngredientMeasurementFragment extends Fragment {
 
-    private RecipeIngredientEditorMeasurementBinding binding;
+//    private RecipeIngredientEditorMeasurementBinding binding;
     private RecipeIngredientCalculatorViewModel viewModel;
 
     static RecipeIngredientMeasurementFragment newInstance() {
@@ -35,21 +33,23 @@ public class RecipeIngredientMeasurementFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        binding = DataBindingUtil.inflate(
-                inflater,
-                R.layout.recipe_ingredient_editor_measurement,
-                container,
-                false);
+//        binding = DataBindingUtil.inflate(
+//                inflater,
+//                R.layout.recipe_ingredient_editor_measurement,
+//                container,
+//                false);
 
-        binding.setLifecycleOwner(this);
+//        binding.setLifecycleOwner(this);
         setViewModel();
-        binding.setViewModel(viewModel);
+//        binding.setViewModel(viewModel);
 
         setObservers();
         setupSpinners();
 
-        return binding.getRoot();
+//        return binding.getRoot();
+        return null;
     }
+
 
     public void setViewModel() {
         this.viewModel = RecipeIngredientEditorActivity.
@@ -67,8 +67,8 @@ public class RecipeIngredientMeasurementFragment extends Fragment {
     }
 
     private void setupSpinners() {
-        binding.recipeIngredientUnitOfMeasureSpinner.setAdapter(getUnitOfMeasureSpinnerAdapter());
-        binding.recipeIngredientCountUnitTwoSpinner.setAdapter(getCountFractionSpinnerAdapter());
+//        binding.recipeIngredientUnitOfMeasureSpinner.setAdapter(getUnitOfMeasureSpinnerAdapter());
+//        binding.recipeIngredientCountUnitTwoSpinner.setAdapter(getCountFractionSpinnerAdapter());
     }
 
     private SpinnerAdapter getUnitOfMeasureSpinnerAdapter() {

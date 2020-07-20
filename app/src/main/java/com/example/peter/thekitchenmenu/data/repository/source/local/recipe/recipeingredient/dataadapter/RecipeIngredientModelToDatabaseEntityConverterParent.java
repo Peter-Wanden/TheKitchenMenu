@@ -2,10 +2,10 @@ package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.rec
 
 import com.example.peter.thekitchenmenu.data.repository.source.local.PersistenceModelToDatabaseEntityConverter;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.recipeingredient.datasource.RecipeIngredientEntity;
-import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModel;
-import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModelBuilder;
-import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;
-import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasure;
+import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.model.MeasurementModel;
+import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.model.MeasurementModelBuilder;
+import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.MeasurementSubtype;
+import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.UnitOfMeasure;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredient.RecipeIngredientPersistenceModel;
 
 import java.util.ArrayList;

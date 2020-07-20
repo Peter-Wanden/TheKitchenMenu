@@ -1,7 +1,5 @@
 package com.example.peter.thekitchenmenu.ui.catalog.recipe;
 
-import androidx.databinding.ObservableBoolean;
-
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -28,9 +26,9 @@ public class RecipeCatalogViewModel extends ViewModel {
     @Nonnull
     private RecipeList useCase;
 
-    public ObservableBoolean dataLoading = new ObservableBoolean(); // todo - setup empty screen
-    public ObservableBoolean isDataLoadingError = new ObservableBoolean();
-    public ObservableBoolean showEmptyScreen = new ObservableBoolean();
+//    public ObservableBoolean dataLoading = new ObservableBoolean(); // todo - setup empty screen
+//    public ObservableBoolean isDataLoadingError = new ObservableBoolean();
+//    public ObservableBoolean showEmptyScreen = new ObservableBoolean();
 
     private MutableLiveData<List<Recipe>> recipeList = new MutableLiveData<>();
 
@@ -49,7 +47,7 @@ public class RecipeCatalogViewModel extends ViewModel {
     }
 
     private void loadRecipes() {
-        dataLoading.set(true);
+//        dataLoading.set(true);
 
         handler.executeAsync(
                 useCase,
@@ -72,13 +70,13 @@ public class RecipeCatalogViewModel extends ViewModel {
         return new UseCaseBase.Callback<RecipeListResponse>() {
             @Override
             public void onUseCaseSuccess(RecipeListResponse response) {
-                dataLoading.set(false);
+//                dataLoading.set(false);
 //                recipeList.setValue(response.getRecipeListItemModels());
             }
 
             @Override
             public void onUseCaseError(RecipeListResponse response) {
-                dataLoading.set(false);
+//                dataLoading.set(false);
 //                dataLoadingFailed(response.getResultStatus());
 
             }

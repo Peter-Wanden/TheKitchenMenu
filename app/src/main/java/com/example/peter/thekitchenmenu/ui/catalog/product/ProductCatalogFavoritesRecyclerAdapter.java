@@ -1,16 +1,16 @@
 package com.example.peter.thekitchenmenu.ui.catalog.product;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
 
-import androidx.databinding.DataBindingUtil;
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.model.ProductModel;
-import com.example.peter.thekitchenmenu.databinding.FavoriteProductListItemBinding;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,19 +36,20 @@ public class ProductCatalogFavoritesRecyclerAdapter
     @Override
     public ViewHolder onCreateViewHolder(@Nonnull ViewGroup viewGroup, int viewType) {
 
-        FavoriteProductListItemBinding binding = DataBindingUtil.inflate(
-                LayoutInflater.from(viewGroup.getContext()),
-                R.layout.favorite_product_list_item,
-                viewGroup,
-                false);
+//        FavoriteProductListItemBinding binding = DataBindingUtil.inflate(
+//                LayoutInflater.from(viewGroup.getContext()),
+//                R.layout.favorite_product_list_item,
+//                viewGroup,
+//                false);
 
-        return new ViewHolder(binding);
+//        return new ViewHolder(binding);
+        return null;
     }
 
     @Override
     public void onBindViewHolder(@Nonnull ViewHolder holder, int position) {
         final ProductModel productModel = productModelList.get(position);
-        holder.bind(productModel);
+//        holder.bind(productModel);
     }
 
     @Override
@@ -105,7 +106,7 @@ public class ProductCatalogFavoritesRecyclerAdapter
 
     /* Inner class for creating ViewHolders */
     class ViewHolder extends RecyclerView.ViewHolder {
-        FavoriteProductListItemBinding binding;
+//        FavoriteProductListItemBinding binding;
 
         FavoriteItemNavigator listener = new FavoriteItemNavigator() {
             @Override
@@ -119,15 +120,19 @@ public class ProductCatalogFavoritesRecyclerAdapter
             }
         };
 
-        ViewHolder(FavoriteProductListItemBinding binding) {
-            super(binding.getRoot());
-            this.binding = binding;
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
         }
 
-        void bind(ProductModel productModel) {
-            binding.setProductModel(productModel);
-            binding.setListener(listener);
-            binding.executePendingBindings();
-        }
+//        ViewHolder(FavoriteProductListItemBinding binding) {
+//            super(binding.getRoot());
+//            this.binding = binding;
+//        }
+
+//        void bind(ProductModel productModel) {
+//            binding.setProductModel(productModel);
+//            binding.setListener(listener);
+//            binding.executePendingBindings();
+//        }
     }
 }

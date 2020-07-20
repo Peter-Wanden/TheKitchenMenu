@@ -10,12 +10,10 @@ import android.view.ViewGroup;
 
 
 import androidx.annotation.Nullable;
-import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.primitivemodel.product.ProductEntity;
-import com.example.peter.thekitchenmenu.databinding.ProductViewerDetailFragmentBinding;
 import com.example.peter.thekitchenmenu.ui.detail.product.favoriteproducteditor.FavoriteProductEditorActivity;
 
 import javax.annotation.Nonnull;
@@ -27,7 +25,7 @@ public class ProductViewerFragment extends Fragment {
     private static final String ARGUMENT_PRODUCT_ID = "PRODUCT_ID";
     static final String ARGUMENT_PRODUCT_ENTITY = "PRODUCT_ENTITY";
 
-    private ProductViewerDetailFragmentBinding binding;
+//    private ProductViewerDetailFragmentBinding binding;
     private ProductViewerViewModel productViewerViewModel;
 
     public static ProductViewerFragment newInstance(String productId) {
@@ -67,17 +65,18 @@ public class ProductViewerFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        binding = DataBindingUtil.inflate(
-                inflater,
-                R.layout.product_viewer_detail_fragment,
-                container,
-                false);
+//        binding = DataBindingUtil.inflate(
+//                inflater,
+//                R.layout.product_viewer_detail_fragment,
+//                container,
+//                false);
 
         setViewModel();
         setBindingInstanceVariables();
         setupObservers();
 
-        return binding.getRoot();
+//        return binding.getRoot();
+        return null;
     }
 
     private void setViewModel() {
@@ -91,7 +90,7 @@ public class ProductViewerFragment extends Fragment {
     }
 
     private void setBindingInstanceVariables() {
-        binding.setViewModel(productViewerViewModel);
+//        binding.setViewModel(productViewerViewModel);
     }
 
     private void setupObservers() {
@@ -134,13 +133,13 @@ public class ProductViewerFragment extends Fragment {
     public boolean onOptionsItemSelected(@Nonnull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_item_edit_product:
-                productViewerViewModel.editProduct(
-                        productViewerViewModel.productEntityObservable.get());
+//                productViewerViewModel.editProduct(
+//                        productViewerViewModel.productEntityObservable.get());
                 return true;
 
             case R.id.menu_item_delete_product:
-                productViewerViewModel.deleteProduct(
-                        productViewerViewModel.productEntityObservable.get().getDataId());
+//                productViewerViewModel.deleteProduct(
+//                        productViewerViewModel.productEntityObservable.get().getDataId());
                 return true;
 
             case R.id.menu_item_post_product:
@@ -152,8 +151,8 @@ public class ProductViewerFragment extends Fragment {
                 return true;
 
             case R.id.menu_item_done:
-                productViewerViewModel.doneWithProduct(
-                        productViewerViewModel.productEntityObservable.get().getDataId());
+//                productViewerViewModel.doneWithProduct(
+//                        productViewerViewModel.productEntityObservable.get().getDataId());
                 return true;
         }
         return false;

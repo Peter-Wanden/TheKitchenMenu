@@ -1,26 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
-
-    <data>
-
-        <import type="android.view.View" />
-        <import type="com.example.peter.thekitchenmenu.ui.utils.unitofmeasure.MeasurementSubtypeConverter" />
-        <import type="com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype"/>
-
-        <variable
-            name="viewModel"
-            type="com.example.peter.thekitchenmenu.ui.detail.product.producteditor.ProductMeasurementViewModel" />
-
-        <variable
-            name="measurementHandler"
-            type="com.example.peter.thekitchenmenu.ui.detail.product.producteditor.ProductMeasurementHandler" />
-    </data>
-
     <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/product_identity_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -63,7 +46,6 @@
             android:layout_marginEnd="8dp"
             android:dropDownWidth="wrap_content"
             android:spinnerMode="dropdown"
-            android:selectedItemPosition="@={MeasurementSubtypeConverter.toInt(viewModel.subtype)}"
             app:layout_constraintStart_toEndOf="@id/vertical_guideline"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -85,7 +67,6 @@
             android:id="@+id/multi_pack_minus"
             android:layout_width="42dp"
             android:layout_height="42dp"
-            android:onClick="@{() -> viewModel.decrementItems()}"
             android:text="@string/minus_sign"
             app:layout_constraintStart_toStartOf="@id/vertical_guideline"
             app:layout_constraintTop_toBottomOf="@id/unit_of_measure_spinner"
@@ -110,7 +91,6 @@
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:layout_marginStart="8dp"
-            android:onClick="@{() -> viewModel.incrementItems()}"
             android:text="@string/plus_sign"
             app:layout_constraintStart_toEndOf="@id/editable_products_in_pack"
             app:layout_constraintBottom_toBottomOf="@id/multi_pack_minus"
@@ -126,8 +106,6 @@
             android:paddingEnd="8dp"
             app:layout_constraintBaseline_toBaselineOf="@id/pack_editable_measurement_one"
             app:layout_constraintStart_toStartOf="parent"
-            app:setLabelForSubtypeSelected="@{viewModel.subtype}"
-            app:fieldVisibilityNumberOfProducts="@{viewModel.numberOfItems}"
             tools:text="@string/pack_size_label" />
 
         <androidx.appcompat.widget.AppCompatEditText
@@ -141,10 +119,6 @@
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
             android:textAlignment="textEnd"
-            app:setUpEditTextForSubtypeSelected="@{viewModel.subtype}"
-            android:afterTextChanged="@{() -> measurementHandler.newMeasurementReceived(packEditableMeasurementTwo)}"
-            app:fieldVisibilityNumberOfMeasurementUnits="@{viewModel.numberOfUnits}"
-            app:fieldVisibilityNumberOfProducts="@{viewModel.numberOfItems}"
             app:layout_constraintBaseline_toBaselineOf="@id/pack_editable_measurement_one"
             app:layout_constraintStart_toEndOf="@id/vertical_guideline"
             tools:text="22"
@@ -158,9 +132,6 @@
             android:layout_marginEnd="8dp"
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
-            app:setLabelForSubtypeSelected="@{viewModel.subtype}"
-            app:fieldVisibilityNumberOfMeasurementUnits="@{viewModel.numberOfUnits}"
-            app:fieldVisibilityNumberOfProducts="@{viewModel.numberOfItems}"
             app:layout_constraintBaseline_toBaselineOf="@id/pack_editable_measurement_one"
             app:layout_constraintStart_toEndOf="@id/pack_editable_measurement_two"
             tools:text="l"
@@ -177,9 +148,6 @@
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
             android:textAlignment="textEnd"
-            app:setUpEditTextForSubtypeSelected="@{viewModel.subtype}"
-            android:afterTextChanged="@{() -> measurementHandler.newMeasurementReceived(packEditableMeasurementOne)}"
-            app:fieldVisibilityNumberOfProducts="@{viewModel.numberOfItems}"
             app:layout_constraintStart_toEndOf="@id/pack_measurement_label_two"
             app:layout_constraintTop_toBottomOf="@id/multi_pack_minus"
             tools:text="16"
@@ -193,8 +161,6 @@
             android:layout_marginEnd="8dp"
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
-            app:setLabelForSubtypeSelected="@{viewModel.subtype}"
-            app:fieldVisibilityNumberOfProducts="@{viewModel.numberOfItems}"
             app:layout_constraintBaseline_toBaselineOf="@id/pack_editable_measurement_one"
             app:layout_constraintStart_toEndOf="@+id/pack_editable_measurement_one"
             tools:text="ml"
@@ -208,7 +174,6 @@
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:setLabelForSubtypeSelected="@{viewModel.subtype}"
             app:layout_constraintBaseline_toBaselineOf="@id/product_editable_measurement_one"
             tools:text="@string/product_size_label" />
 
@@ -223,9 +188,6 @@
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
             android:textAlignment="textEnd"
-            android:afterTextChanged="@{() -> measurementHandler.newMeasurementReceived(productEditableMeasurementTwo)}"
-            app:setUpEditTextForSubtypeSelected="@{viewModel.subtype}"
-            app:fieldVisibilityNumberOfMeasurementUnits="@{viewModel.numberOfUnits}"
             app:layout_constraintBaseline_toBaselineOf="@id/product_editable_measurement_one"
             app:layout_constraintStart_toStartOf="@id/vertical_guideline"
             tools:text="22"
@@ -239,8 +201,6 @@
             android:layout_marginEnd="8dp"
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
-            app:fieldVisibilityNumberOfMeasurementUnits="@{viewModel.numberOfUnits}"
-            app:setLabelForSubtypeSelected="@{viewModel.subtype}"
             app:layout_constraintBaseline_toBaselineOf="@id/product_editable_measurement_one"
             app:layout_constraintStart_toEndOf="@id/product_editable_measurement_two"
             tools:text="l" />
@@ -256,8 +216,6 @@
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
             android:textAlignment="textEnd"
-            android:afterTextChanged="@{() -> measurementHandler.newMeasurementReceived(productEditableMeasurementOne)}"
-            app:setUpEditTextForSubtypeSelected="@{viewModel.subtype}"
             app:layout_constraintStart_toEndOf="@id/product_measurement_label_two"
             app:layout_constraintTop_toBottomOf="@id/pack_editable_measurement_one"
             tools:text="16" />
@@ -270,9 +228,7 @@
             android:layout_marginEnd="8dp"
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
-            app:setLabelForSubtypeSelected="@{viewModel.subtype}"
             app:layout_constraintBaseline_toBaselineOf="@id/product_editable_measurement_one"
             app:layout_constraintStart_toEndOf="@id/product_editable_measurement_one"
             tools:text="ml" />
     </androidx.constraintlayout.widget.ConstraintLayout>
-</layout>

@@ -6,12 +6,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
-import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.databinding.RecipeCourseEditorFragmentBinding;
 
 import javax.annotation.Nonnull;
 
@@ -31,15 +29,16 @@ public class RecipeCourseEditorFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        RecipeCourseEditorFragmentBinding binding = DataBindingUtil.inflate(
-                inflater,
-                R.layout.recipe_course_editor_fragment,
-                container,
-                false);
+//        RecipeCourseEditorFragmentBinding binding = DataBindingUtil.inflate(
+//                inflater,
+//                R.layout.recipe_course_editor_fragment,
+//                container,
+//                false);
 
-        binding.setViewModel(new ViewModelProvider(requireActivity()).
-                get(RecipeCourseEditorViewModel.class));
+//        binding.setViewModel(new ViewModelProvider(requireActivity()).
+//                get(RecipeCourseEditorViewModel.class));
 
-        return binding.getRoot();
+//        return binding.getRoot();
+        return null;
     }
 }

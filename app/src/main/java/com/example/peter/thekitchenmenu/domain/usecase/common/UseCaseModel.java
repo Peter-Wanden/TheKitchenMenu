@@ -143,7 +143,7 @@ public abstract class UseCaseModel<
     }
 
     private USE_CASE_MODEL createUseCaseModelFromRequestModel() {
-        REQUEST_MODEL requestModel = ((RequestModelBase<REQUEST_MODEL>) getRequest()).getDomainModel();
+        REQUEST_MODEL requestModel = ((RequestModelBase<REQUEST_MODEL>) getRequest()).getModel();
         return modelConverter.convertRequestToUseCaseModel(requestModel);
     }
 

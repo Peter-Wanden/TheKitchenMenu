@@ -111,7 +111,7 @@ public class RecipeIdentityTest {
         // verify no save
         verifyNoMoreInteractions(repoIdentityMock);
 
-        // Assert - get elements to assert
+        // Assert
         RecipeIdentityResponse response = identityOnErrorResponse;
         UseCaseMetadataModel metadata = response.getMetadata();
 

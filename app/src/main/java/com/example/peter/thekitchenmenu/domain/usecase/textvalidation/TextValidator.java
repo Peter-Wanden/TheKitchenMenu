@@ -9,7 +9,9 @@ import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TextValidator extends UseCaseBase {
+public class TextValidator
+        extends
+        UseCaseBase {
 
     private static final String TAG = "tkm-" + TextValidator.class.getSimpleName() + ": ";
 

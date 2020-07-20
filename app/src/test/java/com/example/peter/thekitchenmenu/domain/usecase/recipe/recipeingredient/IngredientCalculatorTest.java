@@ -9,9 +9,9 @@ import com.example.peter.thekitchenmenu.data.repository.ingredient.RepositoryIng
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeIngredient;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants;
-import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;
-import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasure;
+import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.UnitOfMeasureConstants;
+import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.MeasurementSubtype;
+import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.UnitOfMeasure;
 import com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.datasource.TestDataIngredientEntity;
 import com.example.peter.thekitchenmenu.testdata.TestDataMeasurementModel;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeIngredientQuantityEntity;
@@ -19,8 +19,8 @@ import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.port
 import com.example.peter.thekitchenmenu.testdata.TestDataUseCasePortionCalculatorRequestResponse;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
-import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModel;
-import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModelBuilder;
+import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.model.MeasurementModel;
+import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.model.MeasurementModelBuilder;
 
 import org.junit.*;
 import org.mockito.*;
@@ -28,7 +28,7 @@ import org.mockito.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants.*;
+import static com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.UnitOfMeasureConstants.*;
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredient.RecipeIngredient.*;
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.assertEquals;

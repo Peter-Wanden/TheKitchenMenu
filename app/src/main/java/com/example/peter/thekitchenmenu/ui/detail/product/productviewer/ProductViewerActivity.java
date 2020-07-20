@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
-import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
@@ -12,7 +11,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.primitivemodel.product.ProductEntity;
-import com.example.peter.thekitchenmenu.databinding.ProductViewerActivityBinding;
 import com.example.peter.thekitchenmenu.ui.AppCompatActivityDialogActions;
 import com.example.peter.thekitchenmenu.ui.UnsavedChangesDialogFragment;
 import com.example.peter.thekitchenmenu.ui.ViewModelFactoryProduct;
@@ -31,7 +29,7 @@ public class ProductViewerActivity
     public static final int RESULT_VIEW_DATA_CHANGED = RESULT_FIRST_USER + 1;
     public static final int RESULT_VIEW_NO_DATA_CHANGED = RESULT_FIRST_USER + 2;
 
-    private ProductViewerActivityBinding binding;
+//    private ProductViewerActivityBinding binding;
     private ProductViewerViewModel productViewerViewModel;
     private FavoriteProductViewerViewModel favoriteProductViewerViewModel;
 
@@ -47,11 +45,11 @@ public class ProductViewerActivity
     }
 
     private void initialiseBindings() {
-        binding = DataBindingUtil.setContentView(this, R.layout.product_viewer_activity);
+//        binding = DataBindingUtil.setContentView(this, R.layout.product_viewer_activity);
     }
 
     private void setupToolbar() {
-        setSupportActionBar(binding.productViewerActivityToolbar);
+//        setSupportActionBar(binding.productViewerActivityToolbar);
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
@@ -59,7 +57,7 @@ public class ProductViewerActivity
     private void setupViewModels() {
         productViewerViewModel = obtainProductViewerViewModel(this);
         productViewerViewModel.setNavigator(this);
-        binding.setViewModel(productViewerViewModel);
+//        binding.setViewModel(productViewerViewModel);
 
         favoriteProductViewerViewModel = obtainFavoriteProductViewerViewModel(this);
         favoriteProductViewerViewModel.setNavigator(this);

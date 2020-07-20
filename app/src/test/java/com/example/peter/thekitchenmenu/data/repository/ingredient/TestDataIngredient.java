@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.data.repository.ingredient;
 
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.commonmocks.StringMaker;
-import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants;
+import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.UnitOfMeasureConstants;
 import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientPersistenceModel;
 import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientTest;
 

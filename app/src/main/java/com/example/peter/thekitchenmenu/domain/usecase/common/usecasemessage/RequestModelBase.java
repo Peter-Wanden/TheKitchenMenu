@@ -3,13 +3,13 @@ package com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage;
 import com.example.peter.thekitchenmenu.domain.model.DomainModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 
-public abstract class RequestModelBase<
-        REQUEST_MODEL extends DomainModel.RequestModel>
+public abstract class RequestModelBase
+        <REQUEST_MODEL extends DomainModel.RequestModel>
         implements UseCaseBase.Request {
 
     protected REQUEST_MODEL model;
 
-    public REQUEST_MODEL getDomainModel() {
+    public REQUEST_MODEL getModel() {
         return model;
     }
 
@@ -20,7 +20,7 @@ public abstract class RequestModelBase<
 
         protected MESSAGE message;
 
-        public SELF setDomainModel(REQUEST_MODEL model) {
+        public SELF setModel(REQUEST_MODEL model) {
             message.model = model;
             return self();
         }

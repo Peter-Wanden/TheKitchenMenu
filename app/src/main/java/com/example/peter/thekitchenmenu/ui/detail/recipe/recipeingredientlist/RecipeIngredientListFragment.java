@@ -7,11 +7,9 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import androidx.annotation.Nullable;
-import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.databinding.RecipeIngredientListFragmentBinding;
 
 import java.util.ArrayList;
 
@@ -19,7 +17,7 @@ import javax.annotation.Nonnull;
 
 public class RecipeIngredientListFragment extends Fragment {
 
-    private RecipeIngredientListFragmentBinding binding;
+//    private RecipeIngredientListFragmentBinding binding;
     private RecipeIngredientListViewModel viewModel;
     private RecipeIngredientListAdapter adapter;
 
@@ -36,17 +34,18 @@ public class RecipeIngredientListFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        binding = DataBindingUtil.inflate(
-                inflater,
-                R.layout.recipe_ingredient_list_fragment,
-                container,
-                false);
-        binding.setLifecycleOwner(this);
+//        binding = DataBindingUtil.inflate(
+//                inflater,
+//                R.layout.recipe_ingredient_list_fragment,
+//                container,
+//                false);
+//        binding.setLifecycleOwner(this);
 
         setupViewModel();
         setBindingInstanceVariables();
 
-        return binding.getRoot();
+//        return binding.getRoot();
+        return null;
     }
 
     @Override
@@ -60,8 +59,8 @@ public class RecipeIngredientListFragment extends Fragment {
     }
 
     private void setBindingInstanceVariables() {
-        binding.setView(this);
-        binding.setViewModel(viewModel);
+//        binding.setView(this);
+//        binding.setViewModel(viewModel);
     }
 
     @Override
@@ -71,12 +70,12 @@ public class RecipeIngredientListFragment extends Fragment {
     }
 
     private void setupListAdapter() {
-        ListView listView = binding.recipeIngredientsList;
+//        ListView listView = binding.recipeIngredientsList;
 
         adapter = new RecipeIngredientListAdapter(
                 new ArrayList<>(0),
                 (RecipeIngredientListActivity) getActivity());
 
-        listView.setAdapter(adapter);
+//        listView.setAdapter(adapter);
     }
 }

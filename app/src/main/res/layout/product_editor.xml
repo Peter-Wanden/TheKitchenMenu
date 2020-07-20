@@ -1,71 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/product_editor_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    >
-    <data>
-        <import type="android.view.View" />
-
-        <variable
-            name="viewModel"
-            type="com.example.peter.thekitchenmenu.ui.detail.product.producteditor.ProductEditorViewModel">
-        </variable>
-    </data>
-
-    <RelativeLayout
-        android:id="@+id/product_editor_parent"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/product_editor_appbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
-        <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/product_editor_appbar"
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:elevation="@dimen/starting_elevation"
+            android:fitsSystemWindows="true" />
+    </com.google.android.material.appbar.AppBarLayout>
 
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:elevation="@dimen/starting_elevation"
-                android:fitsSystemWindows="true" />
-        </com.google.android.material.appbar.AppBarLayout>
+    <ScrollView
+        android:id="@+id/scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/product_editor_appbar">
 
-        <ScrollView
-            android:id="@+id/scroll_view"
+        <LinearLayout
+            android:id="@+id/product_editor_include_parent"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/product_editor_appbar">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-            <LinearLayout
-                android:id="@+id/product_editor_include_parent"
+            <FrameLayout
+                android:id="@+id/image_editor_content_frame"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_height="wrap_content"/>
 
-                <FrameLayout
-                    android:id="@+id/image_editor_content_frame"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                </FrameLayout>
+            <FrameLayout
+                android:id="@+id/product_identity_content_frame"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
-                <FrameLayout
-                    android:id="@+id/product_identity_content_frame"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                </FrameLayout>
+            <FrameLayout
+                android:id="@+id/product_measurement_content_frame"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
-                <FrameLayout
-                    android:id="@+id/product_measurement_content_frame"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                </FrameLayout>
-
-                <FrameLayout
-                    android:id="@+id/product_editor_information_content_frame"
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"/>
-            </LinearLayout>
-        </ScrollView>
-    </RelativeLayout>
-</layout>
+            <FrameLayout
+                android:id="@+id/product_editor_information_content_frame"
+                android:layout_width="match_parent"
+                android:layout_height="200dp" />
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

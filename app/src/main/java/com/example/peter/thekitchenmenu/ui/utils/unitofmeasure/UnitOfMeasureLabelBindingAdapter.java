@@ -5,14 +5,12 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;
-import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasure;
-
-import androidx.databinding.BindingAdapter;
+import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.MeasurementSubtype;
+import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.UnitOfMeasure;
 
 public class UnitOfMeasureLabelBindingAdapter {
 
-    @BindingAdapter(value = {"setLabelForSubtypeSelected"})
+//    @BindingAdapter(value = {"setLabelForSubtypeSelected"})
     public static void setLabelForSubtypeSelected(TextView textView, MeasurementSubtype subtype) {
         setUpViewLabels(textView, subtype);
     }

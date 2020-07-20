@@ -11,11 +11,9 @@ import android.view.ViewGroup;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.model.ImageModel;
-import com.example.peter.thekitchenmenu.databinding.ImageEditorBinding;
 import com.theartofdev.edmodo.cropper.CropImage;
 
 import androidx.annotation.Nullable;
-import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -28,7 +26,7 @@ public class ImageEditorFragment extends Fragment {
 
     private static final String TAG = "tkm-" + ImageEditorFragment.class.getSimpleName() + ":";
 
-    private ImageEditorBinding imageEditorBinding;
+//    private ImageEditorBinding imageEditorBinding;
     private ImageEditorViewModel viewModel;
 
     public static ImageEditorFragment newInstance() {
@@ -41,37 +39,39 @@ public class ImageEditorFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        imageEditorBinding = DataBindingUtil.inflate(
-                inflater,
-                R.layout.image_editor,
-                container,
-                false);
+//        imageEditorBinding = DataBindingUtil.inflate(
+//                inflater,
+//                R.layout.image_editor,
+//                container,
+//                false);
 
-        View rootView = imageEditorBinding.getRoot();
-        imageEditorBinding.setLifecycleOwner(this);
+//        View rootView = imageEditorBinding.getRoot();
+//        imageEditorBinding.setLifecycleOwner(this);
 
         setViewModel();
         setObservers();
         setBindingInstanceVariables();
         subscribeToEvents();
 
-        return rootView;
+//        return rootView;
+        return null;
     }
+
 
     private void setViewModel() {
         viewModel = new ViewModelProvider(requireActivity()).get(ImageEditorViewModel.class);
     }
 
     private void setObservers() {
-        final Observer<ImageModel> imageModelObserver = imageModel ->
-                imageEditorBinding.setImageModel(imageModel);
+//        final Observer<ImageModel> imageModelObserver = imageModel ->
+//                imageEditorBinding.setImageModel(imageModel);
 
-        viewModel.getExistingImageModel().observe(getViewLifecycleOwner(), imageModelObserver);
+//        viewModel.getExistingImageModel().observe(getViewLifecycleOwner(), imageModelObserver);
     }
 
     private void setBindingInstanceVariables() {
-        imageEditorBinding.setImageViewModel(viewModel);
-        imageEditorBinding.setImageModel(viewModel.getUpdatedImageModel());
+//        imageEditorBinding.setImageViewModel(viewModel);
+//        imageEditorBinding.setImageModel(viewModel.getUpdatedImageModel());
     }
 
     private void subscribeToEvents() {

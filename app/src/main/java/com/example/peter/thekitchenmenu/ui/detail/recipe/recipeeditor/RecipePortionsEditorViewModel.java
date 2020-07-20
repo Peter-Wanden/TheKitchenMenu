@@ -3,11 +3,6 @@ package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor;
 import android.content.res.Resources;
 
 import androidx.core.util.Pair;
-import androidx.databinding.Bindable;
-import androidx.databinding.ObservableBoolean;
-import androidx.databinding.ObservableField;
-
-import com.example.peter.thekitchenmenu.BR;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
@@ -39,11 +34,11 @@ public class RecipePortionsEditorViewModel extends ObservableViewModel {
     private Recipe recipeMacro;
     private RecipePortionsResponse response;
 
-    public final ObservableField<String> servingsErrorMessage = new ObservableField<>();
-    public final ObservableField<String> sittingsErrorMessage = new ObservableField<>();
-
-    private final ObservableBoolean isDataLoading = new ObservableBoolean();
-    private final ObservableBoolean dataLoadingError = new ObservableBoolean();
+//    public final ObservableField<String> servingsErrorMessage = new ObservableField<>();
+//    public final ObservableField<String> sittingsErrorMessage = new ObservableField<>();
+//
+//    private final ObservableBoolean isDataLoading = new ObservableBoolean();
+//    private final ObservableBoolean dataLoadingError = new ObservableBoolean();
     private boolean isUpdatingUi;
     private PortionsCallbackListener callback;
 
@@ -70,7 +65,7 @@ public class RecipePortionsEditorViewModel extends ObservableViewModel {
     private class PortionsCallbackListener implements UseCaseBase.Callback<RecipePortionsResponse> {
         @Override
         public void onUseCaseSuccess(RecipePortionsResponse response) {
-            isDataLoading.set(false);
+//            isDataLoading.set(false);
             if (isStateChanged(response)) {
                 System.out.println(TAG + "onSuccess:" + response);
                 RecipePortionsEditorViewModel.this.response = response;
@@ -80,7 +75,7 @@ public class RecipePortionsEditorViewModel extends ObservableViewModel {
 
         @Override
         public void onUseCaseError(RecipePortionsResponse response) {
-            isDataLoading.set(false);
+//            isDataLoading.set(false);
             if (isStateChanged(response)) {
                 System.out.println(TAG + "onError:" + response);
                 RecipePortionsEditorViewModel.this.response = response;
@@ -99,16 +94,16 @@ public class RecipePortionsEditorViewModel extends ObservableViewModel {
     }
 
     private void clearErrors() {
-        sittingsErrorMessage.set(null);
-        servingsErrorMessage.set(null);
-        dataLoadingError.set(false);
+//        sittingsErrorMessage.set(null);
+//        servingsErrorMessage.set(null);
+//        dataLoadingError.set(false);
     }
 
     private void onUseCaseError(RecipePortionsResponse response) {
         List<FailReasons> failReasons = response.getMetadata().getFailReasons();
 
         if (failReasons.contains(CommonFailReason.DATA_UNAVAILABLE)) {
-            dataLoadingError.set(true);
+//            dataLoadingError.set(true);
             return;
         }
         if (failReasons.contains(RecipePortions.FailReason.SERVINGS_TOO_LOW) ||
@@ -124,13 +119,13 @@ public class RecipePortionsEditorViewModel extends ObservableViewModel {
 
     private void updateObservables() {
         isUpdatingUi = true;
-        notifyPropertyChanged(BR.servingsInView);
-        notifyPropertyChanged(BR.sittingsInView);
-        notifyPropertyChanged(BR.portionsInView);
+//        notifyPropertyChanged(BR.servingsInView);
+//        notifyPropertyChanged(BR.sittingsInView);
+//        notifyPropertyChanged(BR.portionsInView);
         isUpdatingUi = false;
     }
 
-    @Bindable
+//    @Bindable
     public String getServingsInView() {
         return response == null ? "" : String.valueOf(response.getDomainModel().getServings());
     }
@@ -140,20 +135,20 @@ public class RecipePortionsEditorViewModel extends ObservableViewModel {
             if (!servingsInView.isEmpty()) {
                 int servingsParsed = parseIntegerFromString(servingsInView);
 
-                if (servingsParsed == MEASUREMENT_ERROR)
-                    servingsErrorMessage.set(numberFormatExceptionErrorMessage());
-                else {
-                    RecipePortionsRequest.DomainModel model = new RecipePortionsRequest.DomainModel.Builder().
-                            basedResponseModel(response.getDomainModel()).
-                            setServings(servingsParsed).
-                            build();
-                    RecipePortionsRequest request = new RecipePortionsRequest.Builder().
-                            setDataId(response.getDataId()).
-                            setDomainId(response.getDomainId()).
-                            setDomainModel(model).
-                            build();
-                    handler.executeAsync(recipeMacro, request, callback);
-                }
+//                if (servingsParsed == MEASUREMENT_ERROR) {
+//                    servingsErrorMessage.set(numberFormatExceptionErrorMessage());
+//                } else {
+//                    RecipePortionsRequest.DomainModel model = new RecipePortionsRequest.DomainModel.Builder().
+//                            basedResponseModel(response.getDomainModel()).
+//                            setServings(servingsParsed).
+//                            build();
+//                    RecipePortionsRequest request = new RecipePortionsRequest.Builder().
+//                            setDataId(response.getDataId()).
+//                            setDomainId(response.getDomainId()).
+//                            setDomainModel(model).
+//                            build();
+//                    handler.executeAsync(recipeMacro, request, callback);
+//                }
             }
         }
     }
@@ -168,7 +163,7 @@ public class RecipePortionsEditorViewModel extends ObservableViewModel {
         int maxServings = resources.getInteger(R.integer.recipe_max_servings);
         String errorMessage = resources.getString(R.string.input_error_recipe_servings,
                 minServings, maxServings);
-        servingsErrorMessage.set(errorMessage);
+//        servingsErrorMessage.set(errorMessage);
     }
 
     private void showSittingsErrorMessage() {
@@ -176,10 +171,10 @@ public class RecipePortionsEditorViewModel extends ObservableViewModel {
         int maxSittings = resources.getInteger(R.integer.recipe_max_sittings);
         String errorMessage = resources.getString(R.string.input_error_recipe_sittings,
                 minSittings, maxSittings);
-        sittingsErrorMessage.set(errorMessage);
+//        sittingsErrorMessage.set(errorMessage);
     }
 
-    @Bindable
+//    @Bindable
     public String getSittingsInView() {
         return String.valueOf(response.getDomainModel().getSittings());
     }
@@ -189,20 +184,20 @@ public class RecipePortionsEditorViewModel extends ObservableViewModel {
             if (!sittingsInView.isEmpty()) {
                 int sittingsParsed = parseIntegerFromString(sittingsInView);
 
-                if (sittingsParsed == MEASUREMENT_ERROR)
-                    sittingsErrorMessage.set(numberFormatExceptionErrorMessage());
-                else {
-                    RecipePortionsRequest.DomainModel model = new RecipePortionsRequest.DomainModel.Builder().
-                            basedResponseModel(response.getDomainModel()).
-                            setSittings(sittingsParsed).
-                            build();
-                    RecipePortionsRequest request = new RecipePortionsRequest.Builder().
-                            setDataId(response.getDataId()).
-                            setDomainId(response.getDomainId()).
-                            setDomainModel(model).
-                            build();
-                    handler.executeAsync(recipeMacro, request, callback);
-                }
+//                if (sittingsParsed == MEASUREMENT_ERROR)
+//                    sittingsErrorMessage.set(numberFormatExceptionErrorMessage());
+//                else {
+//                    RecipePortionsRequest.DomainModel model = new RecipePortionsRequest.DomainModel.Builder().
+//                            basedResponseModel(response.getDomainModel()).
+//                            setSittings(sittingsParsed).
+//                            build();
+//                    RecipePortionsRequest request = new RecipePortionsRequest.Builder().
+//                            setDataId(response.getDataId()).
+//                            setDomainId(response.getDomainId()).
+//                            setDomainModel(model).
+//                            build();
+//                    handler.executeAsync(recipeMacro, request, callback);
+//                }
             }
         }
     }
@@ -212,7 +207,7 @@ public class RecipePortionsEditorViewModel extends ObservableViewModel {
                 equals(sittingsInView);
     }
 
-    @Bindable
+//    @Bindable
     public String getPortionsInView() {
         return String.valueOf(response.getDomainModel().getPortions());
     }

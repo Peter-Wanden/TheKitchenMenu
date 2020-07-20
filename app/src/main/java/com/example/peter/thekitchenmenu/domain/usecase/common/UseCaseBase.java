@@ -44,7 +44,7 @@ public abstract class UseCaseBase {
     }
 
     // For running use cases on the current thread (handler not required).
-    // -- DO NOT USE ON THE UI THREAD IF USE CASE USES SYNCHRONOUS OR ASYNCHRONOUS METHODS --
+    // -- IF USE CASE USES SYNCHRONOUS OR ASYNCHRONOUS METHODS, DO NOT USE ON THE UI THREAD  --
     public <REQUEST extends Request, RESPONSE extends Response>
     void execute (REQUEST request, Callback<RESPONSE> callback) {
 

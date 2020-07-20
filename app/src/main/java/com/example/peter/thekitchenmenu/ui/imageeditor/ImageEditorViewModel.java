@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.provider.MediaStore;
 
 import androidx.core.content.FileProvider;
-import androidx.databinding.ObservableBoolean;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.peter.thekitchenmenu.data.model.ImageModel;
@@ -45,7 +44,7 @@ public class ImageEditorViewModel extends ObservableAndroidViewModel {
     private File mediumImageFile = null;
     private File largeImageFile = null;
 
-    private final ObservableBoolean canTakePictures = new ObservableBoolean(false);
+//    private final ObservableBoolean canTakePictures = new ObservableBoolean(false);
 
     private final SingleLiveEvent<Uri> getImageFromCameraEvent = new SingleLiveEvent<>();
     private final SingleLiveEvent<Void> getImageFromGalleryEvent = new SingleLiveEvent<>();
@@ -129,12 +128,12 @@ public class ImageEditorViewModel extends ObservableAndroidViewModel {
         boolean hasCameraApp = takePictureIntent.resolveActivity(
                 appContext.getPackageManager()) != null;
 
-        canTakePictures.set(hasCamera && hasCameraApp);
+//        canTakePictures.set(hasCamera && hasCameraApp);
     }
 
-    public ObservableBoolean getCanTakePictures() {
-        return canTakePictures;
-    }
+//    public ObservableBoolean getCanTakePictures() {
+//        return canTakePictures;
+//    }
 
     public void getImageFromCamera() {
         fullSizeImageFile = createImageFile(FULL_SIZE_IMAGE_FILE_PREFIX);

@@ -7,10 +7,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.databinding.ProductEditorIdentityBinding;
 
 import androidx.annotation.Nullable;
-import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -19,7 +17,7 @@ import javax.annotation.Nonnull;
 
 public class ProductIdentityEditorFragment extends Fragment {
 
-    private ProductEditorIdentityBinding binding;
+//    private ProductEditorIdentityBinding binding;
     private ProductIdentityViewModel viewModel;
 
     static ProductIdentityEditorFragment getInstance() {
@@ -32,20 +30,21 @@ public class ProductIdentityEditorFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        binding = DataBindingUtil.inflate(
-                inflater,
-                R.layout.product_editor_identity,
-                container,
-                false);
+//        binding = DataBindingUtil.inflate(
+//                inflater,
+//                R.layout.product_editor_identity,
+//                container,
+//                false);
 
-        View rootView = binding.getRoot();
-        binding.setLifecycleOwner(this);
+//        View rootView = binding.getRoot();
+//        binding.setLifecycleOwner(this);
 
         setViewModel();
         setBindingInstanceVariables();
         setupSpinners();
 
-        return rootView;
+//        return rootView;
+        return null;
     }
 
     private void setViewModel() {
@@ -53,7 +52,7 @@ public class ProductIdentityEditorFragment extends Fragment {
     }
 
     private void setBindingInstanceVariables() {
-        binding.setViewModel(viewModel);
+//        binding.setViewModel(viewModel);
     }
 
     private void setupSpinners() {
@@ -62,14 +61,14 @@ public class ProductIdentityEditorFragment extends Fragment {
     }
 
     private void setupCategorySpinner() {
-        binding.spinnerCategory.setAdapter(ArrayAdapter.createFromResource(
-                requireActivity(), R.array.product_category_options, R.layout.list_item_spinner));
+//        binding.spinnerCategory.setAdapter(ArrayAdapter.createFromResource(
+//                requireActivity(), R.array.product_category_options, R.layout.list_item_spinner));
     }
 
     private void setUpShelfLifeSpinner() {
-        binding.spinnerShelfLife.setAdapter(ArrayAdapter.createFromResource(
-                requireActivity(),
-                R.array.shelf_life_options,
-                R.layout.list_item_spinner));
+//        binding.spinnerShelfLife.setAdapter(ArrayAdapter.createFromResource(
+//                requireActivity(),
+//                R.array.shelf_life_options,
+//                R.layout.list_item_spinner));
     }
 }

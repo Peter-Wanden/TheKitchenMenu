@@ -7,9 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import androidx.annotation.Nullable;
-import androidx.databinding.DataBindingUtil;
 
-import com.example.peter.thekitchenmenu.databinding.RecipeIngredientListItemBinding;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredientlist.RecipeIngredientListItemModel;
 import com.example.peter.thekitchenmenu.ui.utils.unitofmeasure.MeasurementToSpannableConverter;
 
@@ -58,27 +56,28 @@ public class RecipeIngredientListAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         RecipeIngredientListItemModel recipeIngredient = getItem(i);
-        RecipeIngredientListItemBinding binding;
+//        RecipeIngredientListItemBinding binding;
 
-        if (view == null) {
-            LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
-            binding = RecipeIngredientListItemBinding.inflate(
-                    inflater,
-                    viewGroup,
-                    false);
-        } else {
-            binding = DataBindingUtil.getBinding(view);
-        }
+//        if (view == null) {
+//            LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
+//            binding = RecipeIngredientListItemBinding.inflate(
+//                    inflater,
+//                    viewGroup,
+//                    false);
+//        } else {
+//            binding = DataBindingUtil.getBinding(view);
+//        }
 
-        Resources resources = binding.getRoot().getContext().getResources();
+//        Resources resources = binding.getRoot().getContext().getResources();
 
-        final RecipeIngredientListItemViewModel viewModel =
-                new RecipeIngredientListItemViewModel(
-                        new MeasurementToSpannableConverter(resources));
+//        final RecipeIngredientListItemViewModel viewModel =
+//                new RecipeIngredientListItemViewModel(
+//                        new MeasurementToSpannableConverter(resources));
 
-        viewModel.setNavigator(navigator);
-        binding.setViewModel(viewModel);
-        viewModel.setListItemModel(recipeIngredient);
-        return binding.getRoot();
+//        viewModel.setNavigator(navigator);
+////        binding.setViewModel(viewModel);
+////        viewModel.setListItemModel(recipeIngredient);
+////        return binding.getRoot();
+        return null;
     }
 }

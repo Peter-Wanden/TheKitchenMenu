@@ -5,14 +5,12 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
-import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.databinding.FavoriteProductEditorActivityBinding;
 import com.example.peter.thekitchenmenu.ui.AppCompatActivityDialogActions;
 import com.example.peter.thekitchenmenu.ui.UnsavedChangesDialogFragment;
 import com.example.peter.thekitchenmenu.ui.ViewModelFactoryProduct;
@@ -35,7 +33,7 @@ public class FavoriteProductEditorActivity
     public static final int RESULT_ADD_EDIT_FAVORITE_PRODUCT_OK = RESULT_FIRST_USER + 1;
     public static final int RESULT_ADD_EDIT_FAVORITE_CANCELED = RESULT_FIRST_USER + 2;
 
-    private FavoriteProductEditorActivityBinding binding;
+//    private FavoriteProductEditorActivityBinding binding;
     private FavoriteProductEditorViewModel viewModel;
 
     @Override
@@ -50,12 +48,12 @@ public class FavoriteProductEditorActivity
     }
 
     private void initialiseBindings() {
-        binding = DataBindingUtil.setContentView(this,
-                R.layout.favorite_product_editor_activity);
+//        binding = DataBindingUtil.setContentView(this,
+//                R.layout.favorite_product_editor_activity);
     }
 
     private void setupToolbar() {
-        setSupportActionBar(binding.favoriteProductEditorActivityToolbar);
+//        setSupportActionBar(binding.favoriteProductEditorActivityToolbar);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);

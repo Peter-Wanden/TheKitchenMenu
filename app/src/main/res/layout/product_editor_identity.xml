@@ -1,142 +1,115 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
+
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/product_identity_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:animateLayoutChanges="true"
+    android:paddingTop="4dp"
+    android:paddingBottom="4dp">
 
-    <data>
-        <import type="android.view.View" />
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/white"
+        android:src="@drawable/rectangle_radius_4dp"
+        app:layout_constraintBottom_toBottomOf="@id/spinner_category"
+        app:layout_constraintEnd_toEndOf="@id/editable_description"
+        app:layout_constraintStart_toStartOf="@id/editable_description"
+        app:layout_constraintTop_toTopOf="@id/description_label" />
 
-        <variable
-            name="viewModel"
-            type="com.example.peter.thekitchenmenu.ui.detail.product.producteditor.ProductIdentityViewModel" />
-    </data>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/product_identity_container"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/description_label"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:animateLayoutChanges="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:paddingStart="8dp"
         android:paddingTop="4dp"
-        android:paddingBottom="4dp">
+        android:paddingEnd="8dp"
+        android:text="@string/label_description"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:background="@color/white"
-            android:src="@drawable/rectangle_radius_4dp"
-            app:layout_constraintStart_toStartOf="@id/editable_description"
-            app:layout_constraintEnd_toEndOf="@id/editable_description"
-            app:layout_constraintTop_toTopOf="@id/description_label"
-            app:layout_constraintBottom_toBottomOf="@id/spinner_category"
-            />
+    <EditText
+        android:id="@+id/editable_description"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:hint="@string/hint_description"
+        android:inputType="textCapWords"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/description_label" />
 
-        <TextView
-            android:id="@+id/description_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="4dp"
-            android:paddingTop="4dp"
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp"
-            android:text="@string/label_description"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            />
+    <TextView
+        android:id="@+id/made_by_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:text="@string/label_shopping_list_item"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editable_description" />
 
-        <EditText
-            android:id="@+id/editable_description"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp"
-            android:inputType="textCapWords"
-            android:hint="@string/hint_description"
-            android:text='@={viewModel.description}'
-            app:editTextErrorSetter="@{viewModel.descriptionErrorMessage}"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/description_label"
-            />
+    <EditText
+        android:id="@+id/editable_shopping_item_list_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:hint="@string/hint_shopping_list_item"
+        android:inputType="textCapSentences"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/made_by_label" />
 
-        <TextView
-            android:id="@+id/made_by_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp"
-            android:text="@string/label_shopping_list_item"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/editable_description"
-            />
+    <TextView
+        android:id="@+id/category_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="8dp"
+        android:paddingEnd="0dp"
+        android:text="@string/label_category"
+        app:layout_constraintBottom_toTopOf="@id/spinner_category"
+        app:layout_constraintStart_toStartOf="@id/spinner_category"
+        app:layout_constraintTop_toBottomOf="@id/editable_shopping_item_list_name" />
 
-        <EditText
-            android:id="@+id/editable_shopping_item_list_name"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp"
-            android:inputType="textCapSentences"
-            android:hint="@string/hint_shopping_list_item"
-            android:text='@={viewModel.shoppingListItemName}'
-            app:editTextErrorSetter="@{viewModel.shoppingListItemNameErrorMessage}"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/made_by_label"
-            />
+    <Spinner
+        android:id="@+id/spinner_category"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/standard_input_item_height"
+        android:spinnerMode="dropdown"
+        app:layout_constraintEnd_toStartOf="@id/spinner_shelf_life"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/category_label" />
 
-        <TextView
-            android:id="@+id/category_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingStart="8dp"
-            android:paddingEnd="0dp"
-            android:text="@string/label_category"
-            app:layout_constraintStart_toStartOf="@id/spinner_category"
-            app:layout_constraintTop_toBottomOf="@id/editable_shopping_item_list_name"
-            app:layout_constraintBottom_toTopOf="@id/spinner_category"
-            />
+    <TextView
+        android:id="@+id/shelf_life_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="8dp"
+        android:paddingEnd="4dp"
+        android:text="@string/label_shelf_life"
+        app:layout_constraintBottom_toTopOf="@id/spinner_shelf_life"
+        app:layout_constraintStart_toStartOf="@id/spinner_shelf_life"
+        app:layout_constraintTop_toBottomOf="@id/editable_shopping_item_list_name" />
 
-        <Spinner
-            android:id="@+id/spinner_category"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/standard_input_item_height"
-            android:spinnerMode="dropdown"
-            android:selectedItemPosition='@={viewModel.category}'
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/spinner_shelf_life"
-            app:layout_constraintTop_toBottomOf="@id/category_label"
-            />
-
-        <TextView
-            android:id="@+id/shelf_life_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingStart="8dp"
-            android:paddingEnd="4dp"
-            android:text="@string/label_shelf_life"
-            android:visibility='@{viewModel.category == 1 ? View.VISIBLE : View.GONE}'
-            app:layout_constraintTop_toBottomOf="@id/editable_shopping_item_list_name"
-            app:layout_constraintBottom_toTopOf="@id/spinner_shelf_life"
-            app:layout_constraintStart_toStartOf="@id/spinner_shelf_life"
-            />
-
-        <Spinner
-            android:id="@+id/spinner_shelf_life"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/standard_input_item_height"
-            android:spinnerMode="dropdown"
-            android:visibility='@{viewModel.category == 1 ? View.VISIBLE : View.GONE}'
-            android:selectedItemPosition='@={viewModel.shelfLife}'
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/spinner_category"
-            app:layout_constraintTop_toBottomOf="@id/shelf_life_label"
-            />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</layout>
+    <Spinner
+        android:id="@+id/spinner_shelf_life"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/standard_input_item_height"
+        android:spinnerMode="dropdown"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/spinner_category"
+        app:layout_constraintTop_toBottomOf="@id/shelf_life_label" />
+</androidx.constraintlayout.widget.ConstraintLayout>

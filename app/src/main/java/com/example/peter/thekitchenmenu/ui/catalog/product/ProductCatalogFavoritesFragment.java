@@ -7,10 +7,8 @@ import android.view.ViewGroup;
 
 import com.example.peter.thekitchenmenu.R;
 
-import com.example.peter.thekitchenmenu.databinding.ProductCatalogFavoritesFragmentBinding;
 
 import androidx.annotation.Nullable;
-import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -49,14 +47,14 @@ public class ProductCatalogFavoritesFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        ProductCatalogFavoritesFragmentBinding binding = DataBindingUtil.inflate(
-                inflater,
-                R.layout.product_catalog_favorites_fragment,
-                container,
-                false);
+//        ProductCatalogFavoritesFragmentBinding binding = DataBindingUtil.inflate(
+//                inflater,
+//                R.layout.product_catalog_favorites_fragment,
+//                container,
+//                false);
 
         viewModel = ProductCatalogActivity.obtainViewModel(requireActivity());
-        binding.setViewModel(viewModel);
+//        binding.setViewModel(viewModel);
 
         if (getResources().getBoolean(R.bool.is_tablet) ||
                 getResources().getBoolean(R.bool.is_landscape)) {
@@ -64,20 +62,21 @@ public class ProductCatalogFavoritesFragment extends Fragment {
             GridLayoutManager gridManager = new GridLayoutManager(requireActivity().
                     getApplicationContext(), 2);
 
-            binding.productCatalogFavoritesFragmentRecyclerView.setLayoutManager(gridManager);
+//            binding.productCatalogFavoritesFragmentRecyclerView.setLayoutManager(gridManager);
 
         } else {
             LinearLayoutManager linearManager = new
                     LinearLayoutManager(requireActivity().getApplicationContext(),
                     RecyclerView.VERTICAL, false);
 
-            binding.productCatalogFavoritesFragmentRecyclerView.setLayoutManager(linearManager);
+//            binding.productCatalogFavoritesFragmentRecyclerView.setLayoutManager(linearManager);
         }
 
-        binding.productCatalogFavoritesFragmentRecyclerView.setHasFixedSize(true);
+//        binding.productCatalogFavoritesFragmentRecyclerView.setHasFixedSize(true);
         adapter = new ProductCatalogFavoritesRecyclerAdapter(viewModel);
-        binding.productCatalogFavoritesFragmentRecyclerView.setAdapter(adapter);
+//        binding.productCatalogFavoritesFragmentRecyclerView.setAdapter(adapter);
 
-        return binding.getRoot();
+//        return binding.getRoot();
+        return null;
     }
 }

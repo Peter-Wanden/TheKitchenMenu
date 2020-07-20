@@ -1,8 +1,6 @@
 package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor;
 
 import androidx.core.util.Pair;
-import androidx.databinding.Bindable;
-import androidx.databinding.ObservableBoolean;
 
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseHandler;
@@ -32,7 +30,7 @@ public class RecipeCourseEditorViewModel extends ObservableViewModel {
     private List<Course> courseList = new ArrayList<>();
 
     private boolean isUpdatingUi;
-    private final ObservableBoolean isDataLoading = new ObservableBoolean(true);
+//    private final ObservableBoolean isDataLoading = new ObservableBoolean(true);
 
     public RecipeCourseEditorViewModel(@Nonnull UseCaseHandler handler,
                                        @Nonnull Recipe recipeMacro) {
@@ -53,7 +51,7 @@ public class RecipeCourseEditorViewModel extends ObservableViewModel {
     private class CourseCallbackListener implements UseCaseBase.Callback<RecipeCourseResponse> {
         @Override
         public void onUseCaseSuccess(RecipeCourseResponse response) {
-            isDataLoading.set(false);
+//            isDataLoading.set(false);
             if (isStateChanged(response)) {
                 System.out.println(TAG + "onSuccess:" + response);
                 RecipeCourseEditorViewModel.this.response = response;
@@ -63,7 +61,7 @@ public class RecipeCourseEditorViewModel extends ObservableViewModel {
 
         @Override
         public void onUseCaseError(RecipeCourseResponse response) {
-            isDataLoading.set(false);
+//            isDataLoading.set(false);
             if (isStateChanged(response)) {
                 System.out.println(TAG + "onError:" + response);
                 RecipeCourseEditorViewModel.this.response = response;
@@ -81,7 +79,7 @@ public class RecipeCourseEditorViewModel extends ObservableViewModel {
         courseList.addAll(response.getDomainModel().getCourses());
 
         isUpdatingUi = true;
-        notifyChange();
+//        notifyChange();
         isUpdatingUi = false;
     }
 
@@ -90,7 +88,7 @@ public class RecipeCourseEditorViewModel extends ObservableViewModel {
         // requires at least one course'.
     }
 
-    @Bindable
+//    @Bindable
     public boolean isCourseZero() {
         return courseList.contains(Course.COURSE_ZERO);
     }
@@ -101,7 +99,7 @@ public class RecipeCourseEditorViewModel extends ObservableViewModel {
         }
     }
 
-    @Bindable
+//    @Bindable
     public boolean isCourseOne() {
         return courseList.contains(Course.COURSE_ONE);
     }
@@ -112,7 +110,7 @@ public class RecipeCourseEditorViewModel extends ObservableViewModel {
         }
     }
 
-    @Bindable
+//    @Bindable
     public boolean isCourseTwo() {
         return courseList.contains(Course.COURSE_TWO);
     }
@@ -123,7 +121,7 @@ public class RecipeCourseEditorViewModel extends ObservableViewModel {
         }
     }
 
-    @Bindable
+//    @Bindable
     public boolean isCourseThree() {
         return courseList.contains(Course.COURSE_THREE);
     }
@@ -134,7 +132,7 @@ public class RecipeCourseEditorViewModel extends ObservableViewModel {
         }
     }
 
-    @Bindable
+//    @Bindable
     public boolean isCourseFour() {
         return courseList.contains(Course.COURSE_FOUR);
     }
@@ -145,7 +143,7 @@ public class RecipeCourseEditorViewModel extends ObservableViewModel {
         }
     }
 
-    @Bindable
+//    @Bindable
     public boolean isCourseFive() {
         return courseList.contains(Course.COURSE_FIVE);
     }
@@ -156,7 +154,7 @@ public class RecipeCourseEditorViewModel extends ObservableViewModel {
         }
     }
 
-    @Bindable
+//    @Bindable
     public boolean isCourseSix() {
         return courseList.contains(Course.COURSE_SIX);
     }
@@ -167,7 +165,7 @@ public class RecipeCourseEditorViewModel extends ObservableViewModel {
         }
     }
 
-    @Bindable
+//    @Bindable
     public boolean isCourseSeven() {
         return courseList.contains(Course.COURSE_SEVEN);
     }
@@ -179,7 +177,7 @@ public class RecipeCourseEditorViewModel extends ObservableViewModel {
     }
 
     private void sendRequest(Course course, boolean isAddCourse) {
-        isDataLoading.set(true);
+//        isDataLoading.set(true);
 
         if (isAddCourse) {
             courseList.add(course);

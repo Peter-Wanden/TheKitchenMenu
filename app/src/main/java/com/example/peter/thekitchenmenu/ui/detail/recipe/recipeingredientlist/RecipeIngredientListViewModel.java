@@ -1,8 +1,5 @@
 package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredientlist;
 
-import androidx.databinding.ObservableArrayList;
-import androidx.databinding.ObservableBoolean;
-import androidx.databinding.ObservableList;
 import androidx.lifecycle.ViewModel;
 
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
@@ -22,9 +19,9 @@ public class RecipeIngredientListViewModel extends ViewModel {
     private UseCaseHandler handler;
     private RecipeIngredientList useCase;
 
-    public final ObservableList<RecipeIngredientListItemModel> recipeIngredientsModels =
-            new ObservableArrayList<>();
-    public final ObservableBoolean hasIngredients = new ObservableBoolean(false);
+//    public final ObservableList<RecipeIngredientListItemModel> recipeIngredientsModels =
+//            new ObservableArrayList<>();
+//    public final ObservableBoolean hasIngredients = new ObservableBoolean(false);
 
     private String recipeId = "";
 
@@ -64,18 +61,18 @@ public class RecipeIngredientListViewModel extends ViewModel {
                 new UseCaseBase.Callback<RecipeIngredientListResponse>() {
                     @Override
                     public void onUseCaseSuccess(RecipeIngredientListResponse response) {
-                        if (response.getListItemModels().size() > 0) {
-                            hasIngredients.set(true);
-                            recipeIngredientsModels.clear();
-                            recipeIngredientsModels.addAll(response.getListItemModels());
-                        } else {
-                            hasIngredients.set(false);
-                        }
+//                        if (response.getListItemModels().size() > 0) {
+//                            hasIngredients.set(true);
+//                            recipeIngredientsModels.clear();
+//                            recipeIngredientsModels.addAll(response.getListItemModels());
+//                        } else {
+//                            hasIngredients.set(false);
+//                        }
                     }
 
                     @Override
                     public void onUseCaseError(RecipeIngredientListResponse response) {
-                        hasIngredients.set(false);
+//                        hasIngredients.set(false);
                     }
                 });
     }

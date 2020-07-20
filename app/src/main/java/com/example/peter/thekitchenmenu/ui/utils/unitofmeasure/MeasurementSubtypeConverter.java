@@ -1,12 +1,10 @@
 package com.example.peter.thekitchenmenu.ui.utils.unitofmeasure;
 
-import androidx.databinding.InverseMethod;
-
-import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;
+import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.MeasurementSubtype;
 
 public class MeasurementSubtypeConverter {
 
-    @InverseMethod("toSubtype")
+//    @InverseMethod("toSubtype")
     public static int toInt(MeasurementSubtype subtype) {
         return subtype.asInt();
     }

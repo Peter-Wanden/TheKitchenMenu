@@ -14,7 +14,6 @@ import com.example.peter.thekitchenmenu.ui.detail.product.producteditor.ProductE
 import com.example.peter.thekitchenmenu.ui.detail.product.productviewer.ProductViewerActivity;
 
 import androidx.annotation.Nullable;
-import androidx.databinding.ObservableBoolean;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
@@ -27,9 +26,9 @@ public class ProductCatalogViewModel extends AndroidViewModel
     private ProductNavigator productNavigator;
     private ProductItemNavigator itemNavigator;
 
-    public final ObservableBoolean productDataLoading = new ObservableBoolean(false);
-    public final ObservableBoolean favoriteProductDataLoading = new ObservableBoolean(false);
-    public final ObservableBoolean isDataLoadingError = new ObservableBoolean(false);
+//    public final ObservableBoolean productDataLoading = new ObservableBoolean(false);
+//    public final ObservableBoolean favoriteProductDataLoading = new ObservableBoolean(false);
+//    public final ObservableBoolean isDataLoadingError = new ObservableBoolean(false);
 
     private final MutableLiveData<List<ProductModel>> productModelList = new MutableLiveData<>();
     private final MutableLiveData<List<ProductModel>> favoriteProductModelList = new MutableLiveData<>();
@@ -53,7 +52,7 @@ public class ProductCatalogViewModel extends AndroidViewModel
 
     void start() {
         loadProductModelList();
-        loadFavoriteProductModelList();
+//        loadFavoriteProductModelList();
     }
 
     private void loadProductModelList() {
@@ -70,7 +69,7 @@ public class ProductCatalogViewModel extends AndroidViewModel
      */
     private void loadProductModelList(boolean forceUpdate, final boolean showLoadingUI) {
         if (showLoadingUI)
-            productDataLoading.set(true);
+//            productDataLoading.set(true);
 
 //        if (forceUpdate)
 //            productEntityDataSource.refreshData();
@@ -78,17 +77,17 @@ public class ProductCatalogViewModel extends AndroidViewModel
         productInteractor.getProductModelList(new ProductCatalogInteractor.GetAllCallback() {
             @Override
             public void onAllLoaded(List<ProductModel> modelList) {
-                isDataLoadingError.set(false);
+//                isDataLoadingError.set(false);
 
                 if (showLoadingUI)
-                    productDataLoading.set(false);
+//                    productDataLoading.set(false);
 
                 productModelList.postValue(modelList);
             }
 
             @Override
             public void onDataNotAvailable() {
-                isDataLoadingError.set(true);
+//                isDataLoadingError.set(true);
             }
         });
     }
@@ -107,7 +106,7 @@ public class ProductCatalogViewModel extends AndroidViewModel
 
     private void loadFavoriteProductModelList(boolean forceUpdate, boolean showLoadingUi) {
         if (showLoadingUi)
-            favoriteProductDataLoading.set(true);
+//            favoriteProductDataLoading.set(true);
 
 //        if (forceUpdate)
 //            favoriteProductEntityDataSource.refreshData();
@@ -115,23 +114,23 @@ public class ProductCatalogViewModel extends AndroidViewModel
         productInteractor.getFavoriteProductModelList(new ProductCatalogInteractor.GetAllCallback() {
             @Override
             public void onAllLoaded(List<ProductModel> modelList) {
-                isDataLoadingError.set(false);
+//                isDataLoadingError.set(false);
 
                 if (showLoadingUi)
-                    favoriteProductDataLoading.set(false);
+//                    favoriteProductDataLoading.set(false);
 
                 favoriteProductModelList.postValue(modelList);
             }
 
             @Override
             public void onDataNotAvailable() {
-                isDataLoadingError.set(true);
+//                isDataLoadingError.set(true);
 
-                if (showLoadingUi)
-                    favoriteProductDataLoading.set(false);
+                if (showLoadingUi) {}
+//                    favoriteProductDataLoading.set(false);
 
-                List<ProductModel> emptyProductModelList = new ArrayList<>();
-                favoriteProductModelList.postValue(emptyProductModelList);
+//                List<ProductModel> emptyProductModelList = new ArrayList<>();
+//                favoriteProductModelList.postValue(emptyProductModelList);
             }
         });
     }

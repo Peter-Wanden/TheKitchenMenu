@@ -3,11 +3,7 @@ package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor;
 import android.content.res.Resources;
 
 import androidx.core.util.Pair;
-import androidx.databinding.Bindable;
-import androidx.databinding.ObservableBoolean;
-import androidx.databinding.ObservableField;
 
-import com.example.peter.thekitchenmenu.BR;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
@@ -39,10 +35,10 @@ public class RecipeIdentityEditorViewModel
     @Nonnull
     private Recipe recipe;
 
-    public final ObservableField<String> titleErrorMessage = new ObservableField<>();
-    public final ObservableField<String> descriptionErrorMessage = new ObservableField<>();
-    public final ObservableBoolean isDataLoadingError = new ObservableBoolean();
-    private final ObservableBoolean isDataLoading = new ObservableBoolean();
+//    public final ObservableField<String> titleErrorMessage = new ObservableField<>();
+//    public final ObservableField<String> descriptionErrorMessage = new ObservableField<>();
+//    public final ObservableBoolean isDataLoadingError = new ObservableBoolean();
+//    private final ObservableBoolean isDataLoading = new ObservableBoolean();
 
     private RecipeIdentityResponse response;
 
@@ -70,7 +66,7 @@ public class RecipeIdentityEditorViewModel
     private class IdentityCallbackListener implements UseCaseBase.Callback<RecipeIdentityResponse> {
         @Override
         public void onUseCaseSuccess(RecipeIdentityResponse response) {
-            isDataLoading.set(false);
+//            isDataLoading.set(false);
             if (isStateChanged(response)) {
                 System.out.println(TAG + "onSuccess:" + response);
                 RecipeIdentityEditorViewModel.this.response = response;
@@ -80,7 +76,7 @@ public class RecipeIdentityEditorViewModel
 
         @Override
         public void onUseCaseError(RecipeIdentityResponse response) {
-            isDataLoading.set(false);
+//            isDataLoading.set(false);
             if (isStateChanged(response)) {
                 RecipeIdentityEditorViewModel.this.response = response;
                 processUseCaseErrorResponse();
@@ -88,7 +84,7 @@ public class RecipeIdentityEditorViewModel
         }
     }
 
-    @Bindable
+//    @Bindable
     public String getTitle() {
         return response == null ? "" : response.getDomainModel().getTitle();
     }
@@ -112,7 +108,7 @@ public class RecipeIdentityEditorViewModel
         return !isUpdatingUi && !response.getDomainModel().getTitle().equals(title.trim());
     }
 
-    @Bindable
+//    @Bindable
     public String getDescription() {
         return response == null ? "" : response.getDomainModel().getDescription();
     }
@@ -149,14 +145,14 @@ public class RecipeIdentityEditorViewModel
     }
 
     private void clearErrors() {
-        titleErrorMessage.set(null);
-        descriptionErrorMessage.set(null);
+//        titleErrorMessage.set(null);
+//        descriptionErrorMessage.set(null);
     }
 
     private void updateObservables() {
         isUpdatingUi = true;
-        notifyPropertyChanged(BR.title);
-        notifyPropertyChanged(BR.description);
+//        notifyPropertyChanged(BR.title);
+//        notifyPropertyChanged(BR.description);
         isUpdatingUi = false;
     }
 
@@ -165,33 +161,33 @@ public class RecipeIdentityEditorViewModel
                 response.getMetadata().getFailReasons());
 
         List<FailReasons> failReasons = response.getMetadata().getFailReasons();
-        if (failReasons.contains(CommonFailReason.DATA_UNAVAILABLE)) {
-            isDataLoadingError.set(true);
-        }
-        if (failReasons.contains(RecipeIdentity.FailReason.TITLE_TOO_SHORT)) {
-            System.out.println(TAG + "Setting title too short error.");
-            titleErrorMessage.set(
-                    resources.getString(R.string.input_error_text_too_short,
-                            String.valueOf(resources.getInteger(
-                                    R.integer.input_validation_short_text_min_length)),
-                            String.valueOf(resources.getInteger(
-                                    R.integer.input_validation_short_text_max_length))));
-        }
-        if (failReasons.contains(RecipeIdentity.FailReason.TITLE_TOO_LONG)) {
-            titleErrorMessage.set(
-                    resources.getString(R.string.input_error_text_too_long,
-                            String.valueOf(resources.getInteger(
-                                    R.integer.input_validation_short_text_min_length)),
-                            String.valueOf(resources.getInteger(
-                                    R.integer.input_validation_short_text_max_length))));
-        }
-        if (failReasons.contains(RecipeIdentity.FailReason.DESCRIPTION_TOO_LONG)) {
-            descriptionErrorMessage.set(
-                    resources.getString(R.string.input_error_text_too_long,
-                            String.valueOf(resources.getInteger(
-                                    R.integer.input_validation_long_text_min_length)),
-                            String.valueOf(resources.getInteger(
-                                    R.integer.input_validation_long_text_max_length))));
-        }
+//        if (failReasons.contains(CommonFailReason.DATA_UNAVAILABLE)) {
+//            isDataLoadingError.set(true);
+//        }
+//        if (failReasons.contains(RecipeIdentity.FailReason.TITLE_TOO_SHORT)) {
+//            System.out.println(TAG + "Setting title too short error.");
+//            titleErrorMessage.set(
+//                    resources.getString(R.string.input_error_text_too_short,
+//                            String.valueOf(resources.getInteger(
+//                                    R.integer.input_validation_short_text_min_length)),
+//                            String.valueOf(resources.getInteger(
+//                                    R.integer.input_validation_short_text_max_length))));
+//        }
+//        if (failReasons.contains(RecipeIdentity.FailReason.TITLE_TOO_LONG)) {
+//            titleErrorMessage.set(
+//                    resources.getString(R.string.input_error_text_too_long,
+//                            String.valueOf(resources.getInteger(
+//                                    R.integer.input_validation_short_text_min_length)),
+//                            String.valueOf(resources.getInteger(
+//                                    R.integer.input_validation_short_text_max_length))));
+//        }
+//        if (failReasons.contains(RecipeIdentity.FailReason.DESCRIPTION_TOO_LONG)) {
+//            descriptionErrorMessage.set(
+//                    resources.getString(R.string.input_error_text_too_long,
+//                            String.valueOf(resources.getInteger(
+//                                    R.integer.input_validation_long_text_min_length)),
+//                            String.valueOf(resources.getInteger(
+//                                    R.integer.input_validation_long_text_max_length))));
+//        }
     }
 }

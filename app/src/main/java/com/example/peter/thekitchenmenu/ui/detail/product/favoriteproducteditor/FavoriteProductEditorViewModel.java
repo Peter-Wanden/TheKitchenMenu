@@ -11,9 +11,6 @@ import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
 import com.example.peter.thekitchenmenu.ui.utils.TextValidator;
 import com.google.android.gms.common.util.Strings;
 
-import androidx.databinding.Observable;
-import androidx.databinding.ObservableBoolean;
-import androidx.databinding.ObservableField;
 import androidx.lifecycle.AndroidViewModel;
 
 import java.math.BigDecimal;
@@ -35,15 +32,15 @@ public class FavoriteProductEditorViewModel
     private String productId;
     private FavoriteProductEntity favoriteProductEntity;
 
-    public final ObservableField<String> retailer = new ObservableField<>();
-    public final ObservableField<String> locationRoom = new ObservableField<>();
-    public final ObservableField<String> locationInRoom = new ObservableField<>();
-    public final ObservableField<String> price = new ObservableField<>();
-
-    public final ObservableField<String> retailerErrorMessage = new ObservableField<>();
-    public final ObservableField<String> locationRoomErrorMessage = new ObservableField<>();
-    public final ObservableField<String> locationInRoomErrorMessage = new ObservableField<>();
-    public final ObservableField<String> priceErrorMessage = new ObservableField<>();
+//    public final ObservableField<String> retailer = new ObservableField<>();
+//    public final ObservableField<String> locationRoom = new ObservableField<>();
+//    public final ObservableField<String> locationInRoom = new ObservableField<>();
+//    public final ObservableField<String> price = new ObservableField<>();
+//
+//    public final ObservableField<String> retailerErrorMessage = new ObservableField<>();
+//    public final ObservableField<String> locationRoomErrorMessage = new ObservableField<>();
+//    public final ObservableField<String> locationInRoomErrorMessage = new ObservableField<>();
+//    public final ObservableField<String> priceErrorMessage = new ObservableField<>();
     private long createDate;
 
     private final SingleLiveEvent<String> setActivityTitleEvent = new SingleLiveEvent<>();
@@ -57,7 +54,7 @@ public class FavoriteProductEditorViewModel
             priceValidated;
 
     private DataSourceFavoriteProducts favoriteProductEntityDataSource;
-    public final ObservableBoolean dataIsLoading = new ObservableBoolean();
+//    public final ObservableBoolean dataIsLoading = new ObservableBoolean();
     private boolean isExistingFavoriteProductEntity;
 
     public FavoriteProductEditorViewModel(
@@ -70,33 +67,33 @@ public class FavoriteProductEditorViewModel
         resources = application.getResources();
         this.validationHandler = validationHandler;
 
-        retailer.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
-            @Override
-            public void onPropertyChanged(Observable sender, int propertyId) {
-                retailerChanged();
-            }
-        });
+//        retailer.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+//            @Override
+//            public void onPropertyChanged(Observable sender, int propertyId) {
+//                retailerChanged();
+//            }
+//        });
 
-        locationRoom.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
-            @Override
-            public void onPropertyChanged(Observable sender, int propertyId) {
-                locationRoomChanged();
-            }
-        });
+//        locationRoom.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+//            @Override
+//            public void onPropertyChanged(Observable sender, int propertyId) {
+//                locationRoomChanged();
+//            }
+//        });
 
-        locationInRoom.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
-            @Override
-            public void onPropertyChanged(Observable sender, int propertyId) {
-                locationInRoomChanged();
-            }
-        });
+//        locationInRoom.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+//            @Override
+//            public void onPropertyChanged(Observable sender, int propertyId) {
+//                locationInRoomChanged();
+//            }
+//        });
 
-        price.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
-            @Override
-            public void onPropertyChanged(Observable sender, int propertyId) {
-                priceChanged();
-            }
-        });
+//        price.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+//            @Override
+//            public void onPropertyChanged(Observable sender, int propertyId) {
+//                priceChanged();
+//            }
+//        });
     }
 
     void setNavigator(AddEditFavoriteProductNavigator navigator) {
@@ -109,13 +106,13 @@ public class FavoriteProductEditorViewModel
 
     void start(String productId) {
         this.productId = productId;
-        dataIsLoading.set(true);
+//        dataIsLoading.set(true);
         favoriteProductEntityDataSource.getByProductId(productId, this);
     }
 
     @Override
     public void onEntityLoaded(FavoriteProductEntity entity) {
-        dataIsLoading.set(false);
+//        dataIsLoading.set(false);
         this.favoriteProductEntity = entity;
         setUpForExistingFavoriteProductEntity();
     }
@@ -128,15 +125,15 @@ public class FavoriteProductEditorViewModel
 
     private void setEntityValuesToObservables(FavoriteProductEntity favoriteProductEntity) {
         createDate = favoriteProductEntity.getCreateDate();
-        retailer.set(favoriteProductEntity.getRetailer());
-        locationRoom.set(favoriteProductEntity.getLocationRoom());
-        locationInRoom.set(favoriteProductEntity.getLocationInRoom());
-        price.set(favoriteProductEntity.getPrice());
+//        retailer.set(favoriteProductEntity.getRetailer());
+//        locationRoom.set(favoriteProductEntity.getLocationRoom());
+//        locationInRoom.set(favoriteProductEntity.getLocationInRoom());
+//        price.set(favoriteProductEntity.getPrice());
     }
 
     @Override
     public void onDataUnavailable() {
-        dataIsLoading.set(false);
+//        dataIsLoading.set(false);
         setUpForNewFavoriteProductEntity();
     }
 
@@ -159,44 +156,44 @@ public class FavoriteProductEditorViewModel
     }
 
     private void retailerChanged() {
-        retailerErrorMessage.set(null);
+//        retailerErrorMessage.set(null);
 
-        TextValidator.Response response = validateText(retailer.get());
+//        TextValidator.Response response = validateText(retailer.get());
 
-        if (response.getResult() == TextValidator.Result.VALID) {
-            retailerValid = true;
-        } else {
-            retailerValid = false;
-            setError(retailerErrorMessage, response);
-        }
+//        if (response.getResult() == TextValidator.Result.VALID) {
+//            retailerValid = true;
+//        } else {
+//            retailerValid = false;
+//            setError(retailerErrorMessage, response);
+//        }
         checkAllFieldsValidated();
     }
 
     private void locationRoomChanged() {
-        locationRoomErrorMessage.set(null);
+//        locationRoomErrorMessage.set(null);
 
-        TextValidator.Response response = validateText(locationRoom.get());
+//        TextValidator.Response response = validateText(locationRoom.get());
 
-        if (response.getResult() == TextValidator.Result.VALID) {
-            locationRoomValid = true;
-        } else {
-            locationRoomValid = false;
-            setError(locationRoomErrorMessage, response);
-        }
+//        if (response.getResult() == TextValidator.Result.VALID) {
+//            locationRoomValid = true;
+//        } else {
+//            locationRoomValid = false;
+//            setError(locationRoomErrorMessage, response);
+//        }
         checkAllFieldsValidated();
     }
 
     private void locationInRoomChanged() {
-        locationInRoomErrorMessage.set(null);
+//        locationInRoomErrorMessage.set(null);
 
-        TextValidator.Response response = validateText(locationInRoom.get());
+//        TextValidator.Response response = validateText(locationInRoom.get());
 
-        if (response.getResult() == TextValidator.Result.VALID) {
-            locationInRoomValidated = true;
-        } else {
-            locationInRoomValidated = false;
-            setError(locationInRoomErrorMessage, response);
-        }
+//        if (response.getResult() == TextValidator.Result.VALID) {
+//            locationInRoomValidated = true;
+//        } else {
+//            locationInRoomValidated = false;
+//            setError(locationInRoomErrorMessage, response);
+//        }
         checkAllFieldsValidated();
     }
 
@@ -208,56 +205,56 @@ public class FavoriteProductEditorViewModel
         return validationHandler.validateText(request);
     }
 
-    private void setError(ObservableField<String> errorObservable,
-                          TextValidator.Response response) {
-        if (response.getResult() == TextValidator.Result.TOO_SHORT) {
-            errorObservable.set(resources.getString(
-                    R.string.input_error_text_too_short,
-                    response.getMinLength(),
-                    response.getMaxLength()));
+//    private void setError(ObservableField<String> errorObservable,
+//                          TextValidator.Response response) {
+//        if (response.getResult() == TextValidator.Result.TOO_SHORT) {
+//            errorObservable.set(resources.getString(
+//                    R.string.input_error_text_too_short,
+//                    response.getMinLength(),
+//                    response.getMaxLength()));
+//
+//        } else if (response.getResult() == TextValidator.Result.TOO_LONG) {
+//            errorObservable.set(resources.getString(
+//                    R.string.input_error_text_too_long,
+//                    response.getMinLength(),
+//                    response.getMaxLength()
+//            ));
+//        }
+//    }
 
-        } else if (response.getResult() == TextValidator.Result.TOO_LONG) {
-            errorObservable.set(resources.getString(
-                    R.string.input_error_text_too_long,
-                    response.getMinLength(),
-                    response.getMaxLength()
-            ));
-        }
-    }
-
-    private void priceChanged() {
-        priceErrorMessage.set(null);
-        if (Strings.isEmptyOrWhitespace(price.get()))
-            return;
-
-        BigDecimal minAmount = new BigDecimal(resources.getString(R.string.min_currency_value));
-        BigDecimal maxAmount = new BigDecimal(resources.getString(R.string.max_price_for_product));
-        BigDecimal givenAmount = removeCurrencySymbolFromPrice();
-
-        if (givenAmount.compareTo(minAmount) >= 0 && givenAmount.compareTo(maxAmount) < 0)
-            priceValidated = true;
-        else {
-            priceValidated = false;
-            priceErrorMessage.set(resources.getString(R.string.input_error_product_pack_price));
-        }
-        checkAllFieldsValidated();
-    }
+//    private void priceChanged() {
+//        priceErrorMessage.set(null);
+//        if (Strings.isEmptyOrWhitespace(price.get()))
+//            return;
+//
+//        BigDecimal minAmount = new BigDecimal(resources.getString(R.string.min_currency_value));
+//        BigDecimal maxAmount = new BigDecimal(resources.getString(R.string.max_price_for_product));
+//        BigDecimal givenAmount = removeCurrencySymbolFromPrice();
+//
+//        if (givenAmount.compareTo(minAmount) >= 0 && givenAmount.compareTo(maxAmount) < 0)
+//            priceValidated = true;
+//        else {
+//            priceValidated = false;
+//            priceErrorMessage.set(resources.getString(R.string.input_error_product_pack_price));
+//        }
+//        checkAllFieldsValidated();
+//    }
 
     private BigDecimal removeCurrencySymbolFromPrice() {
 
         String replaceable = String.format(
                 "[%s,.\\s]", NumberFormat.getCurrencyInstance().getCurrency().getSymbol());
-        String cleanString = price.get().replaceAll(replaceable, "");
+//        String cleanString = price.get().replaceAll(replaceable, "");
 
-        BigDecimal amount;
+        BigDecimal amount = new BigDecimal(0);
 
-        try {
-            amount = new BigDecimal(cleanString).setScale(
-                    2, BigDecimal.ROUND_FLOOR).divide(
-                    new BigDecimal(100), BigDecimal.ROUND_FLOOR);
-        } catch (NumberFormatException e) {
-            amount = new BigDecimal("0");
-        }
+//        try {
+//            amount = new BigDecimal(cleanString).setScale(
+//                    2, BigDecimal.ROUND_FLOOR).divide(
+//                    new BigDecimal(100), BigDecimal.ROUND_FLOOR);
+//        } catch (NumberFormatException e) {
+//            amount = new BigDecimal("0");
+//        }
         return amount;
     }
 
@@ -290,16 +287,16 @@ public class FavoriteProductEditorViewModel
 
     private boolean isExistingFavoriteProductThatHasBeenEdited() {
         if (isExistingFavoriteProductEntity) {
-            FavoriteProductEntity favoriteProductEntity = new FavoriteProductEntity(
-                    this.favoriteProductEntity.getDataId(),
-                    this.favoriteProductEntity.getProductId(),
-                    retailer.get(),
-                    locationRoom.get(),
-                    locationInRoom.get(),
-                    price.get(),
-                    this.favoriteProductEntity.getCreateDate(),
-                    this.favoriteProductEntity.getLastUpdate()
-            );
+//            FavoriteProductEntity favoriteProductEntity = new FavoriteProductEntity(
+//                    this.favoriteProductEntity.getDataId(),
+//                    this.favoriteProductEntity.getProductId(),
+//                    retailer.get(),
+//                    locationRoom.get(),
+//                    locationInRoom.get(),
+//                    price.get(),
+//                    this.favoriteProductEntity.getCreateDate(),
+//                    this.favoriteProductEntity.getLastUpdate()
+//            );
             return this.favoriteProductEntity.equals(favoriteProductEntity);
         }
         return false;
@@ -310,33 +307,33 @@ public class FavoriteProductEditorViewModel
         String price = removeCurrencySymbolFromPrice().toString();
 
         if (isExistingFavoriteProductEntity) {
-            favoriteProduct = FavoriteProductEntity.updateFavoriteProduct(
-                    favoriteProductEntity.getDataId(),
-                    productId,
-                    retailer.get(),
-                    locationRoom.get(),
-                    locationInRoom.get(),
-                    price,
-                    createDate);
+//            favoriteProduct = FavoriteProductEntity.updateFavoriteProduct(
+//                    favoriteProductEntity.getDataId(),
+//                    productId,
+//                    retailer.get(),
+//                    locationRoom.get(),
+//                    locationInRoom.get(),
+//                    price,
+//                    createDate);
 
-            if (!favoriteProduct.isEmpty())
-                updateFavoriteProduct(favoriteProduct);
+//            if (!favoriteProduct.isEmpty())
+//                updateFavoriteProduct(favoriteProduct);
 
         } else {
-            favoriteProduct = FavoriteProductEntity.createFavoriteProduct(
-                    productId,
-                    retailer.get(),
-                    locationRoom.get(),
-                    locationInRoom.get(),
-                    price);
+//            favoriteProduct = FavoriteProductEntity.createFavoriteProduct(
+//                    productId,
+//                    retailer.get(),
+//                    locationRoom.get(),
+//                    locationInRoom.get(),
+//                    price);
 
-            if (!favoriteProduct.isEmpty())
-                saveNewFavoriteProduct(favoriteProduct);
+//            if (!favoriteProduct.isEmpty())
+//                saveNewFavoriteProduct(favoriteProduct);
         }
 
-        if (favoriteProduct.isEmpty()) {
-            System.out.println(TAG + "saveFavoriteProduct: cannot save empty favorite product");
-        }
+//        if (favoriteProduct.isEmpty()) {
+//            System.out.println(TAG + "saveFavoriteProduct: cannot save empty favorite product");
+//        }
     }
 
     private void saveNewFavoriteProduct(FavoriteProductEntity favoriteProduct) {

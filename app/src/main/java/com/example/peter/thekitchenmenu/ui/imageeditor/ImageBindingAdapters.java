@@ -2,8 +2,6 @@ package com.example.peter.thekitchenmenu.ui.imageeditor;
 
 import android.widget.ImageView;
 
-import androidx.databinding.BindingAdapter;
-
 import com.bumptech.glide.Glide;
 import com.example.peter.thekitchenmenu.R;
 
@@ -11,11 +9,11 @@ public class ImageBindingAdapters {
 
     private static final String TAG = "tkm-" + ImageBindingAdapters.class.getSimpleName() + ":";
 
-    @BindingAdapter(value = {
-            "localLargeImageUri",
-            "remoteLargeImageUri",
-            "webImageUrl"},
-            requireAll = false)
+//    @BindingAdapter(value = {
+//            "localLargeImageUri",
+//            "remoteLargeImageUri",
+//            "webImageUrl"},
+//            requireAll = false)
     public static void setImage(ImageView imageView,
                          String localUri,
                          String remoteUri,
@@ -30,10 +28,10 @@ public class ImageBindingAdapters {
         setImageToView(imageView, uri);
     }
 
-    @BindingAdapter(value = {
-            "remoteSmallImageUri",
-            "webImageUrl"},
-            requireAll = false)
+//    @BindingAdapter(value = {
+//            "remoteSmallImageUri",
+//            "webImageUrl"},
+//            requireAll = false)
     public static void setSmallImage(ImageView imageView,
                                      String smallImageUri,
                                      String webUrl) {

@@ -7,7 +7,6 @@ import android.view.MenuItem;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.model.ProductModel;
-import com.example.peter.thekitchenmenu.databinding.ProductCatalogActivityBinding;
 import com.example.peter.thekitchenmenu.ui.ViewModelFactoryProduct;
 import com.example.peter.thekitchenmenu.ui.catalog.CatalogFragmentPageAdapter;
 import com.example.peter.thekitchenmenu.ui.detail.product.favoriteproducteditor.FavoriteProductEditorActivity;
@@ -19,7 +18,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.app.NavUtils;
-import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -30,7 +28,6 @@ public class ProductCatalogActivity
     private static final String TAG = "tkm-" + ProductCatalogActivity.class.getSimpleName() + ":";
 
     private ProductCatalogViewModel viewModel;
-    private ProductCatalogActivityBinding binding;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -46,7 +43,6 @@ public class ProductCatalogActivity
     }
 
     private void initialiseBindings() {
-        binding = DataBindingUtil.setContentView(this, R.layout.product_catalog_activity);
     }
 
     private void setupSearch() {
@@ -75,14 +71,11 @@ public class ProductCatalogActivity
         fragmentPageAdapter.addFragment(ProductCatalogFavoritesFragment.newInstance(),
                 getString(R.string.activity_catalog_products_tab_2_title));
 
-        binding.productCatalogActivityViewPager.setAdapter(fragmentPageAdapter);
 
-        binding.productCatalogActivityTabLayout.setupWithViewPager(
-                binding.productCatalogActivityViewPager);
     }
 
     private void setupToolBar() {
-        setSupportActionBar(binding.productCatalogActivityToolbar);
+//        setSupportActionBar(binding.productCatalogActivityToolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }

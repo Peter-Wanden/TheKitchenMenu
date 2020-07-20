@@ -1,6 +1,5 @@
 package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredientlist;
 
-import androidx.databinding.ObservableField;
 import androidx.lifecycle.ViewModel;
 
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
@@ -19,10 +18,10 @@ public class RecipeNameAndPortionsViewModel extends ViewModel {
     private RecipeIdentity recipeIdentity;
     private RecipePortions recipePortions;
 
-    public final ObservableField<String> recipeTitleObservable = new ObservableField<>();
-    public final ObservableField<String> servingsObservable = new ObservableField<>();
-    public final ObservableField<String> sittingsObservable = new ObservableField<>();
-    public final ObservableField<String> portionsObservable = new ObservableField<>();
+//    public final ObservableField<String> recipeTitleObservable = new ObservableField<>();
+//    public final ObservableField<String> servingsObservable = new ObservableField<>();
+//    public final ObservableField<String> sittingsObservable = new ObservableField<>();
+//    public final ObservableField<String> portionsObservable = new ObservableField<>();
 
     public RecipeNameAndPortionsViewModel(UseCaseHandler handler,
                                           RecipeIdentity recipeIdentity,
@@ -61,7 +60,7 @@ public class RecipeNameAndPortionsViewModel extends ViewModel {
     }
 
     private void setIdentityToView(RecipeIdentityResponseModel domainModel) {
-        recipeTitleObservable.set(domainModel.getTitle());
+//        recipeTitleObservable.set(domainModel.getTitle());
     }
 
     private void getRecipePortionsData(String recipeId) {
@@ -88,8 +87,8 @@ public class RecipeNameAndPortionsViewModel extends ViewModel {
     }
 
     private void setPortionsToView(RecipePortionsResponse.Model model) {
-        servingsObservable.set(String.valueOf(model.getServings()));
-        sittingsObservable.set(String.valueOf(model.getSittings()));
-        portionsObservable.set(String.valueOf(model.getPortions()));
+//        servingsObservable.set(String.valueOf(model.getServings()));
+//        sittingsObservable.set(String.valueOf(model.getSittings()));
+//        portionsObservable.set(String.valueOf(model.getPortions()));
     }
 }

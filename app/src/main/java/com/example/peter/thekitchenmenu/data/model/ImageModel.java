@@ -1,9 +1,6 @@
 package com.example.peter.thekitchenmenu.data.model;
 
-import androidx.databinding.BaseObservable;
-import androidx.databinding.Bindable;
-
-import com.example.peter.thekitchenmenu.BR;
+import com.example.peter.thekitchenmenu.common.BaseObservable;
 
 import javax.annotation.Nonnull;
 
@@ -45,24 +42,20 @@ public class ImageModel extends BaseObservable {
         this.webImageUrl = webImageUrl;
     }
 
-    @Bindable
     public String getRemoteLargeImageUri() {
         return remoteLargeImageUri;
     }
 
     public void setRemoteLargeImageUri(String remoteLargeImageUri) {
         this.remoteLargeImageUri = remoteLargeImageUri;
-        notifyPropertyChanged(BR.remoteLargeImageUri);
     }
 
-    @Bindable
     public String getLocalLargeImageUri() {
         return localLargeImageUri;
     }
 
     public void setLocalLargeImageUri(String localLargeImageUri) {
         this.localLargeImageUri = localLargeImageUri;
-        notifyPropertyChanged(BR.localLargeImageUri);
     }
 
     public String getRemoteMediumImageUri() {
@@ -97,14 +90,12 @@ public class ImageModel extends BaseObservable {
         this.localSmallImageUri = localSmallImageUri;
     }
 
-    @Bindable
     public String getWebImageUrl() {
         return webImageUrl;
     }
 
     public void setWebImageUrl(String webImageUrl) {
         this.webImageUrl = webImageUrl;
-        notifyPropertyChanged(BR.webImageUrl);
     }
 
     @Nonnull

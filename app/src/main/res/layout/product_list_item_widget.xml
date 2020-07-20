@@ -42,5 +42,4 @@
         android:layout_weight="1"
         tools:text="Grams"
         android:ellipsize="end"/>
-
 </LinearLayout>

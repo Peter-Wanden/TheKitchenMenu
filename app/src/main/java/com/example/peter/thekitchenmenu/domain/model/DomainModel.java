@@ -1,5 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.model;
 
+import javax.annotation.Nonnull;
+
 /**
  * Tagging interface for all domain data model classes
  */
@@ -44,18 +46,18 @@ public interface DomainModel {
             REQUEST_MODEL extends RequestModel,
             RESPONSE_MODEL extends ResponseModel> {
 
-        ENTITY_MODEL convertUseCaseToEntityModel(USE_CASE_MODEL useCaseModel);
+        ENTITY_MODEL convertUseCaseToEntityModel(@Nonnull USE_CASE_MODEL useCaseModel);
 
-        USE_CASE_MODEL convertPersistenceToDomainModel(PERSISTENCE_MODEL model);
+        USE_CASE_MODEL convertPersistenceToDomainModel(@Nonnull PERSISTENCE_MODEL model);
 
-        USE_CASE_MODEL convertRequestToUseCaseModel(REQUEST_MODEL model);
+        USE_CASE_MODEL convertRequestToUseCaseModel(@Nonnull REQUEST_MODEL model);
 
-        USE_CASE_MODEL convertEntityToUseCaseModel(ENTITY_MODEL entityModel);
+        USE_CASE_MODEL convertEntityToUseCaseModel(@Nonnull ENTITY_MODEL entityModel);
 
         PERSISTENCE_MODEL createNewPersistenceModel();
 
-        PERSISTENCE_MODEL createArchivedPersistenceModel(PERSISTENCE_MODEL model);
+        PERSISTENCE_MODEL createArchivedPersistenceModel(@Nonnull PERSISTENCE_MODEL model);
 
-        RESPONSE_MODEL convertUseCaseToResponseModel();
+        RESPONSE_MODEL convertUseCaseToResponseModel(@Nonnull USE_CASE_MODEL model);
     }
 }
