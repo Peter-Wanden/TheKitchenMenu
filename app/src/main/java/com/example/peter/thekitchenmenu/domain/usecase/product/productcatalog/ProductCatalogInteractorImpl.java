@@ -7,8 +7,8 @@ import com.example.peter.thekitchenmenu.data.primitivemodel.product.ProductEntit
 import com.example.peter.thekitchenmenu.data.model.ProductModel;
 import com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.DatabaseInjection;
-import com.example.peter.thekitchenmenu.data.repository.product.RepositoryFavoriteProduct;
-import com.example.peter.thekitchenmenu.data.repository.product.RepositoryProduct;
+import com.example.peter.thekitchenmenu.data.repository.product.DataAccessFavoriteProduct;
+import com.example.peter.thekitchenmenu.data.repository.product.DataAccessProduct;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -23,8 +23,8 @@ public class ProductCatalogInteractorImpl implements ProductCatalogInteractor {
             + ":";
 
     private static volatile ProductCatalogInteractorImpl INSTANCE = null;
-    private final RepositoryProduct productEntityDataSource;
-    private final RepositoryFavoriteProduct favoriteProductEntityDataSource;
+    private final DataAccessProduct productEntityDataSource;
+    private final DataAccessFavoriteProduct favoriteProductEntityDataSource;
 
     private boolean productEntitiesLoading;
     private boolean favoriteProductEntitiesLoading;
@@ -34,8 +34,8 @@ public class ProductCatalogInteractorImpl implements ProductCatalogInteractor {
     private LinkedHashMap<String, FavoriteProductEntity> favoriteProductsMap = new LinkedHashMap<>();
 
     private ProductCatalogInteractorImpl(
-            @Nonnull RepositoryProduct repositoryProduct,
-            @Nonnull RepositoryFavoriteProduct repositoryFavoriteProduct) {
+            @Nonnull DataAccessProduct repositoryProduct,
+            @Nonnull DataAccessFavoriteProduct repositoryFavoriteProduct) {
 
         this.productEntityDataSource = repositoryProduct;
         this.favoriteProductEntityDataSource = repositoryFavoriteProduct;

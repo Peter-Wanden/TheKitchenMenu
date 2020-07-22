@@ -5,9 +5,9 @@ import com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.recipeingredient.datasource.RecipeIngredientEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.datasource.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter.PrimitiveDataSource;
-import com.example.peter.thekitchenmenu.data.repository.ingredient.RepositoryIngredient;
-import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeIngredient;
-import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipePortions;
+import com.example.peter.thekitchenmenu.data.repository.ingredient.DataAccessIngredient;
+import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipeIngredient;
+import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseHandler;
 
@@ -25,11 +25,11 @@ public class RecipeIngredientListTest {
 
     // region helper fields ------------------------------------------------------------------------
     @Mock
-    RepositoryRecipeIngredient repoRecipeIngredientMock;
+    DataAccessRecipeIngredient repoRecipeIngredientMock;
     @Mock
-    RepositoryRecipePortions repoPortionsMock;
+    DataAccessRecipePortions repoPortionsMock;
     @Mock
-    RepositoryIngredient repoIngredientMock;
+    DataAccessIngredient repoIngredientMock;
     // endregion helper fields ---------------------------------------------------------------------
 
     private RecipeIngredientList SUT;

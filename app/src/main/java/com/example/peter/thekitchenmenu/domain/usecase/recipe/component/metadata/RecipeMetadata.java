@@ -3,7 +3,7 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadat
 import android.annotation.SuppressLint;
 
 import com.example.peter.thekitchenmenu.app.Constants;
-import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeMetadata;
+import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseElement;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
@@ -27,7 +27,7 @@ import static com.example.peter.thekitchenmenu.domain.usecase.common.usecasemess
 public class RecipeMetadata
         extends
         UseCaseElement<
-                RepositoryRecipeMetadata,
+                DataAccessRecipeMetadata,
                 RecipeMetadataPersistenceModel,
                 RecipeMetadata.DomainModel> {
 
@@ -144,7 +144,7 @@ public class RecipeMetadata
 
     private UseCaseMetadata.ComponentState recipeState;
 
-    public RecipeMetadata(@Nonnull RepositoryRecipeMetadata repository,
+    public RecipeMetadata(@Nonnull DataAccessRecipeMetadata repository,
                           @Nonnull UniqueIdProvider idProvider,
                           @Nonnull TimeProvider timeProvider,
                           @Nonnull Set<ComponentName> requiredComponentNames,

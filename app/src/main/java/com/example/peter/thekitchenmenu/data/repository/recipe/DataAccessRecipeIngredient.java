@@ -1,6 +1,6 @@
 package com.example.peter.thekitchenmenu.data.repository.recipe;
 
-import com.example.peter.thekitchenmenu.data.repository.Repository;
+import com.example.peter.thekitchenmenu.data.repository.DataAccess;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredient.RecipeIngredientPersistenceModel;
 
 import java.util.ArrayList;
@@ -9,23 +9,23 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-public class RepositoryRecipeIngredient
-        extends Repository<RecipeIngredientPersistenceModel>
+public class DataAccessRecipeIngredient
+        extends DataAccess<RecipeIngredientPersistenceModel>
         implements DomainDataAccessRecipeIngredient {
 
-    public static RepositoryRecipeIngredient INSTANCE = null;
+    public static DataAccessRecipeIngredient INSTANCE = null;
 
-    private RepositoryRecipeIngredient(@Nonnull DomainDataAccessRecipeIngredient remoteDataSource,
+    private DataAccessRecipeIngredient(@Nonnull DomainDataAccessRecipeIngredient remoteDataSource,
                                        @Nonnull DomainDataAccessRecipeIngredient localDataSource) {
         this.remoteDomainDataAccess = remoteDataSource;
         this.localDomainDataAccess = localDataSource;
     }
 
-    public static RepositoryRecipeIngredient getInstance(
+    public static DataAccessRecipeIngredient getInstance(
             @Nonnull DomainDataAccessRecipeIngredient remoteDataSource,
             @Nonnull DomainDataAccessRecipeIngredient localDataSource) {
         if (INSTANCE == null)
-            INSTANCE = new RepositoryRecipeIngredient(remoteDataSource, localDataSource);
+            INSTANCE = new DataAccessRecipeIngredient(remoteDataSource, localDataSource);
         return INSTANCE;
     }
 
@@ -95,11 +95,11 @@ public class RepositoryRecipeIngredient
                 new GetAllDomainModelsCallback<RecipeIngredientPersistenceModel>() {
                     @Override
                     public void onAllDomainModelsLoaded(List<RecipeIngredientPersistenceModel> models) {
-                        if (RepositoryRecipeIngredient.this.cache == null)
-                            RepositoryRecipeIngredient.this.cache = new LinkedHashMap<>();
+                        if (DataAccessRecipeIngredient.this.cache == null)
+                            DataAccessRecipeIngredient.this.cache = new LinkedHashMap<>();
 
                         for (RecipeIngredientPersistenceModel m : models)
-                            RepositoryRecipeIngredient.this.cache.put(m.getDataId(), m);
+                            DataAccessRecipeIngredient.this.cache.put(m.getDataId(), m);
 
                         callback.onAllDomainModelsLoaded(models);
                     }
@@ -111,11 +111,11 @@ public class RepositoryRecipeIngredient
                                 new GetAllDomainModelsCallback<RecipeIngredientPersistenceModel>() {
                                     @Override
                                     public void onAllDomainModelsLoaded(List<RecipeIngredientPersistenceModel> models) {
-                                        if (RepositoryRecipeIngredient.this.cache == null)
-                                            RepositoryRecipeIngredient.this.cache = new LinkedHashMap<>();
+                                        if (DataAccessRecipeIngredient.this.cache == null)
+                                            DataAccessRecipeIngredient.this.cache = new LinkedHashMap<>();
 
                                         for (RecipeIngredientPersistenceModel m : models)
-                                            RepositoryRecipeIngredient.this.cache.put(m.getDataId(), m);
+                                            DataAccessRecipeIngredient.this.cache.put(m.getDataId(), m);
 
                                         callback.onAllDomainModelsLoaded(models);
                                     }
@@ -144,11 +144,11 @@ public class RepositoryRecipeIngredient
                 new GetAllDomainModelsCallback<RecipeIngredientPersistenceModel>() {
                     @Override
                     public void onAllDomainModelsLoaded(List<RecipeIngredientPersistenceModel> models) {
-                        if (RepositoryRecipeIngredient.this.cache == null)
-                            RepositoryRecipeIngredient.this.cache = new LinkedHashMap<>();
+                        if (DataAccessRecipeIngredient.this.cache == null)
+                            DataAccessRecipeIngredient.this.cache = new LinkedHashMap<>();
 
                         for (RecipeIngredientPersistenceModel m : models)
-                            RepositoryRecipeIngredient.this.cache.put(m.getDataId(), m);
+                            DataAccessRecipeIngredient.this.cache.put(m.getDataId(), m);
                         callback.onAllDomainModelsLoaded(models);
                     }
 
@@ -159,11 +159,11 @@ public class RepositoryRecipeIngredient
                                 new GetAllDomainModelsCallback<RecipeIngredientPersistenceModel>() {
                                     @Override
                                     public void onAllDomainModelsLoaded(List<RecipeIngredientPersistenceModel> models) {
-                                        if (RepositoryRecipeIngredient.this.cache == null)
-                                            RepositoryRecipeIngredient.this.cache = new LinkedHashMap<>();
+                                        if (DataAccessRecipeIngredient.this.cache == null)
+                                            DataAccessRecipeIngredient.this.cache = new LinkedHashMap<>();
 
                                         for (RecipeIngredientPersistenceModel m : models)
-                                            RepositoryRecipeIngredient.this.cache.put(m.getDataId(), m);
+                                            DataAccessRecipeIngredient.this.cache.put(m.getDataId(), m);
 
                                         callback.onAllDomainModelsLoaded(models);
                                     }

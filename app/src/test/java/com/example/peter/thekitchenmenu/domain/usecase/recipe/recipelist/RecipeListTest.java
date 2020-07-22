@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipelist;
 
 import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess.GetAllDomainModelsCallback;
-import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeMetadata;
+import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipeMetadata;
 import com.example.peter.thekitchenmenu.data.repository.recipe.metadata.TestDataRecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.factory.UseCaseFactory;
@@ -30,7 +30,7 @@ public class RecipeListTest {
     @Mock
     UseCaseFactory useCaseFactoryMock;
     @Mock
-    RepositoryRecipeMetadata repoMetadataMock;
+    DataAccessRecipeMetadata repoMetadataMock;
     @Captor
     ArgumentCaptor<GetAllDomainModelsCallback<RecipeMetadataPersistenceModel>>
             repoMetadataGetAllCallback;

@@ -43,7 +43,8 @@ public class UseCaseHandler {
         return INSTANCE;
     }
 
-    public <REQUEST extends UseCaseBase.Request, RESPONSE extends UseCaseBase.Response> void executeAsync(
+    public <REQUEST extends UseCaseBase.Request, RESPONSE extends UseCaseBase.Response>
+    void executeAsync(
             final UseCaseBase useCase,
             REQUEST request,
             UseCaseBase.Callback<RESPONSE> callback) {

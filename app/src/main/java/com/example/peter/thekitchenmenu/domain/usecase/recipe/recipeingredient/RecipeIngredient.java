@@ -4,9 +4,9 @@ import android.annotation.SuppressLint;
 
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess.GetDomainModelCallback;
 import com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.datasource.IngredientEntity;
-import com.example.peter.thekitchenmenu.data.repository.ingredient.RepositoryIngredient;
-import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeIngredient;
-import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipePortions;
+import com.example.peter.thekitchenmenu.data.repository.ingredient.DataAccessIngredient;
+import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipeIngredient;
+import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.model.MeasurementModelBuilder;
@@ -78,11 +78,11 @@ public class RecipeIngredient extends UseCaseBase {
 
     // TODO -------------------------- USE A RECIPE FOR THE DATA HERE ---------------------- TODO //
     @Nonnull
-    private final RepositoryRecipeIngredient recipeIngredientRepository;
+    private final DataAccessRecipeIngredient recipeIngredientRepository;
 
-    private RepositoryRecipePortions portionsRepository; // TODO - Or use a recipe instance
+    private DataAccessRecipePortions portionsRepository; // TODO - Or use a recipe instance
     @Nonnull
-    private final RepositoryIngredient ingredientRepository; // TODO - for all three??
+    private final DataAccessIngredient ingredientRepository; // TODO - for all three??
     @Nonnull
     private final UniqueIdProvider idProvider;
     @Nonnull
@@ -111,9 +111,9 @@ public class RecipeIngredient extends UseCaseBase {
     private RecipeIngredientPersistenceModel persistenceModel;
     private IngredientEntity ingredientEntity;
 
-    public RecipeIngredient(@Nonnull RepositoryRecipePortions portionsRepository,
-                            @Nonnull RepositoryRecipeIngredient recipeIngredientRepository,
-                            @Nonnull RepositoryIngredient ingredientRepository,
+    public RecipeIngredient(@Nonnull DataAccessRecipePortions portionsRepository,
+                            @Nonnull DataAccessRecipeIngredient recipeIngredientRepository,
+                            @Nonnull DataAccessIngredient ingredientRepository,
                             @Nonnull UniqueIdProvider idProvider,
                             @Nonnull TimeProvider timeProvider) {
         this.portionsRepository = portionsRepository;

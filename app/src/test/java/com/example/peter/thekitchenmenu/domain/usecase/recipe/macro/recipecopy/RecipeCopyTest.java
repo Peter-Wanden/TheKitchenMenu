@@ -1,13 +1,12 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipecopy;
 
 import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
-import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeCourse;
-import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeDuration;
-import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeIdentity;
-import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipePortions;
+import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipeCourse;
+import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipeDuration;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RecipeIdentityUseCaseDataAccess;
+import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipePortions;
 import com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.courseitem.RecipeCourseEntity;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.TestDataRecipeCourseEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.datasource.RecipeDurationEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.datasource.TestDataRecipeDurationEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.datasource.RecipeIdentityEntity;
@@ -90,19 +89,19 @@ public class RecipeCopyTest {
     @Captor
     ArgumentCaptor<PrimitiveDataSource.GetPrimitiveCallback<RecipeMetadataParentEntity>> repoRecipeCallback;
     @Mock
-    RepositoryRecipeIdentity repoIdentityMock;
+    RecipeIdentityUseCaseDataAccess repoIdentityMock;
     @Captor
     ArgumentCaptor<PrimitiveDataSource.GetPrimitiveCallback<RecipeIdentityEntity>> repoIdentityCallback;
     @Mock
-    RepositoryRecipeCourse repoCourseMock;
+    DataAccessRecipeCourse repoCourseMock;
     @Captor
     ArgumentCaptor<PrimitiveDataSource.GetAllPrimitiveCallback<RecipeCourseEntity>> repoCourseCallback;
     @Mock
-    RepositoryRecipeDuration repoDurationMock;
+    DataAccessRecipeDuration repoDurationMock;
     @Captor
     ArgumentCaptor<PrimitiveDataSource.GetPrimitiveCallback<RecipeDurationEntity>> repoDurationCallback;
     @Mock
-    RepositoryRecipePortions repoPortionsMock;
+    DataAccessRecipePortions repoPortionsMock;
     @Captor
     ArgumentCaptor<PrimitiveDataSource.GetPrimitiveCallback<RecipePortionsEntity>> repoPortionsCallback;
     @Mock

@@ -8,11 +8,11 @@ import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public final class RecipeIdentityRequestModel
+public final class RecipeIdentityUseCaseRequestModel
         extends
         BaseDomainModel
         implements
-        DomainModel.RequestModel {
+        DomainModel.UseCaseRequestModel {
 
     private String title;
     private String description;
@@ -29,7 +29,7 @@ public final class RecipeIdentityRequestModel
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        RecipeIdentityRequestModel model = (RecipeIdentityRequestModel) o;
+        RecipeIdentityUseCaseRequestModel model = (RecipeIdentityUseCaseRequestModel) o;
         return title.equals(model.title) &&
                 description.equals(model.description);
     }
@@ -50,10 +50,10 @@ public final class RecipeIdentityRequestModel
 
     public static class Builder
             extends
-            DomainModelBuilder<Builder, RecipeIdentityRequestModel> {
+            DomainModelBuilder<Builder, RecipeIdentityUseCaseRequestModel> {
 
         public Builder() {
-            domainModel = new RecipeIdentityRequestModel();
+            domainModel = new RecipeIdentityUseCaseRequestModel();
         }
 
         public Builder getDefault() {
@@ -62,7 +62,7 @@ public final class RecipeIdentityRequestModel
             return self();
         }
 
-        public Builder basedOnResponseModel(RecipeIdentityResponseModel domainModel) {
+        public Builder basedOnResponseModel(RecipeIdentityUseCaseResponseModel domainModel) {
             this.domainModel.title = domainModel.getTitle();
             this.domainModel.description = domainModel.getDescription();
             return self();

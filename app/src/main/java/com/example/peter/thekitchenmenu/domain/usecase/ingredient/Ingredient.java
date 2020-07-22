@@ -4,7 +4,7 @@ import android.annotation.SuppressLint;
 
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
-import com.example.peter.thekitchenmenu.data.repository.ingredient.RepositoryIngredient;
+import com.example.peter.thekitchenmenu.data.repository.ingredient.DataAccessIngredient;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
@@ -70,7 +70,7 @@ public class Ingredient
     private static final TextType DESCRIPTION_TEXT_TYPE = TextType.LONG_TEXT;
 
     @Nonnull
-    private final RepositoryIngredient repository;
+    private final DataAccessIngredient repository;
     @Nonnull
     private final TextValidator textValidator;
     @Nonnull
@@ -89,7 +89,7 @@ public class Ingredient
     private IngredientRequest.Model requestModel;
     private IngredientPersistenceModel persistenceModel;
 
-    public Ingredient(@Nonnull RepositoryIngredient repository,
+    public Ingredient(@Nonnull DataAccessIngredient repository,
                       @Nonnull UniqueIdProvider idProvider,
                       @Nonnull TimeProvider timeProvider,
                       @Nonnull IngredientDuplicateChecker duplicateNameChecker,

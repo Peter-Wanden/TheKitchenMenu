@@ -8,7 +8,7 @@ import javax.annotation.Nonnull;
 
 public final class RecipeIdentityResponse
         extends
-        UseCaseMessageModelDataIdMetadata<RecipeIdentityResponseModel>
+        UseCaseMessageModelDataIdMetadata<RecipeIdentityUseCaseResponseModel>
         implements
         UseCaseBase.Response {
 
@@ -30,7 +30,7 @@ public final class RecipeIdentityResponse
             MessageModelDataIdMetadataBuilder<
                     Builder,
                     RecipeIdentityResponse,
-                    RecipeIdentityResponseModel> {
+                    RecipeIdentityUseCaseResponseModel> {
 
         public Builder() {
             message = new RecipeIdentityResponse();
@@ -40,7 +40,7 @@ public final class RecipeIdentityResponse
         public Builder getDefault() {
             message.dataId = "";
             message.domainId = "";
-            message.model = new RecipeIdentityResponseModel.Builder().getDefault().build();
+            message.model = new RecipeIdentityUseCaseResponseModel.Builder().getDefault().build();
             message.metadata = new UseCaseMetadataModel.Builder().getDefault().build();
             return self();
         }

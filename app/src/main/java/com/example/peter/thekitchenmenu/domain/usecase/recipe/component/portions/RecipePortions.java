@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portion
 
 import android.annotation.SuppressLint;
 
-import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipePortions;
+import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseElement;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
@@ -16,7 +16,7 @@ import javax.annotation.Nonnull;
 public class RecipePortions
         extends
         UseCaseElement<
-                RepositoryRecipePortions,
+                DataAccessRecipePortions,
                 RecipePortionsPersistenceModel,
                 RecipePortions.DomainModel> {
 
@@ -98,7 +98,7 @@ public class RecipePortions
     private final int maxServings;
     private final int maxSittings;
 
-    public RecipePortions(@Nonnull RepositoryRecipePortions repository,
+    public RecipePortions(@Nonnull DataAccessRecipePortions repository,
                           @Nonnull UniqueIdProvider idProvider,
                           @Nonnull TimeProvider timeProvider,
                           int maxServings,

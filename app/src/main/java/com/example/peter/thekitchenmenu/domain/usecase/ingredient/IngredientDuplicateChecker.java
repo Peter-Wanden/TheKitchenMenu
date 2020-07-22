@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecase.ingredient;
 
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
-import com.example.peter.thekitchenmenu.data.repository.ingredient.RepositoryIngredient;
+import com.example.peter.thekitchenmenu.data.repository.ingredient.DataAccessIngredient;
 import com.google.android.gms.common.util.Strings;
 
 import java.util.LinkedHashMap;
@@ -14,14 +14,14 @@ public class IngredientDuplicateChecker
         void duplicateCheckResult(String duplicateId);
     }
 
-    private RepositoryIngredient repository;
+    private DataAccessIngredient repository;
     private LinkedHashMap<String, String> existingIngredients;
     private DuplicateCallback callback;
     private String keyToCheck;
     private String ingredientId;
     public static final String NO_DUPLICATE_FOUND = "";
 
-    public IngredientDuplicateChecker(RepositoryIngredient repository) {
+    public IngredientDuplicateChecker(DataAccessIngredient repository) {
         this.repository = repository;
     }
 

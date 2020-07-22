@@ -7,9 +7,9 @@ import com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.recipeingredient.datasource.RecipeIngredientEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.datasource.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter.PrimitiveDataSource;
-import com.example.peter.thekitchenmenu.data.repository.ingredient.RepositoryIngredient;
-import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeIngredient;
-import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipePortions;
+import com.example.peter.thekitchenmenu.data.repository.ingredient.DataAccessIngredient;
+import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipeIngredient;
+import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.model.MeasurementModel;
 import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.MeasurementSubtype;
@@ -125,17 +125,17 @@ public class RecipeIngredientCalculatorViewModelTest {
     @Mock
     Resources resourcesMock;
     @Mock
-    RepositoryRecipePortions repoPortionsMock;
+    DataAccessRecipePortions repoPortionsMock;
     @Captor
     ArgumentCaptor<PrimitiveDataSource.GetPrimitiveCallback<RecipePortionsEntity>>
             getPortionsCallbackCaptor;
     @Mock
-    RepositoryRecipeIngredient repoRecipeIngredientMock;
+    DataAccessRecipeIngredient repoRecipeIngredientMock;
     @Captor
     ArgumentCaptor<PrimitiveDataSource.GetPrimitiveCallback<RecipeIngredientEntity>>
             getRecipeIngredientCallbackCaptor;
     @Mock
-    RepositoryIngredient repoIngredientMock;
+    DataAccessIngredient repoIngredientMock;
     @Captor
     ArgumentCaptor<PrimitiveDataSource.GetPrimitiveCallback<IngredientEntity>>
             getIngredientCallbackCaptor;

@@ -5,7 +5,7 @@ import com.example.peter.thekitchenmenu.domain.model.DomainModel;
 
 import javax.annotation.Nonnull;
 
-public final class TextValidationEntityModel
+public final class TextValidationModel
         implements
         DomainModel.EntityModel {
 
@@ -14,7 +14,7 @@ public final class TextValidationEntityModel
     @Nonnull
     private final String text;
 
-    public TextValidationEntityModel(@Nonnull TextLength textLength, @Nonnull String text) {
+    public TextValidationModel(@Nonnull TextLength textLength, @Nonnull String text) {
         this.textLength = textLength;
         this.text = text;
     }
@@ -32,9 +32,9 @@ public final class TextValidationEntityModel
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof TextValidationEntityModel)) return false;
+        if (!(o instanceof TextValidationModel)) return false;
 
-        TextValidationEntityModel that = (TextValidationEntityModel) o;
+        TextValidationModel that = (TextValidationModel) o;
 
         if (textLength != that.textLength) return false;
         return text.equals(that.text);

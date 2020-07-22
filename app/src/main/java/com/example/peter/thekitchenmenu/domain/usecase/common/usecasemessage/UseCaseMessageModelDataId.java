@@ -7,7 +7,8 @@ import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public abstract class UseCaseMessageModelDataId<DOMAIN_MODEL extends BaseDomainModel>
+public abstract class UseCaseMessageModelDataId
+        <DOMAIN_MODEL extends BaseDomainModel>
         extends
         UseCaseMessageModelBase<DOMAIN_MODEL> {
 
@@ -41,7 +42,7 @@ public abstract class UseCaseMessageModelDataId<DOMAIN_MODEL extends BaseDomainM
         return Objects.hash(super.hashCode(), dataId, domainId);
     }
 
-    public static abstract class UseCaseMessageModelDataIdBuilder<
+    protected static abstract class UseCaseMessageModelDataIdBuilder<
             SELF extends UseCaseMessageModelDataIdBuilder<SELF, MESSAGE, DOMAIN_MODEL>,
             MESSAGE extends UseCaseMessageModelDataId<DOMAIN_MODEL>,
             DOMAIN_MODEL extends BaseDomainModel>

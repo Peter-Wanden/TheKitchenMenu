@@ -13,7 +13,7 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 
 
-public abstract class Repository<T extends DomainModel.PersistenceModel>
+public abstract class DataAccess<T extends DomainModel.PersistenceModel>
         implements DomainDataAccess<T> {
 
     protected DomainDataAccess<T> remoteDomainDataAccess;

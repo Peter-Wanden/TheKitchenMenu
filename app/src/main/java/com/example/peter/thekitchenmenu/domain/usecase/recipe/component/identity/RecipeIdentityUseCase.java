@@ -1,33 +1,78 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity;
 
-import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeIdentity;
+import android.annotation.SuppressLint;
+
+import com.example.peter.thekitchenmenu.data.repository.recipe.RecipeIdentityUseCaseDataAccess;
 import com.example.peter.thekitchenmenu.domain.businessentity.BusinessEntity;
-import com.example.peter.thekitchenmenu.domain.businessentity.recipeIdentity.RecipeIdentityEntity;
-import com.example.peter.thekitchenmenu.domain.businessentity.recipeIdentity.RecipeIdentityEntityModel;
+import com.example.peter.thekitchenmenu.domain.businessentity.textvalidation.TextValidationBusinessEntity;
+import com.example.peter.thekitchenmenu.domain.businessentity.textvalidation.TextValidationBusinessEntity.TextLength;
+import com.example.peter.thekitchenmenu.domain.businessentity.textvalidation.TextValidationModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class RecipeIdentityUseCase
         extends
         UseCaseMetadata<
-                RepositoryRecipeIdentity,
-                RecipeIdentityPersistenceModel,
-                RecipeIdentityEntityModel,
+                RecipeIdentityUseCaseDataAccess,
+                RecipeIdentityUseCasePersistenceModel,
                 RecipeIdentityUseCaseModel,
-                RecipeIdentityRequestModel,
-                RecipeIdentityResponseModel> {
+                RecipeIdentityUseCaseRequestModel,
+                RecipeIdentityUseCaseResponseModel> {
 
-    private RecipeIdentityEntity identityEntity;
+    public enum FailReason
+            implements
+            FailReasons {
+        TITLE_NULL(300),
+        TITLE_TOO_SHORT(301),
+        TITLE_TOO_LONG(302),
+        DESCRIPTION_NULL(303),
+        DESCRIPTION_TOO_SHORT(304),
+        DESCRIPTION_TOO_LONG(305);
 
-    public RecipeIdentityUseCase(RepositoryRecipeIdentity repository,
+        private final int id;
+
+        @SuppressLint("UseSparseArrays")
+        private static Map<Integer, FailReason> options = new HashMap<>();
+
+        FailReason(int id) {
+            this.id = id;
+        }
+
+        static {
+            for (FailReason s : FailReason.values())
+                options.put(s.id, s);
+        }
+
+        public static FailReason getById(int id) {
+            return options.get(id);
+        }
+
+        @Override
+        public int getId() {
+            return id;
+        }
+    }
+
+    private static final TextLength TITLE_TEXT_TYPE = TextLength.SHORT_TEXT;
+    private static final TextLength DESCRIPTION_TEXT_TYPE = TextLength.LONG_TEXT;
+
+    private final TextValidationBusinessEntity textValidator;
+    private boolean isTitleValidationComplete;
+    private boolean isDescriptionValidationComplete;
+
+    public RecipeIdentityUseCase(RecipeIdentityUseCaseDataAccess dataAccess,
                                  RecipeIdentityDomainModelConverter modelConverter,
                                  UniqueIdProvider idProvider,
                                  TimeProvider timeProvider,
-                                 RecipeIdentityEntity identityEntity) {
-        super(repository, modelConverter, idProvider, timeProvider);
-
-        this.identityEntity = identityEntity;
+                                 TextValidationBusinessEntity textValidator) {
+        super(dataAccess, modelConverter, idProvider, timeProvider);
+        this.textValidator = textValidator;
     }
 
     @Override
@@ -36,15 +81,59 @@ public class RecipeIdentityUseCase
     }
 
     @Override
-    protected void validateDomainModelElements() {
-        RecipeIdentityEntityModel model = modelConverter.convertUseCaseToEntityModel(useCaseModel);
+    protected void processDataElements() {
+        validateTitle();
+        validateDescription();
 
-        identityEntity.execute(new BusinessEntity.Request<>(model), entityResponse -> {
-            failReasons = entityResponse.getFailReasons();
-            useCaseModel = modelConverter.convertEntityToUseCaseModel(entityResponse.getModel());
+        if (isTitleValidationComplete && isDescriptionValidationComplete) {
+            buildResponse();
+        }
+    }
 
-            processResult();
-        });
+    private void validateTitle() {
+        isTitleValidationComplete = false;
+
+        textValidator.execute(new BusinessEntity.Request<>(new TextValidationModel(
+                        TITLE_TEXT_TYPE, useCaseModel.getTitle())),
+                response -> {
+                    isTitleValidationComplete = true;
+                    addTitleFailReasonsFromTextValidator(response.getFailReasons());
+                    processResult();
+                }
+        );
+    }
+
+    private void addTitleFailReasonsFromTextValidator(List<FailReasons> failReasons) {
+        if (failReasons.contains(TextValidationBusinessEntity.FailReason.TEXT_NULL)) {
+            failReasons.add(FailReason.TITLE_NULL);
+        } else if (failReasons.contains(TextValidationBusinessEntity.FailReason.TEXT_TOO_SHORT)) {
+            failReasons.add(FailReason.TITLE_TOO_SHORT);
+        } else if (failReasons.contains(TextValidationBusinessEntity.FailReason.TEXT_TOO_LONG)) {
+            failReasons.add(FailReason.TITLE_TOO_LONG);
+        }
+    }
+
+    private void validateDescription() {
+        isDescriptionValidationComplete = false;
+
+        textValidator.execute(new BusinessEntity.Request<>(new TextValidationModel(
+                        DESCRIPTION_TEXT_TYPE, useCaseModel.getDescription())),
+                response -> {
+                    isDescriptionValidationComplete = true;
+                    addDescriptionFailReasonsFromTextValidator(response.getFailReasons());
+                    processResult();
+                }
+        );
+    }
+
+    private void addDescriptionFailReasonsFromTextValidator(List<FailReasons> failReasons) {
+        if (failReasons.contains(TextValidationBusinessEntity.FailReason.TEXT_NULL)) {
+            failReasons.add(FailReason.DESCRIPTION_NULL);
+        } else if (failReasons.contains(TextValidationBusinessEntity.FailReason.TEXT_TOO_SHORT)) {
+            failReasons.add(FailReason.DESCRIPTION_TOO_SHORT);
+        } else if (failReasons.contains(TextValidationBusinessEntity.FailReason.TEXT_TOO_LONG)) {
+            failReasons.add(FailReason.DESCRIPTION_TOO_LONG);
+        }
     }
 
     private void processResult() {
@@ -60,7 +149,7 @@ public class RecipeIdentityUseCase
                 setDataId(useCaseDataId).
                 setDomainId(useCaseDomainId).
                 setMetadata(getMetadata()).
-                setDomainModel(modelConverter.convertUseCaseToResponseModel(useCaseModel));
+                setDomainModel(converter.convertUseCaseToResponseModel(useCaseModel));
 
         sendResponse(builder.build());
     }

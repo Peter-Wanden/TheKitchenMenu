@@ -1,23 +1,31 @@
 package com.example.peter.thekitchenmenu.domain.usecase.common;
 
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
-import com.example.peter.thekitchenmenu.data.repository.Repository;
+import com.example.peter.thekitchenmenu.data.repository.DataAccess;
 import com.example.peter.thekitchenmenu.domain.model.DomainModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.RequestModelBase;
-import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.RequestWithId;
+import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.message.RequestWithId;
 import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataId;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
 import javax.annotation.Nonnull;
 
+/**
+ * Each use case is responsible for a single persistence model.
+ * This abstract class provides the functionality required
+ * @param <DATA_ACCESS> the component used to store and retrieve persistence models
+ * @param <PERSISTENCE_MODEL> used for domain data storage
+ * @param <USE_CASE_MODEL> the use case internal domain data structure
+ * @param <USE_CASE_REQUEST_MODEL> domain data model used in requests
+ * @param <USE_CASE_RESPONSE_MODEL> domain data model used in responses
+ */
 public abstract class UseCaseModel<
-        REPOSITORY extends Repository<PERSISTENCE_MODEL>,
+        DATA_ACCESS extends DataAccess<PERSISTENCE_MODEL>,
         PERSISTENCE_MODEL extends DomainModel.PersistenceModel,
-        ENTITY_MODEL extends DomainModel.EntityModel,
         USE_CASE_MODEL extends DomainModel.UseCaseModel,
-        REQUEST_MODEL extends DomainModel.RequestModel,
-        RESPONSE_MODEL extends DomainModel.ResponseModel>
+        USE_CASE_REQUEST_MODEL extends DomainModel.UseCaseRequestModel,
+        USE_CASE_RESPONSE_MODEL extends DomainModel.UseCaseResponseModel>
         extends
         UseCaseBase
         implements
@@ -28,35 +36,34 @@ public abstract class UseCaseModel<
     protected String useCaseDataId = UseCaseMessageModelDataId.NO_ID;
     protected String useCaseDomainId = UseCaseMessageModelDataId.NO_ID;
 
-    protected REPOSITORY repository;
+    protected DATA_ACCESS dataAccess;
     protected UniqueIdProvider idProvider;
     protected TimeProvider timeProvider;
 
     protected PERSISTENCE_MODEL persistenceModel;
     protected USE_CASE_MODEL useCaseModel;
 
-    protected DomainModel.ModelConverter<
-            ENTITY_MODEL,
-            USE_CASE_MODEL,
-            PERSISTENCE_MODEL,
-            REQUEST_MODEL,
-            RESPONSE_MODEL> modelConverter;
+    protected DomainModel.Converter<
+                USE_CASE_MODEL,
+                PERSISTENCE_MODEL,
+                USE_CASE_REQUEST_MODEL,
+                USE_CASE_RESPONSE_MODEL> converter;
 
     protected boolean isChanged;
     protected int accessCount;
 
     public UseCaseModel(
-            REPOSITORY repository,
-            DomainModel.ModelConverter<
-                    ENTITY_MODEL,
-                    USE_CASE_MODEL,
-                    PERSISTENCE_MODEL,
-                    REQUEST_MODEL,
-                    RESPONSE_MODEL> modelConverter,
+            DATA_ACCESS dataAccess,
+            DomainModel.Converter<
+                                USE_CASE_MODEL,
+                                PERSISTENCE_MODEL,
+                                USE_CASE_REQUEST_MODEL,
+                                USE_CASE_RESPONSE_MODEL> converter,
             UniqueIdProvider idProvider,
             TimeProvider timeProvider) {
-        this.repository = repository;
-        this.modelConverter = modelConverter;
+
+        this.dataAccess = dataAccess;
+        this.converter = converter;
         this.idProvider = idProvider;
         this.timeProvider = timeProvider;
     }
@@ -65,7 +72,7 @@ public abstract class UseCaseModel<
     protected <REQUEST extends UseCaseBase.Request> void execute(REQUEST request) {
         accessCount++;
 
-        RequestWithId<REQUEST_MODEL> r = (RequestWithId<REQUEST_MODEL>) request;
+        RequestWithId<USE_CASE_REQUEST_MODEL> r = (RequestWithId<USE_CASE_REQUEST_MODEL>) request;
 
         System.out.println(TAG + "Request No:" + accessCount + " " + request);
 
@@ -103,12 +110,12 @@ public abstract class UseCaseModel<
         }
     }
 
-    private void getPersistenceModelByDataId() {
-        repository.getByDataId(useCaseDataId, this);
+    protected void getPersistenceModelByDataId() {
+        dataAccess.getByDataId(useCaseDataId, this);
     }
 
-    private void getPersistenceModelByDomainId() {
-        repository.getActiveByDomainId(useCaseDomainId, this);
+    protected void getPersistenceModelByDomainId() {
+        dataAccess.getActiveByDomainId(useCaseDomainId, this);
     }
 
     @Override
@@ -131,10 +138,10 @@ public abstract class UseCaseModel<
 
     private USE_CASE_MODEL createUseCaseModelFromPersistenceModel(
             @Nonnull PERSISTENCE_MODEL model) {
-        return modelConverter.convertPersistenceToDomainModel(model);
+        return converter.convertPersistenceToDomainModel(model);
     }
 
-    private void setupForRequestModelProcessing() {
+    protected void setupForRequestModelProcessing() {
         USE_CASE_MODEL updatedModel = createUseCaseModelFromRequestModel();
         isChanged = !useCaseModel.equals(updatedModel);
         useCaseModel = updatedModel;
@@ -143,18 +150,18 @@ public abstract class UseCaseModel<
     }
 
     private USE_CASE_MODEL createUseCaseModelFromRequestModel() {
-        REQUEST_MODEL requestModel = ((RequestModelBase<REQUEST_MODEL>) getRequest()).getModel();
-        return modelConverter.convertRequestToUseCaseModel(requestModel);
+        USE_CASE_REQUEST_MODEL requestModel = ((RequestModelBase<USE_CASE_REQUEST_MODEL>) getRequest()).getModel();
+        return converter.convertRequestToUseCaseModel(requestModel);
     }
 
     protected void createNewPersistenceModel() {
-        persistenceModel = modelConverter.createNewPersistenceModel();
-        repository.save(persistenceModel);
+        persistenceModel = converter.createNewPersistenceModel();
+        dataAccess.save(persistenceModel);
     }
 
     protected void archivePreviousPersistenceModel() {
         if (persistenceModel != null) {
-            repository.save(modelConverter.createArchivedPersistenceModel(persistenceModel));
+            dataAccess.save(converter.createArchivedPersistenceModel(persistenceModel));
         }
     }
 

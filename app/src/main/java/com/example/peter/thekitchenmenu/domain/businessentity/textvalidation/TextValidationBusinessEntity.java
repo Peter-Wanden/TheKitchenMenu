@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class TextValidationBusinessEntity
         extends
-        BusinessEntity<TextValidationEntityModel> {
+        BusinessEntity<TextValidationModel> {
 
     public static final String TAG = "tkm-" + TextValidationBusinessEntity.class.getSimpleName() +
             ": ";
@@ -21,9 +21,9 @@ public class TextValidationBusinessEntity
     }
 
     public enum FailReason implements FailReasons {
-        TOO_SHORT(500),
-        TOO_LONG(501),
-        NULL_TEXT(502);
+        TEXT_TOO_SHORT(500),
+        TEXT_TOO_LONG(501),
+        TEXT_NULL(502);
 
         private final int id;
 
@@ -67,9 +67,9 @@ public class TextValidationBusinessEntity
     }
 
     @Override
-    protected void processElements() {
+    protected void processDataElements() {
         if (model.getText() == null) {
-            failReasons.add(FailReason.NULL_TEXT);
+            failReasons.add(FailReason.TEXT_NULL);
             sendResponse();
         } else if (model.getTextLength().equals(TextLength.SHORT_TEXT)) {
             validateShortText(model.getText());
@@ -82,20 +82,20 @@ public class TextValidationBusinessEntity
 
     private void validateShortText(String text) {
         if (model.getText() == null) {
-            failReasons.add(FailReason.NULL_TEXT);
+            failReasons.add(FailReason.TEXT_NULL);
         } else if (text.length() < shortTextMinLength) {
-            failReasons.add(FailReason.TOO_SHORT);
+            failReasons.add(FailReason.TEXT_TOO_SHORT);
         } else if (text.length() > shortTextMaxLength) {
-            failReasons.add(FailReason.TOO_LONG);
+            failReasons.add(FailReason.TEXT_TOO_LONG);
         }
         sendResponse();
     }
 
     private void validateLongText(String text) {
         if (text.length() < longTextMinLength) {
-            failReasons.add(FailReason.TOO_SHORT);
+            failReasons.add(FailReason.TEXT_TOO_SHORT);
         } else if (text.length() > longTextMaxLength) {
-            failReasons.add(FailReason.TOO_LONG);
+            failReasons.add(FailReason.TEXT_TOO_LONG);
         }
         sendResponse();
     }

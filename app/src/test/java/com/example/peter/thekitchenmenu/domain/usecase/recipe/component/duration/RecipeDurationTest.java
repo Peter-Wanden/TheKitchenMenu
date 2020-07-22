@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration;
 
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess.GetDomainModelCallback;
-import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeDuration;
+import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipeDuration;
 import com.example.peter.thekitchenmenu.data.repository.recipe.duration.TestDataRecipeDuration;
 import com.example.peter.thekitchenmenu.domain.model.UseCaseMetadataModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseMetadata;
@@ -42,7 +42,7 @@ public class RecipeDurationTest {
 
     // region helper fields ------------------------------------------------------------------------
     @Mock
-    RepositoryRecipeDuration repoMock;
+    DataAccessRecipeDuration repoMock;
     @Captor
     ArgumentCaptor<GetDomainModelCallback<RecipeDurationPersistenceModel>> repoDurationCallback;
     @Mock

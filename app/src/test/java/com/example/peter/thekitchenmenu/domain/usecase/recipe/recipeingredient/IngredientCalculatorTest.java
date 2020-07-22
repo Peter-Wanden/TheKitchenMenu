@@ -5,9 +5,9 @@ import com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.recipeingredient.datasource.RecipeIngredientEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.datasource.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter.PrimitiveDataSource;
-import com.example.peter.thekitchenmenu.data.repository.ingredient.RepositoryIngredient;
-import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeIngredient;
-import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipePortions;
+import com.example.peter.thekitchenmenu.data.repository.ingredient.DataAccessIngredient;
+import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipeIngredient;
+import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.UnitOfMeasureConstants;
 import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.MeasurementSubtype;
@@ -205,17 +205,17 @@ public class IngredientCalculatorTest {
     private UseCaseHandler handler;
     private RecipeIngredientResponse actualResponse;
     @Mock
-    RepositoryRecipePortions repoRecipePortionsMock;
+    DataAccessRecipePortions repoRecipePortionsMock;
     @Captor
     ArgumentCaptor<PrimitiveDataSource.GetPrimitiveCallback<RecipePortionsEntity>>
             getRecipePortionsCallbackCaptor;
     @Mock
-    RepositoryRecipeIngredient repoRecipeIngredientMock;
+    DataAccessRecipeIngredient repoRecipeIngredientMock;
     @Captor
     ArgumentCaptor<PrimitiveDataSource.GetPrimitiveCallback<RecipeIngredientEntity>>
             getRecipeIngredientCallbackCaptor;
     @Mock
-    RepositoryIngredient repoIngredientMock;
+    DataAccessIngredient repoIngredientMock;
     @Captor
     ArgumentCaptor<PrimitiveDataSource.GetPrimitiveCallback<IngredientEntity>>
             getIngredientCallbackCaptor;

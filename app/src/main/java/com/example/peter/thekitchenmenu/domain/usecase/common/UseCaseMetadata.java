@@ -3,7 +3,7 @@ package com.example.peter.thekitchenmenu.domain.usecase.common;
 import android.annotation.SuppressLint;
 
 import com.example.peter.thekitchenmenu.app.Constants;
-import com.example.peter.thekitchenmenu.data.repository.Repository;
+import com.example.peter.thekitchenmenu.data.repository.DataAccess;
 import com.example.peter.thekitchenmenu.domain.model.DomainModel;
 import com.example.peter.thekitchenmenu.domain.model.UseCaseMetadataModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.CommonFailReason;
@@ -18,20 +18,18 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class UseCaseMetadata<
-        REPOSITORY extends Repository<PERSISTENCE_MODEL>,
+        DATA_ACCESS extends DataAccess<PERSISTENCE_MODEL>,
         PERSISTENCE_MODEL extends DomainModel.PersistenceModel,
-        ENTITY_MODEL extends DomainModel.EntityModel,
         USE_CASE_MODEL extends DomainModel.UseCaseModel,
-        REQUEST_MODEL extends DomainModel.RequestModel,
-        RESPONSE_MODEL extends DomainModel.ResponseModel>
+        USE_CASE_REQUEST_MODEL extends DomainModel.UseCaseRequestModel,
+        USE_CASE_RESPONSE_MODEL extends DomainModel.UseCaseResponseModel>
 
         extends UseCaseModel<
-        REPOSITORY,
+        DATA_ACCESS,
         PERSISTENCE_MODEL,
-        ENTITY_MODEL,
         USE_CASE_MODEL,
-        REQUEST_MODEL,
-        RESPONSE_MODEL> {
+        USE_CASE_REQUEST_MODEL,
+        USE_CASE_RESPONSE_MODEL> {
 
     public enum ComponentState {
         INVALID_DEFAULT(1),
@@ -66,25 +64,24 @@ public abstract class UseCaseMetadata<
 
     protected List<FailReasons> failReasons = new ArrayList<>();
 
-    public UseCaseMetadata(REPOSITORY repository,
-                           DomainModel.ModelConverter<
-                                   ENTITY_MODEL,
-                                   USE_CASE_MODEL,
-                                   PERSISTENCE_MODEL,
-                                   REQUEST_MODEL,
-                                   RESPONSE_MODEL> modelConverter,
+    public UseCaseMetadata(DATA_ACCESS dataAccess,
+                           DomainModel.Converter<
+                                                              USE_CASE_MODEL,
+                                                              PERSISTENCE_MODEL,
+                                                              USE_CASE_REQUEST_MODEL,
+                                                              USE_CASE_RESPONSE_MODEL> converter,
                            UniqueIdProvider idProvider,
                            TimeProvider timeProvider) {
-        super(repository, modelConverter, idProvider, timeProvider);
+        super(dataAccess, converter, idProvider, timeProvider);
     }
 
     @Override
     protected void initialiseUseCase() {
         failReasons.clear();
-        validateDomainModelElements();
+        processDataElements();
     }
 
-    protected abstract void validateDomainModelElements();
+    protected abstract void processDataElements();
 
     protected UseCaseMetadataModel getMetadata() {
 
@@ -113,21 +110,14 @@ public abstract class UseCaseMetadata<
         ComponentState componentState;
 
         if (isDefaultDomainModel()) {
-            componentState =
-                    isDomainModelValid() ?
-                            ComponentState.VALID_DEFAULT :
-                            ComponentState.INVALID_DEFAULT;
+            componentState = isDomainModelValid() ?
+                    ComponentState.VALID_DEFAULT :
+                    ComponentState.INVALID_DEFAULT;
         } else {
-            componentState =
-                    isDomainModelValid() ?
-                            (isChanged ?
-                                    ComponentState.VALID_CHANGED :
-                                    ComponentState.VALID_UNCHANGED) :
-                            (isChanged ?
-                                    ComponentState.INVALID_CHANGED :
-                                    ComponentState.INVALID_UNCHANGED);
+            componentState = isDomainModelValid() ?
+                    (isChanged ? ComponentState.VALID_CHANGED : ComponentState.VALID_UNCHANGED) :
+                    (isChanged ? ComponentState.INVALID_CHANGED : ComponentState.INVALID_UNCHANGED);
         }
-
         return componentState;
     }
 

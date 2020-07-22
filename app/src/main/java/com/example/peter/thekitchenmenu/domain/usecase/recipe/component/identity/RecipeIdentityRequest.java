@@ -7,7 +7,7 @@ import javax.annotation.Nonnull;
 
 public final class RecipeIdentityRequest
         extends
-        UseCaseMessageModelDataId<RecipeIdentityRequestModel>
+        UseCaseMessageModelDataId<RecipeIdentityUseCaseRequestModel>
         implements
         UseCaseBase.Request {
 
@@ -28,7 +28,7 @@ public final class RecipeIdentityRequest
             UseCaseMessageModelDataIdBuilder<
                     Builder,
                     RecipeIdentityRequest,
-                    RecipeIdentityRequestModel> {
+                    RecipeIdentityUseCaseRequestModel> {
 
         public Builder() {
             message = new RecipeIdentityRequest();
@@ -38,14 +38,14 @@ public final class RecipeIdentityRequest
         public Builder getDefault() {
             message.dataId = "";
             message.domainId = "";
-            message.model = new RecipeIdentityRequestModel.Builder().getDefault().build();
+            message.model = new RecipeIdentityUseCaseRequestModel.Builder().getDefault().build();
             return self();
         }
 
         public Builder basedOnResponse(RecipeIdentityResponse response) {
             message.dataId = response.getDataId();
             message.domainId = response.getDomainId();
-            message.model = new RecipeIdentityRequestModel.Builder().
+            message.model = new RecipeIdentityUseCaseRequestModel.Builder().
                     basedOnResponseModel(response.getDomainModel()).
                     build();
             return self();

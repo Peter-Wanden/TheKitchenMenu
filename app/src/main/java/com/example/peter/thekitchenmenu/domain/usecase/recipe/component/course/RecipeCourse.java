@@ -4,7 +4,7 @@ import android.annotation.SuppressLint;
 
 import androidx.annotation.NonNull;
 
-import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeCourse;
+import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipeCourse;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseElement;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
@@ -20,7 +20,7 @@ import javax.annotation.Nonnull;
 public class RecipeCourse
         extends
         UseCaseElement<
-                RepositoryRecipeCourse,
+                DataAccessRecipeCourse,
                 RecipeCoursePersistenceModel,
                 RecipeCourse.DomainModel> {
 
@@ -97,7 +97,7 @@ public class RecipeCourse
         }
     }
 
-    public RecipeCourse(@Nonnull RepositoryRecipeCourse repository,
+    public RecipeCourse(@Nonnull DataAccessRecipeCourse repository,
                         @Nonnull UniqueIdProvider idProvider,
                         @Nonnull TimeProvider timeProvider) {
 

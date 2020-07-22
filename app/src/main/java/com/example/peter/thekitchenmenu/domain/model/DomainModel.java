@@ -8,7 +8,6 @@ import javax.annotation.Nonnull;
 public interface DomainModel {
 
     interface EntityModel {
-
     }
 
     /**
@@ -31,28 +30,21 @@ public interface DomainModel {
         long getLastUpdate();
     }
 
-    interface RequestModel {
-
+    interface UseCaseRequestModel {
     }
 
-    interface ResponseModel {
-
+    interface UseCaseResponseModel {
     }
 
-    interface ModelConverter<
-            ENTITY_MODEL extends EntityModel,
+    interface Converter<
             USE_CASE_MODEL extends UseCaseModel,
             PERSISTENCE_MODEL extends PersistenceModel,
-            REQUEST_MODEL extends RequestModel,
-            RESPONSE_MODEL extends ResponseModel> {
-
-        ENTITY_MODEL convertUseCaseToEntityModel(@Nonnull USE_CASE_MODEL useCaseModel);
+            REQUEST_MODEL extends UseCaseRequestModel,
+            RESPONSE_MODEL extends UseCaseResponseModel> {
 
         USE_CASE_MODEL convertPersistenceToDomainModel(@Nonnull PERSISTENCE_MODEL model);
 
         USE_CASE_MODEL convertRequestToUseCaseModel(@Nonnull REQUEST_MODEL model);
-
-        USE_CASE_MODEL convertEntityToUseCaseModel(@Nonnull ENTITY_MODEL entityModel);
 
         PERSISTENCE_MODEL createNewPersistenceModel();
 

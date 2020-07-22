@@ -18,9 +18,9 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.R
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourseResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDurationRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDurationResponse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityUseCasePersistenceModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityRequest;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityRequestModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityUseCaseRequestModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentName;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseMetadata.ComponentState;
@@ -436,10 +436,10 @@ public class RecipeTest {
     @Test
     public void identityRequestNewId_titleValidDescriptionValid_identityStateVALID_CHANGED() {
         // Arrange
-        RecipeIdentityPersistenceModel modelUnderTest = TestDataRecipeIdentity.
+        RecipeIdentityUseCasePersistenceModel modelUnderTest = TestDataRecipeIdentity.
                 getValidExistingTitleValidDescriptionValid();
-        ArgumentCaptor<RecipeIdentityPersistenceModel> persistenceModelCaptor = ArgumentCaptor.
-                forClass(RecipeIdentityPersistenceModel.class);
+        ArgumentCaptor<RecipeIdentityUseCasePersistenceModel> persistenceModelCaptor = ArgumentCaptor.
+                forClass(RecipeIdentityUseCasePersistenceModel.class);
 
         String recipeId = modelUnderTest.getDomainId();
 
@@ -462,7 +462,7 @@ public class RecipeTest {
         // Identity Request 2, 'existing request', update title
         String validTitle = modelUnderTest.getTitle();
 
-        RecipeIdentityRequestModel validTitleModel = new RecipeIdentityRequestModel.Builder().
+        RecipeIdentityUseCaseRequestModel validTitleModel = new RecipeIdentityUseCaseRequestModel.Builder().
                 basedOnResponseModel(callbackClient.response.getDomainModel()).
                 setTitle(validTitle).
                 build();
@@ -476,7 +476,7 @@ public class RecipeTest {
 
         // Identity Request 3, existing request, update description
         String validDescription = modelUnderTest.getDescription();
-        RecipeIdentityRequestModel validTitleDescriptionModel = new RecipeIdentityRequestModel.
+        RecipeIdentityUseCaseRequestModel validTitleDescriptionModel = new RecipeIdentityUseCaseRequestModel.
                 Builder().basedOnResponseModel(callbackClient.response.getDomainModel()).
                 setDescription(validDescription).
                 build();

@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.domain.usecase.common;
 
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
-import com.example.peter.thekitchenmenu.data.repository.Repository;
+import com.example.peter.thekitchenmenu.data.repository.DataAccess;
 import com.example.peter.thekitchenmenu.domain.model.BaseDomainModel;
 import com.example.peter.thekitchenmenu.domain.model.DomainModel;
 import com.example.peter.thekitchenmenu.domain.model.UseCaseMetadataModel;
@@ -25,22 +25,23 @@ import static com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseMeta
  *
  * @param <PERSISTENCE_MODEL>     the domain model the use case sends to the repository
  * @param <USE_CASE_MODEL> the use case's internal domain model
- * @param <REPOSITORY>            the repository for the persistence model
+ * @param <DATA_ACCESS>            the repository for the persistence model
  */
 public abstract class UseCaseElement<
-        REPOSITORY extends Repository<PERSISTENCE_MODEL>,
+        DATA_ACCESS extends DataAccess<PERSISTENCE_MODEL>,
         PERSISTENCE_MODEL extends DomainModel.PersistenceModel,
         USE_CASE_MODEL extends DomainModel.UseCaseModel>
         extends
         UseCaseBase
-        implements DomainDataAccess.GetDomainModelCallback<PERSISTENCE_MODEL> {
+        implements
+        DomainDataAccess.GetDomainModelCallback<PERSISTENCE_MODEL> {
 
     private static final String TAG = "tkm-" + "UseCaseElement" + ": ";
 
     protected String useCaseDataId = UseCaseMessageModelDataId.NO_ID;
     protected String useCaseDomainId = UseCaseMessageModelDataId.NO_ID;
 
-    protected REPOSITORY repository;
+    protected DATA_ACCESS repository;
     protected UniqueIdProvider idProvider;
     protected TimeProvider timeProvider;
 

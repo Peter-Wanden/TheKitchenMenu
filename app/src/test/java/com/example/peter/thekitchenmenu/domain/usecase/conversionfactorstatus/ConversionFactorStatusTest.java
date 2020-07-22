@@ -3,7 +3,7 @@ package com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus;
 import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
 import com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.datasource.IngredientEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter.PrimitiveDataSource;
-import com.example.peter.thekitchenmenu.data.repository.ingredient.RepositoryIngredient;
+import com.example.peter.thekitchenmenu.data.repository.ingredient.DataAccessIngredient;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.MeasurementSubtype;
@@ -64,7 +64,7 @@ public class ConversionFactorStatusTest {
     // region helper fields ------------------------------------------------------------------------
     private UseCaseHandler handler = new UseCaseHandler(new UseCaseSchedulerMock());
     @Mock
-    RepositoryIngredient repoMock;
+    DataAccessIngredient repoMock;
     @Captor
     ArgumentCaptor<PrimitiveDataSource.GetPrimitiveCallback<IngredientEntity>> getEntityCallbackCaptor;
 

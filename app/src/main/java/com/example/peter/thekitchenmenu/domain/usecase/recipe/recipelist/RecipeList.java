@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipelist;
 
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
-import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeMetadata;
+import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.factory.UseCaseFactory;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseHandler;
@@ -36,7 +36,7 @@ public class RecipeList
     @Nonnull
     private final UseCaseHandler handler;
     @Nonnull
-    private final RepositoryRecipeMetadata repository;
+    private final DataAccessRecipeMetadata repository;
 
     private List<Recipe> recipes;
 
@@ -47,7 +47,7 @@ public class RecipeList
 
     public RecipeList(@Nonnull UseCaseHandler handler,
                       @Nonnull UseCaseFactory factory,
-                      @Nonnull RepositoryRecipeMetadata repository) {
+                      @Nonnull DataAccessRecipeMetadata repository) {
         this.handler = handler;
         this.factory = factory;
         this.repository = repository;

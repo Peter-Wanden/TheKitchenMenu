@@ -62,10 +62,10 @@ public abstract class BusinessEntity<ENTITY_MODEL extends DomainModel.EntityMode
         this.failReasons = new ArrayList<>();
         this.callback = callback;
 
-        processElements();
+        processDataElements();
     }
 
-    protected abstract void processElements();
+    protected abstract void processDataElements();
 
     protected abstract void sendResponse();
 }

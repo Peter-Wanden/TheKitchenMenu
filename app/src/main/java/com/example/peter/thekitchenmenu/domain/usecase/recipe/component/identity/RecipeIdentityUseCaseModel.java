@@ -4,7 +4,7 @@ import com.example.peter.thekitchenmenu.domain.model.DomainModel;
 
 import javax.annotation.Nonnull;
 
-final class RecipeIdentityUseCaseModel
+public final class RecipeIdentityUseCaseModel
         implements
         DomainModel.UseCaseModel {
     @Nonnull

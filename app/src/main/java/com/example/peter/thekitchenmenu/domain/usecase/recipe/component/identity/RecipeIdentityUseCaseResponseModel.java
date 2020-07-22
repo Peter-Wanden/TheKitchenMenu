@@ -1,22 +1,23 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity;
 
 import com.example.peter.thekitchenmenu.domain.model.BaseDomainModel;
+import com.example.peter.thekitchenmenu.domain.model.DomainModel;
 import com.example.peter.thekitchenmenu.domain.model.DomainModelBuilder;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public final class RecipeIdentityResponseModel
+public final class RecipeIdentityUseCaseResponseModel
         extends
         BaseDomainModel
         implements
-        com.example.peter.thekitchenmenu.domain.model.DomainModel.ResponseModel {
+        DomainModel.UseCaseResponseModel {
 
     private String title;
     private String description;
 
-    private RecipeIdentityResponseModel() {}
+    private RecipeIdentityUseCaseResponseModel() {}
 
     @Nonnull
     public String getTitle() {
@@ -32,7 +33,7 @@ public final class RecipeIdentityResponseModel
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        RecipeIdentityResponseModel domainModel = (RecipeIdentityResponseModel) o;
+        RecipeIdentityUseCaseResponseModel domainModel = (RecipeIdentityUseCaseResponseModel) o;
         return title.equals(domainModel.title) &&
                 description.equals(domainModel.description);
     }
@@ -53,10 +54,10 @@ public final class RecipeIdentityResponseModel
 
     public static class Builder
             extends
-            DomainModelBuilder<Builder, RecipeIdentityResponseModel> {
+            DomainModelBuilder<Builder, RecipeIdentityUseCaseResponseModel> {
 
         public Builder() {
-            domainModel = new RecipeIdentityResponseModel();
+            domainModel = new RecipeIdentityUseCaseResponseModel();
         }
 
         @Override

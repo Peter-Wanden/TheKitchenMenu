@@ -1,9 +1,9 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredientlist;
 
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
-import com.example.peter.thekitchenmenu.data.repository.ingredient.RepositoryIngredient;
-import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeIngredient;
-import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipePortions;
+import com.example.peter.thekitchenmenu.data.repository.ingredient.DataAccessIngredient;
+import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipeIngredient;
+import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.model.MeasurementModel;
 import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.model.MeasurementModelBuilder;
@@ -24,9 +24,9 @@ public class RecipeIngredientList extends UseCaseBase {
 
     private static final String TAG = "tkm-" + RecipeIngredientList.class.getSimpleName() + ": ";
 
-    private RepositoryRecipeIngredient repoRecipeIngredient;
-    private RepositoryIngredient repoIngredient;
-    private RepositoryRecipePortions repoPortions;
+    private DataAccessRecipeIngredient repoRecipeIngredient;
+    private DataAccessIngredient repoIngredient;
+    private DataAccessRecipePortions repoPortions;
 
     private String recipeId;
     private Map<String, RecipeIngredientPersistenceModel> recipeIngredientQuantities =
@@ -35,9 +35,9 @@ public class RecipeIngredientList extends UseCaseBase {
     private List<RecipeIngredientListItemModel> listItemModels = new ArrayList<>();
     private int portions;
 
-    public RecipeIngredientList(RepositoryRecipeIngredient repoRecipeIngredient,
-                                RepositoryIngredient repoIngredient,
-                                RepositoryRecipePortions repoPortions) {
+    public RecipeIngredientList(DataAccessRecipeIngredient repoRecipeIngredient,
+                                DataAccessIngredient repoIngredient,
+                                DataAccessRecipePortions repoPortions) {
         this.repoRecipeIngredient = repoRecipeIngredient;
         this.repoIngredient = repoIngredient;
         this.repoPortions = repoPortions;

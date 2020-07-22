@@ -7,7 +7,7 @@ import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentity;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityResponse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityResponseModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityUseCaseResponseModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortionsRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortionsResponse;
@@ -59,7 +59,7 @@ public class RecipeNameAndPortionsViewModel extends ViewModel {
         });
     }
 
-    private void setIdentityToView(RecipeIdentityResponseModel domainModel) {
+    private void setIdentityToView(RecipeIdentityUseCaseResponseModel domainModel) {
 //        recipeTitleObservable.set(domainModel.getTitle());
     }
 

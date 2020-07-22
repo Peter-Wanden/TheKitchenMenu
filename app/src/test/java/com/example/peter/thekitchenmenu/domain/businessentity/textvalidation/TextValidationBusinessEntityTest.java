@@ -26,7 +26,7 @@ public class TextValidationBusinessEntityTest {
     // endregion constants
 
     // region helper fields
-    private TextValidationEntityModel model;
+    private TextValidationModel model;
     private List<FailReasons> failReasons;
     // endregion helper fields
 
@@ -49,8 +49,8 @@ public class TextValidationBusinessEntityTest {
     @Test
     public void requestTypeSHORT_TEXT_nullCheck_resultNULL_TEXT() {
         // Arrange
-        Request<TextValidationEntityModel> request = new Request<>(
-                new TextValidationEntityModel(
+        Request<TextValidationModel> request = new Request<>(
+                new TextValidationModel(
                         TextLength.SHORT_TEXT,
                         null
                 )
@@ -59,7 +59,7 @@ public class TextValidationBusinessEntityTest {
         SUT.execute(request, new CallbackClient());
         // Assert
         List<FailReasons> expectedFailReasons = Collections.singletonList(
-                TextValidationBusinessEntity.FailReason.NULL_TEXT
+                TextValidationBusinessEntity.FailReason.TEXT_NULL
         );
         List<FailReasons> actualFailReasons = failReasons;
         assertEquals(
@@ -71,8 +71,8 @@ public class TextValidationBusinessEntityTest {
     @Test
     public void requestTypeSHORT_TEXT_emptyString_resultTOO_SHORT() {
         // Arrange
-        Request<TextValidationEntityModel> request = new Request<>(
-                new TextValidationEntityModel(
+        Request<TextValidationModel> request = new Request<>(
+                new TextValidationModel(
                         TextLength.SHORT_TEXT,
                         "")
                 );
@@ -80,7 +80,7 @@ public class TextValidationBusinessEntityTest {
         SUT.execute(request, new CallbackClient());
         // Assert
         List<FailReasons> expectedFailReasons = Collections.singletonList(
-                TextValidationBusinessEntity.FailReason.TOO_SHORT
+                TextValidationBusinessEntity.FailReason.TEXT_TOO_SHORT
         );
         List<FailReasons> actualFailReasons = failReasons;
         assertEquals(
@@ -97,8 +97,8 @@ public class TextValidationBusinessEntityTest {
                 thenRemoveOneCharacter().
                 build();
 
-        Request<TextValidationEntityModel> request = new Request<>(
-                new TextValidationEntityModel(
+        Request<TextValidationModel> request = new Request<>(
+                new TextValidationModel(
                         TextLength.SHORT_TEXT,
                         textToVerify
                 )
@@ -107,7 +107,7 @@ public class TextValidationBusinessEntityTest {
         SUT.execute(request, new CallbackClient());
         // Assert
         List<FailReasons> expectedFailReasons = Collections.singletonList(
-                TextValidationBusinessEntity.FailReason.TOO_SHORT
+                TextValidationBusinessEntity.FailReason.TEXT_TOO_SHORT
         );
         List<FailReasons> actualFailReasons = failReasons;
         assertEquals(
@@ -123,8 +123,8 @@ public class TextValidationBusinessEntityTest {
                 makeStringOfExactLength(SHORT_TEXT_MAX_LENGTH).
                 thenAddOneCharacter().
                 build();
-        Request<TextValidationEntityModel> request = new Request<>(
-                new TextValidationEntityModel(
+        Request<TextValidationModel> request = new Request<>(
+                new TextValidationModel(
                         TextLength.SHORT_TEXT,
                         textToVerify
                 )
@@ -133,7 +133,7 @@ public class TextValidationBusinessEntityTest {
         SUT.execute(request, new CallbackClient());
         // Assert
         List<FailReasons> expectedFailReasons = Collections.singletonList(
-                TextValidationBusinessEntity.FailReason.TOO_LONG
+                TextValidationBusinessEntity.FailReason.TEXT_TOO_LONG
         );
         List<FailReasons> actualFailReasons = failReasons;
         assertEquals(
@@ -145,8 +145,8 @@ public class TextValidationBusinessEntityTest {
     @Test
     public void requestTypeLONG_TEXT_emptyString_resultFailReasonsEmpty() {
         // Arrange
-        Request<TextValidationEntityModel> request = new Request<>(
-                new TextValidationEntityModel(TextLength.LONG_TEXT,""));
+        Request<TextValidationModel> request = new Request<>(
+                new TextValidationModel(TextLength.LONG_TEXT,""));
         // Act
         SUT.execute(request, new CallbackClient());
         // Assert
@@ -156,8 +156,8 @@ public class TextValidationBusinessEntityTest {
     @Test
     public void requestTypeLONG_TEXT_singleCharacter_resultFailReasonsEmpty() {
         // Arrange
-        Request<TextValidationEntityModel> request = new Request<>(
-                new TextValidationEntityModel(TextLength.LONG_TEXT,"a"));
+        Request<TextValidationModel> request = new Request<>(
+                new TextValidationModel(TextLength.LONG_TEXT,"a"));
         // Act
         SUT.execute(request, new CallbackClient());
         // Assert
@@ -171,13 +171,13 @@ public class TextValidationBusinessEntityTest {
                 makeStringOfExactLength(LONG_TEXT_MAX_LENGTH).
                 thenAddOneCharacter().
                 build();
-        Request<TextValidationEntityModel> request = new Request<>(
-                new TextValidationEntityModel(TextLength.LONG_TEXT, textToVerify)
+        Request<TextValidationModel> request = new Request<>(
+                new TextValidationModel(TextLength.LONG_TEXT, textToVerify)
         );
         // Act
         SUT.execute(request, new CallbackClient());
         // Assert
-        List<FailReasons> expectedFailReasons = Collections.singletonList(FailReason.TOO_LONG);
+        List<FailReasons> expectedFailReasons = Collections.singletonList(FailReason.TEXT_TOO_LONG);
         List<FailReasons> actualFailReasons = failReasons;
         assertEquals(
                 expectedFailReasons,
@@ -190,10 +190,10 @@ public class TextValidationBusinessEntityTest {
 
     // region helper classes
     private class CallbackClient
-            implements Callback<Response<TextValidationEntityModel>> {
+            implements Callback<Response<TextValidationModel>> {
 
         @Override
-        public void onProcessed(Response<TextValidationEntityModel> response) {
+        public void onProcessed(Response<TextValidationModel> response) {
             model = response.getModel();
             failReasons = response.getFailReasons();
         }

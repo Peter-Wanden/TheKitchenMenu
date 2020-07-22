@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity;
 
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess.GetDomainModelCallback;
-import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeIdentity;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RecipeIdentityUseCaseDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.recipe.identity.TestDataRecipeIdentity;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.CommonFailReason;
@@ -48,9 +48,9 @@ public class RecipeIdentityTest {
 
     // region helper fields ------------------------------------------------------------------------
     @Mock
-    RepositoryRecipeIdentity repoIdentityMock;
+    RecipeIdentityUseCaseDataAccess repoIdentityMock;
     @Captor
-    ArgumentCaptor<GetDomainModelCallback<RecipeIdentityPersistenceModel>> repoCallback;
+    ArgumentCaptor<GetDomainModelCallback<RecipeIdentityUseCasePersistenceModel>> repoCallback;
     @Mock
     TimeProvider timeProviderMock;
     @Mock
@@ -89,7 +89,7 @@ public class RecipeIdentityTest {
         // Arrange
         // This is the initial pre-test setup request for most tests cases, so check all return
         // values
-        RecipeIdentityPersistenceModel modelUnderTest = TestDataRecipeIdentity.
+        RecipeIdentityUseCasePersistenceModel modelUnderTest = TestDataRecipeIdentity.
                 getNewInvalidActiveDefault();
         // Act
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
@@ -138,14 +138,14 @@ public class RecipeIdentityTest {
     @Test
     public void newRequest_titleTooLongDescriptionTooLong_stateINVALID_CHANGED() {
         // Arrange
-        RecipeIdentityPersistenceModel modelUnderTest = TestDataRecipeIdentity.
+        RecipeIdentityUseCasePersistenceModel modelUnderTest = TestDataRecipeIdentity.
                 getInvalidNewTitleTooLongDescriptionTooLong();
 
         simulateNewInitialisationRequest(modelUnderTest);
 
         RecipeIdentityResponse initialisationResponse = identityOnErrorResponse;
 
-        RecipeIdentityRequestModel model = new RecipeIdentityRequestModel.Builder().
+        RecipeIdentityUseCaseRequestModel model = new RecipeIdentityUseCaseRequestModel.Builder().
                 setTitle(modelUnderTest.getTitle()).
                 setDescription(modelUnderTest.getDescription()).
                 build();
@@ -172,13 +172,13 @@ public class RecipeIdentityTest {
     @Test
     public void newRequest_titleTooLongDescriptionTooLong_failReasonsTITLE_TOO_LONG_DESCRIPTION_TOO_LONG() {
         // Arrange
-        RecipeIdentityPersistenceModel modelUnderTest = TestDataRecipeIdentity.
+        RecipeIdentityUseCasePersistenceModel modelUnderTest = TestDataRecipeIdentity.
                 getInvalidNewTitleTooLongDescriptionTooLong();
 
         simulateNewInitialisationRequest(modelUnderTest); // first request
         RecipeIdentityResponse initialisationResponse = identityOnErrorResponse;
 
-        RecipeIdentityRequestModel model = new RecipeIdentityRequestModel.Builder().
+        RecipeIdentityUseCaseRequestModel model = new RecipeIdentityUseCaseRequestModel.Builder().
                 setTitle(modelUnderTest.getTitle()).
                 setDescription(modelUnderTest.getDescription()).
                 build();
@@ -210,13 +210,13 @@ public class RecipeIdentityTest {
     @Test
     public void newRequest_titleTooShortDescriptionValid_stateINVALID_CHANGED() {
         // Arrange
-        RecipeIdentityPersistenceModel modelUnderTest = TestDataRecipeIdentity.
+        RecipeIdentityUseCasePersistenceModel modelUnderTest = TestDataRecipeIdentity.
                 getInvalidNewTitleTooShortDescriptionValid();
 
         simulateNewInitialisationRequest(modelUnderTest);
         RecipeIdentityResponse initialisationResponse = identityOnErrorResponse;
 
-        RecipeIdentityRequestModel model = new RecipeIdentityRequestModel.Builder().
+        RecipeIdentityUseCaseRequestModel model = new RecipeIdentityUseCaseRequestModel.Builder().
                 setTitle(modelUnderTest.getTitle()).
                 setDescription(modelUnderTest.getDescription()).
                 build();
@@ -253,13 +253,13 @@ public class RecipeIdentityTest {
     @Test
     public void newRequest_titleTooShort_stateINVALID_CHANGED() {
         // Arrange
-        RecipeIdentityPersistenceModel modelUnderTest = TestDataRecipeIdentity.
+        RecipeIdentityUseCasePersistenceModel modelUnderTest = TestDataRecipeIdentity.
                 getInvalidNewTitleTooShort();
 
         simulateNewInitialisationRequest(modelUnderTest);
         RecipeIdentityResponse initialisationResponse = identityOnErrorResponse;
 
-        RecipeIdentityRequestModel model = new RecipeIdentityRequestModel.Builder().
+        RecipeIdentityUseCaseRequestModel model = new RecipeIdentityUseCaseRequestModel.Builder().
                 setTitle(modelUnderTest.getTitle()).
                 setDescription(modelUnderTest.getDescription()).
                 build();
@@ -296,13 +296,13 @@ public class RecipeIdentityTest {
     @Test
     public void newRequest_titleValid_valuesPersisted() {
         // Arrange
-        RecipeIdentityPersistenceModel modelUnderTest = TestDataRecipeIdentity.
+        RecipeIdentityUseCasePersistenceModel modelUnderTest = TestDataRecipeIdentity.
                 getValidNewTitleValid();
 
         simulateNewInitialisationRequest(modelUnderTest);
         RecipeIdentityResponse initialisationResponse = identityOnErrorResponse;
 
-        RecipeIdentityRequestModel model = new RecipeIdentityRequestModel.Builder().
+        RecipeIdentityUseCaseRequestModel model = new RecipeIdentityUseCaseRequestModel.Builder().
                 setTitle(modelUnderTest.getTitle()).
                 setDescription(modelUnderTest.getDescription()).
                 build();
@@ -323,13 +323,13 @@ public class RecipeIdentityTest {
     @Test
     public void newRequest_titleValid_stateVALID_CHANGED() {
         // Arrange
-        RecipeIdentityPersistenceModel modelUnderTest = TestDataRecipeIdentity.
+        RecipeIdentityUseCasePersistenceModel modelUnderTest = TestDataRecipeIdentity.
                 getValidNewTitleValid();
 
         simulateNewInitialisationRequest(modelUnderTest);
         RecipeIdentityResponse initialisationResponse = identityOnErrorResponse;
 
-        RecipeIdentityRequestModel model = new RecipeIdentityRequestModel.Builder().
+        RecipeIdentityUseCaseRequestModel model = new RecipeIdentityUseCaseRequestModel.Builder().
                 setTitle(modelUnderTest.getTitle()).
                 setDescription(modelUnderTest.getDescription()).
                 build();
@@ -367,13 +367,13 @@ public class RecipeIdentityTest {
     @Test
     public void newRequest_titleValidDescriptionValid_valuesPersisted() {
         // Arrange
-        RecipeIdentityPersistenceModel modelUnderTest = TestDataRecipeIdentity.
+        RecipeIdentityUseCasePersistenceModel modelUnderTest = TestDataRecipeIdentity.
                 getValidNewTitleValid();
 
         simulateNewInitialisationRequest(modelUnderTest);
         RecipeIdentityResponse initialisationResponse = identityOnErrorResponse;
 
-        RecipeIdentityRequestModel model = new RecipeIdentityRequestModel.Builder().
+        RecipeIdentityUseCaseRequestModel model = new RecipeIdentityUseCaseRequestModel.Builder().
                 setTitle(modelUnderTest.getTitle()).
                 setDescription(modelUnderTest.getDescription()).
                 build();
@@ -406,7 +406,7 @@ public class RecipeIdentityTest {
     @Test
     public void newRequest_titleValidThenDescriptionValid_stateVALID_CHANGED() {
         // Arrange
-        RecipeIdentityPersistenceModel modelUnderTest = TestDataRecipeIdentity.
+        RecipeIdentityUseCasePersistenceModel modelUnderTest = TestDataRecipeIdentity.
                 getValidNewComplete();
 
         // Request 1: initialisation request
@@ -414,7 +414,7 @@ public class RecipeIdentityTest {
         RecipeIdentityResponse initialisationResponse = identityOnErrorResponse;
 
         // Request 2: valid new title request
-        RecipeIdentityRequestModel titleModel = new RecipeIdentityRequestModel.
+        RecipeIdentityUseCaseRequestModel titleModel = new RecipeIdentityUseCaseRequestModel.
                 Builder().
                 getDefault().
                 setTitle(modelUnderTest.getTitle()).
@@ -435,7 +435,7 @@ public class RecipeIdentityTest {
         // last response, only add those we are going to change
         RecipeIdentityResponse titleResponse = identityOnSuccessResponse;
 
-        RecipeIdentityRequestModel descriptionModel = new RecipeIdentityRequestModel.Builder().
+        RecipeIdentityUseCaseRequestModel descriptionModel = new RecipeIdentityUseCaseRequestModel.Builder().
                 basedOnResponseModel(titleResponse.getDomainModel()).
                 setDescription(modelUnderTest.getDescription()).
                 build();
@@ -456,11 +456,11 @@ public class RecipeIdentityTest {
         int expectedNumberOfSaves = 3;
 
         // Assert data saved
-        ArgumentCaptor<RecipeIdentityPersistenceModel> ac = ArgumentCaptor.
-                forClass(RecipeIdentityPersistenceModel.class);
+        ArgumentCaptor<RecipeIdentityUseCasePersistenceModel> ac = ArgumentCaptor.
+                forClass(RecipeIdentityUseCasePersistenceModel.class);
         verify(repoIdentityMock, times(expectedNumberOfSaves)).save(ac.capture());
 
-        RecipeIdentityPersistenceModel lastSavedDomainModel = ac.getValue();
+        RecipeIdentityUseCasePersistenceModel lastSavedDomainModel = ac.getValue();
         assertEquals(
                 modelUnderTest,
                 lastSavedDomainModel
@@ -488,7 +488,7 @@ public class RecipeIdentityTest {
     @Test
     public void existingRequest_titleValidDescriptionValid_VALID_UNCHANGED() {
         // Arrange
-        RecipeIdentityPersistenceModel modelUnderTest = TestDataRecipeIdentity.
+        RecipeIdentityUseCasePersistenceModel modelUnderTest = TestDataRecipeIdentity.
                 getValidExistingTitleValidDescriptionValid();
         // Act
         simulateExistingInitialisationRequest(modelUnderTest);
@@ -508,7 +508,7 @@ public class RecipeIdentityTest {
     @Test
     public void existingRequest_titleValidDescriptionValid_correctValuesReturned() {
         // Arrange
-        RecipeIdentityPersistenceModel modelUnderTest = TestDataRecipeIdentity.
+        RecipeIdentityUseCasePersistenceModel modelUnderTest = TestDataRecipeIdentity.
                 getValidExistingTitleValidDescriptionValid();
         // Act
         simulateExistingInitialisationRequest(modelUnderTest);
@@ -516,7 +516,7 @@ public class RecipeIdentityTest {
         // Assert
         RecipeIdentityResponse response = identityOnSuccessResponse;
         UseCaseMetadataModel metadata = response.getMetadata();
-        RecipeIdentityResponseModel domainModel = response.getDomainModel();
+        RecipeIdentityUseCaseResponseModel domainModel = response.getDomainModel();
 
         String expectedDataId = modelUnderTest.getDataId();
         String actualDataId = response.getDataId();
@@ -565,7 +565,7 @@ public class RecipeIdentityTest {
     @Test
     public void existingRequest_titleTooShort_stateINVALID_UNCHANGED() {
         // Arrange
-        RecipeIdentityPersistenceModel modelUnderTest = TestDataRecipeIdentity.
+        RecipeIdentityUseCasePersistenceModel modelUnderTest = TestDataRecipeIdentity.
                 getInvalidExistingTitleTooShort();
         // Act
         simulateExistingInitialisationRequest(modelUnderTest);
@@ -584,7 +584,7 @@ public class RecipeIdentityTest {
     @Test
     public void existingRequest_titleTooShort_failReasonsTITLE_TOO_SHORT() {
         // Arrange
-        RecipeIdentityPersistenceModel modelUnderTest = TestDataRecipeIdentity.
+        RecipeIdentityUseCasePersistenceModel modelUnderTest = TestDataRecipeIdentity.
                 getInvalidExistingTitleTooShort();
         // Act
         simulateExistingInitialisationRequest(modelUnderTest);
@@ -604,7 +604,7 @@ public class RecipeIdentityTest {
     @Test
     public void existingRequest_titleTooLong_stateINVALID_UNCHANGED() {
         // Arrange
-        RecipeIdentityPersistenceModel modelUnderTest = TestDataRecipeIdentity.
+        RecipeIdentityUseCasePersistenceModel modelUnderTest = TestDataRecipeIdentity.
                 getInvalidExistingTitleTooLong();
         // Act
         simulateExistingInitialisationRequest(modelUnderTest);
@@ -623,7 +623,7 @@ public class RecipeIdentityTest {
     @Test
     public void existingRequest_titleValidDescriptionTooLong_stateINVALID_UNCHANGED() {
         // Arrange
-        RecipeIdentityPersistenceModel modelUnderTest = TestDataRecipeIdentity.
+        RecipeIdentityUseCasePersistenceModel modelUnderTest = TestDataRecipeIdentity.
                 getInvalidExistingTitleValidDescriptionTooLong();
         // Act
         simulateExistingInitialisationRequest(modelUnderTest);
@@ -642,7 +642,7 @@ public class RecipeIdentityTest {
     @Test
     public void existingRequest_titleValidDescriptionTooLong_failReasonsDESCRIPTION_TOO_LONG() {
         // Arrange
-        RecipeIdentityPersistenceModel modelUnderTest = TestDataRecipeIdentity.
+        RecipeIdentityUseCasePersistenceModel modelUnderTest = TestDataRecipeIdentity.
                 getInvalidExistingTitleValidDescriptionTooLong();
 
         // Act
@@ -662,7 +662,7 @@ public class RecipeIdentityTest {
     @Test
     public void existingRequest_titleTooShortDescriptionTooLong_stateINVALID_UNCHANGED() {
         // Arrange
-        RecipeIdentityPersistenceModel modelUnderTest = TestDataRecipeIdentity.
+        RecipeIdentityUseCasePersistenceModel modelUnderTest = TestDataRecipeIdentity.
                 getInvalidExistingTitleTooShortDescriptionTooLong();
         // Act
         simulateExistingInitialisationRequest(modelUnderTest);
@@ -676,7 +676,7 @@ public class RecipeIdentityTest {
     @Test
     public void existingRequest_titleTooShortDescriptionTooLong_failReasonsTITLE_TOO_SHORT_DESCRIPTION_TOO_LONG() {
         // Arrange
-        RecipeIdentityPersistenceModel modelUnderTest = TestDataRecipeIdentity.
+        RecipeIdentityUseCasePersistenceModel modelUnderTest = TestDataRecipeIdentity.
                 getInvalidExistingTitleTooShortDescriptionTooLong();
 
         // Act
@@ -696,7 +696,7 @@ public class RecipeIdentityTest {
     @Test
     public void existingRequest_titleTooLongDescriptionTooLong_stateINVALID_UNCHANGED() {
         // Arrange
-        RecipeIdentityPersistenceModel modelUnderTest = TestDataRecipeIdentity.
+        RecipeIdentityUseCasePersistenceModel modelUnderTest = TestDataRecipeIdentity.
                 getInvalidExistingTitleTooLongDescriptionTooLong();
         // Act
         simulateExistingInitialisationRequest(modelUnderTest);
@@ -710,7 +710,7 @@ public class RecipeIdentityTest {
     @Test
     public void existingRequest_titleTooLongDescriptionTooLong_failReasonsTITLE_TOO_LONG_DESCRIPTION_TOO_LONG() {
         // Arrange
-        RecipeIdentityPersistenceModel modelUnderTest = TestDataRecipeIdentity.
+        RecipeIdentityUseCasePersistenceModel modelUnderTest = TestDataRecipeIdentity.
                 getInvalidExistingTitleTooLongDescriptionTooLong();
 
         // Act
@@ -730,7 +730,7 @@ public class RecipeIdentityTest {
     @Test
     public void existingRequest_titleValidDescriptionDefault_stateVAILD_UNCHANGED() {
         // Arrange
-        RecipeIdentityPersistenceModel modelUnderTest = TestDataRecipeIdentity.
+        RecipeIdentityUseCasePersistenceModel modelUnderTest = TestDataRecipeIdentity.
                 getValidExistingTitleValid();
         // Act
         simulateExistingInitialisationRequest(modelUnderTest);
@@ -744,7 +744,7 @@ public class RecipeIdentityTest {
     @Test
     public void existingRequest_titleValidDescriptionDefault_failReasonsNONE() {
         // Arrange
-        RecipeIdentityPersistenceModel modelUnderTest = TestDataRecipeIdentity.
+        RecipeIdentityUseCasePersistenceModel modelUnderTest = TestDataRecipeIdentity.
                 getValidExistingTitleValid();
         // Act
         simulateExistingInitialisationRequest(modelUnderTest);
@@ -762,7 +762,7 @@ public class RecipeIdentityTest {
     @Test
     public void existingRequest_titleValidDescriptionValid_stateVALID_UNCHANGED() {
         // Arrange
-        RecipeIdentityPersistenceModel modelUnderTest = TestDataRecipeIdentity.
+        RecipeIdentityUseCasePersistenceModel modelUnderTest = TestDataRecipeIdentity.
                 getValidExistingTitleValid();
         // Act
         simulateExistingInitialisationRequest(modelUnderTest);
@@ -775,7 +775,7 @@ public class RecipeIdentityTest {
     @Test
     public void existingRequest_titleValidDescriptionValid_failReasonsNONE() {
         // Arrange
-        RecipeIdentityPersistenceModel modelUnderTest = TestDataRecipeIdentity.
+        RecipeIdentityUseCasePersistenceModel modelUnderTest = TestDataRecipeIdentity.
                 getValidExistingTitleValidDescriptionValid();
         // Act
         simulateExistingInitialisationRequest(modelUnderTest);
@@ -791,7 +791,7 @@ public class RecipeIdentityTest {
     @Test
     public void existingRequest_titleTooLong_failReasonsTITLE_TOO_LONG() {
         // Arrange
-        RecipeIdentityPersistenceModel modelUnderTest = TestDataRecipeIdentity.
+        RecipeIdentityUseCasePersistenceModel modelUnderTest = TestDataRecipeIdentity.
                 getInvalidExistingTitleTooLong();
         // Act
         simulateExistingInitialisationRequest(modelUnderTest);
@@ -807,7 +807,7 @@ public class RecipeIdentityTest {
 
     // region helper methods -----------------------------------------------------------------------
     private void simulateNewInitialisationRequest(
-            RecipeIdentityPersistenceModel modelUnderTest) {
+            RecipeIdentityUseCasePersistenceModel modelUnderTest) {
 
         // Arrange - data id requested when creating a new persistence model
         when(idProvider.getUId()).thenReturn(modelUnderTest.getDataId());
@@ -830,7 +830,7 @@ public class RecipeIdentityTest {
     }
 
     private void simulateExistingInitialisationRequest(
-            RecipeIdentityPersistenceModel modelUnderTest) {
+            RecipeIdentityUseCasePersistenceModel modelUnderTest) {
         // Arrange
         RecipeIdentityRequest initialisationRequest = new RecipeIdentityRequest.Builder().
                 getDefault().
@@ -849,7 +849,8 @@ public class RecipeIdentityTest {
 
     // region helper classes -----------------------------------------------------------------------
     private final class IdentityCallbackClient
-            implements UseCaseBase.Callback<RecipeIdentityResponse> {
+            implements
+            UseCaseBase.Callback<RecipeIdentityResponse> {
 
         @Override
         public void onUseCaseSuccess(RecipeIdentityResponse response) {

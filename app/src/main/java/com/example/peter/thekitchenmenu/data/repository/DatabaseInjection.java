@@ -24,15 +24,15 @@ import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.iden
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.dataadapter.RecipeMetadataLocalDeleteAdapter;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.dataadapter.RecipeMetadataLocalGetAdapter;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.dataadapter.RecipeMetadataLocalSaveAdapter;
-import com.example.peter.thekitchenmenu.data.repository.ingredient.RepositoryIngredient;
-import com.example.peter.thekitchenmenu.data.repository.product.RepositoryFavoriteProduct;
-import com.example.peter.thekitchenmenu.data.repository.product.RepositoryProduct;
-import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeCourse;
-import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeDuration;
-import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeIdentity;
-import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeIngredient;
-import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeMetadata;
-import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipePortions;
+import com.example.peter.thekitchenmenu.data.repository.ingredient.DataAccessIngredient;
+import com.example.peter.thekitchenmenu.data.repository.product.DataAccessFavoriteProduct;
+import com.example.peter.thekitchenmenu.data.repository.product.DataAccessProduct;
+import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipeCourse;
+import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipeDuration;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RecipeIdentityUseCaseDataAccess;
+import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipeIngredient;
+import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipeMetadata;
+import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipePortions;
 import com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.datasource.IngredientLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.RepositoryRecipeCourseLocal;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.componentstate.RecipeComponentStateLocalDataSource;
@@ -68,23 +68,23 @@ import javax.annotation.Nonnull;
 
 public class DatabaseInjection {
 
-    public static RepositoryProduct provideProductDataSource(@Nonnull Context context) {
+    public static DataAccessProduct provideProductDataSource(@Nonnull Context context) {
 
         TKMDatabase database = TKMDatabase.getInstance(context, new AppExecutors());
 
-        return RepositoryProduct.getInstance(
+        return DataAccessProduct.getInstance(
                 ProductRemoteDataSource.getInstance(),
                 ProductLocalDataSource.getInstance(
                         new AppExecutors(), database.productEntityDao())
         );
     }
 
-    public static RepositoryFavoriteProduct provideFavoriteProductsDataSource(
+    public static DataAccessFavoriteProduct provideFavoriteProductsDataSource(
             @Nonnull Context context) {
 
         TKMDatabase database = TKMDatabase.getInstance(context, new AppExecutors());
 
-        return RepositoryFavoriteProduct.getInstance(
+        return DataAccessFavoriteProduct.getInstance(
                 FavoriteProductsRemoteDataSource.getInstance(),
                 FavoriteProductsLocalDataSource.getInstance(
                         new AppExecutors(),
@@ -92,8 +92,8 @@ public class DatabaseInjection {
         );
     }
 
-    public static RepositoryRecipeMetadata provideRecipeMetadataDataSource(@Nonnull Context c) {
-        return RepositoryRecipeMetadata.getInstance(
+    public static DataAccessRecipeMetadata provideRecipeMetadataDataSource(@Nonnull Context c) {
+        return DataAccessRecipeMetadata.getInstance(
                 RepositoryRecipeMetadataRemote.getInstance(),
                 RepositoryRecipeMetadataLocal.getInstance(
                         provideRecipeMetadataLocalGetAdapter(c),
@@ -164,9 +164,9 @@ public class DatabaseInjection {
         );
     }
 
-    public static RepositoryRecipeCourse provideRecipeCourseDataSource(
+    public static DataAccessRecipeCourse provideRecipeCourseDataSource(
             @Nonnull Context c) {
-        return RepositoryRecipeCourse.getInstance(
+        return DataAccessRecipeCourse.getInstance(
                 RepositoryRecipeCourseRemote.getInstance(),
                 RepositoryRecipeCourseLocal.getInstance(
                         provideCourseLocalGetAdapter(c),
@@ -220,10 +220,10 @@ public class DatabaseInjection {
         );
     }
 
-    public static RepositoryRecipeIdentity provideRecipeIdentityDataSource(
+    public static RecipeIdentityUseCaseDataAccess provideRecipeIdentityDataSource(
             @Nonnull Context c) {
 
-        return RepositoryRecipeIdentity.getInstance(
+        return RecipeIdentityUseCaseDataAccess.getInstance(
                 RepositoryRecipeIdentityRemote.getInstance(),
                 RepositoryRecipeIdentityLocal.getInstance(
                         provideRecipeIdentityLocalGetAdapter(c),
@@ -257,10 +257,10 @@ public class DatabaseInjection {
         );
     }
 
-    public static RepositoryRecipeDuration provideRecipeDurationDataSource(
+    public static DataAccessRecipeDuration provideRecipeDurationDataSource(
             @Nonnull Context c) {
 
-        return RepositoryRecipeDuration.getInstance(
+        return DataAccessRecipeDuration.getInstance(
                 RepositoryRecipeDurationRemote.getInstance(),
                 RepositoryRecipeDurationLocal.getInstance(
                         provideRecipeDurationLocalGetAdapter(c),
@@ -295,10 +295,10 @@ public class DatabaseInjection {
         );
     }
 
-    public static RepositoryRecipePortions provideRecipePortionsDataSource(
+    public static DataAccessRecipePortions provideRecipePortionsDataSource(
             @Nonnull Context c) {
 
-        return RepositoryRecipePortions.getInstance(
+        return DataAccessRecipePortions.getInstance(
                 RepositoryRecipePortionsRemote.getInstance(),
                 RepositoryRecipePortionsLocal.getInstance(
                         providePortionsLocalGetAdapter(c),
@@ -332,9 +332,9 @@ public class DatabaseInjection {
         );
     }
 
-    public static RepositoryIngredient provideIngredientDataSource(
+    public static DataAccessIngredient provideIngredientDataSource(
             @Nonnull Context c) {
-        return RepositoryIngredient.getInstance(
+        return DataAccessIngredient.getInstance(
                 RepositoryIngredientRemote.getInstance(),
                 RepositoryIngredientLocal.getInstance(
                         provideIngredientLocalGetAdapter(c),
@@ -369,10 +369,10 @@ public class DatabaseInjection {
         );
     }
 
-    public static RepositoryRecipeIngredient provideRecipeIngredientDataSource(
+    public static DataAccessRecipeIngredient provideRecipeIngredientDataSource(
             @Nonnull Context c) {
 
-        return RepositoryRecipeIngredient.getInstance(
+        return DataAccessRecipeIngredient.getInstance(
                 RepositoryRecipeIngredientRemote.getInstance(),
                 RepositoryRecipeIngredientLocal.getInstance(
                         provideRecipeIngredientLocalGetAdapter(c),

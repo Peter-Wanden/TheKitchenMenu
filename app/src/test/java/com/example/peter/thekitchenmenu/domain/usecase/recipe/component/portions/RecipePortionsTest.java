@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions;
 
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess.GetDomainModelCallback;
-import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipePortions;
+import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipePortions;
 import com.example.peter.thekitchenmenu.data.repository.recipe.portions.TestDataRecipePortions;
 import com.example.peter.thekitchenmenu.domain.model.UseCaseMetadataModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
@@ -41,7 +41,7 @@ public class RecipePortionsTest {
 
     // region helper fields ------------------------------------------------------------------------
     @Mock
-    RepositoryRecipePortions repoPortionsMock;
+    DataAccessRecipePortions repoPortionsMock;
     @Captor
     ArgumentCaptor<GetDomainModelCallback<RecipePortionsPersistenceModel>> repoPortionsCallback;
     @Mock

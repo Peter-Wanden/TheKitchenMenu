@@ -5,13 +5,13 @@ import android.content.res.Resources;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.repository.DatabaseInjection;
-import com.example.peter.thekitchenmenu.data.repository.ingredient.RepositoryIngredient;
-import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeCourse;
-import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeDuration;
-import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeIdentity;
-import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeIngredient;
-import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeMetadata;
-import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipePortions;
+import com.example.peter.thekitchenmenu.data.repository.ingredient.DataAccessIngredient;
+import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipeCourse;
+import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipeDuration;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RecipeIdentityUseCaseDataAccess;
+import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipeIngredient;
+import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipeMetadata;
+import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.ConversionFactorStatus;
 import com.example.peter.thekitchenmenu.domain.usecase.ingredient.Ingredient;
@@ -41,29 +41,29 @@ public class UseCaseFactory {
     private static volatile UseCaseFactory INSTANCE;
 
     private final Application application;
-    private final RepositoryRecipeMetadata recipeMetadataRepository;
-    private final RepositoryRecipePortions recipePortionsRepository;
-    private final RepositoryRecipeIngredient recipeIngredientRepository;
-    private final RepositoryIngredient ingredientRepository;
-    private final RepositoryRecipeIdentity recipeIdentityRepository;
-    private final RepositoryRecipeDuration recipeDurationRepository;
-    private final RepositoryRecipeCourse recipeCourseRepository;
+    private final DataAccessRecipeMetadata recipeMetadataRepository;
+    private final DataAccessRecipePortions recipePortionsRepository;
+    private final DataAccessRecipeIngredient recipeIngredientRepository;
+    private final DataAccessIngredient ingredientRepository;
+    private final RecipeIdentityUseCaseDataAccess recipeIdentityUseCaseDataAccess;
+    private final DataAccessRecipeDuration recipeDurationRepository;
+    private final DataAccessRecipeCourse recipeCourseRepository;
 
     private UseCaseFactory(Application application,
-                           RepositoryRecipeMetadata recipeMetadataRepository,
-                           RepositoryRecipePortions recipePortionsRepository,
-                           RepositoryRecipeIngredient recipeIngredientRepository,
-                           RepositoryIngredient ingredientRepository,
-                           RepositoryRecipeIdentity recipeIdentityRepository,
-                           RepositoryRecipeDuration recipeDurationRepository,
-                           RepositoryRecipeCourse recipeCourseRepository) {
+                           DataAccessRecipeMetadata recipeMetadataRepository,
+                           DataAccessRecipePortions recipePortionsRepository,
+                           DataAccessRecipeIngredient recipeIngredientRepository,
+                           DataAccessIngredient ingredientRepository,
+                           RecipeIdentityUseCaseDataAccess recipeIdentityUseCaseDataAccess,
+                           DataAccessRecipeDuration recipeDurationRepository,
+                           DataAccessRecipeCourse recipeCourseRepository) {
 
         this.application = application;
         this.recipeMetadataRepository = recipeMetadataRepository;
         this.recipePortionsRepository = recipePortionsRepository;
         this.recipeIngredientRepository = recipeIngredientRepository;
         this.ingredientRepository = ingredientRepository;
-        this.recipeIdentityRepository = recipeIdentityRepository;
+        this.recipeIdentityUseCaseDataAccess = recipeIdentityUseCaseDataAccess;
         this.recipeDurationRepository = recipeDurationRepository;
         this.recipeCourseRepository = recipeCourseRepository;
     }
@@ -208,7 +208,7 @@ public class UseCaseFactory {
 
     public RecipeIdentity getRecipeIdentityUseCase() {
         return new RecipeIdentity(
-                recipeIdentityRepository,
+                recipeIdentityUseCaseDataAccess,
                 new UniqueIdProvider(),
                 new TimeProvider(),
                 getTextValidatorUseCase());

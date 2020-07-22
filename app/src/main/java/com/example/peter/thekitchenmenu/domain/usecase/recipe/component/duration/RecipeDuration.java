@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duratio
 
 import android.annotation.SuppressLint;
 
-import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeDuration;
+import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipeDuration;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseElement;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
@@ -16,7 +16,7 @@ import javax.annotation.Nonnull;
 public class RecipeDuration
         extends
         UseCaseElement<
-                RepositoryRecipeDuration,
+                DataAccessRecipeDuration,
                 RecipeDurationPersistenceModel,
                 RecipeDuration.DomainModel> {
 
@@ -94,7 +94,7 @@ public class RecipeDuration
     private final int MAX_PREP_TIME;
     private final int MAX_COOK_TIME;
 
-    public RecipeDuration(@Nonnull RepositoryRecipeDuration repository,
+    public RecipeDuration(@Nonnull DataAccessRecipeDuration repository,
                           @Nonnull UniqueIdProvider idProvider,
                           @Nonnull TimeProvider timeProvider,
                           int maxPrepTime,

@@ -1,12 +1,15 @@
-package com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage;
+package com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.message;
 
 import com.example.peter.thekitchenmenu.domain.model.DomainModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
+import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.RequestModelBase;
 
-public abstract class RequestWithId<
-        REQUEST_MODEL extends DomainModel.RequestModel>
-        extends RequestModelBase<REQUEST_MODEL>
-        implements UseCaseBase.Request {
+public abstract class RequestWithId
+        <REQUEST_MODEL extends DomainModel.UseCaseRequestModel>
+        extends
+        RequestModelBase<REQUEST_MODEL>
+        implements
+        UseCaseBase.Request {
 
     public static final String NO_ID = "";
 
@@ -21,10 +24,10 @@ public abstract class RequestWithId<
         return domainId;
     }
 
-    public static abstract class IdBuilder<
+    protected static abstract class IdBuilder<
             SELF extends IdBuilder<SELF, REQUEST_TYPE, REQUEST_MODEL>,
             REQUEST_TYPE extends RequestWithId<REQUEST_MODEL>,
-            REQUEST_MODEL extends DomainModel.RequestModel>
+            REQUEST_MODEL extends DomainModel.UseCaseRequestModel>
             extends
             RequestModelBuilder<SELF, REQUEST_TYPE, REQUEST_MODEL> {
 

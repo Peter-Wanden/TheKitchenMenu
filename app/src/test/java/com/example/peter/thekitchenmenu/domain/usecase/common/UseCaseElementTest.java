@@ -1,13 +1,9 @@
 package com.example.peter.thekitchenmenu.domain.usecase.common;
 
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
-import com.example.peter.thekitchenmenu.data.repository.Repository;
-import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeMetadata;
-import com.example.peter.thekitchenmenu.domain.model.BaseDomainModel;
+import com.example.peter.thekitchenmenu.data.repository.DataAccess;
+import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.model.BasePersistenceModel;
-import com.example.peter.thekitchenmenu.domain.model.DomainModel;
-import com.example.peter.thekitchenmenu.domain.model.DomainModelBuilder;
-import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataId;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataPersistenceModel;
 
 import org.junit.Before;
@@ -16,8 +12,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
-import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
@@ -33,9 +27,9 @@ public class UseCaseElementTest {
 
     // region helper fields ------------------------------------------------------------------------
     @Mock
-    RepositoryRecipeMetadata repoMock;
+    private DataAccessRecipeMetadata repoMock;
     @Captor
-    ArgumentCaptor<DomainDataAccess<RecipeMetadataPersistenceModel>> repoCallbackCaptor;
+    private ArgumentCaptor<DomainDataAccess<RecipeMetadataPersistenceModel>> repoCallbackCaptor;
     // endregion helper fields ---------------------------------------------------------------------
 
     private UseCaseElementInheritor SUT;
@@ -56,7 +50,7 @@ public class UseCaseElementTest {
     }
 
     // region empty use case tests -----------------------------------------------------------------
-    // An empty use case is one that is yet to receive its first request
+    // An empty use case is one that is yet to receive a request
     @Test
     public void emptyUseCase_noDataIdNoDomainId_isReprocessCurrentDomainModel() {
         // Arrange
@@ -223,7 +217,7 @@ public class UseCaseElementTest {
     public static class UseCaseElementInheritor
             extends
             UseCaseElement<
-                    Repository<TestPersistenceModel>,
+                    DataAccess<TestPersistenceModel>,
                     TestPersistenceModel,
                     UseCaseElementInheritor.DomainModel>{
 

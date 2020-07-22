@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.data.repository.product;
 
 import com.example.peter.thekitchenmenu.data.primitivemodel.product.FavoriteProductEntity;
-import com.example.peter.thekitchenmenu.data.repository.Repository;
+import com.example.peter.thekitchenmenu.data.repository.DataAccess;
 import com.example.peter.thekitchenmenu.domain.usecase.product.component.favoriteproduct.FavoriteProductPersistenceModel;
 
 import java.util.LinkedHashMap;
@@ -10,13 +10,13 @@ import javax.annotation.Nonnull;
 
 import static androidx.core.util.Preconditions.checkNotNull;
 
-public class RepositoryFavoriteProduct
-        extends Repository<FavoriteProductPersistenceModel>
+public class DataAccessFavoriteProduct
+        extends DataAccess<FavoriteProductPersistenceModel>
         implements DataSourceFavoriteProducts {
 
-    public static RepositoryFavoriteProduct INSTANCE = null;
+    public static DataAccessFavoriteProduct INSTANCE = null;
 
-    private RepositoryFavoriteProduct(
+    private DataAccessFavoriteProduct(
             @Nonnull DataSourceFavoriteProducts remoteDataSource,
             @Nonnull DataSourceFavoriteProducts localDataSource) {
 
@@ -24,11 +24,11 @@ public class RepositoryFavoriteProduct
 //        this.localDomainDataAccess = localDataSource;
     }
 
-    public static RepositoryFavoriteProduct getInstance(
+    public static DataAccessFavoriteProduct getInstance(
             DataSourceFavoriteProducts remoteDataSource,
             DataSourceFavoriteProducts localDataSource) {
         if (INSTANCE == null)
-            INSTANCE = new RepositoryFavoriteProduct(remoteDataSource, localDataSource);
+            INSTANCE = new DataAccessFavoriteProduct(remoteDataSource, localDataSource);
         return INSTANCE;
 
     }

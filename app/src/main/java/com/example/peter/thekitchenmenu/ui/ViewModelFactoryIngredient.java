@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.peter.thekitchenmenu.data.repository.DatabaseInjection;
-import com.example.peter.thekitchenmenu.data.repository.ingredient.RepositoryIngredient;
+import com.example.peter.thekitchenmenu.data.repository.ingredient.DataAccessIngredient;
 import com.example.peter.thekitchenmenu.domain.usecase.factory.UseCaseFactory;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseHandler;
 import com.example.peter.thekitchenmenu.ui.detail.ingredient.IngredientEditorViewModel;
@@ -23,12 +23,12 @@ public class ViewModelFactoryIngredient extends ViewModelProvider.NewInstanceFac
     private final Application application;
     private final UseCaseHandler useCaseHandler;
     private final UseCaseFactory useCaseFactory;
-    private final RepositoryIngredient repositoryIngredient;
+    private final DataAccessIngredient repositoryIngredient;
 
     private ViewModelFactoryIngredient(Application application,
                                        UseCaseFactory useCaseFactory,
                                        UseCaseHandler useCaseHandler,
-                                       RepositoryIngredient repositoryIngredient) {
+                                       DataAccessIngredient repositoryIngredient) {
         this.application = application;
         this.useCaseFactory = useCaseFactory;
         this.useCaseHandler = useCaseHandler;

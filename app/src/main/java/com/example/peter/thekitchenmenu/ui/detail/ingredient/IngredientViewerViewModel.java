@@ -3,18 +3,18 @@ package com.example.peter.thekitchenmenu.ui.detail.ingredient;
 import androidx.lifecycle.ViewModel;
 
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
-import com.example.peter.thekitchenmenu.data.repository.ingredient.RepositoryIngredient;
+import com.example.peter.thekitchenmenu.data.repository.ingredient.DataAccessIngredient;
 import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientPersistenceModel;
 
 public class IngredientViewerViewModel
         extends ViewModel
         implements DomainDataAccess.GetDomainModelCallback<IngredientPersistenceModel> {
 
-    private RepositoryIngredient repositoryIngredient;
+    private DataAccessIngredient repositoryIngredient;
 
 //    public final ObservableField<String> ingredientName = new ObservableField<>();
 
-    public IngredientViewerViewModel(RepositoryIngredient repositoryIngredient) {
+    public IngredientViewerViewModel(DataAccessIngredient repositoryIngredient) {
         this.repositoryIngredient = repositoryIngredient;
     }
 

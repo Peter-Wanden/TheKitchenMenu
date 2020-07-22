@@ -2,11 +2,11 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe;
 
 import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess.GetDomainModelCallback;
-import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeCourse;
-import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeDuration;
-import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeIdentity;
-import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeMetadata;
-import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipePortions;
+import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipeCourse;
+import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipeDuration;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RecipeIdentityUseCaseDataAccess;
+import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipeMetadata;
+import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipePortions;
 import com.example.peter.thekitchenmenu.data.repository.recipe.metadata.TestDataRecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse;
@@ -15,7 +15,7 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDurationPersistenceModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDurationTest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentity;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityUseCasePersistenceModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityTest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataPersistenceModel;
@@ -35,23 +35,23 @@ import org.mockito.MockitoAnnotations;
 public class RecipeTestBase {
 
     @Mock
-    public RepositoryRecipeMetadata repoMetadataMock;
+    public DataAccessRecipeMetadata repoMetadataMock;
     @Captor
     public ArgumentCaptor<GetDomainModelCallback<RecipeMetadataPersistenceModel>> repoMetadataCallback;
     @Mock
-    public RepositoryRecipeIdentity repoIdentityMock;
+    public RecipeIdentityUseCaseDataAccess repoIdentityMock;
     @Captor
-    public ArgumentCaptor<GetDomainModelCallback<RecipeIdentityPersistenceModel>> repoIdentityCallback;
+    public ArgumentCaptor<GetDomainModelCallback<RecipeIdentityUseCasePersistenceModel>> repoIdentityCallback;
     @Mock
-    public RepositoryRecipeCourse repoCourseMock;
+    public DataAccessRecipeCourse repoCourseMock;
     @Captor
     public ArgumentCaptor<GetDomainModelCallback<RecipeCoursePersistenceModel>> repoCourseCallback;
     @Mock
-    public RepositoryRecipeDuration repoDurationMock;
+    public DataAccessRecipeDuration repoDurationMock;
     @Captor
     public ArgumentCaptor<GetDomainModelCallback<RecipeDurationPersistenceModel>> repoDurationCallback;
     @Mock
-    public RepositoryRecipePortions repoPortionsMock;
+    public DataAccessRecipePortions repoPortionsMock;
     @Captor
     public ArgumentCaptor<GetDomainModelCallback<RecipePortionsPersistenceModel>> repoPortionsCallback;
 

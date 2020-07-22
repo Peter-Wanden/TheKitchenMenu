@@ -5,7 +5,7 @@ import android.annotation.SuppressLint;
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.datasource.IngredientEntity;
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
-import com.example.peter.thekitchenmenu.data.repository.ingredient.RepositoryIngredient;
+import com.example.peter.thekitchenmenu.data.repository.ingredient.DataAccessIngredient;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.UnitOfMeasure;
@@ -58,11 +58,11 @@ public class ConversionFactorStatus extends UseCaseBase
         }
     }
 
-    private RepositoryIngredient repository;
+    private DataAccessIngredient repository;
     private IngredientEntity ingredientEntity;
     private IngredientPersistenceModel persistenceModel;
 
-    public ConversionFactorStatus(RepositoryIngredient repository) {
+    public ConversionFactorStatus(DataAccessIngredient repository) {
         this.repository = repository;
     }
 

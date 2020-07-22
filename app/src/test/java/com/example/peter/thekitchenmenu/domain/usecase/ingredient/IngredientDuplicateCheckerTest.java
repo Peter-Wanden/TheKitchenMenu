@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.domain.usecase.ingredient;
 
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess.GetAllDomainModelsCallback;
 import com.example.peter.thekitchenmenu.data.repository.ingredient.TestDataIngredient;
-import com.example.peter.thekitchenmenu.data.repository.ingredient.RepositoryIngredient;
+import com.example.peter.thekitchenmenu.data.repository.ingredient.DataAccessIngredient;
 
 import org.junit.*;
 import org.mockito.*;
@@ -24,7 +24,7 @@ public class IngredientDuplicateCheckerTest {
 
     // region helper fields ------------------------------------------------------------------------
     @Mock
-    RepositoryIngredient repoMock;
+    DataAccessIngredient repoMock;
     @Captor
     ArgumentCaptor<GetAllDomainModelsCallback<IngredientPersistenceModel>> getRepoCallbackCaptor;
     @Mock

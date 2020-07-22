@@ -2,12 +2,12 @@ package com.example.peter.thekitchenmenu.data.repository.product;
 
 import com.example.peter.thekitchenmenu.data.primitivemodel.product.ProductEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter.PrimitiveDataSource;
-import com.example.peter.thekitchenmenu.data.repository.Repository;
+import com.example.peter.thekitchenmenu.data.repository.DataAccess;
 import com.example.peter.thekitchenmenu.domain.usecase.product.component.identity.ProductIdentityPersistenceModel;
 
-public class RepositoryProduct extends Repository<ProductIdentityPersistenceModel> {
+public class DataAccessProduct extends DataAccess<ProductIdentityPersistenceModel> {
 
-    protected static Repository<ProductIdentityPersistenceModel> INSTANCE = null;
+    protected static DataAccess<ProductIdentityPersistenceModel> INSTANCE = null;
 
 //    private RepositoryProduct(
 //            @Nonnull PrimitiveDataSource<ProductEntity> remoteDataSource,
@@ -16,13 +16,13 @@ public class RepositoryProduct extends Repository<ProductIdentityPersistenceMode
 //        this.localDomainDataAccess = localDataSource;
 //    }
 
-    public static RepositoryProduct getInstance(
+    public static DataAccessProduct getInstance(
             PrimitiveDataSource<ProductEntity> remoteDataSource,
             PrimitiveDataSource<ProductEntity> localDataSource) {
 
 //        if (INSTANCE == null) {
 //            INSTANCE = new RepositoryProduct(remoteDataSource, localDataSource);
 //        }
-        return (RepositoryProduct) INSTANCE;
+        return (DataAccessProduct) INSTANCE;
     }
 }

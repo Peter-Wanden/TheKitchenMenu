@@ -2,7 +2,8 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identit
 
 import android.annotation.SuppressLint;
 
-import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeIdentity;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RecipeIdentityUseCaseDataAccess;
+import com.example.peter.thekitchenmenu.domain.model.DomainModel.UseCaseModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseElement;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
@@ -24,15 +25,15 @@ import static com.example.peter.thekitchenmenu.domain.usecase.textvalidation.Tex
 public class RecipeIdentity
         extends
         UseCaseElement<
-                RepositoryRecipeIdentity,
-                RecipeIdentityPersistenceModel,
+                RecipeIdentityUseCaseDataAccess,
+                RecipeIdentityUseCasePersistenceModel,
                 RecipeIdentity.DomainModel> {
 
     private static final String TAG = "tkm-" + RecipeIdentity.class.getSimpleName() + ": ";
 
     protected static final class DomainModel
             implements
-            com.example.peter.thekitchenmenu.domain.model.DomainModel.UseCaseModel {
+            UseCaseModel {
         @Nonnull
         private String title;
         @Nonnull
@@ -108,7 +109,7 @@ public class RecipeIdentity
     private boolean isTitleValidationComplete;
     private boolean isDescriptionValidationComplete;
 
-    public RecipeIdentity(@Nonnull RepositoryRecipeIdentity repository,
+    public RecipeIdentity(@Nonnull RecipeIdentityUseCaseDataAccess repository,
                           @Nonnull UniqueIdProvider idProvider,
                           @Nonnull TimeProvider timeProvider,
                           @Nonnull TextValidator textValidator) {
@@ -124,7 +125,7 @@ public class RecipeIdentity
 
     @Override
     protected DomainModel createUseCaseModelFromPersistenceModel(
-            @Nonnull RecipeIdentityPersistenceModel persistenceModel) {
+            @Nonnull RecipeIdentityUseCasePersistenceModel persistenceModel) {
 
         return new DomainModel(
                 persistenceModel.getTitle(),
@@ -139,7 +140,7 @@ public class RecipeIdentity
 
     @Override
     protected DomainModel createUseCaseModelFromRequestModel() {
-        RecipeIdentityRequestModel requestModel = ((RecipeIdentityRequest) getRequest()).
+        RecipeIdentityUseCaseRequestModel requestModel = ((RecipeIdentityRequest) getRequest()).
                 getDomainModel();
 
         return new DomainModel(
@@ -237,7 +238,7 @@ public class RecipeIdentity
                 archivePreviousState(currentTime);
             }
 
-            persistenceModel = new RecipeIdentityPersistenceModel.Builder().
+            persistenceModel = new RecipeIdentityUseCasePersistenceModel.Builder().
                     setDataId(useCaseDataId).
                     setDomainId(useCaseDomainId).
                     setTitle(useCaseModel.title).
@@ -253,7 +254,7 @@ public class RecipeIdentity
 
     @Override
     protected void archivePreviousState(long currentTime) {
-        RecipeIdentityPersistenceModel model = new RecipeIdentityPersistenceModel.Builder().
+        RecipeIdentityUseCasePersistenceModel model = new RecipeIdentityUseCasePersistenceModel.Builder().
                 basedOnModel(persistenceModel).
                 setLastUpdate(currentTime).
                 build();
@@ -273,8 +274,8 @@ public class RecipeIdentity
         sendResponse(builder.build());
     }
 
-    private RecipeIdentityResponseModel getResponseModel() {
-        return new RecipeIdentityResponseModel.Builder().
+    private RecipeIdentityUseCaseResponseModel getResponseModel() {
+        return new RecipeIdentityUseCaseResponseModel.Builder().
                 setTitle(useCaseModel.title).
                 setDescription(useCaseModel.description).
                 build();

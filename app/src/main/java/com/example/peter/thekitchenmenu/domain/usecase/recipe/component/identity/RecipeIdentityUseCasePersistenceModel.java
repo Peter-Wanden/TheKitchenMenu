@@ -6,13 +6,13 @@ import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public final class RecipeIdentityPersistenceModel
+public final class RecipeIdentityUseCasePersistenceModel
         extends BasePersistenceModel {
 
     private String title;
     private String description;
 
-    private RecipeIdentityPersistenceModel(){}
+    private RecipeIdentityUseCasePersistenceModel(){}
 
     @Nonnull
     public String getTitle() {
@@ -27,9 +27,9 @@ public final class RecipeIdentityPersistenceModel
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof RecipeIdentityPersistenceModel)) return false;
+        if (!(o instanceof RecipeIdentityUseCasePersistenceModel)) return false;
         if (!super.equals(o)) return false;
-        RecipeIdentityPersistenceModel that = (RecipeIdentityPersistenceModel) o;
+        RecipeIdentityUseCasePersistenceModel that = (RecipeIdentityUseCasePersistenceModel) o;
         return Objects.equals(title, that.title) &&
                 Objects.equals(description, that.description);
     }
@@ -50,10 +50,10 @@ public final class RecipeIdentityPersistenceModel
 
     public static class Builder
             extends
-            PersistenceModelBuilder<Builder, RecipeIdentityPersistenceModel> {
+            PersistenceModelBuilder<Builder, RecipeIdentityUseCasePersistenceModel> {
 
         public Builder() {
-            persistenceModel = new RecipeIdentityPersistenceModel();
+            persistenceModel = new RecipeIdentityUseCasePersistenceModel();
         }
 
         @Override
@@ -68,7 +68,7 @@ public final class RecipeIdentityPersistenceModel
         }
 
         @Override
-        public Builder basedOnModel(@Nonnull RecipeIdentityPersistenceModel model) {
+        public Builder basedOnModel(@Nonnull RecipeIdentityUseCasePersistenceModel model) {
             persistenceModel.dataId = model.getDataId();
             persistenceModel.domainId = model.getDomainId();
             persistenceModel.title = model.getTitle();
