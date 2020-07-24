@@ -31,7 +31,7 @@ public class RepositoryRecipeCourseRemote
     }
 
     @Override
-    public void getActiveByDomainId(
+    public void getByDomainId(
             @Nonnull String domainId,
             @Nonnull GetDomainModelCallback<RecipeCoursePersistenceModel> callback) {
         callback.onPersistenceModelUnavailable();

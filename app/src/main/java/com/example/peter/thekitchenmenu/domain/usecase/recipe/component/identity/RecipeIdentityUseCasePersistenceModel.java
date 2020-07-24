@@ -7,7 +7,8 @@ import java.util.Objects;
 import javax.annotation.Nonnull;
 
 public final class RecipeIdentityUseCasePersistenceModel
-        extends BasePersistenceModel {
+        extends
+        BasePersistenceModel {
 
     private String title;
     private String description;

@@ -5,7 +5,7 @@ import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipeP
 import com.example.peter.thekitchenmenu.data.repository.recipe.portions.TestDataRecipePortions;
 import com.example.peter.thekitchenmenu.domain.model.UseCaseMetadataModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
-import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseResult;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
@@ -92,7 +92,7 @@ public class RecipePortionsTest {
         SUT.execute(request, new PortionsCallbackClient());
 
         // Assert persistence calls
-        verify(repoPortionsMock).getActiveByDomainId(
+        verify(repoPortionsMock).getByDomainId(
                 eq(defaultModel.getDomainId()),
                 repoPortionsCallback.capture()
         );
@@ -102,7 +102,7 @@ public class RecipePortionsTest {
         UseCaseMetadataModel metadata = portionsOnErrorResponse.getMetadata();
 
         assertEquals(
-                UseCaseMetadata.ComponentState.VALID_DEFAULT,
+                UseCaseResult.ComponentState.VALID_DEFAULT,
                 metadata.getComponentState()
         );
         List<FailReasons> expectedFailReasons = Arrays.asList(
@@ -124,7 +124,7 @@ public class RecipePortionsTest {
         newRequest_stateVALID_DEFAULT_failReasonNONE_DATA_UNAVAILABLE();
         // Assert
         assertEquals(
-                UseCaseMetadata.ComponentState.VALID_DEFAULT,
+                UseCaseResult.ComponentState.VALID_DEFAULT,
                 portionsOnErrorResponse.getMetadata().getComponentState()
         );
     }
@@ -155,7 +155,7 @@ public class RecipePortionsTest {
         // Assert
         UseCaseMetadataModel metadata = portionsOnErrorResponse.getMetadata();
         assertEquals(
-                UseCaseMetadata.ComponentState.INVALID_CHANGED,
+                UseCaseResult.ComponentState.INVALID_CHANGED,
                 metadata.getComponentState()
         );
 
@@ -197,7 +197,7 @@ public class RecipePortionsTest {
         // Assert
         UseCaseMetadataModel metadata = portionsOnErrorResponse.getMetadata();
         assertEquals(
-                UseCaseMetadata.ComponentState.INVALID_CHANGED,
+                UseCaseResult.ComponentState.INVALID_CHANGED,
                 metadata.getComponentState()
         );
 
@@ -238,7 +238,7 @@ public class RecipePortionsTest {
         // Assert
         UseCaseMetadataModel metadata = portionsOnErrorResponse.getMetadata();
         assertEquals(
-                UseCaseMetadata.ComponentState.INVALID_CHANGED,
+                UseCaseResult.ComponentState.INVALID_CHANGED,
                 metadata.getComponentState()
         );
 
@@ -283,7 +283,7 @@ public class RecipePortionsTest {
         // Assert
         UseCaseMetadataModel metadata = portionsOnSuccessResponse.getMetadata();
         assertEquals(
-                UseCaseMetadata.ComponentState.VALID_CHANGED,
+                UseCaseResult.ComponentState.VALID_CHANGED,
                 metadata.getComponentState()
         );
 
@@ -343,7 +343,7 @@ public class RecipePortionsTest {
         // Act
         SUT.execute(request, new PortionsCallbackClient());
 
-        verify(repoPortionsMock).getActiveByDomainId(
+        verify(repoPortionsMock).getByDomainId(
                 eq(modelUnderTest.getDomainId()),
                 repoPortionsCallback.capture()
         );
@@ -384,7 +384,7 @@ public class RecipePortionsTest {
         // Assert
         UseCaseMetadataModel metadata = portionsOnSuccessResponse.getMetadata();
         assertEquals(
-                UseCaseMetadata.ComponentState.VALID_UNCHANGED,
+                UseCaseResult.ComponentState.VALID_UNCHANGED,
                 metadata.getComponentState()
         );
 
@@ -488,7 +488,7 @@ public class RecipePortionsTest {
         // Act
         SUT.execute(initialRequest, new PortionsCallbackClient());
         // Assert
-        verify(repoPortionsMock).getActiveByDomainId(
+        verify(repoPortionsMock).getByDomainId(
                 eq(initialModel.getDomainId()),
                 repoPortionsCallback.capture()
         );
@@ -541,7 +541,7 @@ public class RecipePortionsTest {
         SUT.execute(initialRequest, new PortionsCallbackClient());
 
         // Assert
-        verify(repoPortionsMock).getActiveByDomainId(
+        verify(repoPortionsMock).getByDomainId(
                 eq(initialModel.getDomainId()),
                 repoPortionsCallback.capture()
         );

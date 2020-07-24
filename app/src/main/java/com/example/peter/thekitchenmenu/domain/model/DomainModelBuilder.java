@@ -15,10 +15,7 @@ public abstract class DomainModelBuilder<
 
     public abstract SELF getDefault();
 
-    protected SELF self() {
-        // noinspection unchecked
-        return (SELF) this;
-    }
+    protected abstract SELF self(); // when implementing, return 'this'
 
     public DOMAIN_MODEL build() {
         return domainModel;

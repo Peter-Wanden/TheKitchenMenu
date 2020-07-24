@@ -53,7 +53,7 @@ public class RecipeIngredientList extends UseCaseBase {
     }
 
     private void getPortionsForRecipe() {
-        repoPortions.getActiveByDomainId(
+        repoPortions.getByDomainId(
                 recipeId,
                 new DomainDataAccess.GetDomainModelCallback<RecipePortionsPersistenceModel>() {
                     @Override

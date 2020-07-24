@@ -10,8 +10,8 @@ import javax.annotation.Nonnull;
  * Implemented by the use cases and business entities to send and receive data structures to and
  * from the dataLayer.
  *
- * @param <PERSISTENCE_MODEL> any domain object data models that extend the {@link DomainModel.PersistenceModel}
- *           interface.
+ * @param <PERSISTENCE_MODEL> any domain object data models that extend the
+ *                            {@link DomainModel.PersistenceModel} interface.
  */
 public interface DomainDataAccess<PERSISTENCE_MODEL extends DomainModel.PersistenceModel> {
 
@@ -32,8 +32,8 @@ public interface DomainDataAccess<PERSISTENCE_MODEL extends DomainModel.Persiste
     void getByDataId(@Nonnull String dataId,
                      @Nonnull GetDomainModelCallback<PERSISTENCE_MODEL> callback);
 
-    void getActiveByDomainId(@Nonnull String domainId,
-                             @Nonnull GetDomainModelCallback<PERSISTENCE_MODEL> callback);
+    void getByDomainId(@Nonnull String domainId,
+                       @Nonnull GetDomainModelCallback<PERSISTENCE_MODEL> callback);
 
     void getAll(@Nonnull GetAllDomainModelsCallback<PERSISTENCE_MODEL> callback);
 

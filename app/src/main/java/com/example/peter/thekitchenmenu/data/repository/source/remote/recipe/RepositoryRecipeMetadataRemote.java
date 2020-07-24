@@ -31,7 +31,7 @@ public class RepositoryRecipeMetadataRemote
     }
 
     @Override
-    public void getActiveByDomainId(
+    public void getByDomainId(
             @Nonnull String domainId,
             @Nonnull GetDomainModelCallback<RecipeMetadataPersistenceModel> callback) {
         callback.onPersistenceModelUnavailable();

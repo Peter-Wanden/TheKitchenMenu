@@ -102,15 +102,15 @@ public abstract class DataAccess<T extends DomainModel.PersistenceModel>
     }
 
     @Override
-    public void getActiveByDomainId(@Nonnull String domainId,
-                                    @Nonnull GetDomainModelCallback<T> callback) {
+    public void getByDomainId(@Nonnull String domainId,
+                              @Nonnull GetDomainModelCallback<T> callback) {
         T cachedModel = getFromCacheModelWithDomainId(domainId);
 
         if (cachedModel != null) {
             callback.onPersistenceModelLoaded(cachedModel);
             return;
         }
-        localDomainDataAccess.getActiveByDomainId(domainId, new GetDomainModelCallback<T>() {
+        localDomainDataAccess.getByDomainId(domainId, new GetDomainModelCallback<T>() {
             @Override
             public void onPersistenceModelLoaded(T model) {
                 if (cache == null) {
@@ -122,7 +122,7 @@ public abstract class DataAccess<T extends DomainModel.PersistenceModel>
 
             @Override
             public void onPersistenceModelUnavailable() {
-                remoteDomainDataAccess.getActiveByDomainId(
+                remoteDomainDataAccess.getByDomainId(
                         domainId,
                         new GetDomainModelCallback<T>() {
                     @Override

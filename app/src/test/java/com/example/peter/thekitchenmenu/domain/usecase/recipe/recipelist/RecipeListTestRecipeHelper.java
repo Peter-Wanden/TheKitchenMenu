@@ -63,31 +63,31 @@ public class RecipeListTestRecipeHelper {
             String recipeDomainId = metadataModel.getDomainId();
 
             // RecipeMetadata
-            verify(recipeTestBase.repoMetadataMock).getActiveByDomainId(eq(recipeDomainId),
+            verify(recipeTestBase.repoMetadataMock).getByDomainId(eq(recipeDomainId),
                     recipeTestBase.repoMetadataCallback.capture());
             recipeTestBase.repoMetadataCallback.getValue().onPersistenceModelLoaded(
                     TestDataRecipeMetadata.getActiveByDomainId(recipeDomainId));
 
             // RecipeIdentity
-            verify(recipeTestBase.repoIdentityMock).getActiveByDomainId(eq(recipeDomainId),
+            verify(recipeTestBase.repoIdentityMock).getByDomainId(eq(recipeDomainId),
                     recipeTestBase.repoIdentityCallback.capture());
             recipeTestBase.repoIdentityCallback.getValue().onPersistenceModelLoaded(
                     TestDataRecipeIdentity.getActiveByDomainId(recipeDomainId));
 
             // RecipeCourse
-            verify(recipeTestBase.repoCourseMock).getActiveByDomainId(eq(recipeDomainId),
+            verify(recipeTestBase.repoCourseMock).getByDomainId(eq(recipeDomainId),
                     recipeTestBase.repoCourseCallback.capture());
             recipeTestBase.repoCourseCallback.getValue().onPersistenceModelLoaded(
                     TestDataRecipeCourse.getActiveByDomainId(recipeDomainId));
 
             // RecipeDuration
-            verify(recipeTestBase.repoDurationMock).getActiveByDomainId(eq(recipeDomainId),
+            verify(recipeTestBase.repoDurationMock).getByDomainId(eq(recipeDomainId),
                     recipeTestBase.repoDurationCallback.capture());
             recipeTestBase.repoDurationCallback.getValue().onPersistenceModelLoaded(
                     TestDataRecipeDuration.getActiveByDomainId(recipeDomainId));
 
             // RecipePortions
-            verify(recipeTestBase.repoPortionsMock).getActiveByDomainId(eq(recipeDomainId),
+            verify(recipeTestBase.repoPortionsMock).getByDomainId(eq(recipeDomainId),
                     recipeTestBase.repoPortionsCallback.capture());
             recipeTestBase.repoPortionsCallback.getValue().onPersistenceModelLoaded(
                     TestDataRecipePortions.getActiveByDomainId(recipeDomainId)

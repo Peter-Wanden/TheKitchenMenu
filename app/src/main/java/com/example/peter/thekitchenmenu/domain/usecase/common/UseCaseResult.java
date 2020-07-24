@@ -17,19 +17,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class UseCaseMetadata<
+public abstract class UseCaseResult<
         DATA_ACCESS extends DataAccess<PERSISTENCE_MODEL>,
         PERSISTENCE_MODEL extends DomainModel.PersistenceModel,
         USE_CASE_MODEL extends DomainModel.UseCaseModel,
         USE_CASE_REQUEST_MODEL extends DomainModel.UseCaseRequestModel,
         USE_CASE_RESPONSE_MODEL extends DomainModel.UseCaseResponseModel>
 
-        extends UseCaseModel<
+        extends UseCaseData<
         DATA_ACCESS,
         PERSISTENCE_MODEL,
         USE_CASE_MODEL,
         USE_CASE_REQUEST_MODEL,
         USE_CASE_RESPONSE_MODEL> {
+
+    private static final String TAG = "tkm-" + UseCaseResult.class.getSimpleName() + ": ";
 
     public enum ComponentState {
         INVALID_DEFAULT(1),
@@ -64,24 +66,37 @@ public abstract class UseCaseMetadata<
 
     protected List<FailReasons> failReasons = new ArrayList<>();
 
-    public UseCaseMetadata(DATA_ACCESS dataAccess,
-                           DomainModel.Converter<
-                                                              USE_CASE_MODEL,
-                                                              PERSISTENCE_MODEL,
-                                                              USE_CASE_REQUEST_MODEL,
-                                                              USE_CASE_RESPONSE_MODEL> converter,
-                           UniqueIdProvider idProvider,
-                           TimeProvider timeProvider) {
+    public UseCaseResult(DATA_ACCESS dataAccess,
+                         DomainModel.Converter<
+                                 USE_CASE_MODEL,
+                                 PERSISTENCE_MODEL,
+                                 USE_CASE_REQUEST_MODEL,
+                                 USE_CASE_RESPONSE_MODEL> converter,
+                         UniqueIdProvider idProvider,
+                         TimeProvider timeProvider) {
         super(dataAccess, converter, idProvider, timeProvider);
     }
 
     @Override
     protected void initialiseUseCase() {
+        if (useCaseModel == null) {
+            useCaseModel = createUseCaseModelFromDefaultValues();
+        }
         failReasons.clear();
-        processDataElements();
+
+        if (isDomainDataElementsProcessed()) {
+            if (isChanged && isDomainModelValid()) {
+                saveChanges();
+            }
+            buildResponse();
+        }
     }
 
-    protected abstract void processDataElements();
+    protected abstract boolean isDomainDataElementsProcessed();
+
+    protected abstract void buildResponse();
+
+    protected abstract USE_CASE_RESPONSE_MODEL getResponseModel();
 
     protected UseCaseMetadataModel getMetadata() {
 
@@ -100,9 +115,11 @@ public abstract class UseCaseMetadata<
 
     protected void sendResponse(UseCaseBase.Response response) {
         if (failReasons.equals(Collections.singletonList(CommonFailReason.NONE))) {
+            System.out.println(TAG + "onUseCaseSuccess: " + response);
             getUseCaseCallback().onUseCaseSuccess(response);
         } else {
             getUseCaseCallback().onUseCaseError(response);
+            System.out.println(TAG + "onUseCaseError: " + response);
         }
     }
 

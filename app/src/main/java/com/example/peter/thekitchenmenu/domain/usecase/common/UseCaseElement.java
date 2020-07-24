@@ -18,7 +18,7 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseMetadata.ComponentState;
+import static com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseResult.ComponentState;
 
 /**
  * Using the state of the data Id's, determines the updatedDomainModel to be processed.
@@ -101,7 +101,7 @@ public abstract class UseCaseElement<
 
     protected void getPersistenceModelByDomainId() {
         System.out.println(TAG + "getPersistenceModelByDomainId=" + useCaseDomainId);
-        repository.getActiveByDomainId(useCaseDomainId, this);
+        repository.getByDomainId(useCaseDomainId, this);
     }
 
     @Override

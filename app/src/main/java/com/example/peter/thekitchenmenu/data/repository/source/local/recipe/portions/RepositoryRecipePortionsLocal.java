@@ -88,7 +88,7 @@ public class RepositoryRecipePortionsLocal
     }
 
     @Override
-    public void getActiveByDomainId(
+    public void getByDomainId(
             @Nonnull String domainId,
             @Nonnull GetDomainModelCallback<RecipePortionsPersistenceModel> callback) {
         getAdapter.getActiveByDomainId(

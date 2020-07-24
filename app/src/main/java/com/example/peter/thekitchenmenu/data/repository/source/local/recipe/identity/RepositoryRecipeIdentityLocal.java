@@ -69,7 +69,7 @@ public class RepositoryRecipeIdentityLocal
     }
 
     @Override
-    public void getActiveByDomainId(
+    public void getByDomainId(
             @Nonnull String domainId,
             @Nonnull GetDomainModelCallback<RecipeIdentityUseCasePersistenceModel> callback) {
         getAdapter.getActiveByDomainId(

@@ -6,7 +6,7 @@ import android.widget.FrameLayout;
 
 import androidx.appcompat.widget.Toolbar;
 
-import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseMetadata.ComponentState;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseResult.ComponentState;
 import com.example.peter.thekitchenmenu.ui.common.views.ObservableViewMvc;
 
 import javax.annotation.Nonnull;

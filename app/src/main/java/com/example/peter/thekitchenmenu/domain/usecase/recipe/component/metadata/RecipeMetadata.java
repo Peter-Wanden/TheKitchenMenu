@@ -5,7 +5,7 @@ import android.annotation.SuppressLint;
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseElement;
-import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseResult;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
@@ -38,10 +38,10 @@ public class RecipeMetadata
             com.example.peter.thekitchenmenu.domain.model.DomainModel.UseCaseModel {
 
         private String parentDomainId;
-        private HashMap<ComponentName, UseCaseMetadata.ComponentState> componentStates;
+        private HashMap<ComponentName, UseCaseResult.ComponentState> componentStates;
 
         private DomainModel(String parentDomainId,
-                            HashMap<ComponentName, UseCaseMetadata.ComponentState> componentStates) {
+                            HashMap<ComponentName, UseCaseResult.ComponentState> componentStates) {
 
             this.parentDomainId = parentDomainId;
             this.componentStates = componentStates;
@@ -142,7 +142,7 @@ public class RecipeMetadata
     @Nonnull
     private final Set<ComponentName> additionalComponentNames;
 
-    private UseCaseMetadata.ComponentState recipeState;
+    private UseCaseResult.ComponentState recipeState;
 
     public RecipeMetadata(@Nonnull DataAccessRecipeMetadata repository,
                           @Nonnull UniqueIdProvider idProvider,
@@ -168,9 +168,9 @@ public class RecipeMetadata
 
     @Override
     protected DomainModel createUseCaseModelFromDefaultValues() {
-        HashMap<ComponentName, UseCaseMetadata.ComponentState> defaultComponentStates = new HashMap<>();
+        HashMap<ComponentName, UseCaseResult.ComponentState> defaultComponentStates = new HashMap<>();
         requiredComponentNames.forEach(componentName ->
-                defaultComponentStates.put(componentName, UseCaseMetadata.ComponentState.INVALID_DEFAULT)
+                defaultComponentStates.put(componentName, UseCaseResult.ComponentState.INVALID_DEFAULT)
         );
 
         DomainModel defaultDomainModel = new DomainModel(NO_ID, defaultComponentStates);
@@ -236,14 +236,14 @@ public class RecipeMetadata
     }
 
     private void checkForInvalidComponentStates() {
-        UseCaseMetadata.ComponentState componentState;
+        UseCaseResult.ComponentState componentState;
 
         for (ComponentName componentName : requiredComponentNames) {
             componentState = useCaseModel.componentStates.get(componentName);
 
-            if (UseCaseMetadata.ComponentState.INVALID_UNCHANGED.equals(componentState) ||
-                    UseCaseMetadata.ComponentState.INVALID_CHANGED.equals(componentState) ||
-                    UseCaseMetadata.ComponentState.INVALID_DEFAULT.equals(componentState)) {
+            if (UseCaseResult.ComponentState.INVALID_UNCHANGED.equals(componentState) ||
+                    UseCaseResult.ComponentState.INVALID_CHANGED.equals(componentState) ||
+                    UseCaseResult.ComponentState.INVALID_DEFAULT.equals(componentState)) {
                 addFailReasonInvalidComponents();
             }
         }
@@ -253,8 +253,8 @@ public class RecipeMetadata
         for (ComponentName componentName : additionalComponentNames) {
             componentState = useCaseModel.componentStates.get(componentName);
 
-            if (UseCaseMetadata.ComponentState.INVALID_UNCHANGED.equals(componentState) ||
-                    UseCaseMetadata.ComponentState.INVALID_CHANGED.equals(componentState)) {
+            if (UseCaseResult.ComponentState.INVALID_UNCHANGED.equals(componentState) ||
+                    UseCaseResult.ComponentState.INVALID_CHANGED.equals(componentState)) {
                 addFailReasonInvalidComponents();
             }
         }

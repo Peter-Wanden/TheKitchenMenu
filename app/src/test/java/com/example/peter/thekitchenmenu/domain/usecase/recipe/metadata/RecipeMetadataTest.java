@@ -7,12 +7,12 @@ import com.example.peter.thekitchenmenu.data.repository.recipe.metadata.TestData
 import com.example.peter.thekitchenmenu.domain.model.UseCaseMetadataModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseResult;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentName;
-import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseMetadata.ComponentState;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseResult.ComponentState;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.FailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataPersistenceModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataRequest;
@@ -152,7 +152,7 @@ public class RecipeMetadataTest {
 
         // Assert
         // assert correct id requested from persistence
-        verify(repoMock).getActiveByDomainId(eq(modelUnderTest.getDomainId()),
+        verify(repoMock).getByDomainId(eq(modelUnderTest.getDomainId()),
                 repoMetadataCallback.capture()
         );
         repoMetadataCallback.getValue().onPersistenceModelUnavailable();
@@ -322,7 +322,7 @@ public class RecipeMetadataTest {
         // assert response
         UseCaseMetadataModel metadata = onErrorResponse.getMetadata();
 
-        ComponentState expectedComponentState = UseCaseMetadata.ComponentState.INVALID_CHANGED;
+        ComponentState expectedComponentState = UseCaseResult.ComponentState.INVALID_CHANGED;
         ComponentState actualComponentState = metadata.getComponentState();
         assertEquals(
                 expectedComponentState,
@@ -401,7 +401,7 @@ public class RecipeMetadataTest {
         SUT.execute(requestGetInvalidModel, new MetadataCallbackClient());
 
         // Assert / return invalid model
-        verify(repoMock).getActiveByDomainId(eq(invalidModelToLoad.getDomainId()),
+        verify(repoMock).getByDomainId(eq(invalidModelToLoad.getDomainId()),
                 repoMetadataCallback.capture()
         );
         repoMetadataCallback.getValue().onPersistenceModelLoaded(invalidModelToLoad);
@@ -538,7 +538,7 @@ public class RecipeMetadataTest {
         // Assert
         UseCaseMetadataModel metadata = onErrorResponse.getMetadata();
 
-        ComponentState expectedComponentState = UseCaseMetadata.ComponentState.INVALID_CHANGED;
+        ComponentState expectedComponentState = UseCaseResult.ComponentState.INVALID_CHANGED;
         ComponentState actualComponentState = metadata.getComponentState();
         assertEquals(
                 expectedComponentState,
@@ -565,7 +565,7 @@ public class RecipeMetadataTest {
         // Assert response
         UseCaseMetadataModel metadata = onErrorResponse.getMetadata();
 
-        ComponentState expectedComponentState = UseCaseMetadata.ComponentState.INVALID_UNCHANGED;
+        ComponentState expectedComponentState = UseCaseResult.ComponentState.INVALID_UNCHANGED;
         ComponentState actualComponentState = metadata.getComponentState();
         assertEquals(
                 expectedComponentState,
@@ -596,12 +596,12 @@ public class RecipeMetadataTest {
         handler.executeAsync(SUT, r, new MetadataCallbackClient());
 
         // Assert
-        verify(repoMock).getActiveByDomainId(eq(recipeId), repoMetadataCallback.capture());
+        verify(repoMock).getByDomainId(eq(recipeId), repoMetadataCallback.capture());
         repoMetadataCallback.getValue().onPersistenceModelLoaded(modelUnderTest);
 
         UseCaseMetadataModel metadata = onErrorResponse.getMetadata();
 
-        ComponentState expectedComponentState = UseCaseMetadata.ComponentState.INVALID_UNCHANGED;
+        ComponentState expectedComponentState = UseCaseResult.ComponentState.INVALID_UNCHANGED;
         ComponentState actualComponentState = metadata.getComponentState();
         assertEquals(
                 expectedComponentState,
@@ -630,12 +630,12 @@ public class RecipeMetadataTest {
         handler.executeAsync(SUT, r, new MetadataCallbackClient()
         );
         // Assert
-        verify(repoMock).getActiveByDomainId(eq(recipeId), repoMetadataCallback.capture());
+        verify(repoMock).getByDomainId(eq(recipeId), repoMetadataCallback.capture());
         repoMetadataCallback.getValue().onPersistenceModelLoaded(modelUnderTest);
 
         UseCaseMetadataModel metadata = onErrorResponse.getMetadata();
 
-        ComponentState expectedComponentState = UseCaseMetadata.ComponentState.INVALID_CHANGED;
+        ComponentState expectedComponentState = UseCaseResult.ComponentState.INVALID_CHANGED;
         ComponentState actualComponentState = metadata.getComponentState();
         assertEquals(
                 expectedComponentState,
@@ -664,12 +664,12 @@ public class RecipeMetadataTest {
         handler.executeAsync(SUT, r, new MetadataCallbackClient());
 
         // Assert
-        verify(repoMock).getActiveByDomainId(eq(recipeId), repoMetadataCallback.capture());
+        verify(repoMock).getByDomainId(eq(recipeId), repoMetadataCallback.capture());
         repoMetadataCallback.getValue().onPersistenceModelLoaded(modelUnderTest);
 
         UseCaseMetadataModel metadata = onSuccessResponse.getMetadata();
 
-        ComponentState expectedComponentState = UseCaseMetadata.ComponentState.VALID_UNCHANGED;
+        ComponentState expectedComponentState = UseCaseResult.ComponentState.VALID_UNCHANGED;
         ComponentState actualComponentState = metadata.getComponentState();
         assertEquals(
                 expectedComponentState,
@@ -696,7 +696,7 @@ public class RecipeMetadataTest {
         // Assert
         UseCaseMetadataModel metadata = onSuccessResponse.getMetadata();
 
-        ComponentState expectedComponentState = UseCaseMetadata.ComponentState.VALID_UNCHANGED;
+        ComponentState expectedComponentState = UseCaseResult.ComponentState.VALID_UNCHANGED;
         ComponentState actualComponentState = metadata.getComponentState();
         assertEquals(
                 expectedComponentState,
@@ -725,12 +725,12 @@ public class RecipeMetadataTest {
         handler.executeAsync(SUT, r, new MetadataCallbackClient()
         );
         // Assert
-        verify(repoMock).getActiveByDomainId(eq(recipeId), repoMetadataCallback.capture());
+        verify(repoMock).getByDomainId(eq(recipeId), repoMetadataCallback.capture());
         repoMetadataCallback.getValue().onPersistenceModelLoaded(modelUnderTest);
 
         UseCaseMetadataModel metadata = onSuccessResponse.getMetadata();
 
-        ComponentState expectedComponentState = UseCaseMetadata.ComponentState.VALID_CHANGED;
+        ComponentState expectedComponentState = UseCaseResult.ComponentState.VALID_CHANGED;
         ComponentState actualComponentState = metadata.getComponentState();
         assertEquals(
                 expectedComponentState,
@@ -760,12 +760,12 @@ public class RecipeMetadataTest {
         );
 
         // Assert
-        verify(repoMock).getActiveByDomainId(eq(recipeId), repoMetadataCallback.capture());
+        verify(repoMock).getByDomainId(eq(recipeId), repoMetadataCallback.capture());
         repoMetadataCallback.getValue().onPersistenceModelLoaded(modelUnderTestOne);
 
         UseCaseMetadataModel metadata = onErrorResponse.getMetadata();
 
-        ComponentState expectedModelUnderTestOneState = UseCaseMetadata.ComponentState.INVALID_UNCHANGED;
+        ComponentState expectedModelUnderTestOneState = UseCaseResult.ComponentState.INVALID_UNCHANGED;
         ComponentState actualModelUnderTestOneState = metadata.getComponentState();
         assertEquals(
                 expectedModelUnderTestOneState,

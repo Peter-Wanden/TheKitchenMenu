@@ -264,6 +264,7 @@ public class RecipeIdentity
         repository.save(model);
     }
 
+    @Override
     protected void buildResponse() {
         RecipeIdentityResponse.Builder builder = new RecipeIdentityResponse.Builder().
                 setDataId(useCaseDataId).

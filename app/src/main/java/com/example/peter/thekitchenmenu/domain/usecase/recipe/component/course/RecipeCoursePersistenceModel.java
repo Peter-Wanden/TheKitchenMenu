@@ -86,5 +86,10 @@ public final class RecipeCoursePersistenceModel
             persistenceModel.courses = items;
             return self();
         }
+
+        @Override
+        protected Builder self() {
+            return this;
+        }
     }
 }

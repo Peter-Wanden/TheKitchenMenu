@@ -14,13 +14,14 @@ import javax.annotation.Nonnull;
 /**
  * Each use case is responsible for a single persistence model.
  * This abstract class provides the functionality required
- * @param <DATA_ACCESS> the component used to store and retrieve persistence models
- * @param <PERSISTENCE_MODEL> used for domain data storage
- * @param <USE_CASE_MODEL> the use case internal domain data structure
- * @param <USE_CASE_REQUEST_MODEL> domain data model used in requests
+ *
+ * @param <DATA_ACCESS>             the component used to store and retrieve persistence models
+ * @param <PERSISTENCE_MODEL>       used for domain data storage
+ * @param <USE_CASE_MODEL>          the use case internal domain data structure
+ * @param <USE_CASE_REQUEST_MODEL>  domain data model used in requests
  * @param <USE_CASE_RESPONSE_MODEL> domain data model used in responses
  */
-public abstract class UseCaseModel<
+public abstract class UseCaseData<
         DATA_ACCESS extends DataAccess<PERSISTENCE_MODEL>,
         PERSISTENCE_MODEL extends DomainModel.PersistenceModel,
         USE_CASE_MODEL extends DomainModel.UseCaseModel,
@@ -31,7 +32,7 @@ public abstract class UseCaseModel<
         implements
         DomainDataAccess.GetDomainModelCallback<PERSISTENCE_MODEL> {
 
-    private static final String TAG = "tkm-" + "UseCaseIdLayerOne" + ": ";
+    private static final String TAG = "tkm-" + "UseCaseModel" + ": ";
 
     protected String useCaseDataId = UseCaseMessageModelDataId.NO_ID;
     protected String useCaseDomainId = UseCaseMessageModelDataId.NO_ID;
@@ -44,21 +45,21 @@ public abstract class UseCaseModel<
     protected USE_CASE_MODEL useCaseModel;
 
     protected DomainModel.Converter<
-                USE_CASE_MODEL,
-                PERSISTENCE_MODEL,
-                USE_CASE_REQUEST_MODEL,
-                USE_CASE_RESPONSE_MODEL> converter;
+            USE_CASE_MODEL,
+            PERSISTENCE_MODEL,
+            USE_CASE_REQUEST_MODEL,
+            USE_CASE_RESPONSE_MODEL> converter;
 
     protected boolean isChanged;
     protected int accessCount;
 
-    public UseCaseModel(
+    public UseCaseData(
             DATA_ACCESS dataAccess,
             DomainModel.Converter<
-                                USE_CASE_MODEL,
-                                PERSISTENCE_MODEL,
-                                USE_CASE_REQUEST_MODEL,
-                                USE_CASE_RESPONSE_MODEL> converter,
+                    USE_CASE_MODEL,
+                    PERSISTENCE_MODEL,
+                    USE_CASE_REQUEST_MODEL,
+                    USE_CASE_RESPONSE_MODEL> converter,
             UniqueIdProvider idProvider,
             TimeProvider timeProvider) {
 
@@ -115,7 +116,7 @@ public abstract class UseCaseModel<
     }
 
     protected void getPersistenceModelByDomainId() {
-        dataAccess.getActiveByDomainId(useCaseDomainId, this);
+        dataAccess.getByDomainId(useCaseDomainId, this);
     }
 
     @Override
@@ -160,9 +161,18 @@ public abstract class UseCaseModel<
     }
 
     protected void archivePreviousPersistenceModel() {
+        dataAccess.save(converter.createArchivedPersistenceModel(persistenceModel));
+    }
+
+    protected void saveChanges() {
         if (persistenceModel != null) {
-            dataAccess.save(converter.createArchivedPersistenceModel(persistenceModel));
+            archivePreviousPersistenceModel();
+            persistenceModel = converter.updatePersistenceModel(persistenceModel, useCaseModel);
+        } else {
+            persistenceModel = converter.createNewPersistenceModel(useCaseDomainId, useCaseModel);
         }
+        useCaseDataId = persistenceModel.getDataId();
+        dataAccess.save(persistenceModel);
     }
 
     protected abstract USE_CASE_MODEL createUseCaseModelFromDefaultValues();

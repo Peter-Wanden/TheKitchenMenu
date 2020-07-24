@@ -19,7 +19,7 @@ public class RepositoryRecipeIngredientRemote
     }
 
     @Override
-    public void getActiveByDomainId(
+    public void getByDomainId(
             @Nonnull String domainId,
             @Nonnull GetDomainModelCallback<RecipeIngredientPersistenceModel> callback) {
         callback.onPersistenceModelUnavailable();

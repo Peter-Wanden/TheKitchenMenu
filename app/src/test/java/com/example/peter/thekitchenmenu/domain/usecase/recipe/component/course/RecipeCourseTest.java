@@ -24,7 +24,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseMetadata.ComponentState;
+import static com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseResult.ComponentState;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
@@ -84,7 +84,7 @@ public class RecipeCourseTest {
 
         // Assert
         // Assert persistence calls
-        verify(repoCourseMock).getActiveByDomainId(eq(expectedDefaultValues.getDomainId()),
+        verify(repoCourseMock).getByDomainId(eq(expectedDefaultValues.getDomainId()),
                 repoCourseCallback.capture());
         repoCourseCallback.getValue().onPersistenceModelUnavailable();
 
@@ -377,7 +377,7 @@ public class RecipeCourseTest {
         SUT.execute(request, new CourseCallbackClient());
 
         // Assert
-        verify(repoCourseMock).getActiveByDomainId(eq(expectedAllCoursesModel.getDomainId()),
+        verify(repoCourseMock).getByDomainId(eq(expectedAllCoursesModel.getDomainId()),
                 repoCourseCallback.capture());
         repoCourseCallback.getValue().onPersistenceModelLoaded(expectedAllCoursesModel);
 

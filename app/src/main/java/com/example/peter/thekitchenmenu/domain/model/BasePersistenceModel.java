@@ -60,7 +60,7 @@ public abstract class BasePersistenceModel
                 '}';
     }
 
-    public abstract static class PersistenceModelBuilder<
+    protected abstract static class PersistenceModelBuilder<
             SELF extends PersistenceModelBuilder<SELF, PERSISTENCE_MODEL>,
             PERSISTENCE_MODEL extends BasePersistenceModel> {
 
@@ -94,9 +94,7 @@ public abstract class BasePersistenceModel
             return persistenceModel;
         }
 
-        protected SELF self() {
-            // noinspection unchecked
-            return (SELF) this;
-        }
+        protected abstract SELF self();
+        // when implementing, write: return this;
     }
 }

@@ -7,7 +7,7 @@ import com.example.peter.thekitchenmenu.domain.businessentity.BusinessEntity;
 import com.example.peter.thekitchenmenu.domain.businessentity.textvalidation.TextValidationBusinessEntity;
 import com.example.peter.thekitchenmenu.domain.businessentity.textvalidation.TextValidationBusinessEntity.TextLength;
 import com.example.peter.thekitchenmenu.domain.businessentity.textvalidation.TextValidationModel;
-import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseResult;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
@@ -18,12 +18,12 @@ import java.util.Map;
 
 public class RecipeIdentityUseCase
         extends
-        UseCaseMetadata<
-                RecipeIdentityUseCaseDataAccess,
-                RecipeIdentityUseCasePersistenceModel,
-                RecipeIdentityUseCaseModel,
-                RecipeIdentityUseCaseRequestModel,
-                RecipeIdentityUseCaseResponseModel> {
+        UseCaseResult<
+                        RecipeIdentityUseCaseDataAccess,
+                        RecipeIdentityUseCasePersistenceModel,
+                        RecipeIdentityUseCaseModel,
+                        RecipeIdentityUseCaseRequestModel,
+                        RecipeIdentityUseCaseResponseModel> {
 
     public enum FailReason
             implements
@@ -81,7 +81,7 @@ public class RecipeIdentityUseCase
     }
 
     @Override
-    protected void processDataElements() {
+    protected void isDomainDataElementsProcessed() {
         validateTitle();
         validateDescription();
 

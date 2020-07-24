@@ -24,7 +24,7 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientDuplicateChecker.NO_DUPLICATE_FOUND;
-import static com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseMetadata.ComponentState;
+import static com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseResult.ComponentState;
 import static com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator.TextType;
 
 public class Ingredient
@@ -126,7 +126,7 @@ public class Ingredient
     }
 
     private void loadData(String ingredientId) {
-        repository.getActiveByDomainId(ingredientId, this);
+        repository.getByDomainId(ingredientId, this);
     }
 
     @Override

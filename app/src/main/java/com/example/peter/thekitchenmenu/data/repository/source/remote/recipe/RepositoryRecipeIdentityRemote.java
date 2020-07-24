@@ -31,7 +31,7 @@ public class RepositoryRecipeIdentityRemote
     }
 
     @Override
-    public void getActiveByDomainId(
+    public void getByDomainId(
             @Nonnull String domainId,
             @Nonnull GetDomainModelCallback<RecipeIdentityUseCasePersistenceModel> callback) {
         callback.onPersistenceModelUnavailable();

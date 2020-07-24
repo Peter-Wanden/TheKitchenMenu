@@ -90,7 +90,7 @@ public class RepositoryRecipeCourseLocal
     }
 
     @Override
-    public void getActiveByDomainId(
+    public void getByDomainId(
             @Nonnull String domainId,
             @Nonnull GetDomainModelCallback<RecipeCoursePersistenceModel> callback) {
         getAdapter.getActiveByDomainId(

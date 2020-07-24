@@ -8,7 +8,7 @@ import com.example.peter.thekitchenmenu.data.repository.recipe.duration.TestData
 import com.example.peter.thekitchenmenu.data.repository.recipe.identity.TestDataRecipeIdentity;
 import com.example.peter.thekitchenmenu.data.repository.recipe.metadata.TestDataRecipeMetadata;
 import com.example.peter.thekitchenmenu.data.repository.recipe.portions.TestDataRecipePortions;
-import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseResult;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
@@ -23,7 +23,7 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityUseCaseRequestModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentName;
-import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseMetadata.ComponentState;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseResult.ComponentState;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.FailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataPersistenceModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataResponse;
@@ -139,7 +139,7 @@ public class RecipeTest {
 
         // Assert recipe state updated
         assertEquals(
-                UseCaseMetadata.ComponentState.INVALID_UNCHANGED,
+                UseCaseResult.ComponentState.INVALID_UNCHANGED,
                 recipeMetadata.getComponentState()
         );
         // Assert all required components responded
@@ -152,7 +152,7 @@ public class RecipeTest {
                 domainModel.getComponentStates().containsKey(ComponentName.IDENTITY)
         );
         assertEquals(
-                UseCaseMetadata.ComponentState.INVALID_UNCHANGED,
+                UseCaseResult.ComponentState.INVALID_UNCHANGED,
                 domainModel.getComponentStates().get(ComponentName.IDENTITY)
         );
         // Assert course component and state
@@ -160,7 +160,7 @@ public class RecipeTest {
                 domainModel.getComponentStates().containsKey(ComponentName.COURSE)
         );
         assertEquals(
-                UseCaseMetadata.ComponentState.INVALID_UNCHANGED,
+                UseCaseResult.ComponentState.INVALID_UNCHANGED,
                 domainModel.getComponentStates().get(ComponentName.COURSE)
         );
         // Assert duration component and state
@@ -168,7 +168,7 @@ public class RecipeTest {
                 domainModel.getComponentStates().containsKey(ComponentName.DURATION)
         );
         assertEquals(
-                UseCaseMetadata.ComponentState.INVALID_UNCHANGED,
+                UseCaseResult.ComponentState.INVALID_UNCHANGED,
                 domainModel.getComponentStates().get(ComponentName.DURATION)
         );
         // Assert portions component and state
@@ -176,7 +176,7 @@ public class RecipeTest {
                 domainModel.getComponentStates().containsKey(ComponentName.PORTIONS)
         );
         assertEquals(
-                UseCaseMetadata.ComponentState.INVALID_UNCHANGED,
+                UseCaseResult.ComponentState.INVALID_UNCHANGED,
                 domainModel.getComponentStates().get(ComponentName.PORTIONS)
         );
     }
@@ -204,7 +204,7 @@ public class RecipeTest {
         // Assert, callback updated with recipe response
         UseCaseMetadataModel metadata = registeredCallback.recipeMetadataResponse.getMetadata();
 
-        ComponentState expectedRecipeState = UseCaseMetadata.ComponentState.INVALID_UNCHANGED;
+        ComponentState expectedRecipeState = UseCaseResult.ComponentState.INVALID_UNCHANGED;
         ComponentState actualRecipeState = metadata.getComponentState();
         assertEquals(
                 expectedRecipeState,
@@ -307,7 +307,7 @@ public class RecipeTest {
         RecipeIdentityResponse identityResponse = macroCallback.identityOnError;
         List<FailReasons> identityFailReasons = identityResponse.getMetadata().getFailReasons();
         assertEquals(
-                UseCaseMetadata.ComponentState.INVALID_UNCHANGED,
+                UseCaseResult.ComponentState.INVALID_UNCHANGED,
                 identityResponse.getMetadata().getComponentState()
         );
         assertEquals(
@@ -322,7 +322,7 @@ public class RecipeTest {
         RecipeCourseResponse courseResponse = macroCallback.courseOnError;
         List<FailReasons> courseFailReasons = courseResponse.getMetadata().getFailReasons();
         assertEquals(
-                UseCaseMetadata.ComponentState.INVALID_UNCHANGED,
+                UseCaseResult.ComponentState.INVALID_UNCHANGED,
                 courseResponse.getMetadata().getComponentState()
         );
         assertEquals(
@@ -336,7 +336,7 @@ public class RecipeTest {
         RecipeDurationResponse durationResponse = macroCallback.durationOnError;
         List<FailReasons> durationFailReasons = durationResponse.getMetadata().getFailReasons();
         assertEquals(
-                UseCaseMetadata.ComponentState.INVALID_UNCHANGED,
+                UseCaseResult.ComponentState.INVALID_UNCHANGED,
                 durationResponse.getMetadata().getComponentState()
         );
         assertEquals(
@@ -350,7 +350,7 @@ public class RecipeTest {
         RecipePortionsResponse portionResponse = macroCallback.portionsOnError;
         List<FailReasons> portionsFailReasons = portionResponse.getMetadata().getFailReasons();
         assertEquals(
-                UseCaseMetadata.ComponentState.INVALID_UNCHANGED,
+                UseCaseResult.ComponentState.INVALID_UNCHANGED,
                 portionResponse.getMetadata().getComponentState()
         );
         assertEquals(
@@ -518,7 +518,7 @@ public class RecipeTest {
 
         // Assert identity component state
         assertEquals(
-                UseCaseMetadata.ComponentState.VALID_CHANGED,
+                UseCaseResult.ComponentState.VALID_CHANGED,
                 response.getMetadata().getComponentState()
         );
         int expectedNoOfFailReasons = 1;
@@ -667,19 +667,19 @@ public class RecipeTest {
                 getDomainModel().
                 getComponentStates();
         assertEquals(
-                UseCaseMetadata.ComponentState.VALID_UNCHANGED,
+                UseCaseResult.ComponentState.VALID_UNCHANGED,
                 componentStates.get(ComponentName.IDENTITY)
         );
         assertEquals(
-                UseCaseMetadata.ComponentState.VALID_UNCHANGED,
+                UseCaseResult.ComponentState.VALID_UNCHANGED,
                 componentStates.get(ComponentName.COURSE)
         );
         assertEquals(
-                UseCaseMetadata.ComponentState.VALID_UNCHANGED,
+                UseCaseResult.ComponentState.VALID_UNCHANGED,
                 componentStates.get(ComponentName.DURATION)
         );
         assertEquals(
-                UseCaseMetadata.ComponentState.VALID_UNCHANGED,
+                UseCaseResult.ComponentState.VALID_UNCHANGED,
                 componentStates.get(ComponentName.PORTIONS)
         );
     }
@@ -705,7 +705,7 @@ public class RecipeTest {
 
         // Assert correct recipe state
         ComponentState recipeState = recipeCallback.recipeMetadataResponse.getMetadata().getComponentState();
-        assertEquals(UseCaseMetadata.ComponentState.VALID_UNCHANGED, recipeState);
+        assertEquals(UseCaseResult.ComponentState.VALID_UNCHANGED, recipeState);
     }
 
     @Test
@@ -749,7 +749,7 @@ public class RecipeTest {
         UseCaseMetadataModel metadata1 = registeredMetadataCallback.response.getMetadata();
         ComponentState actualRecipeState = metadata1.getComponentState();
         assertEquals(
-                UseCaseMetadata.ComponentState.VALID_UNCHANGED,
+                UseCaseResult.ComponentState.VALID_UNCHANGED,
                 actualRecipeState
         );
 
@@ -757,7 +757,7 @@ public class RecipeTest {
         UseCaseMetadataModel metadata2 = registeredIdentityCallback.response.getMetadata();
         ComponentState identityComponentState = metadata2.getComponentState();
         assertEquals(
-                UseCaseMetadata.ComponentState.VALID_UNCHANGED,
+                UseCaseResult.ComponentState.VALID_UNCHANGED,
                 identityComponentState
         );
     }
@@ -772,57 +772,57 @@ public class RecipeTest {
     }
 
     private void verifyRepoRecipeMetadataCalledAndReturnDataUnavailable(String recipeId) {
-        verify(recipeTestBase.repoMetadataMock).getActiveByDomainId(eq(recipeId),
+        verify(recipeTestBase.repoMetadataMock).getByDomainId(eq(recipeId),
                 recipeTestBase.repoMetadataCallback.capture());
         recipeTestBase.repoMetadataCallback.getValue().onPersistenceModelUnavailable();
     }
 
     private void verifyRepoIdentityCalledAndReturnDataUnavailable(String recipeId) {
-        verify(recipeTestBase.repoIdentityMock).getActiveByDomainId(eq(recipeId),
+        verify(recipeTestBase.repoIdentityMock).getByDomainId(eq(recipeId),
                 recipeTestBase.repoIdentityCallback.capture());
         recipeTestBase.repoIdentityCallback.getValue().onPersistenceModelUnavailable();
     }
 
     private void verifyRepoCourseCalledAndReturnDataUnavailable(String recipeId) {
-        verify(recipeTestBase.repoCourseMock).getActiveByDomainId(eq(recipeId),
+        verify(recipeTestBase.repoCourseMock).getByDomainId(eq(recipeId),
                 recipeTestBase.repoCourseCallback.capture());
         recipeTestBase.repoCourseCallback.getValue().onPersistenceModelUnavailable();
     }
 
     private void verifyRepoDurationCalledAndReturnDataUnavailable(String recipeId) {
-        verify(recipeTestBase.repoDurationMock).getActiveByDomainId(eq(recipeId),
+        verify(recipeTestBase.repoDurationMock).getByDomainId(eq(recipeId),
                 recipeTestBase.repoDurationCallback.capture());
         recipeTestBase.repoDurationCallback.getValue().onPersistenceModelUnavailable();
     }
 
     private void verifyRepoPortionsCalledAndReturnDataUnavailable(String recipeId) {
-        verify(recipeTestBase.repoPortionsMock).getActiveByDomainId(eq(recipeId),
+        verify(recipeTestBase.repoPortionsMock).getByDomainId(eq(recipeId),
                 recipeTestBase.repoPortionsCallback.capture());
         recipeTestBase.repoPortionsCallback.getValue().onPersistenceModelUnavailable();
     }
 
     private void verifyAllReposCalledAndReturnValidExisting(String recipeDomainId) {
-        verify(recipeTestBase.repoMetadataMock).getActiveByDomainId(eq(recipeDomainId),
+        verify(recipeTestBase.repoMetadataMock).getByDomainId(eq(recipeDomainId),
                 recipeTestBase.repoMetadataCallback.capture());
         recipeTestBase.repoMetadataCallback.getValue().onPersistenceModelLoaded(
                 TestDataRecipeMetadata.getActiveByDomainId(recipeDomainId)
         );
-        verify(recipeTestBase.repoIdentityMock).getActiveByDomainId(eq(recipeDomainId),
+        verify(recipeTestBase.repoIdentityMock).getByDomainId(eq(recipeDomainId),
                 recipeTestBase.repoIdentityCallback.capture());
         recipeTestBase.repoIdentityCallback.getValue().onPersistenceModelLoaded(
                 TestDataRecipeIdentity.getActiveByDomainId(recipeDomainId)
         );
-        verify(recipeTestBase.repoCourseMock).getActiveByDomainId(eq(recipeDomainId),
+        verify(recipeTestBase.repoCourseMock).getByDomainId(eq(recipeDomainId),
                 recipeTestBase.repoCourseCallback.capture());
         recipeTestBase.repoCourseCallback.getValue().onPersistenceModelLoaded(
                 TestDataRecipeCourse.getActiveByDomainId(recipeDomainId)
         );
-        verify(recipeTestBase.repoDurationMock).getActiveByDomainId(eq(recipeDomainId),
+        verify(recipeTestBase.repoDurationMock).getByDomainId(eq(recipeDomainId),
                 recipeTestBase.repoDurationCallback.capture());
         recipeTestBase.repoDurationCallback.getValue().onPersistenceModelLoaded(TestDataRecipeDuration.
                 getActiveByDomainId(recipeDomainId)
         );
-        verify(recipeTestBase.repoPortionsMock).getActiveByDomainId(eq(recipeDomainId),
+        verify(recipeTestBase.repoPortionsMock).getByDomainId(eq(recipeDomainId),
                 recipeTestBase.repoPortionsCallback.capture());
         recipeTestBase.repoPortionsCallback.getValue().onPersistenceModelLoaded(TestDataRecipePortions.
                 getActiveByDomainId(recipeDomainId)

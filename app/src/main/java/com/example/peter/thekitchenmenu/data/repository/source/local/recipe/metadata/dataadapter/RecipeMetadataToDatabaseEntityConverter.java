@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.met
 
 import com.example.peter.thekitchenmenu.data.repository.source.local.PersistenceModelToDatabaseEntityConverter;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.parent.RecipeMetadataParentEntity;
-import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseResult;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataPersistenceModel;
 
 import java.util.ArrayList;
@@ -21,7 +21,7 @@ public class RecipeMetadataToDatabaseEntityConverter
                 setDataId(entity.getDataId()).
                 setDomainId(entity.getDomainId()).
                 setParentDomainId(entity.getParentDomainId()).
-                setRecipeState(UseCaseMetadata.ComponentState.fromInt(entity.getRecipeStateId())).
+                setRecipeState(UseCaseResult.ComponentState.fromInt(entity.getRecipeStateId())).
                 setCreatedBy(entity.getCreatedBy()).
                 setCreateDate(entity.getCreateDate()).
                 setLastUpdate(entity.getLastUpdate()).

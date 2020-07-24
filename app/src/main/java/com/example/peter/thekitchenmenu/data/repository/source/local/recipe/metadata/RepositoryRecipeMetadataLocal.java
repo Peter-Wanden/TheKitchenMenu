@@ -93,7 +93,7 @@ public class RepositoryRecipeMetadataLocal
     }
 
     @Override
-    public void getActiveByDomainId(
+    public void getByDomainId(
             @Nonnull String domainId,
             @Nonnull GetDomainModelCallback<RecipeMetadataPersistenceModel> callback) {
         getAdapter.getActiveByDomainId(

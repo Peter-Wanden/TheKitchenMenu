@@ -208,7 +208,7 @@ public class RecipeIngredient extends UseCaseBase {
     }
 
     private void loadPortions() {
-        portionsRepository.getActiveByDomainId(
+        portionsRepository.getByDomainId(
                 recipeId,
                 new GetDomainModelCallback<RecipePortionsPersistenceModel>() {
                     @Override
