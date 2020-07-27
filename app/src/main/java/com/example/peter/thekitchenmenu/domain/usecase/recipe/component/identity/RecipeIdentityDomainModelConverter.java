@@ -1,16 +1,24 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity;
 
 import com.example.peter.thekitchenmenu.domain.model.DomainModel;
+import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
+import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
 import javax.annotation.Nonnull;
 
 public class RecipeIdentityDomainModelConverter
-        implements
+        extends
         DomainModel.Converter<
-                        RecipeIdentityUseCaseModel,
-                        RecipeIdentityUseCasePersistenceModel,
-                        RecipeIdentityUseCaseRequestModel,
-                        RecipeIdentityUseCaseResponseModel> {
+                                        RecipeIdentityUseCaseModel,
+                                        RecipeIdentityUseCasePersistenceModel,
+                                        RecipeIdentityUseCaseRequestModel,
+                                        RecipeIdentityUseCaseResponseModel> {
+
+    public RecipeIdentityDomainModelConverter(
+            @Nonnull TimeProvider timeProvider,
+            @Nonnull UniqueIdProvider idProvider) {
+        super(timeProvider, idProvider);
+    }
 
     @Override
     public RecipeIdentityUseCaseModel convertPersistenceToDomainModel(
@@ -28,7 +36,16 @@ public class RecipeIdentityDomainModelConverter
     }
 
     @Override
-    public RecipeIdentityUseCasePersistenceModel createNewPersistenceModel() {
+    public RecipeIdentityUseCasePersistenceModel createNewPersistenceModel(
+            @Nonnull String domainId,
+            @Nonnull RecipeIdentityUseCaseModel useCaseModel) {
+        return null;
+    }
+
+    @Override
+    public RecipeIdentityUseCasePersistenceModel updatePersistenceModel(
+            @Nonnull RecipeIdentityUseCasePersistenceModel persistenceModel,
+            @Nonnull RecipeIdentityUseCaseModel useCaseModel) {
         return null;
     }
 

@@ -17,6 +17,8 @@ public final class RecipeIdentityUseCaseRequestModel
     private String title;
     private String description;
 
+    private RecipeIdentityUseCaseRequestModel(){}
+
     public String getTitle() {
         return title;
     }

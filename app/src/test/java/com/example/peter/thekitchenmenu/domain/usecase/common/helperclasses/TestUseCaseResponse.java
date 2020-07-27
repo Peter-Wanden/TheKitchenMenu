@@ -31,7 +31,7 @@ public class TestUseCaseResponse
                     TestUseCaseResponseModel> {
 
         public Builder() {
-            message.model = new TestUseCaseResponseModel.Builder().getDefault().build();
+            message = new TestUseCaseResponse();
         }
 
         @Override

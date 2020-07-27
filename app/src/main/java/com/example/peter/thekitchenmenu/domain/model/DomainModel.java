@@ -51,7 +51,8 @@ public interface DomainModel {
         @Nonnull
         protected final UniqueIdProvider idProvider;
 
-        public Converter(@Nonnull TimeProvider timeProvider, @Nonnull UniqueIdProvider idProvider) {
+        public Converter(@Nonnull TimeProvider timeProvider,
+                         @Nonnull UniqueIdProvider idProvider) {
             this.timeProvider = timeProvider;
             this.idProvider = idProvider;
         }
@@ -63,7 +64,8 @@ public interface DomainModel {
                 @Nonnull REQUEST_MODEL model);
 
         public abstract PERSISTENCE_MODEL createNewPersistenceModel(
-                @Nonnull String domainId, @Nonnull USE_CASE_MODEL useCaseModel);
+                @Nonnull String domainId,
+                @Nonnull USE_CASE_MODEL useCaseModel);
 
         public abstract PERSISTENCE_MODEL createArchivedPersistenceModel(
                 @Nonnull PERSISTENCE_MODEL oldPersistenceModel);
@@ -72,6 +74,7 @@ public interface DomainModel {
                 @Nonnull USE_CASE_MODEL model);
 
         public abstract PERSISTENCE_MODEL updatePersistenceModel(
-                @Nonnull PERSISTENCE_MODEL persistenceModel, USE_CASE_MODEL useCaseModel);
+                @Nonnull PERSISTENCE_MODEL persistenceModel,
+                @Nonnull USE_CASE_MODEL useCaseModel);
     }
 }

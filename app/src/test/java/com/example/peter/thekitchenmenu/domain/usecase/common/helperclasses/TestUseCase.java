@@ -19,11 +19,11 @@ import java.util.Map;
 public class TestUseCase
         extends
         UseCaseResult<
-                        TestUseCaseDataAccess,
-                        TestUseCasePersistenceModel,
-                TestUseCaseModel,
-                        TestUseCaseRequestModel,
-                        TestUseCaseResponseModel> {
+                TestUseCaseDataAccess,
+                TestUseCasePersistenceModel,
+                TestUseCaseInternalModel,
+                TestUseCaseRequestModel,
+                TestUseCaseResponseModel> {
 
     private static final String TAG = "tkm-" + TestUseCase.class.getSimpleName() + ": ";
 
@@ -33,7 +33,7 @@ public class TestUseCase
      * can be invalid a fail reason must be added to reflect its invalid state.
      * For example: TEXT_TOO_LONG or TEXT_TOO_SHORT, VALUE_TOO_HIGH etc.
      */
-    enum FailReason
+    public enum FailReason
             implements
             FailReasons {
         TEXT_NULL(1000),
@@ -68,7 +68,10 @@ public class TestUseCase
 
     // arbitrary values for testing purposes
     public static final int MIN_STRING_LENGTH = 5;
-    public static final int MAX_STRING_LENGTH = 10;
+    public static final int MAX_STRING_LENGTH = 50;
+
+    // deliberately not final so can be changed between test cases
+    public String useCaseModelDefaultValue = "useCaseModelDefaultValue";
 
     public TestUseCase(TestUseCaseDataAccess dataAccess,
                        TestDomainModelConverter converter,
@@ -80,6 +83,7 @@ public class TestUseCase
     /**
      * This is where the business application logic goes, also any calls to business entities.
      * To keep things simple the use case application logic performs a length check on a string.
+     *
      * @return return true only after all data elements have been processed.
      */
     @Override
@@ -95,25 +99,21 @@ public class TestUseCase
     }
 
     /**
-     * @return the use case domain model default values
+     * @return the use case domain models default values, these are specific to each use case.
      */
     @Override
-    protected TestUseCaseModel createUseCaseModelFromDefaultValues() {
-        return new TestUseCaseModel("useCaseDomainModelDefaultValue");
+    protected TestUseCaseInternalModel createUseCaseModelFromDefaultValues() {
+        return new TestUseCaseInternalModel(useCaseModelDefaultValue);
     }
 
     @Override
     protected void buildResponse() {
-        TestUseCaseResponse response = new TestUseCaseResponse.Builder()
+        sendResponse(new TestUseCaseResponse.Builder()
                 .setDataId(useCaseDataId)
                 .setDomainId(useCaseDomainId)
                 .setMetadata(getMetadata())
                 .setDomainModel(getResponseModel())
-                .build();
-    }
-
-    @Override
-    protected TestUseCaseResponseModel getResponseModel() {
-        return null;
+                .build()
+        );
     }
 }

@@ -4,15 +4,13 @@ import com.example.peter.thekitchenmenu.domain.model.DomainModel;
 
 import javax.annotation.Nonnull;
 
-public class TestUseCaseModel
+public final class TestUseCaseInternalModel
         implements
         DomainModel.UseCaseModel {
+
     private String useCaseModelString = "useCaseModelString";
 
-    public TestUseCaseModel() {
-    }
-
-    public TestUseCaseModel(String useCaseModelString) {
+    public TestUseCaseInternalModel(String useCaseModelString) {
         this.useCaseModelString = useCaseModelString;
     }
 

@@ -29,18 +29,18 @@ public class UseCaseMetadataModel {
     @Nonnull
     private final String createdBy;
     private final long createDate;
-    private final long lasUpdate;
+    private final long lastUpdate;
 
     private UseCaseMetadataModel(@Nonnull ComponentState state,
                                  @Nonnull List<FailReasons> failReasons,
                                  @Nonnull String createdBy,
                                  long createDate,
-                                 long lasUpdate) {
+                                 long lastUpdate) {
         this.state = state;
         this.failReasons = failReasons;
         this.createdBy = createdBy;
         this.createDate = createDate;
-        this.lasUpdate = lasUpdate;
+        this.lastUpdate = lastUpdate;
     }
 
     @Nonnull
@@ -62,8 +62,8 @@ public class UseCaseMetadataModel {
         return createDate;
     }
 
-    public long getLasUpdate() {
-        return lasUpdate;
+    public long getLastUpdate() {
+        return lastUpdate;
     }
 
     @Override
@@ -72,7 +72,7 @@ public class UseCaseMetadataModel {
         if (o == null || getClass() != o.getClass()) return false;
         UseCaseMetadataModel that = (UseCaseMetadataModel) o;
         return createDate == that.createDate &&
-                lasUpdate == that.lasUpdate &&
+                lastUpdate == that.lastUpdate &&
                 state == that.state &&
                 failReasons.equals(that.failReasons) &&
                 createdBy.equals(that.createdBy);
@@ -80,7 +80,7 @@ public class UseCaseMetadataModel {
 
     @Override
     public int hashCode() {
-        return Objects.hash(state, failReasons, createdBy, createDate, lasUpdate);
+        return Objects.hash(state, failReasons, createdBy, createDate, lastUpdate);
     }
 
     @Nonnull
@@ -91,7 +91,7 @@ public class UseCaseMetadataModel {
                 ", failReasons=" + failReasons +
                 ", createdBy='" + createdBy + '\'' +
                 ", createDate=" + createDate +
-                ", lasUpdate=" + lasUpdate +
+                ", lasUpdate=" + lastUpdate +
                 '}';
     }
 

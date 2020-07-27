@@ -3,7 +3,7 @@ package com.example.peter.thekitchenmenu.domain.usecase.common;
 import android.annotation.SuppressLint;
 
 import com.example.peter.thekitchenmenu.app.Constants;
-import com.example.peter.thekitchenmenu.data.repository.DataAccess;
+import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
 import com.example.peter.thekitchenmenu.domain.model.DomainModel;
 import com.example.peter.thekitchenmenu.domain.model.UseCaseMetadataModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.CommonFailReason;
@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class UseCaseResult<
-        DATA_ACCESS extends DataAccess<PERSISTENCE_MODEL>,
+        DATA_ACCESS extends DomainDataAccess<PERSISTENCE_MODEL>,
         PERSISTENCE_MODEL extends DomainModel.PersistenceModel,
         USE_CASE_MODEL extends DomainModel.UseCaseModel,
         USE_CASE_REQUEST_MODEL extends DomainModel.UseCaseRequestModel,
@@ -71,21 +71,18 @@ public abstract class UseCaseResult<
                                  USE_CASE_MODEL,
                                  PERSISTENCE_MODEL,
                                  USE_CASE_REQUEST_MODEL,
-                                 USE_CASE_RESPONSE_MODEL> converter,
+                                 USE_CASE_RESPONSE_MODEL> modelConverter,
                          UniqueIdProvider idProvider,
                          TimeProvider timeProvider) {
-        super(dataAccess, converter, idProvider, timeProvider);
+        super(dataAccess, modelConverter, idProvider, timeProvider);
     }
 
     @Override
     protected void initialiseUseCase() {
-        if (useCaseModel == null) {
-            useCaseModel = createUseCaseModelFromDefaultValues();
-        }
         failReasons.clear();
 
         if (isDomainDataElementsProcessed()) {
-            if (isChanged && isDomainModelValid()) {
+            if (isChanged && isValid()) {
                 saveChanges();
             }
             buildResponse();
@@ -95,8 +92,6 @@ public abstract class UseCaseResult<
     protected abstract boolean isDomainDataElementsProcessed();
 
     protected abstract void buildResponse();
-
-    protected abstract USE_CASE_RESPONSE_MODEL getResponseModel();
 
     protected UseCaseMetadataModel getMetadata() {
 
@@ -115,11 +110,11 @@ public abstract class UseCaseResult<
 
     protected void sendResponse(UseCaseBase.Response response) {
         if (failReasons.equals(Collections.singletonList(CommonFailReason.NONE))) {
-            System.out.println(TAG + "onUseCaseSuccess: " + response);
+            System.out.println(TAG + "onSuccess: " + response);
             getUseCaseCallback().onUseCaseSuccess(response);
         } else {
+            System.out.println(TAG + "onError: " + response);
             getUseCaseCallback().onUseCaseError(response);
-            System.out.println(TAG + "onUseCaseError: " + response);
         }
     }
 
@@ -127,22 +122,18 @@ public abstract class UseCaseResult<
         ComponentState componentState;
 
         if (isDefaultDomainModel()) {
-            componentState = isDomainModelValid() ?
+            componentState = isValid() ?
                     ComponentState.VALID_DEFAULT :
                     ComponentState.INVALID_DEFAULT;
         } else {
-            componentState = isDomainModelValid() ?
+            componentState = isValid() ?
                     (isChanged ? ComponentState.VALID_CHANGED : ComponentState.VALID_UNCHANGED) :
                     (isChanged ? ComponentState.INVALID_CHANGED : ComponentState.INVALID_UNCHANGED);
         }
         return componentState;
     }
 
-    private boolean isDefaultDomainModel() {
-        return useCaseModel.equals(createUseCaseModelFromDefaultValues());
-    }
-
-    protected boolean isDomainModelValid() {
+    protected boolean isValid() {
         return failReasons.isEmpty();
     }
 

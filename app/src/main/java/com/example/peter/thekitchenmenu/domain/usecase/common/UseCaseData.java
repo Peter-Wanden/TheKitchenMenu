@@ -1,7 +1,6 @@
 package com.example.peter.thekitchenmenu.domain.usecase.common;
 
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
-import com.example.peter.thekitchenmenu.data.repository.DataAccess;
 import com.example.peter.thekitchenmenu.domain.model.DomainModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.RequestModelBase;
 import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.message.RequestWithId;
@@ -22,7 +21,7 @@ import javax.annotation.Nonnull;
  * @param <USE_CASE_RESPONSE_MODEL> domain data model used in responses
  */
 public abstract class UseCaseData<
-        DATA_ACCESS extends DataAccess<PERSISTENCE_MODEL>,
+        DATA_ACCESS extends DomainDataAccess<PERSISTENCE_MODEL>,
         PERSISTENCE_MODEL extends DomainModel.PersistenceModel,
         USE_CASE_MODEL extends DomainModel.UseCaseModel,
         USE_CASE_REQUEST_MODEL extends DomainModel.UseCaseRequestModel,
@@ -45,10 +44,10 @@ public abstract class UseCaseData<
     protected USE_CASE_MODEL useCaseModel;
 
     protected DomainModel.Converter<
-            USE_CASE_MODEL,
-            PERSISTENCE_MODEL,
-            USE_CASE_REQUEST_MODEL,
-            USE_CASE_RESPONSE_MODEL> converter;
+                    USE_CASE_MODEL,
+                    PERSISTENCE_MODEL,
+                    USE_CASE_REQUEST_MODEL,
+                    USE_CASE_RESPONSE_MODEL> modelConverter;
 
     protected boolean isChanged;
     protected int accessCount;
@@ -56,15 +55,15 @@ public abstract class UseCaseData<
     public UseCaseData(
             DATA_ACCESS dataAccess,
             DomainModel.Converter<
-                    USE_CASE_MODEL,
-                    PERSISTENCE_MODEL,
-                    USE_CASE_REQUEST_MODEL,
-                    USE_CASE_RESPONSE_MODEL> converter,
+                                            USE_CASE_MODEL,
+                                            PERSISTENCE_MODEL,
+                                            USE_CASE_REQUEST_MODEL,
+                                            USE_CASE_RESPONSE_MODEL> modelConverter,
             UniqueIdProvider idProvider,
             TimeProvider timeProvider) {
 
         this.dataAccess = dataAccess;
-        this.converter = converter;
+        this.modelConverter = modelConverter;
         this.idProvider = idProvider;
         this.timeProvider = timeProvider;
     }
@@ -96,6 +95,9 @@ public abstract class UseCaseData<
                 !requestDomainId.equals(useCaseDomainId);
 
         if (requestHasNoIdentifiers) {
+            if (useCaseModel == null) {
+                useCaseModel = createUseCaseModelFromDefaultValues();
+            }
             initialiseUseCase();
         } else {
             useCaseDataId = requestDataId;
@@ -139,10 +141,10 @@ public abstract class UseCaseData<
 
     private USE_CASE_MODEL createUseCaseModelFromPersistenceModel(
             @Nonnull PERSISTENCE_MODEL model) {
-        return converter.convertPersistenceToDomainModel(model);
+        return modelConverter.convertPersistenceToDomainModel(model);
     }
 
-    protected void setupForRequestModelProcessing() {
+    private void setupForRequestModelProcessing() {
         USE_CASE_MODEL updatedModel = createUseCaseModelFromRequestModel();
         isChanged = !useCaseModel.equals(updatedModel);
         useCaseModel = updatedModel;
@@ -151,31 +153,40 @@ public abstract class UseCaseData<
     }
 
     private USE_CASE_MODEL createUseCaseModelFromRequestModel() {
-        USE_CASE_REQUEST_MODEL requestModel = ((RequestModelBase<USE_CASE_REQUEST_MODEL>) getRequest()).getModel();
-        return converter.convertRequestToUseCaseModel(requestModel);
+        USE_CASE_REQUEST_MODEL requestModel =
+                ((RequestModelBase<USE_CASE_REQUEST_MODEL>) getRequest()).getModel();
+        return modelConverter.convertRequestToUseCaseModel(requestModel);
     }
 
     protected void createNewPersistenceModel() {
-        persistenceModel = converter.createNewPersistenceModel();
+        persistenceModel = modelConverter.createNewPersistenceModel(useCaseDomainId, useCaseModel);
         dataAccess.save(persistenceModel);
-    }
-
-    protected void archivePreviousPersistenceModel() {
-        dataAccess.save(converter.createArchivedPersistenceModel(persistenceModel));
     }
 
     protected void saveChanges() {
         if (persistenceModel != null) {
             archivePreviousPersistenceModel();
-            persistenceModel = converter.updatePersistenceModel(persistenceModel, useCaseModel);
+            persistenceModel = modelConverter.updatePersistenceModel(persistenceModel, useCaseModel);
         } else {
-            persistenceModel = converter.createNewPersistenceModel(useCaseDomainId, useCaseModel);
+            persistenceModel = modelConverter.createNewPersistenceModel(useCaseDomainId, useCaseModel);
         }
         useCaseDataId = persistenceModel.getDataId();
         dataAccess.save(persistenceModel);
     }
 
-    protected abstract USE_CASE_MODEL createUseCaseModelFromDefaultValues();
+    protected void archivePreviousPersistenceModel() {
+        dataAccess.save(modelConverter.createArchivedPersistenceModel(persistenceModel));
+    }
+
+    protected boolean isDefaultDomainModel() {
+        return useCaseModel.equals(createUseCaseModelFromDefaultValues());
+    }
+
+    protected USE_CASE_RESPONSE_MODEL getResponseModel() {
+        return modelConverter.convertUseCaseToResponseModel(useCaseModel);
+    }
 
     protected abstract void initialiseUseCase();
+
+    protected abstract USE_CASE_MODEL createUseCaseModelFromDefaultValues();
 }

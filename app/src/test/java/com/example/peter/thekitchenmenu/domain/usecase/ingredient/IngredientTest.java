@@ -415,7 +415,7 @@ public class IngredientTest {
         );
         assertEquals(
                 modelUnderTest.getLastUpdate(),
-                metadata.getLasUpdate()
+                metadata.getLastUpdate()
         );
         assertEquals(
                 modelUnderTest.getCreatedBy(),

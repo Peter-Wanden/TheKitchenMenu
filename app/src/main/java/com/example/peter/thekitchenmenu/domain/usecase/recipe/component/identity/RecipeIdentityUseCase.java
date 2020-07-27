@@ -19,11 +19,11 @@ import java.util.Map;
 public class RecipeIdentityUseCase
         extends
         UseCaseResult<
-                        RecipeIdentityUseCaseDataAccess,
-                        RecipeIdentityUseCasePersistenceModel,
-                        RecipeIdentityUseCaseModel,
-                        RecipeIdentityUseCaseRequestModel,
-                        RecipeIdentityUseCaseResponseModel> {
+                RecipeIdentityUseCaseDataAccess,
+                RecipeIdentityUseCasePersistenceModel,
+                RecipeIdentityUseCaseModel,
+                RecipeIdentityUseCaseRequestModel,
+                RecipeIdentityUseCaseResponseModel> {
 
     public enum FailReason
             implements
@@ -81,13 +81,10 @@ public class RecipeIdentityUseCase
     }
 
     @Override
-    protected void isDomainDataElementsProcessed() {
+    protected boolean isDomainDataElementsProcessed() {
         validateTitle();
         validateDescription();
-
-        if (isTitleValidationComplete && isDescriptionValidationComplete) {
-            buildResponse();
-        }
+        return isTitleValidationComplete && isDescriptionValidationComplete;
     }
 
     private void validateTitle() {
@@ -137,20 +134,25 @@ public class RecipeIdentityUseCase
     }
 
     private void processResult() {
-        if (isChanged && isDomainModelValid()) {
+        if (isChanged && isValid()) {
             archivePreviousPersistenceModel();
             createNewPersistenceModel();
         }
         buildResponse();
     }
 
-    private void buildResponse() {
+    protected void buildResponse() {
         RecipeIdentityResponse.Builder builder = new RecipeIdentityResponse.Builder().
                 setDataId(useCaseDataId).
                 setDomainId(useCaseDomainId).
                 setMetadata(getMetadata()).
-                setDomainModel(converter.convertUseCaseToResponseModel(useCaseModel));
+                setDomainModel(modelConverter.convertUseCaseToResponseModel(useCaseModel));
 
         sendResponse(builder.build());
+    }
+
+    @Override
+    protected RecipeIdentityUseCaseResponseModel getResponseModel() {
+        return null;
     }
 }

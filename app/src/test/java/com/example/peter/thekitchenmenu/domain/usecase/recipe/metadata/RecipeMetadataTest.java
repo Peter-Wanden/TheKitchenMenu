@@ -216,7 +216,7 @@ public class RecipeMetadataTest {
         );
 
         long expectedLastUpdate = modelUnderTest.getLastUpdate();
-        long actualLastUpdate = metadata.getLasUpdate();
+        long actualLastUpdate = metadata.getLastUpdate();
         assertEquals(
                 expectedLastUpdate,
                 actualLastUpdate

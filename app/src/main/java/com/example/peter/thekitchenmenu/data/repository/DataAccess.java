@@ -13,17 +13,17 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 
 
-public abstract class DataAccess<T extends DomainModel.PersistenceModel>
-        implements DomainDataAccess<T> {
+public abstract class DataAccess<PERSISTENCE_MODEL extends DomainModel.PersistenceModel>
+        implements DomainDataAccess<PERSISTENCE_MODEL> {
 
-    protected DomainDataAccess<T> remoteDomainDataAccess;
-    protected DomainDataAccess<T> localDomainDataAccess;
-    protected Map<String, T> cache;
+    protected DomainDataAccess<PERSISTENCE_MODEL> remoteDomainDataAccess;
+    protected DomainDataAccess<PERSISTENCE_MODEL> localDomainDataAccess;
+    protected Map<String, PERSISTENCE_MODEL> cache;
 
     private boolean cacheIsDirty;
 
     @Override
-    public void getAll(@Nonnull GetAllDomainModelsCallback<T> callback) {
+    public void getAll(@Nonnull GetAllDomainModelsCallback<PERSISTENCE_MODEL> callback) {
 
         if (cache != null && cacheIsDirty) {
             callback.onAllDomainModelsLoaded(new ArrayList<>(cache.values()));
@@ -32,9 +32,9 @@ public abstract class DataAccess<T extends DomainModel.PersistenceModel>
         if (cacheIsDirty) {
             getItemsFromRemoteDataSource(callback);
         } else {
-            localDomainDataAccess.getAll(new GetAllDomainModelsCallback<T>() {
+            localDomainDataAccess.getAll(new GetAllDomainModelsCallback<PERSISTENCE_MODEL>() {
                 @Override
-                public void onAllDomainModelsLoaded(List<T> models) {
+                public void onAllDomainModelsLoaded(List<PERSISTENCE_MODEL> models) {
                     refreshCache(models);
                     callback.onAllDomainModelsLoaded(new ArrayList<>(cache.values()));
                 }
@@ -49,17 +49,19 @@ public abstract class DataAccess<T extends DomainModel.PersistenceModel>
 
     @Override
     public void getByDataId(@Nonnull String dataId,
-                            @Nonnull GetDomainModelCallback<T> callback) {
+                            @Nonnull GetDomainModelCallback<PERSISTENCE_MODEL> callback) {
 
-        T cachedModel = getFromCacheModelWithDataId(dataId);
+        PERSISTENCE_MODEL cachedModel = getFromCacheModelWithDataId(dataId);
 
         if (cachedModel != null) {
             callback.onPersistenceModelLoaded(cachedModel);
             return;
         }
-        localDomainDataAccess.getByDataId(dataId, new GetDomainModelCallback<T>() {
+        localDomainDataAccess.getByDataId(
+                dataId,
+                new GetDomainModelCallback<PERSISTENCE_MODEL>() {
             @Override
-            public void onPersistenceModelLoaded(T model) {
+            public void onPersistenceModelLoaded(PERSISTENCE_MODEL model) {
                 if (cache == null) {
                     cache = new LinkedHashMap<>();
                 }
@@ -69,9 +71,11 @@ public abstract class DataAccess<T extends DomainModel.PersistenceModel>
 
             @Override
             public void onPersistenceModelUnavailable() {
-                remoteDomainDataAccess.getByDataId(dataId, new GetDomainModelCallback<T>() {
+                remoteDomainDataAccess.getByDataId(
+                        dataId,
+                        new GetDomainModelCallback<PERSISTENCE_MODEL>() {
                     @Override
-                    public void onPersistenceModelLoaded(T model) {
+                    public void onPersistenceModelLoaded(PERSISTENCE_MODEL model) {
                         if (model == null) {
                             callback.onPersistenceModelUnavailable();
                             return;
@@ -93,7 +97,7 @@ public abstract class DataAccess<T extends DomainModel.PersistenceModel>
     }
 
     @Nullable
-    private T getFromCacheModelWithDataId(String id) {
+    private PERSISTENCE_MODEL getFromCacheModelWithDataId(String id) {
         if (cache == null || cache.isEmpty()) {
             return null;
         } else {
@@ -103,16 +107,18 @@ public abstract class DataAccess<T extends DomainModel.PersistenceModel>
 
     @Override
     public void getByDomainId(@Nonnull String domainId,
-                              @Nonnull GetDomainModelCallback<T> callback) {
-        T cachedModel = getFromCacheModelWithDomainId(domainId);
+                              @Nonnull GetDomainModelCallback<PERSISTENCE_MODEL> callback) {
+        PERSISTENCE_MODEL cachedModel = getFromCacheModelWithDomainId(domainId);
 
         if (cachedModel != null) {
             callback.onPersistenceModelLoaded(cachedModel);
             return;
         }
-        localDomainDataAccess.getByDomainId(domainId, new GetDomainModelCallback<T>() {
+        localDomainDataAccess.getByDomainId(
+                domainId,
+                new GetDomainModelCallback<PERSISTENCE_MODEL>() {
             @Override
-            public void onPersistenceModelLoaded(T model) {
+            public void onPersistenceModelLoaded(PERSISTENCE_MODEL model) {
                 if (cache == null) {
                     cache = new LinkedHashMap<>();
                 }
@@ -124,9 +130,9 @@ public abstract class DataAccess<T extends DomainModel.PersistenceModel>
             public void onPersistenceModelUnavailable() {
                 remoteDomainDataAccess.getByDomainId(
                         domainId,
-                        new GetDomainModelCallback<T>() {
+                        new GetDomainModelCallback<PERSISTENCE_MODEL>() {
                     @Override
-                    public void onPersistenceModelLoaded(T model) {
+                    public void onPersistenceModelLoaded(PERSISTENCE_MODEL model) {
                         if (model == null) {
                             callback.onPersistenceModelUnavailable();
                             return;
@@ -147,12 +153,12 @@ public abstract class DataAccess<T extends DomainModel.PersistenceModel>
         });
     }
 
-    private T getFromCacheModelWithDomainId(String domainId) {
-        T thisModel = null;
+    private PERSISTENCE_MODEL getFromCacheModelWithDomainId(String domainId) {
+        PERSISTENCE_MODEL thisModel = null;
         if (cache == null || cache.isEmpty()) {
             return null;
         } else {
-            for (T thatModel : cache.values()) {
+            for (PERSISTENCE_MODEL thatModel : cache.values()) {
                 if (domainId.equals(thatModel.getDomainId())) {
                     thisModel = thatModel;
                 }
@@ -162,7 +168,7 @@ public abstract class DataAccess<T extends DomainModel.PersistenceModel>
     }
 
     @Override
-    public void save(@Nonnull T model) {
+    public void save(@Nonnull PERSISTENCE_MODEL model) {
         remoteDomainDataAccess.save(model);
         localDomainDataAccess.save(model);
 
@@ -190,10 +196,10 @@ public abstract class DataAccess<T extends DomainModel.PersistenceModel>
         remoteDomainDataAccess.deleteAllByDomainId(domainId);
         localDomainDataAccess.deleteAllByDomainId(domainId);
 
-        Iterator<Map.Entry<String, T>> cacheIterator = cache.entrySet().iterator();
+        Iterator<Map.Entry<String, PERSISTENCE_MODEL>> cacheIterator = cache.entrySet().iterator();
 
         while (cacheIterator.hasNext()) {
-            Map.Entry<String, T> currentItem = cacheIterator.next();
+            Map.Entry<String, PERSISTENCE_MODEL> currentItem = cacheIterator.next();
             if (domainId.equals(currentItem.getValue().getDomainId())) {
                 cacheIterator.remove();
             }
@@ -211,10 +217,11 @@ public abstract class DataAccess<T extends DomainModel.PersistenceModel>
         cache.clear();
     }
 
-    private void getItemsFromRemoteDataSource(@Nonnull final GetAllDomainModelsCallback<T> callback) {
-        remoteDomainDataAccess.getAll(new GetAllDomainModelsCallback<T>() {
+    private void getItemsFromRemoteDataSource(
+            @Nonnull final GetAllDomainModelsCallback<PERSISTENCE_MODEL> callback) {
+        remoteDomainDataAccess.getAll(new GetAllDomainModelsCallback<PERSISTENCE_MODEL>() {
             @Override
-            public void onAllDomainModelsLoaded(List<T> models) {
+            public void onAllDomainModelsLoaded(List<PERSISTENCE_MODEL> models) {
                 refreshCache(models);
                 refreshLocalDataSource(models);
                 callback.onAllDomainModelsLoaded(new ArrayList<>(cache.values()));
@@ -227,24 +234,24 @@ public abstract class DataAccess<T extends DomainModel.PersistenceModel>
         });
     }
 
-    private void refreshCache(List<T> models) {
+    private void refreshCache(List<PERSISTENCE_MODEL> models) {
         if (cache == null) {
             cache = new LinkedHashMap<>();
         }
 
         cache.clear();
 
-        for (T model : models) {
+        for (PERSISTENCE_MODEL model : models) {
             cache.put(model.getDataId(), model);
         }
 
         cacheIsDirty = false;
     }
 
-    private void refreshLocalDataSource(List<T> models) {
+    private void refreshLocalDataSource(List<PERSISTENCE_MODEL> models) {
         localDomainDataAccess.deleteAll();
 
-        for (T model : models) {
+        for (PERSISTENCE_MODEL model : models) {
             localDomainDataAccess.save(model);
         }
     }

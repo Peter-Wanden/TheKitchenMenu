@@ -9,10 +9,10 @@ import javax.annotation.Nonnull;
 public class TestDomainModelConverter
         extends
         DomainModel.Converter<
-                TestUseCaseModel,
-                TestUseCasePersistenceModel,
-                TestUseCaseRequestModel,
-                TestUseCaseResponseModel> {
+                                TestUseCaseInternalModel,
+                                TestUseCasePersistenceModel,
+                                TestUseCaseRequestModel,
+                                TestUseCaseResponseModel> {
 
     public TestDomainModelConverter(@Nonnull TimeProvider timeProvider,
                                     @Nonnull UniqueIdProvider idProvider) {
@@ -20,21 +20,21 @@ public class TestDomainModelConverter
     }
 
     @Override
-    public TestUseCaseModel convertPersistenceToDomainModel(
+    public TestUseCaseInternalModel convertPersistenceToDomainModel(
             @Nonnull TestUseCasePersistenceModel persistenceModel) {
-        return new TestUseCaseModel(persistenceModel.getPersistenceModelString());
+        return new TestUseCaseInternalModel(persistenceModel.getPersistenceModelString());
     }
 
     @Override
-    public TestUseCaseModel convertRequestToUseCaseModel(
+    public TestUseCaseInternalModel convertRequestToUseCaseModel(
             @Nonnull TestUseCaseRequestModel requestModel) {
-        return new TestUseCaseModel(requestModel.getRequestModelString());
+        return new TestUseCaseInternalModel(requestModel.getRequestModelString());
     }
 
     @Override
     public TestUseCasePersistenceModel createNewPersistenceModel(
-            @Nonnull String domainId, @Nonnull TestUseCaseModel useCaseModel) {
-
+            @Nonnull String domainId,
+            @Nonnull TestUseCaseInternalModel useCaseModel) {
         long currentTime = timeProvider.getCurrentTimeInMills();
         return new TestUseCasePersistenceModel.Builder()
                 .setDataId(idProvider.getUId())
@@ -48,7 +48,6 @@ public class TestDomainModelConverter
     @Override
     public TestUseCasePersistenceModel createArchivedPersistenceModel(
             @Nonnull TestUseCasePersistenceModel oldPersistenceModel) {
-
         return new TestUseCasePersistenceModel.Builder()
                 .basedOnModel(oldPersistenceModel)
                 .setLastUpdate(timeProvider.getCurrentTimeInMills())
@@ -57,14 +56,16 @@ public class TestDomainModelConverter
 
     @Override
     public TestUseCaseResponseModel convertUseCaseToResponseModel(
-            @Nonnull TestUseCaseModel model) {
-        return null;
+            @Nonnull TestUseCaseInternalModel model) {
+        return new TestUseCaseResponseModel.Builder()
+                .setResponseModelString(model.getUseCaseModelString())
+                .build();
     }
 
     @Override
     public TestUseCasePersistenceModel updatePersistenceModel(
             @Nonnull TestUseCasePersistenceModel persistenceModel,
-            TestUseCaseModel useCaseModel) {
+            @Nonnull TestUseCaseInternalModel useCaseModel) {
 
         long currentTime = timeProvider.getCurrentTimeInMills();
         return new TestUseCasePersistenceModel.Builder()

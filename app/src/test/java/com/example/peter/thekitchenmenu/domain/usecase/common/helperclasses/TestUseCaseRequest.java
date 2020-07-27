@@ -33,7 +33,9 @@ public class TestUseCaseRequest
         public Builder getDefault() {
             message.dataId = NO_ID;
             message.domainId = NO_ID;
-            message.model = new TestUseCaseRequestModel();
+            message.model = new TestUseCaseRequestModel.Builder().
+                    getDefault().
+                    build();
             return self();
         }
 

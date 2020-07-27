@@ -47,9 +47,12 @@ public class RecipeIdentityUseCaseTest {
                 TextValidationBusinessEntityTest.LONG_TEXT_MAX_LENGTH
         );
 
+        RecipeIdentityDomainModelConverter converter = new RecipeIdentityDomainModelConverter(
+                timeProviderMock, idProviderMock
+        );
         return new RecipeIdentityUseCase(
                 dataAccessMock,
-                new RecipeIdentityDomainModelConverter(),
+                converter,
                 idProviderMock,
                 timeProviderMock,
                 textValidator

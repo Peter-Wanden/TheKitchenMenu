@@ -41,7 +41,7 @@ public interface DomainDataAccess<PERSISTENCE_MODEL extends DomainModel.Persiste
 
     void refreshData();
 
-    void deleteByDataId(String dataId);
+    void deleteByDataId(@Nonnull String dataId);
 
     void deleteAllByDomainId(@Nonnull String domainId);
 

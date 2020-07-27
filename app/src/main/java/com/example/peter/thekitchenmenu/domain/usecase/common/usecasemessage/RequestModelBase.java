@@ -26,10 +26,7 @@ public abstract class RequestModelBase
             return self();
         }
 
-        protected SELF self() {
-            // noinspection unchecked
-            return (SELF) this;
-        }
+        protected abstract SELF self(); // when implementing return 'this'
 
         public abstract SELF getDefault();
 

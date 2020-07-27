@@ -1,19 +1,21 @@
 package com.example.peter.thekitchenmenu.domain.usecase.common.helperclasses;
 
+import com.example.peter.thekitchenmenu.domain.model.BaseDomainModel;
 import com.example.peter.thekitchenmenu.domain.model.DomainModel;
+import com.example.peter.thekitchenmenu.domain.model.DomainModelBuilder;
+import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataIdMetadata;
 
 import javax.annotation.Nonnull;
 
-public class TestUseCaseRequestModel
+public final class TestUseCaseRequestModel
+        extends
+        BaseDomainModel
         implements
         DomainModel.UseCaseRequestModel {
-    private String requestModelString = "requestModelString";
 
-    public TestUseCaseRequestModel() {
-    }
+    private String requestModelString;
 
-    public TestUseCaseRequestModel(String requestModelString) {
-        this.requestModelString = requestModelString;
+    private TestUseCaseRequestModel() {
     }
 
     public String getRequestModelString() {
@@ -26,5 +28,28 @@ public class TestUseCaseRequestModel
         return "TestRequestModel{" +
                 "requestModelString='" + requestModelString + '\'' +
                 '}';
+    }
+
+    public static final class Builder extends DomainModelBuilder<Builder, TestUseCaseRequestModel> {
+
+        public Builder() {
+            domainModel = new TestUseCaseRequestModel();
+        }
+
+        public Builder setRequestModelString(String requestModelString) {
+            domainModel.requestModelString = requestModelString;
+            return self();
+        }
+
+        @Override
+        public Builder getDefault() {
+            domainModel.requestModelString = "";
+            return self();
+        }
+
+        @Override
+        protected Builder self() {
+            return this;
+        }
     }
 }

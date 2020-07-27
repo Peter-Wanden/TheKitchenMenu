@@ -372,7 +372,7 @@ public class RecipePortionsTest {
         );
         assertEquals(
                 modelUnderTest.getLastUpdate(),
-                portionsOnSuccessResponse.getMetadata().getLasUpdate()
+                portionsOnSuccessResponse.getMetadata().getLastUpdate()
         );
     }
 
