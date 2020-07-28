@@ -34,7 +34,7 @@ public class TestDataRecipeIdentity {
 
     public static RecipeIdentityUseCasePersistenceModel getInvalidNewTitleTooShort() {
         String titleTooShort = new StringMaker().
-                makeStringOfExactLength(RecipeIdentityTest.TITLE_MIN_LENGTH).
+                makeStringOfLength(RecipeIdentityTest.TITLE_MIN_LENGTH).
                 includeStringAtStart("newTitleTooShort").
                 thenRemoveOneCharacter().
                 build();
@@ -51,7 +51,7 @@ public class TestDataRecipeIdentity {
 
     public static RecipeIdentityUseCasePersistenceModel getInvalidNewTitleTooLong() {
         String titleTooLong = new StringMaker().
-                makeStringOfExactLength(RecipeIdentityTest.TITLE_MAX_LENGTH).
+                makeStringOfLength(RecipeIdentityTest.TITLE_MAX_LENGTH).
                 includeStringAtStart("newTitleTooLong").
                 thenAddOneCharacter().
                 build();
@@ -68,7 +68,7 @@ public class TestDataRecipeIdentity {
 
     public static RecipeIdentityUseCasePersistenceModel getInvalidNewTitleTooLongDescriptionTooLong() {
         String descriptionTooLong = new StringMaker().
-                makeStringOfExactLength(RecipeIdentityTest.DESCRIPTION_MAX_LENGTH).
+                makeStringOfLength(RecipeIdentityTest.DESCRIPTION_MAX_LENGTH).
                 includeStringAtStart("newDescriptionTooLong").
                 thenAddOneCharacter().
                 build();
@@ -108,11 +108,11 @@ public class TestDataRecipeIdentity {
 
     public static RecipeIdentityUseCasePersistenceModel getValidNewComplete() {
         String validTitle = new StringMaker().
-                makeStringOfExactLength(RecipeIdentityTest.TITLE_MAX_LENGTH).
+                makeStringOfLength(RecipeIdentityTest.TITLE_MAX_LENGTH).
                 includeStringAtStart("newValidTitle").
                 build();
         String validDescription = new StringMaker().
-                makeStringOfExactLength(RecipeIdentityTest.DESCRIPTION_MAX_LENGTH).
+                makeStringOfLength(RecipeIdentityTest.DESCRIPTION_MAX_LENGTH).
                 includeStringAtStart("newValidDescription").
                 build();
 
@@ -140,7 +140,7 @@ public class TestDataRecipeIdentity {
 
     public static RecipeIdentityUseCasePersistenceModel getInvalidExistingTitleTooShort() {
         String invalidExistingTitleTooShort = new StringMaker().
-                makeStringOfExactLength(RecipeIdentityTest.TITLE_MIN_LENGTH).
+                makeStringOfLength(RecipeIdentityTest.TITLE_MIN_LENGTH).
                 includeStringAtStart("invalidExistingTitleTooShort").
                 thenRemoveOneCharacter().
                 build();
@@ -157,7 +157,7 @@ public class TestDataRecipeIdentity {
 
     public static RecipeIdentityUseCasePersistenceModel getInvalidExistingTitleTooLong() {
         String invalidExistingTitleTooLong = new StringMaker().
-                makeStringOfExactLength(RecipeIdentityTest.TITLE_MAX_LENGTH).
+                makeStringOfLength(RecipeIdentityTest.TITLE_MAX_LENGTH).
                 includeStringAtStart("invalidExistingTitleTooLong").thenAddOneCharacter().
                 build();
 
@@ -173,7 +173,7 @@ public class TestDataRecipeIdentity {
 
     public static RecipeIdentityUseCasePersistenceModel getInvalidExistingTitleValidDescriptionTooLong() {
         String existingDescriptionTooLong = new StringMaker().
-                makeStringOfExactLength(RecipeIdentityTest.DESCRIPTION_MAX_LENGTH).
+                makeStringOfLength(RecipeIdentityTest.DESCRIPTION_MAX_LENGTH).
                 includeStringAtStart("existingDescriptionTooLong").
                 thenAddOneCharacter().
                 build();
@@ -212,11 +212,11 @@ public class TestDataRecipeIdentity {
 
     public static RecipeIdentityUseCasePersistenceModel getValidExistingTitleValidDescriptionValid() {
         String validExistingCompleteTitle = new StringMaker().
-                makeStringOfExactLength(RecipeIdentityTest.TITLE_MAX_LENGTH).
+                makeStringOfLength(RecipeIdentityTest.TITLE_MAX_LENGTH).
                 includeStringAtStart("validExistingCompleteTitle").
                 build();
         String validExistingCompleteDescription = new StringMaker().
-                makeStringOfExactLength(RecipeIdentityTest.DESCRIPTION_MAX_LENGTH).
+                makeStringOfLength(RecipeIdentityTest.DESCRIPTION_MAX_LENGTH).
                 includeStringAtStart("validExistingCompleteDescription").
                 build();
 
@@ -255,11 +255,11 @@ public class TestDataRecipeIdentity {
 
     public static RecipeIdentityUseCasePersistenceModel getValidCompleteFromAnotherUser() {
         String validCompleteFromAnotherUserTitle = new StringMaker().
-                makeStringOfExactLength(RecipeIdentityTest.TITLE_MAX_LENGTH).
+                makeStringOfLength(RecipeIdentityTest.TITLE_MAX_LENGTH).
                 includeStringAtStart("validCompleteFromAnotherUserTitle").
                 build();
         String validCompleteFromAnotherUserDescription = new StringMaker().
-                makeStringOfExactLength(RecipeIdentityTest.DESCRIPTION_MAX_LENGTH).
+                makeStringOfLength(RecipeIdentityTest.DESCRIPTION_MAX_LENGTH).
                 includeStringAtStart("validCompleteFromAnotherUserDescription").
                 build();
 
@@ -275,12 +275,12 @@ public class TestDataRecipeIdentity {
 
     public static RecipeIdentityUseCasePersistenceModel getInvalidFromAnotherUser() {
         String invalidCompleteFromAnotherUserTitle = new StringMaker().
-                makeStringOfExactLength(RecipeIdentityTest.TITLE_MAX_LENGTH).
+                makeStringOfLength(RecipeIdentityTest.TITLE_MAX_LENGTH).
                 includeStringAtStart("invalidFromAnotherUserTitle").
                 thenAddOneCharacter().
                 build();
         String invalidCompleteFromAnotherUserDescription = new StringMaker().
-                makeStringOfExactLength(RecipeIdentityTest.DESCRIPTION_MAX_LENGTH).
+                makeStringOfLength(RecipeIdentityTest.DESCRIPTION_MAX_LENGTH).
                 includeStringAtStart("validCompleteFromAnotherUserDescription").
                 thenAddOneCharacter().
                 build();
@@ -315,7 +315,7 @@ public class TestDataRecipeIdentity {
 
     public static RecipeIdentityUseCasePersistenceModel getValidCopiedDescriptionUpdated() {
         String validCopiedUpdatedDescription = new StringMaker().
-                makeStringOfExactLength(RecipeIdentityTest.DESCRIPTION_MAX_LENGTH).
+                makeStringOfLength(RecipeIdentityTest.DESCRIPTION_MAX_LENGTH).
                 includeStringAtStart("validClonedValidUpdatedDescription").
                 build();
 

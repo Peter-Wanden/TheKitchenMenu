@@ -3,8 +3,7 @@ package com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage;
 import com.example.peter.thekitchenmenu.domain.model.DomainModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 
-public abstract class RequestModelBase
-        <REQUEST_MODEL extends DomainModel.UseCaseRequestModel>
+public abstract class RequestModelBase<REQUEST_MODEL extends DomainModel.UseCaseRequestModel>
         implements
         UseCaseBase.Request {
 

@@ -1,12 +1,12 @@
 package com.example.peter.thekitchenmenu.domain.usecase.common.helperclasses;
 
-import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.message.RequestWithId;
+import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.message.UseCaseRequestWithId;
 
 import javax.annotation.Nonnull;
 
 public class TestUseCaseRequest
         extends
-        RequestWithId<TestUseCaseRequestModel> {
+        UseCaseRequestWithId<TestUseCaseRequestModel> {
 
     private TestUseCaseRequest() {
     }
@@ -27,6 +27,15 @@ public class TestUseCaseRequest
 
         public Builder() {
             message = new TestUseCaseRequest();
+        }
+
+        public Builder basedOnResponse(TestUseCaseResponse response) {
+            message.dataId = response.getDataId();
+            message.domainId = response.getDomainId();
+            message.model = new TestUseCaseRequestModel.Builder()
+                    .setRequestModelString(response.getDomainModel().getResponseModelString())
+                    .build();
+            return self();
         }
 
         @Override

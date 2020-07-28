@@ -530,7 +530,7 @@ public class IngredientEditorViewModelTest {
     public void startExistingId_validNameValidDescriptionNameUpdatedWithInvalidValue_nameErrorMessageSet() {
         // Arrange
         String nameTooShort = new StringMaker().
-                makeStringOfExactLength(shortTextMinLength).
+                makeStringOfLength(shortTextMinLength).
                 thenRemoveOneCharacter().
                 build();
         // Act
@@ -624,7 +624,7 @@ public class IngredientEditorViewModelTest {
     public void startExistingId_validNameValidDescriptionDescriptionUpdatedWithInvalidValue_useButtonNotShown() {
         // Arrange
         String description = new StringMaker().
-                makeStringOfExactLength(longTextMaxLength).
+                makeStringOfLength(longTextMaxLength).
                 thenAddOneCharacter().
                 build();
         // Act
@@ -639,7 +639,7 @@ public class IngredientEditorViewModelTest {
     public void startExistingId_validNameValidDescriptionDescriptionUpdatedWithInvalidValue_descriptionErrorMessageShown() {
         // Arrange
         String description = new StringMaker().
-                makeStringOfExactLength(longTextMaxLength).
+                makeStringOfLength(longTextMaxLength).
                 thenAddOneCharacter().
                 build();
         // Act

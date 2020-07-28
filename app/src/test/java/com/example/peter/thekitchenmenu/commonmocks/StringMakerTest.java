@@ -26,7 +26,7 @@ public class StringMakerTest {
         // Arrange
         int stringLength = 10;
         // Act
-        String string = SUT.makeStringOfExactLength(stringLength).build();
+        String string = SUT.makeStringOfLength(stringLength).build();
         // Assert
         assertEquals(stringLength, string.length());
     }
@@ -36,7 +36,7 @@ public class StringMakerTest {
         // Arrange
         int stringLength = 10;
         // Act
-        String string = SUT.makeStringOfExactLength(stringLength).thenRemoveOneCharacter().build();
+        String string = SUT.makeStringOfLength(stringLength).thenRemoveOneCharacter().build();
         // Assert
         assertEquals(stringLength - 1, string.length());
     }
@@ -46,7 +46,7 @@ public class StringMakerTest {
         // Arrange
         int stringLength = 10;
         // Act
-        String string = SUT.makeStringOfExactLength(stringLength).thenAddOneCharacter().build();
+        String string = SUT.makeStringOfLength(stringLength).thenAddOneCharacter().build();
         // Assert
         assertEquals(stringLength + 1, string.length());
     }
@@ -58,7 +58,7 @@ public class StringMakerTest {
         int stringLength = 10;
         // Act
         String string = SUT.
-                makeStringOfExactLength(stringLength).
+                makeStringOfLength(stringLength).
                 includeStringAtStart(includeString).
                 build();
         // Assert
@@ -73,7 +73,7 @@ public class StringMakerTest {
         // Act
         String string = SUT.
                 includeStringAtStart(stringAtStart).
-                makeStringOfExactLength(stringLength).
+                makeStringOfLength(stringLength).
                 build();
         // Assert
         assertEquals(stringLength, string.length());
@@ -86,7 +86,7 @@ public class StringMakerTest {
         int stringLength = 10;
         // Act
         String string = SUT.
-                makeStringOfExactLength(stringLength).
+                makeStringOfLength(stringLength).
                 includeStringAtStart(stringAtStart).
                 thenRemoveOneCharacter().
                 build();
@@ -101,7 +101,7 @@ public class StringMakerTest {
         int stringLength = 10;
         // Act
         String string = SUT.
-                makeStringOfExactLength(stringLength).
+                makeStringOfLength(stringLength).
                 includeStringAtStart(stringAtStart).
                 thenAddOneCharacter().
                 build();
@@ -116,7 +116,7 @@ public class StringMakerTest {
         int stringLengthTooShort = stringAtStartTooLong.length() - stringAtStartTooLong.length() / 2;
         // Act
         String string = SUT.
-                makeStringOfExactLength(stringLengthTooShort).
+                makeStringOfLength(stringLengthTooShort).
                 includeStringAtStart(stringAtStartTooLong).
                 build();
         // Assert
@@ -131,7 +131,7 @@ public class StringMakerTest {
         // Act
         String string = SUT.
                 includeStringAtStart(stringAtStartTooLong).
-                makeStringOfExactLength(stringLengthTooShort).
+                makeStringOfLength(stringLengthTooShort).
                 build();
         // Assert
         assertEquals(stringLengthTooShort, string.length());

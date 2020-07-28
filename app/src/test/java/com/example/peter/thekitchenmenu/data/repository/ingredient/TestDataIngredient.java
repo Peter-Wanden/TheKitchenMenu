@@ -29,7 +29,7 @@ public class TestDataIngredient {
 
     public static IngredientPersistenceModel getInvalidNewNameTooShort() {
         String nameTooShort = new StringMaker().
-                makeStringOfExactLength(IngredientTest.NAME_MIN_LENGTH).
+                makeStringOfLength(IngredientTest.NAME_MIN_LENGTH).
                 includeStringAtStart("newNameTooShort").
                 thenRemoveOneCharacter().
                 build();
@@ -57,13 +57,13 @@ public class TestDataIngredient {
 
     public static IngredientPersistenceModel getInvalidNewNameTooLongDescriptionTooLong() {
         String nameTooLong = new StringMaker().
-                makeStringOfExactLength(IngredientTest.NAME_MAX_LENGTH).
+                makeStringOfLength(IngredientTest.NAME_MAX_LENGTH).
                 includeStringAtStart("newNameTooLong").
                 thenAddOneCharacter().
                 build();
 
         String descriptionTooLong = new StringMaker().
-                makeStringOfExactLength(IngredientTest.DESCRIPTION_MAX_LENGTH).
+                makeStringOfLength(IngredientTest.DESCRIPTION_MAX_LENGTH).
                 includeStringAtStart("newDescriptionTooLong").
                 thenAddOneCharacter().
                 build();
@@ -104,12 +104,12 @@ public class TestDataIngredient {
 
     public static IngredientPersistenceModel getValidNewNameValidDescriptionValid() {
         String validName = new StringMaker().
-                makeStringOfExactLength(IngredientTest.NAME_MAX_LENGTH).
+                makeStringOfLength(IngredientTest.NAME_MAX_LENGTH).
                 includeStringAtStart("newValidName").
                 build();
 
         String validDescription = new StringMaker().
-                makeStringOfExactLength(IngredientTest.DESCRIPTION_MAX_LENGTH).
+                makeStringOfLength(IngredientTest.DESCRIPTION_MAX_LENGTH).
                 includeStringAtStart("newValidDescription").
                 build();
 
@@ -127,12 +127,12 @@ public class TestDataIngredient {
     // Test data for existing models being queried
     public static IngredientPersistenceModel getValidExistingNameValidDescriptionValid() {
         String validName = new StringMaker().
-                makeStringOfExactLength(IngredientTest.NAME_MAX_LENGTH).
+                makeStringOfLength(IngredientTest.NAME_MAX_LENGTH).
                 includeStringAtStart("existingValidName").
                 build();
 
         String validDescription = new StringMaker().
-                makeStringOfExactLength(IngredientTest.DESCRIPTION_MAX_LENGTH).
+                makeStringOfLength(IngredientTest.DESCRIPTION_MAX_LENGTH).
                 includeStringAtStart("existingValidDescription").
                 build();
 
@@ -149,7 +149,7 @@ public class TestDataIngredient {
 
     public static IngredientPersistenceModel getInvalidExistingNameTooShort() {
         String nameTooShort = new StringMaker().
-                makeStringOfExactLength(IngredientTest.NAME_MIN_LENGTH).
+                makeStringOfLength(IngredientTest.NAME_MIN_LENGTH).
                 includeStringAtStart("existingNmeTooShort").
                 thenRemoveOneCharacter().
                 build();
@@ -166,7 +166,7 @@ public class TestDataIngredient {
 
     public static IngredientPersistenceModel getInvalidExistingNameTooLong() {
         String nameTooLong = new StringMaker().
-                makeStringOfExactLength(IngredientTest.NAME_MAX_LENGTH).
+                makeStringOfLength(IngredientTest.NAME_MAX_LENGTH).
                 includeStringAtStart("nameTooLong").
                 thenAddOneCharacter().
                 build();
@@ -183,7 +183,7 @@ public class TestDataIngredient {
 
     public static IngredientPersistenceModel getInvalidExistingNameValidDescriptionTooLong() {
         String descriptionTooLong = new StringMaker().
-                makeStringOfExactLength(IngredientTest.DESCRIPTION_MAX_LENGTH).
+                makeStringOfLength(IngredientTest.DESCRIPTION_MAX_LENGTH).
                 includeStringAtStart("descriptionTooLong").
                 thenAddOneCharacter().
                 build();
@@ -225,12 +225,12 @@ public class TestDataIngredient {
     // Test data for existing models created by another user
     public static IngredientPersistenceModel getExistingValidNameValidDescriptionValidFromAnotherUser() {
         String validNameFromAnotherUser = new StringMaker().
-                makeStringOfExactLength(IngredientTest.NAME_MAX_LENGTH).
+                makeStringOfLength(IngredientTest.NAME_MAX_LENGTH).
                 includeStringAtStart("validNameFromAnotherUser ").
                 build();
 
         String validDescriptionFromAnotherUser = new StringMaker().
-                makeStringOfExactLength(IngredientTest.DESCRIPTION_MAX_LENGTH).
+                makeStringOfLength(IngredientTest.DESCRIPTION_MAX_LENGTH).
                 includeStringAtStart("validDescriptionFromAnotherUser").
                 build();
 

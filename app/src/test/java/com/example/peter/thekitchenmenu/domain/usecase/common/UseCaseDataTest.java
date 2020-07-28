@@ -1,6 +1,8 @@
 package com.example.peter.thekitchenmenu.domain.usecase.common;
 
+import com.example.peter.thekitchenmenu.commonmocks.StringMaker;
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess.GetDomainModelCallback;
+import com.example.peter.thekitchenmenu.domain.model.UseCaseMetadataModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.common.helperclasses.TestDomainModelConverter;
@@ -20,9 +22,15 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.endsWith;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -61,12 +69,7 @@ public class UseCaseDataTest {
         TestDomainModelConverter converter = new TestDomainModelConverter(
                 timeProviderMock, idProviderMock
         );
-        return new TestUseCase(
-                dataAccessMock,
-                converter,
-                idProviderMock,
-                timeProviderMock
-        );
+        return new TestUseCase(dataAccessMock, converter);
     }
 
     @Test
@@ -385,7 +388,127 @@ public class UseCaseDataTest {
         verify(dataAccessMock).getByDataId(eq(DIFFERENT_DATA_ID), dataAccessCallbackCaptor.capture());
     }
 
-    // todo test for archiving and saving of models
+    @Test
+    public void emptyUseCase_loadPersistenceModel_persistenceModelLoaded() {
+        // Arrange
+        TestUseCasePersistenceModel persistenceModel = new TestUseCasePersistenceModel.Builder()
+                .setDataId("dataId")
+                .setDomainId("domainId")
+                .setPersistenceModelString(new StringMaker()
+                        .makeStringOfLength(TestUseCase.MAX_STRING_LENGTH)
+                        .build())
+                .setCreateDate(10L)
+                .setLastUpdate(10L)
+                .build();
+
+        TestUseCaseRequest request = new TestUseCaseRequest.Builder()
+                .setDataId(persistenceModel.getDataId())
+                .build();
+        // Act
+        SUT.execute(request, new UseCaseCallbackImplementer());
+        // Assert
+        verify(dataAccessMock).getByDataId(eq(persistenceModel.getDataId()),
+                dataAccessCallbackCaptor.capture());
+        dataAccessCallbackCaptor.getValue().onPersistenceModelLoaded(persistenceModel);
+
+        TestUseCaseResponse response = onSuccessResponse;
+        UseCaseMetadataModel metadata = response.getMetadata();
+        assertEquals(
+                persistenceModel.getDataId(),
+                response.getDataId()
+        );
+        assertEquals(
+                persistenceModel.getDomainId(),
+                response.getDomainId()
+        );
+        assertEquals(
+                persistenceModel.getPersistenceModelString(),
+                response.getDomainModel().getResponseModelString()
+        );
+        assertEquals(
+                persistenceModel.getCreateDate(),
+                metadata.getCreateDate()
+        );
+        assertEquals(
+                persistenceModel.getLastUpdate(),
+                metadata.getLastUpdate()
+        );
+    }
+
+    @Test
+    public void loadedUseCase_domainDataChangesToValidState_persistenceModelArchived() {
+        // Arrange
+        TestUseCasePersistenceModel initialModel = new TestUseCasePersistenceModel.Builder()
+                .setDataId("dataId")
+                .setDomainId("domainId")
+                .setPersistenceModelString(new StringMaker()
+                        .makeStringOfLength(TestUseCase.MIN_STRING_LENGTH)
+                        .build())
+                .setCreateDate(10L)
+                .setLastUpdate(10L)
+                .build();
+
+        TestUseCaseRequest loadInitialModelRequest = new TestUseCaseRequest.Builder()
+                .setDomainId(initialModel.getDomainId())
+                .build();
+
+        SUT.execute(loadInitialModelRequest, new UseCaseCallbackImplementer());
+
+        verify(dataAccessMock).getByDomainId(eq(initialModel.getDomainId()),
+                dataAccessCallbackCaptor.capture());
+        dataAccessCallbackCaptor.getValue().onPersistenceModelLoaded(initialModel);
+
+        // Now persistence model loaded, change data
+        String newDomainData = new StringMaker().makeStringOfLength(TestUseCase.MAX_STRING_LENGTH)
+                .build();
+
+        // archived model is initial model with last update updated
+        TestUseCasePersistenceModel expectedArchivedModel = new TestUseCasePersistenceModel.Builder()
+                .basedOnModel(initialModel)
+                .setLastUpdate(20L)
+                .build();
+
+        // expected model to be saved with new dates and domain data
+        TestUseCasePersistenceModel expectedPersistenceModel = new TestUseCasePersistenceModel.Builder()
+                .basedOnModel(initialModel)
+                .setDataId("newDataId")
+                .setPersistenceModelString(newDomainData)
+                .setCreateDate(20L)
+                .setLastUpdate(20L)
+                .build();
+
+        // request with new data extracts data from last response and updates only the parts that
+        // have changed
+        TestUseCaseRequest changeDomainDataRequest = new TestUseCaseRequest.Builder()
+                .basedOnResponse(onSuccessResponse)
+                .setModel(new TestUseCaseRequestModel.Builder()
+                        .setRequestModelString(newDomainData)
+                        .build())
+                .build();
+
+        // as data will be changing an archived model containing previous values will be saved
+        // which will require a new last update date. Additionally, the new persistence model
+        // also require a date and the new model will require a data id
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(expectedArchivedModel.getLastUpdate());
+        when(idProviderMock.getUId()).thenReturn(expectedPersistenceModel.getDataId());
+
+        // Act
+        SUT.execute(changeDomainDataRequest, new UseCaseCallbackImplementer());
+
+        // Assert
+        ArgumentCaptor<TestUseCasePersistenceModel> ac = ArgumentCaptor.forClass(
+                TestUseCasePersistenceModel.class);
+
+        verify(dataAccessMock, times(2)).save(ac.capture());
+
+        List<TestUseCasePersistenceModel> expectedPersistenceModels = Arrays.asList(
+                expectedArchivedModel, expectedPersistenceModel);
+        List<TestUseCasePersistenceModel> actualPersistenceModels = ac.getAllValues();
+        assertEquals(
+                expectedPersistenceModels,
+                actualPersistenceModels
+        );
+    }
 
     // region helper methods -----------------------------------------------------------------------
     // endregion helper methods --------------------------------------------------------------------

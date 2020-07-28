@@ -56,7 +56,7 @@ public class TextValidatorTest {
     public void requestTypeSHORT_TEXT_textTooShort_resultTOO_SHORT() {
         // Arrange
         String shortTextToShort = new StringMaker().
-                makeStringOfExactLength(SHORT_TEXT_MIN_LENGTH).
+                makeStringOfLength(SHORT_TEXT_MIN_LENGTH).
                 thenRemoveOneCharacter().
                 build();
 
@@ -73,7 +73,7 @@ public class TextValidatorTest {
     public void requestTypeSHORT_TEXT_textTooLong_resultTOO_LONG() {
         // Arrange
         String shortTextTooLong = new StringMaker().
-                makeStringOfExactLength(SHORT_TEXT_MAX_LENGTH).
+                makeStringOfLength(SHORT_TEXT_MAX_LENGTH).
                 thenAddOneCharacter().
                 build();
 
@@ -102,7 +102,7 @@ public class TextValidatorTest {
     public void requestTypeLONG_TEXT_singleCharacter_resultVALID() {
         // Arrange
         String longTextMinLengthPlusOne = new StringMaker().
-                makeStringOfExactLength(LONG_TEXT_MIN_LENGTH).
+                makeStringOfLength(LONG_TEXT_MIN_LENGTH).
                 thenAddOneCharacter().
                 build();
 
@@ -119,7 +119,7 @@ public class TextValidatorTest {
     public void requestTypeLONG_TEXT_textTooLong_result_TOO_LONG() {
         // Arrange
         String longTextTooLong = new StringMaker().
-                makeStringOfExactLength(LONG_TEXT_MAX_LENGTH).
+                makeStringOfLength(LONG_TEXT_MAX_LENGTH).
                 thenAddOneCharacter().
                 build();
 

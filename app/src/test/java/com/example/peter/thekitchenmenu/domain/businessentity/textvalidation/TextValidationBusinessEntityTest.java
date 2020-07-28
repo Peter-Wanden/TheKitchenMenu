@@ -93,7 +93,7 @@ public class TextValidationBusinessEntityTest {
     public void requestTypeSHORT_TEXT_textTooShort_resultTOO_SHORT() {
         // Arrange
         String textToVerify = new StringMaker().
-                makeStringOfExactLength(SHORT_TEXT_MIN_LENGTH).
+                makeStringOfLength(SHORT_TEXT_MIN_LENGTH).
                 thenRemoveOneCharacter().
                 build();
 
@@ -120,7 +120,7 @@ public class TextValidationBusinessEntityTest {
     public void requestTypeSHORT_TEXT_textTooLong_resultTOO_LONG() {
         // Arrange
         String textToVerify = new StringMaker().
-                makeStringOfExactLength(SHORT_TEXT_MAX_LENGTH).
+                makeStringOfLength(SHORT_TEXT_MAX_LENGTH).
                 thenAddOneCharacter().
                 build();
         Request<TextValidationModel> request = new Request<>(
@@ -168,7 +168,7 @@ public class TextValidationBusinessEntityTest {
     public void requestTypeLONG_TEXT_textTooLong_result_TOO_LONG() {
         // Arrange
         String textToVerify = new StringMaker().
-                makeStringOfExactLength(LONG_TEXT_MAX_LENGTH).
+                makeStringOfLength(LONG_TEXT_MAX_LENGTH).
                 thenAddOneCharacter().
                 build();
         Request<TextValidationModel> request = new Request<>(

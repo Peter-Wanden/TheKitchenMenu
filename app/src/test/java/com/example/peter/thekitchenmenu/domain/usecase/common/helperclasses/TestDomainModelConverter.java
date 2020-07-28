@@ -8,11 +8,8 @@ import javax.annotation.Nonnull;
 
 public class TestDomainModelConverter
         extends
-        DomainModel.Converter<
-                                TestUseCaseInternalModel,
-                                TestUseCasePersistenceModel,
-                                TestUseCaseRequestModel,
-                                TestUseCaseResponseModel> {
+        DomainModel.Converter<TestUseCaseInternalModel, TestUseCasePersistenceModel,
+                TestUseCaseRequestModel, TestUseCaseResponseModel> {
 
     public TestDomainModelConverter(@Nonnull TimeProvider timeProvider,
                                     @Nonnull UniqueIdProvider idProvider) {

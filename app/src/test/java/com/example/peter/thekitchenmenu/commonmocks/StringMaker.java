@@ -4,7 +4,7 @@ public class StringMaker {
 
     private String string = "";
 
-    public StringMaker makeStringOfExactLength(int length) {
+    public StringMaker makeStringOfLength(int length) {
 
         String a="a";
         StringBuilder builder = new StringBuilder();

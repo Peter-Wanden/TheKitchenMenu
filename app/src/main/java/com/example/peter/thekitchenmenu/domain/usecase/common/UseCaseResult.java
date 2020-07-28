@@ -8,8 +8,6 @@ import com.example.peter.thekitchenmenu.domain.model.DomainModel;
 import com.example.peter.thekitchenmenu.domain.model.UseCaseMetadataModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
-import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
-import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -71,10 +69,8 @@ public abstract class UseCaseResult<
                                  USE_CASE_MODEL,
                                  PERSISTENCE_MODEL,
                                  USE_CASE_REQUEST_MODEL,
-                                 USE_CASE_RESPONSE_MODEL> modelConverter,
-                         UniqueIdProvider idProvider,
-                         TimeProvider timeProvider) {
-        super(dataAccess, modelConverter, idProvider, timeProvider);
+                                 USE_CASE_RESPONSE_MODEL> modelConverter) {
+        super(dataAccess, modelConverter);
     }
 
     @Override
@@ -83,6 +79,7 @@ public abstract class UseCaseResult<
 
         if (isDomainDataElementsProcessed()) {
             if (isChanged && isValid()) {
+                System.out.println(TAG + "saving changes");
                 saveChanges();
             }
             buildResponse();
@@ -138,11 +135,11 @@ public abstract class UseCaseResult<
     }
 
     private void addCommonFailReasons() {
-        if (failReasons.isEmpty()) {
-            failReasons.add(CommonFailReason.NONE);
-        }
         if (persistenceModel == null) {
             failReasons.add(CommonFailReason.DATA_UNAVAILABLE);
+        }
+        if (failReasons.isEmpty()) {
+            failReasons.add(CommonFailReason.NONE);
         }
     }
 }

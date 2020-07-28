@@ -92,7 +92,7 @@ public class RecipeIdentityTest {
         RecipeIdentityUseCasePersistenceModel modelUnderTest = TestDataRecipeIdentity.
                 getNewInvalidActiveDefault();
         // Act
-        RecipeDurationRequest request = new RecipeDurationRequest.Builder().
+        RecipeIdentityRequest request = new RecipeIdentityRequest.Builder().
                 getDefault().
                 setDomainId(modelUnderTest.getDomainId()).
                 build();
@@ -102,8 +102,7 @@ public class RecipeIdentityTest {
 
         // Assert
         // assert database called with correct domain id
-        verify(repoIdentityMock).getByDomainId(
-                eq(modelUnderTest.getDomainId()),
+        verify(repoIdentityMock).getByDomainId(eq(modelUnderTest.getDomainId()),
                 repoCallback.capture()
         );
         repoCallback.getValue().onPersistenceModelUnavailable();

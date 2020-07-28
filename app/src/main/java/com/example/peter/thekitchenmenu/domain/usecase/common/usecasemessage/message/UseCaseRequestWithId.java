@@ -4,8 +4,7 @@ import com.example.peter.thekitchenmenu.domain.model.DomainModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.RequestModelBase;
 
-public abstract class RequestWithId
-        <REQUEST_MODEL extends DomainModel.UseCaseRequestModel>
+public class UseCaseRequestWithId<REQUEST_MODEL extends DomainModel.UseCaseRequestModel>
         extends
         RequestModelBase<REQUEST_MODEL>
         implements
@@ -26,7 +25,7 @@ public abstract class RequestWithId
 
     protected static abstract class IdBuilder<
             SELF extends IdBuilder<SELF, REQUEST_TYPE, REQUEST_MODEL>,
-            REQUEST_TYPE extends RequestWithId<REQUEST_MODEL>,
+            REQUEST_TYPE extends UseCaseRequestWithId<REQUEST_MODEL>,
             REQUEST_MODEL extends DomainModel.UseCaseRequestModel>
             extends
             RequestModelBuilder<SELF, REQUEST_TYPE, REQUEST_MODEL> {

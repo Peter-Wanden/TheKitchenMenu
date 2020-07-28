@@ -4,23 +4,25 @@ import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess.GetDoma
 import com.example.peter.thekitchenmenu.data.repository.recipe.RecipeIdentityUseCaseDataAccess;
 import com.example.peter.thekitchenmenu.domain.businessentity.textvalidation.TextValidationBusinessEntity;
 import com.example.peter.thekitchenmenu.domain.businessentity.textvalidation.TextValidationBusinessEntityTest;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
 import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 
-@RunWith(MockitoJUnitRunner.class)
 public class RecipeIdentityUseCaseTest {
 
-    // region constants
-    // endregion constants
+    // region constants ----------------------------------------------------------------------------
+    // endregion constants -------------------------------------------------------------------------
 
-    // region helper fields
+    // region helper fields ------------------------------------------------------------------------
     @Mock
     RecipeIdentityUseCaseDataAccess dataAccessMock;
     @Captor
@@ -29,14 +31,17 @@ public class RecipeIdentityUseCaseTest {
     TimeProvider timeProviderMock;
     @Mock
     UniqueIdProvider idProviderMock;
-    // endregion helper fields
+
+    private RecipeIdentityResponse onSuccessResponse;
+    private RecipeIdentityResponse onErrorResponse;
+    // endregion helper fields ---------------------------------------------------------------------
 
     RecipeIdentityUseCase SUT;
 
     @Before
     public void setup() {
+        MockitoAnnotations.initMocks(this);
         SUT = givenUseCase();
-
     }
 
     private RecipeIdentityUseCase givenUseCase() {
@@ -46,22 +51,38 @@ public class RecipeIdentityUseCaseTest {
                 TextValidationBusinessEntityTest.LONG_TEXT_MIN_LENGTH,
                 TextValidationBusinessEntityTest.LONG_TEXT_MAX_LENGTH
         );
-
         RecipeIdentityDomainModelConverter converter = new RecipeIdentityDomainModelConverter(
                 timeProviderMock, idProviderMock
         );
-        return new RecipeIdentityUseCase(
-                dataAccessMock,
-                converter,
-                idProviderMock,
-                timeProviderMock,
-                textValidator
-        );
+        return new RecipeIdentityUseCase(dataAccessMock, converter, textValidator);
     }
 
-    // region helper methods
-    // endregion helper methods
+    @Test
+    public void newRequest_stateINVALID_DEFAULT_failReasonDATA_UNAVAILABLE() {
+        // Arrange
+        RecipeIdentityRequest request = new RecipeIdentityRequest.Builder().getDefault().build();
+        // Act
+        SUT.execute(request, new UseCaseCallbackImplementer());
+        // Assert
 
-    // region helper classes
-    // endregion helper classes
+    }
+
+    // region helper methods -----------------------------------------------------------------------
+    // endregion helper methods --------------------------------------------------------------------
+
+    // region helper classes -----------------------------------------------------------------------
+    private final class UseCaseCallbackImplementer
+            implements
+            UseCaseBase.Callback<RecipeIdentityResponse> {
+        @Override
+        public void onUseCaseSuccess(RecipeIdentityResponse response) {
+            onSuccessResponse = response;
+        }
+
+        @Override
+        public void onUseCaseError(RecipeIdentityResponse response) {
+            onErrorResponse = response;
+        }
+    }
+    // endregion helper classes --------------------------------------------------------------------
 }
