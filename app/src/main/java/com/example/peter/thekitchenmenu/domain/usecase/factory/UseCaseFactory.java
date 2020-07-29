@@ -12,7 +12,7 @@ import com.example.peter.thekitchenmenu.data.repository.recipe.RecipeIdentityUse
 import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipeIngredient;
 import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipeMetadata;
 import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipePortions;
-import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseHandler;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.ConversionFactorStatus;
 import com.example.peter.thekitchenmenu.domain.usecase.ingredient.Ingredient;
 import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientDuplicateChecker;

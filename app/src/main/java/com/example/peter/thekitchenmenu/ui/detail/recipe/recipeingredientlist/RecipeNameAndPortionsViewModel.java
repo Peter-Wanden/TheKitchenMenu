@@ -3,11 +3,11 @@ package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredientlist;
 import androidx.lifecycle.ViewModel;
 
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
-import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseHandler;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentity;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityResponse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityUseCaseResponseModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.identity.RecipeIdentityResponseModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortionsRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortionsResponse;
@@ -59,7 +59,7 @@ public class RecipeNameAndPortionsViewModel extends ViewModel {
         });
     }
 
-    private void setIdentityToView(RecipeIdentityUseCaseResponseModel domainModel) {
+    private void setIdentityToView(RecipeIdentityResponseModel domainModel) {
 //        recipeTitleObservable.set(domainModel.getTitle());
     }
 

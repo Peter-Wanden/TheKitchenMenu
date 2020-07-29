@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.data.repository.source.local;
 
 import com.example.peter.thekitchenmenu.data.primitivemodel.EntityModel;
-import com.example.peter.thekitchenmenu.domain.model.BasePersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.model.BasePersistenceModel;
 
 import java.util.List;
 

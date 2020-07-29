@@ -1,9 +1,9 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions;
 
-import com.example.peter.thekitchenmenu.domain.model.DomainModelBuilder;
+import com.example.peter.thekitchenmenu.domain.usecasenew.model.BaseDomainModelBuilder;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataId;
-import com.example.peter.thekitchenmenu.domain.model.BaseDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.model.BaseDomainModel;
 
 import java.util.Objects;
 
@@ -85,10 +85,15 @@ public final class RecipePortionsRequest
                     '}';
         }
 
-        public static class Builder extends DomainModelBuilder<Builder, DomainModel> {
+        public static class Builder extends BaseDomainModelBuilder<Builder, DomainModel> {
 
             public Builder() {
                 domainModel = new DomainModel();
+            }
+
+            @Override
+            public Builder basedOnModel(DomainModel model) {
+                return null;
             }
 
             public Builder getDefault() {

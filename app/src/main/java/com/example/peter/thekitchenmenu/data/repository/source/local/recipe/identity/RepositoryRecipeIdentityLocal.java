@@ -4,7 +4,7 @@ import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.dataadapter.IdentityLocalDeleteAdapter;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.dataadapter.IdentityLocalGetAdapter;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.dataadapter.IdentityLocalSaveAdapter;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityUseCasePersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.identity.RecipeIdentityUseCasePersistenceModel;
 
 import java.util.List;
 
@@ -122,7 +122,7 @@ public class RepositoryRecipeIdentityLocal
     }
 
     @Override
-    public void deleteAllByDomainId(@Nonnull String domainId) {
+    public void deleteByDomainId(@Nonnull String domainId) {
         deleteAdapter.deleteAllByDomainId(domainId);
     }
 

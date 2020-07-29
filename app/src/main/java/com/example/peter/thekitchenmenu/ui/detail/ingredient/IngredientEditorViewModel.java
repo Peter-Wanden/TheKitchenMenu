@@ -6,11 +6,11 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseResult;
-import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.CommonFailReason;
-import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.metadata.ComponentState;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.CommonFailReason;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
-import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseHandler;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.ingredient.Ingredient;
 import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientResponse;
@@ -222,7 +222,7 @@ public class IngredientEditorViewModel extends ViewModel {
         ingredientResponse = response;
 
         List<FailReasons> failReasons = response.getMetadata().getFailReasons();
-        UseCaseResult.ComponentState state = response.getMetadata().getComponentState();
+        ComponentState state = response.getMetadata().getComponentState();
 
         if (failReasons.contains(CommonFailReason.DATA_UNAVAILABLE)) {
             dataLoadingError.setValue(true);
@@ -241,19 +241,19 @@ public class IngredientEditorViewModel extends ViewModel {
             isChanged = false;
 //            showNameError.set(resources.getString(R.string.ingredient_name_duplicate_error_message));
 
-        } else if (state == UseCaseResult.ComponentState.INVALID_UNCHANGED) {
+        } else if (state == ComponentState.INVALID_UNCHANGED) {
             isChanged = false;
             isValid = false;
 
-        } else if (state == UseCaseResult.ComponentState.VALID_UNCHANGED) {
+        } else if (state == ComponentState.VALID_UNCHANGED) {
             isChanged = false;
             isValid = true;
 
-        } else if (state == UseCaseResult.ComponentState.INVALID_CHANGED) {
+        } else if (state == ComponentState.INVALID_CHANGED) {
             isChanged = true;
             isValid = false;
 
-        } else if (state == UseCaseResult.ComponentState.VALID_CHANGED) {
+        } else if (state == ComponentState.VALID_CHANGED) {
             isChanged = true;
             isValid = true;
         }

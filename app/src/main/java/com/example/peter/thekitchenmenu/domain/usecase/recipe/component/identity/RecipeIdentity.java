@@ -3,14 +3,17 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identit
 import android.annotation.SuppressLint;
 
 import com.example.peter.thekitchenmenu.data.repository.recipe.RecipeIdentityUseCaseDataAccess;
-import com.example.peter.thekitchenmenu.domain.model.DomainModel.UseCaseModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.model.DomainModel.UseCaseModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseElement;
-import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidatorModel;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidatorRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidatorResponse;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.identity.RecipeIdentityRequestModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.identity.RecipeIdentityResponseModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.identity.RecipeIdentityUseCasePersistenceModel;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
@@ -140,7 +143,7 @@ public class RecipeIdentity
 
     @Override
     protected DomainModel createUseCaseModelFromRequestModel() {
-        RecipeIdentityUseCaseRequestModel requestModel = ((RecipeIdentityRequest) getRequest()).
+        RecipeIdentityRequestModel requestModel = ((RecipeIdentityRequest) getRequest()).
                 getDomainModel();
 
         return new DomainModel(
@@ -275,8 +278,8 @@ public class RecipeIdentity
         sendResponse(builder.build());
     }
 
-    private RecipeIdentityUseCaseResponseModel getResponseModel() {
-        return new RecipeIdentityUseCaseResponseModel.Builder().
+    private RecipeIdentityResponseModel getResponseModel() {
+        return new RecipeIdentityResponseModel.Builder().
                 setTitle(useCaseModel.title).
                 setDescription(useCaseModel.description).
                 build();

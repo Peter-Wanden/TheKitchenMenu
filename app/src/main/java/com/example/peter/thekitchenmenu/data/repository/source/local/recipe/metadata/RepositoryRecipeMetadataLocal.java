@@ -129,7 +129,7 @@ public class RepositoryRecipeMetadataLocal
     }
 
     @Override
-    public void deleteAllByDomainId(@Nonnull final String domainId) {
+    public void deleteByDomainId(@Nonnull final String domainId) {
         deleteAdapter.deleteAllByDomainId(domainId);
     }
 

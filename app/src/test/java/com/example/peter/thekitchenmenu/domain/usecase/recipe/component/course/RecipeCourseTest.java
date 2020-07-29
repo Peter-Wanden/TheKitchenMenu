@@ -5,8 +5,8 @@ import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipeC
 import com.example.peter.thekitchenmenu.data.repository.recipe.course.TestDataRecipeCourse;
 import com.example.peter.thekitchenmenu.domain.model.UseCaseMetadataModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
-import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.CommonFailReason;
-import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.CommonFailReason;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse.Course;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse.FailReason;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
@@ -24,7 +24,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseResult.ComponentState;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.metadata.ComponentState;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;

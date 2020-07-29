@@ -4,11 +4,11 @@ import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess.GetDomainModelCallback;
 import com.example.peter.thekitchenmenu.data.repository.ingredient.DataAccessIngredient;
 import com.example.peter.thekitchenmenu.data.repository.ingredient.TestDataIngredient;
-import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseResult;
-import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.CommonFailReason;
-import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.metadata.ComponentState;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.CommonFailReason;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
-import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseHandler;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.model.UseCaseMetadataModel;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidatorTest;
@@ -101,7 +101,7 @@ public class IngredientTest {
         simulateNewInitialisationRequest(modelUnderTest);
         // Assert
         assertEquals(
-                UseCaseResult.ComponentState.INVALID_UNCHANGED,
+                ComponentState.INVALID_UNCHANGED,
                 callbackClient.onErrorResponse.getMetadata().getComponentState()
         );
 
@@ -138,7 +138,7 @@ public class IngredientTest {
         assertNoDuplicateFound(modelUnderTest);
 
         assertEquals(
-                UseCaseResult.ComponentState.INVALID_CHANGED,
+                ComponentState.INVALID_CHANGED,
                 callbackClient.onErrorResponse.getMetadata().getComponentState()
         );
     }
@@ -207,7 +207,7 @@ public class IngredientTest {
         assertNoDuplicateFound(modelUnderTest);
 
         assertEquals(
-                UseCaseResult.ComponentState.INVALID_CHANGED,
+                ComponentState.INVALID_CHANGED,
                 callbackClient.onErrorResponse.getMetadata().getComponentState()
         );
 
@@ -289,7 +289,7 @@ public class IngredientTest {
         );
         assertTrue(failReasons.contains(CommonFailReason.NONE));
         assertEquals(
-                UseCaseResult.ComponentState.VALID_CHANGED,
+                ComponentState.VALID_CHANGED,
                 callbackClient.onSuccessResponse.getMetadata().getComponentState()
         );
     }
@@ -404,7 +404,7 @@ public class IngredientTest {
 
         UseCaseMetadataModel metadata = callbackClient.onSuccessResponse.getMetadata();
         assertEquals(
-                UseCaseResult.ComponentState.VALID_UNCHANGED,
+                ComponentState.VALID_UNCHANGED,
                 metadata.getComponentState()
         );
         assertTrue(metadata.getFailReasons().contains(CommonFailReason.NONE)
@@ -448,7 +448,7 @@ public class IngredientTest {
         simulateExistingInitialisationRequest(modelUnderTest);
         // Assert
         assertEquals(
-                UseCaseResult.ComponentState.INVALID_UNCHANGED,
+                ComponentState.INVALID_UNCHANGED,
                 callbackClient.onErrorResponse.getMetadata().getComponentState()
         );
     }
@@ -478,7 +478,7 @@ public class IngredientTest {
         simulateExistingInitialisationRequest(modelUnderTest);
         // Assert
         assertEquals(
-                UseCaseResult.ComponentState.INVALID_UNCHANGED,
+                ComponentState.INVALID_UNCHANGED,
                 callbackClient.onErrorResponse.getMetadata().getComponentState()
         );
         assertTrue(
@@ -496,7 +496,7 @@ public class IngredientTest {
         simulateExistingInitialisationRequest(modelUnderTest);
         // Assert
         assertEquals(
-                UseCaseResult.ComponentState.INVALID_UNCHANGED,
+                ComponentState.INVALID_UNCHANGED,
                 callbackClient.onErrorResponse.getMetadata().getComponentState()
         );
         assertTrue(
@@ -515,7 +515,7 @@ public class IngredientTest {
         simulateExistingInitialisationRequest(modelUnderTest);
         // Assert
         assertEquals(
-                UseCaseResult.ComponentState.INVALID_UNCHANGED,
+                ComponentState.INVALID_UNCHANGED,
                 callbackClient.onErrorResponse.getMetadata().getComponentState()
         );
 
@@ -540,7 +540,7 @@ public class IngredientTest {
         simulateExistingInitialisationRequest(modelUnderTest);
         // Assert
         assertEquals(
-                UseCaseResult.ComponentState.VALID_UNCHANGED,
+                ComponentState.VALID_UNCHANGED,
                 callbackClient.onSuccessResponse.getMetadata().getComponentState()
         );
         assertTrue(

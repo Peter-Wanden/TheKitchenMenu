@@ -35,11 +35,11 @@ public abstract class UseCaseBase {
         return callback;
     }
 
-    void setUseCaseCallback(Callback<UseCaseBase.Response> callback) {
+    public void setUseCaseCallback(Callback<UseCaseBase.Response> callback) {
         this.callback = callback;
     }
 
-    void run() {
+    public void run() {
         execute(request);
     }
 
@@ -54,6 +54,5 @@ public abstract class UseCaseBase {
         run();
     }
 
-    // For running asynchronous use cases on another thread. See UseCaseHandler / UseCaseScheduler.
     protected abstract <REQUEST extends UseCaseBase.Request> void execute(REQUEST request);
 }

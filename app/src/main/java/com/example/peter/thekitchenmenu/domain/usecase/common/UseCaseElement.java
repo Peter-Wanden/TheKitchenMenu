@@ -3,11 +3,12 @@ package com.example.peter.thekitchenmenu.domain.usecase.common;
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.DataAccess;
-import com.example.peter.thekitchenmenu.domain.model.BaseDomainModel;
-import com.example.peter.thekitchenmenu.domain.model.DomainModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.model.BaseDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.metadata.ComponentState;
+import com.example.peter.thekitchenmenu.domain.usecasenew.model.DomainModel;
 import com.example.peter.thekitchenmenu.domain.model.UseCaseMetadataModel;
-import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.CommonFailReason;
-import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.CommonFailReason;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataId;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
@@ -17,8 +18,6 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.Nonnull;
-
-import static com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseResult.ComponentState;
 
 /**
  * Using the state of the data Id's, determines the updatedDomainModel to be processed.

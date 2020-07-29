@@ -2,12 +2,13 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identit
 
 import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataId;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.identity.RecipeIdentityRequestModel;
 
 import javax.annotation.Nonnull;
 
 public final class RecipeIdentityRequest
         extends
-        UseCaseMessageModelDataId<RecipeIdentityUseCaseRequestModel>
+        UseCaseMessageModelDataId<RecipeIdentityRequestModel>
         implements
         UseCaseBase.Request {
 
@@ -28,7 +29,7 @@ public final class RecipeIdentityRequest
             UseCaseMessageModelDataIdBuilder<
                     Builder,
                     RecipeIdentityRequest,
-                    RecipeIdentityUseCaseRequestModel> {
+                    RecipeIdentityRequestModel> {
 
         public Builder() {
             message = new RecipeIdentityRequest();
@@ -38,14 +39,14 @@ public final class RecipeIdentityRequest
         public Builder getDefault() {
             message.dataId = "";
             message.domainId = "";
-            message.model = new RecipeIdentityUseCaseRequestModel.Builder().getDefault().build();
+            message.model = new RecipeIdentityRequestModel.Builder().getDefault().build();
             return self();
         }
 
         public Builder basedOnResponse(RecipeIdentityResponse response) {
             message.dataId = response.getDataId();
             message.domainId = response.getDomainId();
-            message.model = new RecipeIdentityUseCaseRequestModel.Builder().
+            message.model = new RecipeIdentityRequestModel.Builder().
                     basedOnResponseModel(response.getDomainModel()).
                     build();
             return self();

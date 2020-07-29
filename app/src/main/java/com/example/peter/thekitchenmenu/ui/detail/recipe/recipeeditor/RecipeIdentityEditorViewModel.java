@@ -4,11 +4,11 @@ import android.content.res.Resources;
 
 import androidx.core.util.Pair;
 
-import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
-import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseHandler;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityRequest;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityUseCaseRequestModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.identity.RecipeIdentityRequestModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
@@ -88,7 +88,7 @@ public class RecipeIdentityEditorViewModel
 
     public void setTitle(String title) {
         if (isTitleChanged(title)) {
-            RecipeIdentityUseCaseRequestModel model = new RecipeIdentityUseCaseRequestModel.Builder().
+            RecipeIdentityRequestModel model = new RecipeIdentityRequestModel.Builder().
                     basedOnResponseModel(response.getDomainModel()).
                     setTitle(title).
                     build();
@@ -112,7 +112,7 @@ public class RecipeIdentityEditorViewModel
 
     public void setDescription(String description) {
         if (isDescriptionChanged(description)) {
-            RecipeIdentityUseCaseRequestModel model = new RecipeIdentityUseCaseRequestModel.Builder().
+            RecipeIdentityRequestModel model = new RecipeIdentityRequestModel.Builder().
                     basedOnResponseModel(response.getDomainModel()).
                     setDescription(description).
                     build();

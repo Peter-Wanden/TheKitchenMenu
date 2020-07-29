@@ -6,7 +6,7 @@ import com.example.peter.thekitchenmenu.domain.businessentity.BusinessEntity.Req
 import com.example.peter.thekitchenmenu.domain.businessentity.BusinessEntity.Response;
 import com.example.peter.thekitchenmenu.domain.businessentity.textvalidation.TextValidationBusinessEntity.FailReason;
 import com.example.peter.thekitchenmenu.domain.businessentity.textvalidation.TextValidationBusinessEntity.TextLength;
-import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.FailReasons;
 
 import org.junit.Before;
 import org.junit.Test;

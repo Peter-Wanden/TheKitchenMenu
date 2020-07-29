@@ -1,11 +1,8 @@
 package com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage;
 
-import com.example.peter.thekitchenmenu.domain.model.BaseDomainModel;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityRequest;
+import com.example.peter.thekitchenmenu.domain.usecasenew.model.BaseDomainModel;
 
 import java.util.Objects;
-
-import javax.annotation.Nonnull;
 
 public abstract class UseCaseMessageModelDataId
         <DOMAIN_MODEL extends BaseDomainModel>

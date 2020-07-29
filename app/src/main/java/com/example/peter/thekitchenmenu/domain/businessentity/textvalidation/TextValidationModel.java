@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.businessentity.textvalidation;
 
 import com.example.peter.thekitchenmenu.domain.businessentity.textvalidation.TextValidationBusinessEntity.TextLength;
-import com.example.peter.thekitchenmenu.domain.model.DomainModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.model.DomainModel;
 
 import javax.annotation.Nonnull;
 

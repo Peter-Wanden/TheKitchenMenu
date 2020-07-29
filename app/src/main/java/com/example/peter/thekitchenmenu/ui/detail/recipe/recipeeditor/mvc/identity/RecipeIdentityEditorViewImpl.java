@@ -9,11 +9,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.CommonFailReason;
-import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.CommonFailReason;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentity;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityResponse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityUseCaseResponseModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.identity.RecipeIdentityResponseModel;
 import com.example.peter.thekitchenmenu.ui.common.views.BaseObservableViewMvc;
 
 import java.util.List;
@@ -114,7 +114,7 @@ public class RecipeIdentityEditorViewImpl
         titleEditText.setError(null);
         descriptionEditText.setError(null);
 
-        RecipeIdentityUseCaseResponseModel domainModel = response.getDomainModel();
+        RecipeIdentityResponseModel domainModel = response.getDomainModel();
         titleEditText.setText(domainModel.getTitle());
         descriptionEditText.setText(domainModel.getDescription());
 
@@ -159,7 +159,7 @@ public class RecipeIdentityEditorViewImpl
                                     R.integer.input_validation_long_text_max_length))));
         }
 
-        RecipeIdentityUseCaseResponseModel domainModel = response.getDomainModel();
+        RecipeIdentityResponseModel domainModel = response.getDomainModel();
         titleEditText.setText(domainModel.getTitle());
         descriptionEditText.setText(domainModel.getDescription());
 

@@ -1,6 +1,6 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions;
 
-import com.example.peter.thekitchenmenu.domain.model.BasePersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.model.BasePersistenceModel;
 
 import java.util.Objects;
 
@@ -54,38 +54,38 @@ public final class RecipePortionsPersistenceModel
             extends PersistenceModelBuilder<Builder, RecipePortionsPersistenceModel> {
 
         public Builder() {
-            persistenceModel = new RecipePortionsPersistenceModel();
+            domainModel = new RecipePortionsPersistenceModel();
         }
 
         @Override
         public Builder getDefault() {
-            persistenceModel.dataId = "";
-            persistenceModel.domainId = "";
-            persistenceModel.servings = 1;
-            persistenceModel.sittings = 1;
-            persistenceModel.createDate = 0L;
-            persistenceModel.lastUpdate = 0L;
+            domainModel.dataId = "";
+            domainModel.domainId = "";
+            domainModel.servings = 1;
+            domainModel.sittings = 1;
+            domainModel.createDate = 0L;
+            domainModel.lastUpdate = 0L;
             return self();
         }
 
         @Override
         public Builder basedOnModel(@Nonnull RecipePortionsPersistenceModel m) {
-            persistenceModel.dataId = m.getDataId();
-            persistenceModel.domainId = m.getDomainId();
-            persistenceModel.servings = m.getServings();
-            persistenceModel.sittings = m.getSittings();
-            persistenceModel.createDate = m.getCreateDate();
-            persistenceModel.lastUpdate = m.getLastUpdate();
+            domainModel.dataId = m.getDataId();
+            domainModel.domainId = m.getDomainId();
+            domainModel.servings = m.getServings();
+            domainModel.sittings = m.getSittings();
+            domainModel.createDate = m.getCreateDate();
+            domainModel.lastUpdate = m.getLastUpdate();
             return self();
         }
 
         public Builder setServings(int servings) {
-            persistenceModel.servings = servings;
+            domainModel.servings = servings;
             return self();
         }
 
         public Builder setSittings(int sittings) {
-            persistenceModel.sittings = sittings;
+            domainModel.sittings = sittings;
             return self();
         }
 

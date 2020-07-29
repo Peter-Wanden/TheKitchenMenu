@@ -1,10 +1,10 @@
 package com.example.peter.thekitchenmenu.domain.usecase.ingredient;
 
 import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.UnitOfMeasureConstants;
-import com.example.peter.thekitchenmenu.domain.model.DomainModelBuilder;
+import com.example.peter.thekitchenmenu.domain.usecasenew.model.BaseDomainModelBuilder;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataIdMetadata;
-import com.example.peter.thekitchenmenu.domain.model.BaseDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.model.BaseDomainModel;
 import com.example.peter.thekitchenmenu.domain.model.UseCaseMetadataModel;
 
 import java.util.Objects;
@@ -98,10 +98,15 @@ public final class IngredientResponse
             return conversionFactor;
         }
 
-        public static class Builder extends DomainModelBuilder<Builder, Model> {
+        public static class Builder extends BaseDomainModelBuilder<Builder, Model> {
 
             public Builder() {
                 domainModel = new Model();
+            }
+
+            @Override
+            public Builder basedOnModel(Model model) {
+                return null;
             }
 
             @Override

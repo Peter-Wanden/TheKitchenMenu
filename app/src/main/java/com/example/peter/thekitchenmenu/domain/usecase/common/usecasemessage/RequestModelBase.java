@@ -1,9 +1,9 @@
 package com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage;
 
-import com.example.peter.thekitchenmenu.domain.model.DomainModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.model.DomainModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 
-public abstract class RequestModelBase<REQUEST_MODEL extends DomainModel.UseCaseRequestModel>
+public abstract class RequestModelBase<REQUEST_MODEL extends DomainModel.RequestModel>
         implements
         UseCaseBase.Request {
 
@@ -16,7 +16,7 @@ public abstract class RequestModelBase<REQUEST_MODEL extends DomainModel.UseCase
     protected static abstract class RequestModelBuilder
             <SELF extends RequestModelBuilder<SELF, MESSAGE, REQUEST_MODEL>,
                     MESSAGE extends RequestModelBase<REQUEST_MODEL>,
-                    REQUEST_MODEL extends DomainModel.UseCaseRequestModel> {
+                    REQUEST_MODEL extends DomainModel.RequestModel> {
 
         protected MESSAGE message;
 

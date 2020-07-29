@@ -1,8 +1,8 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata;
 
-import com.example.peter.thekitchenmenu.domain.model.DomainModelBuilder;
+import com.example.peter.thekitchenmenu.domain.usecasenew.model.BaseDomainModelBuilder;
 import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataId;
-import com.example.peter.thekitchenmenu.domain.model.BaseDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.model.BaseDomainModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 
 import java.util.HashMap;
@@ -11,7 +11,8 @@ import java.util.Objects;
 import javax.annotation.Nonnull;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentName;
-import static com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseResult.ComponentState;
+
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.metadata.ComponentState;
 
 public final class RecipeMetadataRequest
         extends
@@ -108,12 +109,17 @@ public final class RecipeMetadataRequest
 
         public static class Builder
                 extends
-                DomainModelBuilder<
-                                        Builder,
-                                        DomainModel> {
+                BaseDomainModelBuilder<
+                        Builder,
+                        DomainModel> {
 
             public Builder() {
                 domainModel = new DomainModel();
+            }
+
+            @Override
+            public Builder basedOnModel(DomainModel model) {
+                return null;
             }
 
             @Override

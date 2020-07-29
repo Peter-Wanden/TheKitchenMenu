@@ -1,8 +1,8 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe;
 
-import com.example.peter.thekitchenmenu.domain.model.DomainModelBuilder;
+import com.example.peter.thekitchenmenu.domain.usecasenew.model.BaseDomainModelBuilder;
 import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataId;
-import com.example.peter.thekitchenmenu.domain.model.BaseDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.model.BaseDomainModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata;
 
@@ -79,12 +79,18 @@ public final class RecipeResponse
 
         public static class Builder
                 extends
-                DomainModelBuilder<
-                                        Builder,
-                                        Model> {
+                BaseDomainModelBuilder<
+                        Builder,
+                        Model> {
 
             public Builder() {
                 domainModel = new Model();
+            }
+
+            @Override
+            public Builder basedOnModel(Model model) {
+                domainModel.componentResponses = model.getComponentResponses();
+                return self();
             }
 
             @Override

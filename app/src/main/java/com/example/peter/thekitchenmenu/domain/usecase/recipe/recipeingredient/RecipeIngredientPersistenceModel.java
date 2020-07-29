@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredient;
 
 import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.model.MeasurementModel;
-import com.example.peter.thekitchenmenu.domain.model.BasePersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.model.BasePersistenceModel;
 
 public class RecipeIngredientPersistenceModel extends BasePersistenceModel {
 
@@ -70,93 +70,93 @@ public class RecipeIngredientPersistenceModel extends BasePersistenceModel {
                     RecipeIngredientPersistenceModel> {
 
         public Builder() {
-            persistenceModel = new RecipeIngredientPersistenceModel();
+            domainModel = new RecipeIngredientPersistenceModel();
         }
 
         @Override
         public Builder getDefault() {
-            persistenceModel.dataId = "";
-            persistenceModel.recipeIngredientId = "";
-            persistenceModel.recipeDataId = "";
-            persistenceModel.recipeDomainId = "";
-            persistenceModel.ingredientDataId = "";
-            persistenceModel.ingredientDomainId = "";
-            persistenceModel.productDataId = "";
-            persistenceModel.measurementModel = null;
-            persistenceModel.createdBy = "";
-            persistenceModel.createDate = 0L;
-            persistenceModel.lastUpdate = 0L;
+            domainModel.dataId = "";
+            domainModel.recipeIngredientId = "";
+            domainModel.recipeDataId = "";
+            domainModel.recipeDomainId = "";
+            domainModel.ingredientDataId = "";
+            domainModel.ingredientDomainId = "";
+            domainModel.productDataId = "";
+            domainModel.measurementModel = null;
+            domainModel.createdBy = "";
+            domainModel.createDate = 0L;
+            domainModel.lastUpdate = 0L;
             return self();
         }
 
         @Override
         public Builder basedOnModel(RecipeIngredientPersistenceModel model) {
-            persistenceModel.dataId = model.getDataId();
-            persistenceModel.recipeIngredientId = model.getDomainId();
-            persistenceModel.recipeDataId = model.getRecipeDataId();
-            persistenceModel.recipeDomainId = model.getRecipeDomainId();
-            persistenceModel.ingredientDataId = model.getIngredientDataId();
-            persistenceModel.ingredientDomainId = model.getRecipeDomainId();
-            persistenceModel.productDataId = model.getProductDataId();
-            persistenceModel.measurementModel = model.getMeasurementModel();
-            persistenceModel.createdBy = model.getCreatedBy();
-            persistenceModel.createDate = model.getCreateDate();
-            persistenceModel.lastUpdate = model.getLastUpdate();
+            domainModel.dataId = model.getDataId();
+            domainModel.recipeIngredientId = model.getDomainId();
+            domainModel.recipeDataId = model.getRecipeDataId();
+            domainModel.recipeDomainId = model.getRecipeDomainId();
+            domainModel.ingredientDataId = model.getIngredientDataId();
+            domainModel.ingredientDomainId = model.getRecipeDomainId();
+            domainModel.productDataId = model.getProductDataId();
+            domainModel.measurementModel = model.getMeasurementModel();
+            domainModel.createdBy = model.getCreatedBy();
+            domainModel.createDate = model.getCreateDate();
+            domainModel.lastUpdate = model.getLastUpdate();
             return self();
         }
 
         public Builder setDataId(String dataId) {
-            persistenceModel.dataId = dataId;
+            domainModel.dataId = dataId;
             return this;
         }
 
         public Builder setRecipeIngredientId(String recipeIngredientId) {
-            persistenceModel.recipeIngredientId = recipeIngredientId;
+            domainModel.recipeIngredientId = recipeIngredientId;
             return self();
         }
 
         public Builder setRecipeDataId(String recipeDataId) {
-            persistenceModel.recipeDataId = recipeDataId;
+            domainModel.recipeDataId = recipeDataId;
             return self();
         }
 
         public Builder setRecipeDomainId(String recipeDomainId) {
-            persistenceModel.recipeDomainId = recipeDomainId;
+            domainModel.recipeDomainId = recipeDomainId;
             return self();
         }
 
         public Builder setIngredientDataId(String ingredientDataId) {
-            persistenceModel.ingredientDataId = ingredientDataId;
+            domainModel.ingredientDataId = ingredientDataId;
             return self();
         }
 
         public Builder setIngredientDomainId(String ingredientDomainId) {
-            persistenceModel.ingredientDomainId = ingredientDomainId;
+            domainModel.ingredientDomainId = ingredientDomainId;
             return self();
         }
 
         public Builder setProductDataId(String productId) {
-            persistenceModel.productDataId = productId;
+            domainModel.productDataId = productId;
             return self();
         }
 
         public Builder setMeasurementModel(MeasurementModel measurementModel) {
-            persistenceModel.measurementModel = measurementModel;
+            domainModel.measurementModel = measurementModel;
             return self();
         }
 
         public Builder setCreatedBy(String createdBy) {
-            persistenceModel.createdBy = createdBy;
+            domainModel.createdBy = createdBy;
             return self();
         }
 
         public Builder setCreateDate(long createDate) {
-            persistenceModel.createDate = createDate;
+            domainModel.createDate = createDate;
             return self();
         }
 
         public Builder setLastUpdate(long lastUpdate) {
-            persistenceModel.lastUpdate = lastUpdate;
+            domainModel.lastUpdate = lastUpdate;
             return self();
         }
 

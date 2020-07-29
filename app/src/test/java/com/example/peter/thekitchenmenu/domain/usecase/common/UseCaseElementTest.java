@@ -3,7 +3,7 @@ package com.example.peter.thekitchenmenu.domain.usecase.common;
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.DataAccess;
 import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipeMetadata;
-import com.example.peter.thekitchenmenu.domain.model.BasePersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.model.BasePersistenceModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataPersistenceModel;
 
 import org.junit.Before;
@@ -225,7 +225,7 @@ public class UseCaseElementTest {
                 getSimpleName() + ": ";
 
         static final class DomainModel
-                implements com.example.peter.thekitchenmenu.domain.model.DomainModel.UseCaseModel {
+                implements com.example.peter.thekitchenmenu.domain.usecasenew.model.DomainModel.UseCaseModel {
             String comparisonString;
         }
 

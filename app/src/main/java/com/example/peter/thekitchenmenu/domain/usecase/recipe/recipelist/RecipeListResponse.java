@@ -1,8 +1,8 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipelist;
 
-import com.example.peter.thekitchenmenu.domain.model.DomainModelBuilder;
+import com.example.peter.thekitchenmenu.domain.usecasenew.model.BaseDomainModelBuilder;
 import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataIdMetadata;
-import com.example.peter.thekitchenmenu.domain.model.BaseDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.model.BaseDomainModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.model.UseCaseMetadataModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
@@ -30,7 +30,8 @@ public class RecipeListResponse
                 '}';
     }
 
-    public RecipeListResponse(){}
+    public RecipeListResponse() {
+    }
 
     public static class Builder
             extends
@@ -64,7 +65,8 @@ public class RecipeListResponse
 
         private List<Recipe> recipes;
 
-        private Model(){}
+        private Model() {
+        }
 
         public List<Recipe> getRecipes() {
             return recipes;
@@ -92,12 +94,17 @@ public class RecipeListResponse
         }
 
         public static class Builder
-                extends DomainModelBuilder<
-                                Builder,
-                                Model> {
+                extends
+                BaseDomainModelBuilder<Builder, Model> {
 
             public Builder() {
                 domainModel = new Model();
+            }
+
+            @Override
+            public Builder basedOnModel(Model model) {
+                domainModel.recipes = model.getRecipes();
+                return self();
             }
 
             @Override

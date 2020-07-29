@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.data.repository.source.remote.recipe;
 
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityUseCasePersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.identity.RecipeIdentityUseCasePersistenceModel;
 
 import javax.annotation.Nonnull;
 
@@ -53,7 +53,7 @@ public class RepositoryRecipeIdentityRemote
     }
 
     @Override
-    public void deleteAllByDomainId(@Nonnull String domainId) {
+    public void deleteByDomainId(@Nonnull String domainId) {
 
     }
 

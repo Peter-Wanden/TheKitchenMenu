@@ -4,10 +4,10 @@ import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess.GetDoma
 import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipePortions;
 import com.example.peter.thekitchenmenu.data.repository.recipe.portions.TestDataRecipePortions;
 import com.example.peter.thekitchenmenu.domain.model.UseCaseMetadataModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.metadata.ComponentState;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
-import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseResult;
-import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.CommonFailReason;
-import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.CommonFailReason;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.FailReasons;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
@@ -102,7 +102,7 @@ public class RecipePortionsTest {
         UseCaseMetadataModel metadata = portionsOnErrorResponse.getMetadata();
 
         assertEquals(
-                UseCaseResult.ComponentState.VALID_DEFAULT,
+                ComponentState.VALID_DEFAULT,
                 metadata.getComponentState()
         );
         List<FailReasons> expectedFailReasons = Arrays.asList(
@@ -124,7 +124,7 @@ public class RecipePortionsTest {
         newRequest_stateVALID_DEFAULT_failReasonNONE_DATA_UNAVAILABLE();
         // Assert
         assertEquals(
-                UseCaseResult.ComponentState.VALID_DEFAULT,
+                ComponentState.VALID_DEFAULT,
                 portionsOnErrorResponse.getMetadata().getComponentState()
         );
     }
@@ -155,7 +155,7 @@ public class RecipePortionsTest {
         // Assert
         UseCaseMetadataModel metadata = portionsOnErrorResponse.getMetadata();
         assertEquals(
-                UseCaseResult.ComponentState.INVALID_CHANGED,
+                ComponentState.INVALID_CHANGED,
                 metadata.getComponentState()
         );
 
@@ -197,7 +197,7 @@ public class RecipePortionsTest {
         // Assert
         UseCaseMetadataModel metadata = portionsOnErrorResponse.getMetadata();
         assertEquals(
-                UseCaseResult.ComponentState.INVALID_CHANGED,
+                ComponentState.INVALID_CHANGED,
                 metadata.getComponentState()
         );
 
@@ -238,7 +238,7 @@ public class RecipePortionsTest {
         // Assert
         UseCaseMetadataModel metadata = portionsOnErrorResponse.getMetadata();
         assertEquals(
-                UseCaseResult.ComponentState.INVALID_CHANGED,
+                ComponentState.INVALID_CHANGED,
                 metadata.getComponentState()
         );
 
@@ -283,7 +283,7 @@ public class RecipePortionsTest {
         // Assert
         UseCaseMetadataModel metadata = portionsOnSuccessResponse.getMetadata();
         assertEquals(
-                UseCaseResult.ComponentState.VALID_CHANGED,
+                ComponentState.VALID_CHANGED,
                 metadata.getComponentState()
         );
 
@@ -384,7 +384,7 @@ public class RecipePortionsTest {
         // Assert
         UseCaseMetadataModel metadata = portionsOnSuccessResponse.getMetadata();
         assertEquals(
-                UseCaseResult.ComponentState.VALID_UNCHANGED,
+                ComponentState.VALID_UNCHANGED,
                 metadata.getComponentState()
         );
 

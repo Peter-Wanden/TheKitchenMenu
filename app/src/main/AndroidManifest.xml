@@ -117,12 +117,12 @@
             android:launchMode="singleTop"
             >
 
-            <!-- Receives a query with a request to SEARCH -->
+            <!-- Receives a query with a useCaseRequest to SEARCH -->
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH"/>
             </intent-filter>
 
-            <!-- Receives a query with a request to view a specific item -->
+            <!-- Receives a query with a useCaseRequest to view a specific item -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
             </intent-filter>

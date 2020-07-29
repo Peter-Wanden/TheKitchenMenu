@@ -1,6 +1,6 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration;
 
-import com.example.peter.thekitchenmenu.domain.model.BasePersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.model.BasePersistenceModel;
 
 import javax.annotation.Nonnull;
 
@@ -59,38 +59,38 @@ public final class RecipeDurationPersistenceModel
             PersistenceModelBuilder<Builder, RecipeDurationPersistenceModel> {
 
         public Builder() {
-            persistenceModel = new RecipeDurationPersistenceModel();
+            domainModel = new RecipeDurationPersistenceModel();
         }
 
         @Override
         public Builder getDefault() {
-            persistenceModel.dataId = "";
-            persistenceModel.domainId = "";
-            persistenceModel.prepTime = 0;
-            persistenceModel.cookTime = 0;
-            persistenceModel.createDate = 0L;
-            persistenceModel.lastUpdate = 0L;
+            domainModel.dataId = "";
+            domainModel.domainId = "";
+            domainModel.prepTime = 0;
+            domainModel.cookTime = 0;
+            domainModel.createDate = 0L;
+            domainModel.lastUpdate = 0L;
             return self();
         }
 
         @Override
         public Builder basedOnModel(@Nonnull RecipeDurationPersistenceModel m) {
-            persistenceModel.dataId = m.getDataId();
-            persistenceModel.domainId = m.getDomainId();
-            persistenceModel.prepTime = m.getPrepTime();
-            persistenceModel.cookTime = m.getCookTime();
-            persistenceModel.createDate = m.getCreateDate();
-            persistenceModel.lastUpdate = m.getLastUpdate();
+            domainModel.dataId = m.getDataId();
+            domainModel.domainId = m.getDomainId();
+            domainModel.prepTime = m.getPrepTime();
+            domainModel.cookTime = m.getCookTime();
+            domainModel.createDate = m.getCreateDate();
+            domainModel.lastUpdate = m.getLastUpdate();
             return self();
         }
 
         public Builder setPrepTime(int prepTime) {
-            persistenceModel.prepTime = prepTime;
+            domainModel.prepTime = prepTime;
             return self();
         }
 
         public Builder setCookTime(int cookTime) {
-            persistenceModel.cookTime = cookTime;
+            domainModel.cookTime = cookTime;
             return self();
         }
 

@@ -1,8 +1,8 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata;
 
-import com.example.peter.thekitchenmenu.domain.model.DomainModelBuilder;
+import com.example.peter.thekitchenmenu.domain.usecasenew.model.BaseDomainModelBuilder;
 import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataIdMetadata;
-import com.example.peter.thekitchenmenu.domain.model.BaseDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.model.BaseDomainModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.model.UseCaseMetadataModel;
 
@@ -12,7 +12,8 @@ import java.util.Objects;
 import javax.annotation.Nonnull;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentName;
-import static com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseResult.ComponentState;
+
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.metadata.ComponentState;
 
 public final class RecipeMetadataResponse
         extends
@@ -31,7 +32,8 @@ public final class RecipeMetadataResponse
                 "'}'";
     }
 
-    private RecipeMetadataResponse() {}
+    private RecipeMetadataResponse() {
+    }
 
     public static class Builder
             extends
@@ -66,7 +68,8 @@ public final class RecipeMetadataResponse
         private String parentDomainId;
         private HashMap<ComponentName, ComponentState> componentStates;
 
-        private DomainModel() {}
+        private DomainModel() {
+        }
 
         @Nonnull
         public String getParentDomainId() {
@@ -102,12 +105,15 @@ public final class RecipeMetadataResponse
 
         public static class Builder
                 extends
-                DomainModelBuilder<
-                                        Builder,
-                                        DomainModel> {
+                BaseDomainModelBuilder<Builder, DomainModel> {
 
             public Builder() {
                 domainModel = new DomainModel();
+            }
+
+            @Override
+            public Builder basedOnModel(DomainModel model) {
+                return null;
             }
 
             @Override

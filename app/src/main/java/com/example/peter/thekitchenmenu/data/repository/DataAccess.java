@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.data.repository;
 
 import androidx.annotation.Nullable;
 
-import com.example.peter.thekitchenmenu.domain.model.DomainModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.model.DomainModel;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -192,9 +192,9 @@ public abstract class DataAccess<PERSISTENCE_MODEL extends DomainModel.Persisten
     }
 
     @Override
-    public void deleteAllByDomainId(@Nonnull String domainId) {
-        remoteDomainDataAccess.deleteAllByDomainId(domainId);
-        localDomainDataAccess.deleteAllByDomainId(domainId);
+    public void deleteByDomainId(@Nonnull String domainId) {
+        remoteDomainDataAccess.deleteByDomainId(domainId);
+        localDomainDataAccess.deleteByDomainId(domainId);
 
         Iterator<Map.Entry<String, PERSISTENCE_MODEL>> cacheIterator = cache.entrySet().iterator();
 

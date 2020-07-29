@@ -52,7 +52,7 @@ public class RepositoryIngredientRemote
     }
 
     @Override
-    public void deleteAllByDomainId(@Nonnull String domainId) {
+    public void deleteByDomainId(@Nonnull String domainId) {
 
     }
 

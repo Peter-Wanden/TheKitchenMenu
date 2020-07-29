@@ -8,22 +8,21 @@ import com.example.peter.thekitchenmenu.data.repository.recipe.duration.TestData
 import com.example.peter.thekitchenmenu.data.repository.recipe.identity.TestDataRecipeIdentity;
 import com.example.peter.thekitchenmenu.data.repository.recipe.metadata.TestDataRecipeMetadata;
 import com.example.peter.thekitchenmenu.data.repository.recipe.portions.TestDataRecipePortions;
-import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseResult;
-import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.CommonFailReason;
-import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.CommonFailReason;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
-import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseHandler;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.model.UseCaseMetadataModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourseRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourseResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDurationRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDurationResponse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityUseCasePersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.identity.RecipeIdentityUseCasePersistenceModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityRequest;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityUseCaseRequestModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.identity.RecipeIdentityRequestModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentName;
-import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseResult.ComponentState;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.metadata.ComponentState;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.FailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataPersistenceModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataResponse;
@@ -139,7 +138,7 @@ public class RecipeTest {
 
         // Assert recipe state updated
         assertEquals(
-                UseCaseResult.ComponentState.INVALID_UNCHANGED,
+                ComponentState.INVALID_UNCHANGED,
                 recipeMetadata.getComponentState()
         );
         // Assert all required components responded
@@ -152,7 +151,7 @@ public class RecipeTest {
                 domainModel.getComponentStates().containsKey(ComponentName.IDENTITY)
         );
         assertEquals(
-                UseCaseResult.ComponentState.INVALID_UNCHANGED,
+                ComponentState.INVALID_UNCHANGED,
                 domainModel.getComponentStates().get(ComponentName.IDENTITY)
         );
         // Assert course component and state
@@ -160,7 +159,7 @@ public class RecipeTest {
                 domainModel.getComponentStates().containsKey(ComponentName.COURSE)
         );
         assertEquals(
-                UseCaseResult.ComponentState.INVALID_UNCHANGED,
+                ComponentState.INVALID_UNCHANGED,
                 domainModel.getComponentStates().get(ComponentName.COURSE)
         );
         // Assert duration component and state
@@ -168,7 +167,7 @@ public class RecipeTest {
                 domainModel.getComponentStates().containsKey(ComponentName.DURATION)
         );
         assertEquals(
-                UseCaseResult.ComponentState.INVALID_UNCHANGED,
+                ComponentState.INVALID_UNCHANGED,
                 domainModel.getComponentStates().get(ComponentName.DURATION)
         );
         // Assert portions component and state
@@ -176,7 +175,7 @@ public class RecipeTest {
                 domainModel.getComponentStates().containsKey(ComponentName.PORTIONS)
         );
         assertEquals(
-                UseCaseResult.ComponentState.INVALID_UNCHANGED,
+                ComponentState.INVALID_UNCHANGED,
                 domainModel.getComponentStates().get(ComponentName.PORTIONS)
         );
     }
@@ -204,7 +203,7 @@ public class RecipeTest {
         // Assert, callback updated with recipe response
         UseCaseMetadataModel metadata = registeredCallback.recipeMetadataResponse.getMetadata();
 
-        ComponentState expectedRecipeState = UseCaseResult.ComponentState.INVALID_UNCHANGED;
+        ComponentState expectedRecipeState = ComponentState.INVALID_UNCHANGED;
         ComponentState actualRecipeState = metadata.getComponentState();
         assertEquals(
                 expectedRecipeState,
@@ -307,7 +306,7 @@ public class RecipeTest {
         RecipeIdentityResponse identityResponse = macroCallback.identityOnError;
         List<FailReasons> identityFailReasons = identityResponse.getMetadata().getFailReasons();
         assertEquals(
-                UseCaseResult.ComponentState.INVALID_UNCHANGED,
+                ComponentState.INVALID_UNCHANGED,
                 identityResponse.getMetadata().getComponentState()
         );
         assertEquals(
@@ -322,7 +321,7 @@ public class RecipeTest {
         RecipeCourseResponse courseResponse = macroCallback.courseOnError;
         List<FailReasons> courseFailReasons = courseResponse.getMetadata().getFailReasons();
         assertEquals(
-                UseCaseResult.ComponentState.INVALID_UNCHANGED,
+                ComponentState.INVALID_UNCHANGED,
                 courseResponse.getMetadata().getComponentState()
         );
         assertEquals(
@@ -336,7 +335,7 @@ public class RecipeTest {
         RecipeDurationResponse durationResponse = macroCallback.durationOnError;
         List<FailReasons> durationFailReasons = durationResponse.getMetadata().getFailReasons();
         assertEquals(
-                UseCaseResult.ComponentState.INVALID_UNCHANGED,
+                ComponentState.INVALID_UNCHANGED,
                 durationResponse.getMetadata().getComponentState()
         );
         assertEquals(
@@ -350,7 +349,7 @@ public class RecipeTest {
         RecipePortionsResponse portionResponse = macroCallback.portionsOnError;
         List<FailReasons> portionsFailReasons = portionResponse.getMetadata().getFailReasons();
         assertEquals(
-                UseCaseResult.ComponentState.INVALID_UNCHANGED,
+                ComponentState.INVALID_UNCHANGED,
                 portionResponse.getMetadata().getComponentState()
         );
         assertEquals(
@@ -462,7 +461,7 @@ public class RecipeTest {
         // Identity Request 2, 'existing request', update title
         String validTitle = modelUnderTest.getTitle();
 
-        RecipeIdentityUseCaseRequestModel validTitleModel = new RecipeIdentityUseCaseRequestModel.Builder().
+        RecipeIdentityRequestModel validTitleModel = new RecipeIdentityRequestModel.Builder().
                 basedOnResponseModel(callbackClient.response.getDomainModel()).
                 setTitle(validTitle).
                 build();
@@ -476,7 +475,7 @@ public class RecipeTest {
 
         // Identity Request 3, existing request, update description
         String validDescription = modelUnderTest.getDescription();
-        RecipeIdentityUseCaseRequestModel validTitleDescriptionModel = new RecipeIdentityUseCaseRequestModel.
+        RecipeIdentityRequestModel validTitleDescriptionModel = new RecipeIdentityRequestModel.
                 Builder().basedOnResponseModel(callbackClient.response.getDomainModel()).
                 setDescription(validDescription).
                 build();
@@ -518,7 +517,7 @@ public class RecipeTest {
 
         // Assert identity component state
         assertEquals(
-                UseCaseResult.ComponentState.VALID_CHANGED,
+                ComponentState.VALID_CHANGED,
                 response.getMetadata().getComponentState()
         );
         int expectedNoOfFailReasons = 1;
@@ -667,19 +666,19 @@ public class RecipeTest {
                 getDomainModel().
                 getComponentStates();
         assertEquals(
-                UseCaseResult.ComponentState.VALID_UNCHANGED,
+                ComponentState.VALID_UNCHANGED,
                 componentStates.get(ComponentName.IDENTITY)
         );
         assertEquals(
-                UseCaseResult.ComponentState.VALID_UNCHANGED,
+                ComponentState.VALID_UNCHANGED,
                 componentStates.get(ComponentName.COURSE)
         );
         assertEquals(
-                UseCaseResult.ComponentState.VALID_UNCHANGED,
+                ComponentState.VALID_UNCHANGED,
                 componentStates.get(ComponentName.DURATION)
         );
         assertEquals(
-                UseCaseResult.ComponentState.VALID_UNCHANGED,
+                ComponentState.VALID_UNCHANGED,
                 componentStates.get(ComponentName.PORTIONS)
         );
     }
@@ -705,7 +704,7 @@ public class RecipeTest {
 
         // Assert correct recipe state
         ComponentState recipeState = recipeCallback.recipeMetadataResponse.getMetadata().getComponentState();
-        assertEquals(UseCaseResult.ComponentState.VALID_UNCHANGED, recipeState);
+        assertEquals(ComponentState.VALID_UNCHANGED, recipeState);
     }
 
     @Test
@@ -749,7 +748,7 @@ public class RecipeTest {
         UseCaseMetadataModel metadata1 = registeredMetadataCallback.response.getMetadata();
         ComponentState actualRecipeState = metadata1.getComponentState();
         assertEquals(
-                UseCaseResult.ComponentState.VALID_UNCHANGED,
+                ComponentState.VALID_UNCHANGED,
                 actualRecipeState
         );
 
@@ -757,7 +756,7 @@ public class RecipeTest {
         UseCaseMetadataModel metadata2 = registeredIdentityCallback.response.getMetadata();
         ComponentState identityComponentState = metadata2.getComponentState();
         assertEquals(
-                UseCaseResult.ComponentState.VALID_UNCHANGED,
+                ComponentState.VALID_UNCHANGED,
                 identityComponentState
         );
     }

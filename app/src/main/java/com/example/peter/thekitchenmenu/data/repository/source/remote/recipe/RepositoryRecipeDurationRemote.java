@@ -54,7 +54,7 @@ public class RepositoryRecipeDurationRemote
     }
 
     @Override
-    public void deleteAllByDomainId(@Nonnull String domainId) {
+    public void deleteByDomainId(@Nonnull String domainId) {
 
     }
 

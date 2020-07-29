@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.commonmocks;
 
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
-import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseScheduler;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.UseCaseScheduler;
 
 public class UseCaseSchedulerMock implements UseCaseScheduler {
     @Override

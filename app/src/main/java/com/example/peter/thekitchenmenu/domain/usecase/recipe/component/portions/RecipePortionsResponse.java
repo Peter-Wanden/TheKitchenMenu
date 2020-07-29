@@ -1,8 +1,8 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions;
 
-import com.example.peter.thekitchenmenu.domain.model.DomainModelBuilder;
+import com.example.peter.thekitchenmenu.domain.usecasenew.model.BaseDomainModelBuilder;
 import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataIdMetadata;
-import com.example.peter.thekitchenmenu.domain.model.BaseDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.model.BaseDomainModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.model.UseCaseMetadataModel;
 
@@ -27,7 +27,8 @@ public final class RecipePortionsResponse
                 "'}'";
     }
 
-    private RecipePortionsResponse() {}
+    private RecipePortionsResponse() {
+    }
 
     public static class Builder
             extends
@@ -105,12 +106,17 @@ public final class RecipePortionsResponse
 
         public static class Builder
                 extends
-                DomainModelBuilder<
-                                        Builder,
-                                        Model> {
+                BaseDomainModelBuilder<
+                        Builder,
+                        Model> {
 
             public Builder() {
                 domainModel = new RecipePortionsResponse.Model();
+            }
+
+            @Override
+            public Builder basedOnModel(Model model) {
+                return null;
             }
 
             @Override

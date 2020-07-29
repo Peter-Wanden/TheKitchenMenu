@@ -3,12 +3,13 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identit
 import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataIdMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.model.UseCaseMetadataModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.identity.RecipeIdentityResponseModel;
 
 import javax.annotation.Nonnull;
 
 public final class RecipeIdentityResponse
         extends
-        UseCaseMessageModelDataIdMetadata<RecipeIdentityUseCaseResponseModel>
+        UseCaseMessageModelDataIdMetadata<RecipeIdentityResponseModel>
         implements
         UseCaseBase.Response {
 
@@ -30,7 +31,7 @@ public final class RecipeIdentityResponse
             MessageModelDataIdMetadataBuilder<
                     Builder,
                     RecipeIdentityResponse,
-                    RecipeIdentityUseCaseResponseModel> {
+                    RecipeIdentityResponseModel> {
 
         public Builder() {
             message = new RecipeIdentityResponse();
@@ -40,7 +41,7 @@ public final class RecipeIdentityResponse
         public Builder getDefault() {
             message.dataId = "";
             message.domainId = "";
-            message.model = new RecipeIdentityUseCaseResponseModel.Builder().getDefault().build();
+            message.model = new RecipeIdentityResponseModel.Builder().getDefault().build();
             message.metadata = new UseCaseMetadataModel.Builder().getDefault().build();
             return self();
         }

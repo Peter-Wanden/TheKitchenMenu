@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecase.common;
 
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
-import com.example.peter.thekitchenmenu.domain.model.DomainModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.model.DomainModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.RequestModelBase;
 import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.message.UseCaseRequestWithId;
 import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataId;
@@ -22,8 +22,8 @@ public abstract class UseCaseData<
         DATA_ACCESS extends DomainDataAccess<PERSISTENCE_MODEL>,
         PERSISTENCE_MODEL extends DomainModel.PersistenceModel,
         USE_CASE_MODEL extends DomainModel.UseCaseModel,
-        USE_CASE_REQUEST_MODEL extends DomainModel.UseCaseRequestModel,
-        USE_CASE_RESPONSE_MODEL extends DomainModel.UseCaseResponseModel>
+        USE_CASE_REQUEST_MODEL extends DomainModel.RequestModel,
+        USE_CASE_RESPONSE_MODEL extends DomainModel.ResponseModel>
         extends
         UseCaseBase
         implements

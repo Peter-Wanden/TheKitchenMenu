@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecase.product.component.measurement;
 
 import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.MeasurementSubtype;
-import com.example.peter.thekitchenmenu.domain.model.BasePersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.model.BasePersistenceModel;
 import com.example.peter.thekitchenmenu.domain.usecase.product.component.measurement.ProductMeasurement.ShelfLife;
 
 import java.util.Objects;
@@ -95,80 +95,80 @@ public class ProductMeasurementPersistenceModel
             PersistenceModelBuilder<Builder, ProductMeasurementPersistenceModel> {
 
         public Builder() {
-            persistenceModel = new ProductMeasurementPersistenceModel();
+            domainModel = new ProductMeasurementPersistenceModel();
         }
 
         @Override
         public Builder getDefault() {
-            persistenceModel.dataId = "";
-            persistenceModel.domainId = "";
-            persistenceModel.productId = "";
-            persistenceModel.shelfLife = ShelfLife.OPTION_1;
-            persistenceModel.measurementSubtype = DEFAULT_UNIT_OF_MEASURE.getMeasurementSubtype();
-            persistenceModel.baseUnits = 0.;
-            persistenceModel.numberOfItems = MIN_NUMBER_OF_ITEMS;
-            persistenceModel.createDate = 0L;
-            persistenceModel.lastUpdate = 0L;
+            domainModel.dataId = "";
+            domainModel.domainId = "";
+            domainModel.productId = "";
+            domainModel.shelfLife = ShelfLife.OPTION_1;
+            domainModel.measurementSubtype = DEFAULT_UNIT_OF_MEASURE.getMeasurementSubtype();
+            domainModel.baseUnits = 0.;
+            domainModel.numberOfItems = MIN_NUMBER_OF_ITEMS;
+            domainModel.createDate = 0L;
+            domainModel.lastUpdate = 0L;
             return self();
         }
 
         @Override
         public Builder basedOnModel(ProductMeasurementPersistenceModel model) {
-            persistenceModel.dataId = model.getDataId();
-            persistenceModel.domainId = model.getDomainId();
-            persistenceModel.productId = model.getProductId();
-            persistenceModel.shelfLife = model.getShelfLife();
-            persistenceModel.measurementSubtype = model.getMeasurementSubtype();
-            persistenceModel.baseUnits = model.getBaseUnits();
-            persistenceModel.numberOfItems = model.getNumberOfItems();
-            persistenceModel.createDate = model.getCreateDate();
-            persistenceModel.lastUpdate = model.getLastUpdate();
+            domainModel.dataId = model.getDataId();
+            domainModel.domainId = model.getDomainId();
+            domainModel.productId = model.getProductId();
+            domainModel.shelfLife = model.getShelfLife();
+            domainModel.measurementSubtype = model.getMeasurementSubtype();
+            domainModel.baseUnits = model.getBaseUnits();
+            domainModel.numberOfItems = model.getNumberOfItems();
+            domainModel.createDate = model.getCreateDate();
+            domainModel.lastUpdate = model.getLastUpdate();
 
             return self();
         }
 
         public Builder setDataId(String dataId) {
-            persistenceModel.dataId = dataId;
+            domainModel.dataId = dataId;
             return self();
         }
 
         public Builder setDomainId(String domainId) {
-            persistenceModel.domainId = domainId;
+            domainModel.domainId = domainId;
             return self();
         }
 
         public Builder setProductId(String productId) {
-            persistenceModel.productId = productId;
+            domainModel.productId = productId;
             return self();
         }
 
         public Builder setShelfLife(ShelfLife shelfLife) {
-            persistenceModel.shelfLife = shelfLife;
+            domainModel.shelfLife = shelfLife;
             return self();
         }
 
         public Builder setMeasurementSubType(MeasurementSubtype measurementSubType) {
-            persistenceModel.measurementSubtype = measurementSubType;
+            domainModel.measurementSubtype = measurementSubType;
             return self();
         }
 
         public Builder setBaseUnits(double baseUnits) {
-            persistenceModel.baseUnits = baseUnits;
+            domainModel.baseUnits = baseUnits;
             return self();
         }
 
         public Builder setNumberOfItems(int numberOfItems) {
-            persistenceModel.numberOfItems = numberOfItems;
+            domainModel.numberOfItems = numberOfItems;
             return self();
         }
 
         public Builder setCreateDate(long createDate) {
-            persistenceModel.createDate = createDate;
+            domainModel.createDate = createDate;
             return self();
         }
 
         public Builder setLastUpdate(long lastUpdate) {
-            persistenceModel.lastUpdate = lastUpdate;
+            domainModel.lastUpdate = lastUpdate;
             return self();
         }
 

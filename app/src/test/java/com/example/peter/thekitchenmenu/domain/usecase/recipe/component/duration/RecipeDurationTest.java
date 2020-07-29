@@ -4,12 +4,11 @@ import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess.GetDoma
 import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipeDuration;
 import com.example.peter.thekitchenmenu.data.repository.recipe.duration.TestDataRecipeDuration;
 import com.example.peter.thekitchenmenu.domain.model.UseCaseMetadataModel;
-import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseResult;
-import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.CommonFailReason;
-import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.CommonFailReason;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDuration.FailReason;
-import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseResult.ComponentState;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.metadata.ComponentState;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
@@ -110,7 +109,7 @@ public class RecipeDurationTest {
         // assert response metadata
         UseCaseMetadataModel metadata = durationOnErrorResponse.getMetadata();
 
-        ComponentState expectedState = UseCaseResult.ComponentState.VALID_DEFAULT;
+        ComponentState expectedState = ComponentState.VALID_DEFAULT;
         ComponentState actualComponentState = metadata.getComponentState();
         assertEquals(
                 expectedState,
@@ -163,7 +162,7 @@ public class RecipeDurationTest {
 
         // Assert state
         assertEquals(
-                UseCaseResult.ComponentState.INVALID_CHANGED,
+                ComponentState.INVALID_CHANGED,
                 durationOnErrorResponse.getMetadata().getComponentState()
         );
     }
@@ -221,7 +220,7 @@ public class RecipeDurationTest {
 
         // Assert
         assertEquals(
-                UseCaseResult.ComponentState.VALID_CHANGED,
+                ComponentState.VALID_CHANGED,
                 durationOnSuccessResponse.getMetadata().getComponentState()
         );
     }
@@ -289,7 +288,7 @@ public class RecipeDurationTest {
         SUT.execute(request, new DurationCallbackClient());
         // Assert
         assertEquals(
-                UseCaseResult.ComponentState.INVALID_CHANGED,
+                ComponentState.INVALID_CHANGED,
                 durationOnErrorResponse.getMetadata().getComponentState()
         );
     }
@@ -352,7 +351,7 @@ public class RecipeDurationTest {
         SUT.execute(validRequest, new DurationCallbackClient());
         // Assert
         assertEquals(
-                UseCaseResult.ComponentState.VALID_CHANGED,
+                ComponentState.VALID_CHANGED,
                 durationOnSuccessResponse.getMetadata().getComponentState()
         );
     }
@@ -498,7 +497,7 @@ public class RecipeDurationTest {
         SUT.execute(invalidRequest, new DurationCallbackClient());
         // Assert
         assertEquals(
-                UseCaseResult.ComponentState.INVALID_CHANGED,
+                ComponentState.INVALID_CHANGED,
                 durationOnErrorResponse.getMetadata().getComponentState()
         );
     }
@@ -589,7 +588,7 @@ public class RecipeDurationTest {
         SUT.execute(validRequest, new DurationCallbackClient());
         // Assert
         assertEquals(
-                UseCaseResult.ComponentState.VALID_CHANGED,
+                ComponentState.VALID_CHANGED,
                 durationOnSuccessResponse.getMetadata().getComponentState()
         );
     }
@@ -674,7 +673,7 @@ public class RecipeDurationTest {
         SUT.execute(request, new DurationCallbackClient());
         // Assert
         assertEquals(
-                UseCaseResult.ComponentState.INVALID_CHANGED,
+                ComponentState.INVALID_CHANGED,
                 durationOnErrorResponse.getMetadata().getComponentState());
     }
 
@@ -766,7 +765,7 @@ public class RecipeDurationTest {
         SUT.execute(request, new DurationCallbackClient());
         // Assert
         assertEquals(
-                UseCaseResult.ComponentState.VALID_CHANGED,
+                ComponentState.VALID_CHANGED,
                 durationOnSuccessResponse.getMetadata().getComponentState()
         );
     }
@@ -832,7 +831,7 @@ public class RecipeDurationTest {
         UseCaseMetadataModel metadata = durationOnErrorResponse.getMetadata();
 
         assertEquals(
-                UseCaseResult.ComponentState.INVALID_CHANGED,
+                ComponentState.INVALID_CHANGED,
                 metadata.getComponentState()
         );
 
@@ -932,7 +931,7 @@ public class RecipeDurationTest {
         existingRequest_validDomainId_domainIdSentToRepo();
         // Assert
         assertEquals(
-                UseCaseResult.ComponentState.VALID_UNCHANGED,
+                ComponentState.VALID_UNCHANGED,
                 durationOnSuccessResponse.getMetadata().getComponentState()
         );
     }
@@ -959,7 +958,7 @@ public class RecipeDurationTest {
         repoDurationCallback.getValue().onPersistenceModelLoaded(modelUnderTest);
 
         assertEquals(
-                UseCaseResult.ComponentState.INVALID_UNCHANGED,
+                ComponentState.INVALID_UNCHANGED,
                 durationOnErrorResponse.getMetadata().getComponentState()
         );
     }

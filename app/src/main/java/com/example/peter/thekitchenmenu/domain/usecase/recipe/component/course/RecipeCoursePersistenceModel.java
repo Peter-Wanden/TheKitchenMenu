@@ -1,6 +1,6 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course;
 
-import com.example.peter.thekitchenmenu.domain.model.BasePersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.model.BasePersistenceModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse.Course;
 
 import java.util.ArrayList;
@@ -59,31 +59,31 @@ public final class RecipeCoursePersistenceModel
             PersistenceModelBuilder<Builder, RecipeCoursePersistenceModel> {
 
         public Builder() {
-            persistenceModel = new RecipeCoursePersistenceModel();
+            domainModel = new RecipeCoursePersistenceModel();
         }
 
         @Override
         public Builder getDefault() {
-            persistenceModel.dataId = "";
-            persistenceModel.domainId = "";
-            persistenceModel.courses = new ArrayList<>();
-            persistenceModel.createDate = 0L;
-            persistenceModel.lastUpdate = 0L;
+            domainModel.dataId = "";
+            domainModel.domainId = "";
+            domainModel.courses = new ArrayList<>();
+            domainModel.createDate = 0L;
+            domainModel.lastUpdate = 0L;
             return self();
         }
 
         @Override
-        public Builder basedOnModel(RecipeCoursePersistenceModel persistenceModel) {
-            this.persistenceModel.dataId = persistenceModel.getDataId();
-            this.persistenceModel.domainId = persistenceModel.getDomainId();
-            this.persistenceModel.courses = persistenceModel.getCourses();
-            this.persistenceModel.createDate = persistenceModel.getCreateDate();
-            this.persistenceModel.lastUpdate = persistenceModel.getLastUpdate();
+        public Builder basedOnModel(RecipeCoursePersistenceModel domainModel) {
+            this.domainModel.dataId = domainModel.getDataId();
+            this.domainModel.domainId = domainModel.getDomainId();
+            this.domainModel.courses = domainModel.getCourses();
+            this.domainModel.createDate = domainModel.getCreateDate();
+            this.domainModel.lastUpdate = domainModel.getLastUpdate();
             return self();
         }
 
         public Builder setCourses(List<Course> items) {
-            persistenceModel.courses = items;
+            domainModel.courses = items;
             return self();
         }
 

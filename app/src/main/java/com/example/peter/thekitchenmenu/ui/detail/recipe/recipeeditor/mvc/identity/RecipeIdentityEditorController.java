@@ -3,9 +3,9 @@ package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.mvc.ident
 import androidx.core.util.Pair;
 
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
-import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseHandler;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityRequest;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityUseCaseRequestModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.identity.RecipeIdentityRequestModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentName;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
@@ -86,7 +86,7 @@ public class RecipeIdentityEditorController
         RecipeIdentityRequest request = new RecipeIdentityRequest.Builder().
                 basedOnResponse(response).
                 setDomainModel(
-                        new RecipeIdentityUseCaseRequestModel.
+                        new RecipeIdentityRequestModel.
                                 Builder().
                                 basedOnResponseModel(response.getDomainModel()).
                                 setTitle(title).
@@ -100,7 +100,7 @@ public class RecipeIdentityEditorController
         RecipeIdentityRequest request = new RecipeIdentityRequest.Builder().
                 basedOnResponse(response).
                 setDomainModel(
-                        new RecipeIdentityUseCaseRequestModel.
+                        new RecipeIdentityRequestModel.
                                 Builder().
                                 basedOnResponseModel(response.getDomainModel()).
                                 setDescription(description).

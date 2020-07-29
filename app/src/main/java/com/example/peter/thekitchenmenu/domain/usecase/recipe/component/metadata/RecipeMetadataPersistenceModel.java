@@ -4,8 +4,8 @@ import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.componentstate.RecipeComponentStateEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.failreason.RecipeFailReasonEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.parent.RecipeMetadataParentEntity;
-import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
-import com.example.peter.thekitchenmenu.domain.model.BasePersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.FailReasons;
+import com.example.peter.thekitchenmenu.domain.usecasenew.model.BasePersistenceModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,7 +14,8 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentName;
-import static com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseResult.ComponentState;
+
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.metadata.ComponentState;
 
 /**
  * Represented in primitive form by {@link RecipeMetadataParentEntity},
@@ -73,59 +74,59 @@ public final class RecipeMetadataPersistenceModel
             PersistenceModelBuilder<Builder, RecipeMetadataPersistenceModel> {
 
         public Builder() {
-            persistenceModel = new RecipeMetadataPersistenceModel();
+            domainModel = new RecipeMetadataPersistenceModel();
         }
 
         @Override
         public Builder getDefault() {
-            persistenceModel.dataId = "";
-            persistenceModel.domainId = "";
-            persistenceModel.parentDomainId = "";
-            persistenceModel.componentState = ComponentState.INVALID_UNCHANGED;
-            persistenceModel.componentStates = new HashMap<>();
-            persistenceModel.failReasons = new ArrayList<>();
-            persistenceModel.createdBy = Constants.getUserId();
-            persistenceModel.createDate = 0L;
-            persistenceModel.lastUpdate = 0L;
+            domainModel.dataId = "";
+            domainModel.domainId = "";
+            domainModel.parentDomainId = "";
+            domainModel.componentState = ComponentState.INVALID_UNCHANGED;
+            domainModel.componentStates = new HashMap<>();
+            domainModel.failReasons = new ArrayList<>();
+            domainModel.createdBy = Constants.getUserId();
+            domainModel.createDate = 0L;
+            domainModel.lastUpdate = 0L;
             return self();
         }
 
         @Override
         public Builder basedOnModel(RecipeMetadataPersistenceModel model) {
-            persistenceModel.dataId = model.getDataId();
-            persistenceModel.domainId = model.getDomainId();
-            persistenceModel.parentDomainId = model.getParentDomainId();
-            persistenceModel.componentState = model.getComponentState();
-            persistenceModel.componentStates = model.getComponentStates();
-            persistenceModel.failReasons = model.getFailReasons();
-            persistenceModel.createdBy = model.getCreatedBy();
-            persistenceModel.createDate = model.getCreateDate();
-            persistenceModel.lastUpdate = model.getLastUpdate();
+            domainModel.dataId = model.getDataId();
+            domainModel.domainId = model.getDomainId();
+            domainModel.parentDomainId = model.getParentDomainId();
+            domainModel.componentState = model.getComponentState();
+            domainModel.componentStates = model.getComponentStates();
+            domainModel.failReasons = model.getFailReasons();
+            domainModel.createdBy = model.getCreatedBy();
+            domainModel.createDate = model.getCreateDate();
+            domainModel.lastUpdate = model.getLastUpdate();
             return self();
         }
 
         public Builder setParentDomainId(String parentDomainId) {
-            persistenceModel.parentDomainId = parentDomainId;
+            domainModel.parentDomainId = parentDomainId;
             return self();
         }
 
         public Builder setRecipeState(ComponentState state) {
-            persistenceModel.componentState = state;
+            domainModel.componentState = state;
             return self();
         }
 
         public Builder setComponentStates(HashMap<ComponentName, ComponentState> componentStates) {
-            persistenceModel.componentStates = componentStates;
+            domainModel.componentStates = componentStates;
             return self();
         }
 
         public Builder setFailReasons(List<FailReasons> failReasons) {
-            persistenceModel.failReasons = failReasons;
+            domainModel.failReasons = failReasons;
             return self();
         }
 
         public Builder setCreatedBy(String createdBy) {
-            persistenceModel.createdBy = createdBy;
+            domainModel.createdBy = createdBy;
             return self();
         }
 

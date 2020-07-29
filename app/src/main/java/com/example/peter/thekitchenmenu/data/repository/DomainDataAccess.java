@@ -1,6 +1,6 @@
 package com.example.peter.thekitchenmenu.data.repository;
 
-import com.example.peter.thekitchenmenu.domain.model.DomainModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.model.DomainModel;
 
 import java.util.List;
 
@@ -43,7 +43,7 @@ public interface DomainDataAccess<PERSISTENCE_MODEL extends DomainModel.Persiste
 
     void deleteByDataId(@Nonnull String dataId);
 
-    void deleteAllByDomainId(@Nonnull String domainId);
+    void deleteByDomainId(@Nonnull String domainId);
 
     void deleteAll();
 }

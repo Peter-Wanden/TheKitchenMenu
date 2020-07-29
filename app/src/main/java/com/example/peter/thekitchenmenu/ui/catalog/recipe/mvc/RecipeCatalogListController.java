@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.ui.catalog.recipe.mvc;
 
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
-import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseHandler;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipelist.RecipeList;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipelist.RecipeListRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipelist.RecipeListResponse;

@@ -6,13 +6,12 @@ import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipeM
 import com.example.peter.thekitchenmenu.data.repository.recipe.metadata.TestDataRecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.model.UseCaseMetadataModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
-import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseResult;
-import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.CommonFailReason;
-import com.example.peter.thekitchenmenu.domain.usecase.common.failreasons.FailReasons;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.UseCaseHandler;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.CommonFailReason;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentName;
-import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseResult.ComponentState;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.metadata.ComponentState;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.FailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataPersistenceModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataRequest;
@@ -322,7 +321,7 @@ public class RecipeMetadataTest {
         // assert response
         UseCaseMetadataModel metadata = onErrorResponse.getMetadata();
 
-        ComponentState expectedComponentState = UseCaseResult.ComponentState.INVALID_CHANGED;
+        ComponentState expectedComponentState = ComponentState.INVALID_CHANGED;
         ComponentState actualComponentState = metadata.getComponentState();
         assertEquals(
                 expectedComponentState,
@@ -538,7 +537,7 @@ public class RecipeMetadataTest {
         // Assert
         UseCaseMetadataModel metadata = onErrorResponse.getMetadata();
 
-        ComponentState expectedComponentState = UseCaseResult.ComponentState.INVALID_CHANGED;
+        ComponentState expectedComponentState = ComponentState.INVALID_CHANGED;
         ComponentState actualComponentState = metadata.getComponentState();
         assertEquals(
                 expectedComponentState,
@@ -565,7 +564,7 @@ public class RecipeMetadataTest {
         // Assert response
         UseCaseMetadataModel metadata = onErrorResponse.getMetadata();
 
-        ComponentState expectedComponentState = UseCaseResult.ComponentState.INVALID_UNCHANGED;
+        ComponentState expectedComponentState = ComponentState.INVALID_UNCHANGED;
         ComponentState actualComponentState = metadata.getComponentState();
         assertEquals(
                 expectedComponentState,
@@ -601,7 +600,7 @@ public class RecipeMetadataTest {
 
         UseCaseMetadataModel metadata = onErrorResponse.getMetadata();
 
-        ComponentState expectedComponentState = UseCaseResult.ComponentState.INVALID_UNCHANGED;
+        ComponentState expectedComponentState = ComponentState.INVALID_UNCHANGED;
         ComponentState actualComponentState = metadata.getComponentState();
         assertEquals(
                 expectedComponentState,
@@ -635,7 +634,7 @@ public class RecipeMetadataTest {
 
         UseCaseMetadataModel metadata = onErrorResponse.getMetadata();
 
-        ComponentState expectedComponentState = UseCaseResult.ComponentState.INVALID_CHANGED;
+        ComponentState expectedComponentState = ComponentState.INVALID_CHANGED;
         ComponentState actualComponentState = metadata.getComponentState();
         assertEquals(
                 expectedComponentState,
@@ -669,7 +668,7 @@ public class RecipeMetadataTest {
 
         UseCaseMetadataModel metadata = onSuccessResponse.getMetadata();
 
-        ComponentState expectedComponentState = UseCaseResult.ComponentState.VALID_UNCHANGED;
+        ComponentState expectedComponentState = ComponentState.VALID_UNCHANGED;
         ComponentState actualComponentState = metadata.getComponentState();
         assertEquals(
                 expectedComponentState,
@@ -696,7 +695,7 @@ public class RecipeMetadataTest {
         // Assert
         UseCaseMetadataModel metadata = onSuccessResponse.getMetadata();
 
-        ComponentState expectedComponentState = UseCaseResult.ComponentState.VALID_UNCHANGED;
+        ComponentState expectedComponentState = ComponentState.VALID_UNCHANGED;
         ComponentState actualComponentState = metadata.getComponentState();
         assertEquals(
                 expectedComponentState,
@@ -730,7 +729,7 @@ public class RecipeMetadataTest {
 
         UseCaseMetadataModel metadata = onSuccessResponse.getMetadata();
 
-        ComponentState expectedComponentState = UseCaseResult.ComponentState.VALID_CHANGED;
+        ComponentState expectedComponentState = ComponentState.VALID_CHANGED;
         ComponentState actualComponentState = metadata.getComponentState();
         assertEquals(
                 expectedComponentState,
@@ -765,7 +764,7 @@ public class RecipeMetadataTest {
 
         UseCaseMetadataModel metadata = onErrorResponse.getMetadata();
 
-        ComponentState expectedModelUnderTestOneState = UseCaseResult.ComponentState.INVALID_UNCHANGED;
+        ComponentState expectedModelUnderTestOneState = ComponentState.INVALID_UNCHANGED;
         ComponentState actualModelUnderTestOneState = metadata.getComponentState();
         assertEquals(
                 expectedModelUnderTestOneState,

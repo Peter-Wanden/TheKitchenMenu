@@ -53,7 +53,7 @@ public class RepositoryRecipeCourseRemote
     }
 
     @Override
-    public void deleteAllByDomainId(@Nonnull String domainId) {
+    public void deleteByDomainId(@Nonnull String domainId) {
 
     }
 

@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.domain.usecase.ingredient;
 
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.UnitOfMeasureConstants;
-import com.example.peter.thekitchenmenu.domain.model.BasePersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.model.BasePersistenceModel;
 
 import java.util.Objects;
 
@@ -70,52 +70,52 @@ public final class IngredientPersistenceModel
             PersistenceModelBuilder<Builder, IngredientPersistenceModel> {
 
         public Builder() {
-            persistenceModel = new IngredientPersistenceModel();
+            domainModel = new IngredientPersistenceModel();
         }
 
         @Override
         public Builder getDefault() {
-            persistenceModel.dataId = "";
-            persistenceModel.domainId = NO_ID;
-            persistenceModel.name = "";
-            persistenceModel.description = "";
-            persistenceModel.conversionFactor = UnitOfMeasureConstants.DEFAULT_CONVERSION_FACTOR;
-            persistenceModel.createdBy = Constants.getUserId();
-            persistenceModel.createDate = 0L;
-            persistenceModel.lastUpdate = 0L;
+            domainModel.dataId = "";
+            domainModel.domainId = NO_ID;
+            domainModel.name = "";
+            domainModel.description = "";
+            domainModel.conversionFactor = UnitOfMeasureConstants.DEFAULT_CONVERSION_FACTOR;
+            domainModel.createdBy = Constants.getUserId();
+            domainModel.createDate = 0L;
+            domainModel.lastUpdate = 0L;
             return self();
         }
 
         @Override
         public Builder basedOnModel(@Nonnull IngredientPersistenceModel m) {
-            persistenceModel.dataId = m.getDataId();
-            persistenceModel.domainId = m.getDomainId();
-            persistenceModel.name = m.getName();
-            persistenceModel.description = m.getDescription();
-            persistenceModel.conversionFactor = m.getConversionFactor();
-            persistenceModel.createdBy = m.getCreatedBy();
-            persistenceModel.createDate = m.getCreateDate();
-            persistenceModel.lastUpdate = m.getLastUpdate();
+            domainModel.dataId = m.getDataId();
+            domainModel.domainId = m.getDomainId();
+            domainModel.name = m.getName();
+            domainModel.description = m.getDescription();
+            domainModel.conversionFactor = m.getConversionFactor();
+            domainModel.createdBy = m.getCreatedBy();
+            domainModel.createDate = m.getCreateDate();
+            domainModel.lastUpdate = m.getLastUpdate();
             return self();
         }
 
         public Builder setName(String name) {
-            persistenceModel.name = name;
+            domainModel.name = name;
             return self();
         }
 
         public Builder setDescription(String description) {
-            persistenceModel.description = description;
+            domainModel.description = description;
             return self();
         }
 
         public Builder setConversionFactor(double conversionFactor) {
-            persistenceModel.conversionFactor = conversionFactor;
+            domainModel.conversionFactor = conversionFactor;
             return self();
         }
 
         public Builder setCreatedBy(String createdBy) {
-            persistenceModel.createdBy = createdBy;
+            domainModel.createdBy = createdBy;
             return self();
         }
 

@@ -1,9 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage;
 
-import com.example.peter.thekitchenmenu.domain.model.BaseDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.model.BaseDomainModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
-
-import java.util.Objects;
 
 /**
  * Base class for all request and response messages which operate on domain data.
