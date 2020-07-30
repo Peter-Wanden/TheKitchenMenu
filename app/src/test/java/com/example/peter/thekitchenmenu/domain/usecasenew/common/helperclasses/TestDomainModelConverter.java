@@ -20,7 +20,7 @@ public class TestDomainModelConverter
     }
 
     @Override
-    public TestUseCaseInternalModel convertPersistenceToDomainModel(
+    public TestUseCaseInternalModel convertPersistenceToUseCaseModel(
             @Nonnull TestUseCasePersistenceModel persistenceModel) {
         return new TestUseCaseInternalModel(persistenceModel.getPersistenceModelString());
     }
@@ -32,9 +32,10 @@ public class TestDomainModelConverter
     }
 
     @Override
-    public TestUseCasePersistenceModel createNewPersistenceModel(
+    public TestUseCasePersistenceModel convertUseCaseToPersistenceModel(
             @Nonnull String domainId,
             @Nonnull TestUseCaseInternalModel useCaseModel) {
+
         long currentTime = timeProvider.getCurrentTimeInMills();
         return new TestUseCasePersistenceModel.Builder()
                 .setDataId(idProvider.getUId())
@@ -48,6 +49,7 @@ public class TestDomainModelConverter
     @Override
     public TestUseCasePersistenceModel createArchivedPersistenceModel(
             @Nonnull TestUseCasePersistenceModel oldPersistenceModel) {
+
         return new TestUseCasePersistenceModel.Builder()
                 .basedOnModel(oldPersistenceModel)
                 .setLastUpdate(timeProvider.getCurrentTimeInMills())

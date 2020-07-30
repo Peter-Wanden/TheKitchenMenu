@@ -133,7 +133,7 @@ public abstract class UseCaseData<
 
     private USE_CASE_MODEL createUseCaseModelFromPersistenceModel(
             @Nonnull PERSISTENCE_MODEL model) {
-        return modelConverter.convertPersistenceToDomainModel(model);
+        return modelConverter.convertPersistenceToUseCaseModel(model);
     }
 
     private void setupForRequestModelProcessing() {
@@ -151,7 +151,7 @@ public abstract class UseCaseData<
     }
 
     protected void createNewPersistenceModel() {
-        persistenceModel = modelConverter.createNewPersistenceModel(useCaseDomainId, useCaseModel);
+        persistenceModel = modelConverter.convertUseCaseToPersistenceModel(useCaseDomainId, useCaseModel);
         dataAccess.save(persistenceModel);
     }
 
@@ -160,7 +160,7 @@ public abstract class UseCaseData<
             archivePreviousPersistenceModel();
             persistenceModel = modelConverter.updatePersistenceModel(persistenceModel, useCaseModel);
         } else {
-            persistenceModel = modelConverter.createNewPersistenceModel(useCaseDomainId, useCaseModel);
+            persistenceModel = modelConverter.convertUseCaseToPersistenceModel(useCaseDomainId, useCaseModel);
         }
         useCaseDataId = persistenceModel.getDataId();
         dataAccess.save(persistenceModel);

@@ -10,11 +10,11 @@ import javax.annotation.Nonnull;
 
 public abstract class BusinessEntity<ENTITY_MODEL extends DomainModel.EntityModel> {
 
-    public static class Request<ENTITY_MODEL extends DomainModel.EntityModel> {
+    public static class EntityRequest<ENTITY_MODEL extends DomainModel.EntityModel> {
         @Nonnull
         private final ENTITY_MODEL model;
 
-        public Request(@Nonnull ENTITY_MODEL model) {
+        public EntityRequest(@Nonnull ENTITY_MODEL model) {
             this.model = model;
         }
 
@@ -24,13 +24,13 @@ public abstract class BusinessEntity<ENTITY_MODEL extends DomainModel.EntityMode
         }
     }
 
-    public static class Response<ENTITY_MODEL extends DomainModel.EntityModel> {
+    public static class EntityResponse<ENTITY_MODEL extends DomainModel.EntityModel> {
         @Nonnull
         private final ENTITY_MODEL model;
         @Nonnull
         private final List<FailReasons> failReasons;
 
-        public Response(@Nonnull ENTITY_MODEL model, @Nonnull List<FailReasons> failReasons) {
+        public EntityResponse(@Nonnull ENTITY_MODEL model, @Nonnull List<FailReasons> failReasons) {
             this.model = model;
             this.failReasons = failReasons;
         }
@@ -46,17 +46,17 @@ public abstract class BusinessEntity<ENTITY_MODEL extends DomainModel.EntityMode
         }
     }
 
-    public interface Callback<RESPONSE> {
+    public interface EntityCallback<RESPONSE> {
         void onProcessed(RESPONSE response);
     }
 
-    protected Request<ENTITY_MODEL> request;
+    protected EntityRequest<ENTITY_MODEL> request;
     protected ENTITY_MODEL model;
     protected List<FailReasons> failReasons;
-    protected Callback<Response<ENTITY_MODEL>> callback;
+    protected EntityCallback<EntityResponse<ENTITY_MODEL>> callback;
 
-    public void execute(Request<ENTITY_MODEL> request,
-                        Callback<Response<ENTITY_MODEL>> callback) {
+    public void execute(EntityRequest<ENTITY_MODEL> request,
+                        EntityCallback<EntityResponse<ENTITY_MODEL>> callback) {
         this.request = request;
         this.model = request.getModel();
         this.failReasons = new ArrayList<>();

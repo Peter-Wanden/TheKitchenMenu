@@ -66,13 +66,13 @@ public interface DomainModel {
             this.idProvider = idProvider;
         }
 
-        public abstract USE_CASE_MODEL convertPersistenceToDomainModel(
+        public abstract USE_CASE_MODEL convertPersistenceToUseCaseModel(
                 @Nonnull PERSISTENCE_MODEL model);
 
         public abstract USE_CASE_MODEL convertRequestToUseCaseModel(
                 @Nonnull REQUEST_MODEL model);
 
-        public abstract PERSISTENCE_MODEL createNewPersistenceModel(
+        public abstract PERSISTENCE_MODEL convertUseCaseToPersistenceModel(
                 @Nonnull String domainId,
                 @Nonnull USE_CASE_MODEL useCaseModel);
 

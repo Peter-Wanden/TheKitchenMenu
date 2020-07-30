@@ -108,7 +108,7 @@ public abstract class UseCaseData<
         useCaseDomainId = model.getDomainId();
 
         persistenceModel = model;
-        useCaseModel = modelConverter.convertPersistenceToDomainModel(model);
+        useCaseModel = modelConverter.convertPersistenceToUseCaseModel(model);
         initialiseUseCase();
     }
 
@@ -127,7 +127,7 @@ public abstract class UseCaseData<
             archivePreviousPersistenceModel();
             persistenceModel = modelConverter.updatePersistenceModel(persistenceModel, useCaseModel);
         } else {
-            persistenceModel = modelConverter.createNewPersistenceModel(useCaseDomainId, useCaseModel);
+            persistenceModel = modelConverter.convertUseCaseToPersistenceModel(useCaseDomainId, useCaseModel);
         }
         useCaseDataId = persistenceModel.getDataId();
         dataAccess.save(persistenceModel);
