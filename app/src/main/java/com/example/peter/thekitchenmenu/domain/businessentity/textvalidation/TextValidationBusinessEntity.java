@@ -1,6 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.businessentity.textvalidation;
 
 import com.example.peter.thekitchenmenu.domain.businessentity.BusinessEntity;
+import com.example.peter.thekitchenmenu.domain.businessentity.EntityResponse;
 
 public class TextValidationBusinessEntity
         extends

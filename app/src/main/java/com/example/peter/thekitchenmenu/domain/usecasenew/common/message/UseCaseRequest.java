@@ -4,21 +4,16 @@ import com.example.peter.thekitchenmenu.domain.usecasenew.model.DomainModel;
 
 import javax.annotation.Nonnull;
 
-public final class UseCaseRequest
+public class UseCaseRequest
         <REQUEST_MODEL extends DomainModel.RequestModel>
         implements
         DomainModel.RequestModel {
 
-    private String dataId;
-    private String domainId;
-    private REQUEST_MODEL requestModel;
+    protected String dataId;
+    protected String domainId;
+    protected REQUEST_MODEL requestModel;
 
-    private UseCaseRequest() {}
-
-    private UseCaseRequest(String dataId, String domainId, REQUEST_MODEL requestModel) {
-        this.dataId = dataId;
-        this.domainId = domainId;
-        this.requestModel = requestModel;
+    protected UseCaseRequest() {
     }
 
     public String getDataId() {
@@ -43,43 +38,43 @@ public final class UseCaseRequest
                 '}';
     }
 
-    public static class Builder
-            <REQUEST_MODEL extends DomainModel.RequestModel> {
+    public static abstract class Builder<
+            SELF extends Builder<SELF, REQUEST, REQUEST_MODEL>,
+            REQUEST extends UseCaseRequest<REQUEST_MODEL>,
+            REQUEST_MODEL extends DomainModel.RequestModel> {
 
-        private UseCaseRequest<REQUEST_MODEL> useCaseRequest;
+        protected REQUEST useCaseRequest;
 
-        public Builder() {
-            useCaseRequest = new UseCaseRequest<>();
+        public Builder(REQUEST useCaseRequest) {
+            this.useCaseRequest = useCaseRequest;
         }
 
-        public Builder<REQUEST_MODEL> getDefault() {
+        public SELF getDefault() {
             useCaseRequest.dataId = "";
             useCaseRequest.domainId = "";
             useCaseRequest.requestModel = null;
-            return this;
+            return self();
         }
 
-        public Builder<REQUEST_MODEL> setDataId(String dataId) {
+        public SELF setDataId(String dataId) {
             useCaseRequest.dataId = dataId;
-            return this;
+            return self();
         }
 
-        public Builder<REQUEST_MODEL> setDomainId(String domainId) {
+        public SELF setDomainId(String domainId) {
             useCaseRequest.domainId = domainId;
-            return this;
+            return self();
         }
 
-        public Builder<REQUEST_MODEL> setRequestModel(REQUEST_MODEL requestModel) {
+        public SELF setRequestModel(REQUEST_MODEL requestModel) {
             useCaseRequest.requestModel = requestModel;
-            return this;
+            return self();
         }
 
-        public UseCaseRequest<REQUEST_MODEL> build() {
-            return new UseCaseRequest<>(
-                    useCaseRequest.dataId,
-                    useCaseRequest.domainId,
-                    useCaseRequest.requestModel
-            );
+        public REQUEST build() {
+            return useCaseRequest;
         }
+
+        public abstract SELF self(); // when implementing return this
     }
 }

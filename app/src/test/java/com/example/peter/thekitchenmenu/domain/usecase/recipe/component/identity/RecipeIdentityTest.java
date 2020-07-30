@@ -88,7 +88,6 @@ public class RecipeIdentityTest {
     @Test
     public void newRequest_stateINVALID_DEFAULT_failReasonDATA_UNAVAILABLE() {
         // Arrange
-        // This is the initial pre-test setup request for most tests cases, so check all return
         // values
         RecipeIdentityUseCasePersistenceModel modelUnderTest = TestDataRecipeIdentity.
                 getNewInvalidActiveDefault();
@@ -111,7 +110,6 @@ public class RecipeIdentityTest {
         // verify no save
         verifyNoMoreInteractions(repoIdentityMock);
 
-        // Assert
         RecipeIdentityResponse response = identityOnErrorResponse;
         UseCaseMetadataModel metadata = response.getMetadata();
 

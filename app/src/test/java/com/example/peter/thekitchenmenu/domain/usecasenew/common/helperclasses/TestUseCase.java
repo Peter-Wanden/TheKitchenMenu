@@ -31,12 +31,13 @@ public class TestUseCase
 
     /**
      * This is where the business application logic goes, also any calls to business entities.
-     * To keep things simple the use case application logic performs a length check on a string.
+     * To keep things simple the use case application logic in this test class performs a length
+     * check on a string.
      *
-     * @return return true only after all data elements have been processed.
+     * When processing is complete call domainDataElementProcessingComplete()
      */
     @Override
-    protected boolean isDomainDataElementsProcessed() {
+    protected void beginProcessingDomainDataElements() {
         if (useCaseModel.getUseCaseModelString() == null) {
             failReasons.add(TestUseCaseFailReasons.TEXT_NULL);
         } else if (useCaseModel.getUseCaseModelString().length() < MIN_STRING_LENGTH) {
@@ -44,7 +45,7 @@ public class TestUseCase
         } else if (useCaseModel.getUseCaseModelString().length() > MAX_STRING_LENGTH) {
             failReasons.add(TestUseCaseFailReasons.TEXT_TOO_LONG);
         }
-        return true;
+        domainDataElementProcessingComplete();
     }
 
     /**

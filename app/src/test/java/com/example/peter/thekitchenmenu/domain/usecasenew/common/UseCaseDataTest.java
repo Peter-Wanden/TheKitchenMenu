@@ -5,13 +5,13 @@ import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess.GetDoma
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.helperclasses.TestDomainModelConverter;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.helperclasses.TestRequest;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.helperclasses.TestRequestModel;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.helperclasses.TestResponseModel;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.helperclasses.TestUseCase;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.helperclasses.TestUseCaseDataAccess;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.helperclasses.TestUseCasePersistenceModel;
-import com.example.peter.thekitchenmenu.domain.usecasenew.common.helperclasses.TestRequestModel;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.message.UseCaseCallback;
-import com.example.peter.thekitchenmenu.domain.usecasenew.common.message.UseCaseRequest;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.message.UseCaseResponse;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.metadata.UseCaseMetadataModel;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
@@ -76,7 +76,7 @@ public class UseCaseDataTest {
     public void emptyUseCase_requestHasNoDataIds_failReasonDATA_UNAVAILABLE() {
         // Arrange
         // A default 'empty' request returns the current state and domain data of the use case.
-        UseCaseRequest<TestRequestModel> request = new UseCaseRequest.Builder<TestRequestModel>()
+        TestRequest request = new TestRequest.Builder()
                 .getDefault()
                 .build();
         // Act
@@ -100,7 +100,7 @@ public class UseCaseDataTest {
     @Test
     public void emptyUseCase_requestHasNoDataIdHasDomainId_getPersistenceModelByDomainId() {
         // Arrange
-        UseCaseRequest<TestRequestModel> request = new UseCaseRequest.Builder<TestRequestModel>()
+        TestRequest request = new TestRequest.Builder()
                 .getDefault()
                 .setDomainId(DOMAIN_ID)
                 .build();
@@ -113,7 +113,7 @@ public class UseCaseDataTest {
     @Test
     public void emptyUseCase_requestHasDataIdNoDomainId_getPersistenceModelByDataId() {
         // Arrange
-        UseCaseRequest<TestRequestModel> request = new UseCaseRequest.Builder<TestRequestModel>()
+        TestRequest request = new TestRequest.Builder()
                 .getDefault()
                 .setDataId(DATA_ID)
                 .build();
@@ -126,7 +126,7 @@ public class UseCaseDataTest {
     @Test
     public void emptyUseCase_requestHasDataIdHasDomainId_getPersistenceModelByDataId() {
         // Arrange
-        UseCaseRequest<TestRequestModel> request = new UseCaseRequest.Builder<TestRequestModel>()
+        TestRequest request = new TestRequest.Builder()
                 .getDefault()
                 .setDataId(DATA_ID)
                 .setDomainId(DOMAIN_ID)
@@ -140,7 +140,7 @@ public class UseCaseDataTest {
     @Test
     public void emptyUseCase_loadByDataId_dataUnavailable() {
         // Arrange
-        UseCaseRequest<TestRequestModel> request = new UseCaseRequest.Builder<TestRequestModel>()
+        TestRequest request = new TestRequest.Builder()
                 .getDefault()
                 .setDataId(DATA_ID)
                 .build();
@@ -175,7 +175,7 @@ public class UseCaseDataTest {
                 .setLastUpdate(20L)
                 .build();
 
-        UseCaseRequest<TestRequestModel> request = new UseCaseRequest.Builder<TestRequestModel>()
+        TestRequest request = new TestRequest.Builder()
                 .getDefault()
                 .setDataId(DATA_ID)
                 .build();
@@ -220,7 +220,7 @@ public class UseCaseDataTest {
         emptyUseCase_loadByDataId_persistenceModelLoaded(); // load data into the use case
 
         // default request to return current internal domain data
-        UseCaseRequest<TestRequestModel> request = new UseCaseRequest.Builder<TestRequestModel>()
+        TestRequest request = new TestRequest.Builder()
                 .getDefault()
                 .build();
         // Act
@@ -260,7 +260,7 @@ public class UseCaseDataTest {
         String expectedModelValue = "expectedModelValue";
 
         // loads request model string into use case
-        UseCaseRequest<TestRequestModel> request = new UseCaseRequest.Builder<TestRequestModel>()
+        TestRequest request = new TestRequest.Builder()
                 .getDefault()
                 .setDomainId(DOMAIN_ID)
                 .setRequestModel(new TestRequestModel.Builder()
@@ -296,7 +296,7 @@ public class UseCaseDataTest {
         // loads persistence model into use case
         emptyUseCase_loadByDataId_persistenceModelLoaded();
 
-        UseCaseRequest<TestRequestModel> request = new UseCaseRequest.Builder<TestRequestModel>()
+        TestRequest request = new TestRequest.Builder()
                 .setDomainId(DIFFERENT_DOMAIN_ID)
                 .build();
         // Act
@@ -311,7 +311,7 @@ public class UseCaseDataTest {
         // loads persistence model into use case
         emptyUseCase_loadByDataId_persistenceModelLoaded();
 
-        UseCaseRequest<TestRequestModel> request = new UseCaseRequest.Builder<TestRequestModel>()
+        TestRequest request = new TestRequest.Builder()
                 .getDefault()
                 .setDataId(DATA_ID)
                 .setRequestModel(new TestRequestModel.Builder()
@@ -340,7 +340,7 @@ public class UseCaseDataTest {
         // loads persistence model string into use case
         emptyUseCase_loadByDataId_persistenceModelLoaded();
 
-        UseCaseRequest<TestRequestModel> request = new UseCaseRequest.Builder<TestRequestModel>()
+        TestRequest request = new TestRequest.Builder()
                 .getDefault()
                 .setDataId(DIFFERENT_DATA_ID)
                 .build();
@@ -357,7 +357,7 @@ public class UseCaseDataTest {
         emptyUseCase_loadByDataId_persistenceModelLoaded();
 
         String expectedResponseModelValue = "expectedResponseModelValue";
-        UseCaseRequest<TestRequestModel> request = new UseCaseRequest.Builder<TestRequestModel>()
+        TestRequest request = new TestRequest.Builder()
                 .getDefault()
                 .setDataId(DATA_ID)
                 .setDomainId(DOMAIN_ID)
@@ -380,7 +380,7 @@ public class UseCaseDataTest {
         // loads persistence model into use case
         emptyUseCase_loadByDataId_persistenceModelLoaded();
 
-        UseCaseRequest<TestRequestModel> request = new UseCaseRequest.Builder<TestRequestModel>()
+        TestRequest request = new TestRequest.Builder()
                 .getDefault()
                 .setDataId(DIFFERENT_DATA_ID)
                 .setDomainId(DOMAIN_ID)
@@ -404,7 +404,7 @@ public class UseCaseDataTest {
                 .setLastUpdate(10L)
                 .build();
 
-        UseCaseRequest<TestRequestModel> request = new UseCaseRequest.Builder<TestRequestModel>()
+        TestRequest request = new TestRequest.Builder()
                 .setDataId(persistenceModel.getDataId())
                 .build();
         // Act
@@ -451,7 +451,7 @@ public class UseCaseDataTest {
                 .setLastUpdate(10L)
                 .build();
 
-        UseCaseRequest<TestRequestModel> request = new UseCaseRequest.Builder<TestRequestModel>()
+        TestRequest request = new TestRequest.Builder()
                 .setDomainId(initialModel.getDomainId())
                 .build();
 
@@ -480,7 +480,7 @@ public class UseCaseDataTest {
                 .setLastUpdate(20L)
                 .build();
 
-        UseCaseRequest<TestRequestModel> changeDomainDataRequest = new UseCaseRequest.Builder<TestRequestModel>()
+        TestRequest changeDomainDataRequest = new TestRequest.Builder()
                         .setDataId(onSuccessResponse.getDataId())
                         .setDomainId(onSuccessResponse.getDomainId())
                         .setRequestModel(new TestRequestModel.Builder()

@@ -2,8 +2,8 @@ package com.example.peter.thekitchenmenu.domain.businessentity.textvalidation;
 
 import com.example.peter.thekitchenmenu.commonmocks.StringMaker;
 import com.example.peter.thekitchenmenu.domain.businessentity.BusinessEntity.EntityCallback;
-import com.example.peter.thekitchenmenu.domain.businessentity.BusinessEntity.EntityRequest;
-import com.example.peter.thekitchenmenu.domain.businessentity.BusinessEntity.EntityResponse;
+import com.example.peter.thekitchenmenu.domain.businessentity.EntityRequest;
+import com.example.peter.thekitchenmenu.domain.businessentity.EntityResponse;
 import com.example.peter.thekitchenmenu.domain.businessentity.textvalidation.TextValidationBusinessEntity.TextLength;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.FailReasons;
 
@@ -149,7 +149,7 @@ public class TextValidationBusinessEntityTest {
         // Act
         SUT.execute(request, new EntityCallbackClient());
         // Assert
-        assertEquals(0, failReasons.size());
+        assertTrue(failReasons.isEmpty());
     }
 
     @Test
@@ -160,7 +160,7 @@ public class TextValidationBusinessEntityTest {
         // Act
         SUT.execute(request, new EntityCallbackClient());
         // Assert
-        assertEquals(0, failReasons.size());
+        assertTrue(failReasons.isEmpty());
     }
 
     @Test
@@ -176,7 +176,9 @@ public class TextValidationBusinessEntityTest {
         // Act
         SUT.execute(request, new EntityCallbackClient());
         // Assert
-        List<FailReasons> expectedFailReasons = Collections.singletonList(TextValidationFailReason.TEXT_TOO_LONG);
+        List<FailReasons> expectedFailReasons = Collections.singletonList(
+                TextValidationFailReason.TEXT_TOO_LONG
+        );
         List<FailReasons> actualFailReasons = failReasons;
         assertEquals(
                 expectedFailReasons,

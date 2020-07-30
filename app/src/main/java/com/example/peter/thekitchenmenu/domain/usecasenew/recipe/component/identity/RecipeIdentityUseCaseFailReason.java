@@ -7,7 +7,7 @@ import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.Fai
 import java.util.HashMap;
 import java.util.Map;
 
-public enum RecipeIdentityUseCaseFailReasons
+public enum RecipeIdentityUseCaseFailReason
         implements
         FailReasons {
     TITLE_NULL(300),
@@ -20,18 +20,18 @@ public enum RecipeIdentityUseCaseFailReasons
     private final int id;
 
     @SuppressLint("UseSparseArrays")
-    private static Map<Integer, RecipeIdentityUseCaseFailReasons> options = new HashMap<>();
+    private static Map<Integer, RecipeIdentityUseCaseFailReason> options = new HashMap<>();
 
-    RecipeIdentityUseCaseFailReasons(int id) {
+    RecipeIdentityUseCaseFailReason(int id) {
         this.id = id;
     }
 
     static {
-        for (RecipeIdentityUseCaseFailReasons s : RecipeIdentityUseCaseFailReasons.values())
+        for (RecipeIdentityUseCaseFailReason s : RecipeIdentityUseCaseFailReason.values())
             options.put(s.id, s);
     }
 
-    public static RecipeIdentityUseCaseFailReasons getById(int id) {
+    public static RecipeIdentityUseCaseFailReason getById(int id) {
         return options.get(id);
     }
 

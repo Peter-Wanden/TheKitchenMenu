@@ -17,10 +17,10 @@ public abstract class UseCaseMessageModelBase<
         return model;
     }
 
-    public static abstract class MessageModelBuilder
-            <SELF extends MessageModelBuilder<SELF, MESSAGE, DOMAIN_MODEL>,
-                    MESSAGE extends UseCaseMessageModelBase<DOMAIN_MODEL>,
-                    DOMAIN_MODEL extends BaseDomainModel> {
+    public static abstract class MessageModelBuilder<
+            SELF extends MessageModelBuilder<SELF, MESSAGE, DOMAIN_MODEL>,
+            MESSAGE extends UseCaseMessageModelBase<DOMAIN_MODEL>,
+            DOMAIN_MODEL extends BaseDomainModel> {
 
         protected MESSAGE message;
 

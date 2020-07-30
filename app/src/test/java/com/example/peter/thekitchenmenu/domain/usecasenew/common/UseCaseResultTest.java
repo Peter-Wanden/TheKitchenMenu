@@ -6,17 +6,17 @@ import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess.GetDoma
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.helperclasses.TestDomainModelConverter;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.helperclasses.TestRequest;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.helperclasses.TestRequestModel;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.helperclasses.TestResponseModel;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.helperclasses.TestUseCase;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.helperclasses.TestUseCaseDataAccess;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.helperclasses.TestUseCaseFailReasons;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.helperclasses.TestUseCasePersistenceModel;
-import com.example.peter.thekitchenmenu.domain.usecasenew.common.helperclasses.TestRequestModel;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.message.UseCaseCallback;
-import com.example.peter.thekitchenmenu.domain.usecasenew.common.message.UseCaseRequest;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.message.UseCaseResponse;
-import com.example.peter.thekitchenmenu.domain.usecasenew.common.metadata.UseCaseMetadataModel;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.metadata.ComponentState;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.metadata.UseCaseMetadataModel;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
@@ -75,7 +75,7 @@ public class UseCaseResultTest {
         // Arrange
         // an invalid default state occurs when the default values in the use case are invalid, and
         // the request has no data id's, and a persistence model has not loaded
-        UseCaseRequest<TestRequestModel> request = new UseCaseRequest.Builder<TestRequestModel>()
+        TestRequest request = new TestRequest.Builder()
                 .getDefault()
                 .build();
         // set the default use case domain model value to be invalid
@@ -119,7 +119,7 @@ public class UseCaseResultTest {
         // Arrange
         // a valid default state occurs when the default values in the use case are valid, and
         // and the request has no data id's, and a persistence model has not loaded
-        UseCaseRequest<TestRequestModel> request = new UseCaseRequest.Builder<TestRequestModel>()
+        TestRequest request = new TestRequest.Builder()
                 .getDefault()
                 .build();
         // the default state of the use case domain model is a valid state, so no need to set it
@@ -166,7 +166,7 @@ public class UseCaseResultTest {
                 .setLastUpdate(10L)
                 .build();
 
-        UseCaseRequest<TestRequestModel> initialRequest = new UseCaseRequest.Builder<TestRequestModel>()
+        TestRequest initialRequest = new TestRequest.Builder()
                 .setDataId(validPersistenceModel.getDataId())
                 .build();
 
@@ -202,7 +202,7 @@ public class UseCaseResultTest {
         newRequest_loadValidPersistenceModel_stateVALID_UNCHANGED_failReasonNONE();
 
         // now change the domain model value to a new valid value
-        UseCaseRequest<TestRequestModel> validDomainModelRequest = new UseCaseRequest.Builder<TestRequestModel>()
+        TestRequest validDomainModelRequest = new TestRequest.Builder()
                 .setDataId(onSuccessResponse.getDataId())
                 .setDomainId(onSuccessResponse.getDomainId())
                 .setRequestModel(
@@ -250,7 +250,7 @@ public class UseCaseResultTest {
                 .setLastUpdate(10L)
                 .build();
 
-        UseCaseRequest<TestRequestModel> request = new UseCaseRequest.Builder<TestRequestModel>()
+        TestRequest request = new TestRequest.Builder()
                 .setDataId(invalidPersistenceModel.getDataId())
                 .build();
 
@@ -287,7 +287,7 @@ public class UseCaseResultTest {
         // load a persistence model
         newRequest_loadValidPersistenceModel_stateVALID_UNCHANGED_failReasonNONE();
 
-        UseCaseRequest<TestRequestModel> request = new UseCaseRequest.Builder<TestRequestModel>()
+        TestRequest request = new TestRequest.Builder()
                 .setDataId(onSuccessResponse.getDataId())
                 .setDomainId(onSuccessResponse.getDomainId())
                 .setRequestModel(

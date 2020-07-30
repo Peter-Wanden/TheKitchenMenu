@@ -39,16 +39,17 @@ public abstract class UseCaseResult<
     @Override
     protected void initialiseUseCase() {
         failReasons.clear();
-
-        if (isDomainDataElementsProcessed()) {
-            if (isChanged && isValid()) {
-                saveChanges();
-            }
-            buildResponse();
-        }
+        beginProcessingDomainDataElements();
     }
 
-    protected abstract boolean isDomainDataElementsProcessed();
+    protected abstract void beginProcessingDomainDataElements();
+
+    protected void domainDataElementProcessingComplete() {
+        if (isChanged && isValid()) {
+            saveChanges();
+        }
+        buildResponse();
+    }
 
     protected void buildResponse() {
         sendResponse(new UseCaseResponse.Builder<RESPONSE_MODEL>()
