@@ -37,7 +37,7 @@ public class TestUseCase
      * When processing is complete call domainDataElementProcessingComplete()
      */
     @Override
-    protected void beginProcessingDomainDataElements() {
+    protected void beginProcessingDomainModel() {
         if (useCaseModel.getUseCaseModelString() == null) {
             failReasons.add(TestUseCaseFailReasons.TEXT_NULL);
         } else if (useCaseModel.getUseCaseModelString().length() < MIN_STRING_LENGTH) {
@@ -45,7 +45,7 @@ public class TestUseCase
         } else if (useCaseModel.getUseCaseModelString().length() > MAX_STRING_LENGTH) {
             failReasons.add(TestUseCaseFailReasons.TEXT_TOO_LONG);
         }
-        domainDataElementProcessingComplete();
+        domainModelProcessingComplete();
     }
 
     /**

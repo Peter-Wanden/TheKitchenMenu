@@ -5,7 +5,7 @@ import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.Use
 import com.example.peter.thekitchenmenu.domain.usecasenew.model.BaseDomainModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.model.UseCaseMetadataModel;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse.Course;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.course.Course;
 
 import java.util.ArrayList;
 import java.util.List;

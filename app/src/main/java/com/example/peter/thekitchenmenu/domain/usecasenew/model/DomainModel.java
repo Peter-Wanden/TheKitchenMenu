@@ -67,17 +67,17 @@ public interface DomainModel {
         }
 
         public abstract USE_CASE_MODEL convertPersistenceToUseCaseModel(
-                @Nonnull PERSISTENCE_MODEL model);
+                @Nonnull PERSISTENCE_MODEL persistenceModel);
 
         public abstract USE_CASE_MODEL convertRequestToUseCaseModel(
-                @Nonnull REQUEST_MODEL model);
+                @Nonnull REQUEST_MODEL requestModel);
 
         public abstract PERSISTENCE_MODEL convertUseCaseToPersistenceModel(
                 @Nonnull String domainId,
                 @Nonnull USE_CASE_MODEL useCaseModel);
 
         public abstract PERSISTENCE_MODEL createArchivedPersistenceModel(
-                @Nonnull PERSISTENCE_MODEL oldPersistenceModel);
+                @Nonnull PERSISTENCE_MODEL persistenceModel);
 
         public abstract RESPONSE_MODEL convertUseCaseToResponseModel(
                 @Nonnull USE_CASE_MODEL model);

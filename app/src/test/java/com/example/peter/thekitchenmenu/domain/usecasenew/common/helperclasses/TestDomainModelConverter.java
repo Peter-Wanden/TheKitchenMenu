@@ -48,10 +48,10 @@ public class TestDomainModelConverter
 
     @Override
     public TestUseCasePersistenceModel createArchivedPersistenceModel(
-            @Nonnull TestUseCasePersistenceModel oldPersistenceModel) {
+            @Nonnull TestUseCasePersistenceModel persistenceModel) {
 
         return new TestUseCasePersistenceModel.Builder()
-                .basedOnModel(oldPersistenceModel)
+                .basedOnModel(persistenceModel)
                 .setLastUpdate(timeProvider.getCurrentTimeInMills())
                 .build();
     }

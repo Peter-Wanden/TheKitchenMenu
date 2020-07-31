@@ -17,8 +17,8 @@ public class RecipeIdentityUseCase
                 RecipeIdentityUseCaseDataAccess,
                 RecipeIdentityUseCasePersistenceModel,
                 RecipeIdentityUseCaseModel,
-                RecipeIdentityRequestModel,
-                RecipeIdentityResponseModel> {
+                RecipeIdentityUseCaseRequestModel,
+                RecipeIdentityUseCaseResponseModel> {
 
     public static final String TAG = "tkm-" + RecipeIdentityUseCase.class.getSimpleName() + ": ";
 
@@ -37,12 +37,12 @@ public class RecipeIdentityUseCase
     }
 
     @Override
-    protected void beginProcessingDomainDataElements() {
+    protected void beginProcessingDomainModel() {
         validateTitle();
         validateDescription();
 
         if (isTitleValidationComplete && isDescriptionValidationComplete) {
-            domainDataElementProcessingComplete();
+            domainModelProcessingComplete();
         }
     }
 

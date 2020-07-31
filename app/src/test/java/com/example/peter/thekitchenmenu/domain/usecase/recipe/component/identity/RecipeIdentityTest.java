@@ -11,8 +11,8 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.metadata.ComponentState;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidatorTest;
-import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.identity.RecipeIdentityRequestModel;
-import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.identity.RecipeIdentityResponseModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.identity.RecipeIdentityUseCaseRequestModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.identity.RecipeIdentityUseCaseResponseModel;
 import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.identity.RecipeIdentityUseCasePersistenceModel;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
@@ -143,7 +143,7 @@ public class RecipeIdentityTest {
 
         RecipeIdentityResponse initialisationResponse = identityOnErrorResponse;
 
-        RecipeIdentityRequestModel model = new RecipeIdentityRequestModel.Builder().
+        RecipeIdentityUseCaseRequestModel model = new RecipeIdentityUseCaseRequestModel.Builder().
                 setTitle(modelUnderTest.getTitle()).
                 setDescription(modelUnderTest.getDescription()).
                 build();
@@ -176,7 +176,7 @@ public class RecipeIdentityTest {
         simulateNewInitialisationRequest(modelUnderTest); // first request
         RecipeIdentityResponse initialisationResponse = identityOnErrorResponse;
 
-        RecipeIdentityRequestModel model = new RecipeIdentityRequestModel.Builder().
+        RecipeIdentityUseCaseRequestModel model = new RecipeIdentityUseCaseRequestModel.Builder().
                 setTitle(modelUnderTest.getTitle()).
                 setDescription(modelUnderTest.getDescription()).
                 build();
@@ -214,7 +214,7 @@ public class RecipeIdentityTest {
         simulateNewInitialisationRequest(modelUnderTest);
         RecipeIdentityResponse initialisationResponse = identityOnErrorResponse;
 
-        RecipeIdentityRequestModel model = new RecipeIdentityRequestModel.Builder().
+        RecipeIdentityUseCaseRequestModel model = new RecipeIdentityUseCaseRequestModel.Builder().
                 setTitle(modelUnderTest.getTitle()).
                 setDescription(modelUnderTest.getDescription()).
                 build();
@@ -257,7 +257,7 @@ public class RecipeIdentityTest {
         simulateNewInitialisationRequest(modelUnderTest);
         RecipeIdentityResponse initialisationResponse = identityOnErrorResponse;
 
-        RecipeIdentityRequestModel model = new RecipeIdentityRequestModel.Builder().
+        RecipeIdentityUseCaseRequestModel model = new RecipeIdentityUseCaseRequestModel.Builder().
                 setTitle(modelUnderTest.getTitle()).
                 setDescription(modelUnderTest.getDescription()).
                 build();
@@ -300,7 +300,7 @@ public class RecipeIdentityTest {
         simulateNewInitialisationRequest(modelUnderTest);
         RecipeIdentityResponse initialisationResponse = identityOnErrorResponse;
 
-        RecipeIdentityRequestModel model = new RecipeIdentityRequestModel.Builder().
+        RecipeIdentityUseCaseRequestModel model = new RecipeIdentityUseCaseRequestModel.Builder().
                 setTitle(modelUnderTest.getTitle()).
                 setDescription(modelUnderTest.getDescription()).
                 build();
@@ -327,7 +327,7 @@ public class RecipeIdentityTest {
         simulateNewInitialisationRequest(modelUnderTest);
         RecipeIdentityResponse initialisationResponse = identityOnErrorResponse;
 
-        RecipeIdentityRequestModel model = new RecipeIdentityRequestModel.Builder().
+        RecipeIdentityUseCaseRequestModel model = new RecipeIdentityUseCaseRequestModel.Builder().
                 setTitle(modelUnderTest.getTitle()).
                 setDescription(modelUnderTest.getDescription()).
                 build();
@@ -371,7 +371,7 @@ public class RecipeIdentityTest {
         simulateNewInitialisationRequest(modelUnderTest);
         RecipeIdentityResponse initialisationResponse = identityOnErrorResponse;
 
-        RecipeIdentityRequestModel model = new RecipeIdentityRequestModel.Builder().
+        RecipeIdentityUseCaseRequestModel model = new RecipeIdentityUseCaseRequestModel.Builder().
                 setTitle(modelUnderTest.getTitle()).
                 setDescription(modelUnderTest.getDescription()).
                 build();
@@ -412,7 +412,7 @@ public class RecipeIdentityTest {
         RecipeIdentityResponse initialisationResponse = identityOnErrorResponse;
 
         // Request 2: valid new title request
-        RecipeIdentityRequestModel titleModel = new RecipeIdentityRequestModel.
+        RecipeIdentityUseCaseRequestModel titleModel = new RecipeIdentityUseCaseRequestModel.
                 Builder().
                 getDefault().
                 setTitle(modelUnderTest.getTitle()).
@@ -433,7 +433,7 @@ public class RecipeIdentityTest {
         // last response, only add those we are going to change
         RecipeIdentityResponse titleResponse = identityOnSuccessResponse;
 
-        RecipeIdentityRequestModel descriptionModel = new RecipeIdentityRequestModel.Builder().
+        RecipeIdentityUseCaseRequestModel descriptionModel = new RecipeIdentityUseCaseRequestModel.Builder().
                 basedOnResponseModel(titleResponse.getDomainModel()).
                 setDescription(modelUnderTest.getDescription()).
                 build();
@@ -514,7 +514,7 @@ public class RecipeIdentityTest {
         // Assert
         RecipeIdentityResponse response = identityOnSuccessResponse;
         UseCaseMetadataModel metadata = response.getMetadata();
-        RecipeIdentityResponseModel domainModel = response.getDomainModel();
+        RecipeIdentityUseCaseResponseModel domainModel = response.getDomainModel();
 
         String expectedDataId = modelUnderTest.getDataId();
         String actualDataId = response.getDataId();
@@ -820,8 +820,7 @@ public class RecipeIdentityTest {
         SUT.execute(initialisationRequest, new IdentityCallbackClient());
 
         // Assert repo called, no model found, return model unavailable
-        verify(repoIdentityMock).getByDomainId(
-                eq(modelUnderTest.getDomainId()),
+        verify(repoIdentityMock).getByDomainId(eq(modelUnderTest.getDomainId()),
                 repoCallback.capture()
         );
         repoCallback.getValue().onPersistenceModelUnavailable();
@@ -837,8 +836,7 @@ public class RecipeIdentityTest {
         // Act
         SUT.execute(initialisationRequest, new IdentityCallbackClient());
         // Assert
-        verify(repoIdentityMock).getByDomainId(
-                eq(modelUnderTest.getDomainId()),
+        verify(repoIdentityMock).getByDomainId(eq(modelUnderTest.getDomainId()),
                 repoCallback.capture()
         );
         repoCallback.getValue().onPersistenceModelLoaded(modelUnderTest);

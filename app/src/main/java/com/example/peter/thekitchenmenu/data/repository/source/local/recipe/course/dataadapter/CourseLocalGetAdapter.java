@@ -8,8 +8,8 @@ import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.cour
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.courseitem.RecipeCourseItemLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.parent.RecipeCourseParentEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.parent.RecipeCourseParentLocalDataSource;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCoursePersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.course.Course;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.course.RecipeCourseUseCasePersistenceModel;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
 import java.util.ArrayList;
@@ -35,10 +35,10 @@ public class CourseLocalGetAdapter {
     private boolean courseItemsComplete;
 
     private boolean isListCallback;
-    private GetDomainModelCallback<RecipeCoursePersistenceModel> courseCallback;
-    private GetAllDomainModelsCallback<RecipeCoursePersistenceModel> courseListCallback;
+    private GetDomainModelCallback<RecipeCourseUseCasePersistenceModel> courseCallback;
+    private GetAllDomainModelsCallback<RecipeCourseUseCasePersistenceModel> courseListCallback;
 
-    private HashMap<String, RecipeCoursePersistenceModel.Builder> modelBuilders;
+    private HashMap<String, RecipeCourseUseCasePersistenceModel.Builder> modelBuilders;
 
     public CourseLocalGetAdapter(@Nonnull RecipeCourseParentLocalDataSource parentLocalDataSource,
                                  @Nonnull RecipeCourseItemLocalDataSource courseItemLocalDataSource) {
@@ -51,7 +51,7 @@ public class CourseLocalGetAdapter {
 
     public void getActiveByDomainId(
             @Nonnull String domainId,
-            @Nonnull GetDomainModelCallback<RecipeCoursePersistenceModel> callback) {
+            @Nonnull GetDomainModelCallback<RecipeCourseUseCasePersistenceModel> callback) {
         courseCallback = callback;
         isListCallback = false;
 
@@ -90,7 +90,7 @@ public class CourseLocalGetAdapter {
     }
 
     public void getAll(
-            @Nonnull GetAllDomainModelsCallback<RecipeCoursePersistenceModel> callback) {
+            @Nonnull GetAllDomainModelsCallback<RecipeCourseUseCasePersistenceModel> callback) {
         courseListCallback = callback;
         isListCallback = true;
 
@@ -120,7 +120,7 @@ public class CourseLocalGetAdapter {
 
     public void getByDataId(
             String dataId,
-            GetDomainModelCallback<RecipeCoursePersistenceModel> callback) {
+            GetDomainModelCallback<RecipeCourseUseCasePersistenceModel> callback) {
         courseCallback = callback;
         isListCallback = false;
 
@@ -156,7 +156,7 @@ public class CourseLocalGetAdapter {
     }
 
     private void addNewModelBuilder(String dataId) {
-        RecipeCoursePersistenceModel.Builder builder = new RecipeCoursePersistenceModel.Builder();
+        RecipeCourseUseCasePersistenceModel.Builder builder = new RecipeCourseUseCasePersistenceModel.Builder();
         builder.setDataId(dataId);
         modelBuilders.put(dataId, builder);
     }
@@ -190,7 +190,7 @@ public class CourseLocalGetAdapter {
         );
     }
 
-    private void addCoursesToBuilder(String parentDataId, List<RecipeCourse.Course> courses) {
+    private void addCoursesToBuilder(String parentDataId, List<Course> courses) {
         modelBuilders.get(parentDataId).setCourses(courses);
 
         noOfCourseListsAdded++;
@@ -204,9 +204,9 @@ public class CourseLocalGetAdapter {
     private void returnResult() {
         if (isListCallback) {
 
-            final List<RecipeCoursePersistenceModel> domainModels = new ArrayList<>();
+            final List<RecipeCourseUseCasePersistenceModel> domainModels = new ArrayList<>();
 
-            Iterator<RecipeCoursePersistenceModel.Builder> iterator = modelBuilders.values().
+            Iterator<RecipeCourseUseCasePersistenceModel.Builder> iterator = modelBuilders.values().
                     iterator();
 
             iterator.forEachRemaining(builder -> {
@@ -217,7 +217,7 @@ public class CourseLocalGetAdapter {
             courseListCallback.onAllDomainModelsLoaded(domainModels);
 
         } else {
-            RecipeCoursePersistenceModel domainModel = modelBuilders.get(parentDataId).build();
+            RecipeCourseUseCasePersistenceModel domainModel = modelBuilders.get(parentDataId).build();
             modelBuilders.remove(parentDataId);
             courseCallback.onPersistenceModelLoaded(domainModel);
         }

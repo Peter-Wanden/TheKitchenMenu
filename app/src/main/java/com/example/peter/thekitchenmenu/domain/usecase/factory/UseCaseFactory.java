@@ -6,7 +6,7 @@ import android.content.res.Resources;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.repository.DatabaseInjection;
 import com.example.peter.thekitchenmenu.data.repository.ingredient.DataAccessIngredient;
-import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipeCourse;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RecipeCourseUseCaseDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipeDuration;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RecipeIdentityUseCaseDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipeIngredient;
@@ -47,7 +47,7 @@ public class UseCaseFactory {
     private final DataAccessIngredient ingredientRepository;
     private final RecipeIdentityUseCaseDataAccess recipeIdentityUseCaseDataAccess;
     private final DataAccessRecipeDuration recipeDurationRepository;
-    private final DataAccessRecipeCourse recipeCourseRepository;
+    private final RecipeCourseUseCaseDataAccess recipeCourseRepository;
 
     private UseCaseFactory(Application application,
                            DataAccessRecipeMetadata recipeMetadataRepository,
@@ -56,7 +56,7 @@ public class UseCaseFactory {
                            DataAccessIngredient ingredientRepository,
                            RecipeIdentityUseCaseDataAccess recipeIdentityUseCaseDataAccess,
                            DataAccessRecipeDuration recipeDurationRepository,
-                           DataAccessRecipeCourse recipeCourseRepository) {
+                           RecipeCourseUseCaseDataAccess recipeCourseRepository) {
 
         this.application = application;
         this.recipeMetadataRepository = recipeMetadataRepository;

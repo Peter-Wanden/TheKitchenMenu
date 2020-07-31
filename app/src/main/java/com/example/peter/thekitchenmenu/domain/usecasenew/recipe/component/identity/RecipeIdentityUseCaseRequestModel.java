@@ -8,23 +8,21 @@ import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public final class RecipeIdentityResponseModel
+public final class RecipeIdentityUseCaseRequestModel
         extends
         BaseDomainModel
         implements
-        DomainModel.ResponseModel {
+        DomainModel.RequestModel {
 
     private String title;
     private String description;
 
-    private RecipeIdentityResponseModel() {}
+    private RecipeIdentityUseCaseRequestModel(){}
 
-    @Nonnull
     public String getTitle() {
         return title;
     }
 
-    @Nonnull
     public String getDescription() {
         return description;
     }
@@ -33,9 +31,9 @@ public final class RecipeIdentityResponseModel
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        RecipeIdentityResponseModel domainModel = (RecipeIdentityResponseModel) o;
-        return title.equals(domainModel.title) &&
-                description.equals(domainModel.description);
+        RecipeIdentityUseCaseRequestModel model = (RecipeIdentityUseCaseRequestModel) o;
+        return title.equals(model.title) &&
+                description.equals(model.description);
     }
 
     @Override
@@ -54,23 +52,28 @@ public final class RecipeIdentityResponseModel
 
     public static class Builder
             extends
-            BaseDomainModelBuilder<Builder, RecipeIdentityResponseModel> {
+            BaseDomainModelBuilder<Builder, RecipeIdentityUseCaseRequestModel> {
 
         public Builder() {
-            domainModel = new RecipeIdentityResponseModel();
+            domainModel = new RecipeIdentityUseCaseRequestModel();
         }
 
         @Override
-        public Builder basedOnModel(RecipeIdentityResponseModel model) {
+        public Builder basedOnModel(RecipeIdentityUseCaseRequestModel model) {
             domainModel.title = model.getTitle();
             domainModel.description = model.getDescription();
             return self();
         }
 
-        @Override
         public Builder getDefault() {
             domainModel.title = "";
             domainModel.description = "";
+            return self();
+        }
+
+        public Builder basedOnResponseModel(RecipeIdentityUseCaseResponseModel domainModel) {
+            this.domainModel.title = domainModel.getTitle();
+            this.domainModel.description = domainModel.getDescription();
             return self();
         }
 

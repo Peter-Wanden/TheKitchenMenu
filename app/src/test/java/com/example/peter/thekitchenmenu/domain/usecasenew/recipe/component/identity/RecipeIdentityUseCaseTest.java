@@ -1,6 +1,5 @@
 package com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.identity;
 
-import com.example.peter.thekitchenmenu.commonmocks.StringMaker;
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess.GetDomainModelCallback;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RecipeIdentityUseCaseDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.recipe.identity.TestDataRecipeIdentity;
@@ -27,6 +26,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -50,8 +50,8 @@ public class RecipeIdentityUseCaseTest {
     @Mock
     UniqueIdProvider idProviderMock;
 
-    private UseCaseResponse<RecipeIdentityResponseModel> onSuccessResponse;
-    private UseCaseResponse<RecipeIdentityResponseModel> onErrorResponse;
+    private UseCaseResponse<RecipeIdentityUseCaseResponseModel> onSuccessResponse;
+    private UseCaseResponse<RecipeIdentityUseCaseResponseModel> onErrorResponse;
     // endregion helper fields ---------------------------------------------------------------------
 
     private RecipeIdentityUseCase SUT;
@@ -76,15 +76,15 @@ public class RecipeIdentityUseCaseTest {
     }
 
     @Test
-    public void newRequest_stateINVALID_DEFAULT_failReasonTITLE_TOO_SHORT_DATA_UNAVAILABLE() {
+    public void emptyRequest_stateINVALID_DEFAULT_failReasonDATA_UNAVAILABLE_TITLE_TOO_SHORT() {
         // Arrange
-        RecipeIdentityRequest request = new RecipeIdentityRequest.Builder()
+        RecipeIdentityUseCaseRequest request = new RecipeIdentityUseCaseRequest.Builder()
                 .getDefault()
                 .build();
         // Act
         SUT.execute(request, new UseCaseCallbackImplementer());
         // Assert
-        UseCaseResponse<RecipeIdentityResponseModel> response = onErrorResponse;
+        UseCaseResponse<RecipeIdentityUseCaseResponseModel> response = onErrorResponse;
         UseCaseMetadataModel metadata = response.getUseCaseMetadataModel();
 
         ComponentState expectedState = ComponentState.INVALID_DEFAULT;
@@ -106,14 +106,13 @@ public class RecipeIdentityUseCaseTest {
     }
 
     @Test
-    public void newRequest_stateINVALID_DEFAULT_failReasonDATA_UNAVAILABLE() {
+    public void newRequest_stateINVALID_DEFAULT_failReasonDATA_UNAVAILABLE_TITLE_TOO_SHORT() {
         // Arrange
-        // This is the initial pre-test setup request for other tests cases, so check all
         // return values
         RecipeIdentityUseCasePersistenceModel modelUnderTest = TestDataRecipeIdentity.
                 getNewInvalidActiveDefault();
 
-        RecipeIdentityRequest request = new RecipeIdentityRequest.Builder()
+        RecipeIdentityUseCaseRequest request = new RecipeIdentityUseCaseRequest.Builder()
                 .getDefault()
                 .setDomainId(modelUnderTest.getDomainId())
                 .build();
@@ -130,7 +129,7 @@ public class RecipeIdentityUseCaseTest {
         // verify no save
         verifyNoMoreInteractions(dataAccessMock);
 
-        UseCaseResponse<RecipeIdentityResponseModel> response = onErrorResponse;
+        UseCaseResponse<RecipeIdentityUseCaseResponseModel> response = onErrorResponse;
         UseCaseMetadataModel metadata = response.getUseCaseMetadataModel();
 
         ComponentState expectedState = ComponentState.INVALID_DEFAULT;
@@ -152,25 +151,19 @@ public class RecipeIdentityUseCaseTest {
     }
 
     @Test
-    public void newRequest_stateINVALID_CHANGED_failReasonsTITLE_TOO_LONG_DESCROPTION_TOO_LONG() {
+    public void newRequest_stateINVALID_CHANGED_failReasons_DATA_UNAVAILABLE_TITLE_TOO_LONG_DESCRIPTION_TOO_LONG() {
         // Arrange
-        String expectedTitleTooLong = new StringMaker()
-                .makeStringOfLength(TextValidationBusinessEntityTest.SHORT_TEXT_MAX_LENGTH)
-                .thenAddOneCharacter()
-                .build();
-        String expectedDescriptionTooLong = new StringMaker()
-                .makeStringOfLength(TextValidationBusinessEntityTest.LONG_TEXT_MAX_LENGTH)
-                .thenAddOneCharacter()
-                .build();
+        RecipeIdentityUseCasePersistenceModel modelUnderTest = TestDataRecipeIdentity.
+                getInvalidNewTitleTooLongDescriptionTooLong();
 
         // simulate use case data unavailable to initialise the use case
-        newRequest_stateINVALID_DEFAULT_failReasonDATA_UNAVAILABLE();
+        simulateDataUnavailable(modelUnderTest);
 
-        RecipeIdentityRequest request = new RecipeIdentityRequest.Builder()
+        RecipeIdentityUseCaseRequest request = new RecipeIdentityUseCaseRequest.Builder()
                 .basedOnResponse(onErrorResponse)
-                .setRequestModel(new RecipeIdentityRequestModel.Builder()
-                        .setTitle(expectedTitleTooLong)
-                        .setDescription(expectedDescriptionTooLong)
+                .setRequestModel(new RecipeIdentityUseCaseRequestModel.Builder()
+                        .setTitle(modelUnderTest.getTitle())
+                        .setDescription(modelUnderTest.getDescription())
                         .build())
                 .build();
 
@@ -178,9 +171,9 @@ public class RecipeIdentityUseCaseTest {
         SUT.execute(request, new UseCaseCallbackImplementer());
 
         // Assert
-        UseCaseResponse<RecipeIdentityResponseModel> response = onErrorResponse;
+        UseCaseResponse<RecipeIdentityUseCaseResponseModel> response = onErrorResponse;
         UseCaseMetadataModel metadata = response.getUseCaseMetadataModel();
-        RecipeIdentityResponseModel responseModel = response.getResponseModel();
+        RecipeIdentityUseCaseResponseModel responseModel = response.getResponseModel();
 
         ComponentState expectedState = ComponentState.INVALID_CHANGED;
         ComponentState actualState = metadata.getComponentState();
@@ -202,33 +195,28 @@ public class RecipeIdentityUseCaseTest {
 
         // assert domain model values
         assertEquals(
-                expectedTitleTooLong,
+                modelUnderTest.getTitle(),
                 responseModel.getTitle()
         );
         assertEquals(
-                expectedDescriptionTooLong,
+                modelUnderTest.getDescription(),
                 responseModel.getDescription()
         );
     }
 
     @Test
-    public void newRequest_stateINVALID_CHANGED_failReasonsTITLE_TOO_SHORT() {
+    public void newRequest_stateINVALID_CHANGED_failReasonsDATA_UNAVAILABLE_TITLE_TOO_SHORT() {
         // Arrange
-        String expectedTitleTooShort = new StringMaker()
-                .makeStringOfLength(TextValidationBusinessEntityTest.SHORT_TEXT_MIN_LENGTH)
-                .thenRemoveOneCharacter()
-                .build();
-        String expectedValidDescription = new StringMaker()
-                .makeStringOfLength(TextValidationBusinessEntityTest.LONG_TEXT_MAX_LENGTH)
-                .build();
+        RecipeIdentityUseCasePersistenceModel modelUnderTest = TestDataRecipeIdentity.
+                getInvalidNewTitleTooShortDescriptionValid();
 
-        newRequest_stateINVALID_DEFAULT_failReasonDATA_UNAVAILABLE();
+        simulateDataUnavailable(modelUnderTest);
 
-        RecipeIdentityRequest request = new RecipeIdentityRequest.Builder()
+        RecipeIdentityUseCaseRequest request = new RecipeIdentityUseCaseRequest.Builder()
                 .basedOnResponse(onErrorResponse)
-                .setRequestModel(new RecipeIdentityRequestModel.Builder()
-                        .setTitle(expectedTitleTooShort)
-                        .setDescription(expectedValidDescription)
+                .setRequestModel(new RecipeIdentityUseCaseRequestModel.Builder()
+                        .setTitle(modelUnderTest.getTitle())
+                        .setDescription(modelUnderTest.getDescription())
                         .build())
                 .build();
 
@@ -236,9 +224,9 @@ public class RecipeIdentityUseCaseTest {
         SUT.execute(request, new UseCaseCallbackImplementer());
 
         // Assert
-        UseCaseResponse<RecipeIdentityResponseModel> response = onErrorResponse;
+        UseCaseResponse<RecipeIdentityUseCaseResponseModel> response = onErrorResponse;
         UseCaseMetadataModel metadata = response.getUseCaseMetadataModel();
-        RecipeIdentityResponseModel domainModel = response.getResponseModel();
+        RecipeIdentityUseCaseResponseModel domainModel = response.getResponseModel();
 
         ComponentState expectedState = ComponentState.INVALID_CHANGED;
         ComponentState actualState = metadata.getComponentState();
@@ -258,28 +246,27 @@ public class RecipeIdentityUseCaseTest {
         );
 
         assertEquals(
-                expectedTitleTooShort,
+                modelUnderTest.getTitle(),
                 domainModel.getTitle()
         );
-
         assertEquals(
-                expectedValidDescription,
+                modelUnderTest.getDescription(),
                 domainModel.getDescription()
         );
     }
 
     @Test
-    public void newRequest_stateVALID_CHANGED_validTitlePersisted() {
+    public void newRequest_stateVALID_CHANGED_validTitlePersisted_failReasonNONE() {
         // Arrange
         RecipeIdentityUseCasePersistenceModel modelUnderTest = TestDataRecipeIdentity.
                 getValidNewTitleValid();
 
         // initialise use case
-        newRequest_stateINVALID_DEFAULT_failReasonDATA_UNAVAILABLE();
+        simulateDataUnavailable(modelUnderTest);
 
-        RecipeIdentityRequest request = new RecipeIdentityRequest.Builder()
+        RecipeIdentityUseCaseRequest request = new RecipeIdentityUseCaseRequest.Builder()
                 .basedOnResponse(onErrorResponse)
-                .setRequestModel(new RecipeIdentityRequestModel.Builder()
+                .setRequestModel(new RecipeIdentityUseCaseRequestModel.Builder()
                         .setTitle(modelUnderTest.getTitle())
                         .setDescription(modelUnderTest.getDescription())
                         .build())
@@ -295,9 +282,9 @@ public class RecipeIdentityUseCaseTest {
         // Assert
         verify(dataAccessMock).save(eq(modelUnderTest));
 
-        UseCaseResponse<RecipeIdentityResponseModel> response = onSuccessResponse;
+        UseCaseResponse<RecipeIdentityUseCaseResponseModel> response = onSuccessResponse;
         UseCaseMetadataModel metadata = response.getUseCaseMetadataModel();
-        RecipeIdentityResponseModel responseModel = response.getResponseModel();
+        RecipeIdentityUseCaseResponseModel responseModel = response.getResponseModel();
 
         ComponentState expectedState = ComponentState.VALID_CHANGED;
         ComponentState actualState = metadata.getComponentState();
@@ -323,21 +310,173 @@ public class RecipeIdentityUseCaseTest {
         );
     }
 
+    @Test
+    public void existingRequest_stateVALID_UNCHANGED_titleValidDescriptionValid_failReasonNONE() {
+        // Arrange
+        RecipeIdentityUseCasePersistenceModel modelUnderTest = TestDataRecipeIdentity.
+                getValidExistingTitleValidDescriptionValid();
+
+        // Act
+        simulateLoadPersistenceModel(modelUnderTest);
+
+        // Assert
+        UseCaseResponse<RecipeIdentityUseCaseResponseModel> response = onSuccessResponse;
+        UseCaseMetadataModel metadata = response.getUseCaseMetadataModel();
+        RecipeIdentityUseCaseResponseModel model = response.getResponseModel();
+
+        ComponentState expectedState = ComponentState.VALID_UNCHANGED;
+        ComponentState actualState = metadata.getComponentState();
+        assertEquals(
+                expectedState,
+                actualState
+        );
+
+        List<FailReasons> expectedFailReasons = Collections.singletonList(CommonFailReason.NONE);
+        List<FailReasons> actualFailReasons = metadata.getFailReasons();
+        assertEquals(
+                expectedFailReasons,
+                actualFailReasons
+        );
+
+        assertEquals(
+                modelUnderTest.getTitle(),
+                model.getTitle()
+        );
+        assertEquals(
+                modelUnderTest.getDescription(),
+                model.getDescription()
+        );
+    }
+
+    @Test
+    public void existingRequest_stateINVALID_UNCHANGED_failReasonTITLE_TOO_SHORT() {
+        // Arrange
+        RecipeIdentityUseCasePersistenceModel modelUnderTest = TestDataRecipeIdentity.
+                getInvalidExistingTitleTooShort();
+
+        // Act
+        simulateLoadPersistenceModel(modelUnderTest);
+
+        // Assert
+        UseCaseResponse<RecipeIdentityUseCaseResponseModel> response = onErrorResponse;
+        UseCaseMetadataModel metadata = response.getUseCaseMetadataModel();
+        RecipeIdentityUseCaseResponseModel model = response.getResponseModel();
+
+        ComponentState expectedState = ComponentState.INVALID_UNCHANGED;
+        ComponentState actualState = metadata.getComponentState();
+        assertEquals(
+                expectedState,
+                actualState
+        );
+
+        List<FailReasons> expectedFailReasons = Collections.singletonList(
+                RecipeIdentityUseCaseFailReason.TITLE_TOO_SHORT);
+        List<FailReasons> actualFailReasons = metadata.getFailReasons();
+        assertEquals(
+                expectedFailReasons,
+                actualFailReasons
+        );
+
+        assertEquals(
+                modelUnderTest.getTitle(),
+                model.getTitle()
+        );
+        assertEquals(
+                modelUnderTest.getDescription(),
+                model.getDescription()
+        );
+    }
+
+    @Test
+    public void newRequest_stateINVALID_CHANGED_failReasonDATA_UNAVAILABLE_TITLE_NULL_DESCRIPTION_NULL() {
+        // Arrange
+        newRequest_stateINVALID_DEFAULT_failReasonDATA_UNAVAILABLE_TITLE_TOO_SHORT();
+
+        RecipeIdentityUseCaseRequest request = new RecipeIdentityUseCaseRequest.Builder()
+                .basedOnResponse(onErrorResponse)
+                .setRequestModel(new RecipeIdentityUseCaseRequestModel.Builder()
+                        .setTitle(null)
+                        .setDescription(null)
+                        .build())
+                .build();
+        // Act
+        SUT.execute(request, new UseCaseCallbackImplementer());
+
+        // Assert
+        UseCaseResponse<RecipeIdentityUseCaseResponseModel> response = onErrorResponse;
+        UseCaseMetadataModel metadata = response.getUseCaseMetadataModel();
+        RecipeIdentityUseCaseResponseModel model = response.getResponseModel();
+
+        ComponentState expectedState = ComponentState.INVALID_CHANGED;
+        ComponentState actualState = metadata.getComponentState();
+        assertEquals(
+                expectedState,
+                actualState
+        );
+
+        List<FailReasons> expectedFailReasons = Arrays.asList(
+                RecipeIdentityUseCaseFailReason.TITLE_NULL,
+                RecipeIdentityUseCaseFailReason.DESCRIPTION_NULL,
+                CommonFailReason.DATA_UNAVAILABLE
+        );
+        List<FailReasons> actualFailReasons = metadata.getFailReasons();
+        assertEquals(
+                expectedFailReasons,
+                actualFailReasons
+        );
+
+        assertNull(model.getTitle());
+        assertNull(model.getDescription());
+    }
+
     // region helper methods -----------------------------------------------------------------------
+    private void simulateDataUnavailable(RecipeIdentityUseCasePersistenceModel modelUnderTest) {
+        // Arrange
+        RecipeIdentityUseCaseRequest request = new RecipeIdentityUseCaseRequest.Builder()
+                .getDefault()
+                .setDomainId(modelUnderTest.getDomainId())
+                .build();
+
+        // Act
+        SUT.execute(request, new UseCaseCallbackImplementer());
+
+        // Assert
+        verify(dataAccessMock).getByDomainId(eq(modelUnderTest.getDomainId()),
+                dataAccessCallback.capture()
+        );
+        dataAccessCallback.getValue().onPersistenceModelUnavailable();
+    }
+
+    private void simulateLoadPersistenceModel(RecipeIdentityUseCasePersistenceModel modelUnderTest) {
+        // Arrange
+        RecipeIdentityUseCaseRequest request = new RecipeIdentityUseCaseRequest.Builder()
+                .getDefault()
+                .setDomainId(modelUnderTest.getDomainId())
+                .build();
+
+        // Act
+        SUT.execute(request, new UseCaseCallbackImplementer());
+
+        // Assert
+        verify(dataAccessMock).getByDomainId(eq(modelUnderTest.getDomainId()),
+                dataAccessCallback.capture()
+        );
+        dataAccessCallback.getValue().onPersistenceModelLoaded(modelUnderTest);
+    }
     // endregion helper methods --------------------------------------------------------------------
 
     // region helper classes -----------------------------------------------------------------------
     private final class UseCaseCallbackImplementer
             implements
-            UseCaseCallback<UseCaseResponse<RecipeIdentityResponseModel>> {
+            UseCaseCallback<UseCaseResponse<RecipeIdentityUseCaseResponseModel>> {
 
         @Override
-        public void onSuccess(UseCaseResponse<RecipeIdentityResponseModel> response) {
+        public void onSuccess(UseCaseResponse<RecipeIdentityUseCaseResponseModel> response) {
             onSuccessResponse = response;
         }
 
         @Override
-        public void onError(UseCaseResponse<RecipeIdentityResponseModel> response) {
+        public void onError(UseCaseResponse<RecipeIdentityUseCaseResponseModel> response) {
             onErrorResponse = response;
         }
     }

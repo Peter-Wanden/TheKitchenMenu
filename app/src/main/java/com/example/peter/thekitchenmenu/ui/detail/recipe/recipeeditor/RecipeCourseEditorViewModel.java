@@ -15,7 +15,7 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse.Course;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.course.Course;
 
 public class RecipeCourseEditorViewModel extends ObservableViewModel {
 

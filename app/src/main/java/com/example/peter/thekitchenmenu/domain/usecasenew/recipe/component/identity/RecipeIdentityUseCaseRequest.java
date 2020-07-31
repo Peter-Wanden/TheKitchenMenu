@@ -3,24 +3,26 @@ package com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.iden
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.message.UseCaseRequest;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.message.UseCaseResponse;
 
-public final class RecipeIdentityRequest
+public final class RecipeIdentityUseCaseRequest
         extends
-        UseCaseRequest<RecipeIdentityRequestModel> {
+        UseCaseRequest<RecipeIdentityUseCaseRequestModel> {
 
     public static class Builder
             extends
-            UseCaseRequest.Builder<Builder, RecipeIdentityRequest, RecipeIdentityRequestModel> {
+            UseCaseRequest.Builder<
+                    Builder,
+                    RecipeIdentityUseCaseRequest,
+                    RecipeIdentityUseCaseRequestModel> {
 
         public Builder() {
-            super(new RecipeIdentityRequest());
+            super(new RecipeIdentityUseCaseRequest());
         }
 
-        public Builder basedOnResponse(UseCaseResponse<RecipeIdentityResponseModel> response) {
-
+        public Builder basedOnResponse(UseCaseResponse<RecipeIdentityUseCaseResponseModel> response) {
             useCaseRequest.dataId = response.getDataId();
             useCaseRequest.domainId = response.getDomainId();
 
-            useCaseRequest.requestModel = new RecipeIdentityRequestModel.Builder()
+            useCaseRequest.requestModel = new RecipeIdentityUseCaseRequestModel.Builder()
                     .basedOnResponseModel(response.getResponseModel())
                     .build();
 

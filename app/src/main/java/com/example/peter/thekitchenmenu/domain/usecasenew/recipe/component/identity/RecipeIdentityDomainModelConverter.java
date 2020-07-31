@@ -6,13 +6,13 @@ import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
 import javax.annotation.Nonnull;
 
-public class RecipeIdentityDomainModelConverter
+public final class RecipeIdentityDomainModelConverter
         extends
         DomainModel.Converter<
                 RecipeIdentityUseCaseModel,
                 RecipeIdentityUseCasePersistenceModel,
-                RecipeIdentityRequestModel,
-                RecipeIdentityResponseModel> {
+                RecipeIdentityUseCaseRequestModel,
+                RecipeIdentityUseCaseResponseModel> {
 
     public RecipeIdentityDomainModelConverter(@Nonnull TimeProvider timeProvider,
                                               @Nonnull UniqueIdProvider idProvider) {
@@ -46,7 +46,7 @@ public class RecipeIdentityDomainModelConverter
 
     @Override
     public RecipeIdentityUseCaseModel convertRequestToUseCaseModel(
-            @Nonnull RecipeIdentityRequestModel requestModel) {
+            @Nonnull RecipeIdentityUseCaseRequestModel requestModel) {
         return new RecipeIdentityUseCaseModel(
                 requestModel.getTitle(),
                 requestModel.getDescription()
@@ -71,17 +71,17 @@ public class RecipeIdentityDomainModelConverter
 
     @Override
     public RecipeIdentityUseCasePersistenceModel createArchivedPersistenceModel(
-            @Nonnull RecipeIdentityUseCasePersistenceModel model) {
+            @Nonnull RecipeIdentityUseCasePersistenceModel persistenceModel) {
         return new RecipeIdentityUseCasePersistenceModel.Builder()
-                .basedOnModel(model)
+                .basedOnModel(persistenceModel)
                 .setLastUpdate(timeProvider.getCurrentTimeInMills())
                 .build();
     }
 
     @Override
-    public RecipeIdentityResponseModel convertUseCaseToResponseModel(
+    public RecipeIdentityUseCaseResponseModel convertUseCaseToResponseModel(
             @Nonnull RecipeIdentityUseCaseModel model) {
-        return new RecipeIdentityResponseModel.Builder()
+        return new RecipeIdentityUseCaseResponseModel.Builder()
                 .setTitle(model.getTitle())
                 .setDescription(model.getDescription())
                 .build();

@@ -1,14 +1,15 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course;
 
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess.GetDomainModelCallback;
-import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipeCourse;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RecipeCourseUseCaseDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.recipe.course.TestDataRecipeCourse;
 import com.example.peter.thekitchenmenu.domain.model.UseCaseMetadataModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.FailReasons;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse.Course;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse.FailReason;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.course.Course;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.course.RecipeCourseUseCaseFailReason;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.course.RecipeCourseUseCasePersistenceModel;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
@@ -40,9 +41,9 @@ public class RecipeCourseTest {
 
     // region helper fields ------------------------------------------------------------------------
     @Mock
-    DataAccessRecipeCourse repoCourseMock;
+    RecipeCourseUseCaseDataAccess repoCourseMock;
     @Captor
-    ArgumentCaptor<GetDomainModelCallback<RecipeCoursePersistenceModel>> repoCourseCallback;
+    ArgumentCaptor<GetDomainModelCallback<RecipeCourseUseCasePersistenceModel>> repoCourseCallback;
     @Mock
     UniqueIdProvider idProviderMock;
     @Mock
@@ -71,7 +72,7 @@ public class RecipeCourseTest {
     @Test
     public void newRequest_defaultNoCoursesReturned_stateINVALID_DEFAULT() {
         // Arrange
-        RecipeCoursePersistenceModel expectedDefaultValues = TestDataRecipeCourse.
+        RecipeCourseUseCasePersistenceModel expectedDefaultValues = TestDataRecipeCourse.
                 getNewActiveDefaultNoCourses();
 
         RecipeCourseRequest request = new RecipeCourseRequest.Builder().
@@ -117,7 +118,7 @@ public class RecipeCourseTest {
 
         // assert fail reasons
         List<FailReasons> expectedFailReasons = Arrays.asList(
-                FailReason.NO_COURSE_SELECTED,
+                RecipeCourseUseCaseFailReason.NO_COURSE_SELECTED,
                 CommonFailReason.DATA_UNAVAILABLE
         );
         List<FailReasons> actualFailReasons = metadata.getFailReasons();
@@ -143,7 +144,7 @@ public class RecipeCourseTest {
         newRequest_defaultNoCoursesReturned_stateINVALID_DEFAULT();
 
         // Arrange persistent model that represents state after adding domain data
-        RecipeCoursePersistenceModel expectedCourseOneSaveModel = TestDataRecipeCourse.
+        RecipeCourseUseCasePersistenceModel expectedCourseOneSaveModel = TestDataRecipeCourse.
                 getNewActiveCourseOne();
 
         // Arrange request to add course one
@@ -198,11 +199,11 @@ public class RecipeCourseTest {
         newRequest_addCourseOne_VALID_CHANGED();
 
         // Arrange persistent model for archiving the addCourseOne_VALID_CHANGED state
-        RecipeCoursePersistenceModel expectedArchivedCourseOne = TestDataRecipeCourse.
+        RecipeCourseUseCasePersistenceModel expectedArchivedCourseOne = TestDataRecipeCourse.
                 getNewArchivedCourseOne();
 
         // Arrange persistent model that represents state after adding course two
-        RecipeCoursePersistenceModel expectedCourseOneAndTwoSaveModel = TestDataRecipeCourse.
+        RecipeCourseUseCasePersistenceModel expectedCourseOneAndTwoSaveModel = TestDataRecipeCourse.
                 getNewActiveCourseOneAndTwo();
 
         // Arrange request to add course two
@@ -260,11 +261,11 @@ public class RecipeCourseTest {
         newRequest_addCourseOneAndTwo_VALID_CHANGED();
 
         // Arrange persistent model for archiving the addCourseOneAndTwo_VALID_CHANGED state
-        RecipeCoursePersistenceModel expectedArchivedModelForCourseOneAndTwo = TestDataRecipeCourse.
+        RecipeCourseUseCasePersistenceModel expectedArchivedModelForCourseOneAndTwo = TestDataRecipeCourse.
                 getNewArchivedCourseOneAndTwo();
 
         // Arrange persistent model that represents state after removing course one
-        RecipeCoursePersistenceModel expectedActiveModelAfterCourseOneRemoved = TestDataRecipeCourse.
+        RecipeCourseUseCasePersistenceModel expectedActiveModelAfterCourseOneRemoved = TestDataRecipeCourse.
                 getNewActiveAfterCourseOneRemoved();
 
         // Arrange request to remove course one
@@ -351,7 +352,7 @@ public class RecipeCourseTest {
 
         // Assert fail reasons
         List<FailReasons> expectedFailReasons = Collections.singletonList(
-                FailReason.NO_COURSE_SELECTED
+                RecipeCourseUseCaseFailReason.NO_COURSE_SELECTED
         );
         List<FailReasons> actualFailReasons = metadata.getFailReasons();
         assertEquals(
@@ -364,7 +365,7 @@ public class RecipeCourseTest {
     public void existingRequest_completeListOfModelsReturned_VALID_UNCHANGED() {
         // Arrange
         // arrange persistence model representing all courses
-        RecipeCoursePersistenceModel expectedAllCoursesModel = TestDataRecipeCourse.
+        RecipeCourseUseCasePersistenceModel expectedAllCoursesModel = TestDataRecipeCourse.
                 getExistingActiveWithAllCourses();
 
         // arrange request to get all courses
@@ -447,7 +448,7 @@ public class RecipeCourseTest {
         );
 
         List<FailReasons> expectedFailReasons = Collections.singletonList(
-                FailReason.NO_COURSE_SELECTED
+                RecipeCourseUseCaseFailReason.NO_COURSE_SELECTED
         );
         List<FailReasons> actualFailReasons = metadata.getFailReasons();
         assertEquals(

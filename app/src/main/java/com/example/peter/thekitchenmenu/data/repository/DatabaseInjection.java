@@ -27,7 +27,7 @@ import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.meta
 import com.example.peter.thekitchenmenu.data.repository.ingredient.DataAccessIngredient;
 import com.example.peter.thekitchenmenu.data.repository.product.DataAccessFavoriteProduct;
 import com.example.peter.thekitchenmenu.data.repository.product.DataAccessProduct;
-import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipeCourse;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RecipeCourseUseCaseDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipeDuration;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RecipeIdentityUseCaseDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipeIngredient;
@@ -164,9 +164,9 @@ public class DatabaseInjection {
         );
     }
 
-    public static DataAccessRecipeCourse provideRecipeCourseDataSource(
+    public static RecipeCourseUseCaseDataAccess provideRecipeCourseDataSource(
             @Nonnull Context c) {
-        return DataAccessRecipeCourse.getInstance(
+        return RecipeCourseUseCaseDataAccess.getInstance(
                 RepositoryRecipeCourseRemote.getInstance(),
                 RepositoryRecipeCourseLocal.getInstance(
                         provideCourseLocalGetAdapter(c),

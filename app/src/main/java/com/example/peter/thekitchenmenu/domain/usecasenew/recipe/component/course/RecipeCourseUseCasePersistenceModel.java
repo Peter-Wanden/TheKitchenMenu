@@ -1,21 +1,20 @@
-package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course;
+package com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.course;
 
 import com.example.peter.thekitchenmenu.domain.usecasenew.model.BasePersistenceModel;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse.Course;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nonnull;
 
-public final class RecipeCoursePersistenceModel
+public final class RecipeCourseUseCasePersistenceModel
         extends
         BasePersistenceModel {
 
     @Nonnull
     private List<Course> courses;
 
-    private RecipeCoursePersistenceModel(){
+    private RecipeCourseUseCasePersistenceModel(){
         courses = new ArrayList<>();
     }
 
@@ -27,10 +26,10 @@ public final class RecipeCoursePersistenceModel
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof RecipeCoursePersistenceModel)) return false;
+        if (!(o instanceof RecipeCourseUseCasePersistenceModel)) return false;
         if (!super.equals(o)) return false;
 
-        RecipeCoursePersistenceModel that = (RecipeCoursePersistenceModel) o;
+        RecipeCourseUseCasePersistenceModel that = (RecipeCourseUseCasePersistenceModel) o;
 
         return courses.equals(that.courses);
     }
@@ -56,10 +55,10 @@ public final class RecipeCoursePersistenceModel
 
     public static class Builder
             extends
-            PersistenceModelBuilder<Builder, RecipeCoursePersistenceModel> {
+            PersistenceModelBuilder<Builder, RecipeCourseUseCasePersistenceModel> {
 
         public Builder() {
-            domainModel = new RecipeCoursePersistenceModel();
+            domainModel = new RecipeCourseUseCasePersistenceModel();
         }
 
         @Override
@@ -73,7 +72,7 @@ public final class RecipeCoursePersistenceModel
         }
 
         @Override
-        public Builder basedOnModel(RecipeCoursePersistenceModel domainModel) {
+        public Builder basedOnModel(RecipeCourseUseCasePersistenceModel domainModel) {
             this.domainModel.dataId = domainModel.getDataId();
             this.domainModel.domainId = domainModel.getDomainId();
             this.domainModel.courses = domainModel.getCourses();

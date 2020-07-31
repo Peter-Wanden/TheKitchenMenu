@@ -6,7 +6,9 @@ import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.ident
 
 import javax.annotation.Nonnull;
 
-public class RecipeIdentityUseCaseDataAccess extends DataAccess<RecipeIdentityUseCasePersistenceModel> {
+public class RecipeIdentityUseCaseDataAccess
+        extends
+        DataAccess<RecipeIdentityUseCasePersistenceModel> {
 
     public static RecipeIdentityUseCaseDataAccess INSTANCE = null;
 

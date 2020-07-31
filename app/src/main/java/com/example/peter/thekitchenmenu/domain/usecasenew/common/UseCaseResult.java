@@ -39,12 +39,12 @@ public abstract class UseCaseResult<
     @Override
     protected void initialiseUseCase() {
         failReasons.clear();
-        beginProcessingDomainDataElements();
+        beginProcessingDomainModel();
     }
 
-    protected abstract void beginProcessingDomainDataElements();
+    protected abstract void beginProcessingDomainModel();
 
-    protected void domainDataElementProcessingComplete() {
+    protected void domainModelProcessingComplete() {
         if (isChanged && isValid()) {
             saveChanges();
         }

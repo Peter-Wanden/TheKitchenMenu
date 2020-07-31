@@ -19,7 +19,7 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDurationResponse;
 import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.identity.RecipeIdentityUseCasePersistenceModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityRequest;
-import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.identity.RecipeIdentityRequestModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.identity.RecipeIdentityUseCaseRequestModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentName;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.metadata.ComponentState;
@@ -461,7 +461,7 @@ public class RecipeTest {
         // Identity Request 2, 'existing request', update title
         String validTitle = modelUnderTest.getTitle();
 
-        RecipeIdentityRequestModel validTitleModel = new RecipeIdentityRequestModel.Builder().
+        RecipeIdentityUseCaseRequestModel validTitleModel = new RecipeIdentityUseCaseRequestModel.Builder().
                 basedOnResponseModel(callbackClient.response.getDomainModel()).
                 setTitle(validTitle).
                 build();
@@ -475,7 +475,7 @@ public class RecipeTest {
 
         // Identity Request 3, existing request, update description
         String validDescription = modelUnderTest.getDescription();
-        RecipeIdentityRequestModel validTitleDescriptionModel = new RecipeIdentityRequestModel.
+        RecipeIdentityUseCaseRequestModel validTitleDescriptionModel = new RecipeIdentityUseCaseRequestModel.
                 Builder().basedOnResponseModel(callbackClient.response.getDomainModel()).
                 setDescription(validDescription).
                 build();

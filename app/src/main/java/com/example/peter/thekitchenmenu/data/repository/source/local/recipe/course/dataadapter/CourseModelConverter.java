@@ -2,8 +2,8 @@ package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.cou
 
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.courseitem.RecipeCourseEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.parent.RecipeCourseParentEntity;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCoursePersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.course.Course;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.course.RecipeCourseUseCasePersistenceModel;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
 import java.util.ArrayList;
@@ -20,25 +20,25 @@ public class CourseModelConverter {
         this.idProvider = idProvider;
     }
 
-    public RecipeCoursePersistenceModel.Builder addParentEntityToDomainModelBuilder(
+    public RecipeCourseUseCasePersistenceModel.Builder addParentEntityToDomainModelBuilder(
             @Nonnull RecipeCourseParentEntity entity) {
-        return new RecipeCoursePersistenceModel.Builder().
+        return new RecipeCourseUseCasePersistenceModel.Builder().
                 setDataId(entity.getDataId()).
                 setDomainId(entity.getDomainId()).
                 setCreateDate(entity.getCreateDate()).
                 setLastUpdate(entity.getLastUpdate());
     }
 
-    public List<RecipeCoursePersistenceModel.Builder> convertParentEntitiesToDomainModels(
+    public List<RecipeCourseUseCasePersistenceModel.Builder> convertParentEntitiesToDomainModels(
             @Nonnull List<RecipeCourseParentEntity> entities) {
 
-        List<RecipeCoursePersistenceModel.Builder> models = new ArrayList<>();
+        List<RecipeCourseUseCasePersistenceModel.Builder> models = new ArrayList<>();
         entities.forEach(entity -> models.add(addParentEntityToDomainModelBuilder(entity)));
         return models;
     }
 
     public RecipeCourseParentEntity convertParentDomainModelToEntity(
-            @Nonnull RecipeCoursePersistenceModel model) {
+            @Nonnull RecipeCourseUseCasePersistenceModel model) {
         return new RecipeCourseParentEntity.Builder().
                 getDefault().
                 setDataId(model.getDataId()).
@@ -49,7 +49,7 @@ public class CourseModelConverter {
     }
 
     public RecipeCourseEntity[] convertDomainCoursesToEntities(
-            @Nonnull List<RecipeCourse.Course> courses,
+            @Nonnull List<Course> courses,
             @Nonnull String parentDataId) {
 
         RecipeCourseEntity[] itemArray = new RecipeCourseEntity[courses.size()];
@@ -65,10 +65,10 @@ public class CourseModelConverter {
     }
 
 
-    public List<RecipeCourse.Course> convertCourseEntitiesToDomainModels(
+    public List<Course> convertCourseEntitiesToDomainModels(
             @Nonnull List<RecipeCourseEntity> entities) {
-        List<RecipeCourse.Course> models = new ArrayList<>();
-        entities.forEach(entity -> models.add(RecipeCourse.Course.fromId(entity.getCourseId())));
+        List<Course> models = new ArrayList<>();
+        entities.forEach(entity -> models.add(Course.fromId(entity.getCourseId())));
         return models;
     }
 }

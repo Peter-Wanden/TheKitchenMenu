@@ -2,6 +2,8 @@ package com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.iden
 
 import com.example.peter.thekitchenmenu.domain.usecasenew.model.DomainModel;
 
+import java.util.Objects;
+
 import javax.annotation.Nonnull;
 
 public final class RecipeIdentityUseCaseModel
@@ -34,14 +36,14 @@ public final class RecipeIdentityUseCaseModel
 
         RecipeIdentityUseCaseModel that = (RecipeIdentityUseCaseModel) o;
 
-        if (!title.equals(that.title)) return false;
-        return description.equals(that.description);
+        if (!Objects.equals(title, that.title)) return false;
+        return Objects.equals(description, that.description);
     }
 
     @Override
     public int hashCode() {
-        int result = title.hashCode();
-        result = 31 * result + description.hashCode();
+        int result = title != null ? title.hashCode() : 0;
+        result = 31 * result + (description != null ? description.hashCode() : 0);
         return result;
     }
 

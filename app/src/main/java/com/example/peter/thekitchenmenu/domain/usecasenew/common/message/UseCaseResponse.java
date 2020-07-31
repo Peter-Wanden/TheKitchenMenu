@@ -52,7 +52,8 @@ public final class UseCaseResponse
                 '}';
     }
 
-    public static class Builder<RESPONSE_MODEL extends DomainModel.ResponseModel> {
+    public static class Builder
+            <RESPONSE_MODEL extends DomainModel.ResponseModel> {
 
         private UseCaseResponse<RESPONSE_MODEL> useCaseResponse;
 
