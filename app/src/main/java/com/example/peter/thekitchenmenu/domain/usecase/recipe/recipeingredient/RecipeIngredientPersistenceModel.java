@@ -1,9 +1,9 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredient;
 
 import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.model.MeasurementModel;
-import com.example.peter.thekitchenmenu.domain.usecasenew.model.BasePersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.model.BaseDomainPersistenceModel;
 
-public class RecipeIngredientPersistenceModel extends BasePersistenceModel {
+public class RecipeIngredientPersistenceModel extends BaseDomainPersistenceModel {
 
     private String dataId;
     private String recipeIngredientId;
@@ -90,7 +90,7 @@ public class RecipeIngredientPersistenceModel extends BasePersistenceModel {
         }
 
         @Override
-        public Builder basedOnModel(RecipeIngredientPersistenceModel model) {
+        public Builder basedOnRequestModel(RecipeIngredientPersistenceModel model) {
             domainModel.dataId = model.getDataId();
             domainModel.recipeIngredientId = model.getDomainId();
             domainModel.recipeDataId = model.getRecipeDataId();

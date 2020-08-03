@@ -4,7 +4,7 @@ import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public abstract class BasePersistenceModel
+public abstract class BaseDomainPersistenceModel
         extends
         BaseDomainModel
         implements
@@ -38,8 +38,8 @@ public abstract class BasePersistenceModel
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof BasePersistenceModel)) return false;
-        BasePersistenceModel that = (BasePersistenceModel) o;
+        if (!(o instanceof BaseDomainPersistenceModel)) return false;
+        BaseDomainPersistenceModel that = (BaseDomainPersistenceModel) o;
         return createDate == that.createDate &&
                 lastUpdate == that.lastUpdate &&
                 Objects.equals(dataId, that.dataId) &&
@@ -64,7 +64,7 @@ public abstract class BasePersistenceModel
 
     protected abstract static class PersistenceModelBuilder<
             SELF extends PersistenceModelBuilder<SELF, PERSISTENCE_MODEL>,
-            PERSISTENCE_MODEL extends BasePersistenceModel>
+            PERSISTENCE_MODEL extends BaseDomainPersistenceModel>
             extends
             BaseDomainModelBuilder<SELF, PERSISTENCE_MODEL> {
 

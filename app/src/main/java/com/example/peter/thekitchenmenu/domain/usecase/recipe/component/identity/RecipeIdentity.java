@@ -258,7 +258,7 @@ public class RecipeIdentity
     @Override
     protected void archivePreviousState(long currentTime) {
         RecipeIdentityUseCasePersistenceModel model = new RecipeIdentityUseCasePersistenceModel.Builder().
-                basedOnModel(persistenceModel).
+                basedOnRequestModel(persistenceModel).
                 setLastUpdate(currentTime).
                 build();
 

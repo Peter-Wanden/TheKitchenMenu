@@ -1,26 +1,26 @@
 package com.example.peter.thekitchenmenu.domain.businessentity.textvalidation;
 
-import com.example.peter.thekitchenmenu.domain.businessentity.textvalidation.TextValidationBusinessEntity.TextLength;
 import com.example.peter.thekitchenmenu.domain.usecasenew.model.DomainModel;
 
 import javax.annotation.Nonnull;
 
 public final class TextValidationModel
         implements
-        DomainModel.EntityModel {
+        DomainModel.BusinessEntityModel {
 
     @Nonnull
-    private final TextLength textLength;
+    private final TextValidationBusinessEntityTextLength textLength;
     @Nonnull
     private final String text;
 
-    public TextValidationModel(@Nonnull TextLength textLength, @Nonnull String text) {
+    public TextValidationModel(@Nonnull TextValidationBusinessEntityTextLength textLength,
+                               @Nonnull String text) {
         this.textLength = textLength;
         this.text = text;
     }
 
     @Nonnull
-    public TextLength getTextLength() {
+    public TextValidationBusinessEntityTextLength getTextLength() {
         return textLength;
     }
 

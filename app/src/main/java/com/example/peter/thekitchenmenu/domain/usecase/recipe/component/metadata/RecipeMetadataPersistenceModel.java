@@ -5,7 +5,7 @@ import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.meta
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.failreason.RecipeFailReasonEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.parent.RecipeMetadataParentEntity;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.FailReasons;
-import com.example.peter.thekitchenmenu.domain.usecasenew.model.BasePersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.model.BaseDomainPersistenceModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,7 +23,7 @@ import com.example.peter.thekitchenmenu.domain.usecasenew.common.metadata.Compon
  */
 public final class RecipeMetadataPersistenceModel
         extends
-        BasePersistenceModel {
+        BaseDomainPersistenceModel {
 
     private String parentDomainId;
     private ComponentState componentState;
@@ -92,7 +92,7 @@ public final class RecipeMetadataPersistenceModel
         }
 
         @Override
-        public Builder basedOnModel(RecipeMetadataPersistenceModel model) {
+        public Builder basedOnRequestModel(RecipeMetadataPersistenceModel model) {
             domainModel.dataId = model.getDataId();
             domainModel.domainId = model.getDomainId();
             domainModel.parentDomainId = model.getParentDomainId();

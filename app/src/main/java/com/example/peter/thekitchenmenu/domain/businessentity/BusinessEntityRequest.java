@@ -4,11 +4,11 @@ import com.example.peter.thekitchenmenu.domain.usecasenew.model.DomainModel;
 
 import javax.annotation.Nonnull;
 
-public class EntityRequest<ENTITY_MODEL extends DomainModel.EntityModel> {
+public class BusinessEntityRequest<ENTITY_MODEL extends DomainModel.BusinessEntityModel> {
     @Nonnull
     private final ENTITY_MODEL model;
 
-    public EntityRequest(@Nonnull ENTITY_MODEL model) {
+    public BusinessEntityRequest(@Nonnull ENTITY_MODEL model) {
         this.model = model;
     }
 

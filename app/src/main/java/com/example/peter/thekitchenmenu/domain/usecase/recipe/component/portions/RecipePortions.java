@@ -195,7 +195,7 @@ public class RecipePortions
     @Override
     protected void archivePreviousState(long currentTime) {
         RecipePortionsPersistenceModel model = new RecipePortionsPersistenceModel.Builder().
-                basedOnModel(persistenceModel).
+                basedOnRequestModel(persistenceModel).
                 setLastUpdate(currentTime).
                 build();
 

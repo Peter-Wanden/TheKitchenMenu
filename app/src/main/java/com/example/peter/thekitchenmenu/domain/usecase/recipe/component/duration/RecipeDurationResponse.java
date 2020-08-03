@@ -4,7 +4,7 @@ import com.example.peter.thekitchenmenu.domain.usecasenew.model.BaseDomainModelB
 import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataIdMetadata;
 import com.example.peter.thekitchenmenu.domain.usecasenew.model.BaseDomainModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
-import com.example.peter.thekitchenmenu.domain.model.UseCaseMetadataModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.metadata.UseCaseMetadataModel;
 
 import java.util.Objects;
 
@@ -133,16 +133,14 @@ public final class RecipeDurationResponse
 
         public static class Builder
                 extends
-                BaseDomainModelBuilder<
-                                                        Builder,
-                                                        DomainModel> {
+                BaseDomainModelBuilder<Builder, DomainModel> {
 
             public Builder() {
                 domainModel = new DomainModel();
             }
 
             @Override
-            public Builder basedOnModel(DomainModel model) {
+            public Builder basedOnRequestModel(DomainModel model) {
                 return null;
             }
 

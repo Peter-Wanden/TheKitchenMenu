@@ -88,7 +88,7 @@ public final class RecipeResponse
             }
 
             @Override
-            public Builder basedOnModel(Model model) {
+            public Builder basedOnRequestModel(Model model) {
                 domainModel.componentResponses = model.getComponentResponses();
                 return self();
             }

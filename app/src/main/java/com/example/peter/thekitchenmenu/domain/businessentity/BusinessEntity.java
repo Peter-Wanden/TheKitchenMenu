@@ -6,28 +6,28 @@ import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.Fai
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class BusinessEntity<ENTITY_MODEL extends DomainModel.EntityModel> {
+public abstract class BusinessEntity<ENTITY_MODEL extends DomainModel.BusinessEntityModel> {
 
     public interface EntityCallback<RESPONSE> {
         void onProcessed(RESPONSE response);
     }
 
-    protected EntityRequest<ENTITY_MODEL> request;
+    protected BusinessEntityRequest<ENTITY_MODEL> request;
     protected ENTITY_MODEL model;
     protected List<FailReasons> failReasons;
-    protected EntityCallback<EntityResponse<ENTITY_MODEL>> callback;
+    protected EntityCallback<BusinessEntityResponse<ENTITY_MODEL>> callback;
 
-    public void execute(EntityRequest<ENTITY_MODEL> request,
-                        EntityCallback<EntityResponse<ENTITY_MODEL>> callback) {
+    public void execute(BusinessEntityRequest<ENTITY_MODEL> request,
+                        EntityCallback<BusinessEntityResponse<ENTITY_MODEL>> callback) {
         this.request = request;
         this.model = request.getModel();
         this.failReasons = new ArrayList<>();
         this.callback = callback;
 
-        processDataElements();
+        beginProcessingDomainModel();
     }
 
-    protected abstract void processDataElements();
+    protected abstract void beginProcessingDomainModel();
 
     protected abstract void sendResponse();
 }

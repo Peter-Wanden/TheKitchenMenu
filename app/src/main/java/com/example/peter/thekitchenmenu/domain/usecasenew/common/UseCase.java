@@ -6,10 +6,8 @@ import com.example.peter.thekitchenmenu.domain.usecasenew.common.message.UseCase
 import com.example.peter.thekitchenmenu.domain.usecasenew.model.DomainModel;
 
 public abstract class UseCase<
-        REQUEST_MODEL extends DomainModel.RequestModel,
-        RESPONSE_MODEL extends DomainModel.ResponseModel> {
-
-    public static final String NO_ID = "";
+        REQUEST_MODEL extends DomainModel.UseCaseRequestModel,
+        RESPONSE_MODEL extends DomainModel.UseCaseResponseModel> {
 
     protected UseCaseRequest<REQUEST_MODEL> useCaseRequest;
     protected UseCaseCallback<UseCaseResponse<RESPONSE_MODEL>> useCaseCallback;

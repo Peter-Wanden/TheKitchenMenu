@@ -14,7 +14,7 @@ public class RecipeCourseUseCaseRequestModel
         extends
         BaseDomainModel
         implements
-        DomainModel.RequestModel {
+        DomainModel.UseCaseRequestModel {
 
     private List<Course> courseList;
 
@@ -62,7 +62,7 @@ public class RecipeCourseUseCaseRequestModel
         }
 
         @Override
-        public Builder basedOnModel(RecipeCourseUseCaseRequestModel model) {
+        public Builder basedOnRequestModel(RecipeCourseUseCaseRequestModel model) {
             domainModel.courseList = model.courseList;
             return self();
         }

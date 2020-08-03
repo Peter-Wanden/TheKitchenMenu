@@ -1,6 +1,11 @@
 package com.example.peter.thekitchenmenu.domain.usecasenew.common.metadata;
 
+
+import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.FailReasons;
+import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
+import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataId;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,10 +13,15 @@ import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
+/**
+ * A data structure for storing a use case's metadata. Typically generated within a use case
+ * as it processes a {@link UseCaseMessageModelDataId} and sent as a member in its respective
+ * {@link UseCaseBase.Response}.
+ */
 public class UseCaseMetadataModel {
 
     @Nonnull
-    private final ComponentState componentState;
+    private final ComponentState state;
     @Nonnull
     private final List<FailReasons> failReasons;
     @Nonnull
@@ -19,12 +29,12 @@ public class UseCaseMetadataModel {
     private final long createDate;
     private final long lastUpdate;
 
-    private UseCaseMetadataModel(@Nonnull ComponentState componentState,
+    private UseCaseMetadataModel(@Nonnull ComponentState state,
                                  @Nonnull List<FailReasons> failReasons,
                                  @Nonnull String createdBy,
                                  long createDate,
                                  long lastUpdate) {
-        this.componentState = componentState;
+        this.state = state;
         this.failReasons = failReasons;
         this.createdBy = createdBy;
         this.createDate = createDate;
@@ -33,7 +43,7 @@ public class UseCaseMetadataModel {
 
     @Nonnull
     public ComponentState getComponentState() {
-        return componentState;
+        return state;
     }
 
     @Nonnull
@@ -61,47 +71,46 @@ public class UseCaseMetadataModel {
         UseCaseMetadataModel that = (UseCaseMetadataModel) o;
         return createDate == that.createDate &&
                 lastUpdate == that.lastUpdate &&
-                componentState == that.componentState &&
+                state == that.state &&
                 failReasons.equals(that.failReasons) &&
                 createdBy.equals(that.createdBy);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(componentState, failReasons, createdBy, createDate, lastUpdate);
+        return Objects.hash(state, failReasons, createdBy, createDate, lastUpdate);
     }
 
     @Nonnull
     @Override
     public String toString() {
-        return "MetadataModel{" +
-                "componentState=" + componentState +
+        return "UseCaseMetadata{" +
+                "state=" + state +
                 ", failReasons=" + failReasons +
                 ", createdBy='" + createdBy + '\'' +
                 ", createDate=" + createDate +
-                ", lastUpdate=" + lastUpdate +
+                ", lasUpdate=" + lastUpdate +
                 '}';
     }
 
     public static class Builder {
-
-        private ComponentState componentState;
+        private ComponentState state;
         private List<FailReasons> failReasons;
         private String createdBy;
         private long createDate;
-        private long lastUpdate;
+        private long lasUpdate;
 
         public Builder getDefault() {
-            return new Builder()
-                    .setComponentState(ComponentState.INVALID_UNCHANGED)
-                    .setFailReasons(new ArrayList<>())
-                    .setCreatedBy("")
-                    .setCreateDate(0L)
-                    .setLastUpdate(0L);
+            return new Builder().
+                    setComponentState(ComponentState.INVALID_UNCHANGED).
+                    setFailReasons(getDefaultFailReasons()).
+                    setCreatedBy(Constants.getUserId()).
+                    setCreateDate(0L).
+                    setLastUpdate(0L);
         }
 
-        public Builder setComponentState(ComponentState componentState) {
-            this.componentState = componentState;
+        public Builder setComponentState(ComponentState state) {
+            this.state = state;
             return this;
         }
 
@@ -120,18 +129,24 @@ public class UseCaseMetadataModel {
             return this;
         }
 
-        public Builder setLastUpdate(long lastUpdate) {
-            this.lastUpdate = lastUpdate;
+        public Builder setLastUpdate(long lasUpdate) {
+            this.lasUpdate = lasUpdate;
             return this;
+        }
+
+        private static List<FailReasons> getDefaultFailReasons() {
+            List<FailReasons> failReasons = new ArrayList<>();
+            failReasons.add(RecipeMetadata.FailReason.MISSING_REQUIRED_COMPONENTS);
+            return failReasons;
         }
 
         public UseCaseMetadataModel build() {
             return new UseCaseMetadataModel(
-                    componentState,
+                    state,
                     failReasons,
                     createdBy,
                     createDate,
-                    lastUpdate
+                    lasUpdate
             );
         }
     }

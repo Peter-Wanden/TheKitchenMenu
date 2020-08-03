@@ -24,7 +24,7 @@ public class RecipeCourseUseCase
     @Override
     protected void beginProcessingDomainModel() {
         if (useCaseModel.isEmpty()) {
-            failReasons.add(RecipeCourseUseCaseFailReason.NO_COURSE_SELECTED);
+            useCaseFailReasons.add(RecipeCourseUseCaseFailReason.NO_COURSE_SELECTED);
         }
         domainModelProcessingComplete();
     }

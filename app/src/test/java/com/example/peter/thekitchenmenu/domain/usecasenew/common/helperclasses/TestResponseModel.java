@@ -10,7 +10,7 @@ public final class TestResponseModel
         extends
         BaseDomainModel
         implements
-        DomainModel.ResponseModel {
+        DomainModel.UseCaseResponseModel {
 
     private String responseModelString = "responseModelString";
 
@@ -38,7 +38,7 @@ public final class TestResponseModel
         }
 
         @Override
-        public Builder basedOnModel(TestResponseModel model) {
+        public Builder basedOnRequestModel(TestResponseModel model) {
             domainModel.responseModelString = model.getResponseModelString();
             return self();
         }

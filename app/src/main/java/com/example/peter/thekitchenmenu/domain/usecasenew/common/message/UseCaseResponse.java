@@ -6,7 +6,7 @@ import com.example.peter.thekitchenmenu.domain.usecasenew.model.DomainModel;
 import javax.annotation.Nonnull;
 
 public final class UseCaseResponse
-        <RESPONSE_MODEL extends DomainModel.ResponseModel> {
+        <RESPONSE_MODEL extends DomainModel.UseCaseResponseModel> {
 
     private String dataId;
     private String domainId;
@@ -53,7 +53,7 @@ public final class UseCaseResponse
     }
 
     public static class Builder
-            <RESPONSE_MODEL extends DomainModel.ResponseModel> {
+            <RESPONSE_MODEL extends DomainModel.UseCaseResponseModel> {
 
         private UseCaseResponse<RESPONSE_MODEL> useCaseResponse;
 

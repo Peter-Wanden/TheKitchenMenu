@@ -1,13 +1,13 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions;
 
-import com.example.peter.thekitchenmenu.domain.usecasenew.model.BasePersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.model.BaseDomainPersistenceModel;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
 public final class RecipePortionsPersistenceModel
-        extends BasePersistenceModel {
+        extends BaseDomainPersistenceModel {
 
     private int servings;
     private int sittings;
@@ -69,7 +69,7 @@ public final class RecipePortionsPersistenceModel
         }
 
         @Override
-        public Builder basedOnModel(@Nonnull RecipePortionsPersistenceModel m) {
+        public Builder basedOnRequestModel(@Nonnull RecipePortionsPersistenceModel m) {
             domainModel.dataId = m.getDataId();
             domainModel.domainId = m.getDomainId();
             domainModel.servings = m.getServings();

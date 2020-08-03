@@ -7,7 +7,7 @@ import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.repository.DatabaseInjection;
 import com.example.peter.thekitchenmenu.data.repository.ingredient.DataAccessIngredient;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RecipeCourseUseCaseDataAccess;
-import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipeDuration;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RecipeDurationUseCaseDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RecipeIdentityUseCaseDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipeIngredient;
 import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipeMetadata;
@@ -46,7 +46,7 @@ public class UseCaseFactory {
     private final DataAccessRecipeIngredient recipeIngredientRepository;
     private final DataAccessIngredient ingredientRepository;
     private final RecipeIdentityUseCaseDataAccess recipeIdentityUseCaseDataAccess;
-    private final DataAccessRecipeDuration recipeDurationRepository;
+    private final RecipeDurationUseCaseDataAccess recipeDurationRepository;
     private final RecipeCourseUseCaseDataAccess recipeCourseRepository;
 
     private UseCaseFactory(Application application,
@@ -55,7 +55,7 @@ public class UseCaseFactory {
                            DataAccessRecipeIngredient recipeIngredientRepository,
                            DataAccessIngredient ingredientRepository,
                            RecipeIdentityUseCaseDataAccess recipeIdentityUseCaseDataAccess,
-                           DataAccessRecipeDuration recipeDurationRepository,
+                           RecipeDurationUseCaseDataAccess recipeDurationRepository,
                            RecipeCourseUseCaseDataAccess recipeCourseRepository) {
 
         this.application = application;

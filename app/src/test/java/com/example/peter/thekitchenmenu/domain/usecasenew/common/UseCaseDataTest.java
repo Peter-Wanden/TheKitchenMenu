@@ -2,6 +2,7 @@ package com.example.peter.thekitchenmenu.domain.usecasenew.common;
 
 import com.example.peter.thekitchenmenu.commonmocks.StringMaker;
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess.GetDomainModelCallback;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.metadata.UseCaseMetadataModel;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.helperclasses.TestDomainModelConverter;
@@ -13,7 +14,6 @@ import com.example.peter.thekitchenmenu.domain.usecasenew.common.helperclasses.T
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.helperclasses.TestUseCasePersistenceModel;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.message.UseCaseCallback;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.message.UseCaseResponse;
-import com.example.peter.thekitchenmenu.domain.usecasenew.common.metadata.UseCaseMetadataModel;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
@@ -467,13 +467,13 @@ public class UseCaseDataTest {
 
         // archived model is initial model with last update updated
         TestUseCasePersistenceModel expectedArchivedModel = new TestUseCasePersistenceModel.Builder()
-                .basedOnModel(initialModel)
+                .basedOnRequestModel(initialModel)
                 .setLastUpdate(20L)
                 .build();
 
         // expected model to be saved with new dates and domain data
         TestUseCasePersistenceModel expectedPersistenceModel = new TestUseCasePersistenceModel.Builder()
-                .basedOnModel(initialModel)
+                .basedOnRequestModel(initialModel)
                 .setDataId("newDataId")
                 .setPersistenceModelString(newDomainData)
                 .setCreateDate(20L)

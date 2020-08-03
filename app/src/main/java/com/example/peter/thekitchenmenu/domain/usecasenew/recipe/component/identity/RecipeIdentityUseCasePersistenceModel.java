@@ -1,6 +1,6 @@
 package com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.identity;
 
-import com.example.peter.thekitchenmenu.domain.usecasenew.model.BasePersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.model.BaseDomainPersistenceModel;
 
 import java.util.Objects;
 
@@ -8,7 +8,7 @@ import javax.annotation.Nonnull;
 
 public final class RecipeIdentityUseCasePersistenceModel
         extends
-        BasePersistenceModel {
+        BaseDomainPersistenceModel {
 
     private String title;
     private String description;
@@ -69,7 +69,7 @@ public final class RecipeIdentityUseCasePersistenceModel
         }
 
         @Override
-        public Builder basedOnModel(@Nonnull RecipeIdentityUseCasePersistenceModel model) {
+        public Builder basedOnRequestModel(@Nonnull RecipeIdentityUseCasePersistenceModel model) {
             domainModel.dataId = model.getDataId();
             domainModel.domainId = model.getDomainId();
             domainModel.title = model.getTitle();

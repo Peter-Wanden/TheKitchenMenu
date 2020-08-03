@@ -1,17 +1,17 @@
-package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration;
+package com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.duration;
 
-import com.example.peter.thekitchenmenu.domain.usecasenew.model.BasePersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.model.BaseDomainPersistenceModel;
 
 import javax.annotation.Nonnull;
 
-public final class RecipeDurationPersistenceModel
+public final class RecipeDurationUseCasePersistenceModel
         extends
-        BasePersistenceModel {
+        BaseDomainPersistenceModel {
 
     private int prepTime;
     private int cookTime;
 
-    private RecipeDurationPersistenceModel() {}
+    private RecipeDurationUseCasePersistenceModel() {}
 
     public int getPrepTime() {
         return prepTime;
@@ -24,10 +24,10 @@ public final class RecipeDurationPersistenceModel
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof RecipeDurationPersistenceModel)) return false;
+        if (!(o instanceof RecipeDurationUseCasePersistenceModel)) return false;
         if (!super.equals(o)) return false;
 
-        RecipeDurationPersistenceModel that = (RecipeDurationPersistenceModel) o;
+        RecipeDurationUseCasePersistenceModel that = (RecipeDurationUseCasePersistenceModel) o;
 
         if (prepTime != that.prepTime) return false;
         return cookTime == that.cookTime;
@@ -56,10 +56,10 @@ public final class RecipeDurationPersistenceModel
 
     public static class Builder
             extends
-            PersistenceModelBuilder<Builder, RecipeDurationPersistenceModel> {
+            PersistenceModelBuilder<Builder, RecipeDurationUseCasePersistenceModel> {
 
         public Builder() {
-            domainModel = new RecipeDurationPersistenceModel();
+            domainModel = new RecipeDurationUseCasePersistenceModel();
         }
 
         @Override
@@ -74,7 +74,7 @@ public final class RecipeDurationPersistenceModel
         }
 
         @Override
-        public Builder basedOnModel(@Nonnull RecipeDurationPersistenceModel m) {
+        public Builder basedOnRequestModel(@Nonnull RecipeDurationUseCasePersistenceModel m) {
             domainModel.dataId = m.getDataId();
             domainModel.domainId = m.getDomainId();
             domainModel.prepTime = m.getPrepTime();

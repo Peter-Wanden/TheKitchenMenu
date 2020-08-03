@@ -10,7 +10,7 @@ public final class TestRequestModel
         extends
         BaseDomainModel
         implements
-        DomainModel.RequestModel {
+        DomainModel.UseCaseRequestModel {
 
     private String requestModelString;
 
@@ -38,7 +38,7 @@ public final class TestRequestModel
         }
 
         @Override
-        public Builder basedOnModel(TestRequestModel model) {
+        public Builder basedOnRequestModel(TestRequestModel model) {
             domainModel.requestModelString = model.requestModelString;
             return self();
         }

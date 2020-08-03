@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.datasource;
 
 import com.example.peter.thekitchenmenu.data.repository.recipe.duration.TestDataRecipeDuration;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDurationPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.duration.RecipeDurationUseCasePersistenceModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +48,7 @@ public class TestDataRecipeDurationEntity {
 
     public static List<RecipeDurationEntity> getAllNew() {
         List<RecipeDurationEntity> entities = new ArrayList<>();
-        for (RecipeDurationPersistenceModel m : TestDataRecipeDuration.getAllNew()) {
+        for (RecipeDurationUseCasePersistenceModel m : TestDataRecipeDuration.getAllNew()) {
             entities.add(convertDomainModelToDatabaseEntity(m));
         }
         return entities;
@@ -56,7 +56,7 @@ public class TestDataRecipeDurationEntity {
 
     public static RecipeDurationEntity getInvalidExistingComplete() {
         return convertDomainModelToDatabaseEntity(TestDataRecipeDuration.
-                getExistingInvalidPreAndCookTime());
+                getExistingInvalidPrepAndCookTime());
     }
 
     public static RecipeDurationEntity getValidExistingComplete() {
@@ -90,7 +90,7 @@ public class TestDataRecipeDurationEntity {
     }
 
     private static RecipeDurationEntity convertDomainModelToDatabaseEntity(
-            RecipeDurationPersistenceModel m) {
+            RecipeDurationUseCasePersistenceModel m) {
         return new RecipeDurationEntity(
                 m.getDataId(),
                 m.getDomainId(),

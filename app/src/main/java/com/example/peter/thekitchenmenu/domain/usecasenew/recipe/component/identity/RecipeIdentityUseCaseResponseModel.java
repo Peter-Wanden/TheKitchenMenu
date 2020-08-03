@@ -12,7 +12,7 @@ public final class RecipeIdentityUseCaseResponseModel
         extends
         BaseDomainModel
         implements
-        DomainModel.ResponseModel {
+        DomainModel.UseCaseResponseModel {
 
     private String title;
     private String description;
@@ -61,7 +61,7 @@ public final class RecipeIdentityUseCaseResponseModel
         }
 
         @Override
-        public Builder basedOnModel(RecipeIdentityUseCaseResponseModel model) {
+        public Builder basedOnRequestModel(RecipeIdentityUseCaseResponseModel model) {
             domainModel.title = model.getTitle();
             domainModel.description = model.getDescription();
             return self();

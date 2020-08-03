@@ -12,7 +12,7 @@ public final class RecipeIdentityUseCaseRequestModel
         extends
         BaseDomainModel
         implements
-        DomainModel.RequestModel {
+        DomainModel.UseCaseRequestModel {
 
     private String title;
     private String description;
@@ -59,7 +59,7 @@ public final class RecipeIdentityUseCaseRequestModel
         }
 
         @Override
-        public Builder basedOnModel(RecipeIdentityUseCaseRequestModel model) {
+        public Builder basedOnRequestModel(RecipeIdentityUseCaseRequestModel model) {
             domainModel.title = model.getTitle();
             domainModel.description = model.getDescription();
             return self();

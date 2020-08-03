@@ -120,16 +120,14 @@ public final class RecipeDurationRequest
 
         public static class Builder
                 extends
-                BaseDomainModelBuilder<
-                                                        Builder,
-                                                        DomainModel> {
+                BaseDomainModelBuilder<Builder, DomainModel> {
 
             public Builder() {
                 domainModel = new DomainModel();
             }
 
             @Override
-            public Builder basedOnModel(DomainModel model) {
+            public Builder basedOnRequestModel(DomainModel model) {
                 return null;
             }
 

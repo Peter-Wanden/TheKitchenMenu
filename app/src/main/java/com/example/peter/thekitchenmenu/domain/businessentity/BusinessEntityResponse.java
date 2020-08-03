@@ -7,13 +7,13 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-public class EntityResponse<ENTITY_MODEL extends DomainModel.EntityModel> {
+public class BusinessEntityResponse<ENTITY_MODEL extends DomainModel.BusinessEntityModel> {
     @Nonnull
     private final ENTITY_MODEL model;
     @Nonnull
     private final List<FailReasons> failReasons;
 
-    public EntityResponse(@Nonnull ENTITY_MODEL model, @Nonnull List<FailReasons> failReasons) {
+    public BusinessEntityResponse(@Nonnull ENTITY_MODEL model, @Nonnull List<FailReasons> failReasons) {
         this.model = model;
         this.failReasons = failReasons;
     }

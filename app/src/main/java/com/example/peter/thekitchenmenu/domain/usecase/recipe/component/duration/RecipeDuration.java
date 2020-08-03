@@ -1,23 +1,19 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration;
 
-import android.annotation.SuppressLint;
-
-import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipeDuration;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RecipeDurationUseCaseDataAccess;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseElement;
-import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.FailReasons;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.duration.RecipeDurationUseCaseFailReason;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.duration.RecipeDurationUseCasePersistenceModel;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.annotation.Nonnull;
 
 public class RecipeDuration
         extends
         UseCaseElement<
-                DataAccessRecipeDuration,
-                RecipeDurationPersistenceModel,
+                RecipeDurationUseCaseDataAccess,
+                RecipeDurationUseCasePersistenceModel,
                 RecipeDuration.DomainModel> {
 
     private static final String TAG = "tkm-" + RecipeDuration.class.getSimpleName() + ": ";
@@ -61,40 +57,10 @@ public class RecipeDuration
         }
     }
 
-    public enum FailReason
-            implements
-            FailReasons {
-        INVALID_PREP_TIME(250),
-        INVALID_COOK_TIME(251);
-
-        private final int id;
-
-        @SuppressLint("UseSparseArrays")
-        private static Map<Integer, FailReason> options = new HashMap<>();
-
-        FailReason(int id) {
-            this.id = id;
-        }
-
-        static {
-            for (FailReason s : FailReason.values())
-                options.put(s.id, s);
-        }
-
-        public static FailReason getById(int id) {
-            return options.get(id);
-        }
-
-        @Override
-        public int getId() {
-            return id;
-        }
-    }
-
     private final int MAX_PREP_TIME;
     private final int MAX_COOK_TIME;
 
-    public RecipeDuration(@Nonnull DataAccessRecipeDuration repository,
+    public RecipeDuration(@Nonnull RecipeDurationUseCaseDataAccess repository,
                           @Nonnull UniqueIdProvider idProvider,
                           @Nonnull TimeProvider timeProvider,
                           int maxPrepTime,
@@ -112,7 +78,7 @@ public class RecipeDuration
 
     @Override
     protected DomainModel createUseCaseModelFromPersistenceModel(
-            @Nonnull RecipeDurationPersistenceModel persistenceModel) {
+            @Nonnull RecipeDurationUseCasePersistenceModel persistenceModel) {
 
         return new DomainModel(
                 persistenceModel.getPrepTime(),
@@ -145,13 +111,13 @@ public class RecipeDuration
 
     private void validatePrepTime() {
         if (useCaseModel.prepTime > MAX_PREP_TIME) {
-            failReasons.add(FailReason.INVALID_PREP_TIME);
+            failReasons.add(RecipeDurationUseCaseFailReason.INVALID_PREP_TIME);
         }
     }
 
     private void validateCookTime() {
         if (useCaseModel.cookTime > MAX_COOK_TIME) {
-            failReasons.add(FailReason.INVALID_COOK_TIME);
+            failReasons.add(RecipeDurationUseCaseFailReason.INVALID_COOK_TIME);
         }
     }
 
@@ -166,7 +132,7 @@ public class RecipeDuration
                 archivePreviousState(currentTime);
             }
 
-            persistenceModel = new RecipeDurationPersistenceModel.Builder().
+            persistenceModel = new RecipeDurationUseCasePersistenceModel.Builder().
                     setDataId(useCaseDataId).
                     setDomainId(useCaseDomainId).
                     setPrepTime(useCaseModel.prepTime).
@@ -182,8 +148,8 @@ public class RecipeDuration
 
     @Override
     protected void archivePreviousState(long currentTime) {
-        RecipeDurationPersistenceModel model = new RecipeDurationPersistenceModel.Builder().
-                basedOnModel(persistenceModel).
+        RecipeDurationUseCasePersistenceModel model = new RecipeDurationUseCasePersistenceModel.Builder().
+                basedOnRequestModel(persistenceModel).
                 setLastUpdate(currentTime).
                 build();
 

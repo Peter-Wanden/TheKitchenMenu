@@ -1,6 +1,6 @@
 package com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.course;
 
-import com.example.peter.thekitchenmenu.domain.usecasenew.model.BasePersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.model.BaseDomainPersistenceModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +9,7 @@ import javax.annotation.Nonnull;
 
 public final class RecipeCourseUseCasePersistenceModel
         extends
-        BasePersistenceModel {
+        BaseDomainPersistenceModel {
 
     @Nonnull
     private List<Course> courses;
@@ -72,7 +72,7 @@ public final class RecipeCourseUseCasePersistenceModel
         }
 
         @Override
-        public Builder basedOnModel(RecipeCourseUseCasePersistenceModel domainModel) {
+        public Builder basedOnRequestModel(RecipeCourseUseCasePersistenceModel domainModel) {
             this.domainModel.dataId = domainModel.getDataId();
             this.domainModel.domainId = domainModel.getDomainId();
             this.domainModel.courses = domainModel.getCourses();

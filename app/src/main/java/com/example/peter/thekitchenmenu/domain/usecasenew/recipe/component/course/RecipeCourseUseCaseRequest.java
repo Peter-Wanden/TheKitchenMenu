@@ -3,11 +3,15 @@ package com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.cour
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.message.UseCaseRequest;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.message.UseCaseResponse;
 
+import javax.annotation.Nonnull;
+
 public class RecipeCourseUseCaseRequest
         extends
         UseCaseRequest<RecipeCourseUseCaseRequestModel> {
 
-    public static class Builder extends UseCaseRequest.Builder<
+    public static class Builder
+            extends
+            UseCaseRequest.Builder<
             Builder,
             RecipeCourseUseCaseRequest,
             RecipeCourseUseCaseRequestModel> {
@@ -16,7 +20,7 @@ public class RecipeCourseUseCaseRequest
             super(new RecipeCourseUseCaseRequest());
         }
 
-        public Builder basedOnResponse(UseCaseResponse<RecipeCourseUseCaseResponseModel> response) {
+        public Builder basedOnResponse(@Nonnull UseCaseResponse<RecipeCourseUseCaseResponseModel> response) {
             useCaseRequest.dataId = response.getDataId();
             useCaseRequest.domainId = response.getDomainId();
 

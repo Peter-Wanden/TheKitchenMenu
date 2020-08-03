@@ -38,7 +38,7 @@ public class TestDataRecipePortions {
 
     public static RecipePortionsPersistenceModel getNewArchivedDefault() {
         return new RecipePortionsPersistenceModel.Builder().
-                basedOnModel(getNewActiveDefault()).
+                basedOnRequestModel(getNewActiveDefault()).
                 setLastUpdate(20L).
                 build();
     }
@@ -145,7 +145,7 @@ public class TestDataRecipePortions {
 
     public static RecipePortionsPersistenceModel getArchivedValidNinePortions() {
         return new RecipePortionsPersistenceModel.Builder().
-                basedOnModel(getExistingValidNinePortions()).
+                basedOnRequestModel(getExistingValidNinePortions()).
                 setLastUpdate(40L).
                 build();
     }

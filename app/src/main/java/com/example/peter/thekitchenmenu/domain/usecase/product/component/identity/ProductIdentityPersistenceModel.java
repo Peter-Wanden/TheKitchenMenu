@@ -1,13 +1,13 @@
 package com.example.peter.thekitchenmenu.domain.usecase.product.component.identity;
 
-import com.example.peter.thekitchenmenu.domain.usecasenew.model.BasePersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.model.BaseDomainPersistenceModel;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
 public class ProductIdentityPersistenceModel
-        extends BasePersistenceModel {
+        extends BaseDomainPersistenceModel {
 
     private String name;
     private String description;
@@ -92,7 +92,7 @@ public class ProductIdentityPersistenceModel
         }
 
         @Override
-        public Builder basedOnModel(@Nonnull ProductIdentityPersistenceModel model) {
+        public Builder basedOnRequestModel(@Nonnull ProductIdentityPersistenceModel model) {
             domainModel.dataId = model.getDataId();
             domainModel.domainId = model.getDomainId();
             domainModel.name = model.getName();

@@ -9,6 +9,7 @@ import javax.annotation.Nonnull;
 public final class RecipeIdentityUseCaseModel
         implements
         DomainModel.UseCaseModel {
+
     @Nonnull
     private final String title;
     @Nonnull

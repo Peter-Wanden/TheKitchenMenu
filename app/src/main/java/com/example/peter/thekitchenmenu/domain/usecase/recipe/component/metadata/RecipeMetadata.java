@@ -301,7 +301,7 @@ public class RecipeMetadata
     @Override
     protected void archivePreviousState(long currentTime) {
         RecipeMetadataPersistenceModel model = new RecipeMetadataPersistenceModel.Builder().
-                basedOnModel(persistenceModel).
+                basedOnRequestModel(persistenceModel).
                 setLastUpdate(currentTime).
                 build();
 

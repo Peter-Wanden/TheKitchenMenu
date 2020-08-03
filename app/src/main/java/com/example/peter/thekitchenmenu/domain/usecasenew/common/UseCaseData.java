@@ -9,8 +9,8 @@ public abstract class UseCaseData<
         DATA_ACCESS extends DomainDataAccess<PERSISTENCE_MODEL>,
         PERSISTENCE_MODEL extends DomainModel.PersistenceModel,
         USE_CASE_MODEL extends DomainModel.UseCaseModel,
-        REQUEST_MODEL extends DomainModel.RequestModel,
-        RESPONSE_MODEL extends DomainModel.ResponseModel>
+        REQUEST_MODEL extends DomainModel.UseCaseRequestModel,
+        RESPONSE_MODEL extends DomainModel.UseCaseResponseModel>
         extends
         UseCase<REQUEST_MODEL, RESPONSE_MODEL>
         implements

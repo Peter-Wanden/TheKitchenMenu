@@ -13,7 +13,7 @@ public interface DomainModel {
     /**
      * Business entity domain model
      */
-    interface EntityModel {
+    interface BusinessEntityModel {
     }
 
     /**
@@ -39,20 +39,20 @@ public interface DomainModel {
     /**
      * Request domain model
      */
-    interface RequestModel {
+    interface UseCaseRequestModel {
     }
 
     /**
      * Response domain model
      */
-    interface ResponseModel {
+    interface UseCaseResponseModel {
     }
 
     abstract class Converter<
             USE_CASE_MODEL extends UseCaseModel,
             PERSISTENCE_MODEL extends PersistenceModel,
-            REQUEST_MODEL extends RequestModel,
-            RESPONSE_MODEL extends ResponseModel> {
+            REQUEST_MODEL extends UseCaseRequestModel,
+            RESPONSE_MODEL extends UseCaseResponseModel> {
 
         @Nonnull
         protected final TimeProvider timeProvider;
@@ -80,7 +80,7 @@ public interface DomainModel {
                 @Nonnull PERSISTENCE_MODEL persistenceModel);
 
         public abstract RESPONSE_MODEL convertUseCaseToResponseModel(
-                @Nonnull USE_CASE_MODEL model);
+                @Nonnull USE_CASE_MODEL useCaseModel);
 
         public abstract PERSISTENCE_MODEL updatePersistenceModel(
                 @Nonnull PERSISTENCE_MODEL persistenceModel,

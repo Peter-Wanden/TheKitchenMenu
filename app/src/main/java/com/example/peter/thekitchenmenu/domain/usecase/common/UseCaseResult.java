@@ -4,7 +4,7 @@ import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.metadata.ComponentState;
 import com.example.peter.thekitchenmenu.domain.usecasenew.model.DomainModel;
-import com.example.peter.thekitchenmenu.domain.model.UseCaseMetadataModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.metadata.UseCaseMetadataModel;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.FailReasons;
 
@@ -16,8 +16,8 @@ public abstract class UseCaseResult<
         DATA_ACCESS extends DomainDataAccess<PERSISTENCE_MODEL>,
         PERSISTENCE_MODEL extends DomainModel.PersistenceModel,
         USE_CASE_MODEL extends DomainModel.UseCaseModel,
-        USE_CASE_REQUEST_MODEL extends DomainModel.RequestModel,
-        USE_CASE_RESPONSE_MODEL extends DomainModel.ResponseModel>
+        USE_CASE_REQUEST_MODEL extends DomainModel.UseCaseRequestModel,
+        USE_CASE_RESPONSE_MODEL extends DomainModel.UseCaseResponseModel>
 
         extends
         UseCaseData<

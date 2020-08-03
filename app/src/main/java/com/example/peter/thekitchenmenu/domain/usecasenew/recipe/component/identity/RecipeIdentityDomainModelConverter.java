@@ -73,17 +73,17 @@ public final class RecipeIdentityDomainModelConverter
     public RecipeIdentityUseCasePersistenceModel createArchivedPersistenceModel(
             @Nonnull RecipeIdentityUseCasePersistenceModel persistenceModel) {
         return new RecipeIdentityUseCasePersistenceModel.Builder()
-                .basedOnModel(persistenceModel)
+                .basedOnRequestModel(persistenceModel)
                 .setLastUpdate(timeProvider.getCurrentTimeInMills())
                 .build();
     }
 
     @Override
     public RecipeIdentityUseCaseResponseModel convertUseCaseToResponseModel(
-            @Nonnull RecipeIdentityUseCaseModel model) {
+            @Nonnull RecipeIdentityUseCaseModel useCaseModel) {
         return new RecipeIdentityUseCaseResponseModel.Builder()
-                .setTitle(model.getTitle())
-                .setDescription(model.getDescription())
+                .setTitle(useCaseModel.getTitle())
+                .setDescription(useCaseModel.getDescription())
                 .build();
     }
 }

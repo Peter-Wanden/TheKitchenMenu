@@ -5,8 +5,8 @@ import android.content.res.Resources;
 import androidx.core.util.Pair;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.duration.RecipeDurationUseCaseFailReason;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDuration;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDurationResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
@@ -94,7 +94,7 @@ public class RecipeDurationEditorViewModel extends ObservableViewModel {
     private boolean isInvalidPrepTime() {
         return response.getMetadata().
                 getFailReasons().
-                contains(RecipeDuration.FailReason.INVALID_PREP_TIME);
+                contains(RecipeDurationUseCaseFailReason.INVALID_PREP_TIME);
     }
 
     private String getPrepTimeErrorMessage() {
@@ -104,7 +104,7 @@ public class RecipeDurationEditorViewModel extends ObservableViewModel {
     private boolean isInvalidCookTime() {
         return response.getMetadata().
                 getFailReasons().
-                contains(RecipeDuration.FailReason.INVALID_COOK_TIME);
+                contains(RecipeDurationUseCaseFailReason.INVALID_COOK_TIME);
     }
 
     private String getCookTimeErrorMessage() {

@@ -8,7 +8,7 @@ import com.example.peter.thekitchenmenu.data.repository.ingredient.DataAccessIng
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
-import com.example.peter.thekitchenmenu.domain.model.UseCaseMetadataModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.metadata.UseCaseMetadataModel;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidatorModel;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidatorRequest;
@@ -330,7 +330,7 @@ public class Ingredient
 
     private IngredientPersistenceModel updatePersistenceModel() {
         return new IngredientPersistenceModel.Builder().
-                basedOnModel(persistenceModel).
+                basedOnRequestModel(persistenceModel).
                 setDataId(idProvider.getUId()).
                 setName(requestModel.getName()).
                 setDescription(requestModel.getDescription()).

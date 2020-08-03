@@ -34,7 +34,7 @@ public class TestDataRecipeCourse {
     // When state changed (course added or removed), the old persistence model is archived
     public static RecipeCourseUseCasePersistenceModel getNewArchivedDefaultNoCourses() {
         return new RecipeCourseUseCasePersistenceModel.Builder().
-                basedOnModel(getNewActiveDefaultNoCourses()).
+                basedOnRequestModel(getNewActiveDefaultNoCourses()).
                 setLastUpdate(20L). // updated to current time
                 build();
     }
@@ -42,7 +42,7 @@ public class TestDataRecipeCourse {
     // A course has been added, a new active persistence model is saved
     public static RecipeCourseUseCasePersistenceModel getNewActiveCourseOne() {
         return new RecipeCourseUseCasePersistenceModel.Builder().
-                basedOnModel(getNewActiveDefaultNoCourses()). // only have to add changed data
+                basedOnRequestModel(getNewActiveDefaultNoCourses()). // only have to add changed data
                 setDataId("dataId-recipeCourse-new-id1"). // new data id added
                 setCourses(Collections.singletonList(Course.COURSE_ONE)). // new course added
                 setCreateDate(20L). // current time added
@@ -53,7 +53,7 @@ public class TestDataRecipeCourse {
     // When state changed, old persistence model is archived
     public static RecipeCourseUseCasePersistenceModel getNewArchivedCourseOne() {
         return new RecipeCourseUseCasePersistenceModel.Builder().
-                basedOnModel(getNewActiveCourseOne()).
+                basedOnRequestModel(getNewActiveCourseOne()).
                 setLastUpdate(30L). // current time added
                 build();
     }
@@ -61,7 +61,7 @@ public class TestDataRecipeCourse {
     // A second course is added, a new persistence model is saved
     public static RecipeCourseUseCasePersistenceModel getNewActiveCourseOneAndTwo() {
         return new RecipeCourseUseCasePersistenceModel.Builder().
-                basedOnModel(getNewActiveCourseOne()).
+                basedOnRequestModel(getNewActiveCourseOne()).
                 setDataId("dataId-recipeCourse-new-id2"). // new data id added
                 setCourses(Arrays.asList(Course.COURSE_ONE, Course.COURSE_TWO)). // 2nd course added
                 setCreateDate(30L). // current time added
@@ -72,7 +72,7 @@ public class TestDataRecipeCourse {
     // When state changed, old persistence model is archived
     public static RecipeCourseUseCasePersistenceModel getNewArchivedCourseOneAndTwo() {
         return new RecipeCourseUseCasePersistenceModel.Builder().
-                basedOnModel(getNewActiveCourseOneAndTwo()).
+                basedOnRequestModel(getNewActiveCourseOneAndTwo()).
                 setLastUpdate(40L). // current time added
                 build();
     }
@@ -80,7 +80,7 @@ public class TestDataRecipeCourse {
     // The first course is now removed, new active persistence model saved
     public static RecipeCourseUseCasePersistenceModel getNewActiveAfterCourseOneRemoved() {
         return new RecipeCourseUseCasePersistenceModel.Builder().
-                basedOnModel(getNewActiveCourseOneAndTwo()).
+                basedOnRequestModel(getNewActiveCourseOneAndTwo()).
                 setDataId("dataId-recipeCourse-new-id3"). // new data id added
                 setCourses(Collections.singletonList(Course.COURSE_TWO)).
                 setCreateDate(40L). // current time added
@@ -91,7 +91,7 @@ public class TestDataRecipeCourse {
     // When state changed, old persistence model is archived
     public static RecipeCourseUseCasePersistenceModel getNewArchivedAfterCourseOneRemoved() {
         return new RecipeCourseUseCasePersistenceModel.Builder().
-                basedOnModel(getNewActiveAfterCourseOneRemoved()).
+                basedOnRequestModel(getNewActiveAfterCourseOneRemoved()).
                 setLastUpdate(50L). // current time added
                 build();
     }
@@ -100,7 +100,7 @@ public class TestDataRecipeCourse {
     // been removed, state reverts to default
     public static RecipeCourseUseCasePersistenceModel getNewActiveCourseDefaultAfterAllCoursesRemoved() {
         return new RecipeCourseUseCasePersistenceModel.Builder().
-                basedOnModel(getNewActiveDefaultNoCourses()).
+                basedOnRequestModel(getNewActiveDefaultNoCourses()).
                 setDataId("dataId-recipeCourse-new-id4"). // new data id for new state
                 setCourses(new ArrayList<>()). // default added
                 setCreateDate(50L). // current time added
@@ -213,7 +213,7 @@ public class TestDataRecipeCourse {
 
     public static RecipeCourseUseCasePersistenceModel getExistingArchivedWithAllCourses() {
         return new RecipeCourseUseCasePersistenceModel.Builder().
-                basedOnModel(getExistingActiveWithAllCourses()).
+                basedOnRequestModel(getExistingActiveWithAllCourses()).
                 setCreateDate(30L). // current time added
                 setLastUpdate(40L). // current time added
                 build();
@@ -221,7 +221,7 @@ public class TestDataRecipeCourse {
 
     public static RecipeCourseUseCasePersistenceModel getExistingActiveAfterAllCoursesRemoved() {
         return new RecipeCourseUseCasePersistenceModel.Builder().
-                basedOnModel(getExistingArchivedWithAllCourses()).
+                basedOnRequestModel(getExistingArchivedWithAllCourses()).
                 setDataId("dataId=recipeCourse-existing-id9"). // new state new id
                 setCourses(new ArrayList<>()). // all courses removed
                 setCreateDate(40L). // current time added

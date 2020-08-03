@@ -49,7 +49,7 @@ public class RecipeCourseDomainModelConverter
     public RecipeCourseUseCasePersistenceModel createArchivedPersistenceModel(
             @Nonnull RecipeCourseUseCasePersistenceModel persistenceModel) {
         return new RecipeCourseUseCasePersistenceModel.Builder()
-                .basedOnModel(persistenceModel)
+                .basedOnRequestModel(persistenceModel)
                 .setLastUpdate(timeProvider.getCurrentTimeInMills())
                 .build();
     }

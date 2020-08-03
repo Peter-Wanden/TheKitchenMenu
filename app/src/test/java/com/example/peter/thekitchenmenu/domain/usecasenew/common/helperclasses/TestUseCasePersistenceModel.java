@@ -1,12 +1,12 @@
 package com.example.peter.thekitchenmenu.domain.usecasenew.common.helperclasses;
 
-import com.example.peter.thekitchenmenu.domain.usecasenew.model.BasePersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.model.BaseDomainPersistenceModel;
 
 import javax.annotation.Nonnull;
 
 public final class TestUseCasePersistenceModel
         extends
-        BasePersistenceModel {
+        BaseDomainPersistenceModel {
 
     private String persistenceModelString = "PersistenceModelString";
 
@@ -37,7 +37,7 @@ public final class TestUseCasePersistenceModel
         }
 
         @Override
-        public Builder basedOnModel(TestUseCasePersistenceModel model) {
+        public Builder basedOnRequestModel(TestUseCasePersistenceModel model) {
             domainModel.dataId = model.getDataId();
             domainModel.domainId = model.getDomainId();
             domainModel.persistenceModelString = model.getPersistenceModelString();

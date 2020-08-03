@@ -2,10 +2,10 @@ package com.example.peter.thekitchenmenu.domain.usecasenew.common;
 
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.metadata.UseCaseMetadataModel;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.message.UseCaseResponse;
-import com.example.peter.thekitchenmenu.domain.usecasenew.common.metadata.UseCaseMetadataModel;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.metadata.ComponentState;
 import com.example.peter.thekitchenmenu.domain.usecasenew.model.DomainModel;
 
@@ -17,14 +17,14 @@ public abstract class UseCaseResult<
         DATA_ACCESS extends DomainDataAccess<PERSISTENCE_MODEL>,
         PERSISTENCE_MODEL extends DomainModel.PersistenceModel,
         USE_CASE_MODEL extends DomainModel.UseCaseModel,
-        REQUEST_MODEL extends DomainModel.RequestModel,
-        RESPONSE_MODEL extends DomainModel.ResponseModel>
+        REQUEST_MODEL extends DomainModel.UseCaseRequestModel,
+        RESPONSE_MODEL extends DomainModel.UseCaseResponseModel>
         extends
         UseCaseData<DATA_ACCESS, PERSISTENCE_MODEL, USE_CASE_MODEL, REQUEST_MODEL, RESPONSE_MODEL> {
 
     private static final String TAG = "tkm-" + "UseCaseResult" + ": ";
 
-    protected List<FailReasons> failReasons = new ArrayList<>();
+    protected List<FailReasons> useCaseFailReasons = new ArrayList<>();
 
     public UseCaseResult(
             DATA_ACCESS dataAccess,
@@ -38,7 +38,7 @@ public abstract class UseCaseResult<
 
     @Override
     protected void initialiseUseCase() {
-        failReasons.clear();
+        useCaseFailReasons.clear();
         beginProcessingDomainModel();
     }
 
@@ -60,6 +60,16 @@ public abstract class UseCaseResult<
                 .build());
     }
 
+    protected void sendResponse(UseCaseResponse<RESPONSE_MODEL> response) {
+        if (useCaseFailReasons.equals(Collections.singletonList(CommonFailReason.NONE))) {
+            System.out.println(TAG + "onSuccess: " + response);
+            getUseCaseCallback().onSuccess(response);
+        } else {
+            System.out.println(TAG + "onError: " + response);
+            getUseCaseCallback().onError(response);
+        }
+    }
+
     protected UseCaseMetadataModel getMetadata() {
 
         UseCaseMetadataModel.Builder builder = new UseCaseMetadataModel.Builder();
@@ -67,22 +77,12 @@ public abstract class UseCaseResult<
 
         addCommonFailReasons();
 
-        builder.setFailReasons(new ArrayList<>(failReasons));
+        builder.setFailReasons(new ArrayList<>(useCaseFailReasons));
         builder.setCreatedBy(Constants.getUserId());
         builder.setCreateDate(persistenceModel == null ? 0L : persistenceModel.getCreateDate());
         builder.setLastUpdate(persistenceModel == null ? 0L : persistenceModel.getLastUpdate());
 
         return builder.build();
-    }
-
-    protected void sendResponse(UseCaseResponse<RESPONSE_MODEL> response) {
-        if (failReasons.equals(Collections.singletonList(CommonFailReason.NONE))) {
-            System.out.println(TAG + "onSuccess: " + response);
-            getUseCaseCallback().onSuccess(response);
-        } else {
-            System.out.println(TAG + "onError: " + response);
-            getUseCaseCallback().onError(response);
-        }
     }
 
     protected ComponentState getComponentState() {
@@ -101,15 +101,15 @@ public abstract class UseCaseResult<
     }
 
     protected boolean isValid() {
-        return failReasons.isEmpty();
+        return useCaseFailReasons.isEmpty();
     }
 
     private void addCommonFailReasons() {
         if (persistenceModel == null) {
-            failReasons.add(CommonFailReason.DATA_UNAVAILABLE);
+            useCaseFailReasons.add(CommonFailReason.DATA_UNAVAILABLE);
         }
-        if (failReasons.isEmpty()) {
-            failReasons.add(CommonFailReason.NONE);
+        if (useCaseFailReasons.isEmpty()) {
+            useCaseFailReasons.add(CommonFailReason.NONE);
         }
     }
 }

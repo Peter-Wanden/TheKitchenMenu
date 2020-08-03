@@ -4,7 +4,7 @@ import com.example.peter.thekitchenmenu.domain.usecasenew.model.DomainModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.RequestModelBase;
 
-public class UseCaseRequestWithId<REQUEST_MODEL extends DomainModel.RequestModel>
+public class UseCaseRequestWithId<REQUEST_MODEL extends DomainModel.UseCaseRequestModel>
         extends
         RequestModelBase<REQUEST_MODEL>
         implements
@@ -26,7 +26,7 @@ public class UseCaseRequestWithId<REQUEST_MODEL extends DomainModel.RequestModel
     protected static abstract class IdBuilder<
             SELF extends IdBuilder<SELF, REQUEST_TYPE, REQUEST_MODEL>,
             REQUEST_TYPE extends UseCaseRequestWithId<REQUEST_MODEL>,
-            REQUEST_MODEL extends DomainModel.RequestModel>
+            REQUEST_MODEL extends DomainModel.UseCaseRequestModel>
             extends
             RequestModelBuilder<SELF, REQUEST_TYPE, REQUEST_MODEL> {
 

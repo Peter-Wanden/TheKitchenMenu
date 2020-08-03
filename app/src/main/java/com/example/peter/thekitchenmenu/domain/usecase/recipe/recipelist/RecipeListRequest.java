@@ -86,7 +86,7 @@ public class RecipeListRequest
             }
 
             @Override
-            public Builder basedOnModel(Model model) {
+            public Builder basedOnRequestModel(Model model) {
                 return null;
             }
 

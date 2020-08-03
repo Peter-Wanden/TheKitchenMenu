@@ -51,16 +51,16 @@ public class TestDomainModelConverter
             @Nonnull TestUseCasePersistenceModel persistenceModel) {
 
         return new TestUseCasePersistenceModel.Builder()
-                .basedOnModel(persistenceModel)
+                .basedOnRequestModel(persistenceModel)
                 .setLastUpdate(timeProvider.getCurrentTimeInMills())
                 .build();
     }
 
     @Override
     public TestResponseModel convertUseCaseToResponseModel(
-            @Nonnull TestUseCaseInternalModel model) {
+            @Nonnull TestUseCaseInternalModel useCaseModel) {
         return new TestResponseModel.Builder()
-                .setResponseModelString(model.getUseCaseModelString())
+                .setResponseModelString(useCaseModel.getUseCaseModelString())
                 .build();
     }
 
@@ -71,7 +71,7 @@ public class TestDomainModelConverter
 
         long currentTime = timeProvider.getCurrentTimeInMills();
         return new TestUseCasePersistenceModel.Builder()
-                .basedOnModel(persistenceModel)
+                .basedOnRequestModel(persistenceModel)
                 .setDataId(idProvider.getUId())
                 .setPersistenceModelString(useCaseModel.getUseCaseModelString())
                 .setCreateDate(currentTime)

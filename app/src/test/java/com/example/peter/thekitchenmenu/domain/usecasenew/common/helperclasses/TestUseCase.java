@@ -39,11 +39,11 @@ public class TestUseCase
     @Override
     protected void beginProcessingDomainModel() {
         if (useCaseModel.getUseCaseModelString() == null) {
-            failReasons.add(TestUseCaseFailReasons.TEXT_NULL);
+            useCaseFailReasons.add(TestUseCaseFailReasons.TEXT_NULL);
         } else if (useCaseModel.getUseCaseModelString().length() < MIN_STRING_LENGTH) {
-            failReasons.add(TestUseCaseFailReasons.TEXT_TOO_SHORT);
+            useCaseFailReasons.add(TestUseCaseFailReasons.TEXT_TOO_SHORT);
         } else if (useCaseModel.getUseCaseModelString().length() > MAX_STRING_LENGTH) {
-            failReasons.add(TestUseCaseFailReasons.TEXT_TOO_LONG);
+            useCaseFailReasons.add(TestUseCaseFailReasons.TEXT_TOO_LONG);
         }
         domainModelProcessingComplete();
     }

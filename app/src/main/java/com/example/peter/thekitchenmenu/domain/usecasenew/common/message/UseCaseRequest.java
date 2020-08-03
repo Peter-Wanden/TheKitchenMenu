@@ -1,14 +1,13 @@
 package com.example.peter.thekitchenmenu.domain.usecasenew.common.message;
 
-import com.example.peter.thekitchenmenu.domain.usecasenew.model.BaseDomainModelBuilder;
 import com.example.peter.thekitchenmenu.domain.usecasenew.model.DomainModel;
 
 import javax.annotation.Nonnull;
 
 public class UseCaseRequest
-        <REQUEST_MODEL extends DomainModel.RequestModel>
+        <REQUEST_MODEL extends DomainModel.UseCaseRequestModel>
         implements
-        DomainModel.RequestModel {
+        DomainModel.UseCaseRequestModel {
 
     protected String dataId;
     protected String domainId;
@@ -42,7 +41,7 @@ public class UseCaseRequest
     public static abstract class Builder<
             SELF extends Builder<SELF, REQUEST, REQUEST_MODEL>,
             REQUEST extends UseCaseRequest<REQUEST_MODEL>,
-            REQUEST_MODEL extends DomainModel.RequestModel> {
+            REQUEST_MODEL extends DomainModel.UseCaseRequestModel> {
 
         protected REQUEST useCaseRequest;
 

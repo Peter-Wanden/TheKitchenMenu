@@ -103,7 +103,7 @@ public class RecipeCourse
     @Override
     protected void archivePreviousState(long currentTime) {
         RecipeCourseUseCasePersistenceModel archivedModel = new RecipeCourseUseCasePersistenceModel.Builder().
-                basedOnModel(persistenceModel).
+                basedOnRequestModel(persistenceModel).
                 setLastUpdate(currentTime).
                 build();
 
