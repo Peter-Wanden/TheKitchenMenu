@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.data.repository.recipe;
 
 import com.example.peter.thekitchenmenu.data.repository.DataAccess;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortionsPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.portions.RecipePortionsUseCasePersistenceModel;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -9,23 +9,23 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-public class DataAccessRecipePortions
-        extends DataAccess<RecipePortionsPersistenceModel>
+public class RecipePortionsUseCasseDataAccess
+        extends DataAccess<RecipePortionsUseCasePersistenceModel>
         implements DomainDataAccessRecipePortions {
 
-    public static DataAccessRecipePortions INSTANCE;
+    public static RecipePortionsUseCasseDataAccess INSTANCE;
 
-    private DataAccessRecipePortions(@Nonnull DomainDataAccessRecipePortions remoteDataSource,
-                                     @Nonnull DomainDataAccessRecipePortions localDataSource) {
+    private RecipePortionsUseCasseDataAccess(@Nonnull DomainDataAccessRecipePortions remoteDataSource,
+                                             @Nonnull DomainDataAccessRecipePortions localDataSource) {
         this.remoteDomainDataAccess = remoteDataSource;
         this.localDomainDataAccess = localDataSource;
     }
 
-    public static DataAccessRecipePortions getInstance(
+    public static RecipePortionsUseCasseDataAccess getInstance(
             @Nonnull DomainDataAccessRecipePortions remoteDataSource,
             @Nonnull DomainDataAccessRecipePortions localDataSource) {
         if (INSTANCE == null) {
-            INSTANCE = new DataAccessRecipePortions(remoteDataSource, localDataSource);
+            INSTANCE = new RecipePortionsUseCasseDataAccess(remoteDataSource, localDataSource);
         }
         return INSTANCE;
     }
@@ -33,9 +33,9 @@ public class DataAccessRecipePortions
     @Override
     public void getAllByDomainId(
             @Nonnull String domainId,
-            @Nonnull GetAllDomainModelsCallback<RecipePortionsPersistenceModel> callback) {
+            @Nonnull GetAllDomainModelsCallback<RecipePortionsUseCasePersistenceModel> callback) {
 
-        List<RecipePortionsPersistenceModel> models = getModelsFromCache(domainId);
+        List<RecipePortionsUseCasePersistenceModel> models = getModelsFromCache(domainId);
 
         if (!models.isEmpty()) {
             callback.onAllDomainModelsLoaded(models);
@@ -43,13 +43,13 @@ public class DataAccessRecipePortions
         }
         ((DomainDataAccessRecipePortions) localDomainDataAccess).getAllByDomainId(
                 domainId,
-                new GetAllDomainModelsCallback<RecipePortionsPersistenceModel>() {
+                new GetAllDomainModelsCallback<RecipePortionsUseCasePersistenceModel>() {
                     @Override
-                    public void onAllDomainModelsLoaded(List<RecipePortionsPersistenceModel> models) {
+                    public void onAllDomainModelsLoaded(List<RecipePortionsUseCasePersistenceModel> models) {
                         if (cache == null) {
                             cache = new LinkedHashMap<>();
                         }
-                        for (RecipePortionsPersistenceModel m : models) {
+                        for (RecipePortionsUseCasePersistenceModel m : models) {
                             cache.put(m.getDataId(), m);
                         }
                         callback.onAllDomainModelsLoaded(models);
@@ -59,14 +59,14 @@ public class DataAccessRecipePortions
                     public void onDomainModelsUnavailable() {
                         ((DomainDataAccessRecipePortions)remoteDomainDataAccess).getAllByDomainId(
                                 domainId,
-                                new GetAllDomainModelsCallback<RecipePortionsPersistenceModel>() {
+                                new GetAllDomainModelsCallback<RecipePortionsUseCasePersistenceModel>() {
                                     @Override
                                     public void onAllDomainModelsLoaded(
-                                            List<RecipePortionsPersistenceModel> models) {
+                                            List<RecipePortionsUseCasePersistenceModel> models) {
                                         if (cache == null) {
                                             cache = new LinkedHashMap<>();
                                         }
-                                        for (RecipePortionsPersistenceModel m : models) {
+                                        for (RecipePortionsUseCasePersistenceModel m : models) {
                                             cache.put(m.getDataId(), m);
                                         }
                                         callback.onAllDomainModelsLoaded(models);
@@ -83,13 +83,13 @@ public class DataAccessRecipePortions
         );
     }
 
-    private List<RecipePortionsPersistenceModel> getModelsFromCache(String domainId) {
-        List<RecipePortionsPersistenceModel> models = new ArrayList<>();
+    private List<RecipePortionsUseCasePersistenceModel> getModelsFromCache(String domainId) {
+        List<RecipePortionsUseCasePersistenceModel> models = new ArrayList<>();
 
         if (cache == null || cache.isEmpty())
             return null;
         else {
-            for (RecipePortionsPersistenceModel model : cache.values()) {
+            for (RecipePortionsUseCasePersistenceModel model : cache.values()) {
                 if (domainId.equals(model.getDomainId())) {
                     models.add(model);
                 }

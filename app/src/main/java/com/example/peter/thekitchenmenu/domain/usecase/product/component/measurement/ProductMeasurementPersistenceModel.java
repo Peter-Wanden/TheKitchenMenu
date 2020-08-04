@@ -113,7 +113,7 @@ public class ProductMeasurementPersistenceModel
         }
 
         @Override
-        public Builder basedOnRequestModel(ProductMeasurementPersistenceModel model) {
+        public Builder basedOnModel(ProductMeasurementPersistenceModel model) {
             domainModel.dataId = model.getDataId();
             domainModel.domainId = model.getDomainId();
             domainModel.productId = model.getProductId();

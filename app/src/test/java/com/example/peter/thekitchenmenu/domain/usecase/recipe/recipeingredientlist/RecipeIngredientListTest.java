@@ -7,7 +7,7 @@ import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.port
 import com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.ingredient.DataAccessIngredient;
 import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipeIngredient;
-import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipePortions;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RecipePortionsUseCasseDataAccess;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.UseCaseHandler;
 
@@ -27,7 +27,7 @@ public class RecipeIngredientListTest {
     @Mock
     DataAccessRecipeIngredient repoRecipeIngredientMock;
     @Mock
-    DataAccessRecipePortions repoPortionsMock;
+    RecipePortionsUseCasseDataAccess repoPortionsMock;
     @Mock
     DataAccessIngredient repoIngredientMock;
     // endregion helper fields ---------------------------------------------------------------------

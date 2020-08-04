@@ -51,7 +51,7 @@ public class TestDomainModelConverter
             @Nonnull TestUseCasePersistenceModel persistenceModel) {
 
         return new TestUseCasePersistenceModel.Builder()
-                .basedOnRequestModel(persistenceModel)
+                .basedOnModel(persistenceModel)
                 .setLastUpdate(timeProvider.getCurrentTimeInMills())
                 .build();
     }
@@ -71,7 +71,7 @@ public class TestDomainModelConverter
 
         long currentTime = timeProvider.getCurrentTimeInMills();
         return new TestUseCasePersistenceModel.Builder()
-                .basedOnRequestModel(persistenceModel)
+                .basedOnModel(persistenceModel)
                 .setDataId(idProvider.getUId())
                 .setPersistenceModelString(useCaseModel.getUseCaseModelString())
                 .setCreateDate(currentTime)

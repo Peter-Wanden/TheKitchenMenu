@@ -2,7 +2,6 @@ package com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.dura
 
 import com.example.peter.thekitchenmenu.data.repository.recipe.RecipeDurationUseCaseDataAccess;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.UseCaseResult;
-import com.example.peter.thekitchenmenu.utils.GsonUtils;
 
 public class RecipeDurationUseCase
         extends

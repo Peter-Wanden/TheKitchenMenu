@@ -151,7 +151,7 @@ public class RecipeIdentityUseCaseTest {
     }
 
     @Test
-    public void newRequest_stateINVALID_CHANGED_failReasons_DATA_UNAVAILABLE_TITLE_TOO_LONG_DESCRIPTION_TOO_LONG() {
+    public void newRequest_stateINVALID_CHANGED_failReasonsTITLE_TOO_LONG_DESCRIPTION_TOO_LONG_DATA_UNAVAILABLE() {
         // Arrange
         RecipeIdentityUseCasePersistenceModel modelUnderTest = TestDataRecipeIdentity.
                 getInvalidNewTitleTooLongDescriptionTooLong();
@@ -205,7 +205,7 @@ public class RecipeIdentityUseCaseTest {
     }
 
     @Test
-    public void newRequest_stateINVALID_CHANGED_failReasonsDATA_UNAVAILABLE_TITLE_TOO_SHORT() {
+    public void newRequest_stateINVALID_CHANGED_failReasonsTITLE_TOO_SHORT_DATA_UNAVAILABLE() {
         // Arrange
         RecipeIdentityUseCasePersistenceModel modelUnderTest = TestDataRecipeIdentity.
                 getInvalidNewTitleTooShortDescriptionValid();
@@ -311,6 +311,48 @@ public class RecipeIdentityUseCaseTest {
     }
 
     @Test
+    public void newRequest_stateINVALID_CHANGED_failReasonDATA_UNAVAILABLE_TITLE_NULL_DESCRIPTION_NULL() {
+        // Arrange
+        newRequest_stateINVALID_DEFAULT_failReasonDATA_UNAVAILABLE_TITLE_TOO_SHORT();
+
+        RecipeIdentityUseCaseRequest request = new RecipeIdentityUseCaseRequest.Builder()
+                .basedOnResponse(onErrorResponse)
+                .setRequestModel(new RecipeIdentityUseCaseRequestModel.Builder()
+                        .setTitle(null)
+                        .setDescription(null)
+                        .build())
+                .build();
+        // Act
+        SUT.execute(request, new UseCaseCallbackImplementer());
+
+        // Assert
+        UseCaseResponse<RecipeIdentityUseCaseResponseModel> response = onErrorResponse;
+        UseCaseMetadataModel metadata = response.getUseCaseMetadataModel();
+        RecipeIdentityUseCaseResponseModel model = response.getResponseModel();
+
+        ComponentState expectedState = ComponentState.INVALID_CHANGED;
+        ComponentState actualState = metadata.getComponentState();
+        assertEquals(
+                expectedState,
+                actualState
+        );
+
+        List<FailReasons> expectedFailReasons = Arrays.asList(
+                RecipeIdentityUseCaseFailReason.TITLE_NULL,
+                RecipeIdentityUseCaseFailReason.DESCRIPTION_NULL,
+                CommonFailReason.DATA_UNAVAILABLE
+        );
+        List<FailReasons> actualFailReasons = metadata.getFailReasons();
+        assertEquals(
+                expectedFailReasons,
+                actualFailReasons
+        );
+
+        assertNull(model.getTitle());
+        assertNull(model.getDescription());
+    }
+
+    @Test
     public void existingRequest_stateVALID_UNCHANGED_titleValidDescriptionValid_failReasonNONE() {
         // Arrange
         RecipeIdentityUseCasePersistenceModel modelUnderTest = TestDataRecipeIdentity.
@@ -385,48 +427,6 @@ public class RecipeIdentityUseCaseTest {
                 modelUnderTest.getDescription(),
                 model.getDescription()
         );
-    }
-
-    @Test
-    public void newRequest_stateINVALID_CHANGED_failReasonDATA_UNAVAILABLE_TITLE_NULL_DESCRIPTION_NULL() {
-        // Arrange
-        newRequest_stateINVALID_DEFAULT_failReasonDATA_UNAVAILABLE_TITLE_TOO_SHORT();
-
-        RecipeIdentityUseCaseRequest request = new RecipeIdentityUseCaseRequest.Builder()
-                .basedOnResponse(onErrorResponse)
-                .setRequestModel(new RecipeIdentityUseCaseRequestModel.Builder()
-                        .setTitle(null)
-                        .setDescription(null)
-                        .build())
-                .build();
-        // Act
-        SUT.execute(request, new UseCaseCallbackImplementer());
-
-        // Assert
-        UseCaseResponse<RecipeIdentityUseCaseResponseModel> response = onErrorResponse;
-        UseCaseMetadataModel metadata = response.getUseCaseMetadataModel();
-        RecipeIdentityUseCaseResponseModel model = response.getResponseModel();
-
-        ComponentState expectedState = ComponentState.INVALID_CHANGED;
-        ComponentState actualState = metadata.getComponentState();
-        assertEquals(
-                expectedState,
-                actualState
-        );
-
-        List<FailReasons> expectedFailReasons = Arrays.asList(
-                RecipeIdentityUseCaseFailReason.TITLE_NULL,
-                RecipeIdentityUseCaseFailReason.DESCRIPTION_NULL,
-                CommonFailReason.DATA_UNAVAILABLE
-        );
-        List<FailReasons> actualFailReasons = metadata.getFailReasons();
-        assertEquals(
-                expectedFailReasons,
-                actualFailReasons
-        );
-
-        assertNull(model.getTitle());
-        assertNull(model.getDescription());
     }
 
     // region helper methods -----------------------------------------------------------------------

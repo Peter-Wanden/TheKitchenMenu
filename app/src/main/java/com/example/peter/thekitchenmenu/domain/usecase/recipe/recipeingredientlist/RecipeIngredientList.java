@@ -3,13 +3,13 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredientl
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.ingredient.DataAccessIngredient;
 import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipeIngredient;
-import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipePortions;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RecipePortionsUseCasseDataAccess;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.model.MeasurementModel;
 import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.model.MeasurementModelBuilder;
 import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.UnitOfMeasure;
 import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientPersistenceModel;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortionsPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.portions.RecipePortionsUseCasePersistenceModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredient.RecipeIngredientPersistenceModel;
 
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ public class RecipeIngredientList extends UseCaseBase {
 
     private DataAccessRecipeIngredient repoRecipeIngredient;
     private DataAccessIngredient repoIngredient;
-    private DataAccessRecipePortions repoPortions;
+    private RecipePortionsUseCasseDataAccess repoPortions;
 
     private String recipeId;
     private Map<String, RecipeIngredientPersistenceModel> recipeIngredientQuantities =
@@ -37,7 +37,7 @@ public class RecipeIngredientList extends UseCaseBase {
 
     public RecipeIngredientList(DataAccessRecipeIngredient repoRecipeIngredient,
                                 DataAccessIngredient repoIngredient,
-                                DataAccessRecipePortions repoPortions) {
+                                RecipePortionsUseCasseDataAccess repoPortions) {
         this.repoRecipeIngredient = repoRecipeIngredient;
         this.repoIngredient = repoIngredient;
         this.repoPortions = repoPortions;
@@ -55,9 +55,9 @@ public class RecipeIngredientList extends UseCaseBase {
     private void getPortionsForRecipe() {
         repoPortions.getByDomainId(
                 recipeId,
-                new DomainDataAccess.GetDomainModelCallback<RecipePortionsPersistenceModel>() {
+                new DomainDataAccess.GetDomainModelCallback<RecipePortionsUseCasePersistenceModel>() {
                     @Override
-                    public void onPersistenceModelLoaded(RecipePortionsPersistenceModel model) {
+                    public void onPersistenceModelLoaded(RecipePortionsUseCasePersistenceModel model) {
                         RecipeIngredientList.this.portions =
                                 model.getServings() * model.getSittings();
                         getRecipeIngredientQuantities();

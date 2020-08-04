@@ -61,9 +61,9 @@ public final class RecipeIdentityUseCaseResponseModel
         }
 
         @Override
-        public Builder basedOnRequestModel(RecipeIdentityUseCaseResponseModel model) {
-            domainModel.title = model.getTitle();
-            domainModel.description = model.getDescription();
+        public Builder basedOnModel(RecipeIdentityUseCaseResponseModel model) {
+            domainModel.title = model.title;
+            domainModel.description = model.description;
             return self();
         }
 

@@ -10,9 +10,8 @@ import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentName;
-
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.metadata.ComponentState;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentName;
 
 public final class RecipeMetadataRequest
         extends
@@ -72,7 +71,7 @@ public final class RecipeMetadataRequest
             BaseDomainModel {
 
         private String parentDomainId;
-        private HashMap<ComponentName, ComponentState> componentStates;
+        private HashMap<RecipeComponentName, ComponentState> componentStates;
 
         @Nonnull
         public String getParentDomainId() {
@@ -80,7 +79,7 @@ public final class RecipeMetadataRequest
         }
 
         @Nonnull
-        public HashMap<ComponentName, ComponentState> getComponentStates() {
+        public HashMap<RecipeComponentName, ComponentState> getComponentStates() {
             return componentStates;
         }
 
@@ -118,7 +117,7 @@ public final class RecipeMetadataRequest
             }
 
             @Override
-            public Builder basedOnRequestModel(DomainModel model) {
+            public Builder basedOnModel(DomainModel model) {
                 return null;
             }
 
@@ -141,7 +140,7 @@ public final class RecipeMetadataRequest
                 return self();
             }
 
-            public Builder setComponentStates(HashMap<ComponentName,
+            public Builder setComponentStates(HashMap<RecipeComponentName,
                     ComponentState> componentStates) {
                 domainModel.componentStates = componentStates;
                 return self();

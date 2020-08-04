@@ -5,6 +5,8 @@ import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.Use
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.message.UseCaseRequest;
 import com.example.peter.thekitchenmenu.domain.usecasenew.model.DomainModel;
 
+import javax.annotation.Nonnull;
+
 public abstract class UseCaseData<
         DATA_ACCESS extends DomainDataAccess<PERSISTENCE_MODEL>,
         PERSISTENCE_MODEL extends DomainModel.PersistenceModel,
@@ -36,8 +38,8 @@ public abstract class UseCaseData<
     protected boolean isChanged;
     protected int accessCount;
 
-    public UseCaseData(DATA_ACCESS dataAccess,
-                       DomainModel.Converter<
+    public UseCaseData(@Nonnull DATA_ACCESS dataAccess,
+                       @Nonnull DomainModel.Converter<
                                USE_CASE_MODEL,
                                PERSISTENCE_MODEL,
                                REQUEST_MODEL,

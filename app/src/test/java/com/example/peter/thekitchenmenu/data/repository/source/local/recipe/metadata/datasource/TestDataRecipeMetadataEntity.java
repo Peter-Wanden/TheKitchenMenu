@@ -4,8 +4,8 @@ import com.example.peter.thekitchenmenu.data.repository.recipe.metadata.TestData
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.componentstate.RecipeComponentStateEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.failreason.RecipeFailReasonEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.parent.RecipeMetadataParentEntity;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentName;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.FailReasons;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataPersistenceModel;
 
 import java.util.ArrayList;
@@ -95,7 +95,7 @@ public class TestDataRecipeMetadataEntity {
             RecipeMetadataPersistenceModel model) {
         List<RecipeComponentStateEntity> e = new ArrayList<>();
         int dataId = 0;
-        for (RecipeMetadata.ComponentName name : model.getComponentStates().keySet()) {
+        for (RecipeComponentName name : model.getComponentStates().keySet()) {
             e.add(
                     new RecipeComponentStateEntity(
                             String.valueOf(dataId),

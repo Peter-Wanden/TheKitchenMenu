@@ -38,7 +38,7 @@ public final class TestResponseModel
         }
 
         @Override
-        public Builder basedOnRequestModel(TestResponseModel model) {
+        public Builder basedOnModel(TestResponseModel model) {
             domainModel.responseModelString = model.getResponseModelString();
             return self();
         }

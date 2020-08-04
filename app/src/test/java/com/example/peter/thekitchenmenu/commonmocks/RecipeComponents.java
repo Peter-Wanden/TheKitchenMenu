@@ -3,15 +3,15 @@ package com.example.peter.thekitchenmenu.commonmocks;
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentName;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentName;
 
 public class RecipeComponents {
-    public static final Set<ComponentName> requiredComponents = new HashSet<>();
+    public static final Set<RecipeComponentName> requiredComponents = new HashSet<>();
 
     static {
-        requiredComponents.add(ComponentName.IDENTITY);
-        requiredComponents.add(ComponentName.COURSE);
-        requiredComponents.add(ComponentName.DURATION);
-        requiredComponents.add(ComponentName.PORTIONS);
+        requiredComponents.add(RecipeComponentName.IDENTITY);
+        requiredComponents.add(RecipeComponentName.COURSE);
+        requiredComponents.add(RecipeComponentName.DURATION);
+        requiredComponents.add(RecipeComponentName.PORTIONS);
     }
 }

@@ -4,7 +4,7 @@ import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RecipeCourseUseCaseDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RecipeDurationUseCaseDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RecipeIdentityUseCaseDataAccess;
-import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipePortions;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RecipePortionsUseCasseDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.datasource.courseitem.RecipeCourseEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.datasource.RecipeDurationEntity;
@@ -15,10 +15,10 @@ import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.meta
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.datasource.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.datasource.TestDataRecipePortionsEntity;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentName;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityTest;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortionsTest;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
@@ -35,10 +35,10 @@ import org.mockito.MockitoAnnotations;
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentName.COURSE;
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentName.DURATION;
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentName.IDENTITY;
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentName.PORTIONS;
+import static com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentName.COURSE;
+import static com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentName.DURATION;
+import static com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentName.IDENTITY;
+import static com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentName.PORTIONS;
 
 public class RecipeCopyTest {
 
@@ -101,7 +101,7 @@ public class RecipeCopyTest {
     @Captor
     ArgumentCaptor<PrimitiveDataSource.GetPrimitiveCallback<RecipeDurationEntity>> repoDurationCallback;
     @Mock
-    DataAccessRecipePortions repoPortionsMock;
+    RecipePortionsUseCasseDataAccess repoPortionsMock;
     @Captor
     ArgumentCaptor<PrimitiveDataSource.GetPrimitiveCallback<RecipePortionsEntity>> repoPortionsCallback;
     @Mock
@@ -131,7 +131,7 @@ public class RecipeCopyTest {
                 setLongTextMaxLength(RecipeIdentityTest.DESCRIPTION_MAX_LENGTH).
                 build();
 
-        final Set<RecipeMetadata.ComponentName> requiredComponents = new HashSet<>();
+        final Set<RecipeComponentName> requiredComponents = new HashSet<>();
         requiredComponents.add(IDENTITY);
         requiredComponents.add(COURSE);
         requiredComponents.add(DURATION);

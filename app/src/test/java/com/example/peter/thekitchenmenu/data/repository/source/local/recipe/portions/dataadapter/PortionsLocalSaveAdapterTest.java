@@ -4,7 +4,7 @@ import com.example.peter.thekitchenmenu.data.repository.recipe.portions.TestData
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.datasource.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.datasource.RecipePortionsLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.datasource.TestDataRecipePortionsEntity;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortionsPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.portions.RecipePortionsUseCasePersistenceModel;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -42,7 +42,7 @@ public class PortionsLocalSaveAdapterTest {
     @Test
     public void save() {
         // Arrange
-        RecipePortionsPersistenceModel modelUnderTest = TestDataRecipePortions.
+        RecipePortionsUseCasePersistenceModel modelUnderTest = TestDataRecipePortions.
                 getExistingValidNinePortions();
         RecipePortionsEntity expectedSaved = TestDataRecipePortionsEntity.
                 getExistingValidNinePortions();

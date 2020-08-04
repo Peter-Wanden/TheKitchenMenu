@@ -148,7 +148,7 @@ public class RecipeDurationUseCaseResponseModel
         }
 
         @Override
-        public Builder basedOnRequestModel(RecipeDurationUseCaseResponseModel model) {
+        public Builder basedOnModel(RecipeDurationUseCaseResponseModel model) {
             domainModel.prepHours = model.prepHours;
             domainModel.prepMinutes = model.prepMinutes;
             domainModel.totalPrepTime = model.totalPrepTime;

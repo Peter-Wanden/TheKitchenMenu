@@ -6,14 +6,14 @@ import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess.GetDoma
 import com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.datasource.IngredientEntity;
 import com.example.peter.thekitchenmenu.data.repository.ingredient.DataAccessIngredient;
 import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipeIngredient;
-import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipePortions;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RecipePortionsUseCasseDataAccess;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.model.MeasurementModelBuilder;
 import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.UnitOfMeasure;
 import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.model.MeasurementModel;
 import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.UnitOfMeasureConstants;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortionsPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.portions.RecipePortionsUseCasePersistenceModel;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
@@ -80,7 +80,7 @@ public class RecipeIngredient extends UseCaseBase {
     @Nonnull
     private final DataAccessRecipeIngredient recipeIngredientRepository;
 
-    private DataAccessRecipePortions portionsRepository; // TODO - Or use a recipe instance
+    private RecipePortionsUseCasseDataAccess portionsRepository; // TODO - Or use a recipe instance
     @Nonnull
     private final DataAccessIngredient ingredientRepository; // TODO - for all three??
     @Nonnull
@@ -111,7 +111,7 @@ public class RecipeIngredient extends UseCaseBase {
     private RecipeIngredientPersistenceModel persistenceModel;
     private IngredientEntity ingredientEntity;
 
-    public RecipeIngredient(@Nonnull DataAccessRecipePortions portionsRepository,
+    public RecipeIngredient(@Nonnull RecipePortionsUseCasseDataAccess portionsRepository,
                             @Nonnull DataAccessRecipeIngredient recipeIngredientRepository,
                             @Nonnull DataAccessIngredient ingredientRepository,
                             @Nonnull UniqueIdProvider idProvider,
@@ -210,9 +210,9 @@ public class RecipeIngredient extends UseCaseBase {
     private void loadPortions() {
         portionsRepository.getByDomainId(
                 recipeId,
-                new GetDomainModelCallback<RecipePortionsPersistenceModel>() {
+                new GetDomainModelCallback<RecipePortionsUseCasePersistenceModel>() {
                     @Override
-                    public void onPersistenceModelLoaded(RecipePortionsPersistenceModel model) {
+                    public void onPersistenceModelLoaded(RecipePortionsUseCasePersistenceModel model) {
                         numberOfPortions = model.getServings() *
                                 model.getSittings();
                         setupUnitOfMeasure();

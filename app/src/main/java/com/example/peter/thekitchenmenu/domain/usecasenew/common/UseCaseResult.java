@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 public abstract class UseCaseResult<
         DATA_ACCESS extends DomainDataAccess<PERSISTENCE_MODEL>,
         PERSISTENCE_MODEL extends DomainModel.PersistenceModel,
@@ -27,8 +29,8 @@ public abstract class UseCaseResult<
     protected List<FailReasons> useCaseFailReasons = new ArrayList<>();
 
     public UseCaseResult(
-            DATA_ACCESS dataAccess,
-            DomainModel.Converter<
+            @Nonnull DATA_ACCESS dataAccess,
+            @Nonnull DomainModel.Converter<
                     USE_CASE_MODEL,
                     PERSISTENCE_MODEL,
                     REQUEST_MODEL,

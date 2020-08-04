@@ -74,7 +74,7 @@ public final class RecipeDurationUseCasePersistenceModel
         }
 
         @Override
-        public Builder basedOnRequestModel(@Nonnull RecipeDurationUseCasePersistenceModel m) {
+        public Builder basedOnModel(@Nonnull RecipeDurationUseCasePersistenceModel m) {
             domainModel.dataId = m.getDataId();
             domainModel.domainId = m.getDomainId();
             domainModel.prepTime = m.getPrepTime();

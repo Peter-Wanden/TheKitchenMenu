@@ -105,7 +105,7 @@ public final class RecipeCourseRequest
             }
 
             @Override
-            public Builder basedOnRequestModel(DomainModel model) {
+            public Builder basedOnModel(DomainModel model) {
                 return null;
             }
 

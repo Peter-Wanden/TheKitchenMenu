@@ -15,7 +15,7 @@ public abstract class BaseDomainModelBuilder<
 
     public abstract SELF getDefault();
 
-    public abstract SELF basedOnRequestModel(DOMAIN_MODEL model);
+    public abstract SELF basedOnModel(DOMAIN_MODEL model);
 
     protected abstract SELF self(); // when implementing, return this
 

@@ -140,7 +140,7 @@ public final class RecipeDurationResponse
             }
 
             @Override
-            public Builder basedOnRequestModel(DomainModel model) {
+            public Builder basedOnModel(DomainModel model) {
                 return null;
             }
 

@@ -14,8 +14,6 @@ public class RecipeCourseUseCase
                 RecipeCourseUseCaseRequestModel,
                 RecipeCourseUseCaseResponseModel> {
 
-    private static final String TAG = "tkm-" + RecipeCourseUseCase.class.getSimpleName() + ": ";
-
     public RecipeCourseUseCase(RecipeCourseUseCaseDataAccess dataAccess,
                                RecipeCourseDomainModelConverter converter) {
         super(dataAccess, converter);

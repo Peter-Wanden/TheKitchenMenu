@@ -9,7 +9,7 @@ import com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.datasource.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.datasource.RecipePortionsLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.datasource.TestDataRecipePortionsEntity;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortionsPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.portions.RecipePortionsUseCasePersistenceModel;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -79,7 +79,7 @@ public class PortionsLocalGetAdapterTest {
     @Test
     public void getByDataId_domainModelReturned() {
         // Arrange
-        RecipePortionsPersistenceModel modelUnderTest = TestDataRecipePortions.
+        RecipePortionsUseCasePersistenceModel modelUnderTest = TestDataRecipePortions.
                 getExistingValidNinePortions();
         // Act
         SUT.getByDataId(modelUnderTest.getDataId(), callbackClient);
@@ -114,7 +114,7 @@ public class PortionsLocalGetAdapterTest {
     public void getAllByDomainId_returnAllModelsForDomainId() {
         // Arrange
         String domainId = TestDataRecipeMetadata.getInvalidDefault().getDomainId();
-        List<RecipePortionsPersistenceModel> models = TestDataRecipePortions.
+        List<RecipePortionsUseCasePersistenceModel> models = TestDataRecipePortions.
                 getAllByDomainId(domainId);
         // Act
         SUT.getAllByDomainId(domainId, getAllCallbackClient);
@@ -152,9 +152,9 @@ public class PortionsLocalGetAdapterTest {
     public void getActiveByDomainId_returnMostRecentModel() {
         // Arrange
         long lastUpdate = 0L;
-        RecipePortionsPersistenceModel modelUnderTest = new RecipePortionsPersistenceModel.Builder().
+        RecipePortionsUseCasePersistenceModel modelUnderTest = new RecipePortionsUseCasePersistenceModel.Builder().
                 getDefault().build();
-        for (RecipePortionsPersistenceModel m : TestDataRecipePortions.getAllNew()) {
+        for (RecipePortionsUseCasePersistenceModel m : TestDataRecipePortions.getAllNew()) {
             if (m.getLastUpdate() > lastUpdate) {
                 modelUnderTest = m;
                 lastUpdate = m.getLastUpdate();
@@ -193,7 +193,7 @@ public class PortionsLocalGetAdapterTest {
     @Test
     public void getAll_returnAllModels() {
         // Arrange
-        List<RecipePortionsPersistenceModel> modelsUnderTest = TestDataRecipePortions.getAll();
+        List<RecipePortionsUseCasePersistenceModel> modelsUnderTest = TestDataRecipePortions.getAll();
         // Act
         SUT.getAll(getAllCallbackClient);
         // Assert
@@ -211,16 +211,16 @@ public class PortionsLocalGetAdapterTest {
 
     // region helper classes -----------------------------------------------------------------------
     private static class GetDomainModelCallbackClient
-            implements GetDomainModelCallback<RecipePortionsPersistenceModel> {
+            implements GetDomainModelCallback<RecipePortionsUseCasePersistenceModel> {
 
         private static final String TAG = PortionsLocalGetAdapterTest.TAG +
                 GetDomainModelCallbackClient.class.getSimpleName() + ": ";
 
-        private RecipePortionsPersistenceModel model;
+        private RecipePortionsUseCasePersistenceModel model;
         private boolean isModelUnavailable;
 
         @Override
-        public void onPersistenceModelLoaded(RecipePortionsPersistenceModel m) {
+        public void onPersistenceModelLoaded(RecipePortionsUseCasePersistenceModel m) {
             System.out.println(TAG + m);
             model = m;
         }
@@ -233,16 +233,16 @@ public class PortionsLocalGetAdapterTest {
     }
 
     private static class GetAllDomainModelsCallbackClient
-            implements GetAllDomainModelsCallback<RecipePortionsPersistenceModel> {
+            implements GetAllDomainModelsCallback<RecipePortionsUseCasePersistenceModel> {
 
         private static final String TAG = PortionsLocalGetAdapterTest.TAG +
                 GetAllDomainModelsCallbackClient.class.getSimpleName() + ": ";
 
-        private List<RecipePortionsPersistenceModel> models;
+        private List<RecipePortionsUseCasePersistenceModel> models;
         private boolean isModelUnavailable;
 
         @Override
-        public void onAllDomainModelsLoaded(List<RecipePortionsPersistenceModel> m) {
+        public void onAllDomainModelsLoaded(List<RecipePortionsUseCasePersistenceModel> m) {
             System.out.println(TAG + "onAllLoaded: " + m);
             models = m;
         }

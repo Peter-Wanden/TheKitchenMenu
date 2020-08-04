@@ -37,7 +37,7 @@ public final class TestUseCasePersistenceModel
         }
 
         @Override
-        public Builder basedOnRequestModel(TestUseCasePersistenceModel model) {
+        public Builder basedOnModel(TestUseCasePersistenceModel model) {
             domainModel.dataId = model.getDataId();
             domainModel.domainId = model.getDomainId();
             domainModel.persistenceModelString = model.getPersistenceModelString();

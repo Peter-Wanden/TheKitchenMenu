@@ -92,7 +92,7 @@ public class ProductIdentityPersistenceModel
         }
 
         @Override
-        public Builder basedOnRequestModel(@Nonnull ProductIdentityPersistenceModel model) {
+        public Builder basedOnModel(@Nonnull ProductIdentityPersistenceModel model) {
             domainModel.dataId = model.getDataId();
             domainModel.domainId = model.getDomainId();
             domainModel.name = model.getName();

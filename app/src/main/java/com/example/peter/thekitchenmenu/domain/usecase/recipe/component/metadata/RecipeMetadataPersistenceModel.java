@@ -13,9 +13,8 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentName;
-
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.metadata.ComponentState;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentName;
 
 /**
  * Represented in primitive form by {@link RecipeMetadataParentEntity},
@@ -27,7 +26,7 @@ public final class RecipeMetadataPersistenceModel
 
     private String parentDomainId;
     private ComponentState componentState;
-    private HashMap<ComponentName, ComponentState> componentStates;
+    private HashMap<RecipeComponentName, ComponentState> componentStates;
     private List<FailReasons> failReasons;
     private String createdBy;
 
@@ -41,7 +40,7 @@ public final class RecipeMetadataPersistenceModel
         return componentState;
     }
 
-    public HashMap<ComponentName, ComponentState> getComponentStates() {
+    public HashMap<RecipeComponentName, ComponentState> getComponentStates() {
         return componentStates;
     }
 
@@ -92,7 +91,7 @@ public final class RecipeMetadataPersistenceModel
         }
 
         @Override
-        public Builder basedOnRequestModel(RecipeMetadataPersistenceModel model) {
+        public Builder basedOnModel(RecipeMetadataPersistenceModel model) {
             domainModel.dataId = model.getDataId();
             domainModel.domainId = model.getDomainId();
             domainModel.parentDomainId = model.getParentDomainId();
@@ -115,7 +114,7 @@ public final class RecipeMetadataPersistenceModel
             return self();
         }
 
-        public Builder setComponentStates(HashMap<ComponentName, ComponentState> componentStates) {
+        public Builder setComponentStates(HashMap<RecipeComponentName, ComponentState> componentStates) {
             domainModel.componentStates = componentStates;
             return self();
         }

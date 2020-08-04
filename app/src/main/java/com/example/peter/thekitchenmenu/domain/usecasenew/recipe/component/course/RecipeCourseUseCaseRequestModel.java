@@ -62,7 +62,7 @@ public class RecipeCourseUseCaseRequestModel
         }
 
         @Override
-        public Builder basedOnRequestModel(RecipeCourseUseCaseRequestModel model) {
+        public Builder basedOnModel(RecipeCourseUseCaseRequestModel model) {
             domainModel.courseList = model.courseList;
             return self();
         }

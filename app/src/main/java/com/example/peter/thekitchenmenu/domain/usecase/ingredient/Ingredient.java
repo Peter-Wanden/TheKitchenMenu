@@ -330,7 +330,7 @@ public class Ingredient
 
     private IngredientPersistenceModel updatePersistenceModel() {
         return new IngredientPersistenceModel.Builder().
-                basedOnRequestModel(persistenceModel).
+                basedOnModel(persistenceModel).
                 setDataId(idProvider.getUId()).
                 setName(requestModel.getName()).
                 setDescription(requestModel.getDescription()).

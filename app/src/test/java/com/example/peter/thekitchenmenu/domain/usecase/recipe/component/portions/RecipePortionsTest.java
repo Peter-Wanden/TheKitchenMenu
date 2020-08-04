@@ -1,13 +1,15 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions;
 
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess.GetDomainModelCallback;
-import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipePortions;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RecipePortionsUseCasseDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.recipe.portions.TestDataRecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.metadata.UseCaseMetadataModel;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.metadata.ComponentState;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.FailReasons;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.portions.RecipePortionsUseCaseFailReason;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.portions.RecipePortionsUseCasePersistenceModel;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
@@ -22,7 +24,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortions.FailReason;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.times;
@@ -41,9 +42,9 @@ public class RecipePortionsTest {
 
     // region helper fields ------------------------------------------------------------------------
     @Mock
-    DataAccessRecipePortions repoPortionsMock;
+    RecipePortionsUseCasseDataAccess repoPortionsMock;
     @Captor
-    ArgumentCaptor<GetDomainModelCallback<RecipePortionsPersistenceModel>> repoPortionsCallback;
+    ArgumentCaptor<GetDomainModelCallback<RecipePortionsUseCasePersistenceModel>> repoPortionsCallback;
     @Mock
     TimeProvider timeProviderMock;
     @Mock
@@ -76,7 +77,7 @@ public class RecipePortionsTest {
         // Arrange
         // This is the initial pre-test setup request for most tests cases, so check all return
         // values
-        RecipePortionsPersistenceModel defaultModel = TestDataRecipePortions.
+        RecipePortionsUseCasePersistenceModel defaultModel = TestDataRecipePortions.
                 getNewActiveDefault();
 
         RecipePortionsRequest request = new RecipePortionsRequest.Builder().
@@ -132,8 +133,8 @@ public class RecipePortionsTest {
     @Test
     public void newRequest_invalidServingsInvalidSittings_resultINVALID_CHANGED() {
         // Arrange
-        RecipePortionsPersistenceModel modelUnderTest = TestDataRecipePortions.
-                getNewInvalidTooHighServingsInvalidTooHighSittings();
+        RecipePortionsUseCasePersistenceModel modelUnderTest = TestDataRecipePortions.
+                getNewInvalidServingsTooHighSittingsTooHigh();
 
         // act simulate new default request / response
         newRequest_stateVALID_DEFAULT_failReasonNONE_DATA_UNAVAILABLE();
@@ -160,8 +161,8 @@ public class RecipePortionsTest {
         );
 
         List<FailReasons> expectedFailReasons = Arrays.asList(
-                FailReason.SERVINGS_TOO_HIGH,
-                FailReason.SITTINGS_TOO_HIGH,
+                RecipePortionsUseCaseFailReason.SERVINGS_TOO_HIGH,
+                RecipePortionsUseCaseFailReason.SITTINGS_TOO_HIGH,
                 CommonFailReason.DATA_UNAVAILABLE
         );
         List<FailReasons> actualFailReasons = metadata.getFailReasons();
@@ -174,8 +175,8 @@ public class RecipePortionsTest {
     @Test
     public void newRequest_invalidServingsValidSittings_resultINVALID_CHANGED() {
         // Arrange
-        RecipePortionsPersistenceModel modelUnderTest = TestDataRecipePortions.
-                getNewInvalidTooHighServingsValidSittings();
+        RecipePortionsUseCasePersistenceModel modelUnderTest = TestDataRecipePortions.
+                getNewInvalidServingsTooHighSittingsValid();
 
         // act simulate new default request / response
         newRequest_stateVALID_DEFAULT_failReasonNONE_DATA_UNAVAILABLE();
@@ -202,7 +203,7 @@ public class RecipePortionsTest {
         );
 
         List<FailReasons> expectedFailReasons = Arrays.asList(
-                FailReason.SERVINGS_TOO_HIGH,
+                RecipePortionsUseCaseFailReason.SERVINGS_TOO_HIGH,
                 CommonFailReason.DATA_UNAVAILABLE
         );
         List<FailReasons> actualFailReasons = metadata.getFailReasons();
@@ -215,8 +216,8 @@ public class RecipePortionsTest {
     @Test
     public void newRequest_validServingsInvalidSittings_resultINVALID_CHANGED() {
         // Arrange
-        RecipePortionsPersistenceModel modelUnderTest = TestDataRecipePortions.
-                getNewValidServingsInvalidTooHighSittings();
+        RecipePortionsUseCasePersistenceModel modelUnderTest = TestDataRecipePortions.
+                getNewInvalid_validServingsInvalidSittingsTooHigh();
 
         // act simulate new default request / response
         newRequest_stateVALID_DEFAULT_failReasonNONE_DATA_UNAVAILABLE();
@@ -243,7 +244,7 @@ public class RecipePortionsTest {
         );
 
         List<FailReasons> expectedFailReasons = Arrays.asList(
-                FailReason.SITTINGS_TOO_HIGH,
+                RecipePortionsUseCaseFailReason.SITTINGS_TOO_HIGH,
                 CommonFailReason.DATA_UNAVAILABLE
         );
         List<FailReasons> actualFailReasons = metadata.getFailReasons();
@@ -256,7 +257,7 @@ public class RecipePortionsTest {
     @Test
     public void newRequest_validServingsValidSittings_resultVALID_CHANGED() {
         // Arrange
-        RecipePortionsPersistenceModel modelUnderTest = TestDataRecipePortions.
+        RecipePortionsUseCasePersistenceModel modelUnderTest = TestDataRecipePortions.
                 getNewValidServingsValidSittings();
 
         // act simulate new default request / response
@@ -304,7 +305,7 @@ public class RecipePortionsTest {
         newRequest_stateVALID_DEFAULT_failReasonNONE_DATA_UNAVAILABLE();
 
         // expected eventual state
-        RecipePortionsPersistenceModel modelUnderTest = TestDataRecipePortions.
+        RecipePortionsUseCasePersistenceModel modelUnderTest = TestDataRecipePortions.
                 getNewValidServingsValidSittings();
 
         // Arrange
@@ -332,7 +333,7 @@ public class RecipePortionsTest {
     @Test
     public void existingRequest_validExistingValuesLoaded_equalValuesInResponse() {
         // Arrange
-        RecipePortionsPersistenceModel modelUnderTest = TestDataRecipePortions.
+        RecipePortionsUseCasePersistenceModel modelUnderTest = TestDataRecipePortions.
                 getExistingValidNinePortions();
 
         RecipePortionsRequest request = new RecipePortionsRequest.Builder().
@@ -403,7 +404,7 @@ public class RecipePortionsTest {
         // Arrange // Act // Assert
         existingRequest_validExistingValuesLoaded_equalValuesInResponse();
 
-        RecipePortionsPersistenceModel modelUnderTest = TestDataRecipePortions.
+        RecipePortionsUseCasePersistenceModel modelUnderTest = TestDataRecipePortions.
                 getExistingInvalidTooHighSittingsInvalidTooHighServings();
 
         // Arrange second request with invalid servings
@@ -425,15 +426,15 @@ public class RecipePortionsTest {
     public void existingRequest_validUpdatedServings_saved() {
         // Arrange
         // arrange initial model to load
-        RecipePortionsPersistenceModel initialModel = TestDataRecipePortions.
+        RecipePortionsUseCasePersistenceModel initialModel = TestDataRecipePortions.
                 getExistingValidNinePortions();
 
         // arrange initial model to archive
-        RecipePortionsPersistenceModel initialModelArchived = TestDataRecipePortions.
+        RecipePortionsUseCasePersistenceModel initialModelArchived = TestDataRecipePortions.
                 getArchivedValidNinePortions();
 
         // Expected model after modification request
-        RecipePortionsPersistenceModel newStateModel = TestDataRecipePortions.
+        RecipePortionsUseCasePersistenceModel newStateModel = TestDataRecipePortions.
                 getExistingValidUpdatedServings();
 
         // new data id for updated model
@@ -477,7 +478,7 @@ public class RecipePortionsTest {
     public void existingRequest_invalidUpdatedSittings_invalidValueNotSaved() {
         // Arrange
         // arrange initial model to load data
-        RecipePortionsPersistenceModel initialModel = TestDataRecipePortions.
+        RecipePortionsUseCasePersistenceModel initialModel = TestDataRecipePortions.
                 getExistingValidNinePortions();
 
         // arrange initial request to load data
@@ -512,7 +513,7 @@ public class RecipePortionsTest {
         verifyNoMoreInteractions(repoPortionsMock);
 
         // assert fail reasons
-        List<FailReasons> expectedFailReasons = Collections.singletonList(FailReason.SITTINGS_TOO_HIGH);
+        List<FailReasons> expectedFailReasons = Collections.singletonList(RecipePortionsUseCaseFailReason.SITTINGS_TOO_HIGH);
         List<FailReasons> actualFailReasons = portionsOnErrorResponse.getMetadata().getFailReasons();
         assertEquals(
                 expectedFailReasons,
@@ -523,13 +524,13 @@ public class RecipePortionsTest {
     @Test
     public void existingId_validUpdatedSittings_saved() {
         // Arrange initial model to load
-        RecipePortionsPersistenceModel initialModel = TestDataRecipePortions.
+        RecipePortionsUseCasePersistenceModel initialModel = TestDataRecipePortions.
                 getExistingValidNinePortions();
 
-        RecipePortionsPersistenceModel archivedInitialModel = TestDataRecipePortions.
+        RecipePortionsUseCasePersistenceModel archivedInitialModel = TestDataRecipePortions.
                 getNewArchivedDefault();
 
-        RecipePortionsPersistenceModel finalModelUnderTest = TestDataRecipePortions.
+        RecipePortionsUseCasePersistenceModel finalModelUnderTest = TestDataRecipePortions.
                 getExistingValidUpdatedSittings();
 
         RecipePortionsRequest initialRequest = new RecipePortionsRequest.Builder().
@@ -568,7 +569,7 @@ public class RecipePortionsTest {
         // Act
         SUT.execute(request, new PortionsCallbackClient());
         // Assert
-        ArgumentCaptor<RecipePortionsPersistenceModel> ac = ArgumentCaptor.forClass(RecipePortionsPersistenceModel.class);
+        ArgumentCaptor<RecipePortionsUseCasePersistenceModel> ac = ArgumentCaptor.forClass(RecipePortionsUseCasePersistenceModel.class);
         verify(repoPortionsMock, times(2)).save(ac.capture());
         ac.getAllValues().forEach(models -> System.out.println(TAG + models));
     }

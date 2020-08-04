@@ -13,10 +13,11 @@ import java.util.List;
 import java.util.Set;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataId.NO_ID;
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentName;
+
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentName;
 
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.metadata.ComponentState;
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.FailReason;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.metadata.RecipeMetadataUseCaseFailReason;
 
 /**
  * Persistence stores the state of an object (data model) each time it changes. Therefore there can
@@ -27,16 +28,16 @@ public class TestDataRecipeMetadata {
 
     public static final String NEW_RECIPE_DOMAIN_ID = getInvalidDefault().getDomainId();
 
-    public static final Set<ComponentName> requiredComponentNames = new HashSet<>();
+    public static final Set<RecipeComponentName> requiredComponentNames = new HashSet<>();
     static {
-        requiredComponentNames.add(ComponentName.COURSE);
-        requiredComponentNames.add(ComponentName.IDENTITY);
-        requiredComponentNames.add(ComponentName.PORTIONS);
+        requiredComponentNames.add(RecipeComponentName.COURSE);
+        requiredComponentNames.add(RecipeComponentName.IDENTITY);
+        requiredComponentNames.add(RecipeComponentName.PORTIONS);
     }
 
-    public static final Set<ComponentName> additionalComponentNames = new HashSet<>();
+    public static final Set<RecipeComponentName> additionalComponentNames = new HashSet<>();
     static {
-        additionalComponentNames.add(ComponentName.DURATION);
+        additionalComponentNames.add(RecipeComponentName.DURATION);
     }
 
     /*
@@ -53,7 +54,7 @@ public class TestDataRecipeMetadata {
                 setRecipeState(ComponentState.INVALID_DEFAULT).
                 setComponentStates(new HashMap<>()). // no component state data received
                 setFailReasons(Arrays.asList(
-                        FailReason.MISSING_REQUIRED_COMPONENTS,
+                        RecipeMetadataUseCaseFailReason.MISSING_REQUIRED_COMPONENTS,
                         CommonFailReason.DATA_UNAVAILABLE)).
                 setCreatedBy(Constants.getUserId()).
                 setCreateDate(0L).
@@ -97,8 +98,8 @@ public class TestDataRecipeMetadata {
                 setRecipeState(ComponentState.INVALID_CHANGED). // changed from invalid default
                 setComponentStates(getInvalidMissingComponentsStates()).
                 setFailReasons(Arrays.asList(
-                        FailReason.MISSING_REQUIRED_COMPONENTS,
-                        FailReason.INVALID_COMPONENTS
+                        RecipeMetadataUseCaseFailReason.MISSING_REQUIRED_COMPONENTS,
+                        RecipeMetadataUseCaseFailReason.INVALID_COMPONENTS
                 )).
                 setCreatedBy(Constants.getUserId()).
                 setCreateDate(10L).
@@ -119,7 +120,7 @@ public class TestDataRecipeMetadata {
                 setDomainId(getInvalidDefault().getDomainId()).
                 setParentDomainId(NO_ID).
                 setRecipeState(ComponentState.INVALID_CHANGED). // changed from invalid default
-                setFailReasons(Collections.singletonList(FailReason.INVALID_COMPONENTS)).
+                setFailReasons(Collections.singletonList(RecipeMetadataUseCaseFailReason.INVALID_COMPONENTS)).
                 setComponentStates(getInvalidUnchangedComponentStates()).
                 setCreatedBy(Constants.getUserId()).
                 setCreateDate(20L).
@@ -142,7 +143,7 @@ public class TestDataRecipeMetadata {
                 setDomainId(getInvalidDefault().getDomainId()).
                 setParentDomainId(NO_ID).
                 setRecipeState(ComponentState.INVALID_CHANGED).
-                setFailReasons(Collections.singletonList(FailReason.INVALID_COMPONENTS)).
+                setFailReasons(Collections.singletonList(RecipeMetadataUseCaseFailReason.INVALID_COMPONENTS)).
                 setComponentStates(getInvalidChangedComponentStates()).
                 setCreatedBy(Constants.getUserId()).
                 setCreateDate(30L).
@@ -218,7 +219,7 @@ public class TestDataRecipeMetadata {
                 setDomainId("domainId-recipe-Id21").
                 setParentDomainId("").
                 setRecipeState(ComponentState.INVALID_UNCHANGED).
-                setFailReasons(Collections.singletonList(FailReason.INVALID_COMPONENTS)).
+                setFailReasons(Collections.singletonList(RecipeMetadataUseCaseFailReason.INVALID_COMPONENTS)).
                 setComponentStates(getInvalidUnchangedComponentStates()).
                 setCreatedBy(getValidFromAnotherUser().getCreatedBy()).
                 setCreateDate(80L).
@@ -265,64 +266,64 @@ public class TestDataRecipeMetadata {
     }
 
     // Missing required component recipe identity
-    private static HashMap<ComponentName, ComponentState> getInvalidMissingComponentsStates() {
-        HashMap<ComponentName, ComponentState> componentStates = new HashMap<>();
-        componentStates.put(ComponentName.COURSE, ComponentState.INVALID_UNCHANGED);
-        componentStates.put(ComponentName.DURATION, ComponentState.VALID_UNCHANGED);
-        componentStates.put(ComponentName.PORTIONS, ComponentState.INVALID_UNCHANGED);
+    private static HashMap<RecipeComponentName, ComponentState> getInvalidMissingComponentsStates() {
+        HashMap<RecipeComponentName, ComponentState> componentStates = new HashMap<>();
+        componentStates.put(RecipeComponentName.COURSE, ComponentState.INVALID_UNCHANGED);
+        componentStates.put(RecipeComponentName.DURATION, ComponentState.VALID_UNCHANGED);
+        componentStates.put(RecipeComponentName.PORTIONS, ComponentState.INVALID_UNCHANGED);
         return componentStates;
     }
 
     // Default required components
-    private static HashMap<ComponentName, ComponentState> getDefaultRequiredComponents() {
-        HashMap<ComponentName, ComponentState> defaultComponentStates = new HashMap<>();
+    private static HashMap<RecipeComponentName, ComponentState> getDefaultRequiredComponents() {
+        HashMap<RecipeComponentName, ComponentState> defaultComponentStates = new HashMap<>();
         requiredComponentNames.forEach(componentName ->
                 defaultComponentStates.put(componentName, ComponentState.INVALID_UNCHANGED)
         );
         return defaultComponentStates;
     }
 
-    private static HashMap<ComponentName, ComponentState> getDefaultComponentStates() {
-        HashMap<ComponentName, ComponentState> defaultComponentStates = new HashMap<>();
-        defaultComponentStates.put(ComponentName.COURSE, ComponentState.INVALID_DEFAULT);
-        defaultComponentStates.put(ComponentName.IDENTITY, ComponentState.INVALID_DEFAULT);
-        defaultComponentStates.put(ComponentName.PORTIONS, ComponentState.VALID_DEFAULT);
+    private static HashMap<RecipeComponentName, ComponentState> getDefaultComponentStates() {
+        HashMap<RecipeComponentName, ComponentState> defaultComponentStates = new HashMap<>();
+        defaultComponentStates.put(RecipeComponentName.COURSE, ComponentState.INVALID_DEFAULT);
+        defaultComponentStates.put(RecipeComponentName.IDENTITY, ComponentState.INVALID_DEFAULT);
+        defaultComponentStates.put(RecipeComponentName.PORTIONS, ComponentState.VALID_DEFAULT);
         return defaultComponentStates;
     }
 
-    private static HashMap<ComponentName, ComponentState> getInvalidUnchangedComponentStates() {
-        HashMap<ComponentName, ComponentState> componentStates = new HashMap<>();
-        componentStates.put(ComponentName.COURSE, ComponentState.INVALID_UNCHANGED);
-        componentStates.put(ComponentName.DURATION, ComponentState.INVALID_UNCHANGED);
-        componentStates.put(ComponentName.IDENTITY, ComponentState.INVALID_UNCHANGED);
-        componentStates.put(ComponentName.PORTIONS, ComponentState.INVALID_UNCHANGED);
+    private static HashMap<RecipeComponentName, ComponentState> getInvalidUnchangedComponentStates() {
+        HashMap<RecipeComponentName, ComponentState> componentStates = new HashMap<>();
+        componentStates.put(RecipeComponentName.COURSE, ComponentState.INVALID_UNCHANGED);
+        componentStates.put(RecipeComponentName.DURATION, ComponentState.INVALID_UNCHANGED);
+        componentStates.put(RecipeComponentName.IDENTITY, ComponentState.INVALID_UNCHANGED);
+        componentStates.put(RecipeComponentName.PORTIONS, ComponentState.INVALID_UNCHANGED);
         return componentStates;
     }
 
-    private static HashMap<ComponentName, ComponentState> getInvalidChangedComponentStates() {
-        HashMap<ComponentName, ComponentState> s = new HashMap<>();
-        s.put(ComponentName.COURSE, ComponentState.VALID_CHANGED);
-        s.put(ComponentName.IDENTITY, ComponentState.VALID_UNCHANGED);
-        s.put(ComponentName.PORTIONS, ComponentState.VALID_DEFAULT);
-        s.put(ComponentName.DURATION, ComponentState.INVALID_CHANGED);
+    private static HashMap<RecipeComponentName, ComponentState> getInvalidChangedComponentStates() {
+        HashMap<RecipeComponentName, ComponentState> s = new HashMap<>();
+        s.put(RecipeComponentName.COURSE, ComponentState.VALID_CHANGED);
+        s.put(RecipeComponentName.IDENTITY, ComponentState.VALID_UNCHANGED);
+        s.put(RecipeComponentName.PORTIONS, ComponentState.VALID_DEFAULT);
+        s.put(RecipeComponentName.DURATION, ComponentState.INVALID_CHANGED);
         return s;
     }
 
-    private static HashMap<ComponentName, ComponentState> getValidChangedComponentStates() {
-        HashMap<ComponentName, ComponentState> s = new HashMap<>();
-        s.put(ComponentName.COURSE, ComponentState.VALID_CHANGED);
-        s.put(ComponentName.DURATION, ComponentState.VALID_CHANGED);
-        s.put(ComponentName.IDENTITY, ComponentState.VALID_CHANGED);
-        s.put(ComponentName.PORTIONS, ComponentState.VALID_CHANGED);
+    private static HashMap<RecipeComponentName, ComponentState> getValidChangedComponentStates() {
+        HashMap<RecipeComponentName, ComponentState> s = new HashMap<>();
+        s.put(RecipeComponentName.COURSE, ComponentState.VALID_CHANGED);
+        s.put(RecipeComponentName.DURATION, ComponentState.VALID_CHANGED);
+        s.put(RecipeComponentName.IDENTITY, ComponentState.VALID_CHANGED);
+        s.put(RecipeComponentName.PORTIONS, ComponentState.VALID_CHANGED);
         return s;
     }
 
-    private static HashMap<ComponentName, ComponentState> getValidUnchangedComponentStates() {
-        HashMap<ComponentName, ComponentState> s = new HashMap<>();
-        s.put(ComponentName.COURSE, ComponentState.VALID_UNCHANGED);
-        s.put(ComponentName.DURATION, ComponentState.VALID_UNCHANGED);
-        s.put(ComponentName.IDENTITY, ComponentState.VALID_UNCHANGED);
-        s.put(ComponentName.PORTIONS, ComponentState.VALID_UNCHANGED);
+    private static HashMap<RecipeComponentName, ComponentState> getValidUnchangedComponentStates() {
+        HashMap<RecipeComponentName, ComponentState> s = new HashMap<>();
+        s.put(RecipeComponentName.COURSE, ComponentState.VALID_UNCHANGED);
+        s.put(RecipeComponentName.DURATION, ComponentState.VALID_UNCHANGED);
+        s.put(RecipeComponentName.IDENTITY, ComponentState.VALID_UNCHANGED);
+        s.put(RecipeComponentName.PORTIONS, ComponentState.VALID_UNCHANGED);
         return s;
     }
 

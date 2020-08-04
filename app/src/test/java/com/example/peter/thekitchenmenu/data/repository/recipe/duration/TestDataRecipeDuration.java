@@ -41,7 +41,7 @@ public class TestDataRecipeDuration {
     // When domain data state changes to a new valid value, the previous persisted state is archived
     public static RecipeDurationUseCasePersistenceModel getNewArchivedDefault() {
         return new RecipeDurationUseCasePersistenceModel.Builder().
-                basedOnRequestModel(getNewActiveDefault()).
+                basedOnModel(getNewActiveDefault()).
                 setLastUpdate(20L). // updated to current time
                 build();
     }
@@ -109,7 +109,7 @@ public class TestDataRecipeDuration {
     // When domain data state changes to a new valid value, the previous persisted state is archived
     public static RecipeDurationUseCasePersistenceModel getNewValidArchivedPrepTimeValid() {
         return new RecipeDurationUseCasePersistenceModel.Builder().
-                basedOnRequestModel(getNewValidPrepTime()).
+                basedOnModel(getNewValidPrepTime()).
                 setLastUpdate(30L).
                 build();
     }
@@ -129,7 +129,7 @@ public class TestDataRecipeDuration {
     // When domain data state changes to a new valid value, the previous persisted state is archived
     public static RecipeDurationUseCasePersistenceModel getNewValidArchivedCookTimeValid() {
         return new RecipeDurationUseCasePersistenceModel.Builder().
-                basedOnRequestModel(getNewValidCookTime()).
+                basedOnModel(getNewValidCookTime()).
                 setLastUpdate(30L).
                 build();
     }
@@ -149,7 +149,7 @@ public class TestDataRecipeDuration {
     // When domain data state changes to a new valid value, the previous persisted state is archived
     public static RecipeDurationUseCasePersistenceModel getNewArchivedPrepTimeValidCookTimeValid() {
         return new RecipeDurationUseCasePersistenceModel.Builder().
-                basedOnRequestModel(getNewValidPrepTimeValidCookTime()).
+                basedOnModel(getNewValidPrepTimeValidCookTime()).
                 setLastUpdate(40).
                 build();
     }

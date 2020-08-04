@@ -115,7 +115,7 @@ public final class RecipePortionsResponse
             }
 
             @Override
-            public Builder basedOnRequestModel(Model model) {
+            public Builder basedOnModel(Model model) {
                 return null;
             }
 

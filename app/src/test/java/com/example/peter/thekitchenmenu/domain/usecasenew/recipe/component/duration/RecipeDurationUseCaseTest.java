@@ -111,18 +111,9 @@ public class RecipeDurationUseCaseTest {
         RecipeDurationUseCasePersistenceModel modelUnderTest = TestDataRecipeDuration.
                 getNewActiveDefault();
 
-        RecipeDurationUseCaseRequest request = new RecipeDurationUseCaseRequest.Builder()
-                .setDomainId(modelUnderTest.getDomainId())
-                .build();
-
-        // Act
-        SUT.execute(request, new UseCaseCallbackImplementer());
-
-        // Assert
-        // assert persistence calls
-        verify(dataAccessMock).getByDomainId(eq(modelUnderTest.getDomainId()),
-                dataAccessCallback.capture());
-        dataAccessCallback.getValue().onPersistenceModelUnavailable();
+        // Act / Assert
+        // execute and assert persistence calls
+        simulateDataUnavailable(modelUnderTest);
 
         // assert nothing saved
         verifyNoMoreInteractions(dataAccessMock);
@@ -583,7 +574,7 @@ public class RecipeDurationUseCaseTest {
     }
 
     @Test
-    public void existingRequest_invalidPrepTimeInvalidCookTime_stateINVALID_UNCHANGED_failReasonINVALID_PREP_TIME_INVALID_COOK_TIME() {
+    public void existingRequest_invalidPersistenceModelLoaded_stateINVALID_UNCHANGED_failReasonINVALID_PREP_TIME_INVALID_COOK_TIME() {
         // Arrange
         // Arrange
         RecipeDurationUseCasePersistenceModel modelUnderTest = TestDataRecipeDuration.

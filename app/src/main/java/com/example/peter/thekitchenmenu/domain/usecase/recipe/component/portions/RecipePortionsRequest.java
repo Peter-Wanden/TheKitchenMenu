@@ -92,7 +92,7 @@ public final class RecipePortionsRequest
             }
 
             @Override
-            public Builder basedOnRequestModel(DomainModel model) {
+            public Builder basedOnModel(DomainModel model) {
                 return null;
             }
 

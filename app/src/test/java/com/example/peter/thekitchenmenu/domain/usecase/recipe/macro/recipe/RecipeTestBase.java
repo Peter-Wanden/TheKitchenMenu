@@ -6,7 +6,7 @@ import com.example.peter.thekitchenmenu.data.repository.recipe.RecipeCourseUseCa
 import com.example.peter.thekitchenmenu.data.repository.recipe.RecipeDurationUseCaseDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RecipeIdentityUseCaseDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipeMetadata;
-import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipePortions;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RecipePortionsUseCasseDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.recipe.metadata.TestDataRecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse;
@@ -20,7 +20,7 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataPersistenceModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortions;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortionsPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.portions.RecipePortionsUseCasePersistenceModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortionsTest;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
@@ -51,9 +51,9 @@ public class RecipeTestBase {
     @Captor
     public ArgumentCaptor<GetDomainModelCallback<RecipeDurationUseCasePersistenceModel>> repoDurationCallback;
     @Mock
-    public DataAccessRecipePortions repoPortionsMock;
+    public RecipePortionsUseCasseDataAccess repoPortionsMock;
     @Captor
-    public ArgumentCaptor<GetDomainModelCallback<RecipePortionsPersistenceModel>> repoPortionsCallback;
+    public ArgumentCaptor<GetDomainModelCallback<RecipePortionsUseCasePersistenceModel>> repoPortionsCallback;
 
     @Mock
     private UniqueIdProvider idProviderMock;

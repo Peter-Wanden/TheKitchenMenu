@@ -7,7 +7,7 @@ import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.port
 import com.example.peter.thekitchenmenu.data.repository.source.local.dataadapter.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.ingredient.DataAccessIngredient;
 import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipeIngredient;
-import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipePortions;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RecipePortionsUseCasseDataAccess;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.UnitOfMeasureConstants;
 import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.MeasurementSubtype;
@@ -205,7 +205,7 @@ public class IngredientCalculatorTest {
     private UseCaseHandler handler;
     private RecipeIngredientResponse actualResponse;
     @Mock
-    DataAccessRecipePortions repoRecipePortionsMock;
+    RecipePortionsUseCasseDataAccess repoRecipePortionsMock;
     @Captor
     ArgumentCaptor<PrimitiveDataSource.GetPrimitiveCallback<RecipePortionsEntity>>
             getRecipePortionsCallbackCaptor;

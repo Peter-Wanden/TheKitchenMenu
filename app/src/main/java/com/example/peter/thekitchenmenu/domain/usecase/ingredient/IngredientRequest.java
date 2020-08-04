@@ -95,7 +95,7 @@ public final class IngredientRequest
             }
 
             @Override
-            public Builder basedOnRequestModel(Model model) {
+            public Builder basedOnModel(Model model) {
                 return null;
             }
 

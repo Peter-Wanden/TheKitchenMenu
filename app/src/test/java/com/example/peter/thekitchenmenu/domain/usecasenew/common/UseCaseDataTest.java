@@ -467,13 +467,13 @@ public class UseCaseDataTest {
 
         // archived model is initial model with last update updated
         TestUseCasePersistenceModel expectedArchivedModel = new TestUseCasePersistenceModel.Builder()
-                .basedOnRequestModel(initialModel)
+                .basedOnModel(initialModel)
                 .setLastUpdate(20L)
                 .build();
 
         // expected model to be saved with new dates and domain data
         TestUseCasePersistenceModel expectedPersistenceModel = new TestUseCasePersistenceModel.Builder()
-                .basedOnRequestModel(initialModel)
+                .basedOnModel(initialModel)
                 .setDataId("newDataId")
                 .setPersistenceModelString(newDomainData)
                 .setCreateDate(20L)

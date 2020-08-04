@@ -149,7 +149,7 @@ public class RecipeDuration
     @Override
     protected void archivePreviousState(long currentTime) {
         RecipeDurationUseCasePersistenceModel model = new RecipeDurationUseCasePersistenceModel.Builder().
-                basedOnRequestModel(persistenceModel).
+                basedOnModel(persistenceModel).
                 setLastUpdate(currentTime).
                 build();
 

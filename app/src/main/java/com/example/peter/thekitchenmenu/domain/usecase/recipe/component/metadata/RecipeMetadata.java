@@ -1,20 +1,18 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata;
 
-import android.annotation.SuppressLint;
-
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.metadata.ComponentState;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseElement;
-import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentName;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.metadata.RecipeMetadataUseCaseFailReason;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.metadata.RecipeMetadataUseCaseModel;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
@@ -29,126 +27,22 @@ public class RecipeMetadata
         UseCaseElement<
                 DataAccessRecipeMetadata,
                 RecipeMetadataPersistenceModel,
-                RecipeMetadata.DomainModel> {
+                RecipeMetadataUseCaseModel> {
 
     private static final String TAG = "tkm-" + RecipeMetadata.class.getSimpleName() + ": ";
 
-    protected static final class DomainModel
-            implements
-            com.example.peter.thekitchenmenu.domain.usecasenew.model.DomainModel.UseCaseModel {
-
-        private String parentDomainId;
-        private HashMap<ComponentName, ComponentState> componentStates;
-
-        private DomainModel(String parentDomainId,
-                            HashMap<ComponentName, ComponentState> componentStates) {
-
-            this.parentDomainId = parentDomainId;
-            this.componentStates = componentStates;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (!(o instanceof DomainModel)) return false;
-
-            DomainModel that = (DomainModel) o;
-
-            if (!Objects.equals(parentDomainId, that.parentDomainId))
-                return false;
-            return Objects.equals(componentStates, that.componentStates);
-        }
-
-        @Override
-        public int hashCode() {
-            int result = parentDomainId != null ? parentDomainId.hashCode() : 0;
-            result = 31 * result + (componentStates != null ? componentStates.hashCode() : 0);
-            return result;
-        }
-
-        @Nonnull
-        @Override
-        public String toString() {
-            return "DomainModel{" +
-                    "parentDomainId='" + parentDomainId + '\'' +
-                    ", componentStates=" + componentStates +
-                    '}';
-        }
-    }
-
-    public enum ComponentName {
-        COURSE(1),
-        DURATION(2),
-        IDENTITY(3),
-        PORTIONS(4),
-        TEXT_VALIDATOR(5),
-        RECIPE_METADATA(6),
-        RECIPE(7);
-
-        private final int id;
-
-        @SuppressLint("UseSparseArrays")
-        private static Map<Integer, ComponentName> options = new HashMap<>();
-
-        ComponentName(int id) {
-            this.id = id;
-        }
-
-        static {
-            for (ComponentName n : ComponentName.values())
-                options.put(n.id, n);
-        }
-
-        public static ComponentName getFromId(int id) {
-            return options.get(id);
-        }
-
-        public int getId() {
-            return id;
-        }
-
-    }
-
-    public enum FailReason implements FailReasons {
-        MISSING_REQUIRED_COMPONENTS(400),
-        INVALID_COMPONENTS(401);
-
-        private final int id;
-
-        @SuppressLint("UseSparseArrays")
-        private static Map<Integer, FailReason> options = new HashMap<>();
-
-        FailReason(int id) {
-            this.id = id;
-        }
-
-        static {
-            for (FailReason s : FailReason.values())
-                options.put(s.id, s);
-        }
-
-        public static FailReason getById(int id) {
-            return options.get(id);
-        }
-
-        @Override
-        public int getId() {
-            return id;
-        }
-    }
-
     @Nonnull
-    private final Set<ComponentName> requiredComponentNames;
+    private final Set<RecipeComponentName> requiredComponentNames;
     @Nonnull
-    private final Set<ComponentName> additionalComponentNames;
+    private final Set<RecipeComponentName> additionalComponentNames;
 
     private ComponentState recipeState;
 
     public RecipeMetadata(@Nonnull DataAccessRecipeMetadata repository,
                           @Nonnull UniqueIdProvider idProvider,
                           @Nonnull TimeProvider timeProvider,
-                          @Nonnull Set<ComponentName> requiredComponentNames,
-                          @Nonnull Set<ComponentName> additionalComponentNames) {
+                          @Nonnull Set<RecipeComponentName> requiredComponentNames,
+                          @Nonnull Set<RecipeComponentName> additionalComponentNames) {
 
         this.repository = repository;
         this.idProvider = idProvider;
@@ -167,39 +61,39 @@ public class RecipeMetadata
     }
 
     @Override
-    protected DomainModel createUseCaseModelFromDefaultValues() {
-        HashMap<ComponentName, ComponentState> defaultComponentStates = new HashMap<>();
+    protected RecipeMetadataUseCaseModel createUseCaseModelFromDefaultValues() {
+        HashMap<RecipeComponentName, ComponentState> defaultComponentStates = new HashMap<>();
         requiredComponentNames.forEach(componentName ->
                 defaultComponentStates.put(componentName, ComponentState.INVALID_DEFAULT)
         );
 
-        DomainModel defaultDomainModel = new DomainModel(NO_ID, defaultComponentStates);
+        RecipeMetadataUseCaseModel defaultDomainModel = new RecipeMetadataUseCaseModel(NO_ID, defaultComponentStates);
 
-        return new DomainModel(
+        return new RecipeMetadataUseCaseModel(
                 NO_ID,
                 new HashMap<>()
         );
     }
 
     @Override
-    protected DomainModel createUseCaseModelFromPersistenceModel(
+    protected RecipeMetadataUseCaseModel createUseCaseModelFromPersistenceModel(
             @Nonnull RecipeMetadataPersistenceModel persistenceModel) {
 
         recipeState = persistenceModel.getComponentState();
         failReasons.addAll(persistenceModel.getFailReasons());
 
-        return new DomainModel(
+        return new RecipeMetadataUseCaseModel(
                 persistenceModel.getParentDomainId(),
                 persistenceModel.getComponentStates()
         );
     }
 
     @Override
-    protected DomainModel createUseCaseModelFromRequestModel() {
+    protected RecipeMetadataUseCaseModel createUseCaseModelFromRequestModel() {
         RecipeMetadataRequest.DomainModel model = ((RecipeMetadataRequest) getRequest()).
                 getDomainModel();
 
-        return new DomainModel(
+        return new RecipeMetadataUseCaseModel(
                 model.getParentDomainId(),
                 model.getComponentStates()
         );
@@ -214,7 +108,7 @@ public class RecipeMetadata
     }
 
     private void checkForMissingRequiredComponents() {
-        for (ComponentName componentName : requiredComponentNames) {
+        for (RecipeComponentName componentName : requiredComponentNames) {
             if (!domainModelHasRequiredComponent(componentName)) {
                 addFailReasonsMissingRequiredComponents();
             }
@@ -222,24 +116,24 @@ public class RecipeMetadata
 
         System.out.println(TAG + "checkForMissingRequiredComponents: " +
                 "\n  - required component names= " + requiredComponentNames +
-                "\n  - domainModel.componentStates= " + useCaseModel.componentStates);
+                "\n  - domainModel.componentStates= " + useCaseModel.getComponentStates());
     }
 
-    private boolean domainModelHasRequiredComponent(ComponentName componentName) {
-        return useCaseModel.componentStates.containsKey(componentName);
+    private boolean domainModelHasRequiredComponent(RecipeComponentName componentName) {
+        return useCaseModel.getComponentStates().containsKey(componentName);
     }
 
     private void addFailReasonsMissingRequiredComponents() {
-        if (!failReasons.contains(FailReason.MISSING_REQUIRED_COMPONENTS)) {
-            failReasons.add(FailReason.MISSING_REQUIRED_COMPONENTS);
+        if (!failReasons.contains(RecipeMetadataUseCaseFailReason.MISSING_REQUIRED_COMPONENTS)) {
+            failReasons.add(RecipeMetadataUseCaseFailReason.MISSING_REQUIRED_COMPONENTS);
         }
     }
 
     private void checkForInvalidComponentStates() {
         ComponentState componentState;
 
-        for (ComponentName componentName : requiredComponentNames) {
-            componentState = useCaseModel.componentStates.get(componentName);
+        for (RecipeComponentName componentName : requiredComponentNames) {
+            componentState = useCaseModel.getComponentStates().get(componentName);
 
             if (ComponentState.INVALID_UNCHANGED.equals(componentState) ||
                     ComponentState.INVALID_CHANGED.equals(componentState) ||
@@ -250,8 +144,8 @@ public class RecipeMetadata
 
         // INVALID_DEFAULT state for an additional component means it is not being used, therefore
         // it is not classed as missing as it would be for a required component
-        for (ComponentName componentName : additionalComponentNames) {
-            componentState = useCaseModel.componentStates.get(componentName);
+        for (RecipeComponentName componentName : additionalComponentNames) {
+            componentState = useCaseModel.getComponentStates().get(componentName);
 
             if (ComponentState.INVALID_UNCHANGED.equals(componentState) ||
                     ComponentState.INVALID_CHANGED.equals(componentState)) {
@@ -261,8 +155,8 @@ public class RecipeMetadata
     }
 
     private void addFailReasonInvalidComponents() {
-        if (!failReasons.contains(FailReason.INVALID_COMPONENTS)) {
-            failReasons.add(FailReason.INVALID_COMPONENTS);
+        if (!failReasons.contains(RecipeMetadataUseCaseFailReason.INVALID_COMPONENTS)) {
+            failReasons.add(RecipeMetadataUseCaseFailReason.INVALID_COMPONENTS);
         }
     }
 
@@ -281,9 +175,9 @@ public class RecipeMetadata
                 persistenceModel = new RecipeMetadataPersistenceModel.Builder().
                         setDataId(useCaseDataId).
                         setDomainId(useCaseDomainId).
-                        setParentDomainId(useCaseModel.parentDomainId).
+                        setParentDomainId(useCaseModel.getParentDomainId()).
                         setRecipeState(recipeState).
-                        setComponentStates(useCaseModel.componentStates).
+                        setComponentStates(useCaseModel.getComponentStates()).
                         setFailReasons(failReasons).
                         setCreatedBy(Constants.getUserId()).
                         setCreateDate(currentTime).
@@ -301,7 +195,7 @@ public class RecipeMetadata
     @Override
     protected void archivePreviousState(long currentTime) {
         RecipeMetadataPersistenceModel model = new RecipeMetadataPersistenceModel.Builder().
-                basedOnRequestModel(persistenceModel).
+                basedOnModel(persistenceModel).
                 setLastUpdate(currentTime).
                 build();
 
@@ -322,8 +216,8 @@ public class RecipeMetadata
 
     private RecipeMetadataResponse.DomainModel getResponseDomainModel() {
         return new RecipeMetadataResponse.DomainModel.Builder().
-                setParentDomainId(useCaseModel.parentDomainId).
-                setComponentStates(new LinkedHashMap<>(useCaseModel.componentStates)).
+                setParentDomainId(useCaseModel.getParentDomainId()).
+                setComponentStates(new LinkedHashMap<>(useCaseModel.getComponentStates())).
                 build();
     }
 }

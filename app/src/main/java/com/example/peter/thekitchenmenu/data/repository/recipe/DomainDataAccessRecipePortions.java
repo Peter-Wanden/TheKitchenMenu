@@ -1,15 +1,15 @@
 package com.example.peter.thekitchenmenu.data.repository.recipe;
 
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortionsPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.portions.RecipePortionsUseCasePersistenceModel;
 
 import javax.annotation.Nonnull;
 
 public interface DomainDataAccessRecipePortions
-        extends DomainDataAccess<RecipePortionsPersistenceModel> {
+        extends DomainDataAccess<RecipePortionsUseCasePersistenceModel> {
 
     void getAllByDomainId(
             @Nonnull String domainId,
-            @Nonnull GetAllDomainModelsCallback<RecipePortionsPersistenceModel> callback);
+            @Nonnull GetAllDomainModelsCallback<RecipePortionsUseCasePersistenceModel> callback);
 
 }

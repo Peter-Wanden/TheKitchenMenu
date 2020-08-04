@@ -10,9 +10,9 @@ import com.example.peter.thekitchenmenu.domain.usecasenew.common.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentName;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentName;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.metadata.ComponentState;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.FailReason;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.metadata.RecipeMetadataUseCaseFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataPersistenceModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataResponse;
@@ -53,7 +53,7 @@ public class RecipeMetadataTest {
     TimeProvider timeProviderMock;
 
     private UseCaseHandler handler;
-    private HashMap<ComponentName, ComponentState> expectedComponentStates;
+    private HashMap<RecipeComponentName, ComponentState> expectedComponentStates;
     private RecipeMetadataResponse onSuccessResponse;
     private RecipeMetadataResponse onErrorResponse;
 
@@ -115,9 +115,9 @@ public class RecipeMetadataTest {
         );
 
         // assert recipe components states
-        HashMap<ComponentName, ComponentState> expectedComponentStates = modelUnderTest.
+        HashMap<RecipeComponentName, ComponentState> expectedComponentStates = modelUnderTest.
                 getComponentStates();
-        HashMap<ComponentName, ComponentState> actualComponentStates = model.
+        HashMap<RecipeComponentName, ComponentState> actualComponentStates = model.
                 getComponentStates();
         assertEquals(
                 expectedComponentStates,
@@ -230,9 +230,9 @@ public class RecipeMetadataTest {
         );
 
         // assert componentStates
-        HashMap<ComponentName, ComponentState> expectedComponentStates = modelUnderTest.
+        HashMap<RecipeComponentName, ComponentState> expectedComponentStates = modelUnderTest.
                 getComponentStates();
-        HashMap<ComponentName, ComponentState> actualComponentStates = domainModel.
+        HashMap<RecipeComponentName, ComponentState> actualComponentStates = domainModel.
                 getComponentStates();
         assertEquals(
                 expectedComponentStates,
@@ -544,7 +544,7 @@ public class RecipeMetadataTest {
                 actualComponentState
         );
 
-        FailReasons[] expectedFailReasons = new FailReasons[]{FailReason.INVALID_COMPONENTS};
+        FailReasons[] expectedFailReasons = new FailReasons[]{RecipeMetadataUseCaseFailReason.INVALID_COMPONENTS};
         FailReasons[] actualFailReasons = metadata.getFailReasons().toArray(new FailReasons[0]);
         assertArrayEquals(
                 expectedFailReasons,
@@ -573,7 +573,7 @@ public class RecipeMetadataTest {
 
         FailReasons[] expectedFailReasons = new FailReasons[]{
                 CommonFailReason.DATA_UNAVAILABLE,
-                FailReason.MISSING_REQUIRED_COMPONENTS};
+                RecipeMetadataUseCaseFailReason.MISSING_REQUIRED_COMPONENTS};
         FailReasons[] actualFailReasons = metadata.getFailReasons().toArray(new FailReasons[0]);
         assertArrayEquals(
                 expectedFailReasons,
@@ -607,7 +607,7 @@ public class RecipeMetadataTest {
                 actualComponentState
         );
 
-        FailReasons[] expectedFailReasons = new FailReasons[]{FailReason.INVALID_COMPONENTS};
+        FailReasons[] expectedFailReasons = new FailReasons[]{RecipeMetadataUseCaseFailReason.INVALID_COMPONENTS};
         FailReasons[] actualFailReasons = metadata.getFailReasons().toArray(new FailReasons[0]);
         assertArrayEquals(
                 expectedFailReasons,
@@ -641,7 +641,7 @@ public class RecipeMetadataTest {
                 actualComponentState
         );
 
-        FailReasons[] expectedFailReasons = new FailReasons[]{FailReason.INVALID_COMPONENTS};
+        FailReasons[] expectedFailReasons = new FailReasons[]{RecipeMetadataUseCaseFailReason.INVALID_COMPONENTS};
         FailReasons[] actualFailReasons = metadata.getFailReasons().toArray(new FailReasons[0]);
         assertArrayEquals(
                 expectedFailReasons,

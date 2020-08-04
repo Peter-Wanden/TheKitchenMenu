@@ -22,10 +22,10 @@ import java.util.Set;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.ComponentName;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentName;
 
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.metadata.ComponentState;
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata.FailReason;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.metadata.RecipeMetadataUseCaseFailReason;
 
 public class RecipeMetadataLocalGetAdapter {
 
@@ -184,7 +184,7 @@ public class RecipeMetadataLocalGetAdapter {
 
         for (RecipeFailReasonEntity e : entities) {
             CommonFailReason commonFailReason = CommonFailReason.getFromId(e.getFailReasonId());
-            FailReason metadataRecipeMetadataFailReason = FailReason.getById(e.getFailReasonId());
+            RecipeMetadataUseCaseFailReason metadataRecipeMetadataFailReason = RecipeMetadataUseCaseFailReason.getById(e.getFailReasonId());
 
             failReasons.add(commonFailReason == null ? metadataRecipeMetadataFailReason : commonFailReason);
         }
@@ -215,10 +215,10 @@ public class RecipeMetadataLocalGetAdapter {
     }
 
     private void addComponentStatesToModelBuilder(List<RecipeComponentStateEntity> entities) {
-        HashMap<ComponentName, ComponentState> s = new HashMap<>();
+        HashMap<RecipeComponentName, ComponentState> s = new HashMap<>();
         for (RecipeComponentStateEntity e : entities) {
             s.put(
-                    ComponentName.getFromId(e.getComponentNameId()),
+                    RecipeComponentName.getFromId(e.getComponentNameId()),
                     ComponentState.fromInt(e.getComponentStateId())
             );
         }

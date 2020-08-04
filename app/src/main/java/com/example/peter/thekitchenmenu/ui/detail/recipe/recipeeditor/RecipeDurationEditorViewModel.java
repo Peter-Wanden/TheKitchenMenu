@@ -5,10 +5,10 @@ import android.content.res.Resources;
 import androidx.core.util.Pair;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentName;
 import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.duration.RecipeDurationUseCaseFailReason;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDurationResponse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
 import com.example.peter.thekitchenmenu.ui.ObservableViewModel;
 
@@ -48,7 +48,7 @@ public class RecipeDurationEditorViewModel extends ObservableViewModel {
         response = new RecipeDurationResponse.Builder().getDefault().build();
 
         recipeMacro.registerComponentListener(new Pair<>(
-                RecipeMetadata.ComponentName.DURATION,
+                RecipeComponentName.DURATION,
                 new DurationCallbackListener()));
     }
 

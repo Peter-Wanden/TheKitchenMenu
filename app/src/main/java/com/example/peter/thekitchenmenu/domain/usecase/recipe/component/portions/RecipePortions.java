@@ -1,23 +1,19 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions;
 
-import android.annotation.SuppressLint;
-
-import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipePortions;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RecipePortionsUseCasseDataAccess;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseElement;
-import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.FailReasons;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.portions.RecipePortionsUseCaseFailReason;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.portions.RecipePortionsUseCasePersistenceModel;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.annotation.Nonnull;
 
 public class RecipePortions
         extends
         UseCaseElement<
-                DataAccessRecipePortions,
-                RecipePortionsPersistenceModel,
+                RecipePortionsUseCasseDataAccess,
+                RecipePortionsUseCasePersistenceModel,
                 RecipePortions.DomainModel> {
 
     private static final String TAG = "tkm-" + RecipePortions.class.getSimpleName() + ": ";
@@ -61,44 +57,12 @@ public class RecipePortions
         }
     }
 
-    public enum FailReason
-            implements
-            FailReasons {
-        SERVINGS_TOO_LOW(350),
-        SERVINGS_TOO_HIGH(351),
-        SITTINGS_TOO_LOW(352),
-        SITTINGS_TOO_HIGH(353);
-
-        private final int id;
-
-        @SuppressLint("UseSparseArrays")
-        private static Map<Integer, FailReason> options = new HashMap<>();
-
-        FailReason(int id) {
-            this.id = id;
-        }
-
-        static {
-            for (FailReason s : FailReason.values())
-                options.put(s.id, s);
-        }
-
-        public static FailReason getById(int id) {
-            return options.get(id);
-        }
-
-        @Override
-        public int getId() {
-            return id;
-        }
-    }
-
     static final int MIN_SERVINGS = 1;
     static final int MIN_SITTINGS = 1;
     private final int maxServings;
     private final int maxSittings;
 
-    public RecipePortions(@Nonnull DataAccessRecipePortions repository,
+    public RecipePortions(@Nonnull RecipePortionsUseCasseDataAccess repository,
                           @Nonnull UniqueIdProvider idProvider,
                           @Nonnull TimeProvider timeProvider,
                           int maxServings,
@@ -115,7 +79,7 @@ public class RecipePortions
 
     @Override
     protected DomainModel createUseCaseModelFromPersistenceModel(
-            @Nonnull RecipePortionsPersistenceModel persistenceModel) {
+            @Nonnull RecipePortionsUseCasePersistenceModel persistenceModel) {
 
         return new DomainModel(
                 persistenceModel.getServings(),
@@ -151,19 +115,19 @@ public class RecipePortions
 
     private void validateServings() {
         if (useCaseModel.servings < MIN_SERVINGS) {
-            failReasons.add(FailReason.SERVINGS_TOO_LOW);
+            failReasons.add(RecipePortionsUseCaseFailReason.SERVINGS_TOO_LOW);
 
         } else if (useCaseModel.servings > maxServings) {
-            failReasons.add(FailReason.SERVINGS_TOO_HIGH);
+            failReasons.add(RecipePortionsUseCaseFailReason.SERVINGS_TOO_HIGH);
         }
     }
 
     private void validateSittings() {
         if (useCaseModel.sittings < MIN_SITTINGS) {
-            failReasons.add(FailReason.SITTINGS_TOO_LOW);
+            failReasons.add(RecipePortionsUseCaseFailReason.SITTINGS_TOO_LOW);
 
         } else if (useCaseModel.sittings > maxSittings) {
-            failReasons.add(FailReason.SITTINGS_TOO_HIGH);
+            failReasons.add(RecipePortionsUseCaseFailReason.SITTINGS_TOO_HIGH);
         }
     }
 
@@ -178,7 +142,7 @@ public class RecipePortions
                 archivePreviousState(currentTime);
             }
 
-            persistenceModel = new RecipePortionsPersistenceModel.Builder().
+            persistenceModel = new RecipePortionsUseCasePersistenceModel.Builder().
                     setDataId(useCaseDataId).
                     setDomainId(useCaseDomainId).
                     setServings(useCaseModel.servings).
@@ -194,8 +158,8 @@ public class RecipePortions
 
     @Override
     protected void archivePreviousState(long currentTime) {
-        RecipePortionsPersistenceModel model = new RecipePortionsPersistenceModel.Builder().
-                basedOnRequestModel(persistenceModel).
+        RecipePortionsUseCasePersistenceModel model = new RecipePortionsUseCasePersistenceModel.Builder().
+                basedOnModel(persistenceModel).
                 setLastUpdate(currentTime).
                 build();
 

@@ -32,7 +32,7 @@ import com.example.peter.thekitchenmenu.data.repository.recipe.RecipeDurationUse
 import com.example.peter.thekitchenmenu.data.repository.recipe.RecipeIdentityUseCaseDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipeIngredient;
 import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipeMetadata;
-import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipePortions;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RecipePortionsUseCasseDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.datasource.IngredientLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.RepositoryRecipeCourseLocal;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.componentstate.RecipeComponentStateLocalDataSource;
@@ -295,10 +295,10 @@ public class DatabaseInjection {
         );
     }
 
-    public static DataAccessRecipePortions provideRecipePortionsDataSource(
+    public static RecipePortionsUseCasseDataAccess provideRecipePortionsDataSource(
             @Nonnull Context c) {
 
-        return DataAccessRecipePortions.getInstance(
+        return RecipePortionsUseCasseDataAccess.getInstance(
                 RepositoryRecipePortionsRemote.getInstance(),
                 RepositoryRecipePortionsLocal.getInstance(
                         providePortionsLocalGetAdapter(c),

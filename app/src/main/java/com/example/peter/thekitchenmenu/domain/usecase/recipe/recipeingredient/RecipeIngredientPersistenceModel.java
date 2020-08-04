@@ -90,7 +90,7 @@ public class RecipeIngredientPersistenceModel extends BaseDomainPersistenceModel
         }
 
         @Override
-        public Builder basedOnRequestModel(RecipeIngredientPersistenceModel model) {
+        public Builder basedOnModel(RecipeIngredientPersistenceModel model) {
             domainModel.dataId = model.getDataId();
             domainModel.recipeIngredientId = model.getDomainId();
             domainModel.recipeDataId = model.getRecipeDataId();

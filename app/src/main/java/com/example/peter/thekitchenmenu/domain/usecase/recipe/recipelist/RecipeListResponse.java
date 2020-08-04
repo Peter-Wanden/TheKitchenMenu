@@ -102,7 +102,7 @@ public class RecipeListResponse
             }
 
             @Override
-            public Builder basedOnRequestModel(Model model) {
+            public Builder basedOnModel(Model model) {
                 domainModel.recipes = model.getRecipes();
                 return self();
             }

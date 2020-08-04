@@ -72,7 +72,7 @@ public final class RecipeCourseUseCasePersistenceModel
         }
 
         @Override
-        public Builder basedOnRequestModel(RecipeCourseUseCasePersistenceModel domainModel) {
+        public Builder basedOnModel(RecipeCourseUseCasePersistenceModel domainModel) {
             this.domainModel.dataId = domainModel.getDataId();
             this.domainModel.domainId = domainModel.getDomainId();
             this.domainModel.courses = domainModel.getCourses();

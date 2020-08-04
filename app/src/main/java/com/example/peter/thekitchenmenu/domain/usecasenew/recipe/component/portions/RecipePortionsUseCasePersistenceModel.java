@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions;
+package com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.portions;
 
 import com.example.peter.thekitchenmenu.domain.usecasenew.model.BaseDomainPersistenceModel;
 
@@ -6,13 +6,13 @@ import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public final class RecipePortionsPersistenceModel
+public final class RecipePortionsUseCasePersistenceModel
         extends BaseDomainPersistenceModel {
 
     private int servings;
     private int sittings;
 
-    private RecipePortionsPersistenceModel() {}
+    private RecipePortionsUseCasePersistenceModel() {}
 
     public int getServings() {
         return servings;
@@ -25,9 +25,9 @@ public final class RecipePortionsPersistenceModel
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof RecipePortionsPersistenceModel)) return false;
+        if (!(o instanceof RecipePortionsUseCasePersistenceModel)) return false;
         if (!super.equals(o)) return false;
-        RecipePortionsPersistenceModel that = (RecipePortionsPersistenceModel) o;
+        RecipePortionsUseCasePersistenceModel that = (RecipePortionsUseCasePersistenceModel) o;
         return servings == that.servings &&
                 sittings == that.sittings;
     }
@@ -51,25 +51,25 @@ public final class RecipePortionsPersistenceModel
     }
 
     public static class Builder
-            extends PersistenceModelBuilder<Builder, RecipePortionsPersistenceModel> {
+            extends PersistenceModelBuilder<Builder, RecipePortionsUseCasePersistenceModel> {
 
         public Builder() {
-            domainModel = new RecipePortionsPersistenceModel();
+            domainModel = new RecipePortionsUseCasePersistenceModel();
         }
 
         @Override
         public Builder getDefault() {
             domainModel.dataId = "";
             domainModel.domainId = "";
-            domainModel.servings = 1;
-            domainModel.sittings = 1;
+            domainModel.servings = RecipePortionsUseCase.MIN_SERVINGS;
+            domainModel.sittings = RecipePortionsUseCase.MIN_SITTINGS;
             domainModel.createDate = 0L;
             domainModel.lastUpdate = 0L;
             return self();
         }
 
         @Override
-        public Builder basedOnRequestModel(@Nonnull RecipePortionsPersistenceModel m) {
+        public Builder basedOnModel(@Nonnull RecipePortionsUseCasePersistenceModel m) {
             domainModel.dataId = m.getDataId();
             domainModel.domainId = m.getDomainId();
             domainModel.servings = m.getServings();

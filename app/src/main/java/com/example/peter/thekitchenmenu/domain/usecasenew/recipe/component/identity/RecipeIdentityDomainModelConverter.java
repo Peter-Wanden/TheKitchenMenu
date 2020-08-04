@@ -73,7 +73,7 @@ public final class RecipeIdentityDomainModelConverter
     public RecipeIdentityUseCasePersistenceModel createArchivedPersistenceModel(
             @Nonnull RecipeIdentityUseCasePersistenceModel persistenceModel) {
         return new RecipeIdentityUseCasePersistenceModel.Builder()
-                .basedOnRequestModel(persistenceModel)
+                .basedOnModel(persistenceModel)
                 .setLastUpdate(timeProvider.getCurrentTimeInMills())
                 .build();
     }

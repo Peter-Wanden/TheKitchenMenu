@@ -87,7 +87,7 @@ public final class IngredientPersistenceModel
         }
 
         @Override
-        public Builder basedOnRequestModel(@Nonnull IngredientPersistenceModel m) {
+        public Builder basedOnModel(@Nonnull IngredientPersistenceModel m) {
             domainModel.dataId = m.getDataId();
             domainModel.domainId = m.getDomainId();
             domainModel.name = m.getName();

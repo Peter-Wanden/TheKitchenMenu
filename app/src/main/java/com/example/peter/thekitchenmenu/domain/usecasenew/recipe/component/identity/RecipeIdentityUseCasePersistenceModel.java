@@ -69,7 +69,7 @@ public final class RecipeIdentityUseCasePersistenceModel
         }
 
         @Override
-        public Builder basedOnRequestModel(@Nonnull RecipeIdentityUseCasePersistenceModel model) {
+        public Builder basedOnModel(@Nonnull RecipeIdentityUseCasePersistenceModel model) {
             domainModel.dataId = model.getDataId();
             domainModel.domainId = model.getDomainId();
             domainModel.title = model.getTitle();

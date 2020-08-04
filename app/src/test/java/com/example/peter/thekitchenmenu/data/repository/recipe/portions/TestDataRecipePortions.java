@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.data.repository.recipe.portions;
 
 import com.example.peter.thekitchenmenu.data.repository.recipe.metadata.TestDataRecipeMetadata;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortionsPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.portions.RecipePortionsUseCasePersistenceModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,8 +25,8 @@ public class TestDataRecipePortions {
     public static final int MIN_SITTINGS = 1;
     public static final int MAX_SITTINGS = 10;
 
-    public static RecipePortionsPersistenceModel getNewActiveDefault() {
-        return new RecipePortionsPersistenceModel.Builder().
+    public static RecipePortionsUseCasePersistenceModel getNewActiveDefault() {
+        return new RecipePortionsUseCasePersistenceModel.Builder().
                 setDataId("dataId-recipePortions-id0").
                 setDomainId(NEW_RECIPE_ID).
                 setServings(MIN_SERVINGS).
@@ -36,15 +36,15 @@ public class TestDataRecipePortions {
                 build();
     }
 
-    public static RecipePortionsPersistenceModel getNewArchivedDefault() {
-        return new RecipePortionsPersistenceModel.Builder().
-                basedOnRequestModel(getNewActiveDefault()).
+    public static RecipePortionsUseCasePersistenceModel getNewArchivedDefault() {
+        return new RecipePortionsUseCasePersistenceModel.Builder().
+                basedOnModel(getNewActiveDefault()).
                 setLastUpdate(20L).
                 build();
     }
 
-    public static RecipePortionsPersistenceModel getNewValidFourPortions() {
-        return new RecipePortionsPersistenceModel.Builder().
+    public static RecipePortionsUseCasePersistenceModel getNewValidFourPortions() {
+        return new RecipePortionsUseCasePersistenceModel.Builder().
                 setDataId("dataId-recipePortions-id1").
                 setDomainId(NEW_RECIPE_ID).
                 setServings(2).
@@ -54,8 +54,8 @@ public class TestDataRecipePortions {
                 build();
     }
 
-    public static RecipePortionsPersistenceModel getNewValidSixteenPortions() {
-        return new RecipePortionsPersistenceModel.Builder().
+    public static RecipePortionsUseCasePersistenceModel getNewValidSixteenPortions() {
+        return new RecipePortionsUseCasePersistenceModel.Builder().
                 setDataId("dataId-recipePortions-id2").
                 setDomainId(NEW_RECIPE_ID).
                 setServings(4).
@@ -65,8 +65,19 @@ public class TestDataRecipePortions {
                 build();
     }
 
-    public static RecipePortionsPersistenceModel getNewInvalidTooHighServingsInvalidTooHighSittings() {
-        return new RecipePortionsPersistenceModel.Builder().
+    public static RecipePortionsUseCasePersistenceModel getNewInvalidServingsTooLowSittingsValid() {
+        return new RecipePortionsUseCasePersistenceModel.Builder()
+                .setDataId("dataId-recipePortions-id3a")
+                .setDomainId(NEW_RECIPE_ID)
+                .setServings(MIN_SERVINGS -1)
+                .setSittings(MIN_SERVINGS)
+                .setCreateDate(10L)
+                .setLastUpdate(35L)
+                .build();
+    }
+
+    public static RecipePortionsUseCasePersistenceModel getNewInvalidServingsTooHighSittingsTooHigh() {
+        return new RecipePortionsUseCasePersistenceModel.Builder().
                 setDataId("dataId-recipePortions-id3").
                 setDomainId(NEW_RECIPE_ID).
                 setServings(MAX_SERVINGS + 1).
@@ -76,8 +87,8 @@ public class TestDataRecipePortions {
                 build();
     }
 
-    public static RecipePortionsPersistenceModel getNewInvalidTooHighServingsValidSittings() {
-        return new RecipePortionsPersistenceModel.Builder().
+    public static RecipePortionsUseCasePersistenceModel getNewInvalidServingsTooHighSittingsValid() {
+        return new RecipePortionsUseCasePersistenceModel.Builder().
                 setDataId("dataId-recipePortions-id4").
                 setDomainId(NEW_RECIPE_ID).
                 setServings(MAX_SERVINGS + 1).
@@ -87,8 +98,19 @@ public class TestDataRecipePortions {
                 build();
     }
 
-    public static RecipePortionsPersistenceModel getNewValidServingsInvalidTooHighSittings() {
-        return new RecipePortionsPersistenceModel.Builder().
+    public static RecipePortionsUseCasePersistenceModel getNewInvalidValidServingsValidSittingsTooLow() {
+        return new RecipePortionsUseCasePersistenceModel.Builder()
+                .setDataId("dataId-recipePortions-id4a")
+                .setDomainId(NEW_RECIPE_ID)
+                .setServings(MIN_SERVINGS)
+                .setSittings(MIN_SITTINGS - 1)
+                .setCreateDate(10L)
+                .setLastUpdate(10L)
+                .build();
+    }
+
+    public static RecipePortionsUseCasePersistenceModel getNewInvalid_validServingsInvalidSittingsTooHigh() {
+        return new RecipePortionsUseCasePersistenceModel.Builder().
                 setDataId("dataId-recipePortions-id5").
                 setDomainId(NEW_RECIPE_ID).
                 setServings(MIN_SERVINGS).
@@ -98,9 +120,9 @@ public class TestDataRecipePortions {
                 build();
     }
 
-    public static RecipePortionsPersistenceModel getNewValidServingsValidSittings() {
-        return new RecipePortionsPersistenceModel.Builder().
-                setDataId("data-recipePortions-id6").
+    public static RecipePortionsUseCasePersistenceModel getNewValidServingsValidSittings() {
+        return new RecipePortionsUseCasePersistenceModel.Builder().
+                setDataId("dataId-recipePortions-id6").
                 setDomainId(NEW_RECIPE_ID).
                 setServings(MAX_SERVINGS).
                 setSittings(MAX_SITTINGS).
@@ -109,20 +131,28 @@ public class TestDataRecipePortions {
                 build();
     }
 
-    public static List<RecipePortionsPersistenceModel> getAllNew() {
+    public static RecipePortionsUseCasePersistenceModel getNewArchivedValidServingsValidSittings() {
+        return new RecipePortionsUseCasePersistenceModel.Builder()
+                .basedOnModel(getNewValidServingsValidSittings())
+                .setDataId("dataId-recipePortions-id7")
+                .setLastUpdate(30L)
+                .build();
+    }
+
+    public static List<RecipePortionsUseCasePersistenceModel> getAllNew() {
         return Arrays.asList(
                 getNewActiveDefault(),
                 getNewValidFourPortions(),
                 getNewValidSixteenPortions(),
-                getNewInvalidTooHighServingsInvalidTooHighSittings(),
-                getNewInvalidTooHighServingsValidSittings(),
-                getNewValidServingsInvalidTooHighSittings(),
+                getNewInvalidServingsTooHighSittingsTooHigh(),
+                getNewInvalidServingsTooHighSittingsValid(),
+                getNewInvalid_validServingsInvalidSittingsTooHigh(),
                 getNewValidServingsValidSittings()
         );
     }
 
-    public static RecipePortionsPersistenceModel getExistingInvalidTooHighSittingsInvalidTooHighServings() {
-        return new RecipePortionsPersistenceModel.Builder().
+    public static RecipePortionsUseCasePersistenceModel getExistingInvalidTooHighSittingsInvalidTooHighServings() {
+        return new RecipePortionsUseCasePersistenceModel.Builder().
                 setDataId("dataId-recipePortions-id10").
                 setDomainId(EXISTING_RECIPE_ID).
                 setServings(MAX_SERVINGS + 1).
@@ -132,8 +162,8 @@ public class TestDataRecipePortions {
                 build();
     }
 
-    public static RecipePortionsPersistenceModel getExistingValidNinePortions() {
-        return new RecipePortionsPersistenceModel.Builder().
+    public static RecipePortionsUseCasePersistenceModel getExistingValidNinePortions() {
+        return new RecipePortionsUseCasePersistenceModel.Builder().
                 setDataId("dataId-recipePortions-id11").
                 setDomainId(EXISTING_RECIPE_ID).
                 setServings(3).
@@ -143,15 +173,15 @@ public class TestDataRecipePortions {
                 build();
     }
 
-    public static RecipePortionsPersistenceModel getArchivedValidNinePortions() {
-        return new RecipePortionsPersistenceModel.Builder().
-                basedOnRequestModel(getExistingValidNinePortions()).
+    public static RecipePortionsUseCasePersistenceModel getArchivedValidNinePortions() {
+        return new RecipePortionsUseCasePersistenceModel.Builder().
+                basedOnModel(getExistingValidNinePortions()).
                 setLastUpdate(40L).
                 build();
     }
 
-    public static RecipePortionsPersistenceModel getExistingValidUpdatedServings() {
-        return new RecipePortionsPersistenceModel.Builder().
+    public static RecipePortionsUseCasePersistenceModel getExistingValidUpdatedServings() {
+        return new RecipePortionsUseCasePersistenceModel.Builder().
                 setDataId("dataId-recipePortions-id12").
                 setDomainId(EXISTING_RECIPE_ID).
                 setServings(getNewValidServingsValidSittings().getServings()).
@@ -161,8 +191,8 @@ public class TestDataRecipePortions {
                 build();
     }
 
-    public static RecipePortionsPersistenceModel getExistingValidUpdatedSittings() {
-        return new RecipePortionsPersistenceModel.Builder().
+    public static RecipePortionsUseCasePersistenceModel getExistingValidUpdatedSittings() {
+        return new RecipePortionsUseCasePersistenceModel.Builder().
                 setDataId("dataId-recipePortions-id13").
                 setDomainId(EXISTING_RECIPE_ID).
                 setServings(getExistingValidNinePortions().getServings()).
@@ -172,8 +202,8 @@ public class TestDataRecipePortions {
                 build();
     }
 
-    public static RecipePortionsPersistenceModel getExistingValidCopied() {
-        return new RecipePortionsPersistenceModel.Builder().
+    public static RecipePortionsUseCasePersistenceModel getExistingValidCopied() {
+        return new RecipePortionsUseCasePersistenceModel.Builder().
                 setDataId("dataId-recipePortions-id14").
                 setDomainId(EXISTING_RECIPE_ID).
                 setServings(getExistingValidNinePortions().getServings()).
@@ -183,8 +213,8 @@ public class TestDataRecipePortions {
                 build();
     }
 
-    public static RecipePortionsPersistenceModel getExistingCopiedUpdatedSittingsServings() {
-        return new RecipePortionsPersistenceModel.Builder().
+    public static RecipePortionsUseCasePersistenceModel getExistingCopiedUpdatedSittingsServings() {
+        return new RecipePortionsUseCasePersistenceModel.Builder().
                 setDataId("dataId-recipePortions-id15").
                 setDomainId(EXISTING_RECIPE_ID).
                 setServings(getExistingValidUpdatedServings().getServings()).
@@ -192,7 +222,7 @@ public class TestDataRecipePortions {
                 build();
     }
 
-    public static List<RecipePortionsPersistenceModel> getAllExisting() {
+    public static List<RecipePortionsUseCasePersistenceModel> getAllExisting() {
         return Arrays.asList(
                 getExistingInvalidTooHighSittingsInvalidTooHighServings(),
                 getExistingValidNinePortions(),
@@ -203,8 +233,8 @@ public class TestDataRecipePortions {
         );
     }
 
-    public static RecipePortionsPersistenceModel getValidFromAnotherUser() {
-        return new RecipePortionsPersistenceModel.Builder().
+    public static RecipePortionsUseCasePersistenceModel getValidFromAnotherUser() {
+        return new RecipePortionsUseCasePersistenceModel.Builder().
                 setDataId("dataId-recipePortions-id20").
                 setDomainId(RECIPE_ID_FROM_ANOTHER_USER).
                 setServings(5).
@@ -214,8 +244,8 @@ public class TestDataRecipePortions {
                 build();
     }
 
-    public static RecipePortionsPersistenceModel getValidCopiedFromAnotherUser() {
-        return new RecipePortionsPersistenceModel.Builder().
+    public static RecipePortionsUseCasePersistenceModel getValidCopiedFromAnotherUser() {
+        return new RecipePortionsUseCasePersistenceModel.Builder().
                 setDataId("dataId-recipePortions-id21").
                 setDomainId(RECIPE_ID_FROM_ANOTHER_USER).
                 setServings(5).
@@ -225,24 +255,24 @@ public class TestDataRecipePortions {
                 build();
     }
 
-    public static List<RecipePortionsPersistenceModel> getAllFromAnotherUser() {
+    public static List<RecipePortionsUseCasePersistenceModel> getAllFromAnotherUser() {
         return Arrays.asList(
                 getValidFromAnotherUser(),
                 getValidCopiedFromAnotherUser()
         );
     }
 
-    public static List<RecipePortionsPersistenceModel> getAll() {
-        List<RecipePortionsPersistenceModel> models = new ArrayList<>();
+    public static List<RecipePortionsUseCasePersistenceModel> getAll() {
+        List<RecipePortionsUseCasePersistenceModel> models = new ArrayList<>();
         models.addAll(getAllNew());
         models.addAll(getAllExisting());
         models.addAll(getAllFromAnotherUser());
         return models;
     }
 
-    public static List<RecipePortionsPersistenceModel> getAllByDomainId(String domainId) {
-        List<RecipePortionsPersistenceModel> models = new ArrayList<>();
-        for (RecipePortionsPersistenceModel m : getAll()) {
+    public static List<RecipePortionsUseCasePersistenceModel> getAllByDomainId(String domainId) {
+        List<RecipePortionsUseCasePersistenceModel> models = new ArrayList<>();
+        for (RecipePortionsUseCasePersistenceModel m : getAll()) {
             if (domainId.equals(m.getDomainId())) {
                 models.add(m);
             }
@@ -250,11 +280,11 @@ public class TestDataRecipePortions {
         return models;
     }
 
-    public static RecipePortionsPersistenceModel getActiveByDomainId(String domainId) {
+    public static RecipePortionsUseCasePersistenceModel getActiveByDomainId(String domainId) {
         long lastUpdate = 0;
-        RecipePortionsPersistenceModel model = new RecipePortionsPersistenceModel.Builder().
+        RecipePortionsUseCasePersistenceModel model = new RecipePortionsUseCasePersistenceModel.Builder().
                 getDefault().build();
-        for (RecipePortionsPersistenceModel m : getAllByDomainId(domainId)) {
+        for (RecipePortionsUseCasePersistenceModel m : getAllByDomainId(domainId)) {
             if (lastUpdate < m.getLastUpdate()) {
                 model = m;
                 lastUpdate = m.getLastUpdate();

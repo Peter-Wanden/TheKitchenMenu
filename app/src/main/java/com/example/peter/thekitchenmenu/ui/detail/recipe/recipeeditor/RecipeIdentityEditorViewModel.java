@@ -4,13 +4,13 @@ import android.content.res.Resources;
 
 import androidx.core.util.Pair;
 
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentName;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityRequest;
 import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.identity.RecipeIdentityUseCaseRequestModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityResponse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
 import com.example.peter.thekitchenmenu.ui.ObservableViewModel;
 
@@ -51,7 +51,7 @@ public class RecipeIdentityEditorViewModel
         response = new RecipeIdentityResponse.Builder().getDefault().build();
 
         recipe.registerComponentListener(new Pair<>(
-                RecipeMetadata.ComponentName.IDENTITY,
+                RecipeComponentName.IDENTITY,
                 new IdentityCallbackListener())
         );
     }
