@@ -5,7 +5,7 @@ import com.example.peter.thekitchenmenu.domain.usecasenew.common.message.UseCase
 
 import javax.annotation.Nonnull;
 
-public class RecipePortionsUseCaseRequest
+public final class RecipePortionsUseCaseRequest
         extends
         UseCaseRequest<RecipePortionsUseCaseRequestModel> {
 

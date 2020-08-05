@@ -1,10 +1,9 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration;
 
 
-import com.example.peter.thekitchenmenu.domain.usecasenew.model.BaseDomainModelBuilder;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataId;
-import com.example.peter.thekitchenmenu.domain.usecasenew.model.BaseDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.BaseDomainModel;
 
 import java.util.Objects;
 
@@ -123,7 +122,7 @@ public final class RecipeDurationRequest
                 BaseDomainModelBuilder<Builder, DomainModel> {
 
             public Builder() {
-                domainModel = new DomainModel();
+                super(new DomainModel());
             }
 
             @Override

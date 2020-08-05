@@ -1,6 +1,6 @@
 package com.example.peter.thekitchenmenu.domain.usecasenew.common.helperclasses;
 
-import com.example.peter.thekitchenmenu.domain.usecasenew.model.DomainModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.DomainModelConverter;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
@@ -8,11 +8,11 @@ import javax.annotation.Nonnull;
 
 public class TestDomainModelConverter
         extends
-        DomainModel.Converter<
-                TestUseCaseInternalModel,
-                TestUseCasePersistenceModel,
-                TestRequestModel,
-                TestResponseModel> {
+        DomainModelConverter<
+                        TestUseCaseInternalModel,
+                        TestUseCasePersistenceModel,
+                        TestRequestModel,
+                        TestResponseModel> {
 
     public TestDomainModelConverter(@Nonnull TimeProvider timeProvider,
                                     @Nonnull UniqueIdProvider idProvider) {

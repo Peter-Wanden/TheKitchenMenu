@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.domain.usecase.ingredient;
 
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.UnitOfMeasureConstants;
-import com.example.peter.thekitchenmenu.domain.usecasenew.model.BaseDomainPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.BaseDomainPersistenceModel;
 
 import java.util.Objects;
 
@@ -70,7 +70,7 @@ public final class IngredientPersistenceModel
             PersistenceModelBuilder<Builder, IngredientPersistenceModel> {
 
         public Builder() {
-            domainModel = new IngredientPersistenceModel();
+            super(new IngredientPersistenceModel());
         }
 
         @Override

@@ -1,6 +1,6 @@
 package com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.identity;
 
-import com.example.peter.thekitchenmenu.domain.usecasenew.model.BaseDomainPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.BaseDomainPersistenceModel;
 
 import java.util.Objects;
 
@@ -54,7 +54,7 @@ public final class RecipeIdentityUseCasePersistenceModel
             PersistenceModelBuilder<Builder, RecipeIdentityUseCasePersistenceModel> {
 
         public Builder() {
-            domainModel = new RecipeIdentityUseCasePersistenceModel();
+            super(new RecipeIdentityUseCasePersistenceModel());
         }
 
         @Override

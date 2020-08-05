@@ -1,9 +1,8 @@
 package com.example.peter.thekitchenmenu.domain.usecase.ingredient;
 
 import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.UnitOfMeasureConstants;
-import com.example.peter.thekitchenmenu.domain.usecasenew.model.BaseDomainModelBuilder;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
-import com.example.peter.thekitchenmenu.domain.usecasenew.model.BaseDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.BaseDomainModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataId;
 
 import java.util.Objects;
@@ -91,7 +90,7 @@ public final class IngredientRequest
         public static class Builder extends BaseDomainModelBuilder<Builder, Model> {
 
             public Builder() {
-                domainModel = new Model();
+                super(new Model());
             }
 
             @Override

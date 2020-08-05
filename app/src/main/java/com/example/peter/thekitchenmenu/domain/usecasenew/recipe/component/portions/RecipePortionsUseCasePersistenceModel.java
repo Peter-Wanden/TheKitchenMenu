@@ -1,6 +1,6 @@
 package com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.portions;
 
-import com.example.peter.thekitchenmenu.domain.usecasenew.model.BaseDomainPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.BaseDomainPersistenceModel;
 
 import java.util.Objects;
 
@@ -54,7 +54,7 @@ public final class RecipePortionsUseCasePersistenceModel
             extends PersistenceModelBuilder<Builder, RecipePortionsUseCasePersistenceModel> {
 
         public Builder() {
-            domainModel = new RecipePortionsUseCasePersistenceModel();
+            super(new RecipePortionsUseCasePersistenceModel());
         }
 
         @Override

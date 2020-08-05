@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.data.repository;
 
 import androidx.annotation.Nullable;
 
-import com.example.peter.thekitchenmenu.domain.usecasenew.model.DomainModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.DomainModel;
 
 import java.util.ArrayList;
 import java.util.Iterator;

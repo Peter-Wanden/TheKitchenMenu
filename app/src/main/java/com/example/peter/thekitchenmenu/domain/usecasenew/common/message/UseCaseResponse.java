@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecasenew.common.message;
 
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.metadata.UseCaseMetadataModel;
-import com.example.peter.thekitchenmenu.domain.usecasenew.model.DomainModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.DomainModel;
 
 import javax.annotation.Nonnull;
 

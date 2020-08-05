@@ -1,8 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.identity;
 
-import com.example.peter.thekitchenmenu.domain.usecasenew.model.BaseDomainModel;
-import com.example.peter.thekitchenmenu.domain.usecasenew.model.DomainModel;
-import com.example.peter.thekitchenmenu.domain.usecasenew.model.BaseDomainModelBuilder;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.BaseDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.DomainModel;
 
 import java.util.Objects;
 
@@ -57,7 +56,7 @@ public final class RecipeIdentityUseCaseResponseModel
             BaseDomainModelBuilder<Builder, RecipeIdentityUseCaseResponseModel> {
 
         public Builder() {
-            domainModel = new RecipeIdentityUseCaseResponseModel();
+            super(new RecipeIdentityUseCaseResponseModel());
         }
 
         @Override

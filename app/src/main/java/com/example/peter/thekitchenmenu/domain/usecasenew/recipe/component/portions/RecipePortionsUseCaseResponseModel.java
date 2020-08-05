@@ -1,8 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.portions;
 
-import com.example.peter.thekitchenmenu.domain.usecasenew.model.BaseDomainModel;
-import com.example.peter.thekitchenmenu.domain.usecasenew.model.BaseDomainModelBuilder;
-import com.example.peter.thekitchenmenu.domain.usecasenew.model.DomainModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.BaseDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.DomainModel;
 
 import javax.annotation.Nonnull;
 
@@ -67,7 +66,7 @@ public final class RecipePortionsUseCaseResponseModel
             BaseDomainModelBuilder<Builder, RecipePortionsUseCaseResponseModel> {
 
         public Builder() {
-            domainModel = new RecipePortionsUseCaseResponseModel();
+            super(new RecipePortionsUseCaseResponseModel());
         }
 
         @Override

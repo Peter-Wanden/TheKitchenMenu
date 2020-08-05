@@ -1,8 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course;
 
-import com.example.peter.thekitchenmenu.domain.usecasenew.model.BaseDomainModelBuilder;
 import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataIdMetadata;
-import com.example.peter.thekitchenmenu.domain.usecasenew.model.BaseDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.BaseDomainModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.metadata.UseCaseMetadataModel;
 import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.course.Course;
@@ -95,7 +94,7 @@ public final class RecipeCourseResponse
                 BaseDomainModelBuilder<Builder, DomainModel> {
 
             public Builder() {
-                domainModel = new DomainModel();
+                super(new DomainModel());
             }
 
             @Override

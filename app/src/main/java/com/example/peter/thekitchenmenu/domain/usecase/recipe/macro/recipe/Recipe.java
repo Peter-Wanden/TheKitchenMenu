@@ -2,6 +2,7 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe;
 
 import androidx.core.util.Pair;
 
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.metadata.RecipeMetadataUseCaseRequestModel;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataId;
@@ -333,7 +334,6 @@ public class Recipe extends UseCaseBase {
                 setDomainId(recipeDomainId).
                 setDomainModel(
                         new RecipeMetadataRequest.DomainModel.Builder().
-                                setParentId(recipeMetadataResponse.getDomainModel().getParentDomainId()).
                                 setComponentStates(componentStates).
                                 build()).
                 build();

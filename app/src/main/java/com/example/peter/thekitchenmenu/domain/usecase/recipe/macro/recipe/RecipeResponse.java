@@ -1,9 +1,8 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe;
 
 import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentName;
-import com.example.peter.thekitchenmenu.domain.usecasenew.model.BaseDomainModelBuilder;
 import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataId;
-import com.example.peter.thekitchenmenu.domain.usecasenew.model.BaseDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.BaseDomainModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 
 import java.util.HashMap;
@@ -84,7 +83,7 @@ public final class RecipeResponse
                         Model> {
 
             public Builder() {
-                domainModel = new Model();
+                super(new Model());
             }
 
             @Override

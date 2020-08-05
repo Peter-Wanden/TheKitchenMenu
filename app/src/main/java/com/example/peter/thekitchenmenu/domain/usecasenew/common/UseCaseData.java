@@ -3,7 +3,8 @@ package com.example.peter.thekitchenmenu.domain.usecasenew.common;
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
 import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataId;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.message.UseCaseRequest;
-import com.example.peter.thekitchenmenu.domain.usecasenew.model.DomainModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.DomainModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.DomainModelConverter;
 
 import javax.annotation.Nonnull;
 
@@ -29,21 +30,21 @@ public abstract class UseCaseData<
     protected PERSISTENCE_MODEL persistenceModel;
     protected USE_CASE_MODEL useCaseModel;
 
-    protected DomainModel.Converter<
-            USE_CASE_MODEL,
-            PERSISTENCE_MODEL,
-            REQUEST_MODEL,
-            RESPONSE_MODEL> modelConverter;
+    protected DomainModelConverter<
+                USE_CASE_MODEL,
+                PERSISTENCE_MODEL,
+                REQUEST_MODEL,
+                RESPONSE_MODEL> modelConverter;
 
     protected boolean isChanged;
     protected int accessCount;
 
     public UseCaseData(@Nonnull DATA_ACCESS dataAccess,
-                       @Nonnull DomainModel.Converter<
-                               USE_CASE_MODEL,
-                               PERSISTENCE_MODEL,
-                               REQUEST_MODEL,
-                               RESPONSE_MODEL> modelConverter) {
+                       @Nonnull DomainModelConverter<
+                                                      USE_CASE_MODEL,
+                                                      PERSISTENCE_MODEL,
+                                                      REQUEST_MODEL,
+                                                      RESPONSE_MODEL> modelConverter) {
         this.dataAccess = dataAccess;
         this.modelConverter = modelConverter;
     }
@@ -147,7 +148,10 @@ public abstract class UseCaseData<
         return modelConverter.convertUseCaseToResponseModel(useCaseModel);
     }
 
-    protected abstract USE_CASE_MODEL createUseCaseModelFromDefaultValues();
+    protected USE_CASE_MODEL createUseCaseModelFromDefaultValues() {
+
+        return modelConverter.getDefault();
+    }
 
     protected abstract void initialiseUseCase();
 }

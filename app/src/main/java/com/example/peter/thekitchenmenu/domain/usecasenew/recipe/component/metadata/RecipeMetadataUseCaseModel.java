@@ -1,33 +1,31 @@
 package com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.metadata;
 
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.metadata.ComponentState;
-import com.example.peter.thekitchenmenu.domain.usecasenew.model.DomainModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.BaseDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.DomainModel;
 import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentName;
 
 import java.util.HashMap;
-import java.util.Objects;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 
 public final class RecipeMetadataUseCaseModel
+        extends
+        BaseDomainModel
         implements
         DomainModel.UseCaseModel {
 
-    @Nonnull
-    private final String parentDomainId;
-    @Nonnull
-    private final HashMap<RecipeComponentName, ComponentState> componentStates;
+    private ComponentState componentState;
+    private HashMap<RecipeComponentName, ComponentState> componentStates;
+    private List<FailReasons> failReasons;
 
-    public RecipeMetadataUseCaseModel(@Nonnull String parentDomainId,
-                               @Nonnull HashMap<RecipeComponentName, ComponentState> componentStates) {
-
-        this.parentDomainId = parentDomainId;
-        this.componentStates = componentStates;
-    }
+    private RecipeMetadataUseCaseModel() {}
 
     @Nonnull
-    public String getParentDomainId() {
-        return parentDomainId;
+    public ComponentState getComponentState() {
+        return componentState;
     }
 
     @Nonnull
@@ -35,32 +33,53 @@ public final class RecipeMetadataUseCaseModel
         return componentStates;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof RecipeMetadataUseCaseModel)) return false;
-
-        RecipeMetadataUseCaseModel that = (RecipeMetadataUseCaseModel) o;
-
-        if (!parentDomainId.equals(that.parentDomainId)) return false;
-        return componentStates.equals(that.componentStates);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = parentDomainId.hashCode();
-        result = 31 * result + componentStates.hashCode();
-        return result;
-    }
-
     @Nonnull
-    @Override
-    public String toString() {
-        return "RecipeMetadataUseCaseModel{" +
-                "parentDomainId='" + parentDomainId + '\'' +
-                ", componentStates=" + componentStates +
-                '}';
+    public List<FailReasons> getFailReasons() {
+        return failReasons;
     }
 
+    public static class Builder
+            extends
+            BaseDomainModelBuilder<Builder, RecipeMetadataUseCaseModel> {
 
+        public Builder() {
+            super(new RecipeMetadataUseCaseModel());
+        }
+
+        public Builder setComponentState(ComponentState componentState) {
+            domainModel.componentState = componentState;
+            return this;
+        }
+
+        public Builder setComponentStates(
+                HashMap<RecipeComponentName, ComponentState> componentStates) {
+            domainModel.componentStates = componentStates;
+            return self();
+        }
+
+        public Builder setFailReasons(List<FailReasons> failReasons) {
+            domainModel.failReasons = failReasons;
+            return self();
+        }
+
+        @Override
+        public Builder getDefault() {
+            domainModel.componentState = ComponentState.INVALID_DEFAULT;
+            domainModel.componentStates = new HashMap<>();
+            return self();
+        }
+
+        @Override
+        public Builder basedOnModel(RecipeMetadataUseCaseModel model) {
+            domainModel.componentState = model.componentState;
+            domainModel.componentStates = model.componentStates;
+            domainModel.failReasons = model.failReasons;
+            return self();
+        }
+
+        @Override
+        protected Builder self() {
+            return this;
+        }
+    }
 }

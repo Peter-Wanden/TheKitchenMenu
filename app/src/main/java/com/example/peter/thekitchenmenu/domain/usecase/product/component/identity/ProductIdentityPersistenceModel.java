@@ -1,6 +1,6 @@
 package com.example.peter.thekitchenmenu.domain.usecase.product.component.identity;
 
-import com.example.peter.thekitchenmenu.domain.usecasenew.model.BaseDomainPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.BaseDomainPersistenceModel;
 
 import java.util.Objects;
 
@@ -76,7 +76,7 @@ public class ProductIdentityPersistenceModel
             PersistenceModelBuilder<Builder, ProductIdentityPersistenceModel>  {
 
         public Builder() {
-            domainModel = new ProductIdentityPersistenceModel();
+            super(new ProductIdentityPersistenceModel());
         }
 
         @Override

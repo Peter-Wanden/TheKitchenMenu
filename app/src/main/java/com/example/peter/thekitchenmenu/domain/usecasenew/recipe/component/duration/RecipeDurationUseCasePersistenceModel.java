@@ -1,6 +1,6 @@
 package com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.duration;
 
-import com.example.peter.thekitchenmenu.domain.usecasenew.model.BaseDomainPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.BaseDomainPersistenceModel;
 
 import javax.annotation.Nonnull;
 
@@ -59,7 +59,7 @@ public final class RecipeDurationUseCasePersistenceModel
             PersistenceModelBuilder<Builder, RecipeDurationUseCasePersistenceModel> {
 
         public Builder() {
-            domainModel = new RecipeDurationUseCasePersistenceModel();
+            super(new RecipeDurationUseCasePersistenceModel());
         }
 
         @Override

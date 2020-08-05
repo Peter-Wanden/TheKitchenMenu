@@ -1,8 +1,4 @@
-package com.example.peter.thekitchenmenu.domain.usecasenew.model;
-
-import java.util.Objects;
-
-import javax.annotation.Nonnull;
+package com.example.peter.thekitchenmenu.domain.usecasenew.common.model;
 
 public abstract class BaseDomainPersistenceModel
         extends
@@ -35,38 +31,15 @@ public abstract class BaseDomainPersistenceModel
         return lastUpdate;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof BaseDomainPersistenceModel)) return false;
-        BaseDomainPersistenceModel that = (BaseDomainPersistenceModel) o;
-        return createDate == that.createDate &&
-                lastUpdate == that.lastUpdate &&
-                Objects.equals(dataId, that.dataId) &&
-                Objects.equals(domainId, that.domainId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(dataId, domainId, createDate, lastUpdate);
-    }
-
-    @Nonnull
-    @Override
-    public String toString() {
-        return "BaseDomainPersistenceModel{" +
-                "dataId='" + dataId + '\'' +
-                ", domainId='" + domainId + '\'' +
-                ", createDate=" + createDate +
-                ", lastUpdate=" + lastUpdate +
-                '}';
-    }
-
     protected abstract static class PersistenceModelBuilder<
             SELF extends PersistenceModelBuilder<SELF, PERSISTENCE_MODEL>,
             PERSISTENCE_MODEL extends BaseDomainPersistenceModel>
             extends
             BaseDomainModelBuilder<SELF, PERSISTENCE_MODEL> {
+
+        public PersistenceModelBuilder(PERSISTENCE_MODEL domainModel) {
+            super(domainModel);
+        }
 
         public SELF setDataId(String dataId) {
             domainModel.dataId = dataId;

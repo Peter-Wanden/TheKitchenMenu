@@ -7,7 +7,8 @@ import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.Com
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.message.UseCaseResponse;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.metadata.ComponentState;
-import com.example.peter.thekitchenmenu.domain.usecasenew.model.DomainModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.DomainModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.DomainModelConverter;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,11 +31,11 @@ public abstract class UseCaseResult<
 
     public UseCaseResult(
             @Nonnull DATA_ACCESS dataAccess,
-            @Nonnull DomainModel.Converter<
-                    USE_CASE_MODEL,
-                    PERSISTENCE_MODEL,
-                    REQUEST_MODEL,
-                    RESPONSE_MODEL> modelConverter) {
+            @Nonnull DomainModelConverter<
+                                USE_CASE_MODEL,
+                                PERSISTENCE_MODEL,
+                                REQUEST_MODEL,
+                                RESPONSE_MODEL> modelConverter) {
         super(dataAccess, modelConverter);
     }
 

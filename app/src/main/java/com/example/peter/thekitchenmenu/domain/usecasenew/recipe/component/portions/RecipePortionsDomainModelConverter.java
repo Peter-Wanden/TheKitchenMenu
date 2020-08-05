@@ -1,18 +1,18 @@
 package com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.portions;
 
-import com.example.peter.thekitchenmenu.domain.usecasenew.model.DomainModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.DomainModelConverter;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
 import javax.annotation.Nonnull;
 
-public class RecipePortionsDomainModelConverter
+public final class RecipePortionsDomainModelConverter
         extends
-        DomainModel.Converter<
-                RecipePortionsUseCaseModel,
-                RecipePortionsUseCasePersistenceModel,
-                RecipePortionsUseCaseRequestModel,
-                RecipePortionsUseCaseResponseModel> {
+        DomainModelConverter<
+                        RecipePortionsUseCaseModel,
+                        RecipePortionsUseCasePersistenceModel,
+                        RecipePortionsUseCaseRequestModel,
+                        RecipePortionsUseCaseResponseModel> {
     public RecipePortionsDomainModelConverter(@Nonnull TimeProvider timeProvider,
                                               @Nonnull UniqueIdProvider idProvider) {
         super(timeProvider, idProvider);
@@ -22,19 +22,19 @@ public class RecipePortionsDomainModelConverter
     public RecipePortionsUseCaseModel convertPersistenceToUseCaseModel(
             @Nonnull RecipePortionsUseCasePersistenceModel persistenceModel) {
 
-        return new RecipePortionsUseCaseModel(
-                persistenceModel.getServings(),
-                persistenceModel.getSittings()
-        );
+        return new RecipePortionsUseCaseModel.Builder()
+                .setServings(persistenceModel.getServings())
+                .setSittings(persistenceModel.getSittings())
+                .build();
     }
 
     @Override
     public RecipePortionsUseCaseModel convertRequestToUseCaseModel(
             @Nonnull RecipePortionsUseCaseRequestModel requestModel) {
-        return new RecipePortionsUseCaseModel(
-                requestModel.getServings(),
-                requestModel.getSittings()
-        );
+        return new RecipePortionsUseCaseModel.Builder()
+                .setServings(requestModel.getServings())
+                .setSittings(requestModel.getSittings())
+                .build();
     }
 
     @Override
@@ -86,5 +86,10 @@ public class RecipePortionsDomainModelConverter
                 .setCreateDate(currentTime)
                 .setLastUpdate(currentTime)
                 .build();
+    }
+
+    @Override
+    public RecipePortionsUseCaseModel getDefault() {
+        return new RecipePortionsUseCaseModel.Builder().getDefault().build();
     }
 }

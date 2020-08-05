@@ -1,8 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipelist;
 
-import com.example.peter.thekitchenmenu.domain.usecasenew.model.BaseDomainModelBuilder;
 import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataId;
-import com.example.peter.thekitchenmenu.domain.usecasenew.model.BaseDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.BaseDomainModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 
 import java.util.Objects;
@@ -82,7 +81,7 @@ public class RecipeListRequest
         public static class Builder extends BaseDomainModelBuilder<Builder, Model> {
 
             public Builder() {
-                domainModel = new Model();
+                super(new Model());
             }
 
             @Override

@@ -1,8 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecasenew.common.helperclasses;
 
-import com.example.peter.thekitchenmenu.domain.usecasenew.model.BaseDomainModel;
-import com.example.peter.thekitchenmenu.domain.usecasenew.model.DomainModel;
-import com.example.peter.thekitchenmenu.domain.usecasenew.model.BaseDomainModelBuilder;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.BaseDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.DomainModel;
 
 import javax.annotation.Nonnull;
 
@@ -34,7 +33,7 @@ public final class TestResponseModel
             BaseDomainModelBuilder<Builder, TestResponseModel> {
 
         public Builder() {
-            domainModel = new TestResponseModel();
+            super(new TestResponseModel());
         }
 
         @Override

@@ -1,6 +1,6 @@
 package com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.duration;
 
-public class RecipeDurationTimeHelper {
+public final class RecipeDurationTimeHelper {
     static int getHours(int totalTime) {
         return totalTime / 60;
     }

@@ -1,6 +1,6 @@
 package com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage;
 
-import com.example.peter.thekitchenmenu.domain.usecasenew.model.DomainModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.DomainModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 
 public abstract class RequestModelBase<REQUEST_MODEL extends DomainModel.UseCaseRequestModel>

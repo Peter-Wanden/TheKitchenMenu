@@ -1,6 +1,6 @@
 package com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.identity;
 
-import com.example.peter.thekitchenmenu.domain.usecasenew.model.DomainModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.DomainModelConverter;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
@@ -8,11 +8,11 @@ import javax.annotation.Nonnull;
 
 public final class RecipeIdentityDomainModelConverter
         extends
-        DomainModel.Converter<
-                RecipeIdentityUseCaseModel,
-                RecipeIdentityUseCasePersistenceModel,
-                RecipeIdentityUseCaseRequestModel,
-                RecipeIdentityUseCaseResponseModel> {
+        DomainModelConverter<
+                        RecipeIdentityUseCaseModel,
+                        RecipeIdentityUseCasePersistenceModel,
+                        RecipeIdentityUseCaseRequestModel,
+                        RecipeIdentityUseCaseResponseModel> {
 
     public RecipeIdentityDomainModelConverter(@Nonnull TimeProvider timeProvider,
                                               @Nonnull UniqueIdProvider idProvider) {
@@ -22,10 +22,10 @@ public final class RecipeIdentityDomainModelConverter
     @Override
     public RecipeIdentityUseCaseModel convertPersistenceToUseCaseModel(
             @Nonnull RecipeIdentityUseCasePersistenceModel persistenceModel) {
-        return new RecipeIdentityUseCaseModel(
-                persistenceModel.getTitle(),
-                persistenceModel.getDescription()
-        );
+        return new RecipeIdentityUseCaseModel.Builder()
+                .setTitle(persistenceModel.getTitle())
+                .setDescription(persistenceModel.getDescription())
+                .build();
     }
 
     @Override
@@ -47,10 +47,10 @@ public final class RecipeIdentityDomainModelConverter
     @Override
     public RecipeIdentityUseCaseModel convertRequestToUseCaseModel(
             @Nonnull RecipeIdentityUseCaseRequestModel requestModel) {
-        return new RecipeIdentityUseCaseModel(
-                requestModel.getTitle(),
-                requestModel.getDescription()
-        );
+        return new RecipeIdentityUseCaseModel.Builder()
+                .setTitle(requestModel.getTitle())
+                .setDescription(requestModel.getDescription())
+                .build();
     }
 
     @Override
@@ -84,6 +84,13 @@ public final class RecipeIdentityDomainModelConverter
         return new RecipeIdentityUseCaseResponseModel.Builder()
                 .setTitle(useCaseModel.getTitle())
                 .setDescription(useCaseModel.getDescription())
+                .build();
+    }
+
+    @Override
+    public RecipeIdentityUseCaseModel getDefault() {
+        return new RecipeIdentityUseCaseModel.Builder()
+                .getDefault()
                 .build();
     }
 }

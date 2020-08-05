@@ -1,31 +1,27 @@
 package com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.identity;
 
-import com.example.peter.thekitchenmenu.domain.usecasenew.model.DomainModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.BaseDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.DomainModel;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
 public final class RecipeIdentityUseCaseModel
+        extends
+        BaseDomainModel
         implements
         DomainModel.UseCaseModel {
 
-    @Nonnull
-    private final String title;
-    @Nonnull
-    private final String description;
+    private String title;
+    private String description;
 
-    RecipeIdentityUseCaseModel(@Nonnull String title, @Nonnull String description) {
-        this.title = title;
-        this.description = description;
-    }
+    private RecipeIdentityUseCaseModel(){}
 
-    @Nonnull
     public String getTitle() {
         return title;
     }
 
-    @Nonnull
     public String getDescription() {
         return description;
     }
@@ -55,5 +51,43 @@ public final class RecipeIdentityUseCaseModel
                 "title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 '}';
+    }
+
+    public static class Builder
+            extends
+            BaseDomainModelBuilder<Builder, RecipeIdentityUseCaseModel> {
+
+        public Builder() {
+            super(new RecipeIdentityUseCaseModel());
+        }
+
+        public Builder setTitle(String title) {
+            domainModel.title = title;
+            return self();
+        }
+
+        public Builder setDescription(String description) {
+            domainModel.description = description;
+            return self();
+        }
+
+        @Override
+        public Builder getDefault() {
+            domainModel.title = RecipeIdentityUseCase.DEFAULT_TITLE;
+            domainModel.description = RecipeIdentityUseCase.DEFAULT_DESCRIPTION;
+            return self();
+        }
+
+        @Override
+        public Builder basedOnModel(RecipeIdentityUseCaseModel model) {
+            domainModel.title = model.title;
+            domainModel.description = model.description;
+            return self();
+        }
+
+        @Override
+        protected Builder self() {
+            return this;
+        }
     }
 }

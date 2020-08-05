@@ -1,8 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata;
 
-import com.example.peter.thekitchenmenu.domain.usecasenew.model.BaseDomainModelBuilder;
 import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataIdMetadata;
-import com.example.peter.thekitchenmenu.domain.usecasenew.model.BaseDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.BaseDomainModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.metadata.UseCaseMetadataModel;
 
@@ -64,15 +63,9 @@ public final class RecipeMetadataResponse
             extends
             BaseDomainModel {
 
-        private String parentDomainId;
         private HashMap<RecipeComponentName, ComponentState> componentStates;
 
         private DomainModel() {
-        }
-
-        @Nonnull
-        public String getParentDomainId() {
-            return parentDomainId;
         }
 
         public HashMap<RecipeComponentName, ComponentState> getComponentStates() {
@@ -84,20 +77,18 @@ public final class RecipeMetadataResponse
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             DomainModel domainModel = (DomainModel) o;
-            return Objects.equals(parentDomainId, domainModel.parentDomainId) &&
-                    Objects.equals(componentStates, domainModel.componentStates);
+            return Objects.equals(componentStates, domainModel.componentStates);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(parentDomainId, componentStates);
+            return Objects.hash(componentStates);
         }
 
         @Nonnull
         @Override
         public String toString() {
             return "DomainModel{" +
-                    "parentDomainId='" + parentDomainId + '\'' +
                     ", componentStates=" + componentStates +
                     '}';
         }
@@ -107,7 +98,7 @@ public final class RecipeMetadataResponse
                 BaseDomainModelBuilder<Builder, DomainModel> {
 
             public Builder() {
-                domainModel = new DomainModel();
+                super(new DomainModel());
             }
 
             @Override
@@ -117,13 +108,7 @@ public final class RecipeMetadataResponse
 
             @Override
             public Builder getDefault() {
-                domainModel.parentDomainId = "";
                 domainModel.componentStates = new HashMap<>();
-                return self();
-            }
-
-            public Builder setParentDomainId(String parentId) {
-                domainModel.parentDomainId = parentId;
                 return self();
             }
 

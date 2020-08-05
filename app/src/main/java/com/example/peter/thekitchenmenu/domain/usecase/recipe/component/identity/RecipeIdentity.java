@@ -3,7 +3,7 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identit
 import android.annotation.SuppressLint;
 
 import com.example.peter.thekitchenmenu.data.repository.recipe.RecipeIdentityUseCaseDataAccess;
-import com.example.peter.thekitchenmenu.domain.usecasenew.model.DomainModel.UseCaseModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.DomainModel.UseCaseModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseElement;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;

@@ -1,12 +1,11 @@
 package com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.duration;
 
-import com.example.peter.thekitchenmenu.domain.usecasenew.model.BaseDomainModel;
-import com.example.peter.thekitchenmenu.domain.usecasenew.model.BaseDomainModelBuilder;
-import com.example.peter.thekitchenmenu.domain.usecasenew.model.DomainModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.BaseDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.DomainModel;
 
 import javax.annotation.Nonnull;
 
-public class RecipeDurationUseCaseResponseModel
+public final class RecipeDurationUseCaseResponseModel
         extends
         BaseDomainModel
         implements
@@ -97,7 +96,7 @@ public class RecipeDurationUseCaseResponseModel
             BaseDomainModelBuilder<Builder, RecipeDurationUseCaseResponseModel> {
 
         public Builder() {
-            domainModel = new RecipeDurationUseCaseResponseModel();
+            super(new RecipeDurationUseCaseResponseModel());
         }
 
         @Override

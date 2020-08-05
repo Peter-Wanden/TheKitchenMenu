@@ -3,8 +3,8 @@ package com.example.peter.thekitchenmenu.domain.usecase.common;
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.DataAccess;
 import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipeMetadata;
-import com.example.peter.thekitchenmenu.domain.usecasenew.model.BaseDomainPersistenceModel;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.BaseDomainPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.metadata.RecipeMetadataUseCasePersistenceModel;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -29,7 +29,7 @@ public class UseCaseElementTest {
     @Mock
     private DataAccessRecipeMetadata repoMock;
     @Captor
-    private ArgumentCaptor<DomainDataAccess<RecipeMetadataPersistenceModel>> repoCallbackCaptor;
+    private ArgumentCaptor<DomainDataAccess<RecipeMetadataUseCasePersistenceModel>> repoCallbackCaptor;
     // endregion helper fields ---------------------------------------------------------------------
 
     private UseCaseElementInheritor SUT;
@@ -225,7 +225,7 @@ public class UseCaseElementTest {
                 getSimpleName() + ": ";
 
         static final class DomainModel
-                implements com.example.peter.thekitchenmenu.domain.usecasenew.model.DomainModel.UseCaseModel {
+                implements com.example.peter.thekitchenmenu.domain.usecasenew.common.model.DomainModel.UseCaseModel {
             String comparisonString;
         }
 

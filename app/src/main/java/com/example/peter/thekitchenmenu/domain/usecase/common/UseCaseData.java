@@ -1,10 +1,11 @@
 package com.example.peter.thekitchenmenu.domain.usecase.common;
 
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
-import com.example.peter.thekitchenmenu.domain.usecasenew.model.DomainModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.DomainModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.RequestModelBase;
 import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.message.UseCaseRequestWithId;
 import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataId;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.DomainModelConverter;
 
 import javax.annotation.Nonnull;
 
@@ -39,22 +40,22 @@ public abstract class UseCaseData<
     protected PERSISTENCE_MODEL persistenceModel;
     protected USE_CASE_MODEL useCaseModel;
 
-    protected DomainModel.Converter<
-            USE_CASE_MODEL,
-            PERSISTENCE_MODEL,
-            USE_CASE_REQUEST_MODEL,
-            USE_CASE_RESPONSE_MODEL> modelConverter;
+    protected DomainModelConverter<
+                USE_CASE_MODEL,
+                PERSISTENCE_MODEL,
+                USE_CASE_REQUEST_MODEL,
+                USE_CASE_RESPONSE_MODEL> modelConverter;
 
     protected boolean isChanged;
     protected int accessCount;
 
     public UseCaseData(
             DATA_ACCESS dataAccess,
-            DomainModel.Converter<
-                    USE_CASE_MODEL,
-                    PERSISTENCE_MODEL,
-                    USE_CASE_REQUEST_MODEL,
-                    USE_CASE_RESPONSE_MODEL> modelConverter) {
+            DomainModelConverter<
+                                USE_CASE_MODEL,
+                                PERSISTENCE_MODEL,
+                                USE_CASE_REQUEST_MODEL,
+                                USE_CASE_RESPONSE_MODEL> modelConverter) {
 
         this.dataAccess = dataAccess;
         this.modelConverter = modelConverter;

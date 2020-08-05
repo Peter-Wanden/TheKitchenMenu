@@ -1,18 +1,18 @@
 package com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.duration;
 
-import com.example.peter.thekitchenmenu.domain.usecasenew.model.DomainModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.DomainModelConverter;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
 import javax.annotation.Nonnull;
 
-public class RecipeDurationDomainModelConverter
+public final class RecipeDurationDomainModelConverter
         extends
-        DomainModel.Converter<
-                RecipeDurationUseCaseModel,
-                RecipeDurationUseCasePersistenceModel,
-                RecipeDurationUseCaseRequestModel,
-                RecipeDurationUseCaseResponseModel> {
+        DomainModelConverter<
+                        RecipeDurationUseCaseModel,
+                        RecipeDurationUseCasePersistenceModel,
+                        RecipeDurationUseCaseRequestModel,
+                        RecipeDurationUseCaseResponseModel> {
 
     private static final String TAG = "tkm-" + RecipeDurationDomainModelConverter.class
             .getSimpleName() + ": ";
@@ -26,10 +26,10 @@ public class RecipeDurationDomainModelConverter
     public RecipeDurationUseCaseModel convertPersistenceToUseCaseModel(
             @Nonnull RecipeDurationUseCasePersistenceModel persistenceModel) {
 
-        return new RecipeDurationUseCaseModel(
-                persistenceModel.getPrepTime(),
-                persistenceModel.getCookTime()
-        );
+        return new RecipeDurationUseCaseModel.Builder()
+                .setPrepTime(persistenceModel.getPrepTime())
+                .setCookTime(persistenceModel.getCookTime())
+                .build();
     }
 
     @Override
@@ -43,10 +43,10 @@ public class RecipeDurationDomainModelConverter
                 requestModel.getCookHours(), requestModel.getCookMinutes()
         );
 
-        return new RecipeDurationUseCaseModel(
-                prepTime,
-                cookTime
-        );
+        return new RecipeDurationUseCaseModel.Builder()
+                .setPrepTime(prepTime)
+                .setCookTime(cookTime)
+                .build();
     }
 
     @Override
@@ -101,6 +101,13 @@ public class RecipeDurationDomainModelConverter
                 .setCookTime(useCaseModel.getCookTime())
                 .setCreateDate(currentTime)
                 .setLastUpdate(currentTime)
+                .build();
+    }
+
+    @Override
+    public RecipeDurationUseCaseModel getDefault() {
+        return new RecipeDurationUseCaseModel.Builder()
+                .getDefault()
                 .build();
     }
 }

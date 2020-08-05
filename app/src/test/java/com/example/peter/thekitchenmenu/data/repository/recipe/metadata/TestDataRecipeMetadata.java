@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.data.repository.recipe.metadata;
 
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.CommonFailReason;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.metadata.RecipeMetadataUseCasePersistenceModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,17 +46,15 @@ public class TestDataRecipeMetadata {
     This state should never be saved. It is stored in this persistence model as it's a
     convenient place to retrieve values for testing.
      */
-    public static RecipeMetadataPersistenceModel getDefaultState() {
-        return new RecipeMetadataPersistenceModel.Builder().
+    public static RecipeMetadataUseCasePersistenceModel getDefaultState() {
+        return new RecipeMetadataUseCasePersistenceModel.Builder().
                 setDataId(NO_ID).
                 setDomainId(NO_ID).
-                setParentDomainId(NO_ID).
-                setRecipeState(ComponentState.INVALID_DEFAULT).
+                setComponentState(ComponentState.INVALID_DEFAULT).
                 setComponentStates(new HashMap<>()). // no component state data received
                 setFailReasons(Arrays.asList(
                         RecipeMetadataUseCaseFailReason.MISSING_REQUIRED_COMPONENTS,
                         CommonFailReason.DATA_UNAVAILABLE)).
-                setCreatedBy(Constants.getUserId()).
                 setCreateDate(0L).
                 setLastUpdate(0L).
                 build();
@@ -68,15 +66,13 @@ public class TestDataRecipeMetadata {
       - is a newly created recipe
       - has one or more components reporting INVALID_DEFAULT state.
      */
-    public static RecipeMetadataPersistenceModel getInvalidDefault() {
-        return new RecipeMetadataPersistenceModel.Builder().
+    public static RecipeMetadataUseCasePersistenceModel getInvalidDefault() {
+        return new RecipeMetadataUseCasePersistenceModel.Builder().
                 setDataId(NO_ID).
                 setDomainId("domainId-recipeMetadata-id0").
-                setParentDomainId(NO_ID).
-                setRecipeState(ComponentState.INVALID_DEFAULT).
+                setComponentState(ComponentState.INVALID_DEFAULT).
                 setComponentStates(new HashMap<>()).
                 setFailReasons(getDefaultState().getFailReasons()).
-                setCreatedBy(Constants.getUserId()).
                 setCreateDate(0L).
                 setLastUpdate(0L).
                 build();
@@ -90,18 +86,16 @@ public class TestDataRecipeMetadata {
         - one or more required components are missing
     It is valid to save as the user will have been entering data to get to this state
      */
-    public static RecipeMetadataPersistenceModel getInvalidMissingComponents() {
-        return new RecipeMetadataPersistenceModel.Builder().
+    public static RecipeMetadataUseCasePersistenceModel getInvalidMissingComponents() {
+        return new RecipeMetadataUseCasePersistenceModel.Builder().
                 setDataId("dataId-recipeMetadata-id0").
                 setDomainId(getInvalidDefault().getDomainId()).
-                setParentDomainId(NO_ID).
-                setRecipeState(ComponentState.INVALID_CHANGED). // changed from invalid default
+                setComponentState(ComponentState.INVALID_CHANGED). // changed from invalid default
                 setComponentStates(getInvalidMissingComponentsStates()).
                 setFailReasons(Arrays.asList(
                         RecipeMetadataUseCaseFailReason.MISSING_REQUIRED_COMPONENTS,
                         RecipeMetadataUseCaseFailReason.INVALID_COMPONENTS
                 )).
-                setCreatedBy(Constants.getUserId()).
                 setCreateDate(10L).
                 setLastUpdate(10L).
                 build();
@@ -114,15 +108,13 @@ public class TestDataRecipeMetadata {
      - all additional components are reporting DEFAULT or UNCHANGED
      - has one or more components reporting INVALID
      */
-    public static RecipeMetadataPersistenceModel getInvalidUnchanged() {
-        return new RecipeMetadataPersistenceModel.Builder().
+    public static RecipeMetadataUseCasePersistenceModel getInvalidUnchanged() {
+        return new RecipeMetadataUseCasePersistenceModel.Builder().
                 setDataId("dataId-recipeMetadata-id1").
                 setDomainId(getInvalidDefault().getDomainId()).
-                setParentDomainId(NO_ID).
-                setRecipeState(ComponentState.INVALID_CHANGED). // changed from invalid default
+                setComponentState(ComponentState.INVALID_CHANGED). // changed from invalid default
                 setFailReasons(Collections.singletonList(RecipeMetadataUseCaseFailReason.INVALID_COMPONENTS)).
                 setComponentStates(getInvalidUnchangedComponentStates()).
-                setCreatedBy(Constants.getUserId()).
                 setCreateDate(20L).
                 setLastUpdate(20L).
                 build();
@@ -137,15 +129,13 @@ public class TestDataRecipeMetadata {
     2. one or more components is reporting INVALID
     3. one or more components is reporting CHANGED
      */
-    public static RecipeMetadataPersistenceModel getInvalidChanged() {
-        return new RecipeMetadataPersistenceModel.Builder().
+    public static RecipeMetadataUseCasePersistenceModel getInvalidChanged() {
+        return new RecipeMetadataUseCasePersistenceModel.Builder().
                 setDataId("dataId-recipeMetadata-Id2").
                 setDomainId(getInvalidDefault().getDomainId()).
-                setParentDomainId(NO_ID).
-                setRecipeState(ComponentState.INVALID_CHANGED).
+                setComponentState(ComponentState.INVALID_CHANGED).
                 setFailReasons(Collections.singletonList(RecipeMetadataUseCaseFailReason.INVALID_COMPONENTS)).
                 setComponentStates(getInvalidChangedComponentStates()).
-                setCreatedBy(Constants.getUserId()).
                 setCreateDate(30L).
                 setLastUpdate(30L).
                 build();
@@ -157,15 +147,13 @@ public class TestDataRecipeMetadata {
     3. all additional components are reporting valid or DEFAULT
     4. At least one component is reporting CHANGED
      */
-    public static RecipeMetadataPersistenceModel getValidChanged() {
-        return new RecipeMetadataPersistenceModel.Builder().
+    public static RecipeMetadataUseCasePersistenceModel getValidChanged() {
+        return new RecipeMetadataUseCasePersistenceModel.Builder().
                 setDataId("dataId-recipeMetadata-id5").
                 setDomainId(getInvalidDefault().getDomainId()).
-                setParentDomainId(getInvalidDefault().getParentDomainId()).
-                setRecipeState(ComponentState.VALID_CHANGED).
+                setComponentState(ComponentState.VALID_CHANGED).
                 setFailReasons(Collections.singletonList(CommonFailReason.NONE)).
                 setComponentStates(getValidChangedComponentStates()).
-                setCreatedBy(Constants.getUserId()).
                 setCreateDate(40L).
                 setLastUpdate(40L).
                 build();
@@ -177,15 +165,13 @@ public class TestDataRecipeMetadata {
      2. has all components report their data valid
      3. remains unchanged by the current session.
      */
-    public static RecipeMetadataPersistenceModel getValidUnchanged() {
-        return new RecipeMetadataPersistenceModel.Builder().
+    public static RecipeMetadataUseCasePersistenceModel getValidUnchanged() {
+        return new RecipeMetadataUseCasePersistenceModel.Builder().
                 setDataId("dataId-recipeMetadata-Id6").
                 setDomainId("domainId-recipe-Id2").
-                setParentDomainId("").
-                setRecipeState(ComponentState.VALID_UNCHANGED).
+                setComponentState(ComponentState.VALID_UNCHANGED).
                 setFailReasons(Collections.singletonList(CommonFailReason.NONE)).
                 setComponentStates(getValidUnchangedComponentStates()).
-                setCreatedBy(Constants.getUserId()).
                 setCreateDate(40L).
                 setLastUpdate(50L).
                 build();
@@ -195,15 +181,13 @@ public class TestDataRecipeMetadata {
     Represents a valid recipe created using an user Id that is different from the one in the 
     current session.
      */
-    public static RecipeMetadataPersistenceModel getValidFromAnotherUser() {
-        return new RecipeMetadataPersistenceModel.Builder().
+    public static RecipeMetadataUseCasePersistenceModel getValidFromAnotherUser() {
+        return new RecipeMetadataUseCasePersistenceModel.Builder().
                 setDataId("dataId-recipeMetadata-Id7").
                 setDomainId("domainId-recipe-Id20").
-                setParentDomainId("").
-                setRecipeState(ComponentState.VALID_UNCHANGED).
+                setComponentState(ComponentState.VALID_UNCHANGED).
                 setFailReasons(Collections.singletonList(CommonFailReason.NONE)).
                 setComponentStates(getValidUnchangedComponentStates()).
-                setCreatedBy("anotherUsersId").
                 setCreateDate(60L).
                 setLastUpdate(70L).
                 build();
@@ -213,15 +197,13 @@ public class TestDataRecipeMetadata {
     Represents an invalid recipe created using an user Id that is different from the one in the 
     current session.  
      */
-    public static RecipeMetadataPersistenceModel getInvalidFromAnotherUser() {
-        return new RecipeMetadataPersistenceModel.Builder().
+    public static RecipeMetadataUseCasePersistenceModel getInvalidFromAnotherUser() {
+        return new RecipeMetadataUseCasePersistenceModel.Builder().
                 setDataId(getValidFromAnotherUser().getDataId()).
                 setDomainId("domainId-recipe-Id21").
-                setParentDomainId("").
-                setRecipeState(ComponentState.INVALID_UNCHANGED).
+                setComponentState(ComponentState.INVALID_UNCHANGED).
                 setFailReasons(Collections.singletonList(RecipeMetadataUseCaseFailReason.INVALID_COMPONENTS)).
                 setComponentStates(getInvalidUnchangedComponentStates()).
-                setCreatedBy(getValidFromAnotherUser().getCreatedBy()).
                 setCreateDate(80L).
                 setLastUpdate(90L).
                 build();
@@ -231,16 +213,14 @@ public class TestDataRecipeMetadata {
     Represents a valid recipe that has been copied from another user to the user in the 
     current session.  
      */
-    public static RecipeMetadataPersistenceModel getValidCopied() {
-        RecipeMetadataPersistenceModel validParentFromAnotherUser = getValidFromAnotherUser();
-        return new RecipeMetadataPersistenceModel.Builder().
+    public static RecipeMetadataUseCasePersistenceModel getValidCopied() {
+        RecipeMetadataUseCasePersistenceModel validParentFromAnotherUser = getValidFromAnotherUser();
+        return new RecipeMetadataUseCasePersistenceModel.Builder().
                 setDataId("dataId-recipeMetadata-Id30").
                 setDomainId("domainId-recipe-Id30").
-                setParentDomainId(validParentFromAnotherUser.getDomainId()).
-                setRecipeState(validParentFromAnotherUser.getComponentState()).
+                setComponentState(validParentFromAnotherUser.getComponentState()).
                 setFailReasons(validParentFromAnotherUser.getFailReasons()).
                 setComponentStates(validParentFromAnotherUser.getComponentStates()).
-                setCreatedBy(Constants.getUserId()).
                 setCreateDate(90L).
                 setLastUpdate(100L).
                 build();
@@ -250,16 +230,14 @@ public class TestDataRecipeMetadata {
     Represents an invalid recipe that has been copied from another user to the user in the 
     current session.
      */
-    public static RecipeMetadataPersistenceModel getInvalidCopied() {
-        RecipeMetadataPersistenceModel invalidParentFromAnotherUser = getInvalidFromAnotherUser();
-        return new RecipeMetadataPersistenceModel.Builder().
+    public static RecipeMetadataUseCasePersistenceModel getInvalidCopied() {
+        RecipeMetadataUseCasePersistenceModel invalidParentFromAnotherUser = getInvalidFromAnotherUser();
+        return new RecipeMetadataUseCasePersistenceModel.Builder().
                 setDataId("dataId-recipeMetadata-Idd31").
                 setDomainId("domainId-recipe-Id40").
-                setParentDomainId(invalidParentFromAnotherUser.getDomainId()).
-                setRecipeState(invalidParentFromAnotherUser.getComponentState()).
+                setComponentState(invalidParentFromAnotherUser.getComponentState()).
                 setFailReasons(invalidParentFromAnotherUser.getFailReasons()).
                 setComponentStates(invalidParentFromAnotherUser.getComponentStates()).
-                setCreatedBy(Constants.getUserId()).
                 setCreateDate(110L).
                 setLastUpdate(120L).
                 build();
@@ -327,7 +305,7 @@ public class TestDataRecipeMetadata {
         return s;
     }
 
-    public static List<RecipeMetadataPersistenceModel> getAll() {
+    public static List<RecipeMetadataUseCasePersistenceModel> getAll() {
         return Arrays.asList(
                 getInvalidDefault(),
                 getInvalidUnchanged(),
@@ -341,9 +319,9 @@ public class TestDataRecipeMetadata {
         );
     }
 
-    public static List<RecipeMetadataPersistenceModel> getAllByDomainId(String domainId) {
-        List<RecipeMetadataPersistenceModel> models = new ArrayList<>();
-        for (RecipeMetadataPersistenceModel m : getAll()) {
+    public static List<RecipeMetadataUseCasePersistenceModel> getAllByDomainId(String domainId) {
+        List<RecipeMetadataUseCasePersistenceModel> models = new ArrayList<>();
+        for (RecipeMetadataUseCasePersistenceModel m : getAll()) {
             if (domainId.equals(m.getDomainId())) {
                 models.add(m);
             }
@@ -351,11 +329,11 @@ public class TestDataRecipeMetadata {
         return models;
     }
 
-    public static RecipeMetadataPersistenceModel getActiveByDomainId(String domainId) {
+    public static RecipeMetadataUseCasePersistenceModel getActiveByDomainId(String domainId) {
         long lastUpdate = 0;
-        RecipeMetadataPersistenceModel model = new RecipeMetadataPersistenceModel.Builder().
+        RecipeMetadataUseCasePersistenceModel model = new RecipeMetadataUseCasePersistenceModel.Builder().
                 getDefault().build();
-        for (RecipeMetadataPersistenceModel m : getAllByDomainId(domainId)) {
+        for (RecipeMetadataUseCasePersistenceModel m : getAllByDomainId(domainId)) {
             if (lastUpdate < m.getLastUpdate()) {
                 model = m;
                 lastUpdate = m.getLastUpdate();

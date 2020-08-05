@@ -1,8 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata;
 
-import com.example.peter.thekitchenmenu.domain.usecasenew.model.BaseDomainModelBuilder;
 import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataId;
-import com.example.peter.thekitchenmenu.domain.usecasenew.model.BaseDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.BaseDomainModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 
 import java.util.HashMap;
@@ -52,11 +51,10 @@ public final class RecipeMetadataRequest
             return self();
         }
 
-        public Builder basedOnResponse(RecipeMetadataResponse r) {
-            message.dataId = r.getDataId();
-            message.domainId = r.getDomainId();
-            message.model.parentDomainId = r.getDomainModel().getParentDomainId();
-            message.model.componentStates = r.getDomainModel().getComponentStates();
+        public Builder basedOnResponse(RecipeMetadataResponse response) {
+            message.dataId = response.getDataId();
+            message.domainId = response.getDomainId();
+            message.model.componentStates = response.getDomainModel().getComponentStates();
             return self();
         }
 
@@ -70,13 +68,7 @@ public final class RecipeMetadataRequest
             extends
             BaseDomainModel {
 
-        private String parentDomainId;
         private HashMap<RecipeComponentName, ComponentState> componentStates;
-
-        @Nonnull
-        public String getParentDomainId() {
-            return parentDomainId;
-        }
 
         @Nonnull
         public HashMap<RecipeComponentName, ComponentState> getComponentStates() {
@@ -86,23 +78,22 @@ public final class RecipeMetadataRequest
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            DomainModel domainModel = (DomainModel) o;
-            return Objects.equals(parentDomainId, domainModel.parentDomainId) &&
-                    Objects.equals(componentStates, domainModel.componentStates);
+            if (!(o instanceof DomainModel)) return false;
+
+            DomainModel that = (DomainModel) o;
+
+            return Objects.equals(componentStates, that.componentStates);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(parentDomainId, componentStates);
+            return componentStates != null ? componentStates.hashCode() : 0;
         }
 
-        @Nonnull
         @Override
         public String toString() {
-            return "Model{" +
-                    "parentDomainId='" + parentDomainId + '\'' +
-                    ", componentStates=" + componentStates +
+            return "DomainModel{" +
+                    "componentStates=" + componentStates +
                     '}';
         }
 
@@ -113,7 +104,7 @@ public final class RecipeMetadataRequest
                         DomainModel> {
 
             public Builder() {
-                domainModel = new DomainModel();
+                super(new DomainModel());
             }
 
             @Override
@@ -123,20 +114,13 @@ public final class RecipeMetadataRequest
 
             @Override
             public Builder getDefault() {
-                domainModel.parentDomainId = "";
                 domainModel.componentStates = new HashMap<>();
                 return self();
             }
 
 
             public Builder basedOnResponseModel(RecipeMetadataResponse.DomainModel m) {
-                domainModel.parentDomainId = m.getParentDomainId();
                 domainModel.componentStates = m.getComponentStates();
-                return self();
-            }
-
-            public Builder setParentId(String parentId) {
-                domainModel.parentDomainId = parentId;
                 return self();
             }
 

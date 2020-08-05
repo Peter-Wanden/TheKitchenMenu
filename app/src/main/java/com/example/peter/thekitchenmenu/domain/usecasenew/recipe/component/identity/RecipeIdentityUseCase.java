@@ -22,6 +22,9 @@ public class RecipeIdentityUseCase
 
     public static final String TAG = "tkm-" + RecipeIdentityUseCase.class.getSimpleName() + ": ";
 
+    public static final String DEFAULT_TITLE = "";
+    public static final String DEFAULT_DESCRIPTION = "";
+
     private static final TextValidationBusinessEntityTextLength TITLE_TEXT_TYPE =
             TextValidationBusinessEntityTextLength.SHORT_TEXT;
     private static final TextValidationBusinessEntityTextLength DESCRIPTION_TEXT_TYPE =
@@ -46,11 +49,6 @@ public class RecipeIdentityUseCase
         if (isTitleValidationComplete && isDescriptionValidationComplete) {
             domainModelProcessingComplete();
         }
-    }
-
-    @Override
-    protected RecipeIdentityUseCaseModel createUseCaseModelFromDefaultValues() {
-        return new RecipeIdentityUseCaseModel("", "");
     }
 
     private void validateTitle() {

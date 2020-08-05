@@ -3,7 +3,7 @@ package com.example.peter.thekitchenmenu.domain.usecasenew.common;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.message.UseCaseCallback;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.message.UseCaseRequest;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.message.UseCaseResponse;
-import com.example.peter.thekitchenmenu.domain.usecasenew.model.DomainModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.DomainModel;
 
 public abstract class UseCase<
         REQUEST_MODEL extends DomainModel.UseCaseRequestModel,

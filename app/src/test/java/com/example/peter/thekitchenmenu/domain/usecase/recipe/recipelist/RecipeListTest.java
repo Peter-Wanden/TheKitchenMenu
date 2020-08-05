@@ -7,7 +7,7 @@ import com.example.peter.thekitchenmenu.data.repository.recipe.metadata.TestData
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.factory.UseCaseFactory;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.metadata.RecipeMetadataUseCasePersistenceModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
 
 import org.junit.*;
@@ -32,7 +32,7 @@ public class RecipeListTest {
     @Mock
     DataAccessRecipeMetadata repoMetadataMock;
     @Captor
-    ArgumentCaptor<GetAllDomainModelsCallback<RecipeMetadataPersistenceModel>>
+    ArgumentCaptor<GetAllDomainModelsCallback<RecipeMetadataUseCasePersistenceModel>>
             repoMetadataGetAllCallback;
 
     private UseCaseHandler handler;
@@ -63,7 +63,7 @@ public class RecipeListTest {
     public void newRequest_getAll_recipeListReturned() {
         // Arrange
         // A list of metadata persistent models to load into RecipeList
-        List<RecipeMetadataPersistenceModel> metadataModels = TestDataRecipeMetadata.getAll();
+        List<RecipeMetadataUseCasePersistenceModel> metadataModels = TestDataRecipeMetadata.getAll();
         int expectedNoOfRecipes = metadataModels.size();
 
         // A helper that provides mock recipes and testing capabilities

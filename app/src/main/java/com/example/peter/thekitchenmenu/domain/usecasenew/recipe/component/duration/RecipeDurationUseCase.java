@@ -14,6 +14,8 @@ public class RecipeDurationUseCase
 
     private static final String TAG = "tkm-" + RecipeDurationUseCase.class.getSimpleName() + ": ";
 
+    public static final int MIN_PREP_TIME = 0;
+    public static final int MIN_COOK_TIME = 0;
     private final int MAX_PREP_TIME;
     private final int MAX_COOK_TIME;
 
@@ -45,10 +47,5 @@ public class RecipeDurationUseCase
         if (useCaseModel.getCookTime() > MAX_COOK_TIME) {
             useCaseFailReasons.add(RecipeDurationUseCaseFailReason.INVALID_COOK_TIME);
         }
-    }
-
-    @Override
-    protected RecipeDurationUseCaseModel createUseCaseModelFromDefaultValues() {
-        return new RecipeDurationUseCaseModel(0,0);
     }
 }

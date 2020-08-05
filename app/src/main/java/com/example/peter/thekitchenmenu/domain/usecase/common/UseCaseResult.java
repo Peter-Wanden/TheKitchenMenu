@@ -3,10 +3,11 @@ package com.example.peter.thekitchenmenu.domain.usecase.common;
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.metadata.ComponentState;
-import com.example.peter.thekitchenmenu.domain.usecasenew.model.DomainModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.DomainModel;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.metadata.UseCaseMetadataModel;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.FailReasons;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.DomainModelConverter;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,11 +33,11 @@ public abstract class UseCaseResult<
     protected List<FailReasons> failReasons = new ArrayList<>();
 
     public UseCaseResult(DATA_ACCESS dataAccess,
-                         DomainModel.Converter<
-                                 USE_CASE_MODEL,
-                                 PERSISTENCE_MODEL,
-                                 USE_CASE_REQUEST_MODEL,
-                                 USE_CASE_RESPONSE_MODEL> modelConverter) {
+                         DomainModelConverter<
+                                                          USE_CASE_MODEL,
+                                                          PERSISTENCE_MODEL,
+                                                          USE_CASE_REQUEST_MODEL,
+                                                          USE_CASE_RESPONSE_MODEL> modelConverter) {
         super(dataAccess, modelConverter);
     }
 

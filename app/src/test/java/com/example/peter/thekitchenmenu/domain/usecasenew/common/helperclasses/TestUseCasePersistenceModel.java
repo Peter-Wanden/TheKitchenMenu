@@ -1,6 +1,6 @@
 package com.example.peter.thekitchenmenu.domain.usecasenew.common.helperclasses;
 
-import com.example.peter.thekitchenmenu.domain.usecasenew.model.BaseDomainPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.BaseDomainPersistenceModel;
 
 import javax.annotation.Nonnull;
 
@@ -33,7 +33,7 @@ public final class TestUseCasePersistenceModel
             PersistenceModelBuilder<Builder, TestUseCasePersistenceModel> {
 
         public Builder() {
-            domainModel = new TestUseCasePersistenceModel();
+            super(new TestUseCasePersistenceModel());
         }
 
         @Override

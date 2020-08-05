@@ -1,6 +1,6 @@
 package com.example.peter.thekitchenmenu.domain.businessentity;
 
-import com.example.peter.thekitchenmenu.domain.usecasenew.model.DomainModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.DomainModel;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.FailReasons;
 
 import java.util.ArrayList;

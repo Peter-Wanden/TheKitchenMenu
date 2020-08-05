@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 
 import com.example.peter.thekitchenmenu.data.repository.recipe.RecipeCourseUseCaseDataAccess;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseElement;
-import com.example.peter.thekitchenmenu.domain.usecasenew.model.DomainModel.UseCaseModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.DomainModel.UseCaseModel;
 import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.course.Course;
 import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.course.RecipeCourseUseCaseFailReason;
 import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.course.RecipeCourseUseCasePersistenceModel;

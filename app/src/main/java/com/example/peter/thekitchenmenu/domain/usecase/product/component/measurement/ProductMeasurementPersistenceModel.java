@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecase.product.component.measurement;
 
 import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.MeasurementSubtype;
-import com.example.peter.thekitchenmenu.domain.usecasenew.model.BaseDomainPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.BaseDomainPersistenceModel;
 import com.example.peter.thekitchenmenu.domain.usecase.product.component.measurement.ProductMeasurement.ShelfLife;
 
 import java.util.Objects;
@@ -95,7 +95,7 @@ public class ProductMeasurementPersistenceModel
             PersistenceModelBuilder<Builder, ProductMeasurementPersistenceModel> {
 
         public Builder() {
-            domainModel = new ProductMeasurementPersistenceModel();
+            super(new ProductMeasurementPersistenceModel());
         }
 
         @Override

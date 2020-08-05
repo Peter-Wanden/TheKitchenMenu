@@ -1,13 +1,12 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata;
 
-import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipeMetadata;
-import com.example.peter.thekitchenmenu.domain.usecasenew.common.metadata.ComponentState;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseElement;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.metadata.ComponentState;
 import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentName;
 import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.metadata.RecipeMetadataUseCaseFailReason;
-import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.metadata.RecipeMetadataUseCaseModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.metadata.RecipeMetadataUseCasePersistenceModel;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
@@ -17,16 +16,15 @@ import java.util.Set;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataId.NO_ID;
-
 /**
- * Calculates and stores {@link Recipe} metadata state information based on use case response values
+ * Calculates and stores {@link Recipe} metadata state information based on collective recipe
+ * component metadata values.
  */
 public class RecipeMetadata
         extends
         UseCaseElement<
                 DataAccessRecipeMetadata,
-                RecipeMetadataPersistenceModel,
+                RecipeMetadataUseCasePersistenceModel,
                 RecipeMetadataUseCaseModel> {
 
     private static final String TAG = "tkm-" + RecipeMetadata.class.getSimpleName() + ": ";
@@ -67,25 +65,19 @@ public class RecipeMetadata
                 defaultComponentStates.put(componentName, ComponentState.INVALID_DEFAULT)
         );
 
-        RecipeMetadataUseCaseModel defaultDomainModel = new RecipeMetadataUseCaseModel(NO_ID, defaultComponentStates);
+        RecipeMetadataUseCaseModel defaultDomainModel = new RecipeMetadataUseCaseModel("", defaultComponentStates);
 
-        return new RecipeMetadataUseCaseModel(
-                NO_ID,
-                new HashMap<>()
-        );
+        return new RecipeMetadataUseCaseModel("", new HashMap<>());
     }
 
     @Override
     protected RecipeMetadataUseCaseModel createUseCaseModelFromPersistenceModel(
-            @Nonnull RecipeMetadataPersistenceModel persistenceModel) {
+            @Nonnull RecipeMetadataUseCasePersistenceModel persistenceModel) {
 
         recipeState = persistenceModel.getComponentState();
         failReasons.addAll(persistenceModel.getFailReasons());
 
-        return new RecipeMetadataUseCaseModel(
-                persistenceModel.getParentDomainId(),
-                persistenceModel.getComponentStates()
-        );
+        return new RecipeMetadataUseCaseModel("", persistenceModel.getComponentStates());
     }
 
     @Override
@@ -93,10 +85,7 @@ public class RecipeMetadata
         RecipeMetadataRequest.DomainModel model = ((RecipeMetadataRequest) getRequest()).
                 getDomainModel();
 
-        return new RecipeMetadataUseCaseModel(
-                model.getParentDomainId(),
-                model.getComponentStates()
-        );
+        return new RecipeMetadataUseCaseModel("", model.getComponentStates());
     }
 
     @Override
@@ -172,14 +161,12 @@ public class RecipeMetadata
                     archivePreviousState(currentTime);
                 }
 
-                persistenceModel = new RecipeMetadataPersistenceModel.Builder().
+                persistenceModel = new RecipeMetadataUseCasePersistenceModel.Builder().
                         setDataId(useCaseDataId).
                         setDomainId(useCaseDomainId).
-                        setParentDomainId(useCaseModel.getParentDomainId()).
-                        setRecipeState(recipeState).
+                        setComponentState(recipeState).
                         setComponentStates(useCaseModel.getComponentStates()).
                         setFailReasons(failReasons).
-                        setCreatedBy(Constants.getUserId()).
                         setCreateDate(currentTime).
                         setLastUpdate(currentTime).
                         build();
@@ -194,7 +181,7 @@ public class RecipeMetadata
 
     @Override
     protected void archivePreviousState(long currentTime) {
-        RecipeMetadataPersistenceModel model = new RecipeMetadataPersistenceModel.Builder().
+        RecipeMetadataUseCasePersistenceModel model = new RecipeMetadataUseCasePersistenceModel.Builder().
                 basedOnModel(persistenceModel).
                 setLastUpdate(currentTime).
                 build();
@@ -216,7 +203,6 @@ public class RecipeMetadata
 
     private RecipeMetadataResponse.DomainModel getResponseDomainModel() {
         return new RecipeMetadataResponse.DomainModel.Builder().
-                setParentDomainId(useCaseModel.getParentDomainId()).
                 setComponentStates(new LinkedHashMap<>(useCaseModel.getComponentStates())).
                 build();
     }

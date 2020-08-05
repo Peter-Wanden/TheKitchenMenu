@@ -1,18 +1,18 @@
 package com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.course;
 
-import com.example.peter.thekitchenmenu.domain.usecasenew.model.DomainModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.DomainModelConverter;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
 import javax.annotation.Nonnull;
 
-public class RecipeCourseDomainModelConverter
+public final class RecipeCourseDomainModelConverter
         extends
-        DomainModel.Converter<
-                RecipeCourseUseCaseModel,
-                RecipeCourseUseCasePersistenceModel,
-                RecipeCourseUseCaseRequestModel,
-                RecipeCourseUseCaseResponseModel> {
+        DomainModelConverter<
+                        RecipeCourseUseCaseModel,
+                        RecipeCourseUseCasePersistenceModel,
+                        RecipeCourseUseCaseRequestModel,
+                        RecipeCourseUseCaseResponseModel> {
 
     public RecipeCourseDomainModelConverter(@Nonnull TimeProvider timeProvider,
                                             @Nonnull UniqueIdProvider idProvider) {
@@ -75,5 +75,10 @@ public class RecipeCourseDomainModelConverter
                 .setCreateDate(currentTime)
                 .setLastUpdate(currentTime)
                 .build();
+    }
+
+    @Override
+    public RecipeCourseUseCaseModel getDefault() {
+        return null;
     }
 }

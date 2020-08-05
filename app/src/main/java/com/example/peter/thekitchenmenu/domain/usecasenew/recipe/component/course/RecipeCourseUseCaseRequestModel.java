@@ -1,8 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.course;
 
-import com.example.peter.thekitchenmenu.domain.usecasenew.model.BaseDomainModel;
-import com.example.peter.thekitchenmenu.domain.usecasenew.model.BaseDomainModelBuilder;
-import com.example.peter.thekitchenmenu.domain.usecasenew.model.DomainModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.BaseDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.DomainModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +9,7 @@ import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public class RecipeCourseUseCaseRequestModel
+public final class RecipeCourseUseCaseRequestModel
         extends
         BaseDomainModel
         implements
@@ -52,7 +51,7 @@ public class RecipeCourseUseCaseRequestModel
             BaseDomainModelBuilder<Builder, RecipeCourseUseCaseRequestModel> {
 
         public Builder() {
-            domainModel = new RecipeCourseUseCaseRequestModel();
+            super(new RecipeCourseUseCaseRequestModel());
         }
 
         @Override

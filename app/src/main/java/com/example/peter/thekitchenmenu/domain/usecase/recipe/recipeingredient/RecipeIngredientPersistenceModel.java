@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredient;
 
 import com.example.peter.thekitchenmenu.domain.businessentity.unitofmeasure.model.MeasurementModel;
-import com.example.peter.thekitchenmenu.domain.usecasenew.model.BaseDomainPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.BaseDomainPersistenceModel;
 
 public class RecipeIngredientPersistenceModel extends BaseDomainPersistenceModel {
 
@@ -70,7 +70,7 @@ public class RecipeIngredientPersistenceModel extends BaseDomainPersistenceModel
                     RecipeIngredientPersistenceModel> {
 
         public Builder() {
-            domainModel = new RecipeIngredientPersistenceModel();
+            super(new RecipeIngredientPersistenceModel());
         }
 
         @Override
