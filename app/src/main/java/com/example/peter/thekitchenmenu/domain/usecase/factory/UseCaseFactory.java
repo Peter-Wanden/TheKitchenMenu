@@ -10,7 +10,7 @@ import com.example.peter.thekitchenmenu.data.repository.recipe.RecipeCourseUseCa
 import com.example.peter.thekitchenmenu.data.repository.recipe.RecipeDurationUseCaseDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RecipeIdentityUseCaseDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipeIngredient;
-import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipeMetadata;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RecipeMetadataUseCaseDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RecipePortionsUseCasseDataAccess;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.ConversionFactorStatus;
@@ -20,7 +20,7 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.R
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDuration;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentity;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata;
-import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentName;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentNameName;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipecopy.RecipeCopy;
@@ -41,7 +41,7 @@ public class UseCaseFactory {
     private static volatile UseCaseFactory INSTANCE;
 
     private final Application application;
-    private final DataAccessRecipeMetadata recipeMetadataRepository;
+    private final RecipeMetadataUseCaseDataAccess recipeMetadataRepository;
     private final RecipePortionsUseCasseDataAccess recipePortionsRepository;
     private final DataAccessRecipeIngredient recipeIngredientRepository;
     private final DataAccessIngredient ingredientRepository;
@@ -50,7 +50,7 @@ public class UseCaseFactory {
     private final RecipeCourseUseCaseDataAccess recipeCourseRepository;
 
     private UseCaseFactory(Application application,
-                           DataAccessRecipeMetadata recipeMetadataRepository,
+                           RecipeMetadataUseCaseDataAccess recipeMetadataRepository,
                            RecipePortionsUseCasseDataAccess recipePortionsRepository,
                            DataAccessRecipeIngredient recipeIngredientRepository,
                            DataAccessIngredient ingredientRepository,
@@ -167,13 +167,13 @@ public class UseCaseFactory {
     }
 
     private RecipeMetadata getRecipeMetadataUseCase() {
-        final Set<RecipeComponentName> requiredComponents = new HashSet<>();
-        requiredComponents.add(RecipeComponentName.IDENTITY);
-        requiredComponents.add(RecipeComponentName.COURSE);
-        requiredComponents.add(RecipeComponentName.PORTIONS);
+        final Set<RecipeComponentNameName> requiredComponents = new HashSet<>();
+        requiredComponents.add(RecipeComponentNameName.IDENTITY);
+        requiredComponents.add(RecipeComponentNameName.COURSE);
+        requiredComponents.add(RecipeComponentNameName.PORTIONS);
 
-        final Set<RecipeComponentName> additionalComponents = new HashSet<>();
-        additionalComponents.add(RecipeComponentName.DURATION);
+        final Set<RecipeComponentNameName> additionalComponents = new HashSet<>();
+        additionalComponents.add(RecipeComponentNameName.DURATION);
 
         return new RecipeMetadata(
                 recipeMetadataRepository,

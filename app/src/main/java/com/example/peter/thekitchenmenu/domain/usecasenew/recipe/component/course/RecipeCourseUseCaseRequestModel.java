@@ -15,12 +15,12 @@ public final class RecipeCourseUseCaseRequestModel
         implements
         DomainModel.UseCaseRequestModel {
 
-    private List<Course> courseList;
+    private List<Course> courses;
 
     private RecipeCourseUseCaseRequestModel() {}
 
-    public List<Course> getCourseList() {
-        return courseList;
+    public List<Course> getCourses() {
+        return courses;
     }
 
     @Override
@@ -30,19 +30,19 @@ public final class RecipeCourseUseCaseRequestModel
 
         RecipeCourseUseCaseRequestModel that = (RecipeCourseUseCaseRequestModel) o;
 
-        return Objects.equals(courseList, that.courseList);
+        return Objects.equals(courses, that.courses);
     }
 
     @Override
     public int hashCode() {
-        return courseList != null ? courseList.hashCode() : 0;
+        return courses != null ? courses.hashCode() : 0;
     }
 
     @Nonnull
     @Override
     public String toString() {
         return "RecipeCourseUseCaseRequestModel{" +
-                "courseList=" + courseList +
+                "courses=" + courses +
                 '}';
     }
 
@@ -56,18 +56,23 @@ public final class RecipeCourseUseCaseRequestModel
 
         @Override
         public Builder getDefault() {
-            domainModel.courseList = new ArrayList<>();
+            domainModel.courses = new ArrayList<>();
             return self();
         }
 
         @Override
         public Builder basedOnModel(RecipeCourseUseCaseRequestModel model) {
-            domainModel.courseList = model.courseList;
+            domainModel.courses = model.courses;
             return self();
         }
 
-        public Builder setCourseList(List<Course> courseList) {
-            domainModel.courseList = courseList;
+        public Builder basedOnResponseModel(RecipeCourseUseCaseResponseModel responseModel) {
+            domainModel.courses =  responseModel.getCourses();
+            return self();
+        }
+
+        public Builder setCourses(List<Course> courses) {
+            domainModel.courses = courses;
             return self();
         }
 

@@ -4,6 +4,7 @@ import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.BaseDomai
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
@@ -11,14 +12,10 @@ public final class RecipeCourseUseCasePersistenceModel
         extends
         BaseDomainPersistenceModel {
 
-    @Nonnull
     private List<Course> courses;
 
-    private RecipeCourseUseCasePersistenceModel(){
-        courses = new ArrayList<>();
-    }
+    private RecipeCourseUseCasePersistenceModel(){}
 
-    @Nonnull
     public List<Course> getCourses() {
         return courses;
     }
@@ -27,27 +24,24 @@ public final class RecipeCourseUseCasePersistenceModel
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof RecipeCourseUseCasePersistenceModel)) return false;
-        if (!super.equals(o)) return false;
 
         RecipeCourseUseCasePersistenceModel that = (RecipeCourseUseCasePersistenceModel) o;
 
-        return courses.equals(that.courses);
+        return Objects.equals(courses, that.courses);
     }
 
     @Override
     public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + courses.hashCode();
-        return result;
+        return courses != null ? courses.hashCode() : 0;
     }
 
     @Nonnull
     @Override
     public String toString() {
-        return "RecipeCoursePersistenceModel{" +
-                "dataId='" + dataId + '\'' +
+        return "RecipeCourseUseCasePersistenceModel{" +
+                "courses=" + courses +
+                ", dataId='" + dataId + '\'' +
                 ", domainId='" + domainId + '\'' +
-                ", courses=" + courses +
                 ", createDate=" + createDate +
                 ", lastUpdate=" + lastUpdate +
                 '}';

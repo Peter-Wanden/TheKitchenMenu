@@ -1,11 +1,11 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipelist;
 
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
-import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipeMetadata;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RecipeMetadataUseCaseDataAccess;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.factory.UseCaseFactory;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.metadata.RecipeMetadataUseCasePersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.invoker.metadata.RecipeMacroMetadataUseCasePersistenceModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.RecipeUseCaseCallback;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.RecipeRequest;
@@ -20,7 +20,7 @@ public class RecipeList
         extends
         UseCaseBase
         implements
-        DomainDataAccess.GetAllDomainModelsCallback<RecipeMetadataUseCasePersistenceModel> {
+        DomainDataAccess.GetAllDomainModelsCallback<RecipeMacroMetadataUseCasePersistenceModel> {
 
     private static final String TAG = "tkm:" + RecipeList.class.getSimpleName() +
             ": ";
@@ -36,7 +36,7 @@ public class RecipeList
     @Nonnull
     private final UseCaseHandler handler;
     @Nonnull
-    private final DataAccessRecipeMetadata repository;
+    private final RecipeMetadataUseCaseDataAccess repository;
 
     private List<Recipe> recipes;
 
@@ -47,7 +47,7 @@ public class RecipeList
 
     public RecipeList(@Nonnull UseCaseHandler handler,
                       @Nonnull UseCaseFactory factory,
-                      @Nonnull DataAccessRecipeMetadata repository) {
+                      @Nonnull RecipeMetadataUseCaseDataAccess repository) {
         this.handler = handler;
         this.factory = factory;
         this.repository = repository;
@@ -84,10 +84,10 @@ public class RecipeList
     }
 
     @Override
-    public void onAllDomainModelsLoaded(List<RecipeMetadataUseCasePersistenceModel> metadataModels) {
+    public void onAllDomainModelsLoaded(List<RecipeMacroMetadataUseCasePersistenceModel> metadataModels) {
         System.out.println(TAG + "onAllLoadedCalled");
 
-        for (RecipeMetadataUseCasePersistenceModel metadataModel : metadataModels) {
+        for (RecipeMacroMetadataUseCasePersistenceModel metadataModel : metadataModels) {
             Recipe recipe = factory.getRecipeUseCase();
             recipes.add(recipe);
 

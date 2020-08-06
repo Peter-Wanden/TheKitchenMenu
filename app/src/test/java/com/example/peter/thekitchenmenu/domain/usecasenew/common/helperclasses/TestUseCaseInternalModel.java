@@ -1,21 +1,20 @@
 package com.example.peter.thekitchenmenu.domain.usecasenew.common.helperclasses;
 
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.BaseDomainModel;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.DomainModel;
 
 import javax.annotation.Nonnull;
 
 public final class TestUseCaseInternalModel
+        extends
+        BaseDomainModel
         implements
         DomainModel.UseCaseModel {
 
-    @Nonnull
     private String useCaseModelString;
 
-    public TestUseCaseInternalModel(@Nonnull String useCaseModelString) {
-        this.useCaseModelString = useCaseModelString;
-    }
+    private TestUseCaseInternalModel() {}
 
-    @Nonnull
     public String getUseCaseModelString() {
         return useCaseModelString;
     }
@@ -41,5 +40,36 @@ public final class TestUseCaseInternalModel
         return "TestUseCaseDomainModel{" +
                 "useCaseModelString='" + useCaseModelString + '\'' +
                 '}';
+    }
+
+    public static class Builder
+            extends
+            BaseDomainModelBuilder<Builder, TestUseCaseInternalModel> {
+
+        public Builder() {
+            super(new TestUseCaseInternalModel());
+        }
+
+        public Builder setUseCaseModelString(String useCaseModelString) {
+            domainModel.useCaseModelString = useCaseModelString;
+            return self();
+        }
+
+        @Override
+        public Builder getDefault() {
+            domainModel.useCaseModelString = "";
+            return self();
+        }
+
+        @Override
+        public Builder basedOnModel(TestUseCaseInternalModel model) {
+            domainModel.useCaseModelString = model.useCaseModelString;
+            return self();
+        }
+
+        @Override
+        protected Builder self() {
+            return this;
+        }
     }
 }

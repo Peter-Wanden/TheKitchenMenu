@@ -4,7 +4,7 @@ import android.content.res.Resources;
 
 import androidx.core.util.Pair;
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentName;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentNameName;
 import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.portions.RecipePortionsUseCaseFailReason;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.FailReasons;
@@ -52,7 +52,7 @@ public class RecipePortionsEditorViewModel extends ObservableViewModel {
 
         callback = new PortionsCallbackListener();
         recipeMacro.registerComponentListener(new Pair<>(
-                RecipeComponentName.PORTIONS,
+                RecipeComponentNameName.PORTIONS,
                 callback)
         );
     }

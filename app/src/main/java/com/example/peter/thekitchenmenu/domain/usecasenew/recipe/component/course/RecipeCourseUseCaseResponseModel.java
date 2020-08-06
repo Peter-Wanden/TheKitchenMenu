@@ -15,12 +15,12 @@ public final class RecipeCourseUseCaseResponseModel
         implements
         DomainModel.UseCaseResponseModel {
 
-    private List<Course> courseList;
+    private List<Course> courses;
 
     private RecipeCourseUseCaseResponseModel() {}
 
-    public List<Course> getCourseList() {
-        return courseList;
+    public List<Course> getCourses() {
+        return courses;
     }
 
     @Override
@@ -30,19 +30,19 @@ public final class RecipeCourseUseCaseResponseModel
 
         RecipeCourseUseCaseResponseModel that = (RecipeCourseUseCaseResponseModel) o;
 
-        return Objects.equals(courseList, that.courseList);
+        return Objects.equals(courses, that.courses);
     }
 
     @Override
     public int hashCode() {
-        return courseList != null ? courseList.hashCode() : 0;
+        return courses != null ? courses.hashCode() : 0;
     }
 
     @Nonnull
     @Override
     public String toString() {
         return "RecipeCourseUseCaseResponseModel{" +
-                "courseList=" + courseList +
+                "courses=" + courses +
                 '}';
     }
 
@@ -56,18 +56,18 @@ public final class RecipeCourseUseCaseResponseModel
 
         @Override
         public Builder basedOnModel(RecipeCourseUseCaseResponseModel model) {
-            domainModel.courseList = model.courseList;
+            domainModel.courses = model.courses;
             return self();
         }
 
         @Override
         public Builder getDefault() {
-            domainModel.courseList = new ArrayList<>();
+            domainModel.courses = new ArrayList<>();
             return self();
         }
 
-        public Builder setCourseList(List<Course> courseList) {
-            domainModel.courseList = courseList;
+        public Builder setCourses(List<Course> courses) {
+            domainModel.courses = courses;
             return self();
         }
 

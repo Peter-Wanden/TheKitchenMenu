@@ -26,21 +26,24 @@ public final class RecipePortionsUseCasePersistenceModel
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof RecipePortionsUseCasePersistenceModel)) return false;
-        if (!super.equals(o)) return false;
+
         RecipePortionsUseCasePersistenceModel that = (RecipePortionsUseCasePersistenceModel) o;
-        return servings == that.servings &&
-                sittings == that.sittings;
+
+        if (servings != that.servings) return false;
+        return sittings == that.sittings;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), servings, sittings);
+        int result = servings;
+        result = 31 * result + sittings;
+        return result;
     }
 
     @Nonnull
     @Override
     public String toString() {
-        return "RecipePortionsPersistenceModel{" +
+        return "RecipePortionsUseCasePersistenceModel{" +
                 "servings=" + servings +
                 ", sittings=" + sittings +
                 ", dataId='" + dataId + '\'' +

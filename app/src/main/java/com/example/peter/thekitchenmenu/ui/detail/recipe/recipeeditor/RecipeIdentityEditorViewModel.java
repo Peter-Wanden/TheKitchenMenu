@@ -4,7 +4,7 @@ import android.content.res.Resources;
 
 import androidx.core.util.Pair;
 
-import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentName;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentNameName;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.UseCaseHandler;
@@ -51,7 +51,7 @@ public class RecipeIdentityEditorViewModel
         response = new RecipeIdentityResponse.Builder().getDefault().build();
 
         recipe.registerComponentListener(new Pair<>(
-                RecipeComponentName.IDENTITY,
+                RecipeComponentNameName.IDENTITY,
                 new IdentityCallbackListener())
         );
     }

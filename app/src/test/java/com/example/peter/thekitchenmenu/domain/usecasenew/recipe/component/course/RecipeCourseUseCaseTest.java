@@ -30,7 +30,8 @@ import static org.mockito.Mockito.*;
 
 public class RecipeCourseUseCaseTest {
 
-    private static final String TAG = "tkm-" + RecipeCourseUseCaseTest.class.getSimpleName() + ": ";
+//    private static final String TAG = "tkm-" + RecipeCourseUseCaseTest.class.getSimpleName()
+//            + ": ";
 
     // region constants ----------------------------------------------------------------------------
     // endregion constants -------------------------------------------------------------------------
@@ -99,7 +100,7 @@ public class RecipeCourseUseCaseTest {
                 actualFailReasons
         );
 
-        assertTrue(responseModel.getCourseList().isEmpty());
+        assertTrue(responseModel.getCourses().isEmpty());
     }
 
     @Test
@@ -116,7 +117,7 @@ public class RecipeCourseUseCaseTest {
         RecipeCourseUseCaseRequest request = new RecipeCourseUseCaseRequest.Builder()
                 .basedOnResponse(onErrorResponse)
                 .setRequestModel(new RecipeCourseUseCaseRequestModel.Builder()
-                        .setCourseList(modelUnderTest.getCourses())
+                        .setCourses(modelUnderTest.getCourses())
                         .build())
                 .build();
 
@@ -152,7 +153,7 @@ public class RecipeCourseUseCaseTest {
 
         assertEquals(
                 modelUnderTest.getCourses(),
-                responseModel.getCourseList()
+                responseModel.getCourses()
         );
     }
 
@@ -160,58 +161,69 @@ public class RecipeCourseUseCaseTest {
     public void newRequest_addTwoCourses_stateVALID_CHANGED() {
         // Arrange
         // arrange persistence model that represents data after adding first course
-        RecipeCourseUseCasePersistenceModel firstCoursePersistence = TestDataRecipeCourse.
+        RecipeCourseUseCasePersistenceModel expectedFirstCourseSave = TestDataRecipeCourse.
                 getNewActiveCourseOne();
         // Arrange persistence model that represents the archiving of the first course state
-        RecipeCourseUseCasePersistenceModel expectedArchivedCourseOne = TestDataRecipeCourse.
+        RecipeCourseUseCasePersistenceModel expectedFirstCourseArchived = TestDataRecipeCourse.
                 getNewArchivedCourseOne();
         // arrange persistence model that represents data after adding second course
-        RecipeCourseUseCasePersistenceModel secondCoursePersistence = TestDataRecipeCourse.
+        RecipeCourseUseCasePersistenceModel expectedSecondCourseSave = TestDataRecipeCourse.
                 getNewActiveCourseOneAndTwo();
 
         // initialise use case
-        simulateDataUnavailable(firstCoursePersistence);
+        simulateDataUnavailable(expectedFirstCourseSave);
 
         // add first course
         RecipeCourseUseCaseRequest addFirstCourseRequest = new RecipeCourseUseCaseRequest.Builder()
                 .basedOnResponse(onErrorResponse)
                 .setRequestModel(new RecipeCourseUseCaseRequestModel.Builder()
-                        .setCourseList(firstCoursePersistence.getCourses())
+                        .setCourses(expectedFirstCourseSave.getCourses())
                         .build())
                 .build();
         // arrange id and timestamp for first course save
-        when(idProviderMock.getUId()).thenReturn(firstCoursePersistence.getDataId());
-        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(firstCoursePersistence.getCreateDate());
+        when(idProviderMock.getUId()).thenReturn(expectedFirstCourseSave.getDataId());
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(expectedFirstCourseSave.getCreateDate());
 
         // execute add first course request
         SUT.execute(addFirstCourseRequest, new UseCaseCallbackImplementer());
 
         // verify first course saved correctly
-        verify(dataAccessMock).save(eq(firstCoursePersistence));
+        verify(dataAccessMock).save(eq(expectedFirstCourseSave));
 
         // add second course
         RecipeCourseUseCaseRequest addSecondCourseRequest = new RecipeCourseUseCaseRequest.Builder()
                 .basedOnResponse(onSuccessResponse)
                 .setRequestModel(new RecipeCourseUseCaseRequestModel.Builder()
-                        .setCourseList(secondCoursePersistence.getCourses())
+                        .setCourses(expectedSecondCourseSave.getCourses())
                         .build())
                 .build();
 
         // arrange timestamp for archiving of old persistence model
-        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(expectedArchivedCourseOne.getLastUpdate());
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(expectedFirstCourseArchived.getLastUpdate());
         // arrange new data id and timestamp for second course persistence save
-        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(secondCoursePersistence.getCreateDate());
-        when(idProviderMock.getUId()).thenReturn(secondCoursePersistence.getDataId());
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(expectedSecondCourseSave.getCreateDate());
+        when(idProviderMock.getUId()).thenReturn(expectedSecondCourseSave.getDataId());
 
         // Act
         // execute second course request
         SUT.execute(addSecondCourseRequest, new UseCaseCallbackImplementer());
 
         // Assert
-        // verify first persistence model archived
-        verify(dataAccessMock).save(eq(expectedArchivedCourseOne));
-        // verify second persistence course saved
-        verify(dataAccessMock).save(eq(secondCoursePersistence));
+        // verify correct models saved and archived
+        List<RecipeCourseUseCasePersistenceModel> expectedSavedModels = Arrays.asList(
+                expectedFirstCourseSave,
+                expectedFirstCourseArchived,
+                expectedSecondCourseSave
+        );
+        ArgumentCaptor<RecipeCourseUseCasePersistenceModel> ac =
+                ArgumentCaptor.forClass(RecipeCourseUseCasePersistenceModel.class);
+        verify(dataAccessMock, times(expectedSavedModels.size())).save(ac.capture());
+        List<RecipeCourseUseCasePersistenceModel> actualSavedModels = ac.getAllValues();
+
+        assertEquals(
+                expectedSavedModels,
+                actualSavedModels
+        );
 
         // assert response values
         UseCaseResponse<RecipeCourseUseCaseResponseModel> response = onSuccessResponse;
@@ -233,8 +245,8 @@ public class RecipeCourseUseCaseTest {
         );
 
         assertEquals(
-                secondCoursePersistence.getCourses(),
-                responseModel.getCourseList()
+                expectedSecondCourseSave.getCourses(),
+                responseModel.getCourses()
         );
     }
 
@@ -258,7 +270,7 @@ public class RecipeCourseUseCaseTest {
         RecipeCourseUseCaseRequest removeCourseRequest = new RecipeCourseUseCaseRequest.Builder()
                 .basedOnResponse(onSuccessResponse)
                 .setRequestModel(new RecipeCourseUseCaseRequestModel.Builder()
-                        .setCourseList(expectedModelSavedAfterCourseRemoved.getCourses())
+                        .setCourses(expectedModelSavedAfterCourseRemoved.getCourses())
                         .build())
                 .build();
 
@@ -303,7 +315,7 @@ public class RecipeCourseUseCaseTest {
 
         assertEquals(
                 expectedModelSavedAfterCourseRemoved.getCourses(),
-                responseModel.getCourseList()
+                responseModel.getCourses()
         );
     }
 
@@ -319,7 +331,7 @@ public class RecipeCourseUseCaseTest {
         RecipeCourseUseCaseRequest request = new RecipeCourseUseCaseRequest.Builder()
                 .basedOnResponse(onSuccessResponse)
                 .setRequestModel(new RecipeCourseUseCaseRequestModel.Builder()
-                        .setCourseList(new ArrayList<>())
+                        .setCourses(new ArrayList<>())
                         .build())
                 .build();
         // Act
@@ -346,7 +358,7 @@ public class RecipeCourseUseCaseTest {
                 actualFailReasons
         );
 
-        assertTrue(responseModel.getCourseList().isEmpty());
+        assertTrue(responseModel.getCourses().isEmpty());
     }
 
     @Test
@@ -389,7 +401,7 @@ public class RecipeCourseUseCaseTest {
 
         assertEquals(
                 expectedAllCoursesModel.getCourses(),
-                responseModel.getCourseList()
+                responseModel.getCourses()
         );
     }
 

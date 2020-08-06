@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.metadata;
+package com.example.peter.thekitchenmenu.domain.usecasenew.recipe.invoker.metadata;
 
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.componentstate.RecipeComponentStateEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.failreason.RecipeFailReasonEntity;
@@ -6,7 +6,7 @@ import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.meta
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.metadata.ComponentState;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.BaseDomainPersistenceModel;
-import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentName;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentNameName;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,22 +19,22 @@ import javax.annotation.Nonnull;
  * Represented in primitive form by {@link RecipeMetadataParentEntity},
  * {@link RecipeComponentStateEntity} & {@link RecipeFailReasonEntity}
  */
-public final class RecipeMetadataUseCasePersistenceModel
+public final class RecipeMacroMetadataUseCasePersistenceModel
         extends
         BaseDomainPersistenceModel {
 
     private ComponentState componentState;
-    private HashMap<RecipeComponentName, ComponentState> componentStates;
+    private HashMap<RecipeComponentNameName, ComponentState> componentStates;
     private List<FailReasons> failReasons;
 
 
-    private RecipeMetadataUseCasePersistenceModel(){}
+    private RecipeMacroMetadataUseCasePersistenceModel(){}
 
     public ComponentState getComponentState() {
         return componentState;
     }
 
-    public HashMap<RecipeComponentName, ComponentState> getComponentStates() {
+    public HashMap<RecipeComponentNameName, ComponentState> getComponentStates() {
         return componentStates;
     }
 
@@ -45,9 +45,9 @@ public final class RecipeMetadataUseCasePersistenceModel
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof RecipeMetadataUseCasePersistenceModel)) return false;
+        if (!(o instanceof RecipeMacroMetadataUseCasePersistenceModel)) return false;
 
-        RecipeMetadataUseCasePersistenceModel that = (RecipeMetadataUseCasePersistenceModel) o;
+        RecipeMacroMetadataUseCasePersistenceModel that = (RecipeMacroMetadataUseCasePersistenceModel) o;
 
         if (componentState != that.componentState) return false;
         if (!Objects.equals(componentStates, that.componentStates))
@@ -77,10 +77,10 @@ public final class RecipeMetadataUseCasePersistenceModel
 
     public static class Builder
             extends
-            PersistenceModelBuilder<Builder, RecipeMetadataUseCasePersistenceModel> {
+            PersistenceModelBuilder<Builder, RecipeMacroMetadataUseCasePersistenceModel> {
 
         public Builder() {
-            super(new RecipeMetadataUseCasePersistenceModel());
+            super(new RecipeMacroMetadataUseCasePersistenceModel());
         }
 
         @Override
@@ -96,7 +96,7 @@ public final class RecipeMetadataUseCasePersistenceModel
         }
 
         @Override
-        public Builder basedOnModel(RecipeMetadataUseCasePersistenceModel model) {
+        public Builder basedOnModel(RecipeMacroMetadataUseCasePersistenceModel model) {
             domainModel.dataId = model.getDataId();
             domainModel.domainId = model.getDomainId();
             domainModel.componentState = model.getComponentState();
@@ -112,7 +112,7 @@ public final class RecipeMetadataUseCasePersistenceModel
             return self();
         }
 
-        public Builder setComponentStates(HashMap<RecipeComponentName, ComponentState> componentStates) {
+        public Builder setComponentStates(HashMap<RecipeComponentNameName, ComponentState> componentStates) {
             domainModel.componentStates = componentStates;
             return self();
         }

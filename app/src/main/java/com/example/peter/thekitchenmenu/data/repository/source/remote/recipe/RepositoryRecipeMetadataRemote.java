@@ -1,12 +1,12 @@
 package com.example.peter.thekitchenmenu.data.repository.source.remote.recipe;
 
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
-import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.metadata.RecipeMetadataUseCasePersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.invoker.metadata.RecipeMacroMetadataUseCasePersistenceModel;
 
 import javax.annotation.Nonnull;
 
 public class RepositoryRecipeMetadataRemote
-        implements DomainDataAccess<RecipeMetadataUseCasePersistenceModel> {
+        implements DomainDataAccess<RecipeMacroMetadataUseCasePersistenceModel> {
 
     private static RepositoryRecipeMetadataRemote INSTANCE;
 
@@ -18,7 +18,7 @@ public class RepositoryRecipeMetadataRemote
 
     @Override
     public void getAll(
-            @Nonnull GetAllDomainModelsCallback<RecipeMetadataUseCasePersistenceModel> callback) {
+            @Nonnull GetAllDomainModelsCallback<RecipeMacroMetadataUseCasePersistenceModel> callback) {
         callback.onDomainModelsUnavailable();
 
     }
@@ -26,19 +26,19 @@ public class RepositoryRecipeMetadataRemote
     @Override
     public void getByDataId(
             @Nonnull String dataId,
-            @Nonnull GetDomainModelCallback<RecipeMetadataUseCasePersistenceModel> callback) {
+            @Nonnull GetDomainModelCallback<RecipeMacroMetadataUseCasePersistenceModel> callback) {
         callback.onPersistenceModelUnavailable();
     }
 
     @Override
     public void getByDomainId(
             @Nonnull String domainId,
-            @Nonnull GetDomainModelCallback<RecipeMetadataUseCasePersistenceModel> callback) {
+            @Nonnull GetDomainModelCallback<RecipeMacroMetadataUseCasePersistenceModel> callback) {
         callback.onPersistenceModelUnavailable();
     }
 
     @Override
-    public void save(@Nonnull RecipeMetadataUseCasePersistenceModel model) {
+    public void save(@Nonnull RecipeMacroMetadataUseCasePersistenceModel model) {
 
     }
 

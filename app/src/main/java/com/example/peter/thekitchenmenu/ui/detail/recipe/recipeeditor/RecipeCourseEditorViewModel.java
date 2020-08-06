@@ -3,7 +3,7 @@ package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor;
 import androidx.core.util.Pair;
 
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
-import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentName;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentNameName;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourseRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourseResponse;
@@ -39,7 +39,7 @@ public class RecipeCourseEditorViewModel extends ObservableViewModel {
 
         response = new RecipeCourseResponse.Builder().getDefault().build();
 
-        recipeMacro.registerComponentListener(new Pair<>(RecipeComponentName.COURSE,
+        recipeMacro.registerComponentListener(new Pair<>(RecipeComponentNameName.COURSE,
                 new CourseCallbackListener())
         );
     }

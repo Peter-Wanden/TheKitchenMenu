@@ -7,7 +7,7 @@ import com.example.peter.thekitchenmenu.domain.usecasenew.common.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityRequest;
 import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.identity.RecipeIdentityUseCaseRequestModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityResponse;
-import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentName;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentNameName;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
 
 import java.util.ArrayList;
@@ -62,7 +62,7 @@ public class RecipeIdentityEditorController
 
     void onStart() {
         view.registerListener(this);
-        recipe.registerComponentListener(new Pair<>(RecipeComponentName.IDENTITY, this));
+        recipe.registerComponentListener(new Pair<>(RecipeComponentNameName.IDENTITY, this));
         loadData();
     }
 
@@ -78,7 +78,7 @@ public class RecipeIdentityEditorController
 
     void onStop() {
         view.unregisterListener(this);
-        recipe.unregisterComponentListener(new Pair<>(RecipeComponentName.IDENTITY, this));
+        recipe.unregisterComponentListener(new Pair<>(RecipeComponentNameName.IDENTITY, this));
     }
 
     @Override

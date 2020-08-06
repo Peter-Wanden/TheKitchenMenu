@@ -1,36 +1,36 @@
-package com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.metadata;
+package com.example.peter.thekitchenmenu.domain.usecasenew.recipe.invoker.metadata;
 
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataResponse;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.metadata.ComponentState;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.BaseDomainModel;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.DomainModel;
-import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentName;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentNameName;
 
 import java.util.HashMap;
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public final class RecipeMetadataUseCaseRequestModel
+public final class RecipeMacroMetadataUseCaseRequestModel
         extends
         BaseDomainModel
         implements
         DomainModel.UseCaseRequestModel {
 
-    private HashMap<RecipeComponentName, ComponentState> componentStates;
+    private HashMap<RecipeComponentNameName, ComponentState> componentStates;
 
-    private RecipeMetadataUseCaseRequestModel(){}
+    private RecipeMacroMetadataUseCaseRequestModel(){}
 
-    public HashMap<RecipeComponentName, ComponentState> getComponentStates() {
+    public HashMap<RecipeComponentNameName, ComponentState> getComponentStates() {
         return componentStates;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof RecipeMetadataUseCaseRequestModel)) return false;
+        if (!(o instanceof RecipeMacroMetadataUseCaseRequestModel)) return false;
 
-        RecipeMetadataUseCaseRequestModel that = (RecipeMetadataUseCaseRequestModel) o;
+        RecipeMacroMetadataUseCaseRequestModel that = (RecipeMacroMetadataUseCaseRequestModel) o;
 
         return Objects.equals(componentStates, that.componentStates);
     }
@@ -52,14 +52,14 @@ public final class RecipeMetadataUseCaseRequestModel
             extends
             BaseDomainModelBuilder<
                     Builder,
-                    RecipeMetadataUseCaseRequestModel> {
+                    RecipeMacroMetadataUseCaseRequestModel> {
 
         public Builder() {
-            super(new RecipeMetadataUseCaseRequestModel());
+            super(new RecipeMacroMetadataUseCaseRequestModel());
         }
 
         @Override
-        public Builder basedOnModel(RecipeMetadataUseCaseRequestModel model) {
+        public Builder basedOnModel(RecipeMacroMetadataUseCaseRequestModel model) {
             domainModel.componentStates = model.componentStates;
             return null;
         }
@@ -75,7 +75,7 @@ public final class RecipeMetadataUseCaseRequestModel
             return self();
         }
 
-        public Builder setComponentStates(HashMap<RecipeComponentName,
+        public Builder setComponentStates(HashMap<RecipeComponentNameName,
                 ComponentState> componentStates) {
             domainModel.componentStates = componentStates;
             return self();

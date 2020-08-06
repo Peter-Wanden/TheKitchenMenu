@@ -5,7 +5,7 @@ import com.example.peter.thekitchenmenu.data.repository.recipe.duration.TestData
 import com.example.peter.thekitchenmenu.data.repository.recipe.identity.TestDataRecipeIdentity;
 import com.example.peter.thekitchenmenu.data.repository.recipe.metadata.TestDataRecipeMetadata;
 import com.example.peter.thekitchenmenu.data.repository.recipe.portions.TestDataRecipePortions;
-import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.metadata.RecipeMetadataUseCasePersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.invoker.metadata.RecipeMacroMetadataUseCasePersistenceModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.RecipeTestBase;
 
@@ -27,7 +27,7 @@ public class RecipeListTestRecipeHelper {
     // endregion constants -------------------------------------------------------------------------
 
     // region helper fields ------------------------------------------------------------------------
-    private List<RecipeMetadataUseCasePersistenceModel> metadataModels;
+    private List<RecipeMacroMetadataUseCasePersistenceModel> metadataModels;
 
     private List<RecipeTestBase> recipeTestBases;
     // endregion helper fields ---------------------------------------------------------------------
@@ -39,7 +39,7 @@ public class RecipeListTestRecipeHelper {
         metadataModels = new ArrayList<>();
     }
 
-    void createRecipeMocksForMetadataModels(List<RecipeMetadataUseCasePersistenceModel> metadataModels) {
+    void createRecipeMocksForMetadataModels(List<RecipeMacroMetadataUseCasePersistenceModel> metadataModels) {
         this.metadataModels = metadataModels;
         this.metadataModels.forEach((metadataModel) -> {
             RecipeTestBase recipeTestBase = new RecipeTestBase();
@@ -59,7 +59,7 @@ public class RecipeListTestRecipeHelper {
         for (int i = 0; i < recipeTestBases.size() -1; i++) {
 
             RecipeTestBase recipeTestBase = recipeTestBases.get(i);
-            RecipeMetadataUseCasePersistenceModel metadataModel = metadataModels.get(i);
+            RecipeMacroMetadataUseCasePersistenceModel metadataModel = metadataModels.get(i);
             String recipeDomainId = metadataModel.getDomainId();
 
             // RecipeMetadata

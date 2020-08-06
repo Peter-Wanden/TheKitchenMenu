@@ -29,23 +29,29 @@ public final class RecipeIdentityUseCasePersistenceModel
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof RecipeIdentityUseCasePersistenceModel)) return false;
-        if (!super.equals(o)) return false;
+
         RecipeIdentityUseCasePersistenceModel that = (RecipeIdentityUseCasePersistenceModel) o;
-        return Objects.equals(title, that.title) &&
-                Objects.equals(description, that.description);
+
+        if (!Objects.equals(title, that.title)) return false;
+        return Objects.equals(description, that.description);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), title, description);
+        int result = title != null ? title.hashCode() : 0;
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        return result;
     }
 
     @Nonnull
     @Override
     public String toString() {
-        return "RecipeIdentityPersistenceModel{" +
-                "title='" + title + '\'' +
-                ", description='" + description + '\'' +
+        return "RecipeIdentityUseCasePersistenceModel{" +
+                "description='" + description + '\'' +
+                ", dataId='" + dataId + '\'' +
+                ", domainId='" + domainId + '\'' +
+                ", createDate=" + createDate +
+                ", lastUpdate=" + lastUpdate +
                 '}';
     }
 

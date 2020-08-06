@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.dataadapter;
 
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.componentstate.RecipeComponentStateEntity;
-import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentName;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentNameName;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.metadata.ComponentState;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
@@ -21,12 +21,12 @@ public class ComponentStateConverter {
     }
 
     public List<RecipeComponentStateEntity> convertToEntities(
-            @Nonnull HashMap<RecipeComponentName, ComponentState> componentStates,
+            @Nonnull HashMap<RecipeComponentNameName, ComponentState> componentStates,
             String parentId) {
 
         List<RecipeComponentStateEntity> entities = new ArrayList<>();
 
-        for (RecipeComponentName componentName : componentStates.keySet()) {
+        for (RecipeComponentNameName componentName : componentStates.keySet()) {
             String dataId = idProvider.getUId();
             int componentNameId = componentName.getId();
             int componentStateId = componentStates.get(componentName).id();

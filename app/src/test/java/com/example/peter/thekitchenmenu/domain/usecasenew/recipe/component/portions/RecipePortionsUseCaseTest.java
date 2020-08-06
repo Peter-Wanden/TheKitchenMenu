@@ -26,13 +26,16 @@ import java.util.List;
 import static com.example.peter.thekitchenmenu.data.repository.recipe.portions.TestDataRecipePortions.MIN_SERVINGS;
 import static com.example.peter.thekitchenmenu.data.repository.recipe.portions.TestDataRecipePortions.MIN_SITTINGS;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 public class RecipePortionsUseCaseTest {
 
-    private static final String TAG = "tkm-" + RecipePortionsUseCaseTest.class.getSimpleName() +
-            ": ";
+//    private static final String TAG = "tkm-" + RecipePortionsUseCaseTest.class.getSimpleName() +
+//            ": ";
 
     // region constants ----------------------------------------------------------------------------
     public static final int MAX_SERVINGS = TestDataRecipePortions.MAX_SERVINGS;
@@ -422,7 +425,7 @@ public class RecipePortionsUseCaseTest {
 
         // Arrange
         // - request with valid domain data, values persisted
-        RecipePortionsUseCasePersistenceModel expectedModelPersisted =
+        RecipePortionsUseCasePersistenceModel expectedFirstSavedModel =
                 new RecipePortionsUseCasePersistenceModel.Builder()
                         .basedOnModel(initialModel)
                         .setDataId("dataId-recipePortions-id2")
@@ -435,27 +438,27 @@ public class RecipePortionsUseCaseTest {
         RecipePortionsUseCaseRequest validRequest = new RecipePortionsUseCaseRequest.Builder()
                 .basedOnResponse(onErrorResponse)
                 .setRequestModel(new RecipePortionsUseCaseRequestModel.Builder()
-                        .setServings(expectedModelPersisted.getServings())
-                        .setSittings(expectedModelPersisted.getSittings())
+                        .setServings(expectedFirstSavedModel.getServings())
+                        .setSittings(expectedFirstSavedModel.getSittings())
                         .build())
                 .build();
 
         // data id and timestamp for save
-        when(idProviderMock.getUId()).thenReturn(expectedModelPersisted.getDataId());
-        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(expectedModelPersisted.getCreateDate());
+        when(idProviderMock.getUId()).thenReturn(expectedFirstSavedModel.getDataId());
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(expectedFirstSavedModel.getCreateDate());
 
         // Act
         SUT.execute(validRequest, new UseCaseCallbackImplementer());
 
         // Assert
-        verify(dataAccessMock).save(eq(expectedModelPersisted));
-        assertDomainData(expectedModelPersisted, onSuccessResponse.getResponseModel());
+        verify(dataAccessMock).save(eq(expectedFirstSavedModel));
+        assertDomainData(expectedFirstSavedModel, onSuccessResponse.getResponseModel());
 
         // Arrange
         // - request with invalid data, values not persisted
         RecipePortionsUseCasePersistenceModel invalidModel =
                 new RecipePortionsUseCasePersistenceModel.Builder()
-                        .basedOnModel(expectedModelPersisted)
+                        .basedOnModel(expectedFirstSavedModel)
                         .setSittings(MIN_SITTINGS - 1)
                         .setServings(MIN_SERVINGS - 1)
                         .build();
@@ -477,15 +480,15 @@ public class RecipePortionsUseCaseTest {
 
         // Arrange
         // - finally, request with valid data, old model archived, new model saved
-        RecipePortionsUseCasePersistenceModel expectedArchivedModel =
+        RecipePortionsUseCasePersistenceModel expectedFirstModelArchived =
                 new RecipePortionsUseCasePersistenceModel.Builder()
-                        .basedOnModel(expectedModelPersisted)
+                        .basedOnModel(expectedFirstSavedModel)
                         .setLastUpdate(20L)
                         .build();
 
         RecipePortionsUseCasePersistenceModel expectedNewSavedModel =
                 new RecipePortionsUseCasePersistenceModel.Builder()
-                        .basedOnModel(expectedArchivedModel)
+                        .basedOnModel(expectedFirstModelArchived)
                         .setDataId("dataId-recipePortions-id1000")
                         .setServings(7)
                         .setSittings(7)
@@ -505,7 +508,7 @@ public class RecipePortionsUseCaseTest {
         when(idProviderMock.getUId()).thenReturn(expectedNewSavedModel.getDataId());
         // arrange two timestamps, one for archived model and one for saved model
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
-                expectedArchivedModel.getLastUpdate(),
+                expectedFirstModelArchived.getLastUpdate(),
                 expectedNewSavedModel.getCreateDate()
         );
 
@@ -513,10 +516,23 @@ public class RecipePortionsUseCaseTest {
         SUT.execute(lastValidRequest, new UseCaseCallbackImplementer());
 
         // Assert
-        // assert old valid persistence model archived
-        verify(dataAccessMock).save(eq(expectedArchivedModel));
-        // assert new valid persistence model saved
-        verify(dataAccessMock).save(eq(expectedNewSavedModel));
+        // assert old persistence model archived and new model saved
+        List<RecipePortionsUseCasePersistenceModel> expectedSavedModels = Arrays.asList(
+                expectedFirstSavedModel,
+                expectedFirstModelArchived,
+                expectedNewSavedModel
+        );
+
+        ArgumentCaptor<RecipePortionsUseCasePersistenceModel> ac =
+                ArgumentCaptor.forClass(RecipePortionsUseCasePersistenceModel.class);
+        verify(dataAccessMock, times(expectedSavedModels.size())).save(ac.capture());
+
+        List<RecipePortionsUseCasePersistenceModel> actualSavedModels = ac.getAllValues();
+
+        assertEquals(
+                expectedSavedModels,
+                actualSavedModels
+        );
 
         // Assert response values
         UseCaseResponse<RecipePortionsUseCaseResponseModel> response = onSuccessResponse;

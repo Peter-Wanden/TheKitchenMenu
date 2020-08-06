@@ -3,8 +3,6 @@ package com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.cour
 import com.example.peter.thekitchenmenu.data.repository.recipe.RecipeCourseUseCaseDataAccess;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.UseCaseResult;
 
-import java.util.ArrayList;
-
 public class RecipeCourseUseCase
         extends
         UseCaseResult<
@@ -21,14 +19,9 @@ public class RecipeCourseUseCase
 
     @Override
     protected void beginProcessingDomainModel() {
-        if (useCaseModel.isEmpty()) {
+        if (useCaseModel.getCourses().isEmpty()) {
             useCaseFailReasons.add(RecipeCourseUseCaseFailReason.NO_COURSE_SELECTED);
         }
         domainModelProcessingComplete();
-    }
-
-    @Override
-    protected RecipeCourseUseCaseModel createUseCaseModelFromDefaultValues() {
-        return new RecipeCourseUseCaseModel(new ArrayList<>());
     }
 }

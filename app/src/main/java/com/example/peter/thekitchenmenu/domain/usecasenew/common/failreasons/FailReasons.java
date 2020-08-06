@@ -3,7 +3,7 @@ package com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons;
 import com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.ConversionFactorStatus;
 import com.example.peter.thekitchenmenu.domain.usecase.ingredient.Ingredient;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse;
-import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.metadata.RecipeMetadataUseCaseFailReason;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.invoker.RecipeMacroUseCaseFailReason;
 import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.portions.RecipePortionsUseCaseFailReason;
 import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.duration.RecipeDurationUseCaseFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentity;
@@ -26,7 +26,7 @@ import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValida
  * {@link RecipeDurationUseCaseFailReason} 250-299
  * {@link RecipeIdentity.FailReason} 300-349
  * {@link RecipePortionsUseCaseFailReason} 350-399
- * {@link RecipeMetadataUseCaseFailReason} 400-449
+ * {@link RecipeMacroUseCaseFailReason} 400-449
  * {@link RecipeIngredient.FailReason} 450-499
  * {@link TextValidator.FailReason} 500-549
  *

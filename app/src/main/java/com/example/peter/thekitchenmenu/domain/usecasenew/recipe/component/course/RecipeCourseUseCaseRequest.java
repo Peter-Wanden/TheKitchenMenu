@@ -9,23 +9,26 @@ public final class RecipeCourseUseCaseRequest
         extends
         UseCaseRequest<RecipeCourseUseCaseRequestModel> {
 
+    private RecipeCourseUseCaseRequest() {}
+
     public static class Builder
             extends
             UseCaseRequest.Builder<
-            Builder,
-            RecipeCourseUseCaseRequest,
-            RecipeCourseUseCaseRequestModel> {
+                    Builder,
+                    RecipeCourseUseCaseRequest,
+                    RecipeCourseUseCaseRequestModel> {
 
         public Builder() {
             super(new RecipeCourseUseCaseRequest());
         }
 
-        public Builder basedOnResponse(@Nonnull UseCaseResponse<RecipeCourseUseCaseResponseModel> response) {
+        public Builder basedOnResponse(
+                @Nonnull UseCaseResponse<RecipeCourseUseCaseResponseModel> response) {
             useCaseRequest.dataId = response.getDataId();
             useCaseRequest.domainId = response.getDomainId();
 
             useCaseRequest.requestModel = new RecipeCourseUseCaseRequestModel.Builder()
-                    .setCourseList(response.getResponseModel().getCourseList())
+                    .basedOnResponseModel(response.getResponseModel())
                     .build();
 
             return self();

@@ -6,7 +6,7 @@ import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.meta
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.failreason.RecipeFailReasonsLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.parent.RecipeMetadataParentLocalDataSource;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.FailReasons;
-import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.metadata.RecipeMetadataUseCasePersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.invoker.metadata.RecipeMacroMetadataUseCasePersistenceModel;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
 import java.util.ArrayList;
@@ -43,17 +43,17 @@ public class RecipeMetadataLocalSaveAdapter {
         componentStateConverter = new ComponentStateConverter();
     }
 
-    public void save(@Nonnull RecipeMetadataUseCasePersistenceModel model) {
+    public void save(@Nonnull RecipeMacroMetadataUseCasePersistenceModel model) {
         saveParentEntity(model);
         saveComponentStates(model);
         saveFailReasons(model);
     }
 
-    private void saveParentEntity(RecipeMetadataUseCasePersistenceModel model) {
+    private void saveParentEntity(RecipeMacroMetadataUseCasePersistenceModel model) {
         parentDataSource.save(parentConverter.convertParentDomainModelToEntity(model));
     }
 
-    private void saveComponentStates(RecipeMetadataUseCasePersistenceModel model) {
+    private void saveComponentStates(RecipeMacroMetadataUseCasePersistenceModel model) {
         List<RecipeComponentStateEntity> entities = componentStateConverter.
                 convertToEntities(
                         model.getComponentStates(),
@@ -63,7 +63,7 @@ public class RecipeMetadataLocalSaveAdapter {
         componentStateDataSource.save(entities.toArray(new RecipeComponentStateEntity[0]));
     }
 
-    private void saveFailReasons(RecipeMetadataUseCasePersistenceModel model) {
+    private void saveFailReasons(RecipeMacroMetadataUseCasePersistenceModel model) {
         List<RecipeFailReasonEntity> entityList = new ArrayList<>();
 
         for (FailReasons f : model.getFailReasons()) {

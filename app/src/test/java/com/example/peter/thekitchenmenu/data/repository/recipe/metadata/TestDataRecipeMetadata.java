@@ -1,8 +1,7 @@
 package com.example.peter.thekitchenmenu.data.repository.recipe.metadata;
 
-import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.CommonFailReason;
-import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.metadata.RecipeMetadataUseCasePersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.invoker.metadata.RecipeMacroMetadataUseCasePersistenceModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,10 +13,10 @@ import java.util.Set;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataId.NO_ID;
 
-import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentName;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentNameName;
 
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.metadata.ComponentState;
-import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.metadata.RecipeMetadataUseCaseFailReason;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.invoker.RecipeMacroUseCaseFailReason;
 
 /**
  * Persistence stores the state of an object (data model) each time it changes. Therefore there can
@@ -28,16 +27,16 @@ public class TestDataRecipeMetadata {
 
     public static final String NEW_RECIPE_DOMAIN_ID = getInvalidDefault().getDomainId();
 
-    public static final Set<RecipeComponentName> requiredComponentNames = new HashSet<>();
+    public static final Set<RecipeComponentNameName> requiredComponentNames = new HashSet<>();
     static {
-        requiredComponentNames.add(RecipeComponentName.COURSE);
-        requiredComponentNames.add(RecipeComponentName.IDENTITY);
-        requiredComponentNames.add(RecipeComponentName.PORTIONS);
+        requiredComponentNames.add(RecipeComponentNameName.COURSE);
+        requiredComponentNames.add(RecipeComponentNameName.IDENTITY);
+        requiredComponentNames.add(RecipeComponentNameName.PORTIONS);
     }
 
-    public static final Set<RecipeComponentName> additionalComponentNames = new HashSet<>();
+    public static final Set<RecipeComponentNameName> additionalComponentNames = new HashSet<>();
     static {
-        additionalComponentNames.add(RecipeComponentName.DURATION);
+        additionalComponentNames.add(RecipeComponentNameName.DURATION);
     }
 
     /*
@@ -46,14 +45,14 @@ public class TestDataRecipeMetadata {
     This state should never be saved. It is stored in this persistence model as it's a
     convenient place to retrieve values for testing.
      */
-    public static RecipeMetadataUseCasePersistenceModel getDefaultState() {
-        return new RecipeMetadataUseCasePersistenceModel.Builder().
+    public static RecipeMacroMetadataUseCasePersistenceModel getDefaultState() {
+        return new RecipeMacroMetadataUseCasePersistenceModel.Builder().
                 setDataId(NO_ID).
                 setDomainId(NO_ID).
                 setComponentState(ComponentState.INVALID_DEFAULT).
                 setComponentStates(new HashMap<>()). // no component state data received
                 setFailReasons(Arrays.asList(
-                        RecipeMetadataUseCaseFailReason.MISSING_REQUIRED_COMPONENTS,
+                        RecipeMacroUseCaseFailReason.MISSING_REQUIRED_COMPONENTS,
                         CommonFailReason.DATA_UNAVAILABLE)).
                 setCreateDate(0L).
                 setLastUpdate(0L).
@@ -66,8 +65,8 @@ public class TestDataRecipeMetadata {
       - is a newly created recipe
       - has one or more components reporting INVALID_DEFAULT state.
      */
-    public static RecipeMetadataUseCasePersistenceModel getInvalidDefault() {
-        return new RecipeMetadataUseCasePersistenceModel.Builder().
+    public static RecipeMacroMetadataUseCasePersistenceModel getInvalidDefault() {
+        return new RecipeMacroMetadataUseCasePersistenceModel.Builder().
                 setDataId(NO_ID).
                 setDomainId("domainId-recipeMetadata-id0").
                 setComponentState(ComponentState.INVALID_DEFAULT).
@@ -86,15 +85,15 @@ public class TestDataRecipeMetadata {
         - one or more required components are missing
     It is valid to save as the user will have been entering data to get to this state
      */
-    public static RecipeMetadataUseCasePersistenceModel getInvalidMissingComponents() {
-        return new RecipeMetadataUseCasePersistenceModel.Builder().
+    public static RecipeMacroMetadataUseCasePersistenceModel getInvalidMissingComponents() {
+        return new RecipeMacroMetadataUseCasePersistenceModel.Builder().
                 setDataId("dataId-recipeMetadata-id0").
                 setDomainId(getInvalidDefault().getDomainId()).
                 setComponentState(ComponentState.INVALID_CHANGED). // changed from invalid default
                 setComponentStates(getInvalidMissingComponentsStates()).
                 setFailReasons(Arrays.asList(
-                        RecipeMetadataUseCaseFailReason.MISSING_REQUIRED_COMPONENTS,
-                        RecipeMetadataUseCaseFailReason.INVALID_COMPONENTS
+                        RecipeMacroUseCaseFailReason.MISSING_REQUIRED_COMPONENTS,
+                        RecipeMacroUseCaseFailReason.INVALID_COMPONENTS
                 )).
                 setCreateDate(10L).
                 setLastUpdate(10L).
@@ -108,12 +107,12 @@ public class TestDataRecipeMetadata {
      - all additional components are reporting DEFAULT or UNCHANGED
      - has one or more components reporting INVALID
      */
-    public static RecipeMetadataUseCasePersistenceModel getInvalidUnchanged() {
-        return new RecipeMetadataUseCasePersistenceModel.Builder().
+    public static RecipeMacroMetadataUseCasePersistenceModel getInvalidUnchanged() {
+        return new RecipeMacroMetadataUseCasePersistenceModel.Builder().
                 setDataId("dataId-recipeMetadata-id1").
                 setDomainId(getInvalidDefault().getDomainId()).
                 setComponentState(ComponentState.INVALID_CHANGED). // changed from invalid default
-                setFailReasons(Collections.singletonList(RecipeMetadataUseCaseFailReason.INVALID_COMPONENTS)).
+                setFailReasons(Collections.singletonList(RecipeMacroUseCaseFailReason.INVALID_COMPONENTS)).
                 setComponentStates(getInvalidUnchangedComponentStates()).
                 setCreateDate(20L).
                 setLastUpdate(20L).
@@ -129,12 +128,12 @@ public class TestDataRecipeMetadata {
     2. one or more components is reporting INVALID
     3. one or more components is reporting CHANGED
      */
-    public static RecipeMetadataUseCasePersistenceModel getInvalidChanged() {
-        return new RecipeMetadataUseCasePersistenceModel.Builder().
+    public static RecipeMacroMetadataUseCasePersistenceModel getInvalidChanged() {
+        return new RecipeMacroMetadataUseCasePersistenceModel.Builder().
                 setDataId("dataId-recipeMetadata-Id2").
                 setDomainId(getInvalidDefault().getDomainId()).
                 setComponentState(ComponentState.INVALID_CHANGED).
-                setFailReasons(Collections.singletonList(RecipeMetadataUseCaseFailReason.INVALID_COMPONENTS)).
+                setFailReasons(Collections.singletonList(RecipeMacroUseCaseFailReason.INVALID_COMPONENTS)).
                 setComponentStates(getInvalidChangedComponentStates()).
                 setCreateDate(30L).
                 setLastUpdate(30L).
@@ -147,8 +146,8 @@ public class TestDataRecipeMetadata {
     3. all additional components are reporting valid or DEFAULT
     4. At least one component is reporting CHANGED
      */
-    public static RecipeMetadataUseCasePersistenceModel getValidChanged() {
-        return new RecipeMetadataUseCasePersistenceModel.Builder().
+    public static RecipeMacroMetadataUseCasePersistenceModel getValidChanged() {
+        return new RecipeMacroMetadataUseCasePersistenceModel.Builder().
                 setDataId("dataId-recipeMetadata-id5").
                 setDomainId(getInvalidDefault().getDomainId()).
                 setComponentState(ComponentState.VALID_CHANGED).
@@ -165,8 +164,8 @@ public class TestDataRecipeMetadata {
      2. has all components report their data valid
      3. remains unchanged by the current session.
      */
-    public static RecipeMetadataUseCasePersistenceModel getValidUnchanged() {
-        return new RecipeMetadataUseCasePersistenceModel.Builder().
+    public static RecipeMacroMetadataUseCasePersistenceModel getValidUnchanged() {
+        return new RecipeMacroMetadataUseCasePersistenceModel.Builder().
                 setDataId("dataId-recipeMetadata-Id6").
                 setDomainId("domainId-recipe-Id2").
                 setComponentState(ComponentState.VALID_UNCHANGED).
@@ -181,8 +180,8 @@ public class TestDataRecipeMetadata {
     Represents a valid recipe created using an user Id that is different from the one in the 
     current session.
      */
-    public static RecipeMetadataUseCasePersistenceModel getValidFromAnotherUser() {
-        return new RecipeMetadataUseCasePersistenceModel.Builder().
+    public static RecipeMacroMetadataUseCasePersistenceModel getValidFromAnotherUser() {
+        return new RecipeMacroMetadataUseCasePersistenceModel.Builder().
                 setDataId("dataId-recipeMetadata-Id7").
                 setDomainId("domainId-recipe-Id20").
                 setComponentState(ComponentState.VALID_UNCHANGED).
@@ -197,12 +196,12 @@ public class TestDataRecipeMetadata {
     Represents an invalid recipe created using an user Id that is different from the one in the 
     current session.  
      */
-    public static RecipeMetadataUseCasePersistenceModel getInvalidFromAnotherUser() {
-        return new RecipeMetadataUseCasePersistenceModel.Builder().
+    public static RecipeMacroMetadataUseCasePersistenceModel getInvalidFromAnotherUser() {
+        return new RecipeMacroMetadataUseCasePersistenceModel.Builder().
                 setDataId(getValidFromAnotherUser().getDataId()).
                 setDomainId("domainId-recipe-Id21").
                 setComponentState(ComponentState.INVALID_UNCHANGED).
-                setFailReasons(Collections.singletonList(RecipeMetadataUseCaseFailReason.INVALID_COMPONENTS)).
+                setFailReasons(Collections.singletonList(RecipeMacroUseCaseFailReason.INVALID_COMPONENTS)).
                 setComponentStates(getInvalidUnchangedComponentStates()).
                 setCreateDate(80L).
                 setLastUpdate(90L).
@@ -213,9 +212,9 @@ public class TestDataRecipeMetadata {
     Represents a valid recipe that has been copied from another user to the user in the 
     current session.  
      */
-    public static RecipeMetadataUseCasePersistenceModel getValidCopied() {
-        RecipeMetadataUseCasePersistenceModel validParentFromAnotherUser = getValidFromAnotherUser();
-        return new RecipeMetadataUseCasePersistenceModel.Builder().
+    public static RecipeMacroMetadataUseCasePersistenceModel getValidCopied() {
+        RecipeMacroMetadataUseCasePersistenceModel validParentFromAnotherUser = getValidFromAnotherUser();
+        return new RecipeMacroMetadataUseCasePersistenceModel.Builder().
                 setDataId("dataId-recipeMetadata-Id30").
                 setDomainId("domainId-recipe-Id30").
                 setComponentState(validParentFromAnotherUser.getComponentState()).
@@ -230,9 +229,9 @@ public class TestDataRecipeMetadata {
     Represents an invalid recipe that has been copied from another user to the user in the 
     current session.
      */
-    public static RecipeMetadataUseCasePersistenceModel getInvalidCopied() {
-        RecipeMetadataUseCasePersistenceModel invalidParentFromAnotherUser = getInvalidFromAnotherUser();
-        return new RecipeMetadataUseCasePersistenceModel.Builder().
+    public static RecipeMacroMetadataUseCasePersistenceModel getInvalidCopied() {
+        RecipeMacroMetadataUseCasePersistenceModel invalidParentFromAnotherUser = getInvalidFromAnotherUser();
+        return new RecipeMacroMetadataUseCasePersistenceModel.Builder().
                 setDataId("dataId-recipeMetadata-Idd31").
                 setDomainId("domainId-recipe-Id40").
                 setComponentState(invalidParentFromAnotherUser.getComponentState()).
@@ -244,68 +243,68 @@ public class TestDataRecipeMetadata {
     }
 
     // Missing required component recipe identity
-    private static HashMap<RecipeComponentName, ComponentState> getInvalidMissingComponentsStates() {
-        HashMap<RecipeComponentName, ComponentState> componentStates = new HashMap<>();
-        componentStates.put(RecipeComponentName.COURSE, ComponentState.INVALID_UNCHANGED);
-        componentStates.put(RecipeComponentName.DURATION, ComponentState.VALID_UNCHANGED);
-        componentStates.put(RecipeComponentName.PORTIONS, ComponentState.INVALID_UNCHANGED);
+    private static HashMap<RecipeComponentNameName, ComponentState> getInvalidMissingComponentsStates() {
+        HashMap<RecipeComponentNameName, ComponentState> componentStates = new HashMap<>();
+        componentStates.put(RecipeComponentNameName.COURSE, ComponentState.INVALID_UNCHANGED);
+        componentStates.put(RecipeComponentNameName.DURATION, ComponentState.VALID_UNCHANGED);
+        componentStates.put(RecipeComponentNameName.PORTIONS, ComponentState.INVALID_UNCHANGED);
         return componentStates;
     }
 
     // Default required components
-    private static HashMap<RecipeComponentName, ComponentState> getDefaultRequiredComponents() {
-        HashMap<RecipeComponentName, ComponentState> defaultComponentStates = new HashMap<>();
+    private static HashMap<RecipeComponentNameName, ComponentState> getDefaultRequiredComponents() {
+        HashMap<RecipeComponentNameName, ComponentState> defaultComponentStates = new HashMap<>();
         requiredComponentNames.forEach(componentName ->
                 defaultComponentStates.put(componentName, ComponentState.INVALID_UNCHANGED)
         );
         return defaultComponentStates;
     }
 
-    private static HashMap<RecipeComponentName, ComponentState> getDefaultComponentStates() {
-        HashMap<RecipeComponentName, ComponentState> defaultComponentStates = new HashMap<>();
-        defaultComponentStates.put(RecipeComponentName.COURSE, ComponentState.INVALID_DEFAULT);
-        defaultComponentStates.put(RecipeComponentName.IDENTITY, ComponentState.INVALID_DEFAULT);
-        defaultComponentStates.put(RecipeComponentName.PORTIONS, ComponentState.VALID_DEFAULT);
+    private static HashMap<RecipeComponentNameName, ComponentState> getDefaultComponentStates() {
+        HashMap<RecipeComponentNameName, ComponentState> defaultComponentStates = new HashMap<>();
+        defaultComponentStates.put(RecipeComponentNameName.COURSE, ComponentState.INVALID_DEFAULT);
+        defaultComponentStates.put(RecipeComponentNameName.IDENTITY, ComponentState.INVALID_DEFAULT);
+        defaultComponentStates.put(RecipeComponentNameName.PORTIONS, ComponentState.VALID_DEFAULT);
         return defaultComponentStates;
     }
 
-    private static HashMap<RecipeComponentName, ComponentState> getInvalidUnchangedComponentStates() {
-        HashMap<RecipeComponentName, ComponentState> componentStates = new HashMap<>();
-        componentStates.put(RecipeComponentName.COURSE, ComponentState.INVALID_UNCHANGED);
-        componentStates.put(RecipeComponentName.DURATION, ComponentState.INVALID_UNCHANGED);
-        componentStates.put(RecipeComponentName.IDENTITY, ComponentState.INVALID_UNCHANGED);
-        componentStates.put(RecipeComponentName.PORTIONS, ComponentState.INVALID_UNCHANGED);
+    private static HashMap<RecipeComponentNameName, ComponentState> getInvalidUnchangedComponentStates() {
+        HashMap<RecipeComponentNameName, ComponentState> componentStates = new HashMap<>();
+        componentStates.put(RecipeComponentNameName.COURSE, ComponentState.INVALID_UNCHANGED);
+        componentStates.put(RecipeComponentNameName.DURATION, ComponentState.INVALID_UNCHANGED);
+        componentStates.put(RecipeComponentNameName.IDENTITY, ComponentState.INVALID_UNCHANGED);
+        componentStates.put(RecipeComponentNameName.PORTIONS, ComponentState.INVALID_UNCHANGED);
         return componentStates;
     }
 
-    private static HashMap<RecipeComponentName, ComponentState> getInvalidChangedComponentStates() {
-        HashMap<RecipeComponentName, ComponentState> s = new HashMap<>();
-        s.put(RecipeComponentName.COURSE, ComponentState.VALID_CHANGED);
-        s.put(RecipeComponentName.IDENTITY, ComponentState.VALID_UNCHANGED);
-        s.put(RecipeComponentName.PORTIONS, ComponentState.VALID_DEFAULT);
-        s.put(RecipeComponentName.DURATION, ComponentState.INVALID_CHANGED);
+    private static HashMap<RecipeComponentNameName, ComponentState> getInvalidChangedComponentStates() {
+        HashMap<RecipeComponentNameName, ComponentState> s = new HashMap<>();
+        s.put(RecipeComponentNameName.COURSE, ComponentState.VALID_CHANGED);
+        s.put(RecipeComponentNameName.IDENTITY, ComponentState.VALID_UNCHANGED);
+        s.put(RecipeComponentNameName.PORTIONS, ComponentState.VALID_DEFAULT);
+        s.put(RecipeComponentNameName.DURATION, ComponentState.INVALID_CHANGED);
         return s;
     }
 
-    private static HashMap<RecipeComponentName, ComponentState> getValidChangedComponentStates() {
-        HashMap<RecipeComponentName, ComponentState> s = new HashMap<>();
-        s.put(RecipeComponentName.COURSE, ComponentState.VALID_CHANGED);
-        s.put(RecipeComponentName.DURATION, ComponentState.VALID_CHANGED);
-        s.put(RecipeComponentName.IDENTITY, ComponentState.VALID_CHANGED);
-        s.put(RecipeComponentName.PORTIONS, ComponentState.VALID_CHANGED);
+    private static HashMap<RecipeComponentNameName, ComponentState> getValidChangedComponentStates() {
+        HashMap<RecipeComponentNameName, ComponentState> s = new HashMap<>();
+        s.put(RecipeComponentNameName.COURSE, ComponentState.VALID_CHANGED);
+        s.put(RecipeComponentNameName.DURATION, ComponentState.VALID_CHANGED);
+        s.put(RecipeComponentNameName.IDENTITY, ComponentState.VALID_CHANGED);
+        s.put(RecipeComponentNameName.PORTIONS, ComponentState.VALID_CHANGED);
         return s;
     }
 
-    private static HashMap<RecipeComponentName, ComponentState> getValidUnchangedComponentStates() {
-        HashMap<RecipeComponentName, ComponentState> s = new HashMap<>();
-        s.put(RecipeComponentName.COURSE, ComponentState.VALID_UNCHANGED);
-        s.put(RecipeComponentName.DURATION, ComponentState.VALID_UNCHANGED);
-        s.put(RecipeComponentName.IDENTITY, ComponentState.VALID_UNCHANGED);
-        s.put(RecipeComponentName.PORTIONS, ComponentState.VALID_UNCHANGED);
+    private static HashMap<RecipeComponentNameName, ComponentState> getValidUnchangedComponentStates() {
+        HashMap<RecipeComponentNameName, ComponentState> s = new HashMap<>();
+        s.put(RecipeComponentNameName.COURSE, ComponentState.VALID_UNCHANGED);
+        s.put(RecipeComponentNameName.DURATION, ComponentState.VALID_UNCHANGED);
+        s.put(RecipeComponentNameName.IDENTITY, ComponentState.VALID_UNCHANGED);
+        s.put(RecipeComponentNameName.PORTIONS, ComponentState.VALID_UNCHANGED);
         return s;
     }
 
-    public static List<RecipeMetadataUseCasePersistenceModel> getAll() {
+    public static List<RecipeMacroMetadataUseCasePersistenceModel> getAll() {
         return Arrays.asList(
                 getInvalidDefault(),
                 getInvalidUnchanged(),
@@ -319,9 +318,9 @@ public class TestDataRecipeMetadata {
         );
     }
 
-    public static List<RecipeMetadataUseCasePersistenceModel> getAllByDomainId(String domainId) {
-        List<RecipeMetadataUseCasePersistenceModel> models = new ArrayList<>();
-        for (RecipeMetadataUseCasePersistenceModel m : getAll()) {
+    public static List<RecipeMacroMetadataUseCasePersistenceModel> getAllByDomainId(String domainId) {
+        List<RecipeMacroMetadataUseCasePersistenceModel> models = new ArrayList<>();
+        for (RecipeMacroMetadataUseCasePersistenceModel m : getAll()) {
             if (domainId.equals(m.getDomainId())) {
                 models.add(m);
             }
@@ -329,11 +328,11 @@ public class TestDataRecipeMetadata {
         return models;
     }
 
-    public static RecipeMetadataUseCasePersistenceModel getActiveByDomainId(String domainId) {
+    public static RecipeMacroMetadataUseCasePersistenceModel getActiveByDomainId(String domainId) {
         long lastUpdate = 0;
-        RecipeMetadataUseCasePersistenceModel model = new RecipeMetadataUseCasePersistenceModel.Builder().
+        RecipeMacroMetadataUseCasePersistenceModel model = new RecipeMacroMetadataUseCasePersistenceModel.Builder().
                 getDefault().build();
-        for (RecipeMetadataUseCasePersistenceModel m : getAllByDomainId(domainId)) {
+        for (RecipeMacroMetadataUseCasePersistenceModel m : getAllByDomainId(domainId)) {
             if (lastUpdate < m.getLastUpdate()) {
                 model = m;
                 lastUpdate = m.getLastUpdate();

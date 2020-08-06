@@ -5,7 +5,7 @@ import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess.GetDoma
 import com.example.peter.thekitchenmenu.data.repository.recipe.RecipeCourseUseCaseDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RecipeDurationUseCaseDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RecipeIdentityUseCaseDataAccess;
-import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipeMetadata;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RecipeMetadataUseCaseDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RecipePortionsUseCasseDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.recipe.metadata.TestDataRecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.UseCaseHandler;
@@ -18,7 +18,7 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity
 import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.identity.RecipeIdentityUseCasePersistenceModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityTest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadata;
-import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.metadata.RecipeMetadataUseCasePersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.invoker.metadata.RecipeMacroMetadataUseCasePersistenceModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.portions.RecipePortionsUseCasePersistenceModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortionsTest;
@@ -35,9 +35,9 @@ import org.mockito.MockitoAnnotations;
 public class RecipeTestBase {
 
     @Mock
-    public DataAccessRecipeMetadata repoMetadataMock;
+    public RecipeMetadataUseCaseDataAccess repoMetadataMock;
     @Captor
-    public ArgumentCaptor<GetDomainModelCallback<RecipeMetadataUseCasePersistenceModel>> repoMetadataCallback;
+    public ArgumentCaptor<GetDomainModelCallback<RecipeMacroMetadataUseCasePersistenceModel>> repoMetadataCallback;
     @Mock
     public RecipeIdentityUseCaseDataAccess repoIdentityMock;
     @Captor

@@ -9,10 +9,10 @@ import javax.annotation.Nonnull;
 public final class RecipeCourseDomainModelConverter
         extends
         DomainModelConverter<
-                        RecipeCourseUseCaseModel,
-                        RecipeCourseUseCasePersistenceModel,
-                        RecipeCourseUseCaseRequestModel,
-                        RecipeCourseUseCaseResponseModel> {
+                RecipeCourseUseCaseModel,
+                RecipeCourseUseCasePersistenceModel,
+                RecipeCourseUseCaseRequestModel,
+                RecipeCourseUseCaseResponseModel> {
 
     public RecipeCourseDomainModelConverter(@Nonnull TimeProvider timeProvider,
                                             @Nonnull UniqueIdProvider idProvider) {
@@ -22,13 +22,17 @@ public final class RecipeCourseDomainModelConverter
     @Override
     public RecipeCourseUseCaseModel convertPersistenceToUseCaseModel(
             @Nonnull RecipeCourseUseCasePersistenceModel persistenceModel) {
-        return new RecipeCourseUseCaseModel(persistenceModel.getCourses());
+        return new RecipeCourseUseCaseModel.Builder()
+                .setCourses(persistenceModel.getCourses())
+                .build();
     }
 
     @Override
     public RecipeCourseUseCaseModel convertRequestToUseCaseModel(
             @Nonnull RecipeCourseUseCaseRequestModel requestModel) {
-        return new RecipeCourseUseCaseModel(requestModel.getCourseList());
+        return new RecipeCourseUseCaseModel.Builder()
+                .setCourses(requestModel.getCourses())
+                .build();
     }
 
     @Override
@@ -39,7 +43,7 @@ public final class RecipeCourseDomainModelConverter
         return new RecipeCourseUseCasePersistenceModel.Builder()
                 .setDataId(idProvider.getUId())
                 .setDomainId(domainId)
-                .setCourses(useCaseModel)
+                .setCourses(useCaseModel.getCourses())
                 .setCreateDate(currentTime)
                 .setLastUpdate(currentTime)
                 .build();
@@ -58,7 +62,7 @@ public final class RecipeCourseDomainModelConverter
     public RecipeCourseUseCaseResponseModel convertUseCaseToResponseModel(
             @Nonnull RecipeCourseUseCaseModel useCaseModel) {
         return new RecipeCourseUseCaseResponseModel.Builder()
-                .setCourseList(useCaseModel)
+                .setCourses(useCaseModel.getCourses())
                 .build();
     }
 
@@ -71,7 +75,7 @@ public final class RecipeCourseDomainModelConverter
         return new RecipeCourseUseCasePersistenceModel.Builder()
                 .setDataId(idProvider.getUId())
                 .setDomainId(persistenceModel.getDomainId())
-                .setCourses(useCaseModel)
+                .setCourses(useCaseModel.getCourses())
                 .setCreateDate(currentTime)
                 .setLastUpdate(currentTime)
                 .build();
@@ -79,6 +83,6 @@ public final class RecipeCourseDomainModelConverter
 
     @Override
     public RecipeCourseUseCaseModel getDefault() {
-        return null;
+        return new RecipeCourseUseCaseModel.Builder().getDefault().build();
     }
 }

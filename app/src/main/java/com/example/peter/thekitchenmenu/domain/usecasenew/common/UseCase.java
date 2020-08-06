@@ -20,18 +20,12 @@ public abstract class UseCase<
         run();
     }
 
-    protected abstract void execute(UseCaseRequest<REQUEST_MODEL> useCaseRequest);
-
-    void run() {
-        execute(useCaseRequest);
+    public void setUseCaseRequest(UseCaseRequest<REQUEST_MODEL> useCaseRequest) {
+        this.useCaseRequest = useCaseRequest;
     }
 
     public UseCaseRequest<REQUEST_MODEL> getUseCaseRequest() {
         return useCaseRequest;
-    }
-
-    public void setUseCaseRequest(UseCaseRequest<REQUEST_MODEL> useCaseRequest) {
-        this.useCaseRequest = useCaseRequest;
     }
 
     void setUseCaseCallback(UseCaseCallback<UseCaseResponse<RESPONSE_MODEL>> useCaseCallback) {
@@ -41,4 +35,10 @@ public abstract class UseCase<
     public UseCaseCallback<UseCaseResponse<RESPONSE_MODEL>> getUseCaseCallback() {
         return useCaseCallback;
     }
+
+    void run() {
+        execute(useCaseRequest);
+    }
+
+    protected abstract void execute(UseCaseRequest<REQUEST_MODEL> useCaseRequest);
 }

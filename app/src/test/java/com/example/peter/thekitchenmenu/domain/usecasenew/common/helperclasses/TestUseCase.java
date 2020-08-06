@@ -47,12 +47,4 @@ public class TestUseCase
         }
         domainModelProcessingComplete();
     }
-
-    /**
-     * @return the use case domain models default values, these are specific to each use case.
-     */
-    @Override
-    protected TestUseCaseInternalModel createUseCaseModelFromDefaultValues() {
-        return new TestUseCaseInternalModel(useCaseModelDefaultValue);
-    }
 }

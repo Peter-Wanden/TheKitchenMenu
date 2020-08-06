@@ -12,7 +12,7 @@ import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.meta
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.parent.RecipeMetadataParentLocalDataSource;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.FailReasons;
-import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.metadata.RecipeMetadataUseCasePersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.invoker.metadata.RecipeMacroMetadataUseCasePersistenceModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,10 +22,10 @@ import java.util.Set;
 
 import javax.annotation.Nonnull;
 
-import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentName;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentNameName;
 
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.metadata.ComponentState;
-import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.metadata.RecipeMetadataUseCaseFailReason;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.invoker.RecipeMacroUseCaseFailReason;
 
 public class RecipeMetadataLocalGetAdapter {
 
@@ -41,13 +41,13 @@ public class RecipeMetadataLocalGetAdapter {
     @Nonnull
     private final Set<String> uniqueDomainIdList;
     @Nonnull
-    private List<RecipeMetadataUseCasePersistenceModel> domainModels;
+    private List<RecipeMacroMetadataUseCasePersistenceModel> domainModels;
 
-    private GetDomainModelCallback<RecipeMetadataUseCasePersistenceModel> getModelCallback;
-    private GetAllDomainModelsCallback<RecipeMetadataUseCasePersistenceModel> getAllCallback;
+    private GetDomainModelCallback<RecipeMacroMetadataUseCasePersistenceModel> getModelCallback;
+    private GetAllDomainModelsCallback<RecipeMacroMetadataUseCasePersistenceModel> getAllCallback;
 
     private String activeDataId = "";
-    private RecipeMetadataUseCasePersistenceModel.Builder modelBuilder;
+    private RecipeMacroMetadataUseCasePersistenceModel.Builder modelBuilder;
     private int uniqueDomainIdListSize;
     private int domainModelsProcessed;
 
@@ -69,7 +69,7 @@ public class RecipeMetadataLocalGetAdapter {
 
     public void getByDataId(
             @Nonnull String dataId,
-            @Nonnull GetDomainModelCallback<RecipeMetadataUseCasePersistenceModel> callback) {
+            @Nonnull GetDomainModelCallback<RecipeMacroMetadataUseCasePersistenceModel> callback) {
         this.getModelCallback = callback;
 
         getParentEntityFromDataId(dataId);
@@ -96,7 +96,7 @@ public class RecipeMetadataLocalGetAdapter {
 
     public void getActiveByDomainId(
             @Nonnull String domainId,
-            @Nonnull GetDomainModelCallback<RecipeMetadataUseCasePersistenceModel> callback) {
+            @Nonnull GetDomainModelCallback<RecipeMacroMetadataUseCasePersistenceModel> callback) {
 
         this.getModelCallback = callback;
         getParentEntitiesFromDomainId(domainId);
@@ -143,7 +143,7 @@ public class RecipeMetadataLocalGetAdapter {
     }
 
     private void addParentEntityToModelBuilder(RecipeMetadataParentEntity e) {
-        modelBuilder = new RecipeMetadataUseCasePersistenceModel.Builder();
+        modelBuilder = new RecipeMacroMetadataUseCasePersistenceModel.Builder();
 
         modelBuilder.
                 setDataId(e.getDataId()).
@@ -182,7 +182,7 @@ public class RecipeMetadataLocalGetAdapter {
 
         for (RecipeFailReasonEntity e : entities) {
             CommonFailReason commonFailReason = CommonFailReason.getFromId(e.getFailReasonId());
-            RecipeMetadataUseCaseFailReason metadataRecipeMetadataFailReason = RecipeMetadataUseCaseFailReason.getById(e.getFailReasonId());
+            RecipeMacroUseCaseFailReason metadataRecipeMetadataFailReason = RecipeMacroUseCaseFailReason.getById(e.getFailReasonId());
 
             failReasons.add(commonFailReason == null ? metadataRecipeMetadataFailReason : commonFailReason);
         }
@@ -213,10 +213,10 @@ public class RecipeMetadataLocalGetAdapter {
     }
 
     private void addComponentStatesToModelBuilder(List<RecipeComponentStateEntity> entities) {
-        HashMap<RecipeComponentName, ComponentState> s = new HashMap<>();
+        HashMap<RecipeComponentNameName, ComponentState> s = new HashMap<>();
         for (RecipeComponentStateEntity e : entities) {
             s.put(
-                    RecipeComponentName.getFromId(e.getComponentNameId()),
+                    RecipeComponentNameName.getFromId(e.getComponentNameId()),
                     ComponentState.fromInt(e.getComponentStateId())
             );
         }
@@ -236,7 +236,7 @@ public class RecipeMetadataLocalGetAdapter {
     }
 
     public void getAllActive(
-            @Nonnull GetAllDomainModelsCallback<RecipeMetadataUseCasePersistenceModel> callback) {
+            @Nonnull GetAllDomainModelsCallback<RecipeMacroMetadataUseCasePersistenceModel> callback) {
         getAllCallback = callback;
         getAllParents();
     }
@@ -278,9 +278,9 @@ public class RecipeMetadataLocalGetAdapter {
         for (String domainId : uniqueDomainIdList) {
             getActiveByDomainId(
                     domainId,
-                    new GetDomainModelCallback<RecipeMetadataUseCasePersistenceModel>() {
+                    new GetDomainModelCallback<RecipeMacroMetadataUseCasePersistenceModel>() {
                         @Override
-                        public void onPersistenceModelLoaded(RecipeMetadataUseCasePersistenceModel model) {
+                        public void onPersistenceModelLoaded(RecipeMacroMetadataUseCasePersistenceModel model) {
                             domainModels.add(model);
                             domainModelsProcessed++;
                             returnAllDomainModels();

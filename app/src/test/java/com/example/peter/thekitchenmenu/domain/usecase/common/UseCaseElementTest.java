@@ -2,9 +2,9 @@ package com.example.peter.thekitchenmenu.domain.usecase.common;
 
 import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.DataAccess;
-import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipeMetadata;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RecipeMetadataUseCaseDataAccess;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.BaseDomainPersistenceModel;
-import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.metadata.RecipeMetadataUseCasePersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.invoker.metadata.RecipeMacroMetadataUseCasePersistenceModel;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -27,9 +27,9 @@ public class UseCaseElementTest {
 
     // region helper fields ------------------------------------------------------------------------
     @Mock
-    private DataAccessRecipeMetadata repoMock;
+    private RecipeMetadataUseCaseDataAccess repoMock;
     @Captor
-    private ArgumentCaptor<DomainDataAccess<RecipeMetadataUseCasePersistenceModel>> repoCallbackCaptor;
+    private ArgumentCaptor<DomainDataAccess<RecipeMacroMetadataUseCasePersistenceModel>> repoCallbackCaptor;
     // endregion helper fields ---------------------------------------------------------------------
 
     private UseCaseElementInheritor SUT;

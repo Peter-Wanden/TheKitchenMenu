@@ -4,7 +4,7 @@ import com.example.peter.thekitchenmenu.data.repository.DomainDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.dataadapter.RecipeMetadataLocalDeleteAdapter;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.dataadapter.RecipeMetadataLocalGetAdapter;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.dataadapter.RecipeMetadataLocalSaveAdapter;
-import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.metadata.RecipeMetadataUseCasePersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.invoker.metadata.RecipeMacroMetadataUseCasePersistenceModel;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ import javax.annotation.Nonnull;
  * persistence local persistence framework.
  */
 public class RepositoryRecipeMetadataLocal
-        implements DomainDataAccess<RecipeMetadataUseCasePersistenceModel> {
+        implements DomainDataAccess<RecipeMacroMetadataUseCasePersistenceModel> {
 
     private static volatile RepositoryRecipeMetadataLocal INSTANCE;
 
@@ -56,11 +56,11 @@ public class RepositoryRecipeMetadataLocal
 
     @Override
     public void getAll(
-            @Nonnull GetAllDomainModelsCallback<RecipeMetadataUseCasePersistenceModel> callback) {
+            @Nonnull GetAllDomainModelsCallback<RecipeMacroMetadataUseCasePersistenceModel> callback) {
         getAdapter.getAllActive(
-                new GetAllDomainModelsCallback<RecipeMetadataUseCasePersistenceModel>() {
+                new GetAllDomainModelsCallback<RecipeMacroMetadataUseCasePersistenceModel>() {
                     @Override
-                    public void onAllDomainModelsLoaded(List<RecipeMetadataUseCasePersistenceModel> models) {
+                    public void onAllDomainModelsLoaded(List<RecipeMacroMetadataUseCasePersistenceModel> models) {
                         callback.onAllDomainModelsLoaded(models);
                     }
 
@@ -75,12 +75,12 @@ public class RepositoryRecipeMetadataLocal
     @Override
     public void getByDataId(
             @Nonnull String dataId,
-            @Nonnull GetDomainModelCallback<RecipeMetadataUseCasePersistenceModel> callback) {
+            @Nonnull GetDomainModelCallback<RecipeMacroMetadataUseCasePersistenceModel> callback) {
         getAdapter.getByDataId(
                 dataId,
-                new GetDomainModelCallback<RecipeMetadataUseCasePersistenceModel>() {
+                new GetDomainModelCallback<RecipeMacroMetadataUseCasePersistenceModel>() {
                     @Override
-                    public void onPersistenceModelLoaded(@Nonnull RecipeMetadataUseCasePersistenceModel model) {
+                    public void onPersistenceModelLoaded(@Nonnull RecipeMacroMetadataUseCasePersistenceModel model) {
                         callback.onPersistenceModelLoaded(model);
                     }
 
@@ -95,12 +95,12 @@ public class RepositoryRecipeMetadataLocal
     @Override
     public void getByDomainId(
             @Nonnull String domainId,
-            @Nonnull GetDomainModelCallback<RecipeMetadataUseCasePersistenceModel> callback) {
+            @Nonnull GetDomainModelCallback<RecipeMacroMetadataUseCasePersistenceModel> callback) {
         getAdapter.getActiveByDomainId(
                 domainId,
-                new GetDomainModelCallback<RecipeMetadataUseCasePersistenceModel>() {
+                new GetDomainModelCallback<RecipeMacroMetadataUseCasePersistenceModel>() {
                     @Override
-                    public void onPersistenceModelLoaded(RecipeMetadataUseCasePersistenceModel model) {
+                    public void onPersistenceModelLoaded(RecipeMacroMetadataUseCasePersistenceModel model) {
                         callback.onPersistenceModelLoaded(model);
                     }
 
@@ -113,7 +113,7 @@ public class RepositoryRecipeMetadataLocal
     }
 
     @Override
-    public void save(@Nonnull RecipeMetadataUseCasePersistenceModel persistenceModel) {
+    public void save(@Nonnull RecipeMacroMetadataUseCasePersistenceModel persistenceModel) {
         saveAdapter.save(persistenceModel);
     }
 

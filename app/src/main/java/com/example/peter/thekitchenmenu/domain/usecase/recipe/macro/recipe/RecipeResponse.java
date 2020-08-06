@@ -1,6 +1,6 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe;
 
-import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentName;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentNameName;
 import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataId;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.BaseDomainModel;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
@@ -59,12 +59,12 @@ public final class RecipeResponse
             extends
             BaseDomainModel {
 
-        private HashMap<RecipeComponentName, UseCaseBase.Response> componentResponses;
+        private HashMap<RecipeComponentNameName, UseCaseBase.Response> componentResponses;
 
         public Model() {
         }
 
-        public HashMap<RecipeComponentName, UseCaseBase.Response> getComponentResponses() {
+        public HashMap<RecipeComponentNameName, UseCaseBase.Response> getComponentResponses() {
             return componentResponses;
         }
 
@@ -98,12 +98,12 @@ public final class RecipeResponse
             }
 
             public Builder setComponentResponses(
-                    HashMap<RecipeComponentName, UseCaseBase.Response> componentResponses) {
+                    HashMap<RecipeComponentNameName, UseCaseBase.Response> componentResponses) {
                 domainModel.componentResponses = componentResponses;
                 return self();
             }
 
-            private static HashMap<RecipeComponentName, UseCaseBase.Response>
+            private static HashMap<RecipeComponentNameName, UseCaseBase.Response>
             getDefaultComponentResponses() {
                 return new LinkedHashMap<>();
             }

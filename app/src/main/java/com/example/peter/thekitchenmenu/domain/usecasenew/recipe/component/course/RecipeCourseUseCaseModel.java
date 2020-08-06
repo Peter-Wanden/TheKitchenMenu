@@ -1,24 +1,49 @@
 package com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.course;
 
-import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.BaseDomainModel.BaseDomainModelBuilder;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.BaseDomainModel;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.DomainModel;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
 public final class RecipeCourseUseCaseModel
         extends
-        ArrayList<Course>
+        BaseDomainModel
         implements
-        DomainModel, DomainModel.UseCaseModel {
+        DomainModel.UseCaseModel {
 
-    RecipeCourseUseCaseModel(@Nonnull Collection<? extends Course> c) {
-        super(c);
+    private List<Course> courses;
+
+    private RecipeCourseUseCaseModel() {}
+
+    public List<Course> getCourses() {
+        return courses;
     }
 
-    public RecipeCourseUseCaseModel() {
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof RecipeCourseUseCaseModel)) return false;
+
+        RecipeCourseUseCaseModel that = (RecipeCourseUseCaseModel) o;
+
+        return Objects.equals(courses, that.courses);
+    }
+
+    @Override
+    public int hashCode() {
+        return courses != null ? courses.hashCode() : 0;
+    }
+
+    @Nonnull
+    @Override
+    public String toString() {
+        return "RecipeCourseUseCaseModel{" +
+                "courses=" + courses +
+                '}';
     }
 
     public static class Builder
@@ -29,13 +54,20 @@ public final class RecipeCourseUseCaseModel
             super(new RecipeCourseUseCaseModel());
         }
 
+        public Builder setCourses(List<Course> courses) {
+            domainModel.courses = courses;
+            return self();
+        }
+
         @Override
         public Builder getDefault() {
+            domainModel.courses = new ArrayList<>();
             return self();
         }
 
         @Override
         public Builder basedOnModel(RecipeCourseUseCaseModel model) {
+            domainModel.courses = model.courses;
             return self();
         }
 

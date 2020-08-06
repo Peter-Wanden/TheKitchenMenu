@@ -1,27 +1,27 @@
-package com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.metadata;
+package com.example.peter.thekitchenmenu.domain.usecasenew.recipe.invoker.metadata;
 
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.metadata.ComponentState;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.BaseDomainModel;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.DomainModel;
-import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentName;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentNameName;
 
 import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.Nonnull;
 
-public final class RecipeMetadataUseCaseModel
+public final class RecipeMacroMetadataUseCaseModel
         extends
         BaseDomainModel
         implements
         DomainModel.UseCaseModel {
 
     private ComponentState componentState;
-    private HashMap<RecipeComponentName, ComponentState> componentStates;
+    private HashMap<RecipeComponentNameName, ComponentState> componentStates;
     private List<FailReasons> failReasons;
 
-    private RecipeMetadataUseCaseModel() {}
+    private RecipeMacroMetadataUseCaseModel() {}
 
     @Nonnull
     public ComponentState getComponentState() {
@@ -29,7 +29,7 @@ public final class RecipeMetadataUseCaseModel
     }
 
     @Nonnull
-    public HashMap<RecipeComponentName, ComponentState> getComponentStates() {
+    public HashMap<RecipeComponentNameName, ComponentState> getComponentStates() {
         return componentStates;
     }
 
@@ -40,10 +40,10 @@ public final class RecipeMetadataUseCaseModel
 
     public static class Builder
             extends
-            BaseDomainModelBuilder<Builder, RecipeMetadataUseCaseModel> {
+            BaseDomainModelBuilder<Builder, RecipeMacroMetadataUseCaseModel> {
 
         public Builder() {
-            super(new RecipeMetadataUseCaseModel());
+            super(new RecipeMacroMetadataUseCaseModel());
         }
 
         public Builder setComponentState(ComponentState componentState) {
@@ -52,7 +52,7 @@ public final class RecipeMetadataUseCaseModel
         }
 
         public Builder setComponentStates(
-                HashMap<RecipeComponentName, ComponentState> componentStates) {
+                HashMap<RecipeComponentNameName, ComponentState> componentStates) {
             domainModel.componentStates = componentStates;
             return self();
         }
@@ -70,7 +70,7 @@ public final class RecipeMetadataUseCaseModel
         }
 
         @Override
-        public Builder basedOnModel(RecipeMetadataUseCaseModel model) {
+        public Builder basedOnModel(RecipeMacroMetadataUseCaseModel model) {
             domainModel.componentState = model.componentState;
             domainModel.componentStates = model.componentStates;
             domainModel.failReasons = model.failReasons;

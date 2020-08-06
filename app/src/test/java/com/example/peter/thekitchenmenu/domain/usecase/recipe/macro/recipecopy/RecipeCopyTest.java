@@ -15,7 +15,7 @@ import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.meta
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.datasource.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.datasource.TestDataRecipePortionsEntity;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
-import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentName;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentNameName;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityTest;
@@ -35,10 +35,10 @@ import org.mockito.MockitoAnnotations;
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentName.COURSE;
-import static com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentName.DURATION;
-import static com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentName.IDENTITY;
-import static com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentName.PORTIONS;
+import static com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentNameName.COURSE;
+import static com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentNameName.DURATION;
+import static com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentNameName.IDENTITY;
+import static com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentNameName.PORTIONS;
 
 public class RecipeCopyTest {
 
@@ -131,7 +131,7 @@ public class RecipeCopyTest {
                 setLongTextMaxLength(RecipeIdentityTest.DESCRIPTION_MAX_LENGTH).
                 build();
 
-        final Set<RecipeComponentName> requiredComponents = new HashSet<>();
+        final Set<RecipeComponentNameName> requiredComponents = new HashSet<>();
         requiredComponents.add(IDENTITY);
         requiredComponents.add(COURSE);
         requiredComponents.add(DURATION);

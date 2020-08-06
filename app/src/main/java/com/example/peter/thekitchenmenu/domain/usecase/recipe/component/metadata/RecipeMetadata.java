@@ -1,12 +1,12 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata;
 
-import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipeMetadata;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RecipeMetadataUseCaseDataAccess;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseElement;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.metadata.ComponentState;
-import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentName;
-import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.metadata.RecipeMetadataUseCaseFailReason;
-import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.metadata.RecipeMetadataUseCasePersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentNameName;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.invoker.RecipeMacroUseCaseFailReason;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.invoker.metadata.RecipeMacroMetadataUseCasePersistenceModel;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
@@ -23,24 +23,24 @@ import javax.annotation.Nonnull;
 public class RecipeMetadata
         extends
         UseCaseElement<
-                DataAccessRecipeMetadata,
-                RecipeMetadataUseCasePersistenceModel,
+                RecipeMetadataUseCaseDataAccess,
+                RecipeMacroMetadataUseCasePersistenceModel,
                 RecipeMetadataUseCaseModel> {
 
     private static final String TAG = "tkm-" + RecipeMetadata.class.getSimpleName() + ": ";
 
     @Nonnull
-    private final Set<RecipeComponentName> requiredComponentNames;
+    private final Set<RecipeComponentNameName> requiredComponentNames;
     @Nonnull
-    private final Set<RecipeComponentName> additionalComponentNames;
+    private final Set<RecipeComponentNameName> additionalComponentNames;
 
     private ComponentState recipeState;
 
-    public RecipeMetadata(@Nonnull DataAccessRecipeMetadata repository,
+    public RecipeMetadata(@Nonnull RecipeMetadataUseCaseDataAccess repository,
                           @Nonnull UniqueIdProvider idProvider,
                           @Nonnull TimeProvider timeProvider,
-                          @Nonnull Set<RecipeComponentName> requiredComponentNames,
-                          @Nonnull Set<RecipeComponentName> additionalComponentNames) {
+                          @Nonnull Set<RecipeComponentNameName> requiredComponentNames,
+                          @Nonnull Set<RecipeComponentNameName> additionalComponentNames) {
 
         this.repository = repository;
         this.idProvider = idProvider;
@@ -60,7 +60,7 @@ public class RecipeMetadata
 
     @Override
     protected RecipeMetadataUseCaseModel createUseCaseModelFromDefaultValues() {
-        HashMap<RecipeComponentName, ComponentState> defaultComponentStates = new HashMap<>();
+        HashMap<RecipeComponentNameName, ComponentState> defaultComponentStates = new HashMap<>();
         requiredComponentNames.forEach(componentName ->
                 defaultComponentStates.put(componentName, ComponentState.INVALID_DEFAULT)
         );
@@ -72,7 +72,7 @@ public class RecipeMetadata
 
     @Override
     protected RecipeMetadataUseCaseModel createUseCaseModelFromPersistenceModel(
-            @Nonnull RecipeMetadataUseCasePersistenceModel persistenceModel) {
+            @Nonnull RecipeMacroMetadataUseCasePersistenceModel persistenceModel) {
 
         recipeState = persistenceModel.getComponentState();
         failReasons.addAll(persistenceModel.getFailReasons());
@@ -97,7 +97,7 @@ public class RecipeMetadata
     }
 
     private void checkForMissingRequiredComponents() {
-        for (RecipeComponentName componentName : requiredComponentNames) {
+        for (RecipeComponentNameName componentName : requiredComponentNames) {
             if (!domainModelHasRequiredComponent(componentName)) {
                 addFailReasonsMissingRequiredComponents();
             }
@@ -108,20 +108,20 @@ public class RecipeMetadata
                 "\n  - domainModel.componentStates= " + useCaseModel.getComponentStates());
     }
 
-    private boolean domainModelHasRequiredComponent(RecipeComponentName componentName) {
+    private boolean domainModelHasRequiredComponent(RecipeComponentNameName componentName) {
         return useCaseModel.getComponentStates().containsKey(componentName);
     }
 
     private void addFailReasonsMissingRequiredComponents() {
-        if (!failReasons.contains(RecipeMetadataUseCaseFailReason.MISSING_REQUIRED_COMPONENTS)) {
-            failReasons.add(RecipeMetadataUseCaseFailReason.MISSING_REQUIRED_COMPONENTS);
+        if (!failReasons.contains(RecipeMacroUseCaseFailReason.MISSING_REQUIRED_COMPONENTS)) {
+            failReasons.add(RecipeMacroUseCaseFailReason.MISSING_REQUIRED_COMPONENTS);
         }
     }
 
     private void checkForInvalidComponentStates() {
         ComponentState componentState;
 
-        for (RecipeComponentName componentName : requiredComponentNames) {
+        for (RecipeComponentNameName componentName : requiredComponentNames) {
             componentState = useCaseModel.getComponentStates().get(componentName);
 
             if (ComponentState.INVALID_UNCHANGED.equals(componentState) ||
@@ -133,7 +133,7 @@ public class RecipeMetadata
 
         // INVALID_DEFAULT state for an additional component means it is not being used, therefore
         // it is not classed as missing as it would be for a required component
-        for (RecipeComponentName componentName : additionalComponentNames) {
+        for (RecipeComponentNameName componentName : additionalComponentNames) {
             componentState = useCaseModel.getComponentStates().get(componentName);
 
             if (ComponentState.INVALID_UNCHANGED.equals(componentState) ||
@@ -144,8 +144,8 @@ public class RecipeMetadata
     }
 
     private void addFailReasonInvalidComponents() {
-        if (!failReasons.contains(RecipeMetadataUseCaseFailReason.INVALID_COMPONENTS)) {
-            failReasons.add(RecipeMetadataUseCaseFailReason.INVALID_COMPONENTS);
+        if (!failReasons.contains(RecipeMacroUseCaseFailReason.INVALID_COMPONENTS)) {
+            failReasons.add(RecipeMacroUseCaseFailReason.INVALID_COMPONENTS);
         }
     }
 
@@ -161,7 +161,7 @@ public class RecipeMetadata
                     archivePreviousState(currentTime);
                 }
 
-                persistenceModel = new RecipeMetadataUseCasePersistenceModel.Builder().
+                persistenceModel = new RecipeMacroMetadataUseCasePersistenceModel.Builder().
                         setDataId(useCaseDataId).
                         setDomainId(useCaseDomainId).
                         setComponentState(recipeState).
@@ -181,7 +181,7 @@ public class RecipeMetadata
 
     @Override
     protected void archivePreviousState(long currentTime) {
-        RecipeMetadataUseCasePersistenceModel model = new RecipeMetadataUseCasePersistenceModel.Builder().
+        RecipeMacroMetadataUseCasePersistenceModel model = new RecipeMacroMetadataUseCasePersistenceModel.Builder().
                 basedOnModel(persistenceModel).
                 setLastUpdate(currentTime).
                 build();

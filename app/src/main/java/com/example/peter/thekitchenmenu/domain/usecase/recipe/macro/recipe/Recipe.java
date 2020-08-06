@@ -2,7 +2,6 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe;
 
 import androidx.core.util.Pair;
 
-import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.metadata.RecipeMetadataUseCaseRequestModel;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.common.usecasemessage.UseCaseMessageModelDataId;
@@ -30,18 +29,18 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentName;
-import static com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentName.COURSE;
-import static com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentName.DURATION;
-import static com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentName.IDENTITY;
-import static com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentName.PORTIONS;
-import static com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentName.RECIPE;
-import static com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentName.RECIPE_METADATA;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentNameName;
+import static com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentNameName.COURSE;
+import static com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentNameName.DURATION;
+import static com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentNameName.IDENTITY;
+import static com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentNameName.PORTIONS;
+import static com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentNameName.RECIPE;
+import static com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentNameName.RECIPE_METADATA;
 
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.metadata.ComponentState;
 
 /**
- * A use case interactor acting as a command mediator macro enabling recipe components to work
+ * A use case interactor utilising the command macro pattern enabling recipe components to work
  * together.
  * All recipe component requests should be routed through an instance of this class.
  * The first request sent through, regardless of type, will only load and return data. Subsequent
@@ -67,17 +66,17 @@ public class Recipe extends UseCaseBase {
 
     private RecipeResponse recipeResponse;
     private RecipeMetadataResponse recipeMetadataResponse;
-    private RecipeComponentName requestOriginator;
+    private RecipeComponentNameName requestOriginator;
     private String dataId = "";
     private String recipeDomainId = "";
 
-    private final HashMap<RecipeComponentName, UseCaseBase.Response>
+    private final HashMap<RecipeComponentNameName, UseCaseBase.Response>
             componentResponses = new LinkedHashMap<>();
-    private final HashMap<RecipeComponentName, ComponentState>
+    private final HashMap<RecipeComponentNameName, ComponentState>
             componentStates = new LinkedHashMap<>();
 
     // Listeners
-    private final List<Pair<RecipeComponentName, Callback<? extends UseCaseBase.Response>>>
+    private final List<Pair<RecipeComponentNameName, Callback<? extends UseCaseBase.Response>>>
             componentListeners = new ArrayList<>();
     private final List<RecipeMetadataListener>
             metaDataListeners = new ArrayList<>();
@@ -144,10 +143,6 @@ public class Recipe extends UseCaseBase {
             throw new UnsupportedOperationException("\nRequest type not supported: " + request);
         }
         System.out.println(TAG + "extractRequestOriginator: " + requestOriginator);
-    }
-
-    private boolean isNewRequest(String recipeId) {
-        return !this.recipeDomainId.equals(recipeId);
     }
 
     private void startComponents() {
@@ -306,11 +301,11 @@ public class Recipe extends UseCaseBase {
         }
     }
 
-    private void addComponentState(RecipeComponentName componentName, ComponentState componentState) {
+    private void addComponentState(RecipeComponentNameName componentName, ComponentState componentState) {
         componentStates.put(componentName, componentState);
     }
 
-    private void addComponentResponse(RecipeComponentName componentName, UseCaseBase.Response response) {
+    private void addComponentResponse(RecipeComponentNameName componentName, UseCaseBase.Response response) {
         componentResponses.put(componentName, response);
     }
 
@@ -420,7 +415,7 @@ public class Recipe extends UseCaseBase {
     }
 
     public void registerComponentListener(Pair<
-            RecipeComponentName,
+            RecipeComponentNameName,
             UseCaseBase.Callback<? extends UseCaseBase.Response>> callbackPair) {
         componentListeners.add(callbackPair);
     }
@@ -428,11 +423,11 @@ public class Recipe extends UseCaseBase {
     @SuppressWarnings("unchecked")
     private void notifyComponentListeners() {
         for (Pair<
-                RecipeComponentName,
+                RecipeComponentNameName,
                 UseCaseBase.Callback<? extends UseCaseBase.Response>>
                 callbackPair : componentListeners) {
 
-            RecipeComponentName componentName = callbackPair.first;
+            RecipeComponentNameName componentName = callbackPair.first;
 
             if (IDENTITY.equals(componentName)) {
                 RecipeIdentityResponse response = (RecipeIdentityResponse)
@@ -490,7 +485,7 @@ public class Recipe extends UseCaseBase {
         notifyRequestOriginator();
     }
 
-    public void unregisterComponentListener(Pair<RecipeComponentName, UseCaseBase.Callback
+    public void unregisterComponentListener(Pair<RecipeComponentNameName, UseCaseBase.Callback
             <? extends UseCaseBase.Response>> callback) {
         componentListeners.remove(callback);
     }

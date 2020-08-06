@@ -2,10 +2,15 @@ package com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component;
 
 import android.annotation.SuppressLint;
 
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.componentname.UseCaseInvokerComponentName;
+
 import java.util.HashMap;
 import java.util.Map;
 
-public enum RecipeComponentName {
+/**
+ * The group of components that make up a recipe
+ */
+public enum RecipeComponentNameName implements UseCaseInvokerComponentName {
     COURSE(1),
     DURATION(2),
     IDENTITY(3),
@@ -17,21 +22,22 @@ public enum RecipeComponentName {
     private final int id;
 
     @SuppressLint("UseSparseArrays")
-    private static Map<Integer, RecipeComponentName> options = new HashMap<>();
+    private static Map<Integer, RecipeComponentNameName> options = new HashMap<>();
 
-    RecipeComponentName(int id) {
+    RecipeComponentNameName(int id) {
         this.id = id;
     }
 
     static {
-        for (RecipeComponentName n : RecipeComponentName.values())
+        for (RecipeComponentNameName n : RecipeComponentNameName.values())
             options.put(n.id, n);
     }
 
-    public static RecipeComponentName getFromId(int id) {
+    public static RecipeComponentNameName getFromId(int id) {
         return options.get(id);
     }
 
+    @Override
     public int getId() {
         return id;
     }

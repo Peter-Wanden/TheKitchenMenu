@@ -9,7 +9,7 @@ import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDurationResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityResponse;
-import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentName;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentNameName;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.RecipeUseCaseCallback;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.RecipeRequest;
@@ -84,13 +84,13 @@ public class RecipeListItemViewImpl
         RecipeIdentityResponse identity = (RecipeIdentityResponse) recipeResponse.
                 getDomainModel().
                 getComponentResponses().
-                get(RecipeComponentName.IDENTITY);
+                get(RecipeComponentNameName.IDENTITY);
 
         title.setText(identity.getDomainModel().getTitle());
         description.setText(identity.getDomainModel().getDescription());
 
         RecipeDurationResponse duration = (RecipeDurationResponse) recipeResponse.
-                getDomainModel().getComponentResponses().get(RecipeComponentName.DURATION);
+                getDomainModel().getComponentResponses().get(RecipeComponentNameName.DURATION);
 
         prepTime.setText(duration.getDomainModel().getTotalPrepTime());
         cookTime.setText(duration.getDomainModel().getTotalCookTime());

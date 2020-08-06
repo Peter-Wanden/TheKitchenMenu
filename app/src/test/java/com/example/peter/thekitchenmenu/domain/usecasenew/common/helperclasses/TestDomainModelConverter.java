@@ -22,13 +22,17 @@ public class TestDomainModelConverter
     @Override
     public TestUseCaseInternalModel convertPersistenceToUseCaseModel(
             @Nonnull TestUseCasePersistenceModel persistenceModel) {
-        return new TestUseCaseInternalModel(persistenceModel.getPersistenceModelString());
+        return new TestUseCaseInternalModel.Builder()
+                .setUseCaseModelString(persistenceModel.getPersistenceModelString())
+                .build();
     }
 
     @Override
     public TestUseCaseInternalModel convertRequestToUseCaseModel(
             @Nonnull TestRequestModel requestModel) {
-        return new TestUseCaseInternalModel(requestModel.getRequestModelString());
+        return new TestUseCaseInternalModel.Builder()
+                .setUseCaseModelString(requestModel.getRequestModelString())
+                .build();
     }
 
     @Override
@@ -77,5 +81,10 @@ public class TestDomainModelConverter
                 .setCreateDate(currentTime)
                 .setLastUpdate(currentTime)
                 .build();
+    }
+
+    @Override
+    public TestUseCaseInternalModel getDefault() {
+        return new TestUseCaseInternalModel.Builder().getDefault().build();
     }
 }

@@ -25,18 +25,16 @@ public final class RecipeDurationUseCasePersistenceModel
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof RecipeDurationUseCasePersistenceModel)) return false;
-        if (!super.equals(o)) return false;
 
-        RecipeDurationUseCasePersistenceModel that = (RecipeDurationUseCasePersistenceModel) o;
+        RecipeDurationUseCasePersistenceModel model = (RecipeDurationUseCasePersistenceModel) o;
 
-        if (prepTime != that.prepTime) return false;
-        return cookTime == that.cookTime;
+        if (prepTime != model.prepTime) return false;
+        return cookTime == model.cookTime;
     }
 
     @Override
     public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + prepTime;
+        int result = prepTime;
         result = 31 * result + cookTime;
         return result;
     }
@@ -44,11 +42,11 @@ public final class RecipeDurationUseCasePersistenceModel
     @Nonnull
     @Override
     public String toString() {
-        return "RecipeDurationPersistenceModel{" +
-                "dataId='" + dataId + '\'' +
-                ", domainId='" + domainId + '\'' +
-                ", prepTime=" + prepTime +
+        return "RecipeDurationUseCasePersistenceModel{" +
+                "prepTime=" + prepTime +
                 ", cookTime=" + cookTime +
+                ", dataId='" + dataId + '\'' +
+                ", domainId='" + domainId + '\'' +
                 ", createDate=" + createDate +
                 ", lastUpdate=" + lastUpdate +
                 '}';

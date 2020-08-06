@@ -53,9 +53,4 @@ public class RecipePortionsUseCase
             useCaseFailReasons.add(RecipePortionsUseCaseFailReason.SITTINGS_TOO_HIGH);
         }
     }
-
-    @Override
-    protected RecipePortionsUseCaseModel createUseCaseModelFromDefaultValues() {
-        return new RecipePortionsUseCaseModel(MIN_SERVINGS, MIN_SITTINGS);
-    }
 }

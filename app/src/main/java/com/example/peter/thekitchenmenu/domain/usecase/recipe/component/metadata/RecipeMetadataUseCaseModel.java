@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadat
 
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.metadata.ComponentState;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.DomainModel;
-import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentName;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentNameName;
 
 import java.util.HashMap;
 
@@ -15,10 +15,10 @@ public class RecipeMetadataUseCaseModel
     @Nonnull
     private final String parentDomainId;
     @Nonnull
-    private final HashMap<RecipeComponentName, ComponentState> componentStates;
+    private final HashMap<RecipeComponentNameName, ComponentState> componentStates;
 
     public RecipeMetadataUseCaseModel(@Nonnull String parentDomainId,
-                                      @Nonnull HashMap<RecipeComponentName, ComponentState> componentStates) {
+                                      @Nonnull HashMap<RecipeComponentNameName, ComponentState> componentStates) {
 
         this.parentDomainId = parentDomainId;
         this.componentStates = componentStates;
@@ -30,7 +30,7 @@ public class RecipeMetadataUseCaseModel
     }
 
     @Nonnull
-    public HashMap<RecipeComponentName, ComponentState> getComponentStates() {
+    public HashMap<RecipeComponentNameName, ComponentState> getComponentStates() {
         return componentStates;
     }
 

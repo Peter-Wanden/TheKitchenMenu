@@ -149,7 +149,6 @@ public abstract class UseCaseData<
     }
 
     protected USE_CASE_MODEL createUseCaseModelFromDefaultValues() {
-
         return modelConverter.getDefault();
     }
 

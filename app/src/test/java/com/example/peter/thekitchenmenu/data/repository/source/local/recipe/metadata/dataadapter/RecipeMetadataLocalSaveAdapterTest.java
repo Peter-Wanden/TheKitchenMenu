@@ -6,7 +6,7 @@ import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.meta
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.componentstate.RecipeComponentStateLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.failreason.RecipeFailReasonsLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.datasource.parent.RecipeMetadataParentLocalDataSource;
-import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.metadata.RecipeMetadataUseCasePersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.invoker.metadata.RecipeMacroMetadataUseCasePersistenceModel;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
 import org.junit.Before;
@@ -60,7 +60,7 @@ public class RecipeMetadataLocalSaveAdapterTest {
     @Test
     public void save() {
         // Arrange
-        RecipeMetadataUseCasePersistenceModel modelUnderTest = TestDataRecipeMetadata.getValidChanged();
+        RecipeMacroMetadataUseCasePersistenceModel modelUnderTest = TestDataRecipeMetadata.getValidChanged();
         List<RecipeComponentStateEntity> stateEntities = TestDataRecipeMetadataEntity.
                 getValidChanged0ComponentStateEntities();
         RecipeComponentStateEntity[] states =

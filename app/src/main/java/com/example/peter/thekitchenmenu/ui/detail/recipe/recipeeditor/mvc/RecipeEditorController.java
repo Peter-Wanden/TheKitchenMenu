@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.mvc;
 
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentName;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentNameName;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.metadata.ComponentState;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.metadata.RecipeMetadataResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
@@ -83,7 +83,7 @@ public class RecipeEditorController
     @Override
     public void onUseCaseSuccess(RecipeResponse response) {
         metadataResponse = (RecipeMetadataResponse) response.getDomainModel().getComponentResponses().
-                get(RecipeComponentName.RECIPE_METADATA);
+                get(RecipeComponentNameName.RECIPE_METADATA);
         ComponentState recipeComponentState = metadataResponse.getMetadata().getComponentState();
 
         view.isNewRecipe(isNewRecipe = false);
@@ -93,7 +93,7 @@ public class RecipeEditorController
     @Override
     public void onUseCaseError(RecipeResponse response) {
         metadataResponse = (RecipeMetadataResponse) response.getDomainModel().getComponentResponses().
-                get(RecipeComponentName.RECIPE_METADATA);
+                get(RecipeComponentNameName.RECIPE_METADATA);
         ComponentState recipeComponentState = metadataResponse.getMetadata().getComponentState();
 
         view.isNewRecipe(isNewRecipe);

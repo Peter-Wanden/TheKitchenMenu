@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipecopy;
 
 import android.annotation.SuppressLint;
 
-import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentName;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.RecipeComponentNameName;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.failreasons.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.common.UseCaseBase;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.UseCaseHandler;
@@ -71,7 +71,7 @@ public class RecipeCopy extends UseCaseBase {
     private String destinationId;
     private RecipeResponse destinationData;
 
-    private List<RecipeComponentName> copyCompleteList = new ArrayList<>();
+    private List<RecipeComponentNameName> copyCompleteList = new ArrayList<>();
 
     public RecipeCopy(@Nonnull UseCaseHandler handler,
                       @Nonnull UniqueIdProvider idProvider,
@@ -131,7 +131,7 @@ public class RecipeCopy extends UseCaseBase {
         RecipeIdentityResponse response = (RecipeIdentityResponse) sourceData.
                 getDomainModel().
                 getComponentResponses().
-                get(RecipeComponentName.IDENTITY);
+                get(RecipeComponentNameName.IDENTITY);
 
         RecipeIdentityRequest request = new RecipeIdentityRequest.Builder().
                 basedOnResponse(response).
@@ -146,7 +146,7 @@ public class RecipeCopy extends UseCaseBase {
         protected void processResponse(RecipeIdentityResponse response) {
             System.out.println(response);
             // assert business data in source and destination are the same
-            copyCompleteList.add(RecipeComponentName.IDENTITY);
+            copyCompleteList.add(RecipeComponentNameName.IDENTITY);
             checkDataCopyComplete();
         }
     }
@@ -155,7 +155,7 @@ public class RecipeCopy extends UseCaseBase {
         RecipeCourseResponse response = (RecipeCourseResponse) sourceData.
                 getDomainModel().
                 getComponentResponses().
-                get(RecipeComponentName.COURSE);
+                get(RecipeComponentNameName.COURSE);
 
         RecipeCourseRequest request = new RecipeCourseRequest.Builder().
                 basedOnResponse(response).
@@ -169,7 +169,7 @@ public class RecipeCopy extends UseCaseBase {
         @Override
         protected void processResponse(RecipeCourseResponse response) {
             // assert business data in source and destination are the same
-            copyCompleteList.add(RecipeComponentName.COURSE);
+            copyCompleteList.add(RecipeComponentNameName.COURSE);
             checkDataCopyComplete();
         }
     }
@@ -178,7 +178,7 @@ public class RecipeCopy extends UseCaseBase {
         RecipeDurationResponse response = (RecipeDurationResponse) sourceData.
                 getDomainModel().
                 getComponentResponses().
-                get(RecipeComponentName.DURATION);
+                get(RecipeComponentNameName.DURATION);
 
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
                 basedOnResponse(response).
@@ -192,7 +192,7 @@ public class RecipeCopy extends UseCaseBase {
         @Override
         protected void processResponse(RecipeDurationResponse response) {
             // assert business data in source and destination are the same
-            copyCompleteList.add(RecipeComponentName.DURATION);
+            copyCompleteList.add(RecipeComponentNameName.DURATION);
             checkDataCopyComplete();
         }
     }
@@ -200,7 +200,7 @@ public class RecipeCopy extends UseCaseBase {
     private void copyPortions() {
         RecipePortionsResponse response = (RecipePortionsResponse) sourceData.
                 getDomainModel().
-                getComponentResponses().get(RecipeComponentName.PORTIONS);
+                getComponentResponses().get(RecipeComponentNameName.PORTIONS);
 
         RecipePortionsRequest request = new RecipePortionsRequest.Builder().
                 basedOnResponse(response).
@@ -214,16 +214,16 @@ public class RecipeCopy extends UseCaseBase {
         @Override
         protected void processResponse(RecipePortionsResponse response) {
             // assert business data in source and destination are the same
-            copyCompleteList.add(RecipeComponentName.PORTIONS);
+            copyCompleteList.add(RecipeComponentNameName.PORTIONS);
             checkDataCopyComplete();
         }
     }
 
     private void checkDataCopyComplete() {
-        if (copyCompleteList.contains(RecipeComponentName.IDENTITY) &&
-                copyCompleteList.contains(RecipeComponentName.COURSE) &&
-                copyCompleteList.contains(RecipeComponentName.DURATION) &&
-                copyCompleteList.contains(RecipeComponentName.PORTIONS)) {
+        if (copyCompleteList.contains(RecipeComponentNameName.IDENTITY) &&
+                copyCompleteList.contains(RecipeComponentNameName.COURSE) &&
+                copyCompleteList.contains(RecipeComponentNameName.DURATION) &&
+                copyCompleteList.contains(RecipeComponentNameName.PORTIONS)) {
             verifyCopy();
         }
     }
