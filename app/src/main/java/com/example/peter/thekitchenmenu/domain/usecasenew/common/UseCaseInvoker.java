@@ -1,6 +1,6 @@
 package com.example.peter.thekitchenmenu.domain.usecasenew.common;
 
-import com.example.peter.thekitchenmenu.domain.usecasenew.common.componentname.UseCaseInvokerComponentName;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.componentname.UseCaseComponentName;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.message.UseCaseCallback;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.message.UseCaseRequest;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.message.UseCaseResponse;
@@ -16,7 +16,7 @@ public abstract class UseCaseInvoker {
 
     protected UseCaseRequest<? extends UseCaseRequestModel> useCaseRequest;
     UseCaseCallback<UseCaseResponse<? extends UseCaseResponseModel>> useCaseCallback;
-    protected UseCaseInvokerComponentName requestOriginator;
+    protected UseCaseComponentName requestOriginator;
 
     public <REQUEST extends UseCaseRequest<REQUEST_MODEL>,
             REQUEST_MODEL extends DomainModel.UseCaseRequestModel>

@@ -5,12 +5,14 @@ import com.example.peter.thekitchenmenu.domain.usecasenew.common.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.UseCaseInvoker;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.message.UseCaseRequest;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.message.UseCaseRequestProto;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.DomainModel;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.DomainModel.UseCaseRequestModel;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.DomainModel.UseCaseResponseModel;
 import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.course.RecipeCourseUseCase;
 import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.duration.RecipeDurationUseCase;
 import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.identity.RecipeIdentityUseCase;
+import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.identity.RecipeIdentityUseCaseRequestModel;
 import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.portions.RecipePortionsUseCase;
 import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.invoker.metadata.RecipeMacroMetadataUseCase;
 
@@ -62,5 +64,13 @@ public class RecipeInvoker extends UseCaseInvoker {
         }
     }
 
+    private void startComponents() {
+        UseCaseRequestProto request =
+                new UseCaseRequestProto.Builder<RecipeIdentityUseCaseRequestModel>()
+                .setUseCaseComponentName(RecipeComponentName.IDENTITY)
+                .setDataId(dataId)
+                .setDomainId(recipeDomainId)
+                .setRequestModel()
+    }
 
 }

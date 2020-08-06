@@ -6,8 +6,7 @@ import com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component.Recip
  * Tagging interface for enums that describe groups of components that make up an item.
  * see {@link RecipeComponentNameName for an implementation}
  */
-public interface UseCaseInvokerComponentName {
-
+public interface UseCaseComponentName {
     /* an identification marker mostly used by persistence */
     int getId();
 }

@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.domain.usecasenew.recipe.component;
 
 import android.annotation.SuppressLint;
 
-import com.example.peter.thekitchenmenu.domain.usecasenew.common.componentname.UseCaseInvokerComponentName;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.componentname.UseCaseComponentName;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * The group of components that make up a recipe
  */
-public enum RecipeComponentNameName implements UseCaseInvokerComponentName {
+public enum RecipeComponentNameName implements UseCaseComponentName {
     COURSE(1),
     DURATION(2),
     IDENTITY(3),

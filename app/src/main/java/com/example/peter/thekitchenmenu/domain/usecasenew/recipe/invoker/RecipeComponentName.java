@@ -2,14 +2,14 @@ package com.example.peter.thekitchenmenu.domain.usecasenew.recipe.invoker;
 
 import android.annotation.SuppressLint;
 
-import com.example.peter.thekitchenmenu.domain.usecasenew.common.componentname.UseCaseInvokerComponentName;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.componentname.UseCaseComponentName;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public enum RecipeComponentName
         implements
-        UseCaseInvokerComponentName {
+        UseCaseComponentName {
 
     RECIPE_INVOKER(0),
     COURSE(1),

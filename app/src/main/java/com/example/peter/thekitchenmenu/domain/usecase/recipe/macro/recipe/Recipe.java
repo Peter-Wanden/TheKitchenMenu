@@ -145,6 +145,10 @@ public class Recipe extends UseCaseBase {
         System.out.println(TAG + "extractRequestOriginator: " + requestOriginator);
     }
 
+    private boolean isNewRequest(String recipeId) {
+        return !this.recipeDomainId.equals(recipeId);
+    }
+
     private void startComponents() {
         componentResponses.clear();
         componentStates.clear();

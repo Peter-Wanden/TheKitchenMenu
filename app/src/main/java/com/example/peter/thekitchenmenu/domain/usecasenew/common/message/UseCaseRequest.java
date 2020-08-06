@@ -1,15 +1,15 @@
 package com.example.peter.thekitchenmenu.domain.usecasenew.common.message;
 
-import com.example.peter.thekitchenmenu.domain.usecasenew.common.componentname.UseCaseInvokerComponentName;
+import com.example.peter.thekitchenmenu.domain.usecasenew.common.componentname.UseCaseComponentName;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.DomainModel;
 
 import javax.annotation.Nonnull;
 
 public class UseCaseRequest<REQUEST_MODEL extends DomainModel.UseCaseRequestModel> {
 
-    protected UseCaseInvokerComponentName componentName;
     protected String dataId;
     protected String domainId;
+    protected UseCaseComponentName componentName;
     protected REQUEST_MODEL requestModel;
 
     protected UseCaseRequest() {
@@ -27,7 +27,7 @@ public class UseCaseRequest<REQUEST_MODEL extends DomainModel.UseCaseRequestMode
         return requestModel;
     }
 
-    public UseCaseInvokerComponentName getComponentName() {
+    public UseCaseComponentName getComponentName() {
         return componentName;
     }
 
