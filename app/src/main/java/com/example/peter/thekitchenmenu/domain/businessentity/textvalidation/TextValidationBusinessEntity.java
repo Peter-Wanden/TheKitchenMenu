@@ -3,9 +3,6 @@ package com.example.peter.thekitchenmenu.domain.businessentity.textvalidation;
 import com.example.peter.thekitchenmenu.domain.businessentity.BusinessEntity;
 import com.example.peter.thekitchenmenu.domain.businessentity.BusinessEntityResponse;
 
-import static com.example.peter.thekitchenmenu.domain.businessentity.textvalidation.TextValidationBusinessEntityTextLength.*;
-import static com.example.peter.thekitchenmenu.domain.businessentity.textvalidation.TextValidationFailReason.*;
-
 public class TextValidationBusinessEntity
         extends
         BusinessEntity<TextValidationModel> {
@@ -31,12 +28,12 @@ public class TextValidationBusinessEntity
     @Override
     protected void beginProcessingDomainModel() {
         if (model.getText() == null) {
-            failReasons.add(TEXT_NULL);
+            failReasons.add(TextValidationFailReason.TEXT_NULL);
             sendResponse();
 
-        } else if (model.getTextLength().equals(SHORT_TEXT)) {
+        } else if (model.getTextLength().equals(TextValidationBusinessEntityTextLength.SHORT_TEXT)) {
             validateShortText(model.getText());
-        } else if (model.getTextLength().equals(LONG_TEXT)) {
+        } else if (model.getTextLength().equals(TextValidationBusinessEntityTextLength.LONG_TEXT)) {
             validateLongText(model.getText());
         } else {
             throw new UnsupportedOperationException("Unknown request type: " + model);
@@ -45,20 +42,20 @@ public class TextValidationBusinessEntity
 
     private void validateShortText(String text) {
         if (model.getText() == null) {
-            failReasons.add(TEXT_NULL);
+            failReasons.add(TextValidationFailReason.TEXT_NULL);
         } else if (text.length() < shortTextMinLength) {
-            failReasons.add(TEXT_TOO_SHORT);
+            failReasons.add(TextValidationFailReason.TEXT_TOO_SHORT);
         } else if (text.length() > shortTextMaxLength) {
-            failReasons.add(TEXT_TOO_LONG);
+            failReasons.add(TextValidationFailReason.TEXT_TOO_LONG);
         }
         sendResponse();
     }
 
     private void validateLongText(String text) {
         if (text.length() < longTextMinLength) {
-            failReasons.add(TEXT_TOO_SHORT);
+            failReasons.add(TextValidationFailReason.TEXT_TOO_SHORT);
         } else if (text.length() > longTextMaxLength) {
-            failReasons.add(TEXT_TOO_LONG);
+            failReasons.add(TextValidationFailReason.TEXT_TOO_LONG);
         }
         sendResponse();
     }

@@ -1,7 +1,6 @@
 package com.example.peter.thekitchenmenu.domain.usecasenew.common.message;
 
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.componentname.UseCaseComponentName;
-import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.DomainModel;
 import com.example.peter.thekitchenmenu.domain.usecasenew.common.model.DomainModel.UseCaseRequestModel;
 
 import javax.annotation.Nonnull;
@@ -50,29 +49,30 @@ public class UseCaseRequestProto {
                 '}';
     }
 
-    public static class Builder<REQUEST_MODEL extends DomainModel.UseCaseRequestModel> {
+    public static class Builder {
 
         protected UseCaseComponentName useCaseComponentName;
         protected String dataId;
         protected String domainId;
         protected UseCaseRequestModel requestModel;
 
-        public Builder<REQUEST_MODEL> setUseCaseComponentName(UseCaseComponentName useCaseComponentName) {
+        public Builder setUseCaseComponentName(
+                UseCaseComponentName useCaseComponentName) {
             this.useCaseComponentName = useCaseComponentName;
             return this;
         }
 
-        public Builder<REQUEST_MODEL> setDataId(String dataId) {
+        public Builder setDataId(String dataId) {
             this.dataId = dataId;
             return this;
         }
 
-        public Builder<REQUEST_MODEL> setDomainId(String domainId) {
+        public Builder setDomainId(String domainId) {
             this.domainId = domainId;
             return this;
         }
 
-        public Builder<REQUEST_MODEL> setRequestModel(UseCaseRequestModel requestModel) {
+        public Builder setRequestModel(UseCaseRequestModel requestModel) {
             this.requestModel = requestModel;
             return this;
         }

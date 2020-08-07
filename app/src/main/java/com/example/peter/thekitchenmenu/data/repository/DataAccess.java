@@ -14,7 +14,8 @@ import javax.annotation.Nonnull;
 
 
 public abstract class DataAccess<PERSISTENCE_MODEL extends DomainModel.PersistenceModel>
-        implements DomainDataAccess<PERSISTENCE_MODEL> {
+        implements
+        DomainDataAccess<PERSISTENCE_MODEL> {
 
     protected DomainDataAccess<PERSISTENCE_MODEL> remoteDomainDataAccess;
     protected DomainDataAccess<PERSISTENCE_MODEL> localDomainDataAccess;
