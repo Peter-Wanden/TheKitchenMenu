@@ -55,17 +55,12 @@ public abstract class UseCaseData<
         System.out.println(TAG + "Request No:" + accessCount + " " + useCaseRequest);
 
         // extract id's
-        String requestDataId = useCaseRequest.getDataId() == null ?
-                UseCaseMessageModelDataId.NO_ID :
-                useCaseRequest.getDataId();
-
-        String requestDomainId = useCaseRequest.getDomainId() == null ?
-                UseCaseMessageModelDataId.NO_ID :
-                useCaseRequest.getDomainId();
+        String requestDataId = useCaseRequest.getDataId() == null ? NO_ID : useCaseRequest.getDataId();
+        String requestDomainId = useCaseRequest.getDomainId() == null ? NO_ID : useCaseRequest.getDomainId();
 
         // Explaining variables
-        boolean requestHasDataId = !UseCaseMessageModelDataId.NO_ID.equals(requestDataId);
-        boolean requestHasDomainId = !UseCaseMessageModelDataId.NO_ID.equals(requestDomainId);
+        boolean requestHasDataId = !NO_ID.equals(requestDataId);
+        boolean requestHasDomainId = !NO_ID.equals(requestDomainId);
         boolean requestHasNoIds = !requestHasDataId && !requestHasDomainId;
         boolean isDataIdChanged = requestHasDataId && !requestDataId.equals(useCaseDataId);
         boolean isDomainIdChanged = requestHasDomainId && !requestDomainId.equals(useCaseDomainId);
