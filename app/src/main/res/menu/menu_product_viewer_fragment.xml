@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/menu_item_post_product"
+        android:title="@string/menu_item_post_product"
+        app:showAsAction="always|withText">
+    </item>
+
+    <item
+        android:id="@+id/menu_item_done"
+        android:title="@string/menu_item_use"
+        android:icon="@drawable/ic_done"
+        app:showAsAction="always">
+    </item>
+
+    <item
+        android:id="@+id/menu_item_edit_product"
+        android:title="@string/menu_item_edit_product"
+        android:icon="@drawable/ic_edit"
+        />
+
+    <item
+        android:id="@+id/menu_item_delete_product"
+        android:title="@string/menu_item_delete_product"
+        android:icon="@drawable/ic_delete"
+        />
+
+    <item
+        android:id="@+id/menu_item_discard_changes"
+        android:title="@string/menu_item_discard_changes"
+        />
+</menu>

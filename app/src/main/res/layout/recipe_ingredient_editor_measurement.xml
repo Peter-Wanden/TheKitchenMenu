@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/recipe_ingredient_measurement_editor_parentCL"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/vertical_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent=".26" />
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:contentDescription="TODO"
+        android:src="@drawable/rectangle_radius_4dp"
+        app:layout_constraintBottom_toBottomOf="@id/recipe_ingredient_editable_conversion_factor"
+        app:layout_constraintEnd_toEndOf="@id/recipe_ingredient_unit_of_measure_spinner"
+        app:layout_constraintStart_toStartOf="@id/recipe_ingredient_unit_of_measure_label"
+        app:layout_constraintTop_toTopOf="@id/recipe_ingredient_measurement_editor_label" />
+
+    <TextView
+        android:id="@+id/recipe_ingredient_measurement_editor_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:paddingStart="8dp"
+        android:paddingTop="4dp"
+        android:paddingEnd="8dp"
+        android:text="@string/recipe_ingredient_recipe_name"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/recipe_ingredient_unit_of_measure_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:text="@string/recipe_ingredient_unit_of_measure_label"
+        app:layout_constraintBottom_toBottomOf="@id/recipe_ingredient_unit_of_measure_spinner"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/recipe_ingredient_unit_of_measure_spinner" />
+
+    <androidx.appcompat.widget.AppCompatSpinner
+        android:id="@+id/recipe_ingredient_unit_of_measure_spinner"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="8dp"
+        android:dropDownWidth="wrap_content"
+        android:minHeight="@dimen/standard_input_item_height"
+        android:spinnerMode="dropdown"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/vertical_guideline"
+        app:layout_constraintTop_toBottomOf="@id/recipe_ingredient_measurement_editor_label" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/recipe_ingredient_size_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        app:layout_constraintBaseline_toBaselineOf="@id/recipe_ingredient_editable_measurement_one"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="@string/product_size_label" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/recipe_ingredient_editable_measurement_two"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:minEms="3"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:textAlignment="center"
+        app:layout_constraintStart_toStartOf="@id/vertical_guideline"
+        app:layout_constraintTop_toBottomOf="@id/recipe_ingredient_unit_of_measure_spinner"
+        tools:text="22" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/recipe_ingredient_measurement_label_two"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        app:layout_constraintBaseline_toBaselineOf="@id/recipe_ingredient_editable_measurement_two"
+        app:layout_constraintStart_toEndOf="@id/recipe_ingredient_editable_measurement_two"
+        tools:text="l" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/recipe_ingredient_editable_measurement_one"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:minEms="3"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:textAlignment="center"
+        app:layout_constraintBaseline_toBaselineOf="@id/recipe_ingredient_editable_measurement_two"
+        app:layout_constraintStart_toEndOf="@id/recipe_ingredient_measurement_label_two"
+        tools:text="16" />
+
+    <Spinner
+        android:id="@+id/recipe_ingredient_count_unitTwo_spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBaseline_toBaselineOf="@id/recipe_ingredient_editable_measurement_two"
+        app:layout_constraintEnd_toEndOf="@id/recipe_ingredient_editable_measurement_one"
+        app:layout_constraintStart_toStartOf="@id/recipe_ingredient_editable_measurement_one" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/recipe_ingredient_measurement_label_one"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        app:layout_constraintBaseline_toBaselineOf="@id/recipe_ingredient_editable_measurement_two"
+        app:layout_constraintStart_toEndOf="@id/recipe_ingredient_editable_measurement_one"
+        tools:text="ml" />
+
+    <com.google.android.material.checkbox.MaterialCheckBox
+        android:id="@+id/recipe_ingredient_advanced_check_box"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toStartOf="@id/vertical_guideline"
+        app:layout_constraintTop_toBottomOf="@id/recipe_ingredient_editable_measurement_two" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/recipe_ingredient_measurement_advanced_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/volume_to_weight_conversion_advanced_label"
+        app:layout_constraintBottom_toBottomOf="@id/recipe_ingredient_advanced_check_box"
+        app:layout_constraintStart_toStartOf="@id/vertical_guideline"
+        app:layout_constraintTop_toTopOf="@id/recipe_ingredient_advanced_check_box" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/recipe_ingredient_conversion_factor_message"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:text="@string/volume_to_weight_conversion_factor_label"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/recipe_ingredient_advanced_check_box" />
+
+    <EditText
+        android:id="@+id/recipe_ingredient_editable_conversion_factor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:ems="8"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:textAlignment="center"
+        app:layout_constraintStart_toStartOf="@id/vertical_guideline"
+        app:layout_constraintTop_toBottomOf="@id/recipe_ingredient_conversion_factor_message"
+        tools:text="0.20349" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/recipe_ingredient_conversion_factor_label"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:gravity="center"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:text="@string/conversion_factor_used_for_this_ingredient"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/recipe_ingredient_editable_measurement_two" />
+
+    <TextView
+        android:id="@+id/recipe_ingredient_conversion_factor"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/recipe_ingredient_conversion_factor_label"
+        tools:text="0.20349" />
+</androidx.constraintlayout.widget.ConstraintLayout>

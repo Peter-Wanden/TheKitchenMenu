@@ -20,6 +20,11 @@
             android:id="@+id/nav_lists"
             android:icon="@drawable/ic_list"
             android:title="@string/nav_lists"/>
+        <item
+            android:id="@+id/nav_add_ingredient"
+            android:title="@string/add_ingredient"
+            />
+
     </group>
     <group
         android:id="@+id/nav_settings"

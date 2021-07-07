@@ -38,51 +38,48 @@ public class Converters {
                 shelfLife = context.getResources().getString(R.string.one_day);
                 break;
             case 2:
-                shelfLife = context.getResources().getString(R.string.three_days);
+                shelfLife = context.getResources().getString(R.string.two_days);
                 break;
             case 3:
-                shelfLife = context.getResources().getString(R.string.five_days);
+                shelfLife = context.getResources().getString(R.string.three_days);
                 break;
             case 4:
-                shelfLife = context.getResources().getString(R.string.one_week);
+                shelfLife = context.getResources().getString(R.string.four_days);
                 break;
             case 5:
-                shelfLife = context.getResources().getString(R.string.two_weeks);
+                shelfLife = context.getResources().getString(R.string.five_days);
                 break;
             case 6:
-                shelfLife = context.getResources().getString(R.string.three_weeks);
+                shelfLife = context.getResources().getString(R.string.six_days);
                 break;
             case 7:
-                shelfLife = context.getResources().getString(R.string.four_weeks);
+                shelfLife = context.getResources().getString(R.string.one_week);
                 break;
             case 8:
-                shelfLife = context.getResources().getString(R.string.frozen);
+                shelfLife = context.getResources().getString(R.string.two_weeks);
                 break;
             case 9:
-                shelfLife = context.getResources().getString(R.string.dried);
+                shelfLife = context.getResources().getString(R.string.three_weeks);
                 break;
             case 10:
-                shelfLife = context.getResources().getString(R.string.sealed);
+                shelfLife = context.getResources().getString(R.string.four_weeks);
                 break;
             case 11:
-                shelfLife = context.getResources().getString(R.string.tin);
+                shelfLife = context.getResources().getString(R.string.frozen);
                 break;
             case 12:
-                shelfLife = context.getResources().getString(R.string.jar);
+                shelfLife = context.getResources().getString(R.string.dried);
                 break;
             case 13:
-                shelfLife = context.getResources().getString(R.string.bottle);
+                shelfLife = context.getResources().getString(R.string.tin);
                 break;
             case 14:
-                shelfLife = context.getResources().getString(R.string.box);
+                shelfLife = context.getResources().getString(R.string.jar);
                 break;
             case 15:
-                shelfLife = context.getResources().getString(R.string.packet);
+                shelfLife = context.getResources().getString(R.string.bottle);
                 break;
-            case 16:
-                shelfLife = context.getResources().getString(R.string.not_applicable);
-                break;
-            default: shelfLife = context.getResources().getString(R.string.shelf_life_default);
+            default: shelfLife = context.getResources().getString(R.string.one_day);
 
         }
         return shelfLife;
@@ -95,12 +92,12 @@ public class Converters {
 
         switch (requestCategory) {
             case 1:
-                category = context.getResources().getString(R.string.food);
-                break;
-            case 2:
                 category = context.getResources().getString(R.string.non_food);
                 break;
-            default: category = context.getResources().getString(R.string.shelf_life_default);
+            case 2:
+                category = context.getResources().getString(R.string.food);
+                break;
+            default: category = context.getResources().getString(R.string.non_food);
         }
         return category;
     }

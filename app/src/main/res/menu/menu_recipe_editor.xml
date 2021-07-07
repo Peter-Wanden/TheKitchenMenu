@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Options menu for the RecipeDetail Activity -->
+
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/menu_recipe_editor_action_review"
+        android:contentDescription="@string/cd_use"
+        android:title="@string/menu_item_use"
+        app:showAsAction="always" />
+</menu>

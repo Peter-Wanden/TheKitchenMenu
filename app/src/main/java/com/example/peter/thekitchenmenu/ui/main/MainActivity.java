@@ -5,8 +5,10 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.data.databaseRemote.RemoteSignIn;
-import com.example.peter.thekitchenmenu.ui.catalog.ProductCatalogMain;
+import com.example.peter.thekitchenmenu.data.repository.source.remote.RemoteSignIn;
+import com.example.peter.thekitchenmenu.ui.catalog.product.ProductCatalogActivity;
+import com.example.peter.thekitchenmenu.ui.catalog.recipe.mvc.RecipeCatalogActivity;
+import com.example.peter.thekitchenmenu.ui.detail.ingredient.IngredientEditorActivity;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.Nullable;
@@ -18,7 +20,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String TAG = "MainActivity";
+    private static final String TAG = "tkm-" + MainActivity.class.getSimpleName() + ":";
 
     RemoteSignIn remoteSignIn;
 
@@ -30,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.main);
 //        remoteSignIn = new RemoteSignIn(this);
-
         initialiseViews();
     }
 
@@ -40,9 +41,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         ActionBar actionBar = getSupportActionBar();
-
         if (actionBar != null) {
-
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
         }
@@ -59,36 +58,46 @@ public class MainActivity extends AppCompatActivity {
             // For example, swap UI fragments here
             switch (menuItem.getItemId()) {
 
-                case R.id.sign_out:
+                case R.id.nav_recipes:
+                    launchRecipeActivity();
 
+                case R.id.sign_out:
 //                    remoteSignIn.signOut(this);
                     return true;
 
                 case R.id.nav_products:
-
                     launchProductActivity();
+                    return true;
+
+                case R.id.nav_add_ingredient:
+                    launchIngredientActivity();
                     return true;
             }
             return true;
         });
     }
 
-    void launchProductActivity() {
+    private void launchRecipeActivity() {
+        Intent intent = new Intent(this, RecipeCatalogActivity.class);
+        startActivity(intent);
+    }
 
-        Intent launchProductActivity = new Intent(
-                MainActivity.this, ProductCatalogMain.class);
-        startActivity(launchProductActivity);
+    private void launchProductActivity() {
+        Intent intent = new Intent(this, ProductCatalogActivity.class);
+        startActivity(intent);
+//        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+    }
 
-        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+    private void launchIngredientActivity() {
+        Intent intent = new Intent(this, IngredientEditorActivity.class);
+        startActivity(intent);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
-
             case android.R.id.home:
-
                 drawerLayout.openDrawer(GravityCompat.START);
                 return true;
         }
@@ -96,30 +105,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-
-//        remoteSignIn.authStateListener(true);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-//        remoteSignIn.authStateListener(false);
-    }
-
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
 //        remoteSignIn.signInResult(requestCode, resultCode, data);
-    }
-
-    @Override
-    public void finish() {
-        super.finish();
-
-        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 }

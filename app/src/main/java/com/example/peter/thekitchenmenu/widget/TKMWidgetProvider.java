@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.RemoteViews;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.ui.catalog.ProductCatalogMain;
+import com.example.peter.thekitchenmenu.ui.catalog.product.ProductCatalogActivity;
 
 /**
  * Implementation of App Widget functionality.
@@ -58,7 +58,7 @@ public class TKMWidgetProvider extends AppWidgetProvider {
         remoteViews.setRemoteAdapter(R.id.tkmwidget_provider_lv_products, intentAdapter);
 
         // An intent that launches the MainActivity when the widget button is clicked.
-        Intent intentActivity = new Intent(context, ProductCatalogMain.class);
+        Intent intentActivity = new Intent(context, ProductCatalogActivity.class);
 
         PendingIntent pendingIntent = PendingIntent.getActivity(
                 context,
@@ -96,7 +96,7 @@ public class TKMWidgetProvider extends AppWidgetProvider {
     @Override
     public void onDeleted(Context context, int[] appWidgetIds) {
         super.onDeleted(context, appWidgetIds);
-        // There is no more widget so delete the recipe info from shared preferences
+        // There is no more widget so deleteByFavoriteProductId the recipe info from shared preferences
         for (int widgetId : appWidgetIds) {
             context.getSharedPreferences(String.valueOf(widgetId), Context.MODE_PRIVATE)
                     .edit()

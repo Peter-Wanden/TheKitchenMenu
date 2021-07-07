@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/product_user_data_editable_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/retailer_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="@string/label_retailer"
+        app:layout_constraintBottom_toTopOf="@id/editable_retailer"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/editable_retailer"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/standard_input_item_height"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:hint="@string/hint_retailer"
+        android:inputType="textCapSentences"
+        app:layout_constraintBottom_toTopOf="@id/price_label"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/retailer_label" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/price_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/label_price"
+        app:layout_constraintBottom_toTopOf="@id/editable_price"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editable_retailer" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/editable_price"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/standard_input_item_height"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:hint="@string/hint_price"
+        android:inputType="numberDecimal"
+        app:layout_constraintBottom_toTopOf="@id/storage_room_label"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/price_label" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/storage_room_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/label_location_room"
+        app:layout_constraintBottom_toTopOf="@id/editable_location_room"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editable_price" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/editable_location_room"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/standard_input_item_height"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:hint="@string/hint_location_room"
+        android:inputType="textCapSentences"
+        app:layout_constraintBottom_toTopOf="@id/location_in_room_label"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/storage_room_label" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/location_in_room_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/label_location_in_room"
+        app:layout_constraintBottom_toTopOf="@id/editable_location_in_room"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editable_location_room" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/editable_location_in_room"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/standard_input_item_height"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:hint="@string/hint_location_in_room"
+        android:inputType="textCapSentences"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/location_in_room_label" />
+</androidx.constraintlayout.widget.ConstraintLayout>

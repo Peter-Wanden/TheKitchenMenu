@@ -1,86 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:bind="http://schemas.android.com/tools">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/product_editor_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <data>
-        <variable
-            name="productEditorViewModel"
-            type="com.example.peter.thekitchenmenu.viewmodels.ProductEditorViewModel">
-        </variable>
-    </data>
-
-    <RelativeLayout
-        android:id="@+id/product_editor_parent"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/product_editor_appbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <!--<com.google.android.material.floatingactionbutton.FloatingActionButton-->
-            <!--android:id="@+id/fab"-->
-            <!--android:onClick="@{() -> productEditorViewModel.onFabClick()}"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_margin="@dimen/fab_margin"-->
-            <!--android:src="@drawable/ic_action_done"-->
-            <!--android:tint="@color/white"-->
-            <!--app:backgroundTint="@color/textColorHighlight"-->
-            <!--android:layout_alignParentBottom="true"-->
-            <!--android:layout_alignParentEnd="true"/>-->
+        android:layout_height="wrap_content">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
-            app:title="@{productEditorViewModel.title}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/primaryColor"
+            android:layout_alignParentTop="true"
             android:elevation="@dimen/starting_elevation"
-            android:fitsSystemWindows="true"
-            android:layout_alignParentTop="true"/>
+            android:fitsSystemWindows="true" />
+    </com.google.android.material.appbar.AppBarLayout>
 
-        <ScrollView
-            android:id="@+id/scroll_view"
+    <ScrollView
+        android:id="@+id/scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/product_editor_appbar">
+
+        <LinearLayout
+            android:id="@+id/product_editor_include_parent"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/toolbar">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-            <LinearLayout
-                android:id="@+id/product_editor_include_parent"
+            <FrameLayout
+                android:id="@+id/image_editor_content_frame"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_height="wrap_content"/>
 
-                <fragment
-                    android:id="@+id/image_editor_fragment"
-                    android:name="com.example.peter.thekitchenmenu.ui.detail.product.editor.ImageEditor"
-                    android:layout_width="match_parent"
-                    android:layout_height="250dp"
-                    bind:layout="@layout/image_editor">
-                </fragment>
+            <FrameLayout
+                android:id="@+id/product_identity_content_frame"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
-                <fragment
-                    android:id="@+id/product_identity_fragment"
-                    android:name="com.example.peter.thekitchenmenu.ui.detail.product.editor.ProductIdentityEditor"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    bind:layout="@layout/product_identity_editor">
-                </fragment>
+            <FrameLayout
+                android:id="@+id/product_measurement_content_frame"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
-                <fragment
-                    android:id="@+id/product_size_fragment"
-                    android:name="com.example.peter.thekitchenmenu.ui.detail.product.editor.ProductMeasurementEditor"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    bind:layout="@layout/product_measurement_editor">
-                </fragment>
-
-                <fragment
-                    android:id="@+id/product_user_data_editor"
-                    android:name="com.example.peter.thekitchenmenu.ui.detail.product.editor.ProductUserDataEditor"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    bind:layout="@layout/product_user_data_editor">
-                </fragment>
-            </LinearLayout>
-        </ScrollView>
-    </RelativeLayout>
-</layout>
+            <FrameLayout
+                android:id="@+id/product_editor_information_content_frame"
+                android:layout_width="match_parent"
+                android:layout_height="200dp" />
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

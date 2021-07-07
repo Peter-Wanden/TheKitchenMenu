@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--
-    These are the options displayed in the activity_product_detail drop-down spinners. The string
-    values of these options can be found in strings.xml.
-    -->
-
     <string-array name="unit_of_measure_options">
         <item>@string/unit_of_measure_default</item>
         <item>@string/grams</item>
@@ -26,58 +21,58 @@
         <item>@string/header_volume_metric</item>
         <item>@string/header_volume_imperial</item>
         <item>@string/header_count</item>
+        <item>@string/header_volume_imperial_spoon</item>
     </string-array>
 
     <string-array name="unit_of_measure_options_mass_metric">
-        <item>@string/grams</item>
         <item>@string/kilograms</item>
+        <item>@string/grams</item>
     </string-array>
 
     <string-array name="unit_of_measure_options_mass_imperial">
-        <item>@string/ounces</item>
         <item>@string/pounds</item>
+        <item>@string/ounces</item>
     </string-array>
 
     <string-array name="unit_of_measure_options_volume_metric">
-        <item>@string/millilitres</item>
         <item>@string/litres</item>
+        <item>@string/millilitres</item>
     </string-array>
 
     <string-array name="unit_of_measure_options_volume_imperial">
-        <item>@string/fluidOunce</item>
         <item>@string/pints</item>
-        <item>@string/gallons</item>
+        <item>@string/fluidOunce</item>
     </string-array>
 
     <string-array name="unit_of_measure_options_count">
         <item>@string/each</item>
-        <item>@string/piece</item>
-        <item>@string/items</item>
+    </string-array>
+    
+    <string-array name="unit_of_measure_options_volume_teaspoon">
+        <item>@string/tablespoon</item>
+        <item>@string/teaspoon</item>
     </string-array>
 
     <string-array name="shelf_life_options">
-        <item>@string/shelf_life_default</item>
         <item>@string/one_day</item>
+        <item>@string/two_days</item>
         <item>@string/three_days</item>
+        <item>@string/four_days</item>
         <item>@string/five_days</item>
+        <item>@string/six_days</item>
         <item>@string/one_week</item>
         <item>@string/two_weeks</item>
         <item>@string/three_weeks</item>
         <item>@string/four_weeks</item>
         <item>@string/frozen</item>
         <item>@string/dried</item>
-        <item>@string/sealed</item>
         <item>@string/tin</item>
         <item>@string/jar</item>
         <item>@string/bottle</item>
-        <item>@string/box</item>
-        <item>@string/packet</item>
-        <item>@string/not_applicable</item>
     </string-array>
 
     <string-array name="product_category_options">
-        <item>@string/category_default</item>
-        <item>@string/food</item>
         <item>@string/non_food</item>
+        <item>@string/food</item>
     </string-array>
 </resources>

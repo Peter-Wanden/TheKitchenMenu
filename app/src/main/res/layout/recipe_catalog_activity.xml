@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/recipe_catalog_activity_coordinatorLayout_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/recipe_catalog_activity_viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/recipe_catalog_activity_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_add"
+        android:tint="@color/white"
+        android:layout_margin="@dimen/fab_margin"
+        app:backgroundTint="@color/textColorHighlight"
+        app:fabSize="normal"
+        app:layout_anchor="@id/recipe_catalog_activity_viewPager"
+        app:layout_anchorGravity="bottom|right"
+        />
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/recipe_catalog_activity_appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <include layout="@layout/element_toolbar"/>
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/recipe_catalog_activity_tabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+    </com.google.android.material.appbar.AppBarLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
+

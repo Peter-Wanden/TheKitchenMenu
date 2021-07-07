@@ -2,11 +2,10 @@ apply plugin: 'com.android.application'
 
 android {
 
-    compileSdkVersion rootProject.compileSdkVersion
-    buildToolsVersion '28.0.3'
+    compileSdkVersion targetSdkVersion
+    buildToolsVersion '29.0.3'
 
     signingConfigs {
-
         config {
             keyAlias 'TKMKey'
             keyPassword 'Z5g3yqgZZyuCpSfANITG'
@@ -16,7 +15,6 @@ android {
     }
 
     defaultConfig {
-
         applicationId "com.example.peter.thekitchenmenu"
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
@@ -27,7 +25,6 @@ android {
     }
 
     buildTypes {
-
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -40,35 +37,9 @@ android {
         }
     }
 
-    dataBinding.enabled = true
-
     compileOptions {
-
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-
-    flavorDimensions "mock"
-
-    productFlavors {
-
-        mock {
-            applicationIdSuffix = ".mock"
-            dimension "mock"
-        }
-
-        prod {
-        }
-    }
-
-    // Remove mockRelease as it's not needed.
-    android.variantFilter { variant ->
-
-        if (variant.buildType.name == 'release'
-                && variant.getFlavors().get(0).name == 'mock') {
-
-            variant.setIgnore(true)
-        }
+        sourceCompatibility '1.8'
+        targetCompatibility '1.8'
     }
 
     // Always show the result of every unit test, even if it passes.
@@ -88,56 +59,55 @@ dependencies {
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "androidx.appcompat:appcompat:$androidxAppcompat"
-    implementation "com.google.android.material:material:$androidxSupportVersion"
     implementation "androidx.recyclerview:recyclerview:$androidxRecyclerView"
-    implementation "androidx.cardview:cardview:$androidxSupportVersion"
-    implementation "androidx.exifinterface:exifinterface:$androidxSupportVersion"
-    implementation "androidx.legacy:legacy-support-v4:$androidxSupportVersion"
-    implementation "androidx.browser:browser:$androidxSupportVersion"
+    implementation "androidx.cardview:cardview:$androidxCardView"
+    implementation "androidx.exifinterface:exifinterface:1.2.0"
+    implementation "androidx.legacy:legacy-support-v4:$androidxLegacySupport"
+    implementation "androidx.browser:browser:$androidxBrowser"
     implementation "com.google.android.material:material:$androidMaterial"
 
     // Architecture components
     implementation "androidx.lifecycle:lifecycle-extensions:$androidxLifecycleExtensions"
     implementation "androidx.lifecycle:lifecycle-runtime:$androidxLifecycleRuntime"
-    annotationProcessor "androidx.lifecycle:lifecycle-compiler:$androidxArchComponentsVersion"
+    implementation "androidx.lifecycle:lifecycle-common-java8:$androidxLifecycleCommonJava8"
 
     // Room
-    implementation "androidx.room:room-runtime:$androidxRoomVersion"
-    annotationProcessor "androidx.room:room-compiler:$androidxRoomVersion"
+    implementation "androidx.room:room-runtime:$androidxRoomRuntime"
+    annotationProcessor "androidx.room:room-compiler:$androidxRoomCompiler"
 
     // Paging
-    implementation "androidx.paging:paging-runtime:$androidxPagingRuntimeVersion"
+    implementation "androidx.paging:paging-runtime:$androidxPagingRuntime"
 
     // Constraint layout
-    implementation "androidx.constraintlayout:constraintlayout:$androidxConstraintLayoutVersion"
-
-    // A library that will hold the application logic
-    implementation project(':TKMAppLibrary')
+    implementation "androidx.constraintlayout:constraintlayout:$androidxConstraintLayout"
 
     // Gson
-    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation "com.google.code.gson:gson:$gson"
 
-    // Picasso TODO - Replace with Glide
-    implementation "com.squareup.picasso:picasso:$picassoVersion"
+    // Image processing TODO - Replace with Glide
+    implementation "com.squareup.picasso:picasso:$picasso"
+    implementation "com.github.bumptech.glide:glide:$glide"
+    annotationProcessor "com.github.bumptech.glide:compiler:$glide"
+    implementation "com.theartofdev.edmodo:android-image-cropper:$imageCropper"
 
     // Play services
-    implementation "com.google.android.gms:play-services-ads-identifier:$playServicesA"
-    implementation "com.google.android.gms:play-services-auth-api-phone:$playServicesA"
-    implementation "com.google.android.gms:play-services-auth-base:$playServicesA"
-    implementation "com.google.android.gms:play-services-phenotype:$playServicesA"
-    implementation "com.google.android.gms:play-services-auth:$playServicesB"
-    implementation "com.google.android.gms:play-services-base:$playServicesC"
-    implementation "com.google.android.gms:play-services-stats:$playServicesB"
-    implementation "com.google.android.gms:play-services-flags:$playServicesB"
-    implementation "com.google.android.gms:play-services-tasks:$playServicesB"
-    implementation "com.google.android.gms:play-services-basement:$playServicesC"
+    implementation "com.google.android.gms:play-services-ads-identifier:$playServicesAdsIdentifier"
+    implementation "com.google.android.gms:play-services-auth:$playServicesAuth"
+    implementation "com.google.android.gms:play-services-auth-base:$playServicesAuthBase"
+    implementation "com.google.android.gms:play-services-base:$playServicesBase"
+    implementation "com.google.android.gms:play-services-flags:$playServicesFlags"
+    implementation "com.google.android.gms:play-services-phenotype:$playServicesPhenotype"
+    implementation "com.google.android.gms:play-services-stats:$playServicesStats"
+    implementation "com.google.android.gms:play-services-tasks:$playServicesTasks"
+    implementation "com.google.android.gms:play-services-auth-api-phone:$playServicesAuthApiPhone"
+    implementation "com.google.android.gms:play-services-basement:$playServicesBasement"
 
     // Firebase
-    implementation "com.google.firebase:firebase-database:$firebaseDatabase"
-    implementation "com.google.firebase:firebase-core:$firebaseCore"
     implementation "com.google.firebase:firebase-auth:$firebaseAuth"
+    implementation "com.google.firebase:firebase-config:$firebaseConfig"
+    implementation "com.google.firebase:firebase-core:$firebaseCore"
+    implementation "com.google.firebase:firebase-database:$firebaseDatabase"
     implementation "com.google.firebase:firebase-storage:$firebaseStorage"
-    implementation "com.google.firebase:firebase-config:$firebaseConfigVersion"
 
     //////// Firebase UI ////////
     implementation "com.firebaseui:firebase-ui-auth:$firebaseUiAuth"
@@ -146,36 +116,41 @@ dependencies {
     implementation "com.firebaseui:firebase-ui-database:$firebaseUiAuth"
 
     //////// TESTING ////////
-    // Core library
-    testImplementation "junit:junit:$rootProject.ext.junit"
-    androidTestImplementation "androidx.test:core:$androidxTestCore"
+    testImplementation "junit:junit:$junit"
+    testImplementation "org.mockito:mockito-all:$mockito"
+    testImplementation "org.hamcrest:hamcrest-all:$hamcrest"
+
+    testImplementation "androidx.arch.core:core-testing:$androidxArchCoreTesting"
 
     // AndroidJUnitRunner and JUnit Rules
     androidTestImplementation "androidx.test:runner:$androidxTestRunner"
     androidTestImplementation "androidx.test:rules:$androidxTestRules"
 
-    // Assertions
-    androidTestImplementation "androidx.test.ext:junit:$androidxTestExtJunit"
+    androidTestImplementation "androidx.room:room-testing:$androidxRoomTesting"
+
+    // Dependencies for Android unit tests
+    androidTestImplementation "junit:junit:$junit"
+    androidTestImplementation "org.mockito:mockito-core:$mockitoCore"
+    androidTestImplementation "com.google.dexmaker:dexmaker:$googleDexmaker"
 
     // Espresso UI Testing dependencies.
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspresso"
     androidTestImplementation "androidx.test.espresso:espresso-contrib:$androidxEspresso"
     androidTestImplementation "androidx.test.espresso:espresso-intents:$androidxEspresso"
+    androidTestImplementation "androidx.test.espresso.idling:idling-concurrent:$androidxEspresso"
+    implementation "androidx.test.espresso:espresso-idling-resource:$androidxEspresso"
 
-    testImplementation "org.mockito:mockito-all:$mockitoVersion"
-    testImplementation "org.powermock:powermock-module-junit4:$powerMockito"
-    testImplementation "org.powermock:powermock-api-mockito:$powerMockito"
-
-    testImplementation "org.hamcrest:hamcrest-all:$hamcrest"
+    /*
+    Resolves dependency versions across test and production APKs, specifically, transitive
+    dependencies. This is required since Espresso internally has a dependency on support-annotations.
+    */
+    androidTestImplementation "androidx.annotation:annotation:$annotations"
+    androidTestImplementation "androidx.legacy:legacy-support-v4:$androidxLegacySupport"
+    androidTestImplementation "androidx.recyclerview:recyclerview:$androidxRecyclerView"
+    androidTestImplementation "androidx.appcompat:appcompat:$androidxAppcompat"
+    androidTestImplementation "com.google.android.material:material:$androidMaterial"
+    implementation "com.google.code.findbugs:jsr305:$googleFindBugs"
 }
 
 // Reads the configuration information in app/google-services.json
 apply plugin: 'com.google.gms.google-services'
-
-/*
-Resolves dependency versions across test and production APKs, specifically, transitive
-dependencies. This is required since Espresso internally has a dependency on support-annotations.
-*/
-configurations.all {
-    resolutionStrategy.force "androidx.annotation:annotation:$androidxSupportVersion"
-}

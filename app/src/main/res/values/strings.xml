@@ -2,48 +2,52 @@
     <string name="app_name">The Kitchen Menu</string>
 
     <!-- CONTENT DESCRIPTIONS -->
-    <!-- Attach to any ImageView's of the product_uneditable -->
-    <string name="cd_picture_of_product">A picture of the productEntity</string>
+    <!-- Attach to any ImageView's of the product_viewer_identity -->
+    <string name="cd_picture_of_product">A picture of the product</string>
     <string name="cd_add_image_from_camera">Select to add image from camera</string>
     <string name="cd_add_image_from_gallery">Click to add image from gallery</string>
     <!-- Attach to any ImageView's of the recipe -->
-    <string name="cd_save_product">Click to save the current productEntity</string>
-    <string name="cd_delete_product">Click to delete the current productEntity</string>
-    <string name="cd_action_edit_product">Click to edit the current productEntity</string>
+    <string name="cd_done">Click when done editing</string>
+    <string name="cd_use">Click to use</string>
+    <string name="cd_delete_product">Click to delete the current product</string>
+    <string name="cd_action_edit_product">Click to edit the current product</string>
     <string name="cd_add_image">Click to add a picture</string>
     <string name="cd_rotate_image">Click to rotate picture</string>
-    <string name="cd_add_product">Add a productEntity</string>
+    <string name="cd_add_product">Add a product</string>
     <string name="cd_brand_logo">The kitchen menu brand logo</string>
 
+    <string name="cd_picture_of_ingredient">A image of the ingredient to be used with this recipe</string>
+
     <!-- Common field labels and hints -->
-    <string name="label_description">Description</string>
-    <string name="label_made_by">Made by</string>
-    <string name="hint_made_by">Who the manufacturer?</string>
+    <string name="label_description">Manufacturer or retailers exact description</string>
+    <string name="hint_description">eg. Lurpak spreadable lighter, unsalted</string>
+    <string name="label_shopping_list_item">What do you call this item on your shopping list?</string>
+    <string name="hint_shopping_list_item">eg. Butter</string>
     <string name="label_retailer">Retailer</string>
-    <string name="hint_description">Retailers description</string>
     <string name="hint_retailer">Where do you buy it?</string>
     <string name="label_location_room">Storage room</string>
     <string name="hint_location_room">What room do you keep it?</string>
     <string name="label_location_in_room">Where abouts?</string>
     <string name="hint_location_in_room">Where abouts in the room?</string>
-    <string name="pack_size_label">Total pack %1$s</string>
+    <string name="pack_size_label">Total %1$s</string>
+    <string name="ingredient_size_label">Total %1$s</string>
+    <string name="product_size_label">Item %1$s</string>
     <string name="pack_size_total_hint">How many %1$s?</string>
-    <string name="item_size_label">Single pack %1$s</string>
     <string name="item_size_hint">How many %1$s?</string>
     <string name="label_pack_size">Pack size</string>
     <string name="label_item_size">Item size</string>
     <string name="hint_pack_size">Weight/volume of pack</string>
     <string name="hint_item_size">Weight/volume of each item</string>
-    <string name="unit_of_measure_label">Sold in units of</string>
-    <string name="label_multi_pack">Multipack?</string>
-    <string name="label_number_of_packs">Number of packs / items (multipack only)</string>
+    <string name="unit_of_measure_label">Sold by</string>
+    <string name="label_multi_pack">Multipack</string>
+    <string name="label_number_of_packs">No of items</string>
     <string name="label_price">Price</string>
     <string name="hint_price">How much does it cost?</string>
     <string name="label_shelf_life">Shelf life</string>
     <string name="label_category">Category</string>
     <string name="label_quantity">Quantity</string>
 
-    <!-- ProductDetail unit of measure spinner options -->
+    <!-- Unit of measure spinner options -->
     <!-- See arrays.xml "unit_of_measure_options" for usage -->
     <string name="unit_of_measure_default">Please select</string>
     <string name="grams">g</string>
@@ -58,7 +62,11 @@
     <string name="gallons">gal</string>
     <string name="each">each</string>
     <string name="piece">piece</string>
+    <string name="whole">whole</string>
+    <string name="part">part</string>
     <string name="items">items</string>
+    <string name="teaspoon">tsp</string>
+    <string name="tablespoon">Tbsp</string>
 
     <!-- Unit of measure types -->
     <string name="mass">weight</string>
@@ -78,30 +86,43 @@
     <string name="header_volume_metric">Volume metric</string>
     <string name="header_volume_imperial">Volume imperial</string>
     <string name="header_count">Count</string>
+    <string name="header_volume_imperial_spoon">Volume imperial</string>
 
     <!-- ProductDetail shelf life spinner options -->
-    <string name="shelf_life_default">Please select</string>
     <string name="one_day">1 day</string>
+    <string name="two_days">2 days</string>
     <string name="three_days">3 days</string>
+    <string name="four_days">4 days</string>
     <string name="five_days">5 days</string>
+    <string name="six_days">6 days</string>
     <string name="one_week">1 week</string>
     <string name="two_weeks">2 weeks</string>
     <string name="three_weeks">3 weeks</string>
     <string name="four_weeks">4 weeks</string>
     <string name="frozen">Frozen</string>
     <string name="dried">Dried</string>
-    <string name="sealed">Sealed</string>
     <string name="tin">Tin</string>
     <string name="jar">Jar</string>
     <string name="bottle">Bottle</string>
-    <string name="box">Box</string>
-    <string name="packet">Packet</string>
-    <string name="not_applicable">N/A</string>
 
     <!-- ProductDetail category spinner options -->
     <string name="category_default">Please select</string>
     <string name="food">Food</string>
     <string name="non_food">Non food</string>
+
+    <!-- Count unitOne fraction spinner values -->
+    <string name="count_fraction_zero_value">None</string>
+    <string name="one_tenth">1/10</string>
+    <string name="one_fifth">1/5</string>
+    <string name="three_tenths">3/10</string>
+    <string name="two_fifths">2/5</string>
+    <string name="half">1/2</string>
+    <string name="three_fifths">3/5</string>
+    <string name="seven_tenths">7/10</string>
+    <string name="four_fifths">4/5</string>
+    <string name="nine_tenths">9/10</string>
+    <string name="one_quarter">1/4</string>
+    <string name="three_quarters">3/4</string>
 
     <!-- Common menu bar options -->
     <string name="action_save">Save</string>
@@ -110,15 +131,33 @@
     <string name="sign_out">Sign out</string>
 
     <!-- Activity titles -->
-    <string name="activity_title_view_product">Product View</string>
-    <string name="activity_detail_product_title">Product Details</string>
-    <string name="activity_title_edit_product">Edit a Product</string>
-    <string name="activity_title_add_new_product">Add a Product</string>
-    <string name="widget_product_title_latest_products">Latest Products</string>
+    <string name="activity_title_product_catalog">Product catalog</string>
+    <string name="activity_title_product_detail">Product details</string>
+    <string name="activity_title_view_product">Product viewer</string>
+    <string name="activity_title_review_new_product">Review before post</string>
+    <string name="activity_title_edit_product">Edit product</string>
+    <string name="activity_title_add_new_product">Add new product</string>
+    <string name="widget_product_title_latest_products">Latest products</string>
+    <string name="activity_title_add_favorite_product">Add favorite</string>
+    <string name="activity_title_edit_favorite_product">Edit favorite</string>
+    <string name="activity_title_recipe_catalog">Recipe catalog</string>
+    <string name="activity_title_add_new_recipe">Add new recipe</string>
+    <string name="activity_title_edit_recipe">Edit recipe</string>
+    <string name="activity_title_copy_recipe">Copy recipe</string>
+    <string name="activity_title_image_cropper">TKM - Image Cropper</string>
+    <string name="activity_title_add_new_ingredient">Add new ingredient</string>
+    <string name="activity_title_edit_ingredient">Edit ingredient</string>
+    <string name="activity_title_recipe_ingredient_editor">Recipe ingredient editor</string>
+    <string name="activity_title_recipe_ingredient_list_activity">Recipe ingredients list</string>
 
     <!-- ProductDetail user input error codes -->
-    <string name="validation_text_too_short">Too short, needs to be between 3 and 70 characters.</string>
-    <string name="validation_text_too_long">To long, needs to be between 3 and 70 characters.</string>
+    <string name="input_error_short_text_too_short">Too short, needs to be between 3 and 70 characters.</string>
+    <string name="input_error_short_text_too_long">To long, needs to be between 3 and 70 characters.</string>
+    <string name="input_error_long_text_too_short">Too short, needs to be between 3 and 70 characters.</string>
+    <string name="input_error_long_text_too_long">To long, needs to be between 3 and 70 characters.</string>
+    <string name="input_error_text_too_short">Too short for this field, text needs to be between %1$s and %2$s characters.</string>
+    <string name="input_error_text_too_long">Too long for this field, text needs to be between %1$s and %2$s characters.</string>
+
     <string name="input_error_product_made_by_too_short">Manufacturer name too short, needs to be
         between 1 and 120 characters.</string>
     <string name="input_error_product_made_by_too_long">Manufacturer name too long, needs to be
@@ -134,6 +173,8 @@
     <string name="input_error_pack_size">Total pack %1$s must not exceed %2$s%3$s. Pack %1$s
         must be between %4$s%5$s and %2$s%3$s. Minimum item %1$s is %4$s%5$s.</string>
 
+    <string name="measurement_input_error">Please enter a value between %1$s%2$s and %3$s%4$s %5$s%6$s</string>
+
     <string name="input_error_product_loc_room_too_short">Storage room name too short, needs to be
         between 1 and 60 characters.</string>
     <string name="input_error_product_loc_room_too_long">Storage room name too long, needs to be
@@ -148,25 +189,64 @@
         characters.</string>
     <string name="input_error_recipe_description_too_long">Recipe description too long, needs to be
         between 1 and 120 characters</string>
-    <string name="input_error_recipe_servings">Recipe must make more than one portion.</string>
-    <string name="validation_error_unit_of_measure">Please select a valid
+    <string name="input_error_recipe_servings">Recipe must make between %1$d and %2$d
+        servings.</string>
+    <string name="input_error_recipe_sittings">Recipe must make between %1$d and %2$d
+        sittings.</string>
+    <string name="validation_error_unit_of_measure">Please select a modelValid
         unit of measure.</string>
     <string name="validation_error_shelf_life">Please select a
-        valid shelf life.</string>
-    <string name="validation_error_category">Please select a valid
+        modelValid shelf life.</string>
+    <string name="validation_error_category">Please select a modelValid
         category.</string>
     <string name="input_error_product_pack_price">Pack price needs to be between 0.01 and 1000
     </string>
     <string name="activity_detail_product_error_incomplete_fields">Please ensure you have completed
         all fields.</string>
 
-    <!-- ProductCatalogMain -->
-    <string name="title_product_catalog">Product Catalog</string>
+    <!-- Recipe editor -->
+    <string name="recipe_description_label">Description</string>
+    <string name="recipe_course">Course</string>
+    <string name="recipe_select_all_that_apply">(tick all that apply)</string>
+    <string name="recipe_category_spinner_label">Category</string>
+    <string name="recipe_servings_label">Servings per sitting</string>
+    <string name="recipe_sittings_label">No of sittings</string>
+    <string name="recipe_total_servings_label">Total number of servings</string>
+    <string name="recipe_prep_time_label">Prep time</string>
+    <string name="recipe_cook_time_label">Cook time</string>
+    <string name="recipe_hours_label">Hours</string>
+    <string name="recipe_minutes_label">Minutes</string>
+
+    <!-- Recipe identity input error messages -->
+    <string name="input_error_recipe_prep_time_too_long">Prep time needs to be under 100 hours</string>
+    <string name="input_error_recipe_cook_time_too_long">Cook time needs to be under 100 hours</string>
+
+    <!-- Recipe course labels -->
+    <string name="course_label_breakfast">Breakfast</string>
+    <string name="course_label_lunch">Lunch</string>
+    <string name="course_label_dinner">Main course</string>
+    <string name="course_label_desert">Desert</string>
+    <string name="course_label_side_dish">Side</string>
+    <string name="course_label_accompaniment">Accompaniment</string>
+    <string name="course_label_snack">Snack</string>
+    <string name="course_label_drink">Drink</string>
+    
+    <!-- Ingredients -->
+    <string name="add_ingredients">Add ingredients</string>
+    <string name="edit_ingredients">Edit ingredients</string>
+    <string name="review_ingredients">Review ingredients</string>
+
+    <!-- ProductCatalogActivity -->
     <string name="product_catalog_empty_view_title_text">The cupboards are empty.</string>
-    <string name="product_catalog_empty_view_subtitle_text">Press + to add some productEntities!</string>
+    <string name="product_catalog_empty_view_subtitle_text">Press + to add some products!</string>
     <string name="image_of_meal">An image of the selected recipe</string>
-    <string name="activity_catalog_products_tab_1_title">Community Products</string>
-    <string name="activity_catalog_products_tab_2_title">My Products</string>
+    <string name="activity_catalog_products_tab_1_title">All Products</string>
+    <string name="activity_catalog_products_tab_2_title">My Favorites</string>
+    <string name="activity_catalog_recipes_tab_1_title">All recipes</string>
+    <string name="activity_catalog_recipes_tab_2_title">My favorites</string>
+
+    <!-- Recipe ingredient Editor -->
+    <string name="recipe_ingredient_recipe_name">Enter an amount for this ingredient</string>
 
     <!-- AdapterProduct -->
     <string name="adapter_catalog_product_creator_yes">Yes</string>
@@ -183,8 +263,13 @@
     <string name="label_added_by_me">Added by me</string>
     <string name="intent_gallery_picker_title">Complete action using</string>
 
+    <string name="error_dialog_data_unavailable_title">Data Unavailable</string>
+    <string name="error_dialog_data_unavailable_message">Cannot access data. Are you connected to the internet?</string>
+    <string name="error_dialog_data_unavailable_positive_button_caption">Try again</string>
+    <string name="error_dialog_data_unavailable_negative_button_caption">Cancel</string>
+
     <!-- Widget specific -->
-    <string name="app_widget_empty_view">Press the add button to add a productEntity</string>
+    <string name="app_widget_empty_view">Press the add button to add a product</string>
     <string name="widget_title_latest_products">Latest Products</string>
     <string name="appwidget_text">Product Widget</string>
     <string name="add_widget">Add widget</string>
@@ -197,7 +282,7 @@
 
     <!-- Search strings -->
     <string name="search">Search</string>
-    <string name="search_hint">Search productEntities…</string>
+    <string name="search_hint">Search products…</string>
     <string name="tkm_product_descriptions">Product descriptions</string>
 
     <!-- Recipe Catalog -->
@@ -206,21 +291,93 @@
     <!-- Recipe Editor -->
     <string name="title_recipe_editor">Recipe Editor</string>
 
+    <!-- Ingredient -->
+    <string name="ingredient_name_label">Name</string>
+    <string name="ingredient_description_label">Description</string>
+
     <!-- Navigation drawer -->
     <string name="nav_recipes">Recipes</string>
     <string name="nav_products">Products</string>
     <string name="meal_planner">Meal planner</string>
     <string name="nav_lists">Shopping lists</string>
 
-
     <string name="total_or_unit">----- or -----</string>
     <string name="invalid_pack_size">Invalid number for this measurement!</string>
     <string name="please_select">Please select</string>
-    <string name="number_format_exception">Please only enter numbers.</string>
+    <string name="number_format_exception">Please enter numbers only.</string>
     <string name="plus_sign">+</string>
     <string name="minus_sign">-</string>
     <string name="product_size_options">Product Size Options</string>
     <string name="my_product_information">Your Personal Product Info</string>
     <string name="product_identity">Product identity</string>
     <string name="empty_string" />
+    <string name="add_web_image_url">Add a picture from web, camera or gallery</string>
+    <string name="cd_launch_browser_to_get_image_url">Press to launch browser for image url</string>
+    <string name="product_image">Product image</string>
+    <string name="hint_web_image_url">Paste a web image url here</string>
+    <string name="empty_screen_add_to_favorites_message">Add to favorites</string>
+
+    <!-- Menu items for ProductViewerFragment -->
+    <string name="menu_item_post_product">POST</string>
+    <string name="menu_item_use">USE</string>
+    <string name="menu_item_done">DONE</string>
+    <string name="menu_item_edit_product">Edit product</string>
+    <string name="menu_item_delete_product">Delete product</string>
+    <string name="menu_item_discard_changes">Discard changes</string>
+
+    <!-- Menu items for FavoriteProductViewerFragment -->
+    <string name="menu_item_edit_favorite">Edit favorite info</string>
+    <string name="menu_item_delete_favorite">Remove from favorites</string>
+
+    <!-- Menu items for ProductEditor activity -->
+    <string name="menu_item_review">REVIEW</string>
+
+    <!-- Standard Dialog messages when editing -->
+    <!-- Dialog message when user is leaving ingredientEditor but hasn't saved changes [CHAR LIMIT=NONE] -->
+    <string name="unsaved_changes_dialog_msg">Discard your changes and quit editing?</string>
+    <!-- Dialog button text for the option to discard a user's changes [CHAR LIMIT=20] -->
+    <string name="discard">Discard</string>
+    <!-- Dialog button text for the option to keep editing [CHAR LIMIT=20] -->
+    <string name="keep_editing">Keep editing</string>
+
+    <!-- ProductViewer Activity -->
+    <string name="review_before_post_message">This is how your product will look. Please review the
+        details to ensure they are as accurate as possible. When complete press ‘POST’ and your
+        product will be available to the community to share. Once your product is used by others
+        you will not be able to edit it, so please double check to make sure everything is correct.
+        Thank you for adding products, its an enormous help to our community!</string>
+
+    <!-- PRICING -->
+    <string name="min_currency_value">0.01</string>
+    <string name="max_price_for_product">100</string>
+    <string name="maximum_currency_value_shopping_list">1000</string>
+    <string name="lasUpdated">last updated</string>
+    <string name="recipe_title_label">Title</string>
+    <string name="invalid_number">Invalid number entered</string>
+    <string name="ingredient_name_duplicate_error_message">An ingredient with this name already
+        exists, please choose another name.</string>
+
+    <!-- Sittings servings portions layout -->
+    <string name="sittings_label">Sittings</string>
+    <string name="servings_label">Servings</string>
+    <string name="portions_label">Portions</string>
+
+    <!-- Recipe measurement ingredientEditor -->
+    <string name="recipe_ingredient_unit_of_measure_label">Unit</string>
+    <string name="add_recommended_product">Add recommended product</string>
+
+    <!-- Recipe ingredients list -->
+    <string name="recipe_ingredient_list_header">Ingredients for:</string>
+    <string name="add_ingredient">Add ingredient</string>
+    <string name="empty_recipe_ingredients_message">There are currently no ingredients associated
+        with this recipe.</string>
+
+    <!-- Conversion factor -->
+    <string name="volume_to_weight_conversion_advanced_label">Advanced: Volume to weight conversion</string>
+    <string name="volume_to_weight_conversion_factor_label">Please enter the exact weight of 1ml (1cm3) of this ingredient:</string>
+    <string name="conversion_factor_error_message">Please enter a value between %1$.3fg and %2$.1fg</string>
+    <string name="conversion_factor_used_for_this_ingredient">Conversion factor used for this ingredient</string>
+    <string name="recipe_total_time_label">Total time</string>
+    <string name="total">total:</string>
+    <string name="approximately">approx.</string>
 </resources>

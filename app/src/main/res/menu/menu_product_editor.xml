@@ -2,29 +2,15 @@
 
 <!-- Options menu for the ProductDetail Activity -->
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.detail.ProductDetail">
 
     <item
-        android:id="@+id/menu_product_editor_action_save"
-        android:contentDescription="@string/cd_save_product"
-        android:title="@string/action_save"
-        android:icon="@drawable/ic_action_done"
-        app:showAsAction="ifRoom" />
-
-    <item
-        android:id="@+id/menu_product_editor_action_edit"
-        android:contentDescription="@string/cd_action_edit_product"
-        android:title="@string/action_edit"
-        android:icon="@drawable/ic_action_edit"
-        app:showAsAction="ifRoom" />
-
-    <item
-        android:id="@+id/menu_product_editor_action_delete"
-        android:contentDescription="@string/cd_delete_product"
-        android:title="@string/action_delete"
-        android:icon="@drawable/ic_action_delete"
-        app:showAsAction="never"/>
+        android:id="@+id/menu_product_editor_action_review"
+        android:contentDescription="@string/cd_done"
+        android:title="@string/menu_item_review"
+        app:showAsAction="always" />
 </menu>

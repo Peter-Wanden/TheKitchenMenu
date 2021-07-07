@@ -8,7 +8,7 @@ import android.widget.RemoteViewsService;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.app.Constants;
-import com.example.peter.thekitchenmenu.data.model.ProductModel;
+import com.example.peter.thekitchenmenu.data.primitivemodel.product.ProductEntity;
 import com.example.peter.thekitchenmenu.utils.Converters;
 import com.example.peter.thekitchenmenu.utils.GsonUtils;
 
@@ -29,7 +29,7 @@ public class WidgetServiceList
             RemoteViewsService.RemoteViewsFactory {
 
         private final Context context;
-        private List<ProductModel> products = Collections.emptyList();
+        private List<ProductEntity> products = Collections.emptyList();
 
         ListRemoteViewsFactory(Context applicationContext) {
             context = applicationContext;
@@ -64,11 +64,11 @@ public class WidgetServiceList
         @Override
         public RemoteViews getViewAt(int position) {
 
-            ProductModel currentProduct = products.get(position);
+            ProductEntity currentProduct = products.get(position);
 
             RemoteViews views = new RemoteViews(
                     context.getPackageName(),
-                    R.layout.list_item_product_widget);
+                    R.layout.product_list_item_widget);
 
             /* Set the TextView text color */
             views.setTextColor(R.id.list_item_product_widget_tv_description,
@@ -87,12 +87,12 @@ public class WidgetServiceList
 
             views.setTextViewText(
                     R.id.list_item_product_widget_tv_pack_size,
-                    String.valueOf(currentProduct.getBaseSiUnits()));
+                    String.valueOf(currentProduct.getBaseUnits()));
 
             views.setTextViewText(
                     R.id.list_item_product_widget_tv_unit_of_measure,
                     Converters.getUnitOfMeasureString
-                            (context, currentProduct.getUnitOfMeasureSubType()));
+                            (context, currentProduct.getSubtype()));
 
             return views;
         }
